@@ -1,0 +1,26 @@
+[gd_resource type="SpriteFrames" load_steps=17 format=2]
+
+[ext_resource path="res://Sprites/animations/misc/autobuyerwheel/g15.png" type="Texture" id=1]
+[ext_resource path="res://Sprites/animations/misc/autobuyerwheel/g13.png" type="Texture" id=2]
+[ext_resource path="res://Sprites/animations/misc/autobuyerwheel/g10.png" type="Texture" id=3]
+[ext_resource path="res://Sprites/animations/misc/autobuyerwheel/g1.png" type="Texture" id=4]
+[ext_resource path="res://Sprites/animations/misc/autobuyerwheel/g2.png" type="Texture" id=5]
+[ext_resource path="res://Sprites/animations/misc/autobuyerwheel/g3.png" type="Texture" id=6]
+[ext_resource path="res://Sprites/animations/misc/autobuyerwheel/g7.png" type="Texture" id=7]
+[ext_resource path="res://Sprites/animations/misc/autobuyerwheel/g12.png" type="Texture" id=8]
+[ext_resource path="res://Sprites/animations/misc/autobuyerwheel/g6.png" type="Texture" id=9]
+[ext_resource path="res://Sprites/animations/misc/autobuyerwheel/g0.png" type="Texture" id=10]
+[ext_resource path="res://Sprites/animations/misc/autobuyerwheel/g8.png" type="Texture" id=11]
+[ext_resource path="res://Sprites/animations/misc/autobuyerwheel/g9.png" type="Texture" id=12]
+[ext_resource path="res://Sprites/animations/misc/autobuyerwheel/g4.png" type="Texture" id=13]
+[ext_resource path="res://Sprites/animations/misc/autobuyerwheel/g5.png" type="Texture" id=14]
+[ext_resource path="res://Sprites/animations/misc/autobuyerwheel/g11.png" type="Texture" id=15]
+[ext_resource path="res://Sprites/animations/misc/autobuyerwheel/g14.png" type="Texture" id=16]
+
+[resource]
+animations = [ {
+"frames": [ ExtResource( 10 ), ExtResource( 4 ), ExtResource( 5 ), ExtResource( 6 ), ExtResource( 13 ), ExtResource( 14 ), ExtResource( 9 ), ExtResource( 7 ), ExtResource( 11 ), ExtResource( 12 ), ExtResource( 3 ), ExtResource( 15 ), ExtResource( 8 ), ExtResource( 2 ), ExtResource( 16 ), ExtResource( 1 ) ],
+"loop": true,
+"name": "default",
+"speed": 1.0
+} ]

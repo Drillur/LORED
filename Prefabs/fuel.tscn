@@ -1,0 +1,108 @@
+[gd_scene load_steps=9 format=2]
+
+[ext_resource path="res://Prefabs/fuel.gd" type="Script" id=1]
+[ext_resource path="res://Fonts/Roboto-Black.ttf" type="DynamicFontData" id=2]
+[ext_resource path="res://Sprites/resources/coal.png" type="Texture" id=3]
+[ext_resource path="res://Sprites/misc/circle.png" type="Texture" id=4]
+[ext_resource path="res://Styles/Labels/Val.tres" type="DynamicFont" id=5]
+
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 0.6, 0.6, 0.6, 0 )
+
+[sub_resource type="DynamicFont" id=2]
+outline_size = 2
+outline_color = Color( 0, 0, 0, 1 )
+font_data = ExtResource( 2 )
+
+[sub_resource type="DynamicFont" id=3]
+size = 14
+outline_size = 2
+outline_color = Color( 0, 0, 0, 1 )
+font_data = ExtResource( 2 )
+
+[node name="fuel_info" type="Panel"]
+margin_left = 0.277374
+margin_right = 165.277
+margin_bottom = 120.0
+custom_styles/panel = SubResource( 1 )
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="storage" type="Label" parent="."]
+margin_left = 4.67647
+margin_top = 47.0
+margin_right = 159.676
+margin_bottom = 66.0
+custom_fonts/font = SubResource( 2 )
+custom_colors/font_color = Color( 0.698039, 0, 1, 1 )
+text = "6 / 10"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="icon" type="Sprite" parent="storage"]
+position = Vector2( 65, -47 )
+texture = ExtResource( 3 )
+centered = false
+
+[node name="flair" type="Label" parent="storage"]
+anchor_right = 1.0
+margin_left = 54.0
+margin_top = -22.0
+margin_right = -55.0
+margin_bottom = -5.0
+custom_fonts/font = SubResource( 3 )
+custom_colors/font_color = Color( 0.498039, 0.498039, 0.498039, 1 )
+text = "Battery"
+valign = 1
+
+[node name="bar" type="TextureProgress" parent="storage"]
+margin_left = 23.0
+margin_top = -28.0
+margin_right = 535.0
+margin_bottom = 484.0
+rect_scale = Vector2( 0.05, 0.05 )
+value = 50.0
+texture_under = ExtResource( 4 )
+texture_progress = ExtResource( 4 )
+fill_mode = 5
+tint_under = Color( 0.7, 0, 1, 0.2 )
+tint_progress = Color( 0.7, 0, 1, 0.5 )
+__meta__ = {
+"_edit_group_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="flair" type="TextureProgress" parent="storage/bar"]
+margin_right = 512.0
+margin_bottom = 512.0
+value = 100.0
+texture_progress = ExtResource( 4 )
+fill_mode = 5
+tint_under = Color( 0.501961, 0.501961, 0.501961, 0 )
+tint_progress = Color( 0.7, 0, 1, 0.5 )
+
+[node name="drain" type="Label" parent="."]
+margin_left = 5.0
+margin_top = 93.0
+margin_right = 160.0
+margin_bottom = 106.0
+custom_fonts/font = ExtResource( 5 )
+custom_colors/font_color = Color( 0.698039, 0, 1, 1 )
+text = "-0.2sdfgsdfg"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="flair" type="Label" parent="drain"]
+anchor_right = 1.0
+margin_top = -22.0
+margin_bottom = -5.0
+custom_fonts/font = SubResource( 3 )
+custom_colors/font_color = Color( 0.498039, 0.498039, 0.498039, 1 )
+text = "Coal Drain Per Second:"
+align = 1

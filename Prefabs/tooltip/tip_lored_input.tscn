@@ -1,0 +1,58 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://Scripts/tooltip/tip_lored_input.gd" type="Script" id=1]
+[ext_resource path="res://Sprites/resources/axe.png" type="Texture" id=2]
+[ext_resource path="res://Fonts/Roboto-Black.ttf" type="DynamicFontData" id=3]
+[ext_resource path="res://Styles/Labels/Val.tres" type="DynamicFont" id=4]
+
+[sub_resource type="DynamicFont" id=1]
+size = 14
+outline_size = 2
+outline_color = Color( 0, 0, 0, 1 )
+font_data = ExtResource( 3 )
+
+[sub_resource type="StyleBoxFlat" id=2]
+bg_color = Color( 1, 1, 1, 0.0509804 )
+expand_margin_left = 3.0
+expand_margin_right = 3.0
+expand_margin_top = 3.0
+expand_margin_bottom = 3.0
+
+[node name="input" type="Label"]
+anchor_right = 1.0
+margin_bottom = 13.0
+custom_fonts/font = ExtResource( 4 )
+custom_colors/font_color = Color( 0.698039, 0, 1, 1 )
+text = "33.3e123"
+align = 1
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="sprite" type="Sprite" parent="."]
+show_behind_parent = true
+position = Vector2( 17, 16 )
+scale = Vector2( 0.75, 0.75 )
+texture = ExtResource( 2 )
+
+[node name="type" type="Label" parent="."]
+anchor_right = 1.0
+margin_top = 15.0
+margin_bottom = 32.0
+custom_fonts/font = SubResource( 1 )
+custom_colors/font_color = Color( 0.498039, 0.498039, 0.498039, 1 )
+text = "Malignancy"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="bg" type="Panel" parent="."]
+show_behind_parent = true
+anchor_right = 1.0
+margin_bottom = 32.0
+custom_styles/panel = SubResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}

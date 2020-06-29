@@ -1,0 +1,128 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=4
+
+_global_script_classes=[ {
+"base": "Node",
+"class": "FormatValue",
+"language": "GDScript",
+"path": "res://Scripts/autoload/format_value.gd"
+}, {
+"base": "Node",
+"class": "GlobalVariables",
+"language": "GDScript",
+"path": "res://Scripts/autoload/global_variables.gd"
+}, {
+"base": "Reference",
+"class": "LORED",
+"language": "GDScript",
+"path": "res://Scripts/classes/cLORED.gd"
+}, {
+"base": "Reference",
+"class": "Ob",
+"language": "GDScript",
+"path": "res://Scripts/classes/cObject.gd"
+}, {
+"base": "Reference",
+"class": "Purchasable",
+"language": "GDScript",
+"path": "res://Scripts/classes/cPurchasable.gd"
+}, {
+"base": "Reference",
+"class": "Statistics",
+"language": "GDScript",
+"path": "res://Scripts/classes/cStats.gd"
+}, {
+"base": "Reference",
+"class": "Upgrade",
+"language": "GDScript",
+"path": "res://Scripts/classes/cUpgrade.gd"
+}, {
+"base": "Node2D",
+"class": "_root",
+"language": "GDScript",
+"path": "res://Scripts/Root.gd"
+}, {
+"base": "Resource",
+"class": "_save",
+"language": "GDScript",
+"path": "res://Scripts/save.gd"
+} ]
+_global_script_class_icons={
+"FormatValue": "",
+"GlobalVariables": "",
+"LORED": "",
+"Ob": "",
+"Purchasable": "",
+"Statistics": "",
+"Upgrade": "",
+"_root": "",
+"_save": ""
+}
+
+[application]
+
+config/name="LORED"
+run/main_scene="res://Scenes/Root.tscn"
+boot_splash/image="res://Sprites/misc/splash.png"
+config/icon="res://Sprites/tab/s2.png"
+config/Version="2.0 BETA (3)"
+boot_splash/use_custom_user_dir=false
+boot_splash/reflections/high_quality_ggx=true
+boot_splash/reflections/texture_array_reflections=true
+boot_splash/depth/hdr=true
+boot_splash/directional_shadow/size.mobile=2048
+boot_splash/intended_usage/framebuffer_allocation.mobile=3
+
+[autoload]
+
+fval="*res://Scripts/autoload/format_value.gd"
+gv="*res://Scripts/autoload/global_variables.gd"
+taq="*res://Scripts/autoload/tasks_and_quests.gd"
+
+[display]
+
+window/size/width=800
+window/dpi/allow_hidpi=true
+window/vsync/use_vsync=false
+window/stretch/aspect="expand"
+
+[input]
+
+ui_left_mouse_button={
+"deadzone": 0.5,
+"events": [ Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"button_mask":0,"position":Vector2( 0, 0 ),"global_position":Vector2( 0, 0 ),"factor":1.0,"button_index":1,"pressed":false,"doubleclick":false,"script":null)
+ ]
+}
+ui_right_mouse_button={
+"deadzone": 0.5,
+"events": [ Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"button_mask":0,"position":Vector2( 0, 0 ),"global_position":Vector2( 0, 0 ),"factor":1.0,"button_index":2,"pressed":false,"doubleclick":false,"script":null)
+ ]
+}
+
+[memory]
+
+limits/message_queue/max_size_kb=2048
+
+[physics]
+
+common/physics_jitter_fix=0.1
+
+[rendering]
+
+quality/driver/driver_name="GLES2"
+quality/intended_usage/framebuffer_allocation=1
+quality/intended_usage/framebuffer_allocation.mobile=1
+quality/2d/use_pixel_snap=true
+quality/directional_shadow/size=256
+quality/directional_shadow/size.mobile=256
+environment/default_clear_color=Color( 0.00392157, 0.00392157, 0.00392157, 1 )
+quality/depth/hdr=false
+environment/default_environment="res://Scenes/default_env.tres"
+quality/2d/gles2_use_nvidia_rect_flicker_workaround=true

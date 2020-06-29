@@ -1,0 +1,38 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://Styles/Labels/Big.tres" type="DynamicFont" id=1]
+[ext_resource path="res://Styles/Labels/Desc.tres" type="DynamicFont" id=2]
+
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 0.6, 0.6, 0.6, 0 )
+
+[node name="hold" type="Panel"]
+margin_right = 185.0
+margin_bottom = 93.0
+custom_styles/panel = SubResource( 1 )
+
+[node name="title" type="Label" parent="."]
+anchor_right = 1.0
+margin_left = 5.0
+margin_top = 9.0
+margin_right = -5.0
+margin_bottom = 28.0
+custom_fonts/font = ExtResource( 1 )
+custom_colors/font_color = Color( 0.498039, 0.498039, 0.498039, 1 )
+text = "Halt"
+align = 1
+
+[node name="desc" type="Label" parent="."]
+anchor_right = 1.0
+margin_left = 5.0
+margin_top = 33.0
+margin_right = -5.0
+margin_bottom = 85.0
+custom_fonts/font = ExtResource( 2 )
+custom_colors/font_color = Color( 0.764706, 0.733333, 0.603922, 1 )
+text = "Halts this LORED's activity.
+
+Currently working."
+align = 1
+valign = 1
+autowrap = true

@@ -1,0 +1,68 @@
+[gd_resource type="SpriteFrames" load_steps=54 format=2]
+
+[ext_resource path="res://Sprites/animations/steel/g0.png" type="Texture" id=1]
+[ext_resource path="res://Sprites/animations/steel/g1.png" type="Texture" id=2]
+[ext_resource path="res://Sprites/animations/steel/g2.png" type="Texture" id=3]
+[ext_resource path="res://Sprites/animations/steel/g3.png" type="Texture" id=4]
+[ext_resource path="res://Sprites/animations/steel/g5.png" type="Texture" id=5]
+[ext_resource path="res://Sprites/animations/steel/g6.png" type="Texture" id=6]
+[ext_resource path="res://Sprites/animations/steel/g4.png" type="Texture" id=7]
+[ext_resource path="res://Sprites/animations/steel/g9.png" type="Texture" id=8]
+[ext_resource path="res://Sprites/animations/steel/g8.png" type="Texture" id=9]
+[ext_resource path="res://Sprites/animations/steel/g10.png" type="Texture" id=10]
+[ext_resource path="res://Sprites/animations/steel/g11.png" type="Texture" id=11]
+[ext_resource path="res://Sprites/animations/steel/g14.png" type="Texture" id=12]
+[ext_resource path="res://Sprites/animations/steel/g12.png" type="Texture" id=13]
+[ext_resource path="res://Sprites/animations/steel/g7.png" type="Texture" id=14]
+[ext_resource path="res://Sprites/animations/steel/g13.png" type="Texture" id=15]
+[ext_resource path="res://Sprites/animations/steel/g15.png" type="Texture" id=16]
+[ext_resource path="res://Sprites/animations/steel/g16.png" type="Texture" id=17]
+[ext_resource path="res://Sprites/animations/steel/g19.png" type="Texture" id=18]
+[ext_resource path="res://Sprites/animations/steel/g9point5.png" type="Texture" id=19]
+[ext_resource path="res://Sprites/animations/steel/g17.png" type="Texture" id=20]
+[ext_resource path="res://Sprites/animations/steel/g18.png" type="Texture" id=21]
+[ext_resource path="res://Sprites/animations/steel/g20.png" type="Texture" id=22]
+[ext_resource path="res://Sprites/animations/steel/g23.png" type="Texture" id=23]
+[ext_resource path="res://Sprites/animations/steel/g22.png" type="Texture" id=24]
+[ext_resource path="res://Sprites/animations/steel/g21.png" type="Texture" id=25]
+[ext_resource path="res://Sprites/animations/steel/g25.png" type="Texture" id=26]
+[ext_resource path="res://Sprites/animations/steel/g26.png" type="Texture" id=27]
+[ext_resource path="res://Sprites/animations/steel/g24.png" type="Texture" id=28]
+[ext_resource path="res://Sprites/animations/steel/g27.png" type="Texture" id=29]
+[ext_resource path="res://Sprites/animations/steel/g28.png" type="Texture" id=30]
+[ext_resource path="res://Sprites/animations/steel/g33.png" type="Texture" id=31]
+[ext_resource path="res://Sprites/animations/steel/g35.png" type="Texture" id=32]
+[ext_resource path="res://Sprites/animations/steel/g31.png" type="Texture" id=33]
+[ext_resource path="res://Sprites/animations/steel/g32.png" type="Texture" id=34]
+[ext_resource path="res://Sprites/animations/steel/g30.png" type="Texture" id=35]
+[ext_resource path="res://Sprites/animations/steel/g34.png" type="Texture" id=36]
+[ext_resource path="res://Sprites/animations/steel/g29.png" type="Texture" id=37]
+[ext_resource path="res://Sprites/animations/steel/g36.png" type="Texture" id=38]
+[ext_resource path="res://Sprites/animations/steel/g37.png" type="Texture" id=39]
+[ext_resource path="res://Sprites/animations/steel/g41.png" type="Texture" id=40]
+[ext_resource path="res://Sprites/animations/steel/g38.png" type="Texture" id=41]
+[ext_resource path="res://Sprites/animations/steel/g39.png" type="Texture" id=42]
+[ext_resource path="res://Sprites/animations/steel/g40.png" type="Texture" id=43]
+[ext_resource path="res://Sprites/animations/steel/g46.png" type="Texture" id=44]
+[ext_resource path="res://Sprites/animations/steel/g47.png" type="Texture" id=45]
+[ext_resource path="res://Sprites/animations/steel/g42.png" type="Texture" id=46]
+[ext_resource path="res://Sprites/animations/steel/g43.png" type="Texture" id=47]
+[ext_resource path="res://Sprites/animations/steel/g45.png" type="Texture" id=48]
+[ext_resource path="res://Sprites/animations/steel/g44.png" type="Texture" id=49]
+[ext_resource path="res://Sprites/animations/steel/g48.png" type="Texture" id=50]
+[ext_resource path="res://Sprites/animations/steel/g51.png" type="Texture" id=51]
+[ext_resource path="res://Sprites/animations/steel/g50.png" type="Texture" id=52]
+[ext_resource path="res://Sprites/animations/steel/g49.png" type="Texture" id=53]
+
+[resource]
+animations = [ {
+"frames": [ ExtResource( 1 ), ExtResource( 2 ), ExtResource( 3 ), ExtResource( 4 ), ExtResource( 7 ), ExtResource( 5 ), ExtResource( 6 ), ExtResource( 14 ), ExtResource( 9 ), ExtResource( 8 ), ExtResource( 19 ), ExtResource( 10 ), ExtResource( 11 ), ExtResource( 13 ), ExtResource( 15 ), ExtResource( 12 ), ExtResource( 16 ), ExtResource( 17 ), ExtResource( 20 ), ExtResource( 21 ), ExtResource( 18 ), ExtResource( 22 ), ExtResource( 25 ), ExtResource( 24 ), ExtResource( 23 ), ExtResource( 28 ), ExtResource( 26 ), ExtResource( 27 ), ExtResource( 29 ), ExtResource( 30 ), ExtResource( 37 ), ExtResource( 35 ), ExtResource( 33 ), ExtResource( 34 ), ExtResource( 31 ), ExtResource( 36 ), ExtResource( 32 ), ExtResource( 38 ), ExtResource( 39 ), ExtResource( 41 ), ExtResource( 42 ), ExtResource( 43 ), ExtResource( 40 ), ExtResource( 46 ), ExtResource( 47 ), ExtResource( 49 ), ExtResource( 48 ), ExtResource( 44 ), ExtResource( 45 ), ExtResource( 50 ), ExtResource( 53 ), ExtResource( 52 ), ExtResource( 51 ) ],
+"loop": true,
+"name": "ff",
+"speed": 5.0
+}, {
+"frames": [  ],
+"loop": true,
+"name": "ww",
+"speed": 5.0
+} ]

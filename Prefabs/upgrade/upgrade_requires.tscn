@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Styles/Labels/Desc.tres" type="DynamicFont" id=1]
+[ext_resource path="res://Scripts/upgrade/upgrade_requires.gd" type="Script" id=2]
+
+[node name="requires" type="Label"]
+anchor_right = 1.0
+margin_left = 10.0
+margin_right = -10.0
+margin_bottom = 27.0
+custom_fonts/font = ExtResource( 1 )
+custom_colors/font_color = Color( 0.764706, 0.733333, 0.603922, 1 )
+text = "This upgrade requires the purchase of: wtf is this musk
+ two lines"
+align = 1
+autowrap = true
+script = ExtResource( 2 )

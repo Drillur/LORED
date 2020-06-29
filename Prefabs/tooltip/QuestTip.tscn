@@ -1,0 +1,249 @@
+[gd_scene load_steps=16 format=2]
+
+[ext_resource path="res://Fonts/Roboto-BlackItalic.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://Sprites/resources/axe.png" type="Texture" id=2]
+[ext_resource path="res://Fonts/Roboto-Medium.ttf" type="DynamicFontData" id=3]
+[ext_resource path="res://Fonts/Roboto-MediumItalic.ttf" type="DynamicFontData" id=4]
+[ext_resource path="res://Scripts/tooltip/QuestTip.gd" type="Script" id=5]
+[ext_resource path="res://Styles/Panels/block_inside_tip.tres" type="StyleBox" id=6]
+
+[sub_resource type="StyleBoxFlat" id=8]
+bg_color = Color( 0.929412, 0.839216, 0, 0.211765 )
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color( 0.93, 0.84, 0, 0.4 )
+expand_margin_left = 5.0
+expand_margin_right = 5.0
+expand_margin_top = 5.0
+expand_margin_bottom = 5.0
+anti_aliasing = false
+
+[sub_resource type="DynamicFont" id=9]
+size = 12
+outline_size = 2
+outline_color = Color( 0, 0, 0, 1 )
+font_data = ExtResource( 3 )
+
+[sub_resource type="StyleBoxFlat" id=10]
+bg_color = Color( 0.76, 0, 0, 0.2 )
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color( 0.76, 0, 0, 0.4 )
+expand_margin_left = 5.0
+expand_margin_right = 5.0
+expand_margin_top = 5.0
+expand_margin_bottom = 5.0
+anti_aliasing = false
+
+[sub_resource type="DynamicFont" id=7]
+size = 12
+outline_size = 2
+outline_color = Color( 0, 0, 0, 1 )
+font_data = ExtResource( 3 )
+
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 1, 1, 1, 0.0509804 )
+expand_margin_left = 10.0
+expand_margin_right = 10.0
+
+[sub_resource type="StyleBoxFlat" id=2]
+draw_center = false
+
+[sub_resource type="DynamicFont" id=3]
+font_data = ExtResource( 1 )
+
+[sub_resource type="DynamicFont" id=4]
+size = 12
+outline_size = 2
+outline_color = Color( 0, 0, 0, 1 )
+font_data = ExtResource( 3 )
+
+[sub_resource type="DynamicFont" id=6]
+size = 12
+outline_size = 2
+outline_color = Color( 0, 0, 0, 1 )
+extra_spacing_bottom = 3
+font_data = ExtResource( 4 )
+
+[node name="QuestTip" type="MarginContainer"]
+margin_right = 249.0
+margin_bottom = 125.0
+custom_constants/margin_right = 10
+custom_constants/margin_top = 10
+custom_constants/margin_left = 10
+custom_constants/margin_bottom = 10
+script = ExtResource( 5 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="v" type="VBoxContainer" parent="."]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 239.0
+margin_bottom = 115.0
+
+[node name="tags" type="HBoxContainer" parent="v"]
+margin_right = 229.0
+
+[node name="rare" type="MarginContainer" parent="v/tags"]
+visible = false
+margin_right = 34.0
+margin_bottom = 25.0
+custom_constants/margin_right = 5
+custom_constants/margin_top = 5
+custom_constants/margin_left = 5
+custom_constants/margin_bottom = 5
+
+[node name="bg" type="Panel" parent="v/tags/rare"]
+margin_left = 5.0
+margin_top = 5.0
+margin_right = 29.0
+margin_bottom = 20.0
+custom_styles/panel = SubResource( 8 )
+
+[node name="Label" type="Label" parent="v/tags/rare"]
+margin_left = 5.0
+margin_top = 5.0
+margin_right = 29.0
+margin_bottom = 20.0
+custom_fonts/font = SubResource( 9 )
+text = "Rare"
+
+[node name="spike" type="MarginContainer" parent="v/tags"]
+visible = false
+margin_right = 39.0
+margin_bottom = 25.0
+custom_constants/margin_right = 5
+custom_constants/margin_top = 5
+custom_constants/margin_left = 5
+custom_constants/margin_bottom = 5
+
+[node name="bg" type="Panel" parent="v/tags/spike"]
+margin_left = 5.0
+margin_top = 5.0
+margin_right = 34.0
+margin_bottom = 20.0
+custom_styles/panel = SubResource( 10 )
+
+[node name="Label" type="Label" parent="v/tags/spike"]
+margin_left = 5.0
+margin_top = 5.0
+margin_right = 34.0
+margin_bottom = 20.0
+custom_fonts/font = SubResource( 7 )
+text = "Spike"
+
+[node name="m" type="MarginContainer" parent="v"]
+margin_top = 4.0
+margin_right = 229.0
+margin_bottom = 40.0
+
+[node name="bg" type="Panel" parent="v/m"]
+margin_right = 229.0
+margin_bottom = 36.0
+custom_styles/panel = SubResource( 1 )
+
+[node name="h" type="HBoxContainer" parent="v/m"]
+margin_right = 229.0
+margin_bottom = 36.0
+
+[node name="icon" type="Panel" parent="v/m/h"]
+visible = false
+margin_right = 36.0
+margin_bottom = 36.0
+rect_min_size = Vector2( 36, 36 )
+custom_styles/panel = SubResource( 2 )
+
+[node name="Sprite" type="Sprite" parent="v/m/h/icon"]
+position = Vector2( 18, 18 )
+texture = ExtResource( 2 )
+
+[node name="name" type="Label" parent="v/m/h"]
+margin_right = 229.0
+margin_bottom = 36.0
+rect_min_size = Vector2( 0, 36 )
+size_flags_horizontal = 3
+custom_fonts/font = SubResource( 3 )
+custom_colors/font_color = Color( 0.800781, 0.800781, 0.800781, 1 )
+text = "A Million Reasons to Grind"
+valign = 1
+autowrap = true
+
+[node name="desc" type="Label" parent="v"]
+margin_top = 44.0
+margin_right = 229.0
+margin_bottom = 59.0
+size_flags_horizontal = 3
+custom_fonts/font = SubResource( 4 )
+custom_colors/font_color = Color( 0.796875, 0.796875, 0.796875, 1 )
+text = "1"
+autowrap = true
+
+[node name="steps" type="VBoxContainer" parent="v"]
+margin_top = 63.0
+margin_right = 229.0
+margin_bottom = 63.0
+
+[node name="RR" type="MarginContainer" parent="v"]
+margin_top = 67.0
+margin_right = 229.0
+margin_bottom = 105.0
+custom_constants/margin_right = 10
+custom_constants/margin_top = 10
+custom_constants/margin_left = 10
+custom_constants/margin_bottom = 10
+
+[node name="bg" type="Panel" parent="v/RR"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 219.0
+margin_bottom = 28.0
+custom_styles/panel = ExtResource( 6 )
+
+[node name="v" type="VBoxContainer" parent="v/RR"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 219.0
+margin_bottom = 28.0
+
+[node name="Label" type="Label" parent="v/RR/v"]
+margin_right = 209.0
+margin_bottom = 18.0
+custom_fonts/font = SubResource( 6 )
+text = "Resource Rewards"
+align = 1
+
+[node name="R" type="MarginContainer" parent="v"]
+visible = false
+margin_top = 109.0
+margin_right = 229.0
+margin_bottom = 151.0
+custom_constants/margin_right = 10
+custom_constants/margin_top = 10
+custom_constants/margin_left = 10
+custom_constants/margin_bottom = 10
+
+[node name="bg" type="Panel" parent="v/R"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 219.0
+margin_bottom = 32.0
+custom_styles/panel = ExtResource( 6 )
+
+[node name="v" type="VBoxContainer" parent="v/R"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 219.0
+margin_bottom = 32.0
+
+[node name="Label" type="Label" parent="v/R/v"]
+margin_right = 209.0
+margin_bottom = 22.0
+custom_fonts/font = SubResource( 6 )
+text = "Other Rewards"
+align = 1

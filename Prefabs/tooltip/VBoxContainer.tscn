@@ -1,0 +1,21 @@
+[gd_scene format=2]
+
+[node name="MarginContainer" type="MarginContainer"]
+rect_clip_content = true
+custom_constants/margin_right = 10
+custom_constants/margin_top = 10
+custom_constants/margin_left = 10
+custom_constants/margin_bottom = 10
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="vbox" type="VBoxContainer" parent="."]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 10.0
+margin_bottom = 10.0
+custom_constants/separation = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}

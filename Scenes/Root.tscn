@@ -1,0 +1,221 @@
+[gd_scene load_steps=18 format=2]
+
+[ext_resource path="res://Scripts/Root.gd" type="Script" id=1]
+[ext_resource path="res://Scripts/map.gd" type="Script" id=2]
+[ext_resource path="res://Scripts/lored_master.gd" type="Script" id=3]
+[ext_resource path="res://Scripts/upgrade/upgrade_master.gd" type="Script" id=4]
+[ext_resource path="res://Scripts/tooltip/tooltip_master.gd" type="Script" id=5]
+[ext_resource path="res://Scripts/task/quests.gd" type="Script" id=8]
+[ext_resource path="res://Scripts/tab/tab_master.gd" type="Script" id=12]
+[ext_resource path="res://Fonts/Roboto-Medium.ttf" type="DynamicFontData" id=29]
+[ext_resource path="res://Scripts/resource_bar.gd" type="Script" id=42]
+
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 0, 0, 0, 1 )
+border_color = Color( 0.117647, 0.117647, 0.117647, 1 )
+shadow_color = Color( 0.666667, 0, 0, 1 )
+shadow_size = 30000
+
+[sub_resource type="StyleBoxFlat" id=2]
+bg_color = Color( 0, 0, 0, 1 )
+border_color = Color( 0.117647, 0.117647, 0.117647, 1 )
+shadow_color = Color( 0.67, 0, 0.63, 0.75 )
+shadow_size = 30000
+
+[sub_resource type="StyleBoxFlat" id=3]
+bg_color = Color( 0.1, 0.1, 0.1, 1 )
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color( 1, 0, 0.63, 0.35 )
+shadow_color = Color( 0.054902, 0.054902, 0.054902, 1 )
+shadow_size = 10
+
+[sub_resource type="StyleBoxFlat" id=4]
+bg_color = Color( 0.06, 0.06, 0.06, 1 )
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color( 1, 0, 0.631373, 0.25098 )
+shadow_color = Color( 0.054902, 0.054902, 0.054902, 1 )
+shadow_size = 10
+
+[sub_resource type="StyleBoxFlat" id=5]
+bg_color = Color( 0.0784314, 0.0784314, 0.0784314, 1 )
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color( 1, 0, 0.631373, 0.301961 )
+shadow_color = Color( 0.054902, 0.054902, 0.054902, 1 )
+shadow_size = 10
+
+[sub_resource type="DynamicFont" id=6]
+size = 30
+outline_size = 2
+outline_color = Color( 0, 0, 0, 0.301961 )
+font_data = ExtResource( 29 )
+
+[sub_resource type="StyleBoxFlat" id=7]
+bg_color = Color( 0.0784314, 0.0784314, 0.0784314, 0.901961 )
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color( 1, 0, 0.631373, 0.301961 )
+expand_margin_top = 4.0
+expand_margin_bottom = 4.0
+shadow_color = Color( 0.054902, 0.054902, 0.054902, 1 )
+shadow_size = 10
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id=8]
+draw_center = false
+
+[node name="Root" type="Node2D"]
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_lock_": true,
+"_edit_vertical_guides_": [ 256.0 ]
+}
+
+[node name="map" type="Area2D" parent="."]
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="misc" type="Node2D" parent="map"]
+rotation = 0.785398
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="t0" type="Panel" parent="map/misc"]
+visible = false
+margin_left = -68131.8
+margin_top = -76595.9
+margin_right = 68823.2
+margin_bottom = -28266.9
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_styles/panel = SubResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="t1" type="Panel" parent="map/misc"]
+visible = false
+margin_left = -90151.9
+margin_top = 28902.3
+margin_right = 46803.2
+margin_bottom = 77231.3
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_styles/panel = SubResource( 2 )
+
+[node name="loreds" type="Node2D" parent="map"]
+script = ExtResource( 3 )
+
+[node name="upgrades" type="Node2D" parent="map"]
+script = ExtResource( 4 )
+
+[node name="s1nup" type="Node2D" parent="map/upgrades"]
+
+[node name="s1mup" type="Node2D" parent="map/upgrades"]
+
+[node name="s2nup" type="Node2D" parent="map/upgrades"]
+
+[node name="s2mup" type="Node2D" parent="map/upgrades"]
+
+[node name="tip" type="Node2D" parent="map"]
+script = ExtResource( 5 )
+
+[node name="misc" type="Node2D" parent="."]
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="tabs" type="Node2D" parent="misc"]
+script = ExtResource( 12 )
+
+[node name="menu_button" type="Button" parent="misc"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 48.0
+margin_bottom = 48.0
+focus_mode = 0
+mouse_default_cursor_shape = 2
+custom_styles/hover = SubResource( 3 )
+custom_styles/pressed = SubResource( 4 )
+custom_styles/normal = SubResource( 5 )
+__meta__ = {
+"_edit_group_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="misc/menu_button"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_fonts/font = SubResource( 6 )
+custom_colors/font_color = Color( 1, 0, 0.631373, 0.301961 )
+text = "="
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="qol_displays" type="HBoxContainer" parent="misc"]
+margin_left = 61.0
+margin_top = 14.0
+margin_right = 790.0
+margin_bottom = 81.0
+mouse_filter = 2
+custom_constants/separation = 15
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="resource_bar" type="Panel" parent="misc/qol_displays"]
+margin_right = 729.0
+margin_bottom = 67.0
+rect_min_size = Vector2( 729, 67 )
+size_flags_horizontal = 4
+size_flags_vertical = 0
+custom_styles/panel = SubResource( 7 )
+script = ExtResource( 42 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="taq" type="HBoxContainer" parent="misc"]
+margin_left = 620.0
+margin_top = 545.0
+margin_right = 790.0
+margin_bottom = 590.0
+grow_horizontal = 0
+custom_constants/separation = 14
+alignment = 2
+__meta__ = {
+"_edit_group_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="quest" type="Panel" parent="misc/taq"]
+margin_right = 170.0
+margin_bottom = 45.0
+rect_min_size = Vector2( 170, 45 )
+size_flags_horizontal = 8
+size_flags_vertical = 8
+custom_styles/panel = SubResource( 8 )
+script = ExtResource( 8 )
+
+[node name="upgrades" type="Node2D" parent="."]
+
+[node name="global_tip" type="Node2D" parent="."]
+script = ExtResource( 5 )
+[connection signal="button_down" from="misc/menu_button" to="." method="_on_menu_button_button_down"]
+[connection signal="pressed" from="misc/menu_button" to="." method="_on_menu_button_pressed"]

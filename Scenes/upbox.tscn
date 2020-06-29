@@ -1,0 +1,183 @@
+[gd_scene load_steps=14 format=2]
+
+[ext_resource path="res://Fonts/Roboto-Black.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://Scripts/buy_up.gd" type="Script" id=2]
+[ext_resource path="res://Styles/Labels/Val.tres" type="DynamicFont" id=3]
+[ext_resource path="res://Sprites/resources/iron.png" type="Texture" id=4]
+[ext_resource path="res://Sprites/resources/cop.png" type="Texture" id=5]
+[ext_resource path="res://Styles/Labels/Normal.tres" type="DynamicFont" id=6]
+[ext_resource path="res://Sprites/resources/coal.png" type="Texture" id=7]
+
+
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 0.0627451, 0.0627451, 0.0627451, 1 )
+border_color = Color( 0.117647, 0.117647, 0.117647, 1 )
+
+[sub_resource type="StyleBoxFlat" id=2]
+bg_color = Color( 0.0784314, 0.0784314, 0.0784314, 1 )
+border_color = Color( 0.117647, 0.117647, 0.117647, 1 )
+shadow_size = 3
+
+[sub_resource type="DynamicFont" id=3]
+size = 15
+outline_size = 2
+outline_color = Color( 0, 0, 0, 1 )
+extra_spacing_top = -1
+extra_spacing_bottom = -3
+extra_spacing_char = -1
+font_data = ExtResource( 1 )
+
+[sub_resource type="StyleBoxFlat" id=4]
+bg_color = Color( 0.0980392, 0.0980392, 0.0980392, 1 )
+border_width_left = 1
+border_width_top = 1
+border_color = Color( 0.196078, 0.196078, 0.196078, 1 )
+
+[sub_resource type="StyleBoxFlat" id=5]
+bg_color = Color( 0.0588235, 0.0588235, 0.0588235, 1 )
+border_width_left = 1
+border_width_top = 1
+border_color = Color( 0.196078, 0.196078, 0.196078, 1 )
+
+[sub_resource type="StyleBoxFlat" id=6]
+bg_color = Color( 0.0784314, 0.0784314, 0.0784314, 1 )
+border_width_left = 1
+border_width_top = 1
+border_color = Color( 0.196078, 0.196078, 0.196078, 1 )
+
+[node name="g0" type="Panel"]
+margin_left = 5.0
+margin_top = 5.0
+margin_right = 795.0
+margin_bottom = 66.0
+custom_styles/panel = SubResource( 1 )
+
+[node name="name" type="Panel" parent="."]
+margin_left = 3.0
+margin_top = 3.0
+margin_right = 113.0
+margin_bottom = 58.0
+custom_styles/panel = SubResource( 2 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="t" type="Label" parent="name"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_fonts/font = SubResource( 3 )
+custom_colors/font_color = Color( 0.576471, 0.352941, 0.509804, 1 )
+text = "THE WITCH OF LOREDELITH"
+align = 1
+valign = 1
+autowrap = true
+
+[node name="owned" type="Panel" parent="."]
+margin_left = 693.0
+margin_top = 3.0
+margin_right = 787.0
+margin_bottom = 58.0
+custom_styles/panel = SubResource( 2 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="t" type="Label" parent="owned"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_fonts/font = SubResource( 3 )
+custom_colors/font_color = Color( 0.576471, 0.352941, 0.509804, 1 )
+text = "OWNED"
+align = 1
+valign = 1
+autowrap = true
+
+[node name="buy" type="Button" parent="owned"]
+margin_left = 2.0
+margin_top = 2.0
+margin_right = 92.0
+margin_bottom = 53.0
+mouse_default_cursor_shape = 2
+custom_styles/hover = SubResource( 4 )
+custom_styles/pressed = SubResource( 5 )
+custom_styles/normal = SubResource( 6 )
+custom_colors/font_color_disabled = Color( 0, 0, 0, 1 )
+script = ExtResource( 2 )
+
+[node name="text0" type="Label" parent="owned/buy"]
+margin_left = 27.0
+margin_top = 10.0
+margin_right = 80.0
+margin_bottom = 23.0
+custom_fonts/font = ExtResource( 3 )
+custom_colors/font_color = Color( 0.0666667, 0.890196, 1, 1 )
+text = "12.1e123"
+align = 1
+valign = 1
+
+[node name="sprite" type="Sprite" parent="owned/buy/text0"]
+position = Vector2( -10, 6 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 4 )
+
+[node name="text1" type="Label" parent="owned/buy"]
+margin_left = 27.0
+margin_top = 28.0
+margin_right = 80.0
+margin_bottom = 41.0
+custom_fonts/font = ExtResource( 3 )
+custom_colors/font_color = Color( 1, 0.741176, 0.054902, 1 )
+text = "12.1e123"
+align = 1
+valign = 1
+
+[node name="sprite" type="Sprite" parent="owned/buy/text1"]
+position = Vector2( -10, 6 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 5 )
+
+[node name="text2" type="Label" parent="owned/buy"]
+margin_left = 27.0
+margin_top = 40.0
+margin_right = 80.0
+margin_bottom = 53.0
+custom_fonts/font = ExtResource( 3 )
+custom_colors/font_color = Color( 1, 0.741176, 0.054902, 1 )
+text = "12.1e123"
+align = 1
+valign = 1
+
+[node name="sprite" type="Sprite" parent="owned/buy/text2"]
+position = Vector2( -10, 6 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 5 )
+
+[node name="confirm" type="Label" parent="owned/buy"]
+visible = false
+margin_top = 2.0
+margin_right = 92.0
+margin_bottom = 53.0
+custom_fonts/font = ExtResource( 3 )
+custom_colors/font_color = Color( 0.882353, 0.121569, 0.352941, 1 )
+custom_colors/font_outline_modulate = Color( 0, 0, 0, 1 )
+text = "CONFIRM"
+align = 1
+valign = 1
+
+[node name="desc" type="Label" parent="."]
+anchor_bottom = 1.0
+margin_left = 180.0
+margin_right = 685.0
+custom_fonts/font = ExtResource( 6 )
+custom_colors/font_color = Color( 0.498039, 0.498039, 0.498039, 1 )
+text = "Increases the malignancy output of your GROWTH LORED by 100 * its output * the output of your MALIGNANCY LORED."
+align = 1
+valign = 1
+autowrap = true
+
+[node name="sprite" type="Sprite" parent="."]
+position = Vector2( 120, 5.00001 )
+scale = Vector2( 1.78571, 1.78571 )
+texture = ExtResource( 7 )
+centered = false
+[connection signal="button_down" from="owned/buy" to="owned/buy" method="_on_buy_button_down"]

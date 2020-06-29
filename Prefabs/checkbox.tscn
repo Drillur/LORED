@@ -1,0 +1,13 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Styles/Labels/whatevertheseneedseveremanagement.tres" type="DynamicFont" id=1]
+
+[node name="resource_bar" type="CheckBox"]
+margin_top = 52.0
+margin_right = 123.0
+margin_bottom = 76.0
+custom_fonts/font = ExtResource( 1 )
+custom_colors/font_color = Color( 0.4, 0.4, 0.4, 1 )
+custom_colors/font_color_hover = Color( 0.596078, 0.596078, 0.596078, 1 )
+custom_colors/font_color_pressed = Color( 0.498039, 0.498039, 0.498039, 1 )
+text = "resource bar"

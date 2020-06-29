@@ -1,0 +1,34 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://Styles/Labels/Button.tres" type="DynamicFont" id=1]
+[ext_resource path="res://Styles/Buttons/norm.tres" type="StyleBox" id=2]
+[ext_resource path="res://Styles/Buttons/focus.tres" type="StyleBox" id=3]
+[ext_resource path="res://Styles/Buttons/pressed.tres" type="StyleBox" id=4]
+[ext_resource path="res://Styles/Buttons/hover.tres" type="StyleBox" id=5]
+
+[node name="back" type="Button"]
+margin_left = 10.0
+margin_top = 5.0
+margin_right = 60.0
+margin_bottom = 37.0
+rect_min_size = Vector2( 50, 32 )
+mouse_default_cursor_shape = 2
+size_flags_horizontal = 0
+size_flags_vertical = 4
+custom_styles/hover = ExtResource( 5 )
+custom_styles/pressed = ExtResource( 4 )
+custom_styles/focus = ExtResource( 3 )
+custom_styles/normal = ExtResource( 2 )
+__meta__ = {
+"_edit_group_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="text" type="Label" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_fonts/font = ExtResource( 1 )
+custom_colors/font_color = Color( 0.764706, 0.733333, 0.603922, 1 )
+text = "Back"
+align = 1
+valign = 1

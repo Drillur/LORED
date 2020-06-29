@@ -1,0 +1,80 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://Fonts/Roboto-Black.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://Sprites/resources/axe.png" type="Texture" id=2]
+[ext_resource path="res://Fonts/Roboto-Medium.ttf" type="DynamicFontData" id=3]
+
+[sub_resource type="StyleBoxFlat" id=5]
+bg_color = Color( 1, 1, 1, 0.0509804 )
+expand_margin_left = 10.0
+expand_margin_right = 10.0
+
+[sub_resource type="StyleBoxFlat" id=2]
+draw_center = false
+
+[sub_resource type="DynamicFont" id=3]
+size = 14
+outline_size = 2
+outline_color = Color( 0, 0, 0, 1 )
+extra_spacing_bottom = -4
+font_data = ExtResource( 1 )
+
+[sub_resource type="DynamicFont" id=4]
+size = 12
+outline_size = 2
+outline_color = Color( 0, 0, 0, 1 )
+font_data = ExtResource( 3 )
+
+[node name="MarginContainer" type="MarginContainer"]
+margin_right = 87.0
+margin_bottom = 36.0
+custom_constants/margin_right = 10
+custom_constants/margin_left = 10
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="bg" type="Panel" parent="."]
+margin_left = 10.0
+margin_right = 77.0
+margin_bottom = 36.0
+custom_styles/panel = SubResource( 5 )
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+margin_left = 10.0
+margin_right = 77.0
+margin_bottom = 36.0
+
+[node name="icon" type="Panel" parent="HBoxContainer"]
+margin_right = 36.0
+margin_bottom = 36.0
+rect_min_size = Vector2( 36, 36 )
+size_flags_horizontal = 4
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 2 )
+
+[node name="Sprite" type="Sprite" parent="HBoxContainer/icon"]
+position = Vector2( 18, 18 )
+texture = ExtResource( 2 )
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer"]
+margin_left = 40.0
+margin_right = 67.0
+margin_bottom = 36.0
+alignment = 1
+
+[node name="val" type="Label" parent="HBoxContainer/VBoxContainer"]
+margin_top = 2.0
+margin_right = 27.0
+margin_bottom = 15.0
+custom_fonts/font = SubResource( 3 )
+custom_colors/font_color = Color( 0.517647, 0, 1, 1 )
+text = "5 / 5"
+
+[node name="type" type="Label" parent="HBoxContainer/VBoxContainer"]
+margin_top = 19.0
+margin_right = 27.0
+margin_bottom = 34.0
+custom_fonts/font = SubResource( 4 )
+custom_colors/font_color = Color( 0.800781, 0.800781, 0.800781, 1 )
+text = "Coal"

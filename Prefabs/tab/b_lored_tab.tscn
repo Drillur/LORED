@@ -1,0 +1,78 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://Styles/Labels/Val.tres" type="DynamicFont" id=1]
+[ext_resource path="res://Scripts/tab/tab_stage.gd" type="Script" id=2]
+[ext_resource path="res://Sprites/tab/t0.png" type="Texture" id=3]
+
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 0.101961, 0.101961, 0.101961, 1 )
+border_color = Color( 0.698039, 0.0941176, 0.278431, 1 )
+shadow_color = Color( 0.054902, 0.054902, 0.054902, 1 )
+shadow_size = 10
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id=2]
+bg_color = Color( 0.0588235, 0.0588235, 0.0588235, 1 )
+border_color = Color( 0.541176, 0.0745098, 0.215686, 1 )
+shadow_color = Color( 0.054902, 0.054902, 0.054902, 1 )
+shadow_size = 10
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id=3]
+bg_color = Color( 0.0784314, 0.0784314, 0.0784314, 1 )
+border_color = Color( 0.466667, 0, 0.403922, 1 )
+shadow_color = Color( 0.054902, 0.054902, 0.054902, 1 )
+shadow_size = 10
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id=4]
+bg_color = Color( 1, 0, 0.631373, 0.6 )
+draw_center = false
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color( 1, 1, 1, 0.301961 )
+shadow_color = Color( 0.195801, 0.195801, 0.195801, 0.94902 )
+shadow_size = 3
+anti_aliasing = false
+
+[node name="t0" type="Button"]
+margin_right = 86.0
+margin_bottom = 38.0
+focus_mode = 0
+mouse_default_cursor_shape = 2
+custom_styles/hover = SubResource( 1 )
+custom_styles/pressed = SubResource( 2 )
+custom_styles/normal = SubResource( 3 )
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="selected" type="Panel" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+custom_styles/panel = SubResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="icon" type="Sprite" parent="."]
+position = Vector2( 19, 19 )
+texture = ExtResource( 3 )
+
+[node name="hotkey" type="Label" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_fonts/font = ExtResource( 1 )
+custom_colors/font_color = Color( 0.345098, 0.25098, 0, 1 )
+text = "Stage 1"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="button_down" from="." to="." method="_on_button_down"]
+[connection signal="pressed" from="." to="." method="_on_pressed"]

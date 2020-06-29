@@ -1,0 +1,365 @@
+[gd_scene load_steps=15 format=2]
+
+[ext_resource path="res://Styles/Containers/bg ScrollContainer.tres" type="StyleBox" id=1]
+[ext_resource path="res://Fonts/Roboto-MediumItalic.ttf" type="DynamicFontData" id=3]
+[ext_resource path="res://Styles/Panels/bg.tres" type="StyleBox" id=4]
+[ext_resource path="res://Sprites/tab/expand.png" type="Texture" id=5]
+[ext_resource path="res://Scripts/up_new/up_container.gd" type="Script" id=6]
+
+[sub_resource type="StyleBoxFlat" id=1]
+draw_center = false
+border_width_bottom = 1
+border_color = Color( 1, 0.541176, 0.541176, 1 )
+expand_margin_bottom = 2.0
+
+[sub_resource type="DynamicFont" id=2]
+font_data = ExtResource( 3 )
+
+[sub_resource type="StyleBoxFlat" id=3]
+bg_color = Color( 0.152941, 0.152941, 0.152941, 1 )
+draw_center = false
+
+[sub_resource type="StyleBoxFlat" id=4]
+bg_color = Color( 1, 1, 1, 0.05 )
+expand_margin_bottom = 2.0
+
+[sub_resource type="StyleBoxFlat" id=5]
+bg_color = Color( 1, 1, 1, 0.1 )
+expand_margin_bottom = 2.0
+
+[sub_resource type="StyleBoxFlat" id=6]
+draw_center = false
+expand_margin_bottom = 2.0
+
+[sub_resource type="StyleBoxFlat" id=7]
+draw_center = false
+border_width_bottom = 1
+border_color = Color( 0.47451, 0.870588, 0.694118, 1 )
+expand_margin_bottom = 2.0
+
+[sub_resource type="StyleBoxFlat" id=8]
+draw_center = false
+border_width_bottom = 1
+border_color = Color( 0.878431, 0.121569, 0.34902, 1 )
+expand_margin_bottom = 2.0
+
+[sub_resource type="StyleBoxFlat" id=9]
+draw_center = false
+border_width_bottom = 1
+border_color = Color( 0.733333, 0.458824, 0.0313726, 1 )
+expand_margin_bottom = 2.0
+
+[node name="up_container" type="MarginContainer"]
+margin_right = 489.0
+margin_bottom = 300.0
+rect_min_size = Vector2( 489, 300 )
+custom_constants/margin_top = 4
+script = ExtResource( 6 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Panel" type="Panel" parent="."]
+margin_top = 4.0
+margin_right = 489.0
+margin_bottom = 300.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_styles/panel = ExtResource( 4 )
+
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+margin_top = 4.0
+margin_right = 489.0
+margin_bottom = 300.0
+rect_min_size = Vector2( 265, 110 )
+custom_styles/bg = ExtResource( 1 )
+scroll_horizontal_enabled = false
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="ScrollContainer"]
+margin_right = 489.0
+margin_bottom = 296.0
+rect_min_size = Vector2( 0, 110 )
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/separation = 10
+
+[node name="s2m col" type="MarginContainer" parent="ScrollContainer/VBoxContainer2"]
+margin_right = 489.0
+margin_bottom = 19.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Panel" type="Panel" parent="ScrollContainer/VBoxContainer2/s2m col"]
+margin_right = 489.0
+margin_bottom = 19.0
+custom_styles/panel = SubResource( 1 )
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ScrollContainer/VBoxContainer2/s2m col"]
+margin_right = 489.0
+margin_bottom = 19.0
+
+[node name="Label" type="Label" parent="ScrollContainer/VBoxContainer2/s2m col/HBoxContainer"]
+margin_right = 135.0
+margin_bottom = 19.0
+custom_fonts/font = SubResource( 2 )
+custom_colors/font_color = Color( 0.796875, 0.796875, 0.796875, 1 )
+text = "Radiative Upgrades"
+
+[node name="count" type="Label" parent="ScrollContainer/VBoxContainer2/s2m col/HBoxContainer"]
+margin_left = 409.0
+margin_right = 469.0
+margin_bottom = 19.0
+size_flags_horizontal = 10
+size_flags_vertical = 2
+custom_fonts/font = SubResource( 2 )
+custom_colors/font_color = Color( 0.796875, 0.796875, 0.796875, 1 )
+text = "103/103"
+
+[node name="Panel" type="Panel" parent="ScrollContainer/VBoxContainer2/s2m col/HBoxContainer"]
+margin_left = 473.0
+margin_top = 1.0
+margin_right = 489.0
+margin_bottom = 17.0
+rect_min_size = Vector2( 16, 16 )
+size_flags_horizontal = 8
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 3 )
+
+[node name="Sprite" type="Sprite" parent="ScrollContainer/VBoxContainer2/s2m col/HBoxContainer/Panel"]
+self_modulate = Color( 1, 0.541176, 0.541176, 1 )
+position = Vector2( 8, 8 )
+texture = ExtResource( 5 )
+
+[node name="Button" type="Button" parent="ScrollContainer/VBoxContainer2/s2m col"]
+margin_right = 489.0
+margin_bottom = 19.0
+focus_mode = 0
+mouse_default_cursor_shape = 2
+custom_styles/hover = SubResource( 4 )
+custom_styles/pressed = SubResource( 5 )
+custom_styles/normal = SubResource( 6 )
+
+[node name="s2mup" type="VBoxContainer" parent="ScrollContainer/VBoxContainer2"]
+visible = false
+margin_top = 29.0
+margin_right = 265.0
+margin_bottom = 29.0
+
+[node name="s2n col" type="MarginContainer" parent="ScrollContainer/VBoxContainer2"]
+margin_top = 29.0
+margin_right = 489.0
+margin_bottom = 48.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Panel" type="Panel" parent="ScrollContainer/VBoxContainer2/s2n col"]
+margin_right = 489.0
+margin_bottom = 19.0
+custom_styles/panel = SubResource( 7 )
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ScrollContainer/VBoxContainer2/s2n col"]
+margin_right = 489.0
+margin_bottom = 19.0
+
+[node name="Label" type="Label" parent="ScrollContainer/VBoxContainer2/s2n col/HBoxContainer"]
+margin_right = 164.0
+margin_bottom = 19.0
+custom_fonts/font = SubResource( 2 )
+custom_colors/font_color = Color( 0.796875, 0.796875, 0.796875, 1 )
+text = "Extra-Normal Upgrades"
+
+[node name="count" type="Label" parent="ScrollContainer/VBoxContainer2/s2n col/HBoxContainer"]
+margin_left = 409.0
+margin_right = 469.0
+margin_bottom = 19.0
+size_flags_horizontal = 10
+size_flags_vertical = 2
+custom_fonts/font = SubResource( 2 )
+custom_colors/font_color = Color( 0.796875, 0.796875, 0.796875, 1 )
+text = "103/103"
+
+[node name="Panel" type="Panel" parent="ScrollContainer/VBoxContainer2/s2n col/HBoxContainer"]
+margin_left = 473.0
+margin_top = 1.0
+margin_right = 489.0
+margin_bottom = 17.0
+rect_min_size = Vector2( 16, 16 )
+size_flags_horizontal = 8
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 3 )
+
+[node name="Sprite" type="Sprite" parent="ScrollContainer/VBoxContainer2/s2n col/HBoxContainer/Panel"]
+self_modulate = Color( 0.47451, 0.870588, 0.694118, 1 )
+position = Vector2( 8, 8 )
+texture = ExtResource( 5 )
+
+[node name="Button" type="Button" parent="ScrollContainer/VBoxContainer2/s2n col"]
+margin_right = 489.0
+margin_bottom = 19.0
+focus_mode = 0
+mouse_default_cursor_shape = 2
+custom_styles/hover = SubResource( 4 )
+custom_styles/pressed = SubResource( 5 )
+custom_styles/normal = SubResource( 6 )
+
+[node name="s2nup" type="VBoxContainer" parent="ScrollContainer/VBoxContainer2"]
+visible = false
+margin_top = 68.0
+margin_right = 265.0
+margin_bottom = 68.0
+
+[node name="s1m col" type="MarginContainer" parent="ScrollContainer/VBoxContainer2"]
+margin_top = 58.0
+margin_right = 489.0
+margin_bottom = 77.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Panel" type="Panel" parent="ScrollContainer/VBoxContainer2/s1m col"]
+margin_right = 489.0
+margin_bottom = 19.0
+custom_styles/panel = SubResource( 8 )
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ScrollContainer/VBoxContainer2/s1m col"]
+margin_right = 489.0
+margin_bottom = 19.0
+
+[node name="Label" type="Label" parent="ScrollContainer/VBoxContainer2/s1m col/HBoxContainer"]
+margin_right = 141.0
+margin_bottom = 19.0
+custom_fonts/font = SubResource( 2 )
+custom_colors/font_color = Color( 0.796875, 0.796875, 0.796875, 1 )
+text = "Malignant Upgrades"
+
+[node name="count" type="Label" parent="ScrollContainer/VBoxContainer2/s1m col/HBoxContainer"]
+margin_left = 409.0
+margin_right = 469.0
+margin_bottom = 19.0
+size_flags_horizontal = 10
+size_flags_vertical = 2
+custom_fonts/font = SubResource( 2 )
+custom_colors/font_color = Color( 0.796875, 0.796875, 0.796875, 1 )
+text = "103/103"
+
+[node name="Panel" type="Panel" parent="ScrollContainer/VBoxContainer2/s1m col/HBoxContainer"]
+margin_left = 473.0
+margin_top = 1.0
+margin_right = 489.0
+margin_bottom = 17.0
+rect_min_size = Vector2( 16, 16 )
+size_flags_horizontal = 8
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 3 )
+
+[node name="Sprite" type="Sprite" parent="ScrollContainer/VBoxContainer2/s1m col/HBoxContainer/Panel"]
+self_modulate = Color( 0.878431, 0.121569, 0.34902, 1 )
+position = Vector2( 8, 8 )
+texture = ExtResource( 5 )
+
+[node name="Button" type="Button" parent="ScrollContainer/VBoxContainer2/s1m col"]
+margin_right = 489.0
+margin_bottom = 19.0
+focus_mode = 0
+mouse_default_cursor_shape = 2
+custom_styles/hover = SubResource( 4 )
+custom_styles/pressed = SubResource( 5 )
+custom_styles/normal = SubResource( 6 )
+
+[node name="s1mup" type="VBoxContainer" parent="ScrollContainer/VBoxContainer2"]
+visible = false
+margin_top = 107.0
+margin_right = 265.0
+margin_bottom = 107.0
+
+[node name="s1n col" type="MarginContainer" parent="ScrollContainer/VBoxContainer2"]
+margin_top = 87.0
+margin_right = 489.0
+margin_bottom = 106.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Panel" type="Panel" parent="ScrollContainer/VBoxContainer2/s1n col"]
+margin_right = 489.0
+margin_bottom = 19.0
+custom_styles/panel = SubResource( 9 )
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ScrollContainer/VBoxContainer2/s1n col"]
+margin_right = 489.0
+margin_bottom = 19.0
+
+[node name="Label" type="Label" parent="ScrollContainer/VBoxContainer2/s1n col/HBoxContainer"]
+margin_right = 123.0
+margin_bottom = 19.0
+custom_fonts/font = SubResource( 2 )
+custom_colors/font_color = Color( 0.796875, 0.796875, 0.796875, 1 )
+text = "Normal Upgrades"
+
+[node name="count" type="Label" parent="ScrollContainer/VBoxContainer2/s1n col/HBoxContainer"]
+margin_left = 409.0
+margin_right = 469.0
+margin_bottom = 19.0
+size_flags_horizontal = 10
+size_flags_vertical = 2
+custom_fonts/font = SubResource( 2 )
+custom_colors/font_color = Color( 0.796875, 0.796875, 0.796875, 1 )
+text = "103/103"
+
+[node name="Panel" type="Panel" parent="ScrollContainer/VBoxContainer2/s1n col/HBoxContainer"]
+margin_left = 473.0
+margin_top = 1.0
+margin_right = 489.0
+margin_bottom = 17.0
+rect_min_size = Vector2( 16, 16 )
+size_flags_horizontal = 8
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 3 )
+
+[node name="Sprite" type="Sprite" parent="ScrollContainer/VBoxContainer2/s1n col/HBoxContainer/Panel"]
+self_modulate = Color( 0.733333, 0.458824, 0.0313726, 1 )
+position = Vector2( 8, 8 )
+texture = ExtResource( 5 )
+
+[node name="Button" type="Button" parent="ScrollContainer/VBoxContainer2/s1n col"]
+margin_right = 489.0
+margin_bottom = 19.0
+focus_mode = 0
+mouse_default_cursor_shape = 2
+custom_styles/hover = SubResource( 4 )
+custom_styles/pressed = SubResource( 5 )
+custom_styles/normal = SubResource( 6 )
+
+[node name="s1nup" type="MarginContainer" parent="ScrollContainer/VBoxContainer2"]
+visible = false
+margin_top = 116.0
+margin_right = 265.0
+margin_bottom = 116.0
+custom_constants/margin_right = 12
+custom_constants/margin_left = 12
+
+[node name="v" type="VBoxContainer" parent="ScrollContainer/VBoxContainer2/s1nup"]
+margin_left = 12.0
+margin_right = 253.0
+margin_bottom = 4.0
+
+[node name="t0" type="HBoxContainer" parent="ScrollContainer/VBoxContainer2/s1nup/v"]
+margin_right = 241.0
+alignment = 1
+
+[node name="t1" type="HBoxContainer" parent="ScrollContainer/VBoxContainer2/s1nup/v"]
+margin_right = 241.0
+alignment = 1
+[connection signal="button_down" from="ScrollContainer/VBoxContainer2/s2m col/Button" to="." method="_on_button_down"]
+[connection signal="pressed" from="ScrollContainer/VBoxContainer2/s2m col/Button" to="." method="col_time" binds= [ "ScrollContainer/VBoxContainer2/s2mup" ]]
+[connection signal="button_down" from="ScrollContainer/VBoxContainer2/s2n col/Button" to="." method="_on_button_down"]
+[connection signal="pressed" from="ScrollContainer/VBoxContainer2/s2n col/Button" to="." method="col_time" binds= [ "ScrollContainer/VBoxContainer2/s2nup" ]]
+[connection signal="button_down" from="ScrollContainer/VBoxContainer2/s1m col/Button" to="." method="_on_button_down"]
+[connection signal="pressed" from="ScrollContainer/VBoxContainer2/s1m col/Button" to="." method="col_time" binds= [ "ScrollContainer/VBoxContainer2/s1mup" ]]
+[connection signal="button_down" from="ScrollContainer/VBoxContainer2/s1n col/Button" to="." method="_on_button_down"]
+[connection signal="pressed" from="ScrollContainer/VBoxContainer2/s1n col/Button" to="." method="col_time" binds= [ "ScrollContainer/VBoxContainer2/s1nup" ]]

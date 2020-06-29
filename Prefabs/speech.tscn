@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Sprites/speech/oh_hi.png" type="Texture" id=1]
+[ext_resource path="res://Prefabs/speech.gd" type="Script" id=2]
+
+[node name="oh_hi" type="Sprite"]
+scale = Vector2( 2, 2 )
+texture = ExtResource( 1 )
+script = ExtResource( 2 )

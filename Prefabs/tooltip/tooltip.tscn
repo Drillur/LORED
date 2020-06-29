@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Scripts/tooltip/tooltip_prefab.gd" type="Script" id=1]
+[ext_resource path="res://Styles/Panels/Tip.tres" type="StyleBox" id=2]
+
+[node name="tip" type="Panel"]
+margin_right = 370.0
+margin_bottom = 270.0
+custom_styles/panel = ExtResource( 2 )
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="mouse_entered" from="." to="." method="_on_tip_mouse_entered"]
