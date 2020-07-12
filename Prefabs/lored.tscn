@@ -76,7 +76,7 @@ __meta__ = {
 position = Vector2( 114.5, 80 )
 scale = Vector2( 0.6, 0.6 )
 frames = ExtResource( 12 )
-frame = 4
+frame = 1
 playing = true
 
 [node name="halt" type="Button" parent="."]
@@ -134,7 +134,7 @@ centered = false
 scale = Vector2( 2, 2 )
 frames = ExtResource( 7 )
 animation = "ff"
-frame = 18
+frame = 12
 playing = true
 centered = false
 

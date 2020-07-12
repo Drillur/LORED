@@ -1,6 +1,8 @@
 extends Panel
 
 var fps := 0.0
+var fps25 := 0.0
+var fps1 := 1.0
 var autobuyer_fps := 0.0
 
 onready var rt = get_node("/root/Root")
@@ -20,6 +22,7 @@ var content := {
 	lbi = 0,
 }
 
+var sync_fps := 0.0
 var max_frames : int = 25
 var halfway_frame : int = 13
 
@@ -182,8 +185,14 @@ func _physics_process(delta) -> void:
 	
 	autobuyer()
 	
+	if sync_fps > 0:
+		sync_fps -= delta
+	
 	# ref
 	if true:
+		
+		r_lored_25(gv.g[my_lored])
+		r_lored_1(gv.g[my_lored])
 		
 		fps += delta
 		if fps < rt.FPS: return
@@ -202,8 +211,8 @@ func autobuyer() -> void:
 		return
 	autobuyer_fps -= .25
 	
-	if "no" in rt.menu.f:
-		if int(gv.up[my_autobuyer].type[1]) <= int(rt.menu.f.split("no s")[1]):
+	if "no" in gv.menu.f:
+		if int(gv.up[my_autobuyer].type[1]) <= int(gv.menu.f.split("no s")[1]):
 			return
 	
 	if not gv.up[my_autobuyer].active():
@@ -218,12 +227,15 @@ func autobuy() -> bool:
 	if not gv.g[my_lored].active:
 		return true
 	
+#	if autobuy_too_much_malig():
+#		return false
+	
 	# max fuel
 	if true:
 		
-		var max_fuel = gv.g[my_lored].f.t
+		var max_fuel = Big.new(gv.g[my_lored].f.t).multiply(0.1)
 		
-		if gv.g[my_lored].f.f < max_fuel * 0.1:
+		if gv.g[my_lored].f.f.isLessThan(max_fuel):
 			return false
 	
 	if autobuy_upgrade_check():
@@ -231,39 +243,38 @@ func autobuy() -> bool:
 	
 	# if ingredient LORED per_sec < per_sec, don't buy
 	for x in gv.g[my_lored].b:
-		var consm : float = (gv.g[my_lored].d.t / gv.g[my_lored].speed.t * 60 * gv.g[my_lored].b[x].t)
+		
+		var consm = Big.new(gv.g[my_lored].d.t).divide(gv.g[my_lored].speed.t)
+		consm.multiply(60).multiply(gv.g[my_lored].b[x].t)
+		
 		if gv.g[x].halt:
-			if gv.g[x].net(true) - (consm * 2) < 0.0:
+			if Big.new(gv.g[x].net(true)[0]).minus(Big.new(consm).multiply(2)).isLessThan(0):
 				if not autobuy_afford_ingredient_lored_check(x):
 					return false
-		elif gv.g[x].net() - consm < 0.0:
-			if not autobuy_afford_ingredient_lored_check(x):
-				return false
+		else:
+			#note changed recently
+			var net = gv.g[x].net()
+			if net[0].isLargerThanOrEqualTo(net[1]):
+				net = Big.new(net[0]).minus(net[1])
+				if consm.isLargerThan(net):
+					if not autobuy_afford_ingredient_lored_check(x):
+						return false
 	
 	if gv.g[my_lored].key_lored:
 		return true
 	
+	var net = gv.g[my_lored].net(false, true)
+	
 	# if per_sec > 0, don't buy
 	if not gv.g[my_lored].type[1] in gv.overcharge_list:
-		if gv.g[my_lored].net(false, true) > 0.0:
-			return false
-	else:
-		var base_ps = gv.g[my_lored].net(false, true) #gv.g[my_lored].d.t / gv.g[my_lored].speed.t * 60
-		base_ps /= max(1.0, gv.g[my_lored].f.f / gv.g[my_lored].f.t)
-		var sapped_ps = 0.0
-		for x in gv.g[my_lored].used_by:
-			if (my_lored == "coal" and "bur " in gv.g[x].type) or (my_lored == "jo" and "ele " in gv.g[x].type):
-				sapped_ps += gv.g[x].fc.t * 60
-			if gv.g[x].halt or not gv.g[x].active:
-				continue
-			sapped_ps += (gv.g[x].d.t / gv.g[x].speed.t * 60) / max(1.0, gv.g[x].f.f / gv.g[x].f.t)
-		if base_ps - sapped_ps > 0.0:
+		if net[0].isLargerThanOrEqualTo(net[1]):
+			# if gain/s >= drain/s: net is positive
 			return false
 	
 	return true
 func autobuy_afford_ingredient_lored_check(_lored: String) -> bool:
 	for x in gv.g[_lored].cost:
-		if gv.g[x].r < gv.g[_lored].cost[x].t:
+		if gv.g[x].r.isLessThan(gv.g[_lored].cost[x].t):
 			return false
 	return true
 
@@ -292,6 +303,16 @@ func autobuy_upgrade_check() -> bool:
 	
 	return false
 
+func autobuy_too_much_malig() -> bool:
+	
+	if "s2" in gv.g[my_lored].type:
+		return false
+	
+	if gv.g["malig"].r.isLessThan(gv.up["ROUTINE"].cost["malig"].t):
+		return false
+	
+	return true
+
 
 func wm_lored(f: LORED) -> void:
 	
@@ -299,33 +320,40 @@ func wm_lored(f: LORED) -> void:
 		return
 	
 	# if base task duration == 1
-	if f.progress.b == 1:
+	if f.progress.b.isEqualTo(1):
 		
-		f.inhand = f.d.t
+		f.inhand = Big.new(f.d.t)
 		f.task = w_logic(f)
 		wm_tasks(f)
 	
 	fuel(f)
 	
-	f.r += f.witch()
+	f.r.plus(f.witch(true))
 	
-	if f.progress.b == 1:
+	if f.progress.b.isEqualTo(1):
+		softlock_check()
 		return
 	
-	if f.f.f >= f.fc.t:
-		f.progress.f += 1
+	if f.f.f.isLargerThanOrEqualTo(f.fc.t):
+		f.progress.f.plus(1)
 	else:
-		f.progress.f += 0.05
+		f.progress.f.plus(0.05)
 	
-	if f.progress.f < f.progress.t: return
+	if f.progress.f.isLessThan(f.progress.t):
+		return
 	
-	f.progress.f = 0.0
-	f.progress.b = 1.0
-	if f.crit.t > 0:
-		f.inhand = w_crit_roll(f.inhand, true)
+	f.progress.f = Big.new(0.0)
+	f.progress.b = Big.new(1.0)
+	if f.crit.t.isLargerThan(0):
+		f.inhand.multiply(w_crit_roll(true))
 	wm_tasks(f, false)
 
 func fuel(f: LORED) -> void:
+	
+	# catches
+	if "no" in gv.menu.f:
+		if int(gv.g[my_lored].type[1]) <= int(gv.menu.f.split("no s")[1]):
+			return
 	
 	# f     = lored
 	# f.f   = fuel variable
@@ -333,18 +361,20 @@ func fuel(f: LORED) -> void:
 	# f.f.t = max_fuel
 	
 	var fuel_source = "coal" if "bur " in f.type else "jo"
-	var max_fuel = f.f.t * gv.overcharge if f.type[1] in gv.overcharge_list else f.f.t
+	var max_fuel = Big.new(f.f.t).multiply(gv.overcharge) if f.type[1] in gv.overcharge_list else Big.new(f.f.t)
 	
 	# drain fuel
-	var fuel_drain = f.fc.t
+	var fuel_drain = Big.new(f.fc.t)
+	var over_ft = Big.new(fuel_drain).multiply(2)
+	var at_max_a = Big.new(f.f.t).multiply(gv.overcharge)
+	var at_max_b = Big.new(fuel_drain).multiply(2)
 	var fuel_fill = fuel_net(
 		fuel_source,
 		f.progress.b, # progress
 		fuel_drain, # fc
-		f.f.f > f.f.t - (fuel_drain * 2), # over_ft
+		f.f.f.isLargerThan(Big.new(f.f.t).multiply(0.999).minus(over_ft)), # over_ft
 		f.type[1] in gv.overcharge_list, # in_lb
-		fuel_call_vars(f, "resetting"), # resetting
-		f.f.f >= (f.f.t * gv.overcharge) - (fuel_drain * 2), # at_max
+		f.f.f.isLargerThanOrEqualTo(Big.new(at_max_a).minus(at_max_b)), # at_max
 		fuel_call_vars(f, "babies"), # babies
 		fuel_call_vars(f, "coal_low"), # coal_low
 		not fuel_call_vars(f, "fuel amount"), # insufficient_fuel
@@ -352,67 +382,71 @@ func fuel(f: LORED) -> void:
 		max_fuel
 	)
 	
-	f.f.f += fuel_fill * gv.hax_pow
-	f.f.f = clamp(f.f.f, 0, max_fuel)
+	if fuel_fill[1] == "plus":
+		f.f.f.plus(fuel_fill[0].multiply(gv.hax_pow))
+	else:
+		f.f.f.minus(fuel_fill[0])
+	
+	f.f.sync()
+	if f.f.f.isLargerThan(max_fuel):
+		f.f.f = Big.new(max_fuel)
 	
 	limit_break(f)
 
 func fuel_net(
 	fuel_source: String,
-	progress,
-	fc: float, # fuel_cost
+	progress: Big,
+	fc: Big, # fuel_cost
 	over_ft: bool, # over_fuel_total
 	in_lb: bool, # in gv.overcharge_list
-	resetting: bool, # metastasize menu
 	at_max: bool,
 	babies: bool, # see fuel_call_vars - "babies"
 	coal_low: bool, # keep coal above certain amount
 	insufficient_fuel: bool,
-	current: float,
-	max_fuel
-	) -> float:
+	current: Big,
+	max_fuel ) -> Array:
 	
 	# determine whether fuel goes up or down
 	
-	if resetting:
-		return 0.0
 	
 	# drain
 	if true:
 		
-		if progress != 1: # active
+		if not progress.isEqualTo(1): # active
 			if insufficient_fuel:
-				return -fc
+				return [Big.new(fc), "minus"]
 		else:
 			if insufficient_fuel:
-				return 0.0
+				return [Big.new(0), "plus"]
 		
 		if babies: # target is an s1 baby.
-			if progress != 1:
+			if not progress.isEqualTo(1):
 				# already active
-				return -fc
+				return [Big.new(fc), "minus"]
 			else:
 				# idle
-				return 0.0
+				return [Big.new(0), "plus"]
 		
 		if over_ft:
 			
-			if progress == 1:
-				return -fc * 2
+			if progress.isEqualTo(1):
+				return [Big.new(fc), "minus"]
 			if not in_lb:
-				return -fc * 2
+				return [Big.new(fc), "minus"]
 	
 	if at_max:
 		subtract_fuel(fuel_source, fc)
-		return 0.0
+		return [Big.new(0), "plus"]
 	
 	# gain
-	subtract_fuel(fuel_source, fc * 2 * gv.g[my_lored].less_from_full(current, max_fuel))
-	return fc * gv.g[my_lored].less_from_full(current, max_fuel)
+	subtract_fuel(fuel_source, Big.new(fc).multiply(2).multiply(gv.g[my_lored].less_from_full(current, max_fuel)))
+	if progress.isEqualTo(1):
+		return [Big.new(fc).multiply(2).multiply(gv.g[my_lored].less_from_full(current, max_fuel)), "plus"]
+	return [Big.new(fc).multiply(gv.g[my_lored].less_from_full(current, max_fuel)), "plus"]
 
-func subtract_fuel(fuel_source: String, amount: float) -> void:
+func subtract_fuel(fuel_source: String, amount: Big) -> void:
 	
-	gv.g[fuel_source].r -= amount
+	gv.g[fuel_source].r.minus(amount)
 	
 	# milkshake
 	if true:
@@ -422,17 +456,13 @@ func subtract_fuel(fuel_source: String, amount: float) -> void:
 		if not gv.up["I DRINK YOUR MILKSHAKE"].active():
 			return
 		
-		gv.up["I DRINK YOUR MILKSHAKE"].set_d.b += 0.0001
+		gv.up["I DRINK YOUR MILKSHAKE"].set_d.b.plus(0.0001)
 
 func fuel_call_vars(f, type: String) -> bool:
 	
 	var fuel_source = "coal" if "bur " in f.type else "jo"
 	
 	match type:
-		"resetting":
-			if "no" in rt.menu.f:
-				if int(gv.g[my_lored].type[1]) <= int(rt.menu.f.split("no s")[1]):
-					return true
 		"babies":
 			if gv.up["don't take candy from babies"].active():
 				if int(f.type[1]) > int(gv.g[fuel_source].type[1]):
@@ -441,20 +471,20 @@ func fuel_call_vars(f, type: String) -> bool:
 		"coal_low":
 			if my_lored == "coal" or not fuel_source == "coal":
 				return false
-			if gv.g[fuel_source].r < gv.g[fuel_source].d.t + (f.fc.t * 3):
+			if gv.g[fuel_source].r.isLessThan(Big.new(gv.g[fuel_source].d.t).plus(Big.new(f.fc.t).multiply(3))):
 				return true
 		"fuel amount":
 			
 			# returns true if sufficient fuel
 			
 			if my_lored == "coal":
-				if f.r > f.fc.t:
+				if f.r.isLargerThan(f.fc.t):
 					return true
 				return false
 			
-			var _min = gv.g[fuel_source].d.t + (f.fc.t * 3) if fuel_source == "coal" else f.fc.t * 3
+			var _min = Big.new(gv.g[fuel_source].d.t).plus(Big.new(f.fc.t).multiply(3)) if fuel_source == "coal" else Big.new(f.fc.t).multiply(3)
 			
-			if gv.g[fuel_source].r >= _min:
+			if gv.g[fuel_source].r.isLargerThanOrEqualTo(_min):
 				return true
 	
 	return false
@@ -472,28 +502,28 @@ func limit_break(f: LORED) -> void:
 	# hide / display bars
 	if true:
 		
-		if f.f.f <= f.f.t:
+		if f.f.f.isLessThanOrEqualTo(f.f.t):
 			if $fuel/lbt.visible:
 				$fuel/lbt.hide()
 		else:
 			if not $fuel/lbt.visible:
 				$fuel/lbt.show()
 		
-		if f.f.f <= f.f.t * 2:
+		if f.f.f.isLessThanOrEqualTo(Big.new(f.f.t).multiply(2)):
 			if $fuel/lbb.visible:
 				$fuel/lbb.hide()
 		else:
 			if not $fuel/lbb.visible:
 				$fuel/lbb.show()
 	
-	var fx_relative = (f.f.f - (f.f.t * content.lbi)) / f.f.t # top-level percent; example: 0.5
+	var fx_over = Big.new(f.f.f).minus(Big.new(f.f.t).multiply(content.lbi))
+	var fx_relative = Big.new(fx_over).divide(f.f.t).toFloat() # top-level percent; example: 0.5
 	
 	# shift up or down
 	if fx_relative <= 0.0 or fx_relative >= 1.0:
-		content.lbi = int(floor(f.f.f / f.f.t))
-		update_colors()
+		content.lbi = int(Big.new(f.f.f).divide(f.f.t).roundDown().toFloat())
 
-func update_colors() -> void:
+func update_lb_colors() -> void:
 	
 	$lb.self_modulate = lb_color(content.lbi)
 	$fuel/lbb.self_modulate = lb_color(content.lbi - 1)
@@ -501,7 +531,7 @@ func update_colors() -> void:
 
 func lb_color(key: int) -> Color:
 	
-	if rt.menu.option["lb_flash"]:
+	if gv.menu.option["lb_flash"]:
 		return my_color
 	
 	if key == -1:
@@ -509,8 +539,9 @@ func lb_color(key: int) -> Color:
 	
 	key = max(0, key)
 	
-	while key > 7:
-		key -= 8
+#	while key > 7:
+#		key -= 8
+	key = key % 8
 	return gv.LIMIT_BREAK_COLORS[key]
 
 
@@ -520,27 +551,28 @@ func reset_lb() -> void:
 	
 	$fuel/lbb.hide()
 	$fuel/lbt.hide()
-	
-	update_colors()
 
 
 func r_limit_break(f) -> void:
-	
+	#return
 	if content.lbi == 0:
 		$lb.text = ""
 		return
 	
-	var fx = f.f.f / f.f.t # percent; example: 2.5
-	var fx_relative = (f.f.f - (f.f.t * content.lbi)) / f.f.t # top-level percent; example: 0.5
+	var fx = Big.new(f.f.f).divide(f.f.t).toFloat() # percent; example: 2.5
+	var fx_over = Big.new(f.f.f).minus(Big.new(f.f.t).multiply(content.lbi))
+	var fx_relative = fx_over.divide(f.f.t).toFloat() # top-level percent; example: 0.5
 	
 	# set value of the front-most bar
 	$fuel/lbt.value = fx_relative * 100
 	
 	# set text
-	if f.f.f < f.f.t or not rt.menu.option["limit_break_text"]:
+	if f.f.f.isLessThan(f.f.t) or not gv.menu.option["limit_break_text"]:
 		$lb.text = ""
 	else:
 		$lb.text = fval.f(fx) + "x"
+	
+	update_lb_colors()
 
 
 func wm_tasks(f, beginning = true):
@@ -548,19 +580,25 @@ func wm_tasks(f, beginning = true):
 	if beginning:
 		
 		# animation
-		if rt.menu.option["animations"]:
+		if gv.menu.option["animations"]:
 			var anim = "ff"
 			if "idle" in f.task or "na " in f.task: anim = "ww"
 			$worker.animation = anim
 		
-		if not "idle" in f.task and not "na " in f.task: f.progress.b = f.speed.t
+		if not "idle" in f.task and not "na " in f.task:
+			f.progress.b = Big.new(f.speed.t)
+			f.sync()
+			sync_fps = 0.5
 		
 		if "cook " in f.task:
 			
 			for x in f.b:
-				gv.g[x].r -= f.d.t * f.b[x].t
+				var less = Big.new(f.d.t).multiply(f.b[x].t)
+				gv.g[x].r.minus(less)
 		
-		f.sync_self()
+		if sync_fps <= 0:
+			f.sync()
+			sync_fps = 0.5
 		
 		return
 	
@@ -569,16 +607,16 @@ func wm_tasks(f, beginning = true):
 	w_output_master(f)
 	
 	# dtext # flying
-	if rt.menu.option["flying_numbers"] and f.type[1] == rt.tabby["last stage"]:
+	if gv.menu.option["flying_numbers"] and f.type[1] == rt.tabby["last stage"]:
 		
 		var luck_to_go := true
-		if rt.menu.option["crits_only"]:
+		if gv.menu.option["crits_only"]:
 			if not crit: luck_to_go = false
 		
 		if luck_to_go:
 			
 			output["hi"] = output_prefab.instance()
-			output["hi"].text = "+ " + fval.f(f.inhand)
+			output["hi"].text = "+ " + f.inhand.toString()
 			output["hi"].get_node("icon").texture = gv.sprite[my_lored]
 			if crit:
 				if critcrit:
@@ -596,34 +634,34 @@ func wm_tasks(f, beginning = true):
 	
 	if f.short == "coal":
 		if gv.up["I DRINK YOUR MILKSHAKE"].active():
-			gv.up["I DRINK YOUR MILKSHAKE"].sync_self()
-			gv.up["I DRINK YOUR MILKSHAKE"].set_d()
+			gv.up["I DRINK YOUR MILKSHAKE"].sync()
 	
-	f.sync_self()
+	f.sync()
 
 func w_output_master(f : LORED) -> void:
 	
 	w_bonus_output(f.short, f.inhand)
 	
-	f.r += f.inhand
+	f.r.plus(f.inhand)
 	gv.g[my_lored].task_and_quest_check(f.inhand)
-	gv.stats.r_gained[f.short] += f.inhand
+	gv.stats.r_gained[f.short].plus(f.inhand)
 
-func w_bonus_output(short : String, inhand : float) -> void:
+func w_bonus_output(short : String, inhand : Big) -> void:
 	
 	match short:
 		"coal":
-			if gv.up["wait that's not fair"].have and gv.up["wait that's not fair"].active:
-				gv.g["stone"].r += inhand * 10
-				rt.task_and_quest_check("stone", inhand * 10)
+			if gv.up["wait that's not fair"].active():
+				var bla = Big.new(inhand).multiply(10)
+				gv.g["stone"].r.plus(bla)
+				gv.g["stone"].task_and_quest_check(bla)
 		"irono":
-			if gv.up["I RUN"].have and gv.up["I RUN"].active:
-				gv.g["iron"].r += inhand
-				rt.task_and_quest_check("iron", inhand)
+			if gv.up["I RUN"].active():
+				gv.g["iron"].r.plus(inhand)
+				gv.g["iron"].task_and_quest_check(inhand)
 		"copo":
-			if gv.up["THE THIRD"].have and gv.up["THE THIRD"].active:
-				gv.g["cop"].r += inhand
-				rt.task_and_quest_check("cop", inhand)
+			if gv.up["THE THIRD"].active():
+				gv.g["cop"].r.plus(inhand)
+				gv.g["cop"].task_and_quest_check(inhand)
 		"growth":
 			if gv.up["IT'S GROWIN ON ME"].active():
 				var buff = 0.1 * gv.g["growth"].level
@@ -631,24 +669,24 @@ func w_bonus_output(short : String, inhand : float) -> void:
 					var roll = randi()%2
 					match roll:
 						0:
-							gv.g["iron"].modifier_from_growin_on_me += buff
+							gv.g["iron"].modifier_from_growin_on_me.plus(buff)
 						1:
-							gv.g["cop"].modifier_from_growin_on_me += buff
+							gv.g["cop"].modifier_from_growin_on_me.plus(buff)
 				else:
-					gv.g["iron"].modifier_from_growin_on_me += buff
-					gv.g["cop"].modifier_from_growin_on_me += buff
-					gv.g["irono"].modifier_from_growin_on_me += buff
-					gv.g["copo"].modifier_from_growin_on_me += buff
+					gv.g["iron"].modifier_from_growin_on_me.plus(buff)
+					gv.g["cop"].modifier_from_growin_on_me.plus(buff)
+					gv.g["irono"].modifier_from_growin_on_me.plus(buff)
+					gv.g["copo"].modifier_from_growin_on_me.plus(buff)
 
 func w_logic(f: LORED) -> String:
 	
-	if "no" in rt.menu.f:
-		if int(f.type[1]) <= int(rt.menu.f.split(" s")[1]): return "idle"
+	if "no" in gv.menu.f:
+		if int(f.type[1]) <= int(gv.menu.f.split(" s")[1]): return "idle"
 	
 	if f.halt:
 		return "idle"
 	
-	if f.f.f < f.speed.t * f.fc.t * 1.1:
+	if f.f.f.isLessThan(Big.new(f.speed.t).multiply(f.fc.t).multiply(1.1)):
 		if "bur " in f.type: return "na coal"
 		if "ele " in f.type: return "na jo"
 	
@@ -663,13 +701,13 @@ func w_logic(f: LORED) -> String:
 		for x in f.b:
 			if gv.g[x].hold:
 				return "na burn"
-			if gv.g[x].r < f.d.t * f.b[x].t:
+			if gv.g[x].r.isLessThan(Big.new(f.d.t).multiply(f.b[x].t)):
 				return "na burn"
-			if x == "iron" and gv.g["iron"].r + f.d.t <= 20:
+			if x == "iron" and Big.new(gv.g["iron"].r).plus(f.d.t).isLessThanOrEqualTo(20):
 				return "na burn"
-			if x == "cop" and gv.g["cop"].r + f.d.t <= 20:
+			if x == "cop" and Big.new(gv.g["cop"].r).plus(f.d.t).isLessThanOrEqualTo(20):
 				return "na burn"
-			if x == "stone" and gv.g["stone"].r + f.d.t <= 30:
+			if x == "stone" and Big.new(gv.g["stone"].r).plus(f.d.t).isLessThanOrEqualTo(30):
 				return "na burn"
 			if gv.up["don't take candy from babies"].active():
 				if "s1" in gv.g[x].type and not "s1" in f.type and gv.g[x].level <= 5:
@@ -679,30 +717,86 @@ func w_logic(f: LORED) -> String:
 		if true:
 			match f.short:
 				"jo":
-					if gv.g["coal"].r < gv.g["coal"].d.t:
+					if gv.g["coal"].r.isLessThan(gv.g["coal"].d.t):
 						return "na burn"
 	
 	return "cook " + f.short
 
 
-func w_crit_roll(f : float, by_thine_own_hand : bool) -> float:
+func w_crit_roll(by_thine_own_hand : bool) -> Big:
 	
-	var roll := rand_range(0,100)
-	if roll <= gv.g[my_lored].crit.t:
-		f *= rand_range(7.5, 12.5)
+	var f := Big.new(1)
+	
+	var roll := Big.new(rand_range(0,100))
+	if roll.isLessThanOrEqualTo(gv.g[my_lored].crit.t):
+		f.multiply(rand_range(7.5, 12.5))
 		if by_thine_own_hand: crit = true
 	
 	if gv.g[my_lored].type[1] == "1":
 		
-		if not (gv.up["the athore coments al totol lies!"].have and gv.up["the athore coments al totol lies!"].active):
+		if not gv.up["the athore coments al totol lies!"].active():
 			return f
 		
-		roll = rand_range(0,101)
-		if roll <= 1:
-			f *= rand_range(7.5, 12.5)
+		roll = Big.new(rand_range(0,101))
+		if roll.isLessThanOrEqualTo(1):
+			f.multiply(rand_range(7.5, 12.5))
 			if by_thine_own_hand: critcrit = true
 	
 	return f
+
+
+func softlock_check():
+	
+	# softlock checks done out of "ye" can be done above here
+	
+	if not "ye" in gv.menu.f:
+		return
+	
+	softlock_wood_cycle()
+	softlock_no_seeds()
+
+func softlock_wood_cycle():
+	
+	if my_lored != "axe":
+		return
+	
+	var axe_wood_hard = ["axe", "wood", "hard"]
+	
+	for x in axe_wood_hard:
+		
+		if not gv.g[x].progress.f.isEqualTo(0):
+			return
+		if gv.g[x].halt:
+			return
+		
+		if gv.g["axe"].r.isLargerThan(Big.new(gv.g["wood"].d.t).multiply(gv.g["wood"].b["axe"].t)):
+			return
+		if gv.g["wood"].r.isLargerThan(Big.new(gv.g["hard"].d.t).multiply(gv.g["hard"].b["wood"].t)):
+			return
+		if gv.g["hard"].r.isLargerThan(Big.new(gv.g["axe"].d.t).multiply(gv.g["axe"].b["hard"].t)):
+			return
+	
+	print("Axes, Wood, and Hardwood dropped low enough that none of them could take from each other, so you've been given free resources.")
+	
+	for x in axe_wood_hard:
+		gv.g[x].r.plus(gv.g[x].d.t)
+
+func softlock_no_seeds():
+	
+	if my_lored != "tree":
+		return
+	
+	if gv.g["seed"].active:
+		return
+	if gv.g["tree"].r.isLargerThanOrEqualTo(2):
+		return
+	if gv.g["seed"].r.isLargerThanOrEqualTo(Big.new(gv.g["tree"].d.t).multiply(gv.g["tree"].b["seed"].t)):
+		return
+	
+	print("You didn't have enough Seeds to produce any Trees to be able to afford the Seed LORED, so you've been given free Trees.")
+	
+	gv.g["tree"].r.plus(2)
+
 
 func r_lored(f):
 	
@@ -710,21 +804,10 @@ func r_lored(f):
 	if not visible:
 		return
 	
-	# color
-	$buy.self_modulate = rt.r_buy_color(0, f.short)
-	if not gv.g[my_lored].active: $worker.self_modulate = Color(1,1,1,0.5)
-	
 	# text / value
-	r_limit_break(f)
-	$net.text = fval.f(f.net()) + "/s"
-	$progress/d.text = "+" + fval.f(f.d.t)
-	$amount.text = fval.f(f.r)
-	$fuel.value = f.f.f / f.f.t * 100
-	$progress.value = f.progress.f / f.progress.t * 100
-	
-	if not rt.menu.tabs_unlocked["s2nup"]:
-		if b_ubu_s2n_check(f.type[1]):
-			rt.get_node("misc/tabs").unlock(["s2nup"])
+	$amount.text = f.r.toString()
+	$fuel.value = Big.new(f.f.f).divide(f.f.t).toFloat() * 100
+	$progress.value = Big.new(f.progress.f).divide(f.progress.t).toFloat() * 100
 	
 	# animation
 	if not ("idle" in f.task or "na " in f.task):
@@ -732,31 +815,97 @@ func r_lored(f):
 		$worker.playing = false
 		
 		match my_lored:
+			
 			"water", "seed":
-				var poop = int(f.progress.f / f.progress.t * max_frames / 2)
 				
-				if poop == 0 and not frame_set[my_lored]:
+				var frame = Big.new(f.progress.f).divide(f.progress.t).toFloat()
+				frame *= max_frames
+				frame /= 2
+				frame = int(frame)
+				
+				if frame == 0 and not frame_set[my_lored]:
+					
 					frame_set[my_lored] = true
+					
 					if frame_set[my_lored + " last"] == 0:
 						$worker.frame = halfway_frame
 						frame_set[my_lored + " last"] = 1
 					else:
 						$worker.frame = 0
 						frame_set[my_lored + " last"] = 0
+				
 				else:
-					if poop > 0: frame_set[my_lored] = false
+					
+					if frame > 0:
+						frame_set[my_lored] = false
+					
+					$worker.frame = int(frame)
 					if frame_set[my_lored + " last"] == 1:
-						$worker.frame = halfway_frame + int(f.progress.f / f.progress.t * max_frames / 2)
-					else:
-						$worker.frame = int(f.progress.f / f.progress.t * max_frames / 2)
+						$worker.frame += halfway_frame
+			
 			_:
-				$worker.frame = int(f.progress.f / f.progress.t * max_frames)
+				$worker.frame = int(Big.new(f.progress.f).divide(f.progress.t).toFloat() * max_frames)
 	else:
 		$worker.playing = true
 	
+func r_status_indicator(net, sender := "lored") -> Color:
+	
+	var f = gv.g[my_lored]
+	
+	# inactive
+	if not f.active:
+		return status_color(sender, "hide")
+	
+	if f.halt:
+		return status_color(sender, "halt")
+	
+	# bad
+	if true:
+		
+		if net[1].isLargerThan(Big.new(net[0]).multiply(2)):
+			return status_color(sender, "bad")
+		
+		if net[1].isLargerThan(net[0]):
+			if f.r.isLessThanOrEqualTo(Big.new(f.d.t).multiply(100)) and Big.new(net[1]).minus(net[0]).isLessThan(Big.new(f.d.t).multiply(0.01)):
+				return status_color(sender, "bad")
+	
+	# possibly fine
+	if true:
+		
+		if net[1].isLargerThan(net[0]):
+			return status_color(sender, "fine")
+		
+		if f.r.isLessThanOrEqualTo(Big.new(f.d.t).multiply(2)) and Big.new(net[0]).minus(net[1]).isLessThan(Big.new(f.d.t).multiply(0.01)):
+			return status_color(sender, "fine")
+	
+	# good
+	return status_color(sender,"good")
+func r_lored_25(f):
+	
+	# catches
+	if true:
+		
+		fps25 += get_physics_process_delta_time()
+		if fps25 < 0.2:
+			return
+		fps25 -= 0.2
+	
+	# color
+	$buy.self_modulate = rt.r_buy_color(0, f.short)
+	if not gv.g[my_lored].active: $worker.self_modulate = Color(1,1,1,0.5)
+	
+	# text / value
+	r_limit_break(f)
+	
+	$progress/d.text = "+" + f.d.t.toString()
+	
+	if not gv.menu.tabs_unlocked["s2nup"]:
+		if b_ubu_s2n_check(f.type[1]):
+			rt.get_node("misc/tabs").unlock(["s2nup"])
+	
 	# autobuywheel
 	if $autobuywheel.visible:
-		$autobuywheel.speed_scale = f.speed.b / f.speed.t
+		$autobuywheel.speed_scale = Big.new(f.speed.b).divide(f.speed.t).toFloat()
 	if not my_autobuyer == "":
 		
 		if not abw_shown:
@@ -770,31 +919,32 @@ func r_lored(f):
 				$autobuywheel.hide()
 				abw_shown = false
 				abw_hidden = true
+
+func r_lored_1(f, allow_catches := true):
 	
-	$status.modulate = r_status_indicator()
-func r_status_indicator(sender := "lored") -> Color:
+	if allow_catches:
+		
+		if fps1 < 1:
+			fps1 += get_physics_process_delta_time()
+			return
+		
+		if not f.update_net_text:
+			return
+		
+		fps1 -= 1
 	
-	var f = gv.g[my_lored]
+	f.update_net_text = false
 	
-	# inactive
-	if not f.active:
-		return status_color(sender, "hide")
+	var schlonk = f.net()
+	$status.modulate = r_status_indicator(schlonk)
 	
-	if f.halt:
-		return status_color(sender, "halt")
+	var net = ""
+	if schlonk[0].isLargerThanOrEqualTo(schlonk[1]):
+		net = Big.new(schlonk[0]).minus(schlonk[1]).toString() + "/s"
+	else:
+		net = "-" + Big.new(schlonk[1].minus(schlonk[0])).toString() + "/s"
+	$net.text = net
 	
-	var per_sec = f.net()
-	
-	# bad
-	if per_sec < -f.d.t or (f.r <= f.d.t * 100 and per_sec < f.d.t * 0.01):
-		return status_color(sender, "bad")
-	
-	# fine but maybe not fine
-	if per_sec <= 0 or (f.r <= f.d.t * 2 and per_sec > f.d.t * 0.01):
-		return status_color(sender, "fine")
-	
-	# good
-	return status_color(sender,"good")
 
 func status_color(sender:String, status:String) -> Color:
 	
@@ -825,51 +975,49 @@ func r_hold_lord(f : LORED = gv.g[my_lored]) -> bool:
 	
 	return false
 
-func b_buy_lored(manually_bought = false, f = gv.g[my_lored]):
+func b_buy_lored(manually_bought = false, f: LORED = gv.g[my_lored]):
 	
 	# catches
 	while true:
-		if my_lored == "tar" and gv.g["iron"].r >= f.cost["iron"].t:
+		if my_lored == "tar" and gv.g["iron"].r.isLargerThanOrEqualTo(f.cost["iron"].t):
 			if "malig" in f.cost.keys():
-				if f.cost["malig"].t == 10.0:
+				if f.cost["malig"].t.isEqualTo(10):
 					break
 		if not rt.r_buy_color(0, my_lored) == Color(1,1,1):
 			if manually_bought and is_instance_valid(rt.get_node("map/tip").tip):
 				rt.get_node("map/tip").tip.price_flash = true
 			return
-		if not "ye" in rt.menu.f:
-			if f.type.split(" ")[0] in rt.menu.f: return
+		if not "ye" in gv.menu.f:
+			if f.type.split(" ")[0] in gv.menu.f: return
 		break
 	
 	# price
 	if true:
 		
 		for v in f.cost:
-			gv.g[v].r -= f.cost[v].t
+			gv.g[v].r.minus(f.cost[v].t)
 		
-		f.cost_modifier.b *= rt.price_increase(f.type)
+		f.cost_modifier.multiply(rt.price_increase(f.type))
 		
-		f.sync_self()
+		f.sync_cost()
 	
 	# task stuff
 	if taq.cur_quest != "":
 		
 		match my_lored:
-			"tum":
-				if "Tumors LORED bought" in taq.quest.step:
-					taq.quest.step["Tumors LORED bought"].f = 1.0
 			"coal":
 				if "Coal LORED bought" in taq.quest.step:
-					if taq.quest.step["Coal LORED bought"].f < 1: taq.quest.step["Coal LORED bought"].f += 1
+					taq.quest.step["Coal LORED bought"].f = Big.new()
+						
 			"stone":
 				if "Stone LORED bought" in taq.quest.step:
-					if taq.quest.step["Stone LORED bought"].f < 1: taq.quest.step["Stone LORED bought"].f += 1
+					taq.quest.step["Stone LORED bought"].f = Big.new()
 			"iron":
 				if "Iron LORED bought" in taq.quest.step:
-					if taq.quest.step["Iron LORED bought"].f < 1: taq.quest.step["Iron LORED bought"].f += 1
+					taq.quest.step["Iron LORED bought"].f = Big.new()
 			"cop":
 				if "Copper LORED bought" in taq.quest.step:
-					if taq.quest.step["Copper LORED bought"].f < 1: taq.quest.step["Copper LORED bought"].f += 1
+					taq.quest.step["Copper LORED bought"].f = Big.new()
 	
 	if manually_bought:
 		rt.get_node("map/tip")._call("no")
@@ -879,21 +1027,23 @@ func b_buy_lored(manually_bought = false, f = gv.g[my_lored]):
 	if f.active:
 		
 		f.level += 1
-		f.output_modifier.b *= 2
-		f.fc.b *= 2
-		f.f.b *= 2
-		gv.g[my_lored].sync_self()
-		if f.short == "coal" and f.f.f < f.speed.t * f.fc.t * 2:
-			f.f.f += f.speed.t * f.fc.t * 2
+		f.output_modifier.multiply(2)
+		f.fc.b.multiply(2)
+		f.f.b.multiply(2)
 		
-		if f.type[1] == "1" and gv.up["dust"].active():
-			b_buy_lored()
-			return
+		f.sync()
+		
+		if f.short == "coal" and f.f.f.isLessThan(Big.new(f.speed.t).multiply(f.fc.t).multiply(2)):
+			f.f.f.plus(Big.new(f.speed.t).multiply(f.fc.t).multiply(2))
 		
 		output["lored up"] = lored_buy.instance()
 		output["lored up"].rect_position = Vector2(0, - 30)#Vector2(rect_position.x, rect_position.y - 30)
 		output["lored up"].init("lv" + fval.f(f.level), my_color)
 		add_child(output["lored up"])
+		
+		r_lored_1(gv.g[my_lored], false)
+		for x in gv.g[my_lored].b:
+			gv.g[x].update_net_text = true
 		
 		return
 	
@@ -902,7 +1052,7 @@ func b_buy_lored(manually_bought = false, f = gv.g[my_lored]):
 		
 		f.active = true
 		f.unlocked = true
-		if "bore" in gv.g[my_lored].type and rt.menu.option["animations"]:
+		if "bore" in gv.g[my_lored].type and gv.menu.option["animations"]:
 			$worker.animation = "ff"
 		
 		output["new lored"] = lored_buy.instance()
@@ -925,7 +1075,7 @@ func b_buy_lored(manually_bought = false, f = gv.g[my_lored]):
 		
 		# ref
 		$worker.self_modulate = Color(1,1,1,1)
-		if not rt.menu.tabs_unlocked["s2nup"]:
+		if not gv.menu.tabs_unlocked["s2nup"]:
 			if b_ubu_s2n_check(f.type[1]):
 				rt.get_node("misc/tabs").unlock(["s2nup"])
 	
@@ -949,17 +1099,17 @@ func _on_buy_mouse_entered():
 	rt.get_node("map/tip")._call("buy lored " + my_lored)
 func _on_fuel_mouse_entered():
 	if not gv.g[my_lored].active: return
-	if not rt.menu.option["tooltip_fuel"]: return
+	if not gv.menu.option["tooltip_fuel"]: return
 	rt.get_node("map/tip")._call("fuel lored " + my_lored)
 func _on_worker_mouse_entered():
 	rt.get_node("map/tip")._call("mainstuff lored " + my_lored)
 func _on_halt_mouse_entered():
 	if not gv.g[my_lored].active: return
-	if not rt.menu.option["tooltip_halt"]: return
+	if not gv.menu.option["tooltip_halt"]: return
 	rt.get_node("map/tip")._call("tip halt lored " + my_lored)
 func _on_hold_mouse_entered():
 	if not gv.g[my_lored].active: return
-	if not rt.menu.option["tooltip_hold"]: return
+	if not gv.menu.option["tooltip_hold"]: return
 	rt.get_node("map/tip")._call("tip hold lored " + my_lored)
 
 func _on_mouse_exited():
@@ -972,8 +1122,8 @@ func _on_buy_pressed():
 
 func _on_halt_pressed():
 	
-	if "no" in rt.menu.f:
-		if int(gv.g[my_lored].type[1]) <= int(rt.menu.f.split("no s")[1]): return
+	if "no" in gv.menu.f:
+		if int(gv.g[my_lored].type[1]) <= int(gv.menu.f.split("no s")[1]): return
 	
 	match gv.g[my_lored].halt:
 		true:
@@ -981,29 +1131,42 @@ func _on_halt_pressed():
 		false:
 			gv.g[my_lored].halt = true
 	
+	if is_instance_valid(rt.get_node("map/tip").tip):
+		rt.get_node("map/tip").tip.content["halt"].r_update()
+	
 	r_update_halt(gv.g[my_lored].halt)
 	
-	rt.instances["qol"]["held"].w_update(my_lored)
+	gv.g[my_lored].update_net_text = true
 	
+	for x in gv.g:
+		if my_lored in gv.g[x].used_by:
+			gv.g[x].update_net_text = true
 	
 	if rt.hax == 1:
 		return
 	
-	gv.g[my_lored].r += gv.g[my_lored].d.t * 1000
-	rt.task_and_quest_check(my_lored, gv.g[my_lored].d.t * 1000)
+	var haxx = Big.new(gv.g[my_lored].d.t).multiply(1000)
+	gv.g[my_lored].r.plus(haxx)
+	rt.task_and_quest_check(my_lored, haxx)
 
 func _on_hold_pressed():
 	
-	if "no" in rt.menu.f:
-		if int(gv.g[my_lored].type[1]) <= int(rt.menu.f.split("no s")[1]): return
+	if "no" in gv.menu.f:
+		if int(gv.g[my_lored].type[1]) <= int(gv.menu.f.split("no s")[1]): return
 	
 	match gv.g[my_lored].hold:
 		true: gv.g[my_lored].hold = false
 		false: gv.g[my_lored].hold = true
 	
+	if is_instance_valid(rt.get_node("map/tip").tip):
+		rt.get_node("map/tip").tip.content["hold"].r_update()
+	
 	r_update_hold(gv.g[my_lored].hold)
 	
-	rt.instances["qol"]["held"].w_update(my_lored)
+	gv.g[my_lored].update_net_text = true
+	
+	for x in gv.g[my_lored].used_by:
+		gv.g[x].update_net_text = true
 func r_update_halt(halt:bool) -> void:
 	match halt:
 		true: $halt/text.text = "=/="

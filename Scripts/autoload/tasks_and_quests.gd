@@ -30,7 +30,7 @@ class Task:
 	var can_quit : bool
 	var effect_loaded := false
 	var color := Color(0,0,0)
-	var total_points := 0.0
+	var total_points := Big.new(0)
 	func _init(nam : String, des : String, rr : Dictionary, r : Dictionary, stepz : Dictionary, _icon : Dictionary, _color: Color):
 		name = nam
 		desc = des
@@ -41,7 +41,7 @@ class Task:
 		icon.texture = _icon.texture
 		color = _color
 		for x in step:
-			total_points += step[x].b
+			total_points.plus(step[x].b)
 
 
 func new_quest(_quest: Task) -> void:

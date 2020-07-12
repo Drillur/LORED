@@ -1,80 +1,158 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=12 format=2]
 
-[ext_resource path="res://Styles/Labels/Big.tres" type="DynamicFont" id=1]
+[ext_resource path="res://Fonts/Roboto-Medium.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Styles/Labels/Desc.tres" type="DynamicFont" id=2]
-[ext_resource path="res://Styles/Panels/input_flair.tres" type="StyleBox" id=3]
-[ext_resource path="res://Scripts/tooltip/tip_hold.gd" type="Script" id=4]
-[ext_resource path="res://Fonts/Roboto-Black.ttf" type="DynamicFontData" id=5]
+[ext_resource path="res://Prefabs/tooltip/tip_hold.gd" type="Script" id=3]
+[ext_resource path="res://Fonts/Roboto-MediumItalic.ttf" type="DynamicFontData" id=4]
+[ext_resource path="res://Styles/Panels/block_inside_tip.tres" type="StyleBox" id=5]
+[ext_resource path="res://Fonts/Roboto-Black.ttf" type="DynamicFontData" id=6]
 
 [sub_resource type="StyleBoxFlat" id=1]
-bg_color = Color( 0.6, 0.6, 0.6, 0 )
+bg_color = Color( 1, 1, 0, 0.211765 )
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color( 1, 1, 0, 0.4 )
+expand_margin_left = 5.0
+expand_margin_right = 5.0
+expand_margin_top = 5.0
+expand_margin_bottom = 5.0
+anti_aliasing = false
 
 [sub_resource type="DynamicFont" id=2]
+size = 12
 outline_size = 2
 outline_color = Color( 0, 0, 0, 1 )
-font_data = ExtResource( 5 )
+font_data = ExtResource( 1 )
 
-[node name="hold" type="Panel"]
-margin_right = 185.0
-margin_bottom = 90.0
+[sub_resource type="DynamicFont" id=3]
+size = 12
+outline_size = 2
+outline_color = Color( 0, 0, 0, 1 )
+extra_spacing_bottom = 3
+font_data = ExtResource( 4 )
+
+[sub_resource type="DynamicFont" id=4]
+size = 14
+outline_size = 2
+outline_color = Color( 0, 0, 0, 1 )
+font_data = ExtResource( 6 )
+
+[sub_resource type="DynamicFont" id=5]
+size = 11
+outline_size = 2
+outline_color = Color( 0, 0, 0, 1 )
+font_data = ExtResource( 4 )
+
+[node name="hold" type="MarginContainer"]
+margin_right = 225.0
+margin_bottom = 130.0
+rect_min_size = Vector2( 196, 0 )
+custom_constants/margin_right = 10
+custom_constants/margin_top = 10
+custom_constants/margin_left = 10
+custom_constants/margin_bottom = 10
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="v" type="VBoxContainer" parent="."]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 215.0
+margin_bottom = 120.0
+custom_constants/separation = 10
+
+[node name="hold" type="MarginContainer" parent="v"]
+visible = false
+margin_right = 36.0
+margin_bottom = 25.0
+size_flags_horizontal = 0
+custom_constants/margin_right = 5
+custom_constants/margin_top = 5
+custom_constants/margin_left = 5
+custom_constants/margin_bottom = 5
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="bg" type="Panel" parent="v/hold"]
+margin_left = 5.0
+margin_top = 5.0
+margin_right = 31.0
+margin_bottom = 20.0
 custom_styles/panel = SubResource( 1 )
-script = ExtResource( 4 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="title" type="Label" parent="."]
-anchor_right = 1.0
+[node name="Label" type="Label" parent="v/hold"]
 margin_left = 5.0
-margin_top = 9.0
-margin_right = -5.0
-margin_bottom = 28.0
-custom_fonts/font = ExtResource( 1 )
-custom_colors/font_color = Color( 0.498039, 0.498039, 0.498039, 1 )
+margin_top = 5.0
+margin_right = 31.0
+margin_bottom = 20.0
+custom_fonts/font = SubResource( 2 )
 text = "Hold"
-align = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="desc" type="Label" parent="."]
-anchor_right = 1.0
-margin_left = 5.0
-margin_top = 33.0
-margin_right = -5.0
-margin_bottom = 85.0
+[node name="desc" type="Label" parent="v"]
+margin_right = 205.0
+margin_bottom = 27.0
 custom_fonts/font = ExtResource( 2 )
-custom_colors/font_color = Color( 0.764706, 0.733333, 0.603922, 1 )
-text = "Allows the use of this resource.
-
-Currently allowing"
-align = 1
+custom_colors/font_color = Color( 0.804688, 0.804688, 0.804688, 1 )
+text = "Prevents the use of this resource (except for fuel if appliccable)."
 valign = 1
 autowrap = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="used_by" type="Label" parent="."]
-margin_left = 5.0
-margin_top = 94.0
-margin_right = 180.0
-margin_bottom = 113.0
-custom_fonts/font = SubResource( 2 )
-custom_colors/font_color = Color( 0.498039, 0.498039, 0.498039, 1 )
+[node name="used_by" type="MarginContainer" parent="v"]
+margin_top = 37.0
+margin_right = 205.0
+margin_bottom = 75.0
+custom_constants/margin_right = 10
+custom_constants/margin_top = 10
+custom_constants/margin_left = 10
+custom_constants/margin_bottom = 10
+
+[node name="bg" type="Panel" parent="v/used_by"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 195.0
+margin_bottom = 28.0
+custom_styles/panel = ExtResource( 5 )
+
+[node name="v" type="VBoxContainer" parent="v/used_by"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 195.0
+margin_bottom = 28.0
+
+[node name="Label" type="Label" parent="v/used_by/v"]
+margin_right = 185.0
+margin_bottom = 18.0
+custom_fonts/font = SubResource( 3 )
 text = "Used By"
 align = 1
-valign = 1
-__meta__ = {
-"_edit_group_": true,
-"_edit_use_anchors_": false
-}
 
-[node name="flair" type="Panel" parent="used_by"]
-show_behind_parent = true
-anchor_right = 1.0
-anchor_bottom = 1.0
-custom_styles/panel = ExtResource( 3 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
+[node name="h" type="HBoxContainer" parent="v"]
+visible = false
+margin_top = 85.0
+margin_right = 205.0
+margin_bottom = 102.0
+alignment = 1
+
+[node name="usage" type="Label" parent="v/h"]
+margin_left = 10.0
+margin_right = 28.0
+margin_bottom = 17.0
+custom_fonts/font = SubResource( 4 )
+custom_colors/font_color = Color( 0.800781, 0.800781, 0.800781, 1 )
+text = "8%"
+
+[node name="desc" type="Label" parent="v/h"]
+margin_left = 32.0
+margin_top = 1.0
+margin_right = 195.0
+margin_bottom = 15.0
+rect_min_size = Vector2( 163, 0 )
+size_flags_horizontal = 0
+custom_fonts/font = SubResource( 5 )
+custom_colors/font_color = Color( 0.800781, 0.800781, 0.800781, 1 )
+text = "usage"

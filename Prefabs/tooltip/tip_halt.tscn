@@ -1,38 +1,70 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=6 format=2]
 
-[ext_resource path="res://Styles/Labels/Big.tres" type="DynamicFont" id=1]
+[ext_resource path="res://Fonts/Roboto-Medium.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Styles/Labels/Desc.tres" type="DynamicFont" id=2]
+[ext_resource path="res://Styles/Panels/tag_bg.tres" type="StyleBox" id=3]
+[ext_resource path="res://Prefabs/tooltip/tip_halt.gd" type="Script" id=4]
 
-[sub_resource type="StyleBoxFlat" id=1]
-bg_color = Color( 0.6, 0.6, 0.6, 0 )
+[sub_resource type="DynamicFont" id=1]
+size = 12
+outline_size = 2
+outline_color = Color( 0, 0, 0, 1 )
+font_data = ExtResource( 1 )
 
-[node name="hold" type="Panel"]
-margin_right = 185.0
-margin_bottom = 93.0
-custom_styles/panel = SubResource( 1 )
+[node name="halt" type="MarginContainer"]
+anchor_right = 9.53674e-09
+margin_right = 110.0
+margin_bottom = 47.0
+rect_min_size = Vector2( 110, 0 )
+custom_constants/margin_right = 10
+custom_constants/margin_top = 10
+custom_constants/margin_left = 10
+custom_constants/margin_bottom = 10
+script = ExtResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[node name="title" type="Label" parent="."]
-anchor_right = 1.0
+[node name="v" type="VBoxContainer" parent="."]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 100.0
+margin_bottom = 37.0
+custom_constants/separation = 10
+
+[node name="halt" type="MarginContainer" parent="v"]
+visible = false
+margin_right = 33.0
+margin_bottom = 25.0
+size_flags_horizontal = 0
+custom_constants/margin_right = 5
+custom_constants/margin_top = 5
+custom_constants/margin_left = 5
+custom_constants/margin_bottom = 5
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="bg" type="Panel" parent="v/halt"]
 margin_left = 5.0
-margin_top = 9.0
-margin_right = -5.0
-margin_bottom = 28.0
-custom_fonts/font = ExtResource( 1 )
-custom_colors/font_color = Color( 0.498039, 0.498039, 0.498039, 1 )
+margin_top = 5.0
+margin_right = 28.0
+margin_bottom = 20.0
+custom_styles/panel = ExtResource( 3 )
+
+[node name="Label" type="Label" parent="v/halt"]
+margin_left = 5.0
+margin_top = 5.0
+margin_right = 28.0
+margin_bottom = 20.0
+custom_fonts/font = SubResource( 1 )
 text = "Halt"
-align = 1
 
-[node name="desc" type="Label" parent="."]
-anchor_right = 1.0
-margin_left = 5.0
-margin_top = 33.0
-margin_right = -5.0
-margin_bottom = 85.0
+[node name="desc" type="Label" parent="v"]
+margin_right = 90.0
+margin_bottom = 27.0
 custom_fonts/font = ExtResource( 2 )
-custom_colors/font_color = Color( 0.764706, 0.733333, 0.603922, 1 )
-text = "Halts this LORED's activity.
-
-Currently working."
-align = 1
+custom_colors/font_color = Color( 0.804688, 0.804688, 0.804688, 1 )
+text = "Stop this LORED from working."
 valign = 1
 autowrap = true

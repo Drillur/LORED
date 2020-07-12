@@ -19,10 +19,11 @@ func _ready():
 	randomize()
 func _physics_process(delta):
 	
-	# shake if done
 	shake()
 
 func shake() -> void:
+	
+	# shake if done
 	
 	if ready_task_count == 0:
 		return
@@ -37,7 +38,7 @@ func shake() -> void:
 
 func init(_tasks := []):
 	
-	if not rt.menu.option["task auto"]:
+	if not gv.menu.option["task auto"]:
 		$HBoxContainer/auto/Label.show()
 		$HBoxContainer/auto/AnimatedSprite.hide()
 	
@@ -51,9 +52,55 @@ func hit_max_tasks():
 		add_task(_generate_random_task())
 
 
+func flying_numbers(f: Dictionary):
+	
+	ready_task_count -= 1
+	time_since_last_shake = 0.0
+	
+	var i = 0
+	for x in f:
+		
+		rt.save_fps -= 0.09
+		var t = Timer.new()
+		t.set_wait_time(0.09)
+		t.set_one_shot(true)
+		self.add_child(t)
+		t.start()
+		yield(t, "timeout")
+		t.queue_free()
+		
+		var rollx :int= rand_range(-30,30)
+		
+		if x == "growth":
+			rt.get_node("map/loreds").lored[x].w_bonus_output(x, f[x])
+		
+		var key = "flying freaking numbers " + str(i)
+		
+		effects_content[key] = prefabs.d_text.instance()
+		effects_content[key].text = "+ " + f[x].toString()
+		effects_content[key].add_color_override("font_color", rt.r_lored_color(x))
+		effects_content[key].get_node("icon").set_texture(gv.sprite[x])
+		effects_content[key].init(true,-50)
+		get_parent().get_parent().add_child(effects_content[key])
+		
+		var left_x = rollx + rt.get_node("misc/taq").rect_position.x + rect_size.x / 2
+		var ypos = get_node("/root/Root/misc/taq").rect_position.y - 17
+		if i == 0:
+			effects_content[key].rect_position = Vector2(left_x, ypos)
+		else:
+			for v in i:
+				effects_content["flying freaking numbers " + str(v)].rect_position.y -= 7
+			effects_content[key].rect_position = Vector2(
+				left_x - effects_content[key].rect_size.x / 2,
+				effects_content["flying freaking numbers " + str(i-1)].rect_position.y + effects_content[key].rect_size.y
+			)
+		
+		i += 1
+
+
 func add_task(task) -> void:
 	
-	task.code = stepify(task.code, 0.01)
+	#task.code = stepify(task.code, 0.01)
 	
 	content[task.code] = prefabs.block.instance()
 	$HBoxContainer.add_child(content[task.code])
@@ -112,8 +159,8 @@ func _generate_random_task() -> taq.Task:
 		
 		for x in gv.g[short].b:
 			
-			if "no" in rt.menu.f:
-				if int(gv.g[x].type[1]) <= int(rt.menu.f.split("no s")[1]):
+			if "no" in gv.menu.f:
+				if int(gv.g[x].type[1]) <= int(gv.menu.f.split("no s")[1]):
 					cont = true
 					break
 			
@@ -137,9 +184,6 @@ func _generate_random_task() -> taq.Task:
 	var step := {}
 	var icon := {texture = gv.sprite["unknown"], key = "unknown"}
 	
-	rr.clear()
-	step.clear()
-	
 	var rr_size := 1
 	if rall_spike >= 0.1:
 		roll = rand_range(0, 100)
@@ -148,7 +192,7 @@ func _generate_random_task() -> taq.Task:
 		elif roll > 50: rr_size = 2
 		else: rr_size = 1
 	
-	var time: float
+	var time := Big.new(0)
 	
 	# name / desc / step / icon
 	if true:
@@ -174,10 +218,13 @@ func _generate_random_task() -> taq.Task:
 		match type:
 			"collect":
 				
-				var amount : float = rall * max(gv.g[f].d.b, gv.g[f].net(true)) * rr_size
+				var net = Big.new(gv.g[f].net(true)[0])
+				
+				var amount: Big = Big.new(rall).multiply(Big.new(Big.max(gv.g[f].d.b, net))).multiply(rr_size)
 				
 				step[gv.g[f].name + " produced"] = Ob.Num.new(amount)
-				time = amount / max(0.05, gv.g[f].net(true)) / 60
+				time.plus(amount).divide(60)
+				time.divide(Big.new(Big.max(net, 0.05)))
 				desc = "Collect " + gv.g[f].name + "."
 	
 	# resource_reward
@@ -191,8 +238,8 @@ func _generate_random_task() -> taq.Task:
 				match gv.stats.highest_run:
 					2:
 						gg = "tum"
-				var reward = max(gv.stats.most_resources_gained, gv.stats.run[gv.stats.highest_run - 1] * 1000)
-				reward *= rand_range(0.9, 1.1)
+				var reward = Big.new(Big.max(gv.stats.most_resources_gained, gv.stats.run[gv.stats.highest_run - 1] * 1000))
+				reward.multiply(rand_range(0.9, 1.1))
 				rr[gg] = reward
 			
 			else:
@@ -217,8 +264,8 @@ func _generate_random_task() -> taq.Task:
 					
 					var cont := false
 					for v in gv.g[b].b:
-						if "no" in rt.menu.f:
-							var menu = rt.menu.f.split("no ")[1]
+						if "no" in gv.menu.f:
+							var menu = gv.menu.f.split("no ")[1]
 							if menu in gv.g[v].type:
 								cont = true
 								break
@@ -237,22 +284,23 @@ func _generate_random_task() -> taq.Task:
 				if progression_mod > 100: progression_mod = 100.0
 				var quest_mod = 10.0 if rt.tasks["Horse Doodie"].complete else 1.0
 				
-				var dink = 1.0 * gv.g[b].net(true) * progression_mod * time * quest_mod
-				if "(Rare)" in name: dink *= rand_range(1,3)
+				var dink: Big = Big.new(gv.g[b].net(true)[0]).multiply(progression_mod).multiply(time).multiply(quest_mod)
+				if "(Rare)" in name: dink.multiply(rand_range(1,3))
 				
 				#dink *= 1 + time
 				
 				if gv.stats.tasks_completed < 10:
-					dink *= 4
+					dink.multiply(4)
 				if gv.stats.tasks_completed < 20:
-					dink *= 2
+					dink.multiply(2)
 				if gv.stats.tasks_completed < 30:
-					dink *= 1.5
+					dink.multiply(1.5)
 				if gv.stats.tasks_completed < 40:
-					dink *= 1.25
+					dink.multiply(1.25)
 				
-				var reward : float = max(1.0, rand_range(dink * 0.9, dink * 1.1))
-				if reward < 10: reward = round(reward)
+				var reward: Big = Big.new(dink).multiply(rand_range(0.9,1.1))
+				if reward.isLessThan(1): reward = Big.new()
+				if reward.isLessThan(10): reward.roundDown()
 				
 				rr[rt.w_index_to_short(roll)] = reward
 	
@@ -358,7 +406,7 @@ func generate_task_name(lored : String, roll := 0) -> String:
 		"seed":
 			match roll:
 				0:
-					return "What is this, Stardew valley?"
+					return "What is this, Stardew Valley?"
 				1:
 					return "nobody even gardens in real life"
 				2:
@@ -474,7 +522,7 @@ func generate_task_name(lored : String, roll := 0) -> String:
 		1:
 			return "placeholder1"
 	
-	return "if ur seeing this it means im absolutely trash at programming"
+	return "placeholder2"
 
 
 func erase(_erase := -1.0) -> void:
@@ -584,8 +632,8 @@ func _on_auto_button_down() -> void:
 
 func _on_auto_pressed() -> void:
 	
-	if not rt.menu.option["task auto"]:
-		rt.menu.option["task auto"] = true
+	if not gv.menu.option["task auto"]:
+		gv.menu.option["task auto"] = true
 		$HBoxContainer/auto/Label.hide()
 		$HBoxContainer/auto/AnimatedSprite.show()
 		for x in content:
@@ -593,6 +641,6 @@ func _on_auto_pressed() -> void:
 				content[x]._on_task_pressed()
 		return
 	
-	rt.menu.option["task auto"] = false
+	gv.menu.option["task auto"] = false
 	$HBoxContainer/auto/Label.show()
 	$HBoxContainer/auto/AnimatedSprite.hide()

@@ -9,6 +9,11 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "Reference",
+"class": "Big",
+"language": "GDScript",
+"path": "res://Scripts/classes/Big.gd"
+}, {
 "base": "Node",
 "class": "FormatValue",
 "language": "GDScript",
@@ -55,6 +60,7 @@ _global_script_classes=[ {
 "path": "res://Scripts/save.gd"
 } ]
 _global_script_class_icons={
+"Big": "",
 "FormatValue": "",
 "GlobalVariables": "",
 "LORED": "",
@@ -70,7 +76,8 @@ _global_script_class_icons={
 
 config/name="LORED"
 run/main_scene="res://Scenes/Root.tscn"
-config/Version="2.0.1"
+config/icon="res://Sprites/misc/splash.png"
+config/Version="2.0 BETA (5)"
 
 [autoload]
 
@@ -82,6 +89,29 @@ fval="*res://Scripts/autoload/format_value.gd"
 
 window/size/width=800
 
+[importer_defaults]
+
+texture={
+"compress/bptc_ldr": 0,
+"compress/hdr_mode": 0,
+"compress/lossy_quality": 0.7,
+"compress/mode": 0,
+"compress/normal_map": 0,
+"detect_3d": false,
+"flags/anisotropic": false,
+"flags/filter": false,
+"flags/mipmaps": false,
+"flags/repeat": 0,
+"flags/srgb": 2,
+"process/HDR_as_SRGB": false,
+"process/fix_alpha_border": true,
+"process/invert_color": false,
+"process/premult_alpha": false,
+"size_limit": 0,
+"stream": false,
+"svg/scale": 1.0
+}
+
 [input]
 
 ui_left_mouse_button={
@@ -92,4 +122,5 @@ ui_left_mouse_button={
 
 [rendering]
 
+quality/driver/driver_name="GLES2"
 environment/default_clear_color=Color( 0, 0, 0, 1 )

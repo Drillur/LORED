@@ -27,6 +27,10 @@ func init(_icon:Dictionary, _code:float, _tp_border_color: Color) -> void:
 
 func _physics_process(delta):
 	
+	if not code in taq.task.keys():
+		set_physics_process(false)
+		return
+	
 	if killing_self:
 		return
 	
@@ -38,23 +42,27 @@ func _physics_process(delta):
 		return
 	fps -= rt.FPS
 	
-	$time.text = w_get_time_remaining()
+	if taq.task[code].step.size() == 1 and " produced" in taq.task[code].step.keys()[0]:
+		var gg = rt.w_name_to_short(taq.task[code].step.keys()[0].split(" produced")[0])
+		$time.text = gv.time_remaining(gg, taq.task[code].step.values()[0].f, taq.task[code].step.values()[0].t, true)
+	else:
+		$time.text = ""
 	
 	r_update_tp()
 
 func r_update_tp() -> void:
 	
-	var points := 0.0
+	var points: Big = Big.new(0)
 	for x in taq.task[code].step:
-		points += taq.task[code].step[x].f
-	$tp.value = points / taq.task[code].total_points * 100
+		points.plus(taq.task[code].step[x].f)
+	$tp.value = Big.new(points).divide(taq.task[code].total_points).toFloat() * 100
 	
 	if $tp.value >= 100:
 		get_parent().get_parent().ready_task_count += 1
 		$time.text = ""
 		$tp.self_modulate = Color($tp.self_modulate.r, $tp.self_modulate.g, $tp.self_modulate.b, 1.0)
 		
-		if rt.menu.option["task auto"]:
+		if gv.menu.option["task auto"]:
 			_on_task_pressed(false)
 
 
@@ -70,6 +78,8 @@ func _on_task_mouse_exited():
 func _on_task_pressed(manual := true):
 	
 	if $tp.value < 100:
+		if manual:
+			rt.get_node("global_tip").tip.content["taq"].flash_incomplete_steps = true
 		return
 	
 	if manual:
@@ -92,107 +102,39 @@ func kill_yourself():
 
 func finish_up():
 	
-	if "Tasks completed" in taq.quest.step.keys():
-		taq.quest.step["Tasks completed"].f = min(taq.quest.step["Tasks completed"].f + 1, taq.quest.step["Tasks completed"].b)
-	elif "Rare or Spike tasks completed" in taq.quest.step.keys():
-		if $rare.visible or $spike.visible:
-			taq.quest.step["Rare or Spike tasks completed"].f = min(taq.quest.step["Rare or Spike tasks completed"].f + 1, taq.quest.step["Rare or Spike tasks completed"].b)
-	elif "Spike tasks completed" in taq.quest.step.keys():
-		if $spike.visible:
-			taq.quest.step["Spike tasks completed"].f = min(taq.quest.step["Spike tasks completed"].f + 1, taq.quest.step["Spike tasks completed"].b)
+	if taq.cur_quest != "":
+		
+		if "Tasks completed" in taq.quest.step.keys():
+			var A = Big.new(Big.min(Big.new(taq.quest.step["Tasks completed"].f).plus(1), taq.quest.step["Tasks completed"].b))
+			taq.quest.step["Tasks completed"].f = A
+		elif "Rare or Spike tasks completed" in taq.quest.step.keys():
+			if $rare.visible or $spike.visible:
+				var A = Big.new(Big.min(Big.new(taq.quest.step["Rare or Spike tasks completed"].f).plus(1), taq.quest.step["Rare or Spike tasks completed"].b))
+				taq.quest.step["Rare or Spike tasks completed"].f = A
+		elif "Spike tasks completed" in taq.quest.step.keys():
+			if $spike.visible:
+				var A = Big.new(Big.min(Big.new(taq.quest.step["Spike tasks completed"].f).plus(1), taq.quest.step["Spike tasks completed"].b))
+				taq.quest.step["Spike tasks completed"].f = A
 	
 	for x in taq.task[code].resource_reward:
-		gv.g[x].r += taq.task[code].resource_reward[x]
+		gv.g[x].r.plus(taq.task[code].resource_reward[x].toScientific())
 		gv.g[x].task_and_quest_check(taq.task[code].resource_reward[x])
 	
 	for x in taq.task[code].reward:
 		
-		pass
+		break
 	
-	var i := 0
+	var gayzo = {}
 	for x in taq.task[code].resource_reward:
-		
-		rt.save_fps -= 0.09
-		var t = Timer.new()
-		t.set_wait_time(0.09)
-		t.set_one_shot(true)
-		self.add_child(t)
-		t.start()
-		yield(t, "timeout")
-		t.queue_free()
-		
-		var rollx :int= rand_range(-20,40)
-		
-		if x == "growth":
-			rt.get_node("map/loreds").lored[x].w_bonus_output(x, taq.task[code].resource_reward[x])
-		
-		var key = "task reward dtext" + str(i) + str(code)
-		
-		get_parent().get_parent().effects_content[key] = get_parent().get_parent().prefabs.d_text.instance()
-		get_parent().get_parent().effects_content[key].text = "+ " + fval.f(taq.task[code].resource_reward[x])
-		get_parent().get_parent().effects_content[key].add_color_override("font_color", rt.r_lored_color(x))
-		get_parent().get_parent().effects_content[key].get_node("icon").set_texture(gv.sprite[x])
-		get_parent().get_parent().effects_content[key].init(true,-50)
-		get_parent().get_parent().get_parent().get_parent().add_child(get_parent().get_parent().effects_content[key])
-		
-		var left_x = rollx + rt.get_node("misc/taq").rect_position.x + rect_position.x
-		var ypos = get_node("/root/Root/misc/taq").rect_position.y - 17
-		if i == 0:
-			get_parent().get_parent().effects_content[key].rect_position = Vector2(left_x, ypos)
-		else:
-			for v in i:
-				get_parent().get_parent().effects_content["task reward dtext" + str(v) + str(code)].rect_position.y -= 7
-			get_parent().get_parent().effects_content[key].rect_position = Vector2(left_x, get_parent().get_parent().effects_content["task reward dtext" + str(i-1) + str(code)].rect_position.y + get_parent().get_parent().effects_content[key].rect_size.y)
-		
-		
-		i += 1
+		gayzo[x] = Big.new(taq.task[code].resource_reward[x])
 	
-	get_parent().get_parent().ready_task_count -= 1
-	get_parent().get_parent().time_since_last_shake = 0.0
+	get_parent().get_parent().flying_numbers(gayzo)
 	
 	taq.task.erase(code)
 	
 	queue_free()
 
 
-func w_get_time_remaining() -> String:
-	
-	if taq.task[code].step.size() == 1 and " produced" in taq.task[code].step.keys()[0]:
-		
-		var remaining_amount : float = taq.task[code].step.values()[0].t - taq.task[code].step.values()[0].f
-		var gg = rt.w_name_to_short(taq.task[code].step.keys()[0].split(" produced")[0])
-		
-		if gv.g[gg].halt:
-			return "=/="
-		
-		var per_sec = gv.g[gg].net(true)
-		var intermittent := 1.0
-		if not gv.g[gg].progress.t == 0.0:
-			intermittent = gv.g[gg].d.t * (gv.g[gg].progress.f / gv.g[gg].progress.t)
-		var final := 1.0
-		if not per_sec == 0.0:
-			final = (remaining_amount - intermittent) / per_sec
-		else:
-			return "!?"
-		if final > 3600 * 24 * 365:
-			var days:= int(final /60 / 60 / 24 / 365)
-			return fval.f(days) + "y"
-		if final > 3600 * 24:
-			var days:= int(final /60 / 60 / 24)
-			return str(days) + "d"
-		if final > 3600:
-			var hours := int(final / 60 / 60)
-			return str(hours) + "h"
-		if final > 60:
-			var minutes := int(final / 60)
-			#var sec := int(final - (minutes * 60))
-			return str(minutes) + "m"# " + str(sec) + "s"
-		if final >= 1:
-			return String(int(final)) + "s"
-		if not taq.task[code].step.values()[0].f >= taq.task[code].step.values()[0].t:
-			return "!"
-	
-	return ""
 
 
 func _on_task_button_down():

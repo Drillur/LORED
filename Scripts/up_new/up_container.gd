@@ -2,11 +2,11 @@ extends MarginContainer
 
 onready var rt = get_node("/root/Root")
 
-onready var gn_vbc2 = get_node("ScrollContainer/VBoxContainer2")
-onready var gn_s1n_count = get_node("ScrollContainer/VBoxContainer2/s1n col/HBoxContainer/count")
-onready var gn_s1m_count = get_node("ScrollContainer/VBoxContainer2/s1m col/HBoxContainer/count")
-onready var gn_s2n_count = get_node("ScrollContainer/VBoxContainer2/s2n col/HBoxContainer/count")
-onready var gn_s2m_count = get_node("ScrollContainer/VBoxContainer2/s2m col/HBoxContainer/count")
+onready var gn_vbc2 = get_node("sc/v")
+onready var gn_s1n_count = get_node("sc/v/s1n col/HBoxContainer/count")
+onready var gn_s1m_count = get_node("sc/v/s1m col/HBoxContainer/count")
+onready var gn_s2n_count = get_node("sc/v/s2n col/HBoxContainer/count")
+onready var gn_s2m_count = get_node("sc/v/s2m col/HBoxContainer/count")
 
 #var fps := 0.0
 
@@ -33,20 +33,121 @@ func init() -> void:
 	
 	sort_ups()
 	
-	sync_self()
+	sync()
 
 func sort_ups() -> void:
 	
-	$ScrollContainer/VBoxContainer2/s1nup/v/t0.add_child(cont["GRINDER"])
+	var f = "0"
 	
+	# s1M
+	if true:
+		
+		get_node("sc/v/s1mup/v/t" + f).add_child(cont["AUTOSHOVELER"])
+		get_node("sc/v/s1mup/v/t" + f).add_child(cont["SOCCER DUDE"])
+		get_node("sc/v/s1mup/v/t" + f).add_child(cont["IT'S GROWIN ON ME"])
+		
+		f = "1"
+		
+		get_node("sc/v/s1mup/v/t" + f).add_child(cont["OREOREUHBor E ALICE"])
+		get_node("sc/v/s1mup/v/t" + f).add_child(cont["ENTHUSIASM"])
+		get_node("sc/v/s1mup/v/t" + f).add_child(cont["how is this an RPG anyway?"])
+		get_node("sc/v/s1mup/v/t" + f).add_child(cont["aw <3"])
+		
+		f = "2"
+		
+		get_node("sc/v/s1mup/v/t" + f).add_child(cont["AUTOSTONER"])
+		get_node("sc/v/s1mup/v/t" + f).add_child(cont["CHUNKUS"])
+		get_node("sc/v/s1mup/v/t" + f).add_child(cont["you little hard worker, you"])
+		get_node("sc/v/s1mup/v/t" + f).add_child(cont["CON-FRICKIN-CRETE"])
+		get_node("sc/v/s1mup/v/t" + f).add_child(cont["OH, BABY, A TRIPLE"])
+		
+		f = "3"
+		
+		get_node("sc/v/s1mup/v/t" + f).add_child(cont["AUTOPOLICE"])
+		get_node("sc/v/s1mup/v/t" + f).add_child(cont["COMPULSORY JUICE"])
+		get_node("sc/v/s1mup/v/t" + f).add_child(cont["BIG TOUGH BOY"])
+		get_node("sc/v/s1mup/v/t" + f).add_child(cont["STAY QUENCHED"])
+		get_node("sc/v/s1mup/v/t" + f).add_child(cont["I DRINK YOUR MILKSHAKE"])
+		
+		f = "4"
+		
+		get_node("sc/v/s1mup/v/t" + f).add_child(cont["pippenpaddle- oppsoCOPolis"])
+		get_node("sc/v/s1mup/v/t" + f).add_child(cont["THE THIRD"])
+		get_node("sc/v/s1mup/v/t" + f).add_child(cont["ORE LORD"])
+		
+		f = "5"
+		
+		get_node("sc/v/s1mup/v/t" + f).add_child(cont["MOIST"])
+		get_node("sc/v/s1mup/v/t" + f).add_child(cont["CANCER'S COOL"])
+		get_node("sc/v/s1mup/v/t" + f).add_child(cont["upgrade_name"])
+		
+		f = "6"
+		
+		get_node("sc/v/s1mup/v/t" + f).add_child(cont["wtf is that musk"])
+		get_node("sc/v/s1mup/v/t" + f).add_child(cont["DUNKUS"])
+		get_node("sc/v/s1mup/v/t" + f).add_child(cont["I RUN"])
+		
+		f = "7"
+		
+		get_node("sc/v/s1mup/v/t" + f).add_child(cont["CANKERITE"])
+		get_node("sc/v/s1mup/v/t" + f).add_child(cont["coal DUDE"])
+		#note duplicate!get_node("sc/v/s1mup/v/t" + f).add_child(cont["I RUN"])
+		
+		f = "8"
+		
+		get_node("sc/v/s1mup/v/t" + f).add_child(cont["SENTIENT DERRICK"])
+		get_node("sc/v/s1mup/v/t" + f).add_child(cont["FOOD TRUCKS"])
 	
-	$ScrollContainer/VBoxContainer2/s1nup/v/t1.add_child(cont["LIGHTER SHOVEL"])
-	$ScrollContainer/VBoxContainer2/s1nup/v/t1.add_child(cont["RYE"])
-	$ScrollContainer/VBoxContainer2/s1nup/v/t1.add_child(cont["GRANDER"])
+	# s1n
+	if true:
+		
+		get_node("sc/v/s1nup/v/t" + f).add_child(cont["GRINDER"])
+		
+		f = "1"
+		get_node("sc/v/s1nup/v/t" + f).add_child(cont["GRANDER"])
+		get_node("sc/v/s1nup/v/t" + f).add_child(cont["LIGHTER SHOVEL"])
+		get_node("sc/v/s1nup/v/t" + f).add_child(cont["RYE"])
+		
+		f = "2"
+		get_node("sc/v/s1nup/v/t" + f).add_child(cont["GRANDMA"])
+		get_node("sc/v/s1nup/v/t" + f).add_child(cont["SAALNDT"])
+		get_node("sc/v/s1nup/v/t" + f).add_child(cont["TEXAS"])
+		get_node("sc/v/s1nup/v/t" + f).add_child(cont["MIXER"])
+		
+		f = "3"
+		get_node("sc/v/s1nup/v/t" + f).add_child(cont["GRANDPA"])
+		get_node("sc/v/s1nup/v/t" + f).add_child(cont["SALT"])
+		get_node("sc/v/s1nup/v/t" + f).add_child(cont["SAND"])
+		get_node("sc/v/s1nup/v/t" + f).add_child(cont["SWIRLER"])
+		get_node("sc/v/s1nup/v/t" + f).add_child(cont["WATT?"])
+		
+		f = "4"
+		get_node("sc/v/s1nup/v/t" + f).add_child(cont["GROUNDER"])
+		get_node("sc/v/s1nup/v/t" + f).add_child(cont["SLIMER"])
+		get_node("sc/v/s1nup/v/t" + f).add_child(cont["MAXER"])
+		get_node("sc/v/s1nup/v/t" + f).add_child(cont["CHEEKS"])
+		get_node("sc/v/s1nup/v/t" + f).add_child(cont["STICKYTAR"])
+		
+		f = "5"
+		get_node("sc/v/s1nup/v/t" + f).add_child(cont["ANCHOVE COVE"])
+		get_node("sc/v/s1nup/v/t" + f).add_child(cont["FLANK"])
+		get_node("sc/v/s1nup/v/t" + f).add_child(cont["RIB"])
+		get_node("sc/v/s1nup/v/t" + f).add_child(cont["GEARED OILS"])
+		get_node("sc/v/s1nup/v/t" + f).add_child(cont["RED GOOPY BOY"])
+		
+		f = "6"
+		get_node("sc/v/s1nup/v/t" + f).add_child(cont["MUD"])
+		get_node("sc/v/s1nup/v/t" + f).add_child(cont["THYME"])
+		get_node("sc/v/s1nup/v/t" + f).add_child(cont["SLOP"])
+		
+		f = "7"
+		get_node("sc/v/s1nup/v/t" + f).add_child(cont["PEPPER"])
+		get_node("sc/v/s1nup/v/t" + f).add_child(cont["GARLIC"])
+		get_node("sc/v/s1nup/v/t" + f).add_child(cont["INJECT"])
 
 
 
-func sync_self() -> void:
+func sync() -> void:
 	
 	gn_s1n_count.text = sync_count("s1nup")
 	gn_s1m_count.text = sync_count("s1mup")
@@ -56,7 +157,7 @@ func sync_self() -> void:
 
 func sync_count(_path: String) -> String:
 	
-	var owned :int= rt.menu.upgrades_owned[_path]
+	var owned :int= gv.menu.upgrades_owned[_path]
 	var total :int= rt.upc[_path].size()
 	var final_text = String(total)
 	

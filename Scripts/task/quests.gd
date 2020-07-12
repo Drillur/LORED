@@ -20,17 +20,18 @@ func quest_ended() -> void:
 	
 	match taq.quest.name:
 		"Spike":
-			rt.menu.option["task auto"] = true
+			gv.menu.option["task auto"] = true
 	
 	taq.cur_quest = ""
 	
 	for x in rt.tasks:
 		if rt.tasks[x].complete:
 			continue
-		
 		taq.new_quest(rt.tasks[x])
-		
 		break
+	
+	if taq.cur_quest == "":
+		hide()
 	
 	if "tasks" in rt.content_tasks.keys():
 		if taq.cur_tasks < taq.max_tasks:
@@ -41,7 +42,7 @@ func quest_ended() -> void:
 func flying_texts(resource_reward = {}) -> void:
 	
 	for x in resource_reward:
-		gv.g[x].r += resource_reward[x]
+		gv.g[x].r.plus(resource_reward[x])
 	
 	var i := 0
 	for x in resource_reward:
@@ -61,7 +62,7 @@ func flying_texts(resource_reward = {}) -> void:
 		
 		# dtext
 		content_effects["task reward dtext" + str(i)] = prefabs.D_TEXT.instance()
-		content_effects["task reward dtext" + str(i)].text = "+ " + fval.f(resource_reward[x])
+		content_effects["task reward dtext" + str(i)].text = "+ " + resource_reward[x].toString()
 		content_effects["task reward dtext" + str(i)].add_color_override("font_color", rt.r_lored_color(x))
 		content_effects["task reward dtext" + str(i)].get_node("icon").set_texture(gv.sprite[x])
 		content_effects["task reward dtext" + str(i)].init(true,-50)

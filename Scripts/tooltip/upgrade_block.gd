@@ -23,6 +23,11 @@ func init(_key: String) -> void:
 
 func get_texture(_key) -> Texture:
 	
+	# un-un-comment this line to only display the actual icon
+	#return gv.sprite[gv.up[_key].main_lored_target]
+	
+	
+	
 	if gv.up[_key].requires == "":
 		return gv.sprite[gv.up[_key].main_lored_target]
 	

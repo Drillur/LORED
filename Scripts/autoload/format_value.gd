@@ -6,14 +6,8 @@ extends Node
 
 # invoke with fval
 
-enum NotationType {ENGINEERING, SCIENTIFIC, PHONE_GAME}
+enum NotationType {ENGINEERING, SCIENTIFIC}
 
-const PHONE_GAME_NOTATION_KEYS := {
-	0: "m", 1: "b", 2: "t", 3: "aa", 4: "ab", 5: "ac", 6: "ad", 7: "ae",
-	8: "af", 9: "ag", 10: "ah", 11: "ai", 12: "aj", 13: "ak", 14: "al",
-	15: "am", 16: "an", 17: "ao", 18: "ap", 19: "aq", 20: "ar", 21: "as",
-	22: "at", 23: "au", 24: "av", 25: "aw", 26: "ax", 27: "ay", 28: "az",
-}
 onready var Root = get_node("/root/Root")
 
 
@@ -28,13 +22,13 @@ func f(value: float) -> String:
 	value = abs(value)
 	
 	if value >= 1000000.0:
-		match Root.menu.option["notation_type"]:
+		match gv.menu.option["notation_type"]:
 			NotationType.ENGINEERING:
 				return format_val_eng(_sign, value) # 20e6
 			NotationType.SCIENTIFIC:
 				return format_val_sci(_sign, value) # 2e7
-			NotationType.PHONE_GAME:
-				return format_val_phone_game(_sign, value) # 20m
+			_:
+				return format_val_log(_sign, value)
 	
 	if value < 100.0:
 		return format_val_small(_sign, value) # 10.0
@@ -89,15 +83,14 @@ func format_val_sci(_sign: int, value: float) -> String:
 	return String(stepify(_sign * coefficient, .01)) + "e" + String(_exp)
 
 
-func format_val_phone_game(_sign: int, value: float) -> String:
+func format_val_log(_sign: int, value: float) -> String:
 	
-	# not-a-real notation
+	# logarithmic notation
 	
-	var _exp := stepify((String(value).split(".")[0].length() - 1) - 1, 3)
-	var coefficient := value / pow(10, _exp)
-	
-	_exp = (_exp - 6) / 3
-	return String(stepify(_sign * coefficient, step(coefficient))) + ("{" + String(_exp) + "}").format(PHONE_GAME_NOTATION_KEYS)
+	var to_log_10 = str(stepify(log(value) / log(10) * 10,0.01))
+	if _sign == -1:
+		to_log_10 = "-" + to_log_10
+	return to_log_10
 
 
 func step(coefficient: float) -> float:

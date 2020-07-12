@@ -13,19 +13,20 @@ var used_by := []
 var progress := Num.new()
 var task := "no"
 var last_task : String
-var inhand : float
+var inhand := Big.new(0)
 
 var level := 1
 var d : Num # output; damage, basically
-var output_modifier := Num.new()
+var output_modifier := Big.new()
 var f := Num.new() # fuel
 var fc := Num.new() # fuel cost
-var r: float # resources
+var r := Big.new(0.0) # resources
 var b := {} # burn
-var cost_modifier := Num.new()
-var modifier_from_growin_on_me := 1.0
+var cost_modifier := Big.new()
+var modifier_from_growin_on_me := Big.new(1.0)
 var halt := false
 var hold := false
+var update_net_text := true
 var speed : Num
 var crit := Num.new(0.0) # crit chance
 
@@ -34,14 +35,14 @@ var crit := Num.new(0.0) # crit chance
 var benefactors := {}
 
 
+
 func _init(
 	_name: String,
 	_type: String,
 	_burn: Dictionary,
 	_cost: Dictionary,
 	_speed: float,
-	_base_d := 1.0
-	) -> void:
+	_base_d := 1.0) -> void:
 	
 	name = _name
 	type = _type
@@ -52,207 +53,240 @@ func _init(
 
 
 
-func sync_self():
+func sync():
 	
-	f.t = f.b # * w_aa_d("fuelt", f.short)
-	output_modifier.t = output_modifier.b * mod("add") * mod("out") * mod_limit_break() * modifier_from_growin_on_me * gv.hax_pow
-	d.t = d.b * output_modifier.t
-	fc.t = fc.b * mod("fc")
-	speed.t = speed.b * mod("haste") / gv.hax_pow
-	crit.t = crit.b + mod("crit")
-
-	progress.t = progress.b
-	cost_modifier.t = cost_modifier.b
-	var tier = int(type[1])
-	for v in cost:
-		
-		cost[v].t = cost[v].b * cost_modifier.t * mod_cost(v)
-		
-		var vtier = int(gv.g[v].type[1])
-		while tier > vtier:
-			cost[v].t *= cost_modifier.t
-			vtier += 1
-	for v in b:
-		b[v].t = b[v].b * mod_burn(v)
+	f.sync()
+	progress.sync()
+	
+	sync_d()
+	sync_fc()
+	sync_speed()
+	sync_crit()
+	sync_cost()
+	sync_b()
+	
+	if r.isLessThan(0):
+		r = Big.new(0)
+	if r.mantissa < 0:
+		r.mantissa = 0
+	
+	# -
+	
+	#update_net_text = true
 
 
-func mod(_type: String) -> float:
+func sync_d():
 	
-	var d := 1.0
+	d.a = Big.new(0)
+	d.m = Big.new()
 	
-	match _type:
-		"crit":
-			d = mod_crit(d - 1)
-		"add":
-			d = mod_add(d)
-		"haste":
-			d = mod_haste_d(d)
-		"out":
-			d = mod_output(d)
-		"fc":
-			d = mod_fuel_cost(d)
 	
-	return d
-
-func mod_add(d: float) -> float:
-	
+	# a
 	for x in benefactors["add list"]:
-		d += gv.up[x].d
+		d.a.plus(gv.up[x].d.t)
 	
-	return d
-
-func mod_crit(d: float) -> float:
-	
-	for x in benefactors["crit list"]:
-		d += gv.up[x].d
-	
-	return d
-
-func mod_output(d: float) -> float:
-	
+	# m
 	for x in benefactors["out list"]:
-		d *= gv.up[x].d
+		d.m.multiply(gv.up[x].d.t)
 	
-	return d
-
-func mod_haste_d(d: float) -> float:
+	d.m.multiply(output_modifier)
+	d.m.multiply(Big.new(1).max(Big.new(f.f).divide(f.t), 1))
+	d.m.multiply(modifier_from_growin_on_me)
+	d.m.multiply(gv.hax_pow)
 	
-	for x in benefactors["haste list"]:
-		d *= gv.up[x].d
 	
-	return d
+	d.sync()
 
-func mod_limit_break() -> float:
-	return max(1.0, f.f / f.t)
-
-func mod_fuel_cost(d: float) -> float:
+func sync_fc():
+	
+	#fc.a = Big.new(0) - uncomment if you ever need this
+	fc.m = Big.new()
+	
 	
 	if gv.up["upgrade_description"].active():
-		d *= 10
+		fc.m.multiply(10)
 	
 	if "s1" in type and "bur " in type:
 		if gv.up["upgrade_name"].active():
-			d *= 10
+			fc.m.multiply(10)
 	
-	return d
+	
+	fc.sync()
 
-func mod_cost(v: String) -> float:
+func sync_speed():
 	
-	# v: which key in the cost dictionary
+	#speed.a = Big.new(0)
+	speed.m = Big.new()
 	
-	var d := 1.0
 	
-	for x in benefactors["cost list"]:
-		
-		if type.split(" ")[0] == gv.up[x].benefactor_of[0]:
-			d *= gv.up[x].d
-			continue
-		
-		var in_check := false
-		var i := -1
-		for z in gv.up[x].benefactor_of:
-			i += 1
-			if not v in gv.up[x].benefactor_of[i]: continue
-			in_check = true
-			break
-		
-		if not in_check: continue
-		
-		d *= gv.up[x].d
+	for x in benefactors["haste list"]:
+		speed.m.divide(gv.up[x].d.t)
 	
-	return d
+	speed.m.divide(gv.hax_pow)
+	
+	
+	speed.sync()
 
-func mod_burn(v: String) -> float:
+func sync_crit():
 	
-	# v: which key in the cost dictionary
+	crit.a = Big.new(0)
+	#crit.m = Big.new()
 	
-	var d := 1.0
 	
-	for x in benefactors["burn list"]:
-		
-		if type.split(" ")[0] == gv.up[x].benefactor_of[0]:
-			d *= gv.up[x].d
-			continue
-		
-		var in_check := false
-		var i := -1
-		for z in gv.up[x].benefactor_of:
-			i += 1
-			if not v in gv.up[x].benefactor_of[i]: continue
-			in_check = true
-			break
-		
-		if not in_check: continue
-		
-		d *= gv.up[x].d
+	for x in benefactors["crit list"]:
+		crit.a.plus(gv.up[x].d.t)
 	
-	return d
+	
+	crit.sync()
+
+func sync_cost():
+	
+	for c in cost:
+		
+		cost[c].m = Big.new()
+		
+		cost[c].m.multiply(cost_modifier)
+		
+		for x in benefactors["cost list"]:
+			
+			if type.split(" ")[0] == gv.up[x].benefactor_of[0]:
+				cost[c].m.multiply(gv.up[x].d.t)
+				continue
+			
+			var in_check := false
+			var i := -1
+			for z in gv.up[x].benefactor_of:
+				i += 1
+				if not c in gv.up[x].benefactor_of[i]:
+					continue
+				in_check = true
+				break
+			
+			if not in_check: continue
+			
+			cost[c].m.multiply(gv.up[x].d.t)
+	
+	var tier = int(type[1])
+	for c in cost:
+		
+		var vtier = int(gv.g[c].type[1])
+		while tier > vtier:
+			cost[c].m.multiply(cost_modifier)
+			vtier += 1
+	
+	
+	for c in cost:
+		
+		cost[c].sync()
+
+func sync_b():
+	
+	for v in b:
+		
+		#b[v].a = Big.new(0)
+		b[v].m = Big.new()
+	
+		for x in benefactors["burn list"]:
+			
+			if type.split(" ")[0] == gv.up[x].benefactor_of[0]:
+				b[v].m.multiply(gv.up[x].d.t)
+				continue
+			
+			var in_check := false
+			var i := -1
+			for z in gv.up[x].benefactor_of:
+				i += 1
+				if not v in gv.up[x].benefactor_of[i]:
+					continue
+				in_check = true
+				break
+			
+			if not in_check: continue
+			
+			b[v].m.multiply(gv.up[x].d.t)
+	
+	for x in b:
+		b[x].sync()
 
 
-func net(get_raw_power := false, ignore_halt := false) -> float:
+func ___________________():
+	#lol
+	pass
+
+
+func net(get_raw_power := false, ignore_halt := false) -> Array:
 	
-	var per_sec : float = d.t * 60 / speed.t * (1 + (crit.t / 10))
+	# returns [gain, drain]
+	
+	var gain = Big.new(d.t).multiply(60).divide(speed.t).multiply(Big.new(1).plus(Big.new(crit.t).divide(10)))
+	var drain = Big.new(0)
 	
 	if not active:
-		per_sec = 0.0
+		gain.multiply(0)
 	
 	# upgrade-specific per_sec bonuses
 	if true:
 		
-		if short == "cop" and gv.up["THE THIRD"].active() and not w_idle("copo"):
-			per_sec += gv.g["copo"].d.t * 60 / gv.g["copo"].speed.t * (1 + (gv.g["copo"].crit.t / 10))
+		if short == "cop" and gv.up["THE THIRD"].active() and gv.g["copo"].active():
+			var gay = Big.new(gv.g["copo"].d.t).multiply(60).divide(gv.g["copo"].speed.t)
+			gay.multiply(Big.new(1).plus(Big.new(gv.g["copo"].crit.t).divide(10)))
+			gain.plus(gay)
 		
-		if short == "stone" and gv.up["wait that's not fair"].active() and not w_idle("stone"):
-			per_sec += gv.g["coal"].d.t * 60 / gv.g["coal"].speed.t * (1 + (gv.g["coal"].crit.t / 10)) * 10
+		if short == "stone" and gv.up["wait that's not fair"].active() and gv.g["stone"].active():
+			var gay = Big.new(gv.g["coal"].d.t).multiply(60).divide(gv.g["coal"].speed.t)
+			gay.multiply(Big.new(1).plus(Big.new(gv.g["coal"].crit.t).divide(10)))
+			gain.plus(gay)
 		
-		if short == "iron" and gv.up["I RUN"].active() and not w_idle("iron"):
-			per_sec += gv.g["irono"].d.t * 60 / gv.g["irono"].speed.t * (1 + (gv.g["irono"].crit.t / 10))
+		if short == "iron" and gv.up["I RUN"].active() and not gv.g["iron"].active():
+			var gay = Big.new(gv.g["irono"].d.t).multiply(60).divide(gv.g["irono"].speed.t)
+			gay.multiply(Big.new(1).plus(Big.new(gv.g["irono"].crit.t).divide(10)))
+			gain.plus(gay)
 		
-		per_sec += witch() * 60
+		gain.plus(witch(false).multiply(60))
 	
 	if get_raw_power:
-		return per_sec
+		return [gain, drain]
 	
 	# halt or hold shit
 	if not ignore_halt:
 		
 		if halt:
-			per_sec = 0.0
+			gain.multiply(0)
 		
 		# all below: candy from babies
 		while "bur " in type:
 			if gv.up["don't take candy from babies"].active():
 				if int(type[1]) > 1 and gv.g["coal"].level <= 5:
-					if f.f < f.t * 0.1:
-						per_sec = 0.0
+					if f.f.isLessThan(Big.new(f.t).multiply(0.1)):
+						gain.multiply(0)
 						break
-			if f.f < f.t * 0.1 and not gv.g["coal"].active:
-				per_sec = 0.0
+			if f.f.isLessThan(Big.new(f.t).multiply(0.1)) and not gv.g["coal"].active:
+				gain.multiply(0)
 				break
 			break
 		
 		while "ele " in type:
 			if gv.up["don't take candy from babies"].active():
 				if int(type[1]) > 1 and gv.g["jo"].level <= 5:
-					if f.f < f.t * 0.1:
-						per_sec = 0.0
+					if f.f.isLessThan(Big.new(f.t).multiply(0.1)):
+						gain.multiply(0)
 						break
-			if f.f < f.t * 0.1 and not gv.g["jo"].active:
-				per_sec = 0.0
+			if f.f.isLessThan(Big.new(f.t).multiply(0.1)) and not gv.g["jo"].active:
+				gain.multiply(0)
 				break
 			break
 		
 		for x in b:
 			if gv.up["don't take candy from babies"].active():
 				if gv.g[x].type[1] == "1" and int(type[1]) > 1 and gv.g[x].level <= 5:
-					per_sec = 0.0
+					gain.multiply(0)
 					break
 			if not gv.g[x].hold: continue
-			per_sec = 0.0
+			gain.multiply(0)
 			break
 	
 	# fuel lored
-	if short == "coal" or short == "jo":
+	if short in ["coal", "jo"]:
 		
 		for x in gv.g:
 			
@@ -262,7 +296,7 @@ func net(get_raw_power := false, ignore_halt := false) -> float:
 			if (short == "coal" and "bur " in gv.g[x].type) or (short == "jo" and "ele " in gv.g[x].type):
 				if is_baby(int(gv.g[x].type[1])):
 					continue
-				per_sec -= fuel_lored_net_loss(gv.g[x])
+				drain.plus(fuel_lored_net_loss(gv.g[x]))
 	
 	# checks all loreds that use this resource
 	for x in used_by:
@@ -284,23 +318,24 @@ func net(get_raw_power := false, ignore_halt := false) -> float:
 			if brake:
 				break
 		
+		
 		if not gv.g[x].active:
 			continue
 		if is_baby(int(gv.g[x].type[1])):
 			continue
 		
-		per_sec -= gv.g[x].d.t / gv.g[x].speed.t * 60 * gv.g[x].b[short].t
-	
-#	if f.short == "coal":
-#		print(fval.f(per_sec))
-	return per_sec
+		var gay = Big.new(gv.g[x].d.t).divide(gv.g[x].speed.t).multiply(60).multiply(gv.g[x].b[short].t)
+		drain.plus(gay)
+#	if short == "jo":
+#		print(gain.toString(), "/", drain.toString())
+	return [gain, drain]
 
-func is_baby(gx_type: int) -> bool:
+func is_baby(gx_type: int = int(type[1])) -> bool:
 	
-	# compares f and gx.
-	# if f is baby and gx is adult, returns true
+	# compares self and gx.
+	# if self is baby and gx is adult, returns true
 	
-	if gx_type >= 2:
+	if int(type[1]) >= 2:
 		return false
 	
 	if not gv.up["don't take candy from babies"].active():
@@ -318,73 +353,90 @@ func is_baby(gx_type: int) -> bool:
 
 func fuel_lored_net_loss(gx: LORED) -> float:
 	
-	var less = gx.fc.t * 4
-	var max_fuel = gx.f.t * gv.overcharge if gx.type[1] in gv.overcharge_list else gx.f.t
-	max_fuel -= less
+	var less = Big.new(gx.fc.t).multiply(4)
+	var max_fuel = Big.new(gx.f.t).multiply(gv.overcharge) if gx.type[1] in gv.overcharge_list else Big.new(gx.f.t)
+	max_fuel.minus(less)
 	
-	if gx.f.f < gx.f.t - less:
-		return gx.fc.t * 120 * less_from_full(gx.f.f, max_fuel)
+	if gx.f.f.isLessThan(Big.new(gx.f.t).minus(less)):
+		return Big.new(gx.fc.t).multiply(120).multiply(less_from_full(gx.f.f, max_fuel))
 	
-	if gx.f.f < max_fuel:
+	if gx.f.f.isLessThan(max_fuel):
 		if gx.halt:
-			return gx.fc.t * 60 * less_from_full(gx.f.f, max_fuel)
-		return gx.fc.t * 120 * less_from_full(gx.f.f, max_fuel)
+			return Big.new(gx.fc.t).multiply(60).multiply(less_from_full(gx.f.f, max_fuel))
+		return Big.new(gx.fc.t).multiply(120).multiply(less_from_full(gx.f.f, max_fuel))
 	
 	if gx.halt:
 		return 0.0
 	
-	return gx.fc.t * 60 * less_from_full(gx.f.f, max_fuel)
+	return Big.new(gx.fc.t).multiply(60).multiply(less_from_full(gx.f.f, max_fuel))
 
-func less_from_full(current: float, _max: float) -> float:
+func less_from_full(current: Big, _max: Big) -> Big:
 	if not gv.up["RELATIVITY"].active():
-		return 1.0
+		return Big.new()
 	# if 1% fuel, returns 99x
 	# if 60% fuel, returns 40x
-	return (1.0 - (current / _max)) * 100
+	# 1 - (current / max)
+	return Big.new(1).minus(Big.new(current).divide(_max)).multiply(100)
 
 
-func w_idle(short: String) -> bool:
+func active() -> bool:
 	# return true if the lored is either halted or inactive
-	if not active: return true
-	if halt: return true
-	return false
+	if not active: return false
+	if halt: return false
+	return true
 
-func witch() -> float:
+func witch(produced : bool) -> Big:
 	
 	if halt or type[1] == "2" or not gv.up["THE WITCH OF LOREDELITH"].active():
-		return 0.0
+		return Big.new(0.0)
+	if "no" in gv.menu.f:
+		return Big.new(0)
 	
-	var witch: float = d.t * 0.01 * (speed.b / speed.t)
+	var witch: Big = Big.new(d.t).multiply(0.01).multiply(speed.b).divide(speed.t)
 	
-	if gv.w_active("GRIMOIRE"):
-		witch *= log(gv.stats.run[0])
+	if gv.up["GRIMOIRE"].active():
+		witch.multiply(log(gv.stats.run[0]))
+	
+	if not produced:
+		return witch
 	
 	task_and_quest_check(witch)
 	
 	return witch
 
-func task_and_quest_check(f: float) -> void:
+func task_and_quest_check(f: Big) -> void:
 	
 	var key = name + " produced"
 	
 	# tasks
 	for x in taq.task:
+		
 		if not key in taq.task[x].step.keys():
 			continue
-		#print("key: ", key, " - task step keys: ", taq.task[x].step.keys())
-		taq.task[x].step[key].f = min(taq.task[x].step[key].f + f, taq.task[x].step[key].b)
+		
+		if taq.task[x].step[key].f.isLessThan(taq.task[x].step[key].b):
+			taq.task[x].step[key].f.plus(f)
+		if taq.task[x].step[key].f.isLargerThan(taq.task[x].step[key].b):
+			taq.task[x].step[key].f = Big.new(taq.task[x].step[key].b)
 	
 	# quest
 	if taq.cur_quest != "":
 		
 		var z = taq.quest.step.keys()[0]
 		if z == "Combined resources produced" or (z == "Combined Stage 2 resources produced" and "s2" in type):
-			taq.quest.step[z].f = min(taq.quest.step[z].f + f, taq.quest.step[z].b)
+			
+			if taq.quest.step[z].f.isLessThan(taq.quest.step[z].b):
+				taq.quest.step[z].f.plus(f)
+			if taq.quest.step[z].f.isLargerThan(taq.quest.step[z].b):
+				taq.quest.step[z].f = Big.new(taq.quest.step[z].b)
 		
 		if not key in taq.quest.step.keys():
 			return
-		#print("key: ", key, " - quest step keys: ", taq.quest.step.keys())
-		taq.quest.step[key].f = min(taq.quest.step[key].f + f, taq.quest.step[key].b)
+		
+		if taq.quest.step[key].f.isLessThan(taq.quest.step[key].b):
+			taq.quest.step[key].f.plus(f)
+		if taq.quest.step[key].f.isLargerThan(taq.quest.step[key].b):
+			taq.quest.step[key].f = Big.new(taq.quest.step[key].b)
 
 
 func w_get_losing() -> float:

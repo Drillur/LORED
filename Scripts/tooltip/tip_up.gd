@@ -55,20 +55,23 @@ func price_stuff() -> void:
 			return
 		if "reset" in gv.up[key].type:
 			return
+		if gv.up[key].cost.size() == 0:
+			return
 	
 	$VBoxContainer/m.show()
+	get_node("VBoxContainer/m/bg").self_modulate = rt.r_lored_color(gv.up[key].main_lored_target)
 	
 	var f = gv.up[key].cost
 	var i := 0
 	
 	for x in f:
 		
-		var val: float = f[x].t
+		var val: Big = Big.new(f[x].t)
 		
 		cont[x] = src.price.instance()
 		
 		# texts
-		cont[x].get_node("HBoxContainer/VBoxContainer/val").text = fval.f(gv.g[x].r) + " / " + fval.f(val)
+		cont[x].get_node("HBoxContainer/VBoxContainer/val").text = gv.g[x].r.toString() + " / " + val.toString()
 		cont[x].get_node("HBoxContainer/VBoxContainer/type").text = gv.g[x].name
 		
 		# texture
@@ -114,12 +117,13 @@ func requirements() -> bool:
 	
 	return true
 
-var upgrades_with_effects := [
-	"IT'S GROWIN ON ME",
-	"IT'S SPREADIN ON ME",
-	"I DRINK YOUR MILKSHAKE"
-]
 func effects() -> void:
+	
+	var upgrades_with_effects := [
+		"IT'S GROWIN ON ME",
+		"IT'S SPREADIN ON ME",
+		"I DRINK YOUR MILKSHAKE"
+	]
 	
 	# catches
 	if not key in upgrades_with_effects:
@@ -132,22 +136,23 @@ func effects() -> void:
 	
 	
 	get_node("VBoxContainer/effects").show()
+	get_node("VBoxContainer/effects/bg").self_modulate = rt.r_lored_color(gv.up[key].main_lored_target)
 	
 	match key:
 		
 		"I DRINK YOUR MILKSHAKE":
 			
-			get_node("VBoxContainer/effects/idym").show()
+			get_node("VBoxContainer/effects/v/idym").show()
 		
 		"IT'S GROWIN ON ME", "IT'S SPREADIN ON ME":
 			
 			if gv.up["IT'S GROWIN ON ME"].active():
-				get_node("VBoxContainer/effects/igom_iron").show()
-				get_node("VBoxContainer/effects/igom_cop").show()
+				get_node("VBoxContainer/effects/v/igom_iron").show()
+				get_node("VBoxContainer/effects/v/igom_cop").show()
 			
 			if gv.up["IT'S SPREADIN ON ME"].active():
-				get_node("VBoxContainer/effects/igom_irono").show()
-				get_node("VBoxContainer/effects/igom_copo").show()
+				get_node("VBoxContainer/effects/v/igom_irono").show()
+				get_node("VBoxContainer/effects/v/igom_copo").show()
 
 func labels_and_textures() -> void:
 	
@@ -187,7 +192,9 @@ func random_desc() -> String:
 		1:
 			return "This upgrade could do ANYTHING. It could unlock the WIN command. You don't know."
 		2:
-			return "LORED haste x" + fval.f(5000000000) + "."
+			var mant: float = rand_range(1,9)
+			var expo: float = rand_range(1000, 100000)
+			return "LORED haste x" + Big.new(str(mant)+"e"+str(expo)).toString() + "."
 		3:
 			return "Improves the quality of every animation."
 		4:

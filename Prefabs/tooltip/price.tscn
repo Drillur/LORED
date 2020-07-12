@@ -4,40 +4,34 @@
 [ext_resource path="res://Fonts/Roboto-Black.ttf" type="DynamicFontData" id=2]
 [ext_resource path="res://Fonts/Roboto-Medium.ttf" type="DynamicFontData" id=3]
 [ext_resource path="res://Fonts/Roboto-MediumItalic.ttf" type="DynamicFontData" id=4]
+[ext_resource path="res://Styles/Panels/flash.tres" type="StyleBox" id=5]
 
 [sub_resource type="StyleBoxFlat" id=1]
 bg_color = Color( 1, 1, 1, 0.0509804 )
 expand_margin_left = 12.0
 expand_margin_right = 16.0
 
-[sub_resource type="DynamicFont" id=5]
+[sub_resource type="DynamicFont" id=2]
 size = 12
 outline_size = 2
 outline_color = Color( 0, 0, 0, 1 )
 font_data = ExtResource( 4 )
 
-[sub_resource type="StyleBoxFlat" id=2]
+[sub_resource type="StyleBoxFlat" id=3]
 draw_center = false
 
-[sub_resource type="DynamicFont" id=3]
+[sub_resource type="DynamicFont" id=4]
 size = 14
 outline_size = 2
 outline_color = Color( 0, 0, 0, 1 )
 extra_spacing_bottom = -4
 font_data = ExtResource( 2 )
 
-[sub_resource type="DynamicFont" id=4]
+[sub_resource type="DynamicFont" id=5]
 size = 12
 outline_size = 2
 outline_color = Color( 0, 0, 0, 1 )
 font_data = ExtResource( 3 )
-
-[sub_resource type="StyleBoxFlat" id=6]
-bg_color = Color( 0.0705882, 0.0705882, 0.0705882, 0 )
-expand_margin_left = 12.0
-expand_margin_right = 16.0
-shadow_color = Color( 0.878431, 0.121569, 0.34902, 0.2 )
-shadow_size = 5
 
 [node name="MarginContainer" type="MarginContainer"]
 margin_right = 110.0
@@ -66,7 +60,7 @@ margin_top = 16.0
 margin_right = 25.0
 margin_bottom = 31.0
 rect_min_size = Vector2( 25, 0 )
-custom_fonts/font = SubResource( 5 )
+custom_fonts/font = SubResource( 2 )
 text = "12y"
 align = 1
 __meta__ = {
@@ -90,7 +84,7 @@ margin_bottom = 42.0
 rect_min_size = Vector2( 36, 36 )
 size_flags_horizontal = 4
 size_flags_vertical = 4
-custom_styles/panel = SubResource( 2 )
+custom_styles/panel = SubResource( 3 )
 
 [node name="Sprite" type="Sprite" parent="HBoxContainer/icon"]
 position = Vector2( 18, 18 )
@@ -106,7 +100,7 @@ alignment = 1
 margin_top = 8.0
 margin_right = 27.0
 margin_bottom = 21.0
-custom_fonts/font = SubResource( 3 )
+custom_fonts/font = SubResource( 4 )
 custom_colors/font_color = Color( 0.517647, 0, 1, 1 )
 text = "5 / 5"
 
@@ -114,7 +108,7 @@ text = "5 / 5"
 margin_top = 25.0
 margin_right = 27.0
 margin_bottom = 40.0
-custom_fonts/font = SubResource( 4 )
+custom_fonts/font = SubResource( 5 )
 custom_colors/font_color = Color( 0.800781, 0.800781, 0.800781, 1 )
 text = "Coal"
 
@@ -126,7 +120,7 @@ margin_right = 102.0
 margin_bottom = 45.0
 rect_min_size = Vector2( 0, 43 )
 size_flags_vertical = 4
-custom_styles/panel = SubResource( 6 )
+custom_styles/panel = ExtResource( 5 )
 
 [node name="flash1" type="Panel" parent="."]
 visible = false
@@ -136,4 +130,4 @@ margin_right = 102.0
 margin_bottom = 45.0
 rect_min_size = Vector2( 0, 43 )
 size_flags_vertical = 4
-custom_styles/panel = SubResource( 6 )
+custom_styles/panel = ExtResource( 5 )

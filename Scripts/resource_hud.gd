@@ -23,13 +23,20 @@ func _physics_process(delta):
 	if fps < rt.FPS: return
 	fps -= rt.FPS
 	
-	if rt.menu.option["resource_bar_net"]:
+	if gv.menu.option["resource_bar_net"]:
 		text = rt.get_node("map/loreds").lored[my_lored].get_node("net").text
 	else:
-		text = fval.f(gv.g[my_lored].r)
+		text = gv.g[my_lored].r.toString()
 	
-	if not rt.menu.option["status_color"]: return
+	if not gv.menu.option["status_color"]: return
 	
-	self.add_color_override("font_color", rt.get_node("map/loreds").lored[my_lored].r_status_indicator("resource bar"))
-	#if text == "0": text = ""
+	var color = rt.get_node("map/loreds").lored[my_lored].get_node("status").modulate
+	if color == Color(1,0,0,0):
+		color = Color(.5,.5,.5,1)
+	elif color == Color(1,0,0,0.5):
+		color = Color(1,0,0, 1)
+	elif color == Color(1,1,0,0.5):
+		color = Color(1,1,0,1)
+	
+	add_color_override("font_color", color)
 

@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=2]
+[gd_scene load_steps=21 format=2]
 
 [ext_resource path="res://Sprites/resources/carc.png" type="Texture" id=1]
 [ext_resource path="res://Fonts/Roboto-BlackItalic.ttf" type="DynamicFontData" id=2]
@@ -8,6 +8,7 @@
 [ext_resource path="res://Styles/Labels/narrow.tres" type="DynamicFont" id=6]
 [ext_resource path="res://Styles/Panels/block_inside_tip.tres" type="StyleBox" id=7]
 [ext_resource path="res://Styles/Panels/tag_bg.tres" type="StyleBox" id=8]
+[ext_resource path="res://Fonts/Roboto-Black.ttf" type="DynamicFontData" id=9]
 
 [sub_resource type="StyleBoxFlat" id=1]
 bg_color = Color( 0.121569, 0.121569, 0.121569, 1 )
@@ -70,72 +71,26 @@ size = 11
 outline_color = Color( 0, 0, 0, 1 )
 font_data = ExtResource( 4 )
 
-[sub_resource type="StyleBoxFlat" id=8]
-bg_color = Color( 0.701961, 0, 1, 0.211765 )
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color( 0.7, 0, 1, 0.4 )
-expand_margin_left = 5.0
-expand_margin_right = 5.0
-expand_margin_top = 5.0
-expand_margin_bottom = 5.0
-anti_aliasing = false
+[sub_resource type="DynamicFont" id=8]
+size = 12
+outline_size = 2
+outline_color = Color( 0, 0, 0, 1 )
+extra_spacing_bottom = 3
+font_data = ExtResource( 3 )
 
-[sub_resource type="StyleBoxFlat" id=9]
-bg_color = Color( 0.07, 0.89, 1, 0.21 )
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color( 0.07, 0.89, 1, 0.4 )
-expand_margin_left = 5.0
-expand_margin_right = 5.0
-expand_margin_top = 5.0
-expand_margin_bottom = 5.0
-anti_aliasing = false
+[sub_resource type="DynamicFont" id=9]
+size = 14
+outline_size = 2
+outline_color = Color( 0, 0, 0, 1 )
+font_data = ExtResource( 9 )
 
-[sub_resource type="StyleBoxFlat" id=10]
-bg_color = Color( 1, 0.741176, 0.0509804, 0.211765 )
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color( 1, 0.74, 0.05, 0.4 )
-expand_margin_left = 5.0
-expand_margin_right = 5.0
-expand_margin_top = 5.0
-expand_margin_bottom = 5.0
-anti_aliasing = false
+[sub_resource type="DynamicFont" id=10]
+size = 11
+outline_size = 2
+outline_color = Color( 0, 0, 0, 1 )
+font_data = ExtResource( 3 )
 
-[sub_resource type="StyleBoxFlat" id=11]
-bg_color = Color( 0, 0.321569, 0.560784, 0.211765 )
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color( 0, 0.321569, 0.560784, 0.4 )
-expand_margin_left = 5.0
-expand_margin_right = 5.0
-expand_margin_top = 5.0
-expand_margin_bottom = 5.0
-anti_aliasing = false
-
-[sub_resource type="StyleBoxFlat" id=12]
-bg_color = Color( 0.701961, 0.329412, 0, 0.211765 )
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color( 0.701961, 0.329412, 0, 0.4 )
-expand_margin_left = 5.0
-expand_margin_right = 5.0
-expand_margin_top = 5.0
-expand_margin_bottom = 5.0
-anti_aliasing = false
-
-[sub_resource type="DynamicFont" id=13]
+[sub_resource type="DynamicFont" id=11]
 size = 12
 outline_size = 2
 outline_color = Color( 0, 0, 0, 1 )
@@ -144,7 +99,7 @@ font_data = ExtResource( 3 )
 [node name="MarginContainer" type="MarginContainer"]
 anchor_right = 1.90735e-08
 margin_right = 258.0
-margin_bottom = 121.0
+margin_bottom = 78.0
 rect_min_size = Vector2( 258, 0 )
 rect_clip_content = true
 size_flags_horizontal = 0
@@ -163,14 +118,14 @@ visible = false
 margin_left = 10.0
 margin_top = 10.0
 margin_right = 248.0
-margin_bottom = 111.0
+margin_bottom = 68.0
 custom_styles/panel = SubResource( 1 )
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 margin_left = 10.0
 margin_top = 10.0
 margin_right = 248.0
-margin_bottom = 111.0
+margin_bottom = 68.0
 
 [node name="Active" type="HBoxContainer" parent="VBoxContainer"]
 size_flags_horizontal = 0
@@ -322,183 +277,181 @@ custom_colors/font_color = Color( 0.827451, 0.827451, 0.827451, 1 )
 text = "One line"
 autowrap = true
 
-[node name="effects" type="VBoxContainer" parent="VBoxContainer"]
+[node name="effects" type="MarginContainer" parent="VBoxContainer"]
+visible = false
 margin_top = 62.0
-margin_bottom = 62.0
-size_flags_horizontal = 0
-
-[node name="idym" type="MarginContainer" parent="VBoxContainer/effects"]
-visible = false
-margin_right = 65.0
-margin_bottom = 25.0
-size_flags_horizontal = 0
-size_flags_vertical = 0
-custom_constants/margin_right = 5
-custom_constants/margin_top = 5
-custom_constants/margin_left = 5
-custom_constants/margin_bottom = 5
-
-[node name="Panel" type="Panel" parent="VBoxContainer/effects/idym"]
-margin_left = 5.0
-margin_top = 5.0
-margin_right = 60.0
-margin_bottom = 20.0
-mouse_filter = 2
-custom_styles/panel = SubResource( 8 )
-
-[node name="text" type="Label" parent="VBoxContainer/effects/idym"]
-margin_left = 5.0
-margin_top = 5.0
-margin_right = 60.0
-margin_bottom = 20.0
-size_flags_horizontal = 4
-custom_fonts/font = ExtResource( 6 )
-custom_colors/font_color = Color( 1, 1, 1, 1 )
-text = "Boost: 8.5"
-
-[node name="igom_iron" type="MarginContainer" parent="VBoxContainer/effects"]
-visible = false
-margin_top = 29.0
-margin_right = 128.0
-margin_bottom = 54.0
-size_flags_horizontal = 0
-size_flags_vertical = 0
-custom_constants/margin_right = 5
-custom_constants/margin_top = 5
-custom_constants/margin_left = 5
-custom_constants/margin_bottom = 5
-
-[node name="Panel" type="Panel" parent="VBoxContainer/effects/igom_iron"]
-margin_left = 5.0
-margin_top = 5.0
-margin_right = 123.0
-margin_bottom = 20.0
-mouse_filter = 2
-custom_styles/panel = SubResource( 9 )
-
-[node name="text" type="Label" parent="VBoxContainer/effects/igom_iron"]
-margin_left = 5.0
-margin_top = 5.0
-margin_right = 123.0
-margin_bottom = 20.0
-size_flags_horizontal = 4
-custom_fonts/font = ExtResource( 6 )
-custom_colors/font_color = Color( 1, 1, 1, 1 )
-text = "Iron LORED boost: 8.5"
-
-[node name="igom_cop" type="MarginContainer" parent="VBoxContainer/effects"]
-visible = false
-margin_top = 29.0
-margin_right = 146.0
-margin_bottom = 54.0
-size_flags_horizontal = 0
-size_flags_vertical = 0
-custom_constants/margin_right = 5
-custom_constants/margin_top = 5
-custom_constants/margin_left = 5
-custom_constants/margin_bottom = 5
-
-[node name="Panel" type="Panel" parent="VBoxContainer/effects/igom_cop"]
-margin_left = 5.0
-margin_top = 5.0
-margin_right = 141.0
-margin_bottom = 20.0
-mouse_filter = 2
-custom_styles/panel = SubResource( 10 )
-
-[node name="text" type="Label" parent="VBoxContainer/effects/igom_cop"]
-margin_left = 5.0
-margin_top = 5.0
-margin_right = 141.0
-margin_bottom = 20.0
-size_flags_horizontal = 4
-custom_fonts/font = ExtResource( 6 )
-custom_colors/font_color = Color( 1, 1, 1, 1 )
-text = "Copper LORED boost: 8.5"
-
-[node name="igom_irono" type="MarginContainer" parent="VBoxContainer/effects"]
-visible = false
-margin_top = 58.0
-margin_right = 149.0
-margin_bottom = 83.0
-size_flags_horizontal = 0
-size_flags_vertical = 0
-custom_constants/margin_right = 5
-custom_constants/margin_top = 5
-custom_constants/margin_left = 5
-custom_constants/margin_bottom = 5
-
-[node name="Panel" type="Panel" parent="VBoxContainer/effects/igom_irono"]
-margin_left = 5.0
-margin_top = 5.0
-margin_right = 144.0
-margin_bottom = 20.0
-mouse_filter = 2
-custom_styles/panel = SubResource( 11 )
-
-[node name="text" type="Label" parent="VBoxContainer/effects/igom_irono"]
-margin_left = 5.0
-margin_top = 5.0
-margin_right = 144.0
-margin_bottom = 20.0
-size_flags_horizontal = 4
-custom_fonts/font = ExtResource( 6 )
-custom_colors/font_color = Color( 1, 1, 1, 1 )
-text = "Iron Ore LORED boost: 8.5"
-
-[node name="igom_copo" type="MarginContainer" parent="VBoxContainer/effects"]
-visible = false
-margin_top = 87.0
-margin_right = 167.0
-margin_bottom = 112.0
-size_flags_horizontal = 0
-size_flags_vertical = 0
-custom_constants/margin_right = 5
-custom_constants/margin_top = 5
-custom_constants/margin_left = 5
-custom_constants/margin_bottom = 5
-
-[node name="Panel" type="Panel" parent="VBoxContainer/effects/igom_copo"]
-margin_left = 5.0
-margin_top = 5.0
-margin_right = 162.0
-margin_bottom = 20.0
-mouse_filter = 2
-custom_styles/panel = SubResource( 12 )
-
-[node name="text" type="Label" parent="VBoxContainer/effects/igom_copo"]
-margin_left = 5.0
-margin_top = 5.0
-margin_right = 162.0
-margin_bottom = 20.0
-size_flags_horizontal = 4
-custom_fonts/font = ExtResource( 6 )
-custom_colors/font_color = Color( 1, 1, 1, 1 )
-text = "Copper Ore LORED boost: 8.5"
-
-[node name="m" type="MarginContainer" parent="VBoxContainer"]
-visible = false
-margin_top = 66.0
 margin_right = 238.0
-margin_bottom = 86.0
+margin_bottom = 205.0
 custom_constants/margin_right = 10
 custom_constants/margin_top = 10
 custom_constants/margin_left = 10
 custom_constants/margin_bottom = 10
 
-[node name="g" type="Panel" parent="VBoxContainer/m"]
+[node name="bg" type="Panel" parent="VBoxContainer/effects"]
 margin_left = 10.0
 margin_top = 10.0
 margin_right = 228.0
-margin_bottom = 10.0
+margin_bottom = 133.0
+custom_styles/panel = ExtResource( 7 )
+
+[node name="v" type="VBoxContainer" parent="VBoxContainer/effects"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 228.0
+margin_bottom = 133.0
+
+[node name="Label" type="Label" parent="VBoxContainer/effects/v"]
+margin_right = 218.0
+margin_bottom = 18.0
+custom_fonts/font = SubResource( 8 )
+text = "Effects"
+align = 1
+
+[node name="idym" type="HBoxContainer" parent="VBoxContainer/effects/v"]
+visible = false
+margin_top = 22.0
+margin_right = 218.0
+margin_bottom = 39.0
+size_flags_vertical = 0
+
+[node name="val" type="Label" parent="VBoxContainer/effects/v/idym"]
+margin_right = 27.0
+margin_bottom = 17.0
+custom_fonts/font = SubResource( 9 )
+custom_colors/font_color = Color( 0.701961, 0, 1, 1 )
+text = "8.5x"
+
+[node name="desc" type="Label" parent="VBoxContainer/effects/v/idym"]
+margin_left = 31.0
+margin_top = 1.0
+margin_right = 59.0
+margin_bottom = 15.0
+custom_fonts/font = SubResource( 10 )
+custom_colors/font_color = Color( 0.799805, 0.799805, 0.799805, 1 )
+text = "boost"
+
+[node name="igom_iron" type="HBoxContainer" parent="VBoxContainer/effects/v"]
+visible = false
+margin_top = 43.0
+margin_right = 218.0
+margin_bottom = 60.0
+size_flags_vertical = 0
+
+[node name="val" type="Label" parent="VBoxContainer/effects/v/igom_iron"]
+margin_right = 27.0
+margin_bottom = 17.0
+custom_fonts/font = SubResource( 9 )
+custom_colors/font_color = Color( 0.0705882, 0.890196, 1, 1 )
+text = "8.5x"
+
+[node name="desc" type="Label" parent="VBoxContainer/effects/v/igom_iron"]
+margin_left = 31.0
+margin_top = 1.0
+margin_right = 117.0
+margin_bottom = 15.0
+custom_fonts/font = SubResource( 10 )
+custom_colors/font_color = Color( 0.799805, 0.799805, 0.799805, 1 )
+text = "Iron LORED boost"
+
+[node name="igom_cop" type="HBoxContainer" parent="VBoxContainer/effects/v"]
+visible = false
+margin_top = 64.0
+margin_right = 218.0
+margin_bottom = 81.0
+size_flags_vertical = 0
+
+[node name="val" type="Label" parent="VBoxContainer/effects/v/igom_cop"]
+margin_right = 27.0
+margin_bottom = 17.0
+custom_fonts/font = SubResource( 9 )
+custom_colors/font_color = Color( 1, 0.741176, 0.0509804, 1 )
+text = "8.5x"
+
+[node name="desc" type="Label" parent="VBoxContainer/effects/v/igom_cop"]
+margin_left = 31.0
+margin_top = 1.0
+margin_right = 133.0
+margin_bottom = 15.0
+custom_fonts/font = SubResource( 10 )
+custom_colors/font_color = Color( 0.799805, 0.799805, 0.799805, 1 )
+text = "Copper LORED boost"
+
+[node name="igom_irono" type="HBoxContainer" parent="VBoxContainer/effects/v"]
+visible = false
+margin_top = 85.0
+margin_right = 218.0
+margin_bottom = 102.0
+size_flags_vertical = 0
+
+[node name="val" type="Label" parent="VBoxContainer/effects/v/igom_irono"]
+margin_right = 27.0
+margin_bottom = 17.0
+custom_fonts/font = SubResource( 9 )
+custom_colors/font_color = Color( 0, 0.52, 0.91, 1 )
+text = "8.5x"
+
+[node name="desc" type="Label" parent="VBoxContainer/effects/v/igom_irono"]
+margin_left = 31.0
+margin_top = 1.0
+margin_right = 137.0
+margin_bottom = 15.0
+custom_fonts/font = SubResource( 10 )
+custom_colors/font_color = Color( 0.799805, 0.799805, 0.799805, 1 )
+text = "Iron Ore LORED boost"
+
+[node name="igom_copo" type="HBoxContainer" parent="VBoxContainer/effects/v"]
+visible = false
+margin_top = 106.0
+margin_right = 218.0
+margin_bottom = 123.0
+size_flags_vertical = 0
+
+[node name="val" type="Label" parent="VBoxContainer/effects/v/igom_copo"]
+margin_right = 27.0
+margin_bottom = 17.0
+custom_fonts/font = SubResource( 9 )
+custom_colors/font_color = Color( 0.701961, 0.329412, 0, 1 )
+text = "8.5x"
+
+[node name="desc" type="Label" parent="VBoxContainer/effects/v/igom_copo"]
+margin_left = 31.0
+margin_top = 1.0
+margin_right = 153.0
+margin_bottom = 15.0
+custom_fonts/font = SubResource( 10 )
+custom_colors/font_color = Color( 0.799805, 0.799805, 0.799805, 1 )
+text = "Copper Ore LORED boost"
+
+[node name="m" type="MarginContainer" parent="VBoxContainer"]
+visible = false
+margin_top = 62.0
+margin_right = 238.0
+margin_bottom = 100.0
+custom_constants/margin_right = 10
+custom_constants/margin_top = 10
+custom_constants/margin_left = 10
+custom_constants/margin_bottom = 10
+
+[node name="bg" type="Panel" parent="VBoxContainer/m"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 228.0
+margin_bottom = 28.0
 custom_styles/panel = ExtResource( 7 )
 
 [node name="price" type="VBoxContainer" parent="VBoxContainer/m"]
 margin_left = 10.0
 margin_top = 10.0
 margin_right = 228.0
-margin_bottom = 10.0
+margin_bottom = 28.0
 custom_constants/separation = 0
+
+[node name="Label" type="Label" parent="VBoxContainer/m/price"]
+margin_right = 218.0
+margin_bottom = 18.0
+custom_fonts/font = SubResource( 8 )
+text = "Cost"
+align = 1
 
 [node name="requires" type="MarginContainer" parent="VBoxContainer"]
 visible = false
@@ -526,7 +479,7 @@ margin_bottom = 25.0
 [node name="text" type="Label" parent="VBoxContainer/requires/v"]
 margin_right = 218.0
 margin_bottom = 15.0
-custom_fonts/font = SubResource( 13 )
+custom_fonts/font = SubResource( 11 )
 custom_colors/font_color = Color( 0.800781, 0.800781, 0.800781, 1 )
 text = "Required Upgrade"
 align = 1

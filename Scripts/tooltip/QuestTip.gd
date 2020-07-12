@@ -25,8 +25,22 @@ var fps := 0.0
 var task: taq.Task
 var step_check := {}
 
+var flash_incomplete_steps := false
+var flash_i := 0
+
+
+
+func _ready():
+	set_process(false)
+
+func _process(delta: float) -> void:
+	
+	rect_size = Vector2(0, 0)
+	set_process(false)
 
 func _physics_process(delta: float) -> void:
+	
+	flash()
 	
 	fps += delta
 	if fps < rt.FPS:
@@ -35,13 +49,14 @@ func _physics_process(delta: float) -> void:
 	
 	r_update()
 
+
 func r_update() -> void:
 	
 	# step
 	for x in task.step:
-		cont.step[x].get_node("v/h/step/val").text = fval.f(task.step[x].f) + " / " + fval.f(task.step[x].b)
+		cont.step[x].get_node("v/h/step/val").text = task.step[x].f.toString() + " / " + task.step[x].b.toString()
 		
-		cont.step[x].get_node("v/ct/c").rect_size.x = task.step[x].f / task.step[x].b * cont.step[x].get_node("v/ct").rect_size.x
+		cont.step[x].get_node("v/ct/c").rect_size.x = Big.new(task.step[x].f).divide(task.step[x].b).toFloat() * cont.step[x].get_node("v/ct").rect_size.x
 		cont.step[x].get_node("v/ct/c").rect_size.x = min(cont.step[x].get_node("v/ct/c").rect_size.x, cont.step[x].get_node("v/ct").rect_size.x)
 		
 		if cont.step[x].get_node("v/ct/c").rect_size.x == cont.step[x].get_node("v/ct").rect_size.x:
@@ -50,10 +65,41 @@ func r_update() -> void:
 				cont.step[x].get_node("v/ct").hide()
 				cont.step[x].get_node("v/h/check").show()
 				
-				cont.step[x].rect_size.y = 0
-				rect_size.y = 0
-				
+				set_process(true)
 				step_check[x] = true
+
+
+func flash():
+	
+	if not flash_incomplete_steps:
+		return
+	
+	# init
+	if flash_i == 0:
+		
+		flash_i = 8
+		
+		for x in cont.step:
+			
+			if cont.step[x].get_node("v/h/check").visible:
+				continue
+			
+			cont.step[x].get_node("flash0").show()
+			cont.step[x].get_node("flash1").show()
+	
+	flash_i -= 1
+	
+	if flash_i == 4:
+		
+		for x in cont.step:
+			cont.step[x].get_node("flash1").hide()
+	
+	if flash_i == 0:
+		
+		for x in cont.step:
+			cont.step[x].get_node("flash0").hide()
+		
+		flash_incomplete_steps = false
 
 
 
@@ -71,7 +117,7 @@ func init(_task: taq.Task) -> void:
 	resource_reward(task.resource_reward)
 	reward(task.reward)
 	
-	rect_size.y = 0
+	#set_process(true)
 
 func _name(_name: String) -> String:
 	
@@ -97,16 +143,15 @@ func desc(step: Dictionary, desc: String) -> String:
 		if step.size() == 1:
 			for x in step.keys():
 				if " purchased" in x:
-					gn_desc.hide()
 					return ""
 				if " produced" in x:
-					gn_desc.hide()
 					return ""
 	
 	# quests
 	if task.desc == "":
-		gn_desc.hide()
 		return ""
+	
+	gn_desc.show()
 	
 	return desc
 
@@ -119,8 +164,10 @@ func step(step: Dictionary) -> void:
 		cont.step[x] = src.step.instance()
 		cont.step[x].get_node("v/h/icon/Sprite").texture = r_set_icon(x)
 		cont.step[x].get_node("v/h/step/desc").text = x
+		var color = rt.r_lored_color(rt.w_name_to_short(x.split(" produced")[0]))
+		cont.step[x].get_node("v/h/step/val").add_color_override("font_color", color)
 		if " produced" in x:
-			cont.step[x].get_node("v/ct").modulate = rt.r_lored_color(rt.w_name_to_short(x.split(" produced")[0]))
+			cont.step[x].get_node("v/ct").modulate = color
 		
 		gn_steps.add_child(cont.step[x])
 		
@@ -144,7 +191,7 @@ func resource_reward(rr: Dictionary) -> void:
 		cont.rr[x] = src.resource_reward.instance()
 		cont.rr[x].get_node("HBoxContainer/icon/Sprite").texture = gv.sprite[x]
 		cont.rr[x].get_node("HBoxContainer/VBoxContainer/type").text = gv.g[x].name
-		cont.rr[x].get_node("HBoxContainer/VBoxContainer/val").text = fval.f(task.resource_reward[x])
+		cont.rr[x].get_node("HBoxContainer/VBoxContainer/val").text = task.resource_reward[x].toString()
 		cont.rr[x].get_node("HBoxContainer/VBoxContainer/val").add_color_override("font_color", rt.r_lored_color(x))
 		
 		if i % 2 == 0:

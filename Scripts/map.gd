@@ -9,7 +9,7 @@ var initpos := Vector2()
 
 var y_off = -200
 var height_limit = 500
-var scroll_speed := 40
+var scroll_speed := 80
 
 var mouse_in := "no"
 
@@ -22,6 +22,9 @@ func init():
 	
 	pos["menu"] = rt.get_node("misc/menu").position
 	size["menu"] = rt.get_node("misc/menu/ScrollContainer").rect_size
+	
+	pos["upgrades"] = rt.get_node("up_container").rect_position
+	size["upgrades"] = rt.get_node("up_container").rect_size
 
 func _input(ev):
 	
@@ -30,11 +33,13 @@ func _input(ev):
 	# scroll wheel
 	if ev is InputEventMouseButton and ev.is_pressed():
 		
-		var pos_held_window := Vector2(rt.get_node("misc/qol_displays").rect_position.x + rt.instances["qol"]["held"].rect_position.x, rt.get_node("misc/qol_displays").rect_position.y + rt.instances["qol"]["held"].rect_position.y)
-		var size_held_window : Vector2 = rt.instances["qol"]["held"].rect_size
 		# menu
 		if rt.get_node("misc/menu").visible and mpos.x >= rt.get_node("misc/menu").position.x and mpos.x < rt.get_node("misc/menu").position.x + rt.get_node("misc/menu/ScrollContainer").rect_size.x and get_global_mouse_position().y > rt.get_node("misc/menu").position.y and get_global_mouse_position().y < rt.get_node("misc/menu").position.y + rt.get_node("misc/menu/ScrollContainer").rect_size.y:
 			# the line above is fucking ridiculous
+			
+			pass
+		
+		elif rt.get_node("up_container").visible and not mouse_out(pos["upgrades"], size["upgrades"]):
 			
 			pass
 		
@@ -63,6 +68,8 @@ func _input(ev):
 		
 		if rt.get_node("misc/menu").visible and get_global_mouse_position().x >= rt.get_node("misc/menu").position.x and get_global_mouse_position().x < rt.get_node("misc/menu").position.x + rt.get_node("misc/menu/ScrollContainer").rect_size.x and get_global_mouse_position().y > rt.get_node("misc/menu").position.y and get_global_mouse_position().y < rt.get_node("misc/menu").position.y + rt.get_node("misc/menu/ScrollContainer").rect_size.y:
 			dragging = "menu"
+		elif rt.get_node("up_container").visible and not mouse_out(pos["upgrades"], size["upgrades"]):
+			dragging = "upgrades"
 		elif mouse_in == "no":
 			dragging = "self"
 		

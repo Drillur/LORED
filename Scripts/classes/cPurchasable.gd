@@ -10,6 +10,6 @@ var cost := {}
 func cost_check() -> bool:
 	# returns true if can be afforded
 	for x in cost:
-		if gv.g[x].r < cost[x].t:
+		if gv.g[x].r.isLessThan(cost[x].t):
 			return false
 	return true

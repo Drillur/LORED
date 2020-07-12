@@ -8,7 +8,7 @@ var tasks_completed := 0
 var r_gained := {}
 var last_run_dur := []
 var last_reset_clock := [] # for each stage, saves the date/time
-var most_resources_gained := 0.0
+var most_resources_gained := Big.new(0)
 var highest_run = 1
 var up_list := {}
 
@@ -21,4 +21,4 @@ func _init(g : Array):
 	
 	for x in g:
 		# an array of all the keys in gv.g
-		r_gained[x] = 0.0
+		r_gained[x] = Big.new(0)

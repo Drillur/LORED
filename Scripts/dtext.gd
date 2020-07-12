@@ -42,3 +42,4 @@ func _physics_process(_delta):
 		return
 	
 	queue_free()
+	set_physics_process(false)

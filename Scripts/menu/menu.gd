@@ -32,14 +32,14 @@ func _ready():
 		node.add_item("25 fps") # 5
 		node.add_item("30 fps") # 6
 		node.add_item("60 fps") # 7
-		node.select(rt.menu.option["FPS"])
-		_on_fps_item_selected(rt.menu.option["FPS"])
+		node.select(gv.menu.option["FPS"])
+		_on_fps_item_selected(gv.menu.option["FPS"])
 		
 		node = $ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/notation_type
 		node.add_item("engineering") # 0
-		node.add_item("scientific")
-		node.add_item("phone game")
-		node.select(rt.menu.option["notation_type"])
+		node.add_item("scientific") # 1
+		node.add_item("logarithmic") # 2
+		node.select(gv.menu.option["notation_type"])
 	
 	# ref
 	if true:
@@ -62,6 +62,13 @@ func _ready():
 			$ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/net.hide()
 		if not $ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/flying_numbers.pressed:
 			$ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/crits_only.hide()
+		
+		
+		if "browser" in rt.PLATFORM:
+			$ScrollContainer/MarginContainer/VBoxContainer/save/CenterContainer/VBoxContainer/import_save.hide()
+			$ScrollContainer/MarginContainer/VBoxContainer/save/CenterContainer/VBoxContainer/export_save.hide()
+		elif "pc" in rt.PLATFORM:
+			$ScrollContainer/MarginContainer/VBoxContainer/save/CenterContainer/VBoxContainer/b_print_save.hide()
 func init(f: Dictionary) -> void:
 	
 	# resources
@@ -97,13 +104,6 @@ func init(f: Dictionary) -> void:
 			
 			# status_color
 			$ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/net/CenterContainer/status_color.pressed = f["status_color"]
-	
-	# held_window
-	$ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/held_window.pressed = f["held_window"]
-	rt.instances["qol"]["held"].visible = f["held_window"]
-	if not rt.tasks["The Heart of Things"].complete:
-		$ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/held_window.hide()
-		rt.instances["qol"]["held"].hide()
 	
 	# flying_numbers
 	$ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/flying_numbers.pressed = f["flying_numbers"]
@@ -196,7 +196,7 @@ func r_resource_text() -> void:
 		if not rt.get_node("map/loreds").lored[x].visible:
 			content["resource_text"][x].hide()
 			continue
-		content["resource_text"][x].text = fval.f(gv.stats.r_gained[x]) + " " + gv.g[x].name
+		content["resource_text"][x].text = gv.stats.r_gained[x].toString() + " " + gv.g[x].name
 		if not content["resource_text"][x].visible: content["resource_text"][x].show()
 func r_runs() -> void:
 	
@@ -276,7 +276,7 @@ func _on_menu_hide():
 
 
 func _on_fps_item_selected(id):
-	rt.menu.option["FPS"] = id
+	gv.menu.option["FPS"] = id
 	match id:
 		0: rt.FPS = 1.0
 		1: rt.FPS = 0.2
@@ -287,12 +287,10 @@ func _on_fps_item_selected(id):
 		6: rt.FPS = 0.0333
 		7: rt.FPS = 0.01666
 func _on_notation_type_item_selected(id):
-	rt.menu.option["notation_type"] = id
+	gv.menu.option["notation_type"] = id
 func _on_notation_for_item_selected(id):
-	rt.menu.option["notation_for"] = id
+	gv.menu.option["notation_for"] = id
 
-func _on_held_pressed():
-	b_option_pressed("held_window", $ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/held_window)
 func _on_crits_only_pressed():
 	b_option_pressed("crits_only", $ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/crits_only/CenterContainer/crits_only)
 func _on_animations_pressed():
@@ -308,28 +306,28 @@ func _on_option_pressed(option: String, node_path: String):
 
 func b_option_pressed(option: String, node) -> void:
 	
-	rt.menu.option[option] = node.pressed
+	gv.menu.option[option] = node.pressed
 	
 	match option:
 		"lb_flash":
 			rt.get_node("map/loreds").r_update_lb_flash()
 		"status_color":
-			if not rt.menu.option[option]:
+			if not gv.menu.option[option]:
 				for x in gv.g:
 					rt.get_node("misc/qol_displays/resource_bar").content[x].add_color_override("font_color", rt.r_lored_color(x))
 		"held_window":
-			rt.instances["qol"]["held"].visible = rt.menu.option[option]
+			rt.instances["qol"]["held"].visible = gv.menu.option[option]
 			rt.get_node("misc/qol_displays").rect_size.x = 1
 		"resource_bar":
-			rt.get_node("misc/qol_displays/resource_bar").visible = rt.menu.option[option]
-			$ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/net.visible = rt.menu.option[option]
+			rt.get_node("misc/qol_displays/resource_bar").visible = gv.menu.option[option]
+			$ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/net.visible = gv.menu.option[option]
 		"animations":
 			for x in rt.get_node("map/loreds").lored:
 				if not node.pressed:
 					rt.get_node("map/loreds").lored[x].get_node("worker").animation = "ww"
 					rt.get_node("map/loreds").lored[x].get_node("worker").playing = true
 					continue
-				if gv.g[x].progress.f > 0: rt.get_node("map/loreds").lored[x].get_node("worker").animation = "ff"
+				if gv.g[x].progress.f.isLargerThan(0): rt.get_node("map/loreds").lored[x].get_node("worker").animation = "ff"
 				rt.get_node("map/loreds").lored[x].get_node("worker").playing = false
 
 func _on_ScrollContainer_resized():
@@ -357,7 +355,7 @@ func _on_delete_pressed():
 	rt.get_node("misc/task").w_complete_reset()
 	rt.b_tabkey(KEY_ESCAPE)
 	rt.b_tabkey(KEY_1)
-	rt.menu.option["resource_bar"] = false
+	gv.menu.option["resource_bar"] = false
 	rt.get_node("misc/qol_displays/resource_bar").hide()
 	rt.save_fps = 0.0
 	
@@ -388,3 +386,7 @@ func _on_FileDialog_file_selected(path: String) -> void:
 	rt.e_save("export", path)
 func _on_Import_file_selected(path: String) -> void:
 	rt.game_start(rt.e_load(path))
+
+
+func _on_Discord_pressed() -> void:
+	OS.shell_open("https://discord.gg/xJeBZxt")

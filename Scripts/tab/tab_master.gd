@@ -62,21 +62,21 @@ func lil_helper_bitch(path : String) -> void:
 
 func gonna_send_unlock(f : String) -> bool:
 	
-	if rt.menu.tabs_unlocked[f]: return true
+	if gv.menu.tabs_unlocked[f]: return true
 	return false
 
 func unlock(type := ["all"]) -> void:
 	
 	if type[0] == "all":
 		type.clear()
-		for x in rt.menu.tabs_unlocked:
+		for x in gv.menu.tabs_unlocked:
 			type.append(x)
 	
 	for x in type:
 		
-		if rt.menu.tabs_unlocked[x]: continue
+		if gv.menu.tabs_unlocked[x]: continue
 		
-		rt.menu.tabs_unlocked[x] = true
+		gv.menu.tabs_unlocked[x] = true
 		
 		# upgrade
 		if x[0] == "s": lil_helper_bitch(x)
@@ -89,8 +89,8 @@ func unlock(type := ["all"]) -> void:
 func reset(type := ["all"]) -> void:
 	
 	if type[0] == "all":
-		for x in rt.menu.tabs_unlocked:
-			rt.menu.tabs_unlocked[x] = false
+		for x in gv.menu.tabs_unlocked:
+			gv.menu.tabs_unlocked[x] = false
 		for x in up:
 			up[x].hide()
 		for x in lored:
@@ -99,7 +99,7 @@ func reset(type := ["all"]) -> void:
 		return
 	
 	for x in type:
-		rt.menu.tabs_unlocked[x] = false
+		gv.menu.tabs_unlocked[x] = false
 		if x in up.keys():
 			up[x].hide()
 		if x in lored.keys():

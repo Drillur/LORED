@@ -4,7 +4,7 @@
 [ext_resource path="res://Sprites/resources/axe.png" type="Texture" id=2]
 [ext_resource path="res://Fonts/Roboto-Medium.ttf" type="DynamicFontData" id=3]
 
-[sub_resource type="StyleBoxFlat" id=5]
+[sub_resource type="StyleBoxFlat" id=1]
 bg_color = Color( 1, 1, 1, 0.0509804 )
 expand_margin_left = 10.0
 expand_margin_right = 10.0
@@ -38,7 +38,7 @@ __meta__ = {
 margin_left = 10.0
 margin_right = 77.0
 margin_bottom = 36.0
-custom_styles/panel = SubResource( 5 )
+custom_styles/panel = SubResource( 1 )
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 margin_left = 10.0

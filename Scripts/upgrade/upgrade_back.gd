@@ -20,8 +20,8 @@ func init(typ : String, up_count_pos: int) -> void:
 	if "m" in type:
 		if rt.tabby["last stage"] == "1" and gv.up["RED NECROMANCY"].have and gv.up["RED NECROMANCY"].active:
 			show_reset = false
-		if "no" in rt.menu.f:
-			if not rt.menu.f.split("no ")[1] == type[0] + type[1]: show_reset = false
+		if "no" in gv.menu.f:
+			if not gv.menu.f.split("no ")[1] == type[0] + type[1]: show_reset = false
 	
 	if show_reset:
 		$reset.show()
@@ -88,12 +88,12 @@ func r_modulate_reset_button():
 	
 	match rt.tabby["last stage"]:
 		"1":
-			if "no" in rt.menu.f:
+			if "no" in gv.menu.f:
 				reset_name = "SPREAD"
 			else:
 				reset_name = "METASTASIZE"
 		"2":
-			if "no" in rt.menu.f:
+			if "no" in gv.menu.f:
 				reset_name = "RECOVER"
 			else:
 				reset_name = "CHEMOTHERAPY"
@@ -101,7 +101,7 @@ func r_modulate_reset_button():
 	$reset/button.modulate = rt.r_buy_color(1, reset_name)
 func w_update_owned_count():
 	
-	var owned :int= rt.menu.upgrades_owned[type + "up"]
+	var owned :int= gv.menu.upgrades_owned[type + "up"]
 	var total :int= rt.upc[type + "up"].size()
 	
 	$up_count/amount.text = String(owned) + "/" + str(total)
@@ -112,14 +112,14 @@ func _on_button_mouse_entered():
 	# $reset/button
 	match type:
 		"s2m":
-			if "ye" in rt.menu.f:
+			if "ye" in gv.menu.f:
 				rt.get_node("map/tip")._call("buy upgrade CHEMOTHERAPY")
-			elif "no" in rt.menu.f and "s2" in rt.menu.f:
+			elif "no" in gv.menu.f and "s2" in gv.menu.f:
 				rt.get_node("map/tip")._call("buy upgrade RECOVER")
 		"s1m":
-			if "ye" in rt.menu.f:
+			if "ye" in gv.menu.f:
 				rt.get_node("map/tip")._call("buy upgrade METASTASIZE")
-			elif "no" in rt.menu.f and "s1" in rt.menu.f:
+			elif "no" in gv.menu.f and "s1" in gv.menu.f:
 				rt.get_node("map/tip")._call("buy upgrade SPREAD")
 func _on_button_mouse_exited():
 	rt.get_node("map/tip")._call("no")
@@ -127,7 +127,7 @@ func _on_button_mouse_exited():
 
 func _on_button_pressed():
 	
-	if "m" in rt.menu.tab and "ye" in rt.menu.f:
+	if "m" in gv.menu.tab and "ye" in gv.menu.f:
 		
 		var g = "malig"
 		var up = "METASTASIZE"
@@ -135,10 +135,6 @@ func _on_button_pressed():
 			"2":
 				g = "tum"
 				up = "CHEMOTHERAPY"
-		
-		for x in gv.up[up].cost:
-			if gv.g[g].r < gv.up[up].cost[x].t:
-				return
 	
 	if confirm == 0:
 		confirm = 100
@@ -150,11 +146,11 @@ func _on_button_pressed():
 	$reset/button/text.text = "Reset"
 	rt.get_node("map/tip")._call("no")
 	
-	match rt.menu.f:
+	match gv.menu.f:
 		"ye":
-			rt.menu.f = "no s" + rt.tabby["last stage"]
+			gv.menu.f = "no s" + rt.tabby["last stage"]
 		_:
-			rt.b_reset(int(rt.menu.f[4])) # will be 1 - 4
+			rt.b_reset(int(gv.menu.f[4])) # will be 1 - 4
 
 func _on_back_pressed():
 	rt.b_tabkey(KEY_ESCAPE)

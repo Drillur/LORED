@@ -1,10 +1,11 @@
-[gd_scene load_steps=18 format=2]
+[gd_scene load_steps=19 format=2]
 
 [ext_resource path="res://Scripts/Root.gd" type="Script" id=1]
 [ext_resource path="res://Scripts/map.gd" type="Script" id=2]
 [ext_resource path="res://Scripts/lored_master.gd" type="Script" id=3]
 [ext_resource path="res://Scripts/upgrade/upgrade_master.gd" type="Script" id=4]
 [ext_resource path="res://Scripts/tooltip/tooltip_master.gd" type="Script" id=5]
+[ext_resource path="res://Prefabs/upgrade/upgrade_container.tscn" type="PackedScene" id=6]
 [ext_resource path="res://Scripts/task/quests.gd" type="Script" id=8]
 [ext_resource path="res://Scripts/tab/tab_master.gd" type="Script" id=12]
 [ext_resource path="res://Fonts/Roboto-Medium.ttf" type="DynamicFontData" id=29]
@@ -215,7 +216,24 @@ script = ExtResource( 8 )
 
 [node name="upgrades" type="Node2D" parent="."]
 
+[node name="up_container" parent="." instance=ExtResource( 6 )]
+visible = false
+margin_left = 227.0
+margin_top = 326.0
+margin_right = 573.0
+margin_bottom = 586.0
+
 [node name="global_tip" type="Node2D" parent="."]
 script = ExtResource( 5 )
+
+[node name="Button" type="Button" parent="."]
+margin_left = 10.0
+margin_top = 58.0
+margin_right = 48.0
+margin_bottom = 98.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
 [connection signal="button_down" from="misc/menu_button" to="." method="_on_menu_button_button_down"]
 [connection signal="pressed" from="misc/menu_button" to="." method="_on_menu_button_pressed"]
+[connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]
