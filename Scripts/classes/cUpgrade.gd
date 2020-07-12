@@ -153,8 +153,6 @@ func get_witch_percent() -> String:
 
 func active() -> bool:
 	# returns true if the upgrade is owned and active
-	if not have: return false
-	if not active: return false
-	return true
+	return have and active
 
 
