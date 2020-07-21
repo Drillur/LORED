@@ -7,6 +7,12 @@ var overcharge := 1.0
 var overcharge_list := []
 var hax_pow := 1.0 # 1.0 for normal
 
+
+# signals are emitted in multiple places but may only be received in one place
+
+signal lored_updated(_lored, _updated_stat) # lored.gd -> lored_master.gd
+
+
 const LIMIT_BREAK_COLORS := {
 	0: Color(1, 0.328125, 0),
 	1: Color(1, 1, 0),
@@ -17,8 +23,6 @@ const LIMIT_BREAK_COLORS := {
 	6: Color(0.875, 0, 1),
 	7: Color(1, 0, 0.494118),
 }
-
-
 
 const sprite := {
 	"coal" : preload("res://Sprites/resources/coal.png"),
@@ -149,44 +153,51 @@ func time_remaining(
 	task_or_quest: bool) -> String:
 	
 	
+	if gv.g[lored_key].halt:
+		return "=/="
+	
+	
 	var net = gv.g[lored_key].net(true)
 	
 	if net[1].isLargerThan(net[0]):
 		return "-"
 	
-	net = net[0].minus(net[1])
+	net = net[0].s(net[1])
 	
 	var less: Big = Big.new(0)
 	if not gv.g[lored_key].hold and not task_or_quest:
 		for x in gv.g[lored_key].used_by:
 			if not gv.g[x].active():
 				continue
-			less.plus(Big.new(gv.g[x].d.t).multiply(60).divide(gv.g[x].speed.t).multiply(gv.g[x].b[lored_key].t))
+			less.a(Big.new(gv.g[x].d.t).m(60).d(gv.g[x].speed.t).m(gv.g[x].b[lored_key].t))
 	
 	if less.isLargerThan(net):
 		return "-"
 	
-	net.minus(less)
+	net.s(less)
 	
 	if net.isEqualTo(0):
 		return "!?"
 	
-	var delta: Big = Big.new(total_amount).minus(present_amount)
+	var delta: Big = Big.new(total_amount).s(present_amount)
 	var incoming_amount := Big.new(0)
 	
 	
 	if not gv.g[lored_key].progress.t.isEqualTo(0):
-		var percent_task_complete = Big.new(gv.g[lored_key].progress.f).divide(gv.g[lored_key].progress.t).toFloat()
-		incoming_amount.plus(Big.new(gv.g[lored_key].d.t).multiply(percent_task_complete))
+		
+		var percent_task_complete = gv.g[lored_key].progress.f.percent(gv.g[lored_key].progress.t)
+		
+		incoming_amount.a(gv.g[lored_key].d.t)
+		incoming_amount.m(percent_task_complete)
 	
-	var seconds: Big = Big.new(delta).minus(incoming_amount)
-	seconds.divide(Big.new(net).divide(1))
-	
-	return big_to_time(seconds)
+	return big_to_time(Big.new(delta).s(incoming_amount).d(net))
 
 func big_to_time(big: Big) -> String:
 	
-	big = Big.max(big, Big.new(0))
+	# big should be equal to the amount of seconds required to complete the objective
+	
+	if big.isLessThan(0):
+		big = Big.new(0)
 	
 	if big.isLessThan(1) or big.toString()[0] == "-":
 		return "!"
@@ -194,34 +205,36 @@ func big_to_time(big: Big) -> String:
 	if big.isLessThan(60):
 		return big.roundDown().toString() + "s"
 	
-	big.divide(60) # minutes
+	big.d(60) # minutes
 	
 	if big.isLessThan(60):
 		return big.roundDown().toString() + "m"
 	
-	big.divide(60) # hours
+	big.d(60) # hours
 	
 	if big.isLessThan(24):
 		return big.roundDown().toString() + "h"
 	
-	big.divide(24) # days
+	big.d(24) # days
 	
 	if big.isLessThan(365):
 		return big.roundDown().toString() + "d"
 	
-	big.divide(365) # years
+	big.d(365) # years
 	
 	if big.isLessThan(10):
 		return big.roundDown().toString() + "y"
 	
-	big.divide(10) # decades
+	big.d(10) # decades
 	
 	if big.isLessThan(100):
 		return big.roundDown().toString() + "dec"
 	
-	big.divide(100) # centuries
+	big.d(100) # centuries
 	
 	if big.isLessThan(1000):
 		return big.roundDown().toString() + "cen"
 	
 	return big.roundDown().toString() + "mil"
+
+

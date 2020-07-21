@@ -220,11 +220,11 @@ func _generate_random_task() -> taq.Task:
 				
 				var net = Big.new(gv.g[f].net(true)[0])
 				
-				var amount: Big = Big.new(rall).multiply(Big.new(Big.max(gv.g[f].d.b, net))).multiply(rr_size)
+				var amount: Big = Big.new(rall).m(Big.new(Big.max(gv.g[f].d.b, net))).m(rr_size)
 				
 				step[gv.g[f].name + " produced"] = Ob.Num.new(amount)
-				time.plus(amount).divide(60)
-				time.divide(Big.new(Big.max(net, 0.05)))
+				time.a(amount).d(60)
+				time.d(Big.new(Big.max(net, 0.05)))
 				desc = "Collect " + gv.g[f].name + "."
 	
 	# resource_reward
@@ -239,7 +239,7 @@ func _generate_random_task() -> taq.Task:
 					2:
 						gg = "tum"
 				var reward = Big.new(Big.max(gv.stats.most_resources_gained, gv.stats.run[gv.stats.highest_run - 1] * 1000))
-				reward.multiply(rand_range(0.9, 1.1))
+				reward.m(rand_range(0.9, 1.1))
 				rr[gg] = reward
 			
 			else:
@@ -284,21 +284,21 @@ func _generate_random_task() -> taq.Task:
 				if progression_mod > 100: progression_mod = 100.0
 				var quest_mod = 10.0 if rt.tasks["Horse Doodie"].complete else 1.0
 				
-				var dink: Big = Big.new(gv.g[b].net(true)[0]).multiply(progression_mod).multiply(time).multiply(quest_mod)
-				if "(Rare)" in name: dink.multiply(rand_range(1,3))
+				var dink: Big = Big.new(gv.g[b].net(true)[0]).m(progression_mod).m(time).m(quest_mod)
+				if "(Rare)" in name: dink.m(rand_range(1,3))
 				
 				#dink *= 1 + time
 				
 				if gv.stats.tasks_completed < 10:
-					dink.multiply(4)
+					dink.m(4)
 				if gv.stats.tasks_completed < 20:
-					dink.multiply(2)
+					dink.m(2)
 				if gv.stats.tasks_completed < 30:
-					dink.multiply(1.5)
+					dink.m(1.5)
 				if gv.stats.tasks_completed < 40:
-					dink.multiply(1.25)
+					dink.m(1.25)
 				
-				var reward: Big = Big.new(dink).multiply(rand_range(0.9,1.1))
+				var reward: Big = Big.new(dink).m(rand_range(0.9,1.1))
 				if reward.isLessThan(1): reward = Big.new()
 				if reward.isLessThan(10): reward.roundDown()
 				

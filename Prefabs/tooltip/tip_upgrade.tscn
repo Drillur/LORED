@@ -161,8 +161,7 @@ text = "Inactive"
 
 [node name="permanent" type="MarginContainer" parent="VBoxContainer/Active"]
 visible = false
-margin_left = 56.0
-margin_right = 125.0
+margin_right = 69.0
 margin_bottom = 25.0
 rect_min_size = Vector2( 66, 0 )
 size_flags_horizontal = 10
@@ -192,8 +191,7 @@ text = "Permanent"
 
 [node name="refundable" type="MarginContainer" parent="VBoxContainer/Active"]
 visible = false
-margin_left = 129.0
-margin_right = 264.0
+margin_right = 135.0
 margin_bottom = 25.0
 rect_min_size = Vector2( 66, 0 )
 size_flags_horizontal = 10
@@ -281,7 +279,7 @@ autowrap = true
 visible = false
 margin_top = 62.0
 margin_right = 238.0
-margin_bottom = 205.0
+margin_bottom = 100.0
 custom_constants/margin_right = 10
 custom_constants/margin_top = 10
 custom_constants/margin_left = 10
@@ -291,14 +289,14 @@ custom_constants/margin_bottom = 10
 margin_left = 10.0
 margin_top = 10.0
 margin_right = 228.0
-margin_bottom = 133.0
+margin_bottom = 28.0
 custom_styles/panel = ExtResource( 7 )
 
 [node name="v" type="VBoxContainer" parent="VBoxContainer/effects"]
 margin_left = 10.0
 margin_top = 10.0
 margin_right = 228.0
-margin_bottom = 133.0
+margin_bottom = 28.0
 
 [node name="Label" type="Label" parent="VBoxContainer/effects/v"]
 margin_right = 218.0
@@ -424,9 +422,9 @@ text = "Copper Ore LORED boost"
 
 [node name="m" type="MarginContainer" parent="VBoxContainer"]
 visible = false
-margin_top = 62.0
+margin_top = 104.0
 margin_right = 238.0
-margin_bottom = 100.0
+margin_bottom = 142.0
 custom_constants/margin_right = 10
 custom_constants/margin_top = 10
 custom_constants/margin_left = 10
@@ -455,9 +453,9 @@ align = 1
 
 [node name="requires" type="MarginContainer" parent="VBoxContainer"]
 visible = false
-margin_top = 66.0
+margin_top = 62.0
 margin_right = 238.0
-margin_bottom = 101.0
+margin_bottom = 97.0
 custom_constants/margin_right = 10
 custom_constants/margin_top = 10
 custom_constants/margin_left = 10

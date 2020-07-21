@@ -54,8 +54,8 @@ func r_update_tp() -> void:
 	
 	var points: Big = Big.new(0)
 	for x in taq.task[code].step:
-		points.plus(taq.task[code].step[x].f)
-	$tp.value = Big.new(points).divide(taq.task[code].total_points).toFloat() * 100
+		points.a(taq.task[code].step[x].f)
+	$tp.value = points.percent(taq.task[code].total_points) * 100
 	
 	if $tp.value >= 100:
 		get_parent().get_parent().ready_task_count += 1
@@ -105,19 +105,20 @@ func finish_up():
 	if taq.cur_quest != "":
 		
 		if "Tasks completed" in taq.quest.step.keys():
-			var A = Big.new(Big.min(Big.new(taq.quest.step["Tasks completed"].f).plus(1), taq.quest.step["Tasks completed"].b))
+			var A = Big.new(Big.min(Big.new(taq.quest.step["Tasks completed"].f).a(1), taq.quest.step["Tasks completed"].b))
 			taq.quest.step["Tasks completed"].f = A
 		elif "Rare or Spike tasks completed" in taq.quest.step.keys():
 			if $rare.visible or $spike.visible:
-				var A = Big.new(Big.min(Big.new(taq.quest.step["Rare or Spike tasks completed"].f).plus(1), taq.quest.step["Rare or Spike tasks completed"].b))
+				var A = Big.new(Big.min(Big.new(taq.quest.step["Rare or Spike tasks completed"].f).a(1), taq.quest.step["Rare or Spike tasks completed"].b))
 				taq.quest.step["Rare or Spike tasks completed"].f = A
 		elif "Spike tasks completed" in taq.quest.step.keys():
 			if $spike.visible:
-				var A = Big.new(Big.min(Big.new(taq.quest.step["Spike tasks completed"].f).plus(1), taq.quest.step["Spike tasks completed"].b))
+				var A = Big.new(Big.min(Big.new(taq.quest.step["Spike tasks completed"].f).a(1), taq.quest.step["Spike tasks completed"].b))
 				taq.quest.step["Spike tasks completed"].f = A
 	
 	for x in taq.task[code].resource_reward:
-		gv.g[x].r.plus(taq.task[code].resource_reward[x].toScientific())
+		gv.g[x].r.a(taq.task[code].resource_reward[x].toScientific())
+		gv.emit_signal("lored_updated", x, "amount")
 		gv.g[x].task_and_quest_check(taq.task[code].resource_reward[x])
 	
 	for x in taq.task[code].reward:

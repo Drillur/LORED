@@ -105,6 +105,15 @@ func init(f: Dictionary) -> void:
 			# status_color
 			$ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/net/CenterContainer/status_color.pressed = f["status_color"]
 	
+	# performance // save cpu
+	if rt.PLATFORM != "browser":
+		$ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/perf.pressed = f["performance"]
+	else:
+		$ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/perf.hide()
+	
+	# tank_my_pc // Increase FPS
+	$ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/tank_my_pc.pressed = f["tank_my_pc"]
+	
 	# flying_numbers
 	$ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/flying_numbers.pressed = f["flying_numbers"]
 	$ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/crits_only.visible = f["flying_numbers"]
@@ -309,6 +318,18 @@ func b_option_pressed(option: String, node) -> void:
 	gv.menu.option[option] = node.pressed
 	
 	match option:
+		"tank_my_pc":
+			if node.pressed:
+				for x in gv.g:
+					for v in rt.get_node("map/loreds").lored[x].fps:
+						rt.get_node("map/loreds").lored[x].fps[v].t *= 0.1
+			else:
+				for x in gv.g:
+					for v in rt.get_node("map/loreds").lored[x].fps:
+						rt.get_node("map/loreds").lored[x].fps[v].t *= 10
+		"performance":
+			if rt.PLATFORM != "browser":
+				OS.set_low_processor_usage_mode(node.pressed)
 		"lb_flash":
 			rt.get_node("map/loreds").r_update_lb_flash()
 		"status_color":

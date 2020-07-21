@@ -59,7 +59,7 @@ func fuel_check(x: String) -> bool:
 	
 	var max_fuel = gv.g[x].f.t
 	
-	if gv.g[x].f.f.isLessThan(Big.new(max_fuel).multiply(0.1)):
+	if gv.g[x].f.f.isLessThan(Big.new(max_fuel).m(0.1)):
 		$VBoxContainer/low_fuel.show()
 		rect_size.y = 0
 		return true

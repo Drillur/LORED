@@ -44,16 +44,16 @@ func static_vals():
 	
 	var total_fuel: Big = Big.new(gv.g[lored_key].f.t)
 	if gv.g[lored_key].type[1] in gv.overcharge_list:
-		total_fuel.multiply(gv.overcharge)
-	var less = Big.new(gv.g[lored_key].fc.t).multiply(4)
-	var drain = Big.new(gv.g[lored_key].fc.t).multiply(60).multiply(gv.g[lored_key].less_from_full(gv.g[lored_key].f.f, total_fuel))
-	if gv.g[lored_key].f.f.isLessThan(Big.new(total_fuel).minus(less)):
-		drain.multiply(2)
+		total_fuel.m(gv.overcharge)
+	var less = Big.new(gv.g[lored_key].fc.t).m(4)
+	var drain = Big.new(gv.g[lored_key].fc.t).m(60).m(gv.g[lored_key].less_from_full(gv.g[lored_key].f.f, total_fuel))
+	if gv.g[lored_key].f.f.isLessThan(Big.new(total_fuel).s(less)):
+		drain.m(2)
 	if drain.isLessThan(gv.g[lored_key].fc.t):
 		drain = Big.new(gv.g[lored_key].fc.t)
 	
 	# change to string
-	if gv.g[lored_key].f.f.isLessThan(Big.new(total_fuel).minus(less)):
+	if gv.g[lored_key].f.f.isLessThan(Big.new(total_fuel).s(less)):
 		drain = drain.toString() + "*"
 	else:
 		drain = drain.toString()
@@ -80,7 +80,7 @@ func r_update():
 	present_fuel = Big.new(gv.g[lored_key].f.f)
 	total_fuel = Big.new(gv.g[lored_key].f.t)
 	if gv.g[lored_key].type[1] in gv.overcharge_list:
-		total_fuel.multiply(gv.overcharge)
+		total_fuel.m(gv.overcharge)
 	
-	$v/ct/c.rect_size.x = min(Big.new(present_fuel).divide(total_fuel).toFloat() * $v/ct.rect_size.x, $v/ct.rect_size.x)
+	$v/ct/c.rect_size.x = min(present_fuel.percent(total_fuel) * $v/ct.rect_size.x, $v/ct.rect_size.x)
 	$v/h/step/val.text = present_fuel.toString() + " / " + total_fuel.toString()

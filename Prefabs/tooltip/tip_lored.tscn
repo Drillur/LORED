@@ -94,7 +94,7 @@ func burn():
 	var selmod = rt.r_lored_color(lored_key)
 	$v/b/bg.self_modulate = selmod
 	$v/active/RR/bg.self_modulate = selmod
-	var per_sec = Big.new(gv.g[lored_key].d.t).multiply(60).divide(gv.g[lored_key].speed.t)
+	var per_sec = Big.new(gv.g[lored_key].d.t).m(60).d(gv.g[lored_key].speed.t)
 	
 	var i = 0
 	for x in gv.g[lored_key].b:
@@ -125,11 +125,11 @@ func r_update():
 	
 	$v/m/h/v/level.text = \"Level \" + fval.f(gv.g[lored_key].level)
 	$v/active/crit/val.text = gv.g[lored_key].crit.t.toString() + \"%\"
-	$v/active/haste/val.text = Big.new(gv.g[lored_key].speed.b).divide(gv.g[lored_key].speed.t).toString() + \"x\"
+	$v/active/haste/val.text = Big.new(gv.g[lored_key].speed.b).d(gv.g[lored_key].speed.t).toString() + \"x\"
 	
 	
 	var lv_out: Big = Big.new(pow(2, gv.g[lored_key].level - 1))
-	var out_mod: Big = Big.new(gv.g[lored_key].d.m).divide(lv_out)
+	var out_mod: Big = Big.new(gv.g[lored_key].d.m).d(lv_out)
 	
 	$v/active/RR/v/base/val.text = gv.g[lored_key].d.b.toString()
 	$v/active/RR/v/a/val.text = \"+\" + gv.g[lored_key].d.a.toString()

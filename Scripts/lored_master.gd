@@ -15,6 +15,8 @@ var pad := Vector2(130 + 30, 165)
 
 func _ready() -> void:
 	
+	gv.connect("lored_updated", self, "r_update_lored")
+	
 	# loreds
 	if true:
 		
@@ -91,7 +93,7 @@ func _ready() -> void:
 			gv.g[x].benefactors["burn list"] = []
 			gv.g[x].benefactors["cost list"] = []
 			gv.g[x].benefactors["crit list"] = []
-	
+
 
 
 
@@ -101,6 +103,8 @@ func init():
 		lored[x] = src.LORED.instance()
 		add_child(lored[x])
 		lored[x].init(x)
+		for v in lored[x].fps:
+			lored[x].fps[v]["set"] = true
 		if x in "stone coal":
 			lored[x].show()
 	
@@ -217,4 +221,9 @@ func r_update_lb() -> void:
 		lored[x].limit_break(gv.g[x])
 func r_update_lb_flash() -> void:
 	for x in lored:
-		lored[x].update_colors()
+		lored[x].update_lb_colors()
+
+
+func r_update_lored(_lored, _updated_stat) -> void:
+	
+	lored[_lored].fps[_updated_stat].set = true

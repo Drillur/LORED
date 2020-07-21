@@ -6,8 +6,8 @@ extends MarginContainer
 
 func setup_b(key: String, used_by_key: String, used_by_net: Big, color: Color):
 	
-	var actual = Big.new(gv.g[used_by_key].d.t).multiply(gv.g[used_by_key].b[key].t).toString()
-	var per_sec = Big.new(used_by_net).multiply(gv.g[used_by_key].b[key].t).toString()
+	var actual = Big.new(gv.g[used_by_key].d.t).m(gv.g[used_by_key].b[key].t).toString()
+	var per_sec = Big.new(used_by_net).m(gv.g[used_by_key].b[key].t).toString()
 	
 	$v/h/v/val.text = actual + " (" + per_sec + "/s)"
 	
@@ -19,8 +19,8 @@ func setup_b(key: String, used_by_key: String, used_by_net: Big, color: Color):
 
 func setup_used_by(key: String, b_key: String, b_net: Big, color: Color):
 	
-	var actual = Big.new(gv.g[b_key].d.t).multiply(gv.g[b_key].b[key].t).toString()
-	var per_sec = Big.new(b_net).multiply(gv.g[b_key].b[key].t).toString()
+	var actual = Big.new(gv.g[b_key].d.t).m(gv.g[b_key].b[key].t).toString()
+	var per_sec = Big.new(b_net).m(gv.g[b_key].b[key].t).toString()
 	
 	$v/h/v/val.text = actual + " (" + per_sec + "/s)"
 	

@@ -1,0 +1,280 @@
+[gd_scene load_steps=16 format=2]
+
+[ext_resource path="res://Fonts/Roboto-BlackItalic.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://Sprites/resources/axe.png" type="Texture" id=2]
+[ext_resource path="res://Fonts/Roboto-Medium.ttf" type="DynamicFontData" id=3]
+[ext_resource path="res://Styles/Panels/tag_bg.tres" type="StyleBox" id=4]
+[ext_resource path="res://Prefabs/upgrade/Upgrade Slot.gd" type="Script" id=5]
+
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 0.101961, 0.101961, 0.101961, 0.8 )
+expand_margin_left = 5.0
+expand_margin_right = 5.0
+expand_margin_top = 5.0
+expand_margin_bottom = 5.0
+
+[sub_resource type="StyleBoxFlat" id=2]
+draw_center = false
+
+[sub_resource type="DynamicFont" id=3]
+size = 13
+outline_size = 1
+outline_color = Color( 0, 0, 0, 1 )
+font_data = ExtResource( 1 )
+
+[sub_resource type="DynamicFont" id=5]
+size = 12
+outline_size = 2
+outline_color = Color( 0, 0, 0, 1 )
+font_data = ExtResource( 3 )
+
+[sub_resource type="StyleBoxFlat" id=9]
+bg_color = Color( 1, 1, 1, 0.211765 )
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color( 1, 1, 1, 0.4 )
+expand_margin_left = 5.0
+expand_margin_right = 5.0
+expand_margin_top = 5.0
+expand_margin_bottom = 5.0
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id=11]
+bg_color = Color( 0.1, 0.1, 0.1, 0.8 )
+draw_center = false
+border_width_bottom = 1
+border_color = Color( 1, 1, 1, 0.25 )
+expand_margin_left = 5.0
+expand_margin_right = 5.0
+expand_margin_bottom = 5.0
+
+[sub_resource type="DynamicFont" id=4]
+size = 11
+outline_size = 1
+outline_color = Color( 0, 0, 0, 1 )
+font_data = ExtResource( 3 )
+
+[sub_resource type="StyleBoxFlat" id=6]
+bg_color = Color( 1, 1, 1, 0.05 )
+
+[sub_resource type="StyleBoxFlat" id=10]
+bg_color = Color( 1, 1, 1, 0.07 )
+
+[sub_resource type="StyleBoxFlat" id=8]
+bg_color = Color( 1, 1, 1, 0 )
+expand_margin_left = 5.0
+expand_margin_right = 5.0
+expand_margin_top = 5.0
+expand_margin_bottom = 5.0
+
+[node name="Upgrade Slot" type="MarginContainer"]
+margin_right = 340.0
+margin_bottom = 35.0
+script = ExtResource( 5 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="m" type="MarginContainer" parent="."]
+margin_right = 340.0
+margin_bottom = 35.0
+rect_min_size = Vector2( 340, 0 )
+size_flags_vertical = 0
+custom_constants/margin_right = 5
+custom_constants/margin_top = 5
+custom_constants/margin_left = 5
+custom_constants/margin_bottom = 5
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="bg" type="Panel" parent="m"]
+margin_left = 5.0
+margin_top = 5.0
+margin_right = 335.0
+margin_bottom = 30.0
+rect_min_size = Vector2( 0, 25 )
+mouse_filter = 2
+size_flags_vertical = 0
+custom_styles/panel = SubResource( 1 )
+__meta__ = {
+"_editor_description_": "5"
+}
+
+[node name="v" type="VBoxContainer" parent="m"]
+margin_left = 5.0
+margin_top = 5.0
+margin_right = 335.0
+margin_bottom = 30.0
+mouse_filter = 2
+custom_constants/separation = 10
+
+[node name="h" type="HBoxContainer" parent="m/v"]
+margin_right = 330.0
+margin_bottom = 25.0
+rect_min_size = Vector2( 0, 25 )
+mouse_filter = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="icon" type="Panel" parent="m/v/h"]
+margin_top = 3.0
+margin_right = 18.0
+margin_bottom = 21.0
+rect_min_size = Vector2( 18, 18 )
+mouse_filter = 2
+size_flags_horizontal = 0
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Sprite" type="Sprite" parent="m/v/h/icon"]
+position = Vector2( 9, 9 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 2 )
+
+[node name="name" type="Label" parent="m/v/h"]
+margin_left = 22.0
+margin_top = 4.0
+margin_right = 330.0
+margin_bottom = 21.0
+size_flags_horizontal = 3
+custom_fonts/font = SubResource( 3 )
+custom_colors/font_color = Color( 0.804688, 0.804688, 0.804688, 1 )
+text = "GRINDER"
+autowrap = true
+
+[node name="inactive" type="MarginContainer" parent="m/v/h"]
+visible = false
+margin_left = 278.0
+margin_right = 330.0
+margin_bottom = 25.0
+
+[node name="m" type="MarginContainer" parent="m/v/h/inactive"]
+margin_right = 52.0
+margin_bottom = 25.0
+size_flags_horizontal = 0
+custom_constants/margin_right = 5
+custom_constants/margin_top = 5
+custom_constants/margin_left = 5
+custom_constants/margin_bottom = 5
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="bg" type="Panel" parent="m/v/h/inactive/m"]
+margin_left = 5.0
+margin_top = 5.0
+margin_right = 47.0
+margin_bottom = 20.0
+custom_styles/panel = ExtResource( 4 )
+
+[node name="Label" type="Label" parent="m/v/h/inactive/m"]
+margin_left = 5.0
+margin_top = 5.0
+margin_right = 47.0
+margin_bottom = 20.0
+custom_fonts/font = SubResource( 5 )
+text = "Inactive"
+
+[node name="permanent" type="MarginContainer" parent="m/v/h"]
+visible = false
+margin_left = 261.0
+margin_right = 330.0
+margin_bottom = 25.0
+
+[node name="m" type="MarginContainer" parent="m/v/h/permanent"]
+margin_right = 69.0
+margin_bottom = 25.0
+size_flags_horizontal = 0
+custom_constants/margin_right = 5
+custom_constants/margin_top = 5
+custom_constants/margin_left = 5
+custom_constants/margin_bottom = 5
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="bg" type="Panel" parent="m/v/h/permanent/m"]
+margin_left = 5.0
+margin_top = 5.0
+margin_right = 64.0
+margin_bottom = 20.0
+custom_styles/panel = SubResource( 9 )
+
+[node name="Label" type="Label" parent="m/v/h/permanent/m"]
+margin_left = 5.0
+margin_top = 5.0
+margin_right = 64.0
+margin_bottom = 20.0
+custom_fonts/font = SubResource( 5 )
+text = "Permanent"
+
+[node name="details" type="MarginContainer" parent="m/v"]
+visible = false
+margin_top = 35.0
+margin_right = 330.0
+margin_bottom = 71.0
+
+[node name="bg" type="Panel" parent="m/v/details"]
+margin_right = 330.0
+margin_bottom = 36.0
+rect_min_size = Vector2( 0, 25 )
+mouse_filter = 2
+custom_styles/panel = SubResource( 11 )
+__meta__ = {
+"_editor_description_": "5"
+}
+
+[node name="h" type="HBoxContainer" parent="m/v/details"]
+margin_right = 330.0
+margin_bottom = 36.0
+mouse_filter = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="icon" type="Panel" parent="m/v/details/h"]
+margin_right = 36.0
+margin_bottom = 36.0
+rect_min_size = Vector2( 36, 36 )
+mouse_filter = 2
+size_flags_horizontal = 0
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Sprite" type="Sprite" parent="m/v/details/h/icon"]
+position = Vector2( 18, 18 )
+texture = ExtResource( 2 )
+
+[node name="desc" type="Label" parent="m/v/details/h"]
+margin_left = 40.0
+margin_top = 11.0
+margin_right = 330.0
+margin_bottom = 25.0
+size_flags_horizontal = 3
+custom_fonts/font = SubResource( 4 )
+custom_colors/font_color = Color( 0.804688, 0.804688, 0.804688, 1 )
+text = "Stone LORED haste x1.35."
+autowrap = true
+
+[node name="Select" type="Button" parent="."]
+margin_right = 340.0
+margin_bottom = 35.0
+rect_min_size = Vector2( 0, 35 )
+focus_mode = 0
+mouse_default_cursor_shape = 2
+size_flags_vertical = 0
+custom_styles/hover = SubResource( 6 )
+custom_styles/pressed = SubResource( 10 )
+custom_styles/normal = SubResource( 8 )
+[connection signal="mouse_entered" from="Select" to="." method="_on_Select_mouse_entered"]
+[connection signal="mouse_exited" from="Select" to="." method="_on_Select_mouse_exited"]

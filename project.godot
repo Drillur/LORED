@@ -14,6 +14,16 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://Scripts/classes/Big.gd"
 }, {
+"base": "Reference",
+"class": "BigFloat",
+"language": "GDScript",
+"path": "res://Scripts/classes/BreakInfinity.gd"
+}, {
+"base": "Reference",
+"class": "FPS",
+"language": "GDScript",
+"path": "res://Scripts/classes/class_FPS.gd"
+}, {
 "base": "Node",
 "class": "FormatValue",
 "language": "GDScript",
@@ -61,6 +71,8 @@ _global_script_classes=[ {
 } ]
 _global_script_class_icons={
 "Big": "",
+"BigFloat": "",
+"FPS": "",
 "FormatValue": "",
 "GlobalVariables": "",
 "LORED": "",
@@ -77,7 +89,7 @@ _global_script_class_icons={
 config/name="LORED"
 run/main_scene="res://Scenes/Root.tscn"
 config/icon="res://Sprites/misc/splash.png"
-config/Version="2.0 BETA (5)"
+config/Version="2.0 BETA (7)"
 
 [autoload]
 

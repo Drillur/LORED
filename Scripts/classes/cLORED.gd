@@ -26,7 +26,6 @@ var cost_modifier := Big.new()
 var modifier_from_growin_on_me := Big.new(1.0)
 var halt := false
 var hold := false
-var update_net_text := true
 var speed : Num
 var crit := Num.new(0.0) # crit chance
 
@@ -69,10 +68,6 @@ func sync():
 		r = Big.new(0)
 	if r.mantissa < 0:
 		r.mantissa = 0
-	
-	# -
-	
-	#update_net_text = true
 
 
 func sync_d():
@@ -83,17 +78,17 @@ func sync_d():
 	
 	# a
 	for x in benefactors["add list"]:
-		d.a.plus(gv.up[x].d.t)
+		d.a.a(gv.up[x].d.t)
 	
 	# m
 	for x in benefactors["out list"]:
-		d.m.multiply(gv.up[x].d.t)
+		d.m.m(gv.up[x].d.t)
 	
-	d.m.multiply(output_modifier)
-	d.m.multiply(Big.new(1).max(Big.new(f.f).divide(f.t), 1))
-	d.m.multiply(modifier_from_growin_on_me)
-	d.m.multiply(gv.hax_pow)
-	
+	d.m.m(output_modifier)
+	var lb_percent = max(f.f.percent(f.t), 1)
+	d.m.m(lb_percent)
+	d.m.m(modifier_from_growin_on_me)
+	d.m.m(gv.hax_pow)
 	
 	d.sync()
 
@@ -104,11 +99,11 @@ func sync_fc():
 	
 	
 	if gv.up["upgrade_description"].active():
-		fc.m.multiply(10)
+		fc.m.m(10)
 	
 	if "s1" in type and "bur " in type:
 		if gv.up["upgrade_name"].active():
-			fc.m.multiply(10)
+			fc.m.m(10)
 	
 	
 	fc.sync()
@@ -120,9 +115,9 @@ func sync_speed():
 	
 	
 	for x in benefactors["haste list"]:
-		speed.m.divide(gv.up[x].d.t)
+		speed.m.d(gv.up[x].d.t)
 	
-	speed.m.divide(gv.hax_pow)
+	speed.m.d(gv.hax_pow)
 	
 	
 	speed.sync()
@@ -134,7 +129,7 @@ func sync_crit():
 	
 	
 	for x in benefactors["crit list"]:
-		crit.a.plus(gv.up[x].d.t)
+		crit.a.a(gv.up[x].d.t)
 	
 	
 	crit.sync()
@@ -145,12 +140,12 @@ func sync_cost():
 		
 		cost[c].m = Big.new()
 		
-		cost[c].m.multiply(cost_modifier)
+		cost[c].m.m(cost_modifier)
 		
 		for x in benefactors["cost list"]:
 			
 			if type.split(" ")[0] == gv.up[x].benefactor_of[0]:
-				cost[c].m.multiply(gv.up[x].d.t)
+				cost[c].m.m(gv.up[x].d.t)
 				continue
 			
 			var in_check := false
@@ -164,14 +159,14 @@ func sync_cost():
 			
 			if not in_check: continue
 			
-			cost[c].m.multiply(gv.up[x].d.t)
+			cost[c].m.m(gv.up[x].d.t)
 	
 	var tier = int(type[1])
 	for c in cost:
 		
 		var vtier = int(gv.g[c].type[1])
 		while tier > vtier:
-			cost[c].m.multiply(cost_modifier)
+			cost[c].m.m(cost_modifier)
 			vtier += 1
 	
 	
@@ -189,7 +184,7 @@ func sync_b():
 		for x in benefactors["burn list"]:
 			
 			if type.split(" ")[0] == gv.up[x].benefactor_of[0]:
-				b[v].m.multiply(gv.up[x].d.t)
+				b[v].m.m(gv.up[x].d.t)
 				continue
 			
 			var in_check := false
@@ -203,7 +198,7 @@ func sync_b():
 			
 			if not in_check: continue
 			
-			b[v].m.multiply(gv.up[x].d.t)
+			b[v].m.m(gv.up[x].d.t)
 	
 	for x in b:
 		b[x].sync()
@@ -218,31 +213,31 @@ func net(get_raw_power := false, ignore_halt := false) -> Array:
 	
 	# returns [gain, drain]
 	
-	var gain = Big.new(d.t).multiply(60).divide(speed.t).multiply(Big.new(1).plus(Big.new(crit.t).divide(10)))
+	var gain = Big.new(d.t).m(60).d(speed.t).m(Big.new(1).a(crit.t.percent(10)))
 	var drain = Big.new(0)
 	
 	if not active:
-		gain.multiply(0)
+		gain.m(0)
 	
 	# upgrade-specific per_sec bonuses
 	if true:
 		
 		if short == "cop" and gv.up["THE THIRD"].active() and gv.g["copo"].active():
-			var gay = Big.new(gv.g["copo"].d.t).multiply(60).divide(gv.g["copo"].speed.t)
-			gay.multiply(Big.new(1).plus(Big.new(gv.g["copo"].crit.t).divide(10)))
-			gain.plus(gay)
+			var gay = Big.new(gv.g["copo"].d.t).m(60).d(gv.g["copo"].speed.t)
+			gay.m(Big.new(1).a(Big.new(gv.g["copo"].crit.t).d(10)))
+			gain.a(gay)
 		
 		if short == "stone" and gv.up["wait that's not fair"].active() and gv.g["stone"].active():
-			var gay = Big.new(gv.g["coal"].d.t).multiply(60).divide(gv.g["coal"].speed.t)
-			gay.multiply(Big.new(1).plus(Big.new(gv.g["coal"].crit.t).divide(10)))
-			gain.plus(gay)
+			var gay = Big.new(gv.g["coal"].d.t).m(60).d(gv.g["coal"].speed.t)
+			gay.m(Big.new(1).a(Big.new(gv.g["coal"].crit.t).d(10)))
+			gain.a(gay)
 		
 		if short == "iron" and gv.up["I RUN"].active() and not gv.g["iron"].active():
-			var gay = Big.new(gv.g["irono"].d.t).multiply(60).divide(gv.g["irono"].speed.t)
-			gay.multiply(Big.new(1).plus(Big.new(gv.g["irono"].crit.t).divide(10)))
-			gain.plus(gay)
+			var gay = Big.new(gv.g["irono"].d.t).m(60).d(gv.g["irono"].speed.t)
+			gay.m(Big.new(1).a(Big.new(gv.g["irono"].crit.t).d(10)))
+			gain.a(gay)
 		
-		gain.plus(witch(false).multiply(60))
+		gain.a(witch(false).m(60))
 	
 	if get_raw_power:
 		return [gain, drain]
@@ -251,38 +246,38 @@ func net(get_raw_power := false, ignore_halt := false) -> Array:
 	if not ignore_halt:
 		
 		if halt:
-			gain.multiply(0)
+			gain.m(0)
 		
 		# all below: candy from babies
 		while "bur " in type:
 			if gv.up["don't take candy from babies"].active():
 				if int(type[1]) > 1 and gv.g["coal"].level <= 5:
-					if f.f.isLessThan(Big.new(f.t).multiply(0.1)):
-						gain.multiply(0)
+					if f.f.isLessThan(Big.new(f.t).m(0.1)):
+						gain.m(0)
 						break
-			if f.f.isLessThan(Big.new(f.t).multiply(0.1)) and not gv.g["coal"].active:
-				gain.multiply(0)
+			if f.f.isLessThan(Big.new(f.t).m(0.1)) and not gv.g["coal"].active:
+				gain.m(0)
 				break
 			break
 		
 		while "ele " in type:
 			if gv.up["don't take candy from babies"].active():
 				if int(type[1]) > 1 and gv.g["jo"].level <= 5:
-					if f.f.isLessThan(Big.new(f.t).multiply(0.1)):
-						gain.multiply(0)
+					if f.f.isLessThan(Big.new(f.t).m(0.1)):
+						gain.m(0)
 						break
-			if f.f.isLessThan(Big.new(f.t).multiply(0.1)) and not gv.g["jo"].active:
-				gain.multiply(0)
+			if f.f.isLessThan(Big.new(f.t).m(0.1)) and not gv.g["jo"].active:
+				gain.m(0)
 				break
 			break
 		
 		for x in b:
 			if gv.up["don't take candy from babies"].active():
 				if gv.g[x].type[1] == "1" and int(type[1]) > 1 and gv.g[x].level <= 5:
-					gain.multiply(0)
+					gain.m(0)
 					break
 			if not gv.g[x].hold: continue
-			gain.multiply(0)
+			gain.m(0)
 			break
 	
 	# fuel lored
@@ -296,7 +291,7 @@ func net(get_raw_power := false, ignore_halt := false) -> Array:
 			if (short == "coal" and "bur " in gv.g[x].type) or (short == "jo" and "ele " in gv.g[x].type):
 				if is_baby(int(gv.g[x].type[1])):
 					continue
-				drain.plus(fuel_lored_net_loss(gv.g[x]))
+				drain.a(fuel_lored_net_loss(gv.g[x]))
 	
 	# checks all loreds that use this resource
 	for x in used_by:
@@ -324,10 +319,13 @@ func net(get_raw_power := false, ignore_halt := false) -> Array:
 		if is_baby(int(gv.g[x].type[1])):
 			continue
 		
-		var gay = Big.new(gv.g[x].d.t).divide(gv.g[x].speed.t).multiply(60).multiply(gv.g[x].b[short].t)
-		drain.plus(gay)
-#	if short == "jo":
-#		print(gain.toString(), "/", drain.toString())
+		var gay = Big.new(gv.g[x].d.t).d(gv.g[x].speed.t).m(60).m(gv.g[x].b[short].t)
+		drain.a(gay)
+	
+	if drain.exponent < -10:
+		drain.mantissa = 0.0
+		drain.exponent = 0
+	
 	return [gain, drain]
 
 func is_baby(gx_type: int = int(type[1])) -> bool:
@@ -353,22 +351,22 @@ func is_baby(gx_type: int = int(type[1])) -> bool:
 
 func fuel_lored_net_loss(gx: LORED) -> float:
 	
-	var less = Big.new(gx.fc.t).multiply(4)
-	var max_fuel = Big.new(gx.f.t).multiply(gv.overcharge) if gx.type[1] in gv.overcharge_list else Big.new(gx.f.t)
-	max_fuel.minus(less)
+	var less = Big.new(gx.fc.t).m(4)
+	var max_fuel = Big.new(gx.f.t).m(gv.overcharge) if gx.type[1] in gv.overcharge_list else Big.new(gx.f.t)
+	max_fuel.s(less)
 	
-	if gx.f.f.isLessThan(Big.new(gx.f.t).minus(less)):
-		return Big.new(gx.fc.t).multiply(120).multiply(less_from_full(gx.f.f, max_fuel))
+	if gx.f.f.isLessThan(Big.new(gx.f.t).s(less)):
+		return Big.new(gx.fc.t).m(120).m(less_from_full(gx.f.f, max_fuel))
 	
 	if gx.f.f.isLessThan(max_fuel):
 		if gx.halt:
-			return Big.new(gx.fc.t).multiply(60).multiply(less_from_full(gx.f.f, max_fuel))
-		return Big.new(gx.fc.t).multiply(120).multiply(less_from_full(gx.f.f, max_fuel))
+			return Big.new(gx.fc.t).m(60).m(less_from_full(gx.f.f, max_fuel))
+		return Big.new(gx.fc.t).m(120).m(less_from_full(gx.f.f, max_fuel))
 	
 	if gx.halt:
 		return 0.0
 	
-	return Big.new(gx.fc.t).multiply(60).multiply(less_from_full(gx.f.f, max_fuel))
+	return Big.new(gx.fc.t).m(60).m(less_from_full(gx.f.f, max_fuel))
 
 func less_from_full(current: Big, _max: Big) -> Big:
 	if not gv.up["RELATIVITY"].active():
@@ -376,7 +374,7 @@ func less_from_full(current: Big, _max: Big) -> Big:
 	# if 1% fuel, returns 99x
 	# if 60% fuel, returns 40x
 	# 1 - (current / max)
-	return Big.new(1).minus(Big.new(current).divide(_max)).multiply(100)
+	return Big.new(1).s(current.percent(_max)).m(100)
 
 
 func active() -> bool:
@@ -392,10 +390,10 @@ func witch(produced : bool) -> Big:
 	if "no" in gv.menu.f:
 		return Big.new(0)
 	
-	var witch: Big = Big.new(d.t).multiply(0.01).multiply(speed.b).divide(speed.t)
+	var witch: Big = Big.new(d.t).m(0.01).m(speed.b.percent(speed.t))
 	
 	if gv.up["GRIMOIRE"].active():
-		witch.multiply(log(gv.stats.run[0]))
+		witch.m(log(gv.stats.run[0]))
 	
 	if not produced:
 		return witch
@@ -415,7 +413,7 @@ func task_and_quest_check(f: Big) -> void:
 			continue
 		
 		if taq.task[x].step[key].f.isLessThan(taq.task[x].step[key].b):
-			taq.task[x].step[key].f.plus(f)
+			taq.task[x].step[key].f.a(f)
 		if taq.task[x].step[key].f.isLargerThan(taq.task[x].step[key].b):
 			taq.task[x].step[key].f = Big.new(taq.task[x].step[key].b)
 	
@@ -426,7 +424,7 @@ func task_and_quest_check(f: Big) -> void:
 		if z == "Combined resources produced" or (z == "Combined Stage 2 resources produced" and "s2" in type):
 			
 			if taq.quest.step[z].f.isLessThan(taq.quest.step[z].b):
-				taq.quest.step[z].f.plus(f)
+				taq.quest.step[z].f.a(f)
 			if taq.quest.step[z].f.isLargerThan(taq.quest.step[z].b):
 				taq.quest.step[z].f = Big.new(taq.quest.step[z].b)
 		
@@ -434,7 +432,7 @@ func task_and_quest_check(f: Big) -> void:
 			return
 		
 		if taq.quest.step[key].f.isLessThan(taq.quest.step[key].b):
-			taq.quest.step[key].f.plus(f)
+			taq.quest.step[key].f.a(f)
 		if taq.quest.step[key].f.isLargerThan(taq.quest.step[key].b):
 			taq.quest.step[key].f = Big.new(taq.quest.step[key].b)
 

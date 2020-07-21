@@ -56,7 +56,7 @@ func r_update() -> void:
 	for x in task.step:
 		cont.step[x].get_node("v/h/step/val").text = task.step[x].f.toString() + " / " + task.step[x].b.toString()
 		
-		cont.step[x].get_node("v/ct/c").rect_size.x = Big.new(task.step[x].f).divide(task.step[x].b).toFloat() * cont.step[x].get_node("v/ct").rect_size.x
+		cont.step[x].get_node("v/ct/c").rect_size.x = task.step[x].f.percent(task.step[x].b) * cont.step[x].get_node("v/ct").rect_size.x
 		cont.step[x].get_node("v/ct/c").rect_size.x = min(cont.step[x].get_node("v/ct/c").rect_size.x, cont.step[x].get_node("v/ct").rect_size.x)
 		
 		if cont.step[x].get_node("v/ct/c").rect_size.x == cont.step[x].get_node("v/ct").rect_size.x:

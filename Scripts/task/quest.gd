@@ -45,12 +45,12 @@ func _physics_process(delta):
 		for x in taq.quest.step:
 			if typeof(taq.quest.step[x].f) == TYPE_NIL:
 				taq.quest.step[x].f = Big.new(0)
-			points.plus(taq.quest.step[x].f)
+			points.a(taq.quest.step[x].f)
 		points = Big.new(Big.min(points, taq.quest.total_points))
 		
-		get_node("bar").value = Big.new(points).divide(taq.quest.total_points).toFloat() * 100
+		get_node("bar").value = points.percent(taq.quest.total_points) * 100
 		
-		if points.isLargerThanOrEqualTo(Big.new(taq.quest.total_points).multiply(0.9995)):
+		if points.isLargerThanOrEqualTo(Big.new(taq.quest.total_points).m(0.9995)):
 			get_node("time").hide()
 			get_node("done").show()
 			get_node("view").hide()

@@ -41,7 +41,7 @@ class Task:
 		icon.texture = _icon.texture
 		color = _color
 		for x in step:
-			total_points.plus(step[x].b)
+			total_points.a(step[x].b)
 
 
 func new_quest(_quest: Task) -> void:

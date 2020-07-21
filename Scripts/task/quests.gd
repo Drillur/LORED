@@ -42,7 +42,8 @@ func quest_ended() -> void:
 func flying_texts(resource_reward = {}) -> void:
 	
 	for x in resource_reward:
-		gv.g[x].r.plus(resource_reward[x])
+		gv.g[x].r.a(resource_reward[x])
+		gv.emit_signal("lored_updated", x, "amount")
 	
 	var i := 0
 	for x in resource_reward:

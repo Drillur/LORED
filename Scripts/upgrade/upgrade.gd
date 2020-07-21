@@ -85,7 +85,7 @@ func r_update() -> void:
 			show()
 		
 		if going_to_hide and going_to_show:
-			print("for fuck's sake, you idiot")
+			print("that just makes no fuckin sense, i mean it's just bullshit. fuck")
 	
 	# set icon
 	if true:
@@ -192,7 +192,8 @@ func refundable(b: String, red_necro: bool) -> bool:
 	gv.up[b].sync()
 	
 	for c in gv.up[b].cost:
-		gv.g[c].r.plus(gv.up[b].cost[c].t)
+		gv.g[c].r.a(gv.up[b].cost[c].t)
+		gv.emit_signal("lored_updated", c, "amount")
 	
 	rt.w_aa()
 	rt.get_node("map/tip")._call("no")
@@ -420,8 +421,10 @@ func upgrade_effects(b: String, active: bool, first_purchase: bool):
 					routine.clear()
 					routine = get_routine_info()
 					
-					gv.g["tum"].r.plus(routine[0]) # d
-					gv.g["malig"].r.minus(routine[1]) # c
+					gv.g["tum"].r.a(routine[0]) # d
+					gv.emit_signal("lored_updated", "tum", "amount")
+					gv.g["malig"].r.s(routine[1]) # c
+					gv.emit_signal("lored_updated", "malig", "amount")
 					rt.b_reset(1, false)
 					
 					gv.g["malig"].sync()
@@ -436,6 +439,27 @@ func upgrade_effects(b: String, active: bool, first_purchase: bool):
 				continue
 			gv.up[x].sync()
 	
+	# signals
+	if true:
+		
+		if " out" in gv.up[b].type or "add buff" in gv.up[b].type:
+			if gv.up[b].main_lored_target in gv.g.keys():
+				gv.emit_signal("lored_updated", gv.up[b].main_lored_target, "d")
+			elif gv.up[b].main_lored_target in ["s1", "s2"]:
+				for x in gv.g:
+					if not gv.g[x].type[1] == gv.up[b].main_lored_target[1]:
+						continue
+					gv.emit_signal("lored_updated", x, "d")
+		
+		if " haste" in gv.up[b].type or "haste buff" in gv.up[b].type:
+			if gv.up[b].main_lored_target in gv.g.keys():
+				gv.emit_signal("lored_updated", gv.up[b].main_lored_target, "autobuywheel")
+			elif gv.up[b].main_lored_target in ["s1", "s2"]:
+				for x in gv.g:
+					if not gv.g[x].type[1] == gv.up[b].main_lored_target[1]:
+						continue
+					gv.emit_signal("lored_updated", x, "autobuywheel")
+	
 	rt.w_distribute_upgrade_buff(b)
 
 func get_routine_info() -> Array:
@@ -443,15 +467,15 @@ func get_routine_info() -> Array:
 	var routine_d: Big = Big.new(gv.up["PROCEDURE"].d.t)
 	var routine_c: Big = Big.new(gv.up["ROUTINE"].cost["malig"].t)
 	
-	if gv.g["malig"].r.isLargerThan(Big.new(routine_c).multiply(2)):
+	if gv.g["malig"].r.isLargerThan(Big.new(routine_c).m(2)):
 		
-		var _c: Big = Big.new(gv.g["malig"].r).divide(gv.up["ROUTINE"].cost["malig"].t).roundDown().minus(1)
-		_c.multiply(routine_c)
-		routine_c.plus(_c)
+		var _c: Big = Big.new(gv.g["malig"].r.percent(gv.up["ROUTINE"].cost["malig"].t)).roundDown().s(1)
+		_c.m(routine_c)
+		routine_c.a(_c)
 		
-		var relative: Big = Big.new(routine_c).divide(gv.up["ROUTINE"].cost["malig"].t).roundDown().minus(1)
-		relative.multiply(gv.up["PROCEDURE"].d.t)
-		routine_d.plus(relative)
+		var relative: Big = Big.new(routine_c.percent(gv.up["ROUTINE"].cost["malig"].t)).roundDown().s(1)
+		relative.m(gv.up["PROCEDURE"].d.t)
+		routine_d.a(relative)
 	
 	return [routine_d, routine_c]
 
@@ -461,7 +485,8 @@ func takeaway_price(b: String):
 		return
 	
 	for c in gv.up[b].cost:
-		gv.g[c].r.minus(gv.up[b].cost[c].t)
+		gv.g[c].r.s(gv.up[b].cost[c].t)
+		gv.emit_signal("lored_updated", c, "amount")
 
 func upgrade_bought(b: String, manual: bool):
 	
@@ -628,7 +653,8 @@ func _kill_all_children(up : String) -> void:
 			gv.up[x].sync()
 			
 			for c in gv.up[x].cost:
-				gv.g[c].r.plus(gv.up[x].cost[c].t)
+				gv.g[c].r.a(gv.up[x].cost[c].t)
+				gv.emit_signal("lored_updated", c, "amount")
 			
 			#var poop = gv.up[my_upgrade].type.split(" ")[0] + gv.up[my_upgrade].type.split(" ")[1].split(" ")[0]
 			

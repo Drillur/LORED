@@ -68,98 +68,98 @@ func init(f := "") -> void:
 				
 				f = "AXELOT"
 				gv.up[f] = Upgrade.new(f, "s2 mup autob", "Automatically purchases your Axe LORED if it won't cause your Hardwood LORED's net output to drop below 0.", 0.0, "axe")
-				gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up["Master"].cost["tum"].b).multiply(2 * 5))
+				gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up["Master"].cost["tum"].b).m(2 * 5))
 				gv.up[f].requires = "Master"
 				
 				f = "AUTOSHIT"
 				gv.up[f] = Upgrade.new(f, "s2 mup autob", "Automatically purchases your Humus LORED if it won't cause your Water LORED's net output to drop below 0.", 0.0, "humus")
 				gv.up[f].requires = "AXELOT"
-				gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up[gv.up[f].requires].cost["tum"].b).multiply(2)) # bil
+				gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up[gv.up[f].requires].cost["tum"].b).m(2)) # bil
 				
 				f = "Smashy Crashy"
 				gv.up[f] = Upgrade.new(f, "s2 mup autob", "Automatically purchases your Tree LORED if its net output is less than 0.", 0.0, "tree")
 				gv.up[f].requires = "AUTOSHIT"
-				gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up[gv.up[f].requires].cost["tum"].b).multiply(2)) # bil
+				gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up[gv.up[f].requires].cost["tum"].b).m(2)) # bil
 				
 				f = "A baby Roleum!! Thanks, pa!"
 				gv.up[f] = Upgrade.new(f, "s2 mup autob", "AKJSLHDFKLJHASDFKL", 0.0, "pet")
 				gv.up[f].requires = "Smashy Crashy"
-				gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up[gv.up[f].requires].cost["tum"].b).multiply(2)) # bil
+				gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up[gv.up[f].requires].cost["tum"].b).m(2)) # bil
 				
 				f = "poofy wizard boy"
 				gv.up[f] = Upgrade.new(f, "s2 mup autob", "Automatically purchases your Tobacco LORED if its net output is less than 0.", 0.0, "toba")
 				gv.up[f].requires = "A baby Roleum!! Thanks, pa!"
-				gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up[gv.up[f].requires].cost["tum"].b).multiply(2)) # bil
+				gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up[gv.up[f].requires].cost["tum"].b).m(2)) # bil
 				
 				f = "BENEFIT"
 				gv.up[f] = Upgrade.new(f, "s2 mup autob", "Automatically purchases your Galena LORED.", 0.0, "gale")
 				gv.up[f].requires = "poofy wizard boy"
-				gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up[gv.up[f].requires].cost["tum"].b).multiply(2))
+				gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up[gv.up[f].requires].cost["tum"].b).m(2))
 				
 				f = "AUTOAQUATICICIDE"
 				gv.up[f] = Upgrade.new(f, "s2 mup autob", "AKJSLHDFKLJHASDFKL", 0.0, "plast")
 				gv.up[f].requires = "BENEFIT"
-				gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up[gv.up[f].requires].cost["tum"].b).multiply(2))
+				gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up[gv.up[f].requires].cost["tum"].b).m(2))
 				
 				f = "Go on, then, LEAD us!"
 				gv.up[f] = Upgrade.new(f, "s2 mup autob", "Automatically purchases your Lead LORED if it won't cause your Galena LORED's net output to drop below 0.", 0.0, "lead")
 				gv.up[f].requires = "AUTOAQUATICICIDE"
-				gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up[gv.up[f].requires].cost["tum"].b).multiply(2))
+				gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up[gv.up[f].requires].cost["tum"].b).m(2))
 				
 				f = "BEEKEEPING"
 				gv.up[f] = Upgrade.new(f, "s2 mup autob", "Automatically purchases your Seed LORED if its net output is less than 0.", 0.0, "seed")
 				gv.up[f].requires = "Go on, then, LEAD us!"
-				gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up[gv.up[f].requires].cost["tum"].b).multiply(2))
+				gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up[gv.up[f].requires].cost["tum"].b).m(2))
 				
 				f = "Scoopy Doopy"
 				gv.up[f] = Upgrade.new(f, "s2 mup autob", "Automatically purchases your Soil LORED if it won't cause your Humus LORED's net output to drop below 0.", 0.0, "soil")
 				gv.up[f].requires = "BEEKEEPING"
-				gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up[gv.up[f].requires].cost["tum"].b).multiply(2))
+				gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up[gv.up[f].requires].cost["tum"].b).m(2))
 				
 				f = "Master Iron Worker"
 				gv.up[f] = Upgrade.new(f, "s2 mup autob", "Automatically purchases your Steel LORED if it won't cause your Liquid Iron LORED's net output to drop below 0.", 0.0, "steel")
 				gv.up[f].requires = "Scoopy Doopy"
-				gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up[gv.up[f].requires].cost["tum"].b).multiply(2))
+				gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up[gv.up[f].requires].cost["tum"].b).m(2))
 				
 				f = "JOINTSHACK"
 				gv.up[f] = Upgrade.new(f, "s2 mup autob", "Automatically purchases your Paper LORED if its net output is less than 0.", 0.0, "paper")
 				gv.up[f].requires = "Master Iron Worker"
-				gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up[gv.up[f].requires].cost["tum"].b).multiply(2))
+				gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up[gv.up[f].requires].cost["tum"].b).m(2))
 				
 				f = "AROUSAL"
 				gv.up[f] = Upgrade.new(f, "s2 mup autob", "Automatically purchases your Hardwood LORED if it won't cause your Wood LORED's net output to drop below 0.", 0.0, "hard")
 				gv.up[f].requires = "JOINTSHACK"
-				gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up[gv.up[f].requires].cost["tum"].b).multiply(2))
+				gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up[gv.up[f].requires].cost["tum"].b).m(2))
 				
 				f = "autofloof"
 				gv.up[f] = Upgrade.new(f, "s2 mup autob", "Automatically purchases your Wood Pulp LORED if its net output is less than 0.", 0.0, "pulp")
 				gv.up[f].requires = "AROUSAL"
-				gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up[gv.up[f].requires].cost["tum"].b).multiply(2))
+				gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up[gv.up[f].requires].cost["tum"].b).m(2))
 				
 				f = "ELECTRONIC CIRCUITS"
 				gv.up[f] = Upgrade.new(f, "s2 mup autob", "AKJSLHDFKLJHASDFKL", 0.0, "wire")
 				gv.up[f].requires = "autofloof"
-				gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up[gv.up[f].requires].cost["tum"].b).multiply(2))
+				gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up[gv.up[f].requires].cost["tum"].b).m(2))
 				
 				f = "AUTOBADDECISIONMAKER"
 				gv.up[f] = Upgrade.new(f, "s2 mup autob", "Automatically purchases your Cigarette LORED if its net output is less than 0.", 0.0, "ciga")
 				gv.up[f].requires = "ELECTRONIC CIRCUITS"
-				gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up[gv.up[f].requires].cost["tum"].b).multiply(2))
+				gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up[gv.up[f].requires].cost["tum"].b).m(2))
 				
 				f = "PILLAR OF AUTUMN"
 				gv.up[f] = Upgrade.new(f, "s2 mup autob", "Automatically purchases your Glass LORED if it won't cause your Sand LORED's net output to drop below 0.", 0.0, "glass")
 				gv.up[f].requires = "AUTOBADDECISIONMAKER"
-				gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up[gv.up[f].requires].cost["tum"].b).multiply(2))
+				gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up[gv.up[f].requires].cost["tum"].b).m(2))
 				
 				f = "what kind of resource is 'tumors', you hack fraud"
 				gv.up[f] = Upgrade.new(f, "s2 mup autob", "AKJSLHDFKLJHASDFKL", 0.0, "tum")
 				gv.up[f].requires = "PILLAR OF AUTUMN"
-				gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up[gv.up[f].requires].cost["tum"].b).multiply(2))
+				gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up[gv.up[f].requires].cost["tum"].b).m(2))
 				
 				f = "DEVOUR"
 				gv.up[f] = Upgrade.new(f, "s2 mup autob", "AKJSLHDFKLJHASDFKL", 0.0, "carc")
 				gv.up[f].requires = "what kind of resource is 'tumors', you hack fraud"
-				gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up[gv.up[f].requires].cost["tum"].b).multiply(2))
+				gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up[gv.up[f].requires].cost["tum"].b).m(2))
 				
 				f = "Splishy Splashy"
 				gv.up[f] = Upgrade.new(f, "s2 mup autob", "Automatically purchases your Water LORED.", 0.0, "water")
@@ -182,85 +182,85 @@ func init(f := "") -> void:
 				f = "beeware the seed lored"
 				gv.up[f] = Upgrade.new(f, "s2 mup autoup", "Automatically purchases Extra-normal upgrades that share this icon (but also the bee with daggers too obviously shucks).", 0.0, "seed")
 				gv.up[f].requires = "BEEKEEPING"
-				gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up[gv.up[f].requires].cost["tum"].b).divide(2))
+				gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up[gv.up[f].requires].cost["tum"].b).d(2))
 				gv.up[f].benefactor_of.append("seed")
 				
 				f = "flonky wonky"
 				gv.up[f] = Upgrade.new(f, "s2 mup autoup", "Automatically purchases Extra-normal upgrades that share this icon.", 0.0, "paper")
 				gv.up[f].requires = "JOINTSHACK"
-				gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up[gv.up[f].requires].cost["tum"].b).divide(2))
+				gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up[gv.up[f].requires].cost["tum"].b).d(2))
 				gv.up[f].benefactor_of.append("paper")
 				
 				f = "INSIDIUS"
 				gv.up[f] = Upgrade.new(f, "s2 mup autoup", "Automatically purchases Extra-normal upgrades that share this icon.", 0.0, "carc")
 				gv.up[f].requires = "DEVOUR"
-				gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up[gv.up[f].requires].cost["tum"].b).divide(2))
+				gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up[gv.up[f].requires].cost["tum"].b).d(2))
 				gv.up[f].benefactor_of.append("carc")
 				
 				f = "Tummy Ache"
 				gv.up[f] = Upgrade.new(f, "s2 mup autoup", "Automatically purchases Extra-normal upgrades that share this icon.", 0.0, "tum")
 				gv.up[f].requires = "what kind of resource is 'tumors', you hack fraud"
-				gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up[gv.up[f].requires].cost["tum"].b).divide(2))
+				gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up[gv.up[f].requires].cost["tum"].b).d(2))
 				gv.up[f].benefactor_of.append("tum")
 				
 				f = "Second Breakfast"
 				gv.up[f] = Upgrade.new(f, "s2 mup autoup", "Automatically purchases Extra-normal upgrades that share this icon.", 0.0, "toba")
 				gv.up[f].requires = "poofy wizard boy"
-				gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up[gv.up[f].requires].cost["tum"].b).divide(2))
+				gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up[gv.up[f].requires].cost["tum"].b).d(2))
 				gv.up[f].benefactor_of.append("toba")
 				
 				f = "AUTOSQUIRTER"
 				gv.up[f] = Upgrade.new(f, "s2 mup autoup", "Automatically purchases Extra-normal upgrades that share this icon.", 0.0, "pet")
 				gv.up[f].requires = "A baby Roleum!! Thanks, pa!"
-				gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up[gv.up[f].requires].cost["tum"].b).divide(2))
+				gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up[gv.up[f].requires].cost["tum"].b).d(2))
 				gv.up[f].benefactor_of.append("pet")
 				
 				f = "Motherlode"
 				gv.up[f] = Upgrade.new(f, "s2 mup autoup", "Automatically purchases Extra-normal upgrades that share this icon.", 0.0, "gale")
 				gv.up[f].requires = "BENEFIT"
-				gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up[gv.up[f].requires].cost["tum"].b).divide(2))
+				gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up[gv.up[f].requires].cost["tum"].b).d(2))
 				gv.up[f].benefactor_of.append("gale")
 				
 				f = "Plasticular Cancer"
 				gv.up[f] = Upgrade.new(f, "s2 mup autoup", "Automatically purchases Extra-normal upgrades that share this icon.", 0.0, "plast")
 				gv.up[f].requires = "AUTOAQUATICICIDE"
-				gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up[gv.up[f].requires].cost["tum"].b).divide(2))
+				gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up[gv.up[f].requires].cost["tum"].b).d(2))
 				gv.up[f].benefactor_of.append("plast")
 				
 				f = "probably radioactive"
 				gv.up[f] = Upgrade.new(f, "s2 mup autoup", "Automatically purchases Extra-normal upgrades that share this icon.", 0.0, "lead")
 				gv.up[f].requires = "Go on, then, LEAD us!"
-				gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up[gv.up[f].requires].cost["tum"].b).divide(2))
+				gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up[gv.up[f].requires].cost["tum"].b).d(2))
 				gv.up[f].benefactor_of.append("lead")
 				
 				f = "Fangorn"
 				gv.up[f] = Upgrade.new(f, "s2 mup autoup", "Automatically purchases Extra-normal upgrades that share this icon.", 0.0, "tree")
 				gv.up[f].requires = "Smashy Crashy"
-				gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up[gv.up[f].requires].cost["tum"].b).divide(2))
+				gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up[gv.up[f].requires].cost["tum"].b).d(2))
 				gv.up[f].benefactor_of.append("tree")
 				
 				f = "Glass Pass"
 				gv.up[f] = Upgrade.new(f, "s2 mup autoup", "Automatically purchases Extra-normal upgrades that share this icon.", 0.0, "glass")
 				gv.up[f].requires = "PILLAR OF AUTUMN"
-				gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up[gv.up[f].requires].cost["tum"].b).divide(2))
+				gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up[gv.up[f].requires].cost["tum"].b).percent(2))
 				gv.up[f].benefactor_of.append("glass")
 				
 				f = "Wire Trail"
 				gv.up[f] = Upgrade.new(f, "s2 mup autoup", "Automatically purchases Extra-normal upgrades that share this icon.", 0.0, "wire")
 				gv.up[f].requires = "ELECTRONIC CIRCUITS"
-				gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up[gv.up[f].requires].cost["tum"].b).divide(2))
+				gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up[gv.up[f].requires].cost["tum"].b).percent(2))
 				gv.up[f].benefactor_of.append("wire")
 				
 				f = "Hardwood Cycle"
 				gv.up[f] = Upgrade.new(f, "s2 mup autoup", "Automatically purchases Extra-normal upgrades that share this icon.", 0.0, "hard")
 				gv.up[f].requires = "AROUSAL"
-				gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up[gv.up[f].requires].cost["tum"].b).divide(2))
+				gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up[gv.up[f].requires].cost["tum"].b).percent(2))
 				gv.up[f].benefactor_of.append("hard")
 				
 				f = "Steel Pattern"
 				gv.up[f] = Upgrade.new(f, "s2 mup autoup", "Automatically purchases Extra-normal upgrades that share this icon.", 0.0, "steel")
 				gv.up[f].requires = "Master Iron Worker"
-				gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up[gv.up[f].requires].cost["tum"].b).divide(2))
+				gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up[gv.up[f].requires].cost["tum"].b).percent(2))
 				gv.up[f].benefactor_of.append("steel")
 				
 				f = "Iron Liquidizer"
@@ -272,13 +272,13 @@ func init(f := "") -> void:
 				f = "Confirmed Poopy"
 				gv.up[f] = Upgrade.new(f, "s2 mup autoup", "Automatically purchases Extra-normal upgrades that share this icon.", 0.0, "humus")
 				gv.up[f].requires = "AUTOSHIT"
-				gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up[gv.up[f].requires].cost["tum"].b).divide(2))
+				gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up[gv.up[f].requires].cost["tum"].b).percent(2))
 				gv.up[f].benefactor_of.append("humus")
 				
 				f = "lemme axe u summ"
 				gv.up[f] = Upgrade.new(f, "s2 mup autoup", "Automatically purchases Extra-normal upgrades that share this icon.", 0.0, "axe")
 				gv.up[f].requires = "AXELOT"
-				gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up[gv.up[f].requires].cost["tum"].b).divide(2))
+				gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up[gv.up[f].requires].cost["tum"].b).percent(2))
 				gv.up[f].benefactor_of.append("axe")
 				
 				f = "Apprentice"
@@ -383,7 +383,7 @@ func init(f := "") -> void:
 			
 			f = "mods enabled"
 			gv.up[f] = Upgrade.new(f, "s2 mup cost","Petroleum LORED Glass cost x0.8.", 0.75, "pet")
-			gv.up[f].cost["tum"] = Ob.Num.new(400000)
+			gv.up[f].cost["tum"] = Ob.Num.new("1e6")
 			gv.up[f].benefactor_of.append("pet glass")
 			gv.up[f].requires = "BEAVER"
 			
@@ -394,12 +394,12 @@ func init(f := "") -> void:
 			
 			f = "The Great Journey"
 			gv.up[f] = Upgrade.new(f, "s2 mup cost","Glass LORED Steel cost x0.8.", 0.8, "glass")
-			gv.up[f].cost["tum"] = Ob.Num.new(6000)
+			gv.up[f].cost["tum"] = Ob.Num.new("20e3")
 			gv.up[f].benefactor_of.append("glass steel")
 			
 			f = "BEAVER"
 			gv.up[f] = Upgrade.new(f, "s2 mup cost","Water LORED Wood cost x0.8.", 0.8, "water")
-			gv.up[f].cost["tum"] = Ob.Num.new(60000)
+			gv.up[f].cost["tum"] = Ob.Num.new("180e3")
 			gv.up[f].benefactor_of.append("water wood")
 		
 		# s1m
@@ -431,43 +431,43 @@ func init(f := "") -> void:
 			
 			f = "SPEED DOODS"
 			gv.up[f] = Upgrade.new(f, "s2 mup haste","Draw Plate LORED haste x1.5.", 1.5, "draw")
-			gv.up[f].cost["tum"] = Ob.Num.new(6400000)
+			gv.up[f].cost["tum"] = Ob.Num.new("1e12")
 			gv.up[f].requires = "Erebor"
 			gv.up[f].benefactor_of.append("draw")
 			
 			f = "Erebor"
 			gv.up[f] = Upgrade.new(f, "s2 mup haste","Galena LORED haste x1.5.", 1.5, "gale")
-			gv.up[f].cost["tum"] = Ob.Num.new(3200000)
+			gv.up[f].cost["tum"] = Ob.Num.new("250e9")
 			gv.up[f].requires = "Child Energy"
 			gv.up[f].benefactor_of.append("gale")
 			
 			f = "Child Energy"
 			gv.up[f] = Upgrade.new(f, "s2 mup haste","Soil LORED haste x1.5.", 1.5, "soil")
-			gv.up[f].cost["tum"] = Ob.Num.new(1600000)
+			gv.up[f].cost["tum"] = Ob.Num.new("5e9")
 			gv.up[f].requires = "PLATE"
 			gv.up[f].benefactor_of.append("soil")
 			
 			f = "PLATE"
 			gv.up[f] = Upgrade.new(f, "s2 mup haste","Steel LORED haste x1.5.", 1.5, "steel")
-			gv.up[f].cost["tum"] = Ob.Num.new(800000)
+			gv.up[f].cost["tum"] = Ob.Num.new("1e9")
 			gv.up[f].requires = "SILLY"
 			gv.up[f].benefactor_of.append("steel")
 			
 			f = "SILLY"
 			gv.up[f] = Upgrade.new(f, "s2 mup haste","Hardwood LORED haste x1.5.", 1.5, "hard")
-			gv.up[f].cost["tum"] = Ob.Num.new(400000)
+			gv.up[f].cost["tum"] = Ob.Num.new("10e6")
 			gv.up[f].requires = "Bone Meal"
 			gv.up[f].benefactor_of.append("hard")
 			
 			f = "Bone Meal"
 			gv.up[f] = Upgrade.new(f, "s2 mup haste","Tree LORED haste x1.5.", 1.5, "tree")
-			gv.up[f].cost["tum"] = Ob.Num.new(200000)
+			gv.up[f].cost["tum"] = Ob.Num.new("3e6")
 			gv.up[f].requires = "Overtime"
 			gv.up[f].benefactor_of.append("tree")
 			
 			f = "Overtime"
 			gv.up[f] = Upgrade.new(f, "s2 mup haste","Liquid Iron LORED haste x1.5.", 1.5, "liq")
-			gv.up[f].cost["tum"] = Ob.Num.new(100000)
+			gv.up[f].cost["tum"] = Ob.Num.new("400e3")
 			gv.up[f].requires = "Covenant Dance"
 			gv.up[f].benefactor_of.append("liq")
 			
@@ -485,43 +485,43 @@ func init(f := "") -> void:
 			f = "GATORADE"
 			gv.up[f] = Upgrade.new(f, "s2 mup haste buff","Stage 2 haste x%s.", 1.1, "s2")
 			gv.up[f].requires = "MILK"
-			gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up["MILK"].cost["tum"].b).multiply(3))
+			gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up["MILK"].cost["tum"].b).m(5))
 			gv.up[f].benefactor_of.append("s2")
 			
 			f = "APPLE JUICE"
 			gv.up[f] = Upgrade.new(f, "s2 mup haste buff","Stage 2 haste x%s.", 1.1, "s2")
 			gv.up[f].requires = "GATORADE"
-			gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up["GATORADE"].cost["tum"].b).multiply(6))
+			gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up["GATORADE"].cost["tum"].b).m(6))
 			gv.up[f].benefactor_of.append("s2")
 			
 			f = "PEPPERMINT MOCHA"
 			gv.up[f] = Upgrade.new(f, "s2 mup haste buff","Stage 2 haste x%s.", 1.1, "s2")
 			gv.up[f].requires = "APPLE JUICE"
-			gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up["APPLE JUICE"].cost["tum"].b).multiply(3))
+			gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up["APPLE JUICE"].cost["tum"].b).m(3))
 			gv.up[f].benefactor_of.append("s2")
 			
 			f = "STRAWBERRY BANANA SMOOTHIE"
 			gv.up[f] = Upgrade.new(f, "s2 mup haste buff","Stage 2 haste x%s.", 1.1, "s2")
 			gv.up[f].requires = "PEPPERMINT MOCHA"
-			gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up["PEPPERMINT MOCHA"].cost["tum"].b).multiply(3))
+			gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up["PEPPERMINT MOCHA"].cost["tum"].b).m(3))
 			gv.up[f].benefactor_of.append("s2")
 			
 			f = "GREEN TEA"
 			gv.up[f] = Upgrade.new(f, "s2 mup haste buff","Stage 2 haste x%s.", 1.1, "s2")
 			gv.up[f].requires = "STRAWBERRY BANANA SMOOTHIE"
-			gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up["STRAWBERRY BANANA SMOOTHIE"].cost["tum"].b).multiply(3))
+			gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up["STRAWBERRY BANANA SMOOTHIE"].cost["tum"].b).m(3))
 			gv.up[f].benefactor_of.append("s2")
 			
 			f = "FRENCH VANILLA"
 			gv.up[f] = Upgrade.new(f, "s2 mup haste buff","Stage 2 haste x%s.", 1.1, "s2")
 			gv.up[f].requires = "GREEN TEA"
-			gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up["GREEN TEA"].cost["tum"].b).multiply(3))
+			gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up["GREEN TEA"].cost["tum"].b).m(3))
 			gv.up[f].benefactor_of.append("s2")
 			
 			f = "WATER"
 			gv.up[f] = Upgrade.new(f, "s2 mup haste buff","Stage 2 haste x%s.", 1.1, "s2")
 			gv.up[f].requires = "FRENCH VANILLA"
-			gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up["FRENCH VANILLA"].cost["tum"].b).multiply(3))
+			gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up["FRENCH VANILLA"].cost["tum"].b).m(3))
 			gv.up[f].benefactor_of.append("s2")
 		
 		# s2n
@@ -858,43 +858,43 @@ func init(f := "") -> void:
 			
 			f = "KAIO-KEN"
 			gv.up[f] = Upgrade.new(f, "s2 mup add buff","Stage 2 base output +%s.", 1.0, "s2")
-			gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up["FALCON PAWNCH"].cost["tum"].b).multiply(3))
+			gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up["FALCON PAWNCH"].cost["tum"].b).m(5))
 			gv.up[f].requires = "FALCON PAWNCH"
 			gv.up[f].benefactor_of.append("s2")
 			
 			f = "DANCE OF THE FIRE GOD"
 			gv.up[f] = Upgrade.new(f, "s2 mup add buff","Stage 2 base output +%s.", 1.0, "s2")
-			gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up["KAIO-KEN"].cost["tum"].b).multiply(6))
+			gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up["KAIO-KEN"].cost["tum"].b).m(6))
 			gv.up[f].requires = "KAIO-KEN"
 			gv.up[f].benefactor_of.append("s2")
 			
 			f = "RASENGAN"
 			gv.up[f] = Upgrade.new(f, "s2 mup add buff","Stage 2 base output +%s.", 1.0, "s2")
-			gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up["DANCE OF THE FIRE GOD"].cost["tum"].b).multiply(3))
+			gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up["DANCE OF THE FIRE GOD"].cost["tum"].b).m(3))
 			gv.up[f].requires = "DANCE OF THE FIRE GOD"
 			gv.up[f].benefactor_of.append("s2")
 			
 			f = "AVATAR STATE"
 			gv.up[f] = Upgrade.new(f, "s2 mup add buff","Stage 2 base output +%s.", 1.0, "s2")
-			gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up["RASENGAN"].cost["tum"].b).multiply(3)) # 1.01mil
+			gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up["RASENGAN"].cost["tum"].b).m(3)) # 1.01mil
 			gv.up[f].requires = "RASENGAN"
 			gv.up[f].benefactor_of.append("s2")
 			
 			f = "HAMON"
 			gv.up[f] = Upgrade.new(f, "s2 mup add buff","Stage 2 base output +%s.", 1.0, "s2")
-			gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up["AVATAR STATE"].cost["tum"].b).multiply(3))
+			gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up["AVATAR STATE"].cost["tum"].b).m(3))
 			gv.up[f].requires = "AVATAR STATE"
 			gv.up[f].benefactor_of.append("s2")
 			
 			f = "METAL CAP"
 			gv.up[f] = Upgrade.new(f, "s2 mup add buff","Stage 2 base output +%s.", 1.0, "s2")
-			gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up["HAMON"].cost["tum"].b).multiply(3))
+			gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up["HAMON"].cost["tum"].b).m(3))
 			gv.up[f].requires = "HAMON"
 			gv.up[f].benefactor_of.append("s2")
 			
 			f = "STAR ROD"
 			gv.up[f] = Upgrade.new(f, "s2 mup add buff","Stage 2 base output +%s.", 1.0, "s2")
-			gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up["METAL CAP"].cost["tum"].b).multiply(3))
+			gv.up[f].cost["tum"] = Ob.Num.new(Big.new(gv.up["METAL CAP"].cost["tum"].b).m(3))
 			gv.up[f].requires = "METAL CAP"
 			gv.up[f].benefactor_of.append("s2")
 			
@@ -1585,7 +1585,7 @@ func init(f := "") -> void:
 			
 			f = "Tolkien"
 			gv.up[f] = Upgrade.new(f, "s2 mup benefactor add", "Output upgrades at +1 (base) +1.", 1.0, "s2")
-			gv.up[f].cost["tum"] = Ob.Num.new("5e7")
+			gv.up[f].cost["tum"] = Ob.Num.new("50e6")
 		
 		# s2n
 		if true:
@@ -1764,27 +1764,27 @@ func init(f := "") -> void:
 				
 				f = "Combo Breaker"
 				gv.up[f] = Upgrade.new(f, "s2 mup misc", "The Malignant upgrades OREOREUHBor E ALICE and AUTOSHOVELER persist through Chemotherapy.",0.0,  "coal")
-				gv.up[f].cost["tum"] = Ob.Num.new(195000)
+				gv.up[f].cost["tum"] = Ob.Num.new("1e9")
 				gv.up[f].requires = "CARAVAN"
 				
 				f = "CARAVAN"
 				gv.up[f] = Upgrade.new(f, "s2 mup misc","The Malignant upgrades AUTOPOLICE and AUTOSTONER persist through Chemotherapy.",0.0, "stone")
-				gv.up[f].cost["tum"] = Ob.Num.new(175000)
+				gv.up[f].cost["tum"] = Ob.Num.new("20e6")
 				gv.up[f].requires = "UNIONIZE"
 				
 				f = "UNIONIZE"
 				gv.up[f] = Upgrade.new(f, "s2 mup misc","The Malignant upgrades MOIST and pippenpaddle- oppsoCOPolis persist through Chemotherapy.", 0.0, "copo")
-				gv.up[f].cost["tum"] = Ob.Num.new(155000)
+				gv.up[f].cost["tum"] = Ob.Num.new("5e6")
 				gv.up[f].requires = "Jasmine"
 				
 				f = "Jasmine"
 				gv.up[f] = Upgrade.new(f, "s2 mup misc","The Malignant upgrades CANKERITE and wtf is that musk persist through Chemotherapy.", 0.0, "jo")
-				gv.up[f].cost["tum"] = Ob.Num.new(135000)
+				gv.up[f].cost["tum"] = Ob.Num.new("900e3")
 				gv.up[f].requires = "Mad Science"
 				
 				f = "Mad Science"
 				gv.up[f] = Upgrade.new(f, "s2 mup misc","The Malignant upgrades SLAPAPOW! and SENTIENT DERRICK persist through Chemotherapy.", 0.0, "tar")
-				gv.up[f].cost["tum"] = Ob.Num.new(115000)
+				gv.up[f].cost["tum"] = Ob.Num.new("300e3")
 				gv.up[f].requires = "AUTO-PERSIST"
 				
 				f = "AUTO-PERSIST"
@@ -1799,7 +1799,7 @@ func init(f := "") -> void:
 				
 				f = "GRIMOIRE"
 				gv.up[f] = Upgrade.new(f, "s2 mup misc","Radiative upgrade THE WITCH OF LOREDELITH percent modifier is affected by your Stage 1 run count.", 0.0, "thewitchofloredelith")
-				gv.up[f].cost["tum"] = Ob.Num.new("5e9")
+				gv.up[f].cost["tum"] = Ob.Num.new("15e6")
 				gv.up[f].requires = "THE WITCH OF LOREDELITH"
 		
 		# s1mup

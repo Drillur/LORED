@@ -7,7 +7,7 @@ var exponent:int = 1
 
 const MAX_MANTISSA = 1209600
 
-func _init(m = 1,e=0):
+func _init(m = 1.0,e=0):
 	if typeof(m) == TYPE_STRING:
 		var scientific = m.split("e")
 		var bla = scientific[0].replace(",", "")
@@ -20,16 +20,9 @@ func _init(m = 1,e=0):
 		mantissa = m.mantissa
 		exponent = m.exponent
 	else:
-		size_check(m)
 		mantissa = m
 		exponent = e
-	calculate(self)
-
-func size_check(m):
-	return
-	if m > MAX_MANTISSA:
-		printerr("BIG ERROR: MANTISSA TOO LARGE, PLEASE USE EXPONENT OR SCIENTIFIC NOTATION")
-		pass
+	calc(self)
 
 func type_check(n):
 	if typeof(n) == TYPE_INT or typeof(n) == TYPE_REAL:
@@ -41,52 +34,98 @@ func type_check(n):
 	else:
 		return n
 
-func plus(n):
+func calc(big = self):
+	
+	if big.mantissa >= 1 and big.mantissa < 10:
+		return
+	
+	if big.mantissa == 0.0:
+		big.exponent = 0
+		return
+	
+	var temp_exponent := floor(log(big.mantissa) / log(10))
+	
+	if temp_exponent < -10:
+		big.exponent = 0
+		big.mantissa = 0.0
+		return
+	
+	big.exponent += temp_exponent
+	big.mantissa /= pow(10, temp_exponent)
+
+func percent(n):
+	
+	# gets self's percent of n
+	
 	n = type_check(n)
-	size_check(n.mantissa)
+	
+	if n.mantissa == 0.0:
+		return 0.0
+	
+	var bla = {"mantissa": float(mantissa), "exponent": int(exponent)}
+	
+	bla.mantissa /= n.mantissa
+	bla.exponent -= n.exponent
+	
+	calc(bla)
+	
+	return max(0.0, bla.mantissa * pow(10, bla.exponent))
+
+func m(n):
+	
+	# multiplies self by n
+	
+	n = type_check(n)
+	
+	mantissa *= n.mantissa
+	exponent += n.exponent
+	
+	calc()
+	
+	return self
+
+func d(n):
+	
+	# divides self by n
+	
+	n = type_check(n)
+	
+	if n.mantissa == 0:
+		return self
+	
+	mantissa /= n.mantissa
+	exponent -= n.exponent
+	
+	calc()
+	
+	return self
+
+func a(n):
+	
+	# adds n to self
+	
+	n = type_check(n)
+	
 	var exp_diff = n.exponent - exponent
 	var scaled_mantissa = n.mantissa * pow(10, exp_diff)
 	mantissa += scaled_mantissa
-	calculate(self)
+	
+	calc()
+	
 	return self
 
-func minus(n):
+func s(n):
+	
+	# subtracts n from self
+	
 	n = type_check(n)
-	size_check(n.mantissa)
+	
 	var exp_diff = n.exponent - exponent
 	var scaled_mantissa = n.mantissa * pow(10, exp_diff)
 	mantissa -= scaled_mantissa
-	calculate(self)
-	return self
-
-func multiply(n):
-	n = type_check(n)
-	size_check(n.mantissa)
-	var new_exponent = n.exponent + exponent
-	var new_mantissa = n.mantissa * mantissa
-	while new_mantissa >= 10.0:
-		new_mantissa /= 10.0
-		new_exponent += 1
-	mantissa = new_mantissa
-	exponent = new_exponent
-	calculate(self)
-	return self
 	
-func divide(n):
-	n = type_check(n)
-	size_check(n.mantissa)
-	if n.mantissa == 0:
-		#printerr("BIG ERROR: DIVIDE BY ZERO")
-		return self
+	calc()
 	
-	var new_exponent = exponent - n.exponent
-	var new_mantissa = mantissa / n.mantissa
-	while new_mantissa < 1.0 and new_mantissa > 0.0:
-		new_mantissa *= 10.0
-		new_exponent -= 1
-	mantissa = new_mantissa
-	exponent = new_exponent
-	calculate(self)
 	return self
 
 func power(n:int):
@@ -117,7 +156,7 @@ func power(n:int):
 
 	exponent = y_exponent + exponent
 	mantissa = y_mantissa * mantissa
-	calculate(self)
+	calc(self)
 	return self
 
 func square():
@@ -127,37 +166,24 @@ func square():
 	else:
 		mantissa = sqrt(mantissa*10)
 		exponent = (exponent-1)/2
-	calculate(self)
+	calc(self)
 	return self
 
-func calculate(big):
-	if big.mantissa >= 10.0 or big.mantissa < 1.0:
-		var diff = int(floor(log10(big.mantissa)))
-		var div = pow(10.0, diff)
-		if div > 0.0:
-			big.mantissa /= div
-			big.exponent += diff
-	while big.exponent < 0:
-		big.mantissa *= 0.1
-		big.exponent += 1
-	while big.mantissa >= 10.0:
-		big.mantissa *= 0.1
-		big.exponent += 1
-	if big.mantissa == 0.0:
-		big.exponent = 0
-	pass
 
 func isEqualTo(n):
 	n = type_check(n)
-	calculate(n)
+	calc(n)
 	return n.mantissa == mantissa and n.exponent == exponent
 
 func isLargerThan(n):
+	
 	n = type_check(n)
-	calculate(n)
+	calc(n)
 	
 	if mantissa == 0.0:
 		return false
+	elif n.mantissa == 0.0 and mantissa > 0:
+		return true
 	
 	if exponent > n.exponent:
 		return true
@@ -170,57 +196,50 @@ func isLargerThan(n):
 		return false
 
 func isLargerThanOrEqualTo(n):
-	n = type_check(n)
-	calculate(n)
 	if isEqualTo(n):
 		return true
 	return isLargerThan(n)
 
 func isNegative() -> bool:
-	if exponent < 0:
-		return true
-	#elif exponent == 0:
-	if mantissa < 0:
-		return true
-	if toScientific()[0] == "-":
-		return true
-	return false
+	return mantissa < 0
 
 func isLessThan(n):
-	n = type_check(n)
-	calculate(n)
 	
+	n = type_check(n)
+	calc(n)
+	
+	if mantissa > 0 and n.mantissa == 0:
+		return false
 	if mantissa == 0.0 and n.mantissa > 0.0:
 		return true
 	
 	if exponent < n.exponent:
 		return true
 	elif exponent == n.exponent:
-		if mantissa < n.mantissa:
-			return true
-		else:
-			return false
+		return mantissa < n.mantissa
 	else:
 		return false
 
 func isLessThanOrEqualTo(n):
-	n = type_check(n)
-	calculate(n)
+	
 	if isEqualTo(n):
 		return true
+	
 	return isLessThan(n)
 
 static func min(m, n):
+	
 	if m.isLessThan(n):
 		return m
-	else:
-		return n
+	
+	return n
 
 static func max(m, n):
+	
 	if m.isLargerThan(n):
 		return m
-	else:
-		return n
+	
+	return n
 
 func roundDown():
 	if exponent == 0:
@@ -253,35 +272,39 @@ func toString():
 
 func toScientific():
 	return fval.f(mantissa) + "e" + fval.f(exponent)
+
 func toEngineering():
-	if exponent % 3 == 0:
-		return toScientific()
-	elif exponent % 3 == 1:
-		return fval.f(mantissa * 10) + "e" + fval.f(exponent - 1)
-	elif exponent % 3 == 2:
-		return fval.f(mantissa * 100) + "e" + fval.f(exponent - 2)
+	
+	var mod = exponent % 3
+	return fval.f(mantissa * pow(10, mod)) + "e" + fval.f(exponent - mod)
+
 func toLog():
 	
-#	if isLessThan(0):
-#		return "-e" + fval.f(exponent)
-	
-	var dec = str(stepify(abs(log(mantissa) / log(10) * 10), 0.01))
-	dec = dec.replace(".", "")
-	
-	if dec == "10":
-		dec = "999"
-	
-	if dec != "0":
-		dec = "." + dec
-	else:
+	var dec = "." + str(floor(abs(log(mantissa) / log(10) * 100))).pad_zeros(2)
+	if dec == ".00":
 		dec = ""
+	return "e" + format_exponent(exponent) + dec
+
+func format_exponent(value) -> String:
 	
-	return "e" + fval.f(exponent) + dec
+	if value < 1000:
+		return str(value) # 100
+	
+	# above: for numbers < 1000
+	# below: for numbers >= 1,000 and < 1,000,000
+	
+	var string = str(value)
+	var mod = string.length() % 3
+	var output = ""
+	
+	for i in range(0, string.length()):
+		if i != 0 && i % 3 == mod:
+			output += ","
+		output += string[i]
+	
+	return output # 342,945
+
 
 
 func toFloat():
-	while exponent > 0:
-		exponent -= 1
-		mantissa *= 10
-	return mantissa
-	#return stepify(float(str(mantissa) + "e" + str(exponent)),0.01)
+	return mantissa * pow(10, exponent)

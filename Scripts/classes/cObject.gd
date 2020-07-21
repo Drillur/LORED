@@ -20,8 +20,9 @@ class Num:
 	func sync():
 		
 		t = Big.new(b)
-		t.plus(a)
-		t.multiply(m)
+		t.a(a)
+		t.m(m)
 		
-		f = Big.new(Big.max(f, 0))
+		if f.isLessThan(0):
+			f = Big.new(0)
 		#f = Big.new(Big.min(f, t))

@@ -74,24 +74,26 @@ func sync_set_d():
 	# a
 	if "add buff" in type:
 		for x in gv.stats.up_list["benefactor add"]:
-			var gay = Big.new(Big.max(gv.up[x].d.t, 0))
-			set_d.a.plus(gay)
+			var gay = Big.new(gv.up[x].d.t)
+			if gay.isLessThan(0):
+				gay = Big.new(0)
+			set_d.a.a(gay)
 	if "crit buff" in type:
 		for x in gv.stats.up_list["benefactor crit"]:
-			set_d.a.plus(gv.up[x].d.t)
+			set_d.a.a(gv.up[x].d.t)
 	
 	# m
 	if "haste buff" in type:
 		for x in gv.stats.up_list["benefactor haste"]:
-			set_d.m.multiply(gv.up[x].d.t)
+			set_d.m.m(gv.up[x].d.t)
 	match name:
 		"CAPITAL PUNISHMENT":
-			set_d.m.multiply(gv.stats.run[0])
+			set_d.m.m(gv.stats.run[0])
 		"PROCEDURE":
-			set_d.m.multiply(gv.up["Hey, that's pretty good!"].d.t)
-			set_d.m.multiply(gv.up["Power Schlonks"].d.t)
-			set_d.m.multiply(gv.up["Mega Wonks"].d.t)
-			set_d.m.multiply(gv.up["CAPITAL PUNISHMENT"].d.t)
+			set_d.m.m(gv.up["Hey, that's pretty good!"].d.t)
+			set_d.m.m(gv.up["Power Schlonks"].d.t)
+			set_d.m.m(gv.up["Mega Wonks"].d.t)
+			set_d.m.m(gv.up["CAPITAL PUNISHMENT"].d.t)
 	
 	
 	set_d.sync()
@@ -104,7 +106,7 @@ func sync_d():
 	if not active():
 		
 		if " crit" in type or " add" in type:
-			d.m.minus(1) # must be 0 for these
+			d.m.s(1) # must be 0 for these
 		
 		d.sync()
 		return
