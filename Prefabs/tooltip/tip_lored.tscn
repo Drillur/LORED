@@ -237,7 +237,7 @@ margin_bottom = 56.0
 
 [node name="tags" type="HBoxContainer" parent="v"]
 visible = false
-margin_right = 115.0
+margin_right = 59.0
 
 [node name="halt" type="MarginContainer" parent="v/tags"]
 visible = false
@@ -561,9 +561,9 @@ text = "from upgrades"
 
 [node name="b" type="MarginContainer" parent="v"]
 visible = false
-margin_top = 40.0
-margin_right = 80.0
-margin_bottom = 78.0
+margin_top = 334.0
+margin_right = 134.0
+margin_bottom = 372.0
 custom_constants/margin_right = 10
 custom_constants/margin_top = 10
 custom_constants/margin_left = 10
@@ -572,18 +572,18 @@ custom_constants/margin_bottom = 10
 [node name="bg" type="Panel" parent="v/b"]
 margin_left = 10.0
 margin_top = 10.0
-margin_right = 70.0
+margin_right = 124.0
 margin_bottom = 28.0
 custom_styles/panel = ExtResource( 9 )
 
 [node name="v" type="VBoxContainer" parent="v/b"]
 margin_left = 10.0
 margin_top = 10.0
-margin_right = 70.0
+margin_right = 124.0
 margin_bottom = 28.0
 
 [node name="Label" type="Label" parent="v/b/v"]
-margin_right = 60.0
+margin_right = 114.0
 margin_bottom = 18.0
 custom_fonts/font = SubResource( 12 )
 text = "Ingredients"

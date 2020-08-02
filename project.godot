@@ -15,11 +15,6 @@ _global_script_classes=[ {
 "path": "res://Scripts/classes/Big.gd"
 }, {
 "base": "Reference",
-"class": "BigFloat",
-"language": "GDScript",
-"path": "res://Scripts/classes/BreakInfinity.gd"
-}, {
-"base": "Reference",
 "class": "FPS",
 "language": "GDScript",
 "path": "res://Scripts/classes/class_FPS.gd"
@@ -32,7 +27,7 @@ _global_script_classes=[ {
 "base": "Node",
 "class": "GlobalVariables",
 "language": "GDScript",
-"path": "res://Scripts/autoload/global_variables.gd"
+"path": "res://Scripts/autoload/_vars.gd"
 }, {
 "base": "Reference",
 "class": "LORED",
@@ -62,7 +57,7 @@ _global_script_classes=[ {
 "base": "Node2D",
 "class": "_root",
 "language": "GDScript",
-"path": "res://Scripts/Root.gd"
+"path": "res://Scripts/_Root.gd"
 }, {
 "base": "Resource",
 "class": "_save",
@@ -71,7 +66,6 @@ _global_script_classes=[ {
 } ]
 _global_script_class_icons={
 "Big": "",
-"BigFloat": "",
 "FPS": "",
 "FormatValue": "",
 "GlobalVariables": "",
@@ -89,17 +83,21 @@ _global_script_class_icons={
 config/name="LORED"
 run/main_scene="res://Scenes/Root.tscn"
 config/icon="res://Sprites/misc/splash.png"
-config/Version="2.0 BETA (7)"
+config/Version="2.0.1"
 
 [autoload]
 
-gv="*res://Scripts/autoload/global_variables.gd"
+gv="*res://Scripts/autoload/_vars.gd"
 taq="*res://Scripts/autoload/tasks_and_quests.gd"
 fval="*res://Scripts/autoload/format_value.gd"
 
 [display]
 
-window/size/width=800
+window/size/height=768
+
+[enviro]
+
+size/height=false
 
 [importer_defaults]
 
@@ -131,8 +129,17 @@ ui_left_mouse_button={
 "events": [ Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"button_mask":0,"position":Vector2( 0, 0 ),"global_position":Vector2( 0, 0 ),"factor":1.0,"button_index":1,"pressed":false,"doubleclick":false,"script":null)
  ]
 }
+ui_upgrade_menu={
+"deadzone": 0.5,
+"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":96,"unicode":0,"echo":false,"script":null)
+ ]
+}
 
 [rendering]
 
 quality/driver/driver_name="GLES2"
-environment/default_clear_color=Color( 0, 0, 0, 1 )
+environment/default_clear_color=Color( 0.0705882, 0.0705882, 0.0705882, 1 )
+
+[testwindow]
+
+size/height=false

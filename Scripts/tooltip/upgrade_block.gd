@@ -8,18 +8,18 @@ func init(_key: String) -> void:
 	$vbox/MarginContainer/VBoxContainer/HBoxContainer/name.text = gv.up[_key].name
 	
 	var type: String = gv.up[_key].type
-	if "s1 nup" in type:
+	if "s1n" in type:
 		$vbox/MarginContainer/VBoxContainer/type/text.text = "Normal"
 		$vbox/MarginContainer/VBoxContainer/type/bg.self_modulate = Color(.8,.8,.8)
-	elif "s2 nup" in type:
+	elif "s2n" in type:
 		$vbox/MarginContainer/VBoxContainer/type/text.text = "Extra-normal"
 		$vbox/MarginContainer/VBoxContainer/type/bg.self_modulate = Color(.8,.8,.8)
-	elif "s1 mup" in type:
+	elif "s1m" in type:
 		$vbox/MarginContainer/VBoxContainer/type/text.text = "Malignant"
-		$vbox/MarginContainer/VBoxContainer/type/bg.self_modulate = rt.r_lored_color("malig")
-	elif "s2 mup" in type:
+		$vbox/MarginContainer/VBoxContainer/type/bg.self_modulate = gv.g["malig"].color
+	elif "s2m" in type:
 		$vbox/MarginContainer/VBoxContainer/type/text.text = "Radiative"
-		$vbox/MarginContainer/VBoxContainer/type/bg.self_modulate = rt.r_lored_color("tum")
+		$vbox/MarginContainer/VBoxContainer/type/bg.self_modulate = gv.g["tum"].color
 
 func get_texture(_key) -> Texture:
 	

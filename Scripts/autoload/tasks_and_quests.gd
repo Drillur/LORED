@@ -51,7 +51,6 @@ func new_quest(_quest: Task) -> void:
 	quest = Task.new(_quest.name, _quest.desc, _quest.resource_reward, _quest.reward, _quest.step, _quest.icon, _quest.color)
 	
 	content = prefabs.TASK.instance()
-	get_node("/root/Root/misc/taq/quest").add_child(content)
+	get_node("/root/Root/m/v/bot/h/taq/quest").add_child(content)
 	content.init()
 	
-	#content.rect_position = Vector2(800 - content.rect_size.x - 10, 600 - content.rect_size.y - 10)

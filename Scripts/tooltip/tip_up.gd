@@ -78,7 +78,7 @@ func price_stuff() -> void:
 		cont[x].get_node("HBoxContainer/icon/Sprite").texture = gv.sprite[x]
 		
 		# colors
-		var color: Color = rt.r_lored_color(x)
+		var color: Color = gv.g[x].color
 		cont[x].get_node("HBoxContainer/VBoxContainer/val").add_color_override("font_color", color)
 		cont[x].get_node("HBoxContainer/time").add_color_override("font_color", color)
 		
@@ -136,7 +136,7 @@ func effects() -> void:
 	
 	
 	get_node("VBoxContainer/effects").show()
-	get_node("VBoxContainer/effects/bg").self_modulate = rt.r_lored_color(gv.up[key].main_lored_target)
+	get_node("VBoxContainer/effects/bg").self_modulate = gv.g[gv.up[key].main_lored_target].color
 	
 	match key:
 		

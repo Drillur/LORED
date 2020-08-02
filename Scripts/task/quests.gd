@@ -45,6 +45,9 @@ func flying_texts(resource_reward = {}) -> void:
 		gv.g[x].r.a(resource_reward[x])
 		gv.emit_signal("lored_updated", x, "amount")
 	
+	var left_x = rect_global_position.x + rect_size.x / 2
+	var ypos = rect_global_position.y - 5
+	
 	var i := 0
 	for x in resource_reward:
 		
@@ -56,23 +59,28 @@ func flying_texts(resource_reward = {}) -> void:
 		yield(t, "timeout")
 		t.queue_free()
 		
-		var rollx :int= rand_range(75,150)
+		left_x += rand_range(-20, 20)
 		
 		if x == "growth":
-			rt.get_node("map/loreds").lored[x].w_bonus_output(x, resource_reward[x])
+			rt.get_node(rt.gnLOREDs).cont[x].w_bonus_output(x, resource_reward[x])
+		
+		var key = "task reward dtext" + str(i)
 		
 		# dtext
-		content_effects["task reward dtext" + str(i)] = prefabs.D_TEXT.instance()
-		content_effects["task reward dtext" + str(i)].text = "+ " + resource_reward[x].toString()
-		content_effects["task reward dtext" + str(i)].add_color_override("font_color", rt.r_lored_color(x))
-		content_effects["task reward dtext" + str(i)].get_node("icon").set_texture(gv.sprite[x])
-		content_effects["task reward dtext" + str(i)].init(true,-50)
+		content_effects[key] = prefabs.D_TEXT.instance()
+		content_effects[key].init(false,-50, "+ " + resource_reward[x].toString(), gv.sprite[x], gv.g[x].color)
+		rt.get_node("texts").add_child(content_effects[key])
+		
 		if i == 0:
-			content_effects["task reward dtext" + str(i)].rect_position = Vector2(rollx + rt.get_node("misc/taq").rect_position.x + 25, rt.get_node("misc/taq").rect_position.y - 10)
+			content_effects[key].rect_position = Vector2(left_x, ypos)
 		else:
 			
 			for v in i:
 				content_effects["task reward dtext" + str(v)].rect_position.y -= 7
-			content_effects["task reward dtext" + str(i)].rect_position = Vector2(rollx + 570, content_effects["task reward dtext" + str(i-1)].rect_position.y + content_effects["task reward dtext" + str(i)].rect_size.y)
-		rt.add_child(content_effects["task reward dtext" + str(i)])
+			content_effects[key].rect_position = Vector2(
+				content_effects["task reward dtext" + str(0)].rect_position.x + int(rand_range(-5,5)),
+				content_effects["task reward dtext" + str(i-1)].rect_position.y + content_effects[key].rect_size.y
+			)
+		
+		
 		i += 1

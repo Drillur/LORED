@@ -23,8 +23,8 @@ func init():
 	pos["menu"] = rt.get_node("misc/menu").position
 	size["menu"] = rt.get_node("misc/menu/ScrollContainer").rect_size
 	
-	pos["upgrades"] = rt.get_node("up_container").rect_position
-	size["upgrades"] = rt.get_node("up_container").rect_size
+	pos["upgrade button"] = rt.get_node("misc/tabs/v/upgrades").rect_global_position# + rt.get_node("misc/tabs/v").rect_position + rt.get_node("misc/tabs").rect_position
+	size["upgrade button"] = rt.get_node("misc/tabs/v/upgrades").rect_size
 
 func _input(ev):
 	
@@ -39,9 +39,9 @@ func _input(ev):
 			
 			pass
 		
-		elif rt.get_node("up_container").visible and not mouse_out(pos["upgrades"], size["upgrades"]):
-			
-			pass
+#		elif rt.get_node(rt.gnupcon).visible and not mouse_out(pos["upgrades"], size["upgrades"]):
+#
+#			pass
 		
 		# screen
 		elif mouse_in == "no":
@@ -50,8 +50,6 @@ func _input(ev):
 				set_global_position(Vector2(get_global_position().x, min(get_global_position().y + scroll_speed, height_limit)))
 			if ev.button_index == BUTTON_WHEEL_DOWN:
 				set_global_position(Vector2(get_global_position().x, max(get_global_position().y - scroll_speed, y_off)))
-			
-			if is_instance_valid($tip.tip) and $tip.tip_filled: $tip.tip.r_tip(true)
 		
 		#if ev.button_index == BUTTON_WHEEL_UP or ev.button_index == BUTTON_WHEEL_DOWN:
 		#	get_node("tip")._call("no")
@@ -68,8 +66,8 @@ func _input(ev):
 		
 		if rt.get_node("misc/menu").visible and get_global_mouse_position().x >= rt.get_node("misc/menu").position.x and get_global_mouse_position().x < rt.get_node("misc/menu").position.x + rt.get_node("misc/menu/ScrollContainer").rect_size.x and get_global_mouse_position().y > rt.get_node("misc/menu").position.y and get_global_mouse_position().y < rt.get_node("misc/menu").position.y + rt.get_node("misc/menu/ScrollContainer").rect_size.y:
 			dragging = "menu"
-		elif rt.get_node("up_container").visible and not mouse_out(pos["upgrades"], size["upgrades"]):
-			dragging = "upgrades"
+#		elif rt.get_node(rt.gnupcon).visible and not mouse_out(pos["upgrades"], size["upgrades"]):
+#			dragging = "upgrades"
 		elif mouse_in == "no":
 			dragging = "self"
 		
@@ -89,6 +87,11 @@ func _input(ev):
 		# menu
 		if rt.get_node("misc/menu").visible and mouse_out(Vector2(10,10), Vector2(38,38)) and mouse_out(pos["menu"], size["menu"]):
 			rt.get_node("misc/menu").hide()
+		
+		var upcon = rt.get_node(rt.gnupcon)
+		if rt.get_node(rt.gnupcon).visible and mouse_out(pos["upgrade button"], size["upgrade button"]) and mouse_out(upcon.rect_global_position, upcon.rect_size):
+			rt.get_node(rt.gnupcon).hide()
+			rt.get_node(rt.gnupcon).go_back()
 	
 	if status == "clicked" and ev.is_class("InputEventMouseMotion"):
 		status = "dragging"

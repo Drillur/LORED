@@ -18,11 +18,11 @@ func init(key : String) -> int:
 		$icon.texture = gv.sprite[gv.up[key].main_lored_target]
 	var required_upgrades_purchased : bool = true
 	if not gv.up[key].requires == "":
-		if not "mup" in gv.up[key].type and not gv.up[gv.up[key].requires].have and not gv.up[gv.up[key].requires].refundable:
+		if gv.up[key].normal and not gv.up[gv.up[key].requires].have and not gv.up[gv.up[key].requires].refundable:
 			required_upgrades_purchased = false
 	if required_upgrades_purchased:
 		if not gv.up[key].requires == "":
-			if not ("mup" in gv.up[key].type and not gv.up[gv.up[key].requires].have and not gv.up[gv.up[key].requires].refundable):
+			if not (not gv.up[key].normal and not gv.up[gv.up[key].requires].have and not gv.up[gv.up[key].requires].refundable):
 				$desc.text = gv.up[key].desc.f
 			else:
 				$desc.text = random_desc()
@@ -45,7 +45,7 @@ func init(key : String) -> int:
 			for x in gv.up[key].cost:
 				price = gv.up[key].cost[x].t
 			
-			if key == "Limit Break" or key == "Share the Hit":
+			if key == "Limit Break":
 				get_parent().content["tip up"].get_node("refund").text = "You do not own this upgrade until you reset."
 			else:
 				get_parent().content["tip up"].get_node("refund").init(refund_type, fval.f(price))

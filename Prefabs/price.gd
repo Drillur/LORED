@@ -16,9 +16,9 @@ func init(f : Dictionary, type : String) -> int:
 		numbers[x] = f[x].t
 		
 		content[x].get_node("type").text = gv.g[x].name
-		content[x].get_node("amount").add_color_override("font_color", rt.r_lored_color(x))
+		content[x].get_node("amount").add_color_override("font_color", gv.g[x].color)
 		content[x].get_node("amount").text = fval.f(gv.g[x].r) + " / " + fval.f(numbers[x])
-		content[x].get_node("time").add_color_override("font_color", rt.r_lored_color(x))
+		content[x].get_node("time").add_color_override("font_color", gv.g[x].color)
 		
 		if gv.g[x].r > numbers[x]:
 			content[x].get_node("time").hide()

@@ -11,6 +11,10 @@ var last_reset_clock := [] # for each stage, saves the date/time
 var most_resources_gained := Big.new(0)
 var highest_run = 1
 var up_list := {}
+var g_list := {
+	"s1": [],
+	"s2": [],
+}
 
 func _init(g : Array):
 	

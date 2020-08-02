@@ -24,9 +24,6 @@ func init(_lored: String) -> int:
 		rect_size.y = 0
 		return int(rect_size.y)
 	
-#	if too_much_malig(_lored):
-#		return int(rect_size.y)
-	
 	if fuel_check(_lored):
 		return int(rect_size.y)
 	
@@ -42,9 +39,6 @@ func init(_lored: String) -> int:
 	
 	$VBoxContainer/net.show()
 	
-	if gv.g[_lored].type[1] in gv.overcharge_list:
-		$VBoxContainer/limitbreak.show()
-	
 	rect_size.y = 0
 	
 	return int(rect_size.y)
@@ -57,9 +51,7 @@ func hide_set_key() -> void:
 
 func fuel_check(x: String) -> bool:
 	
-	var max_fuel = gv.g[x].f.t
-	
-	if gv.g[x].f.f.isLessThan(Big.new(max_fuel).m(0.1)):
+	if gv.g[x].f.f.isLessThan(Big.new(gv.g[x].fc.t).m(2)):
 		$VBoxContainer/low_fuel.show()
 		rect_size.y = 0
 		return true

@@ -8,5 +8,5 @@ border_width_right = 1
 border_width_bottom = 1
 border_color = Color( 0.501961, 0.501961, 0.501961, 1 )
 shadow_color = Color( 0.054902, 0.054902, 0.054902, 1 )
-shadow_size = 10
+shadow_size = 2
 anti_aliasing = false

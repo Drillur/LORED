@@ -22,5 +22,5 @@ animations = [ {
 "frames": [ ExtResource( 10 ), ExtResource( 4 ), ExtResource( 5 ), ExtResource( 6 ), ExtResource( 13 ), ExtResource( 14 ), ExtResource( 9 ), ExtResource( 7 ), ExtResource( 11 ), ExtResource( 12 ), ExtResource( 3 ), ExtResource( 15 ), ExtResource( 8 ), ExtResource( 2 ), ExtResource( 16 ), ExtResource( 1 ) ],
 "loop": true,
 "name": "default",
-"speed": 1.0
+"speed": 2.0
 } ]

@@ -7,32 +7,75 @@ var exponent:int = 1
 
 const MAX_MANTISSA = 1209600
 
-func _init(m = 1.0,e=0):
-	if typeof(m) == TYPE_STRING:
-		var scientific = m.split("e")
-		var bla = scientific[0].replace(",", "")
-		mantissa = float(bla)
-		if scientific.size() > 1:
-			exponent = int(scientific[1])
-		else:
-			exponent = 0
-	elif typeof(m) == TYPE_OBJECT:
-		mantissa = m.mantissa
-		exponent = m.exponent
-	else:
-		mantissa = m
-		exponent = e
+# for example: if two exponents are more than 17 apart, consider adding them together pointless, just return the larger one
+const MAX_SIG_DIGITS: int = 17
+
+
+func _init(m = 1.0, e = 0):
+	
+	match typeof(m):
+		
+		TYPE_STRING:
+			
+			parse(m)
+		
+		TYPE_OBJECT:
+			
+			mantissa = m.mantissa
+			exponent = m.exponent
+		
+		_:
+			
+			mantissa = m
+			exponent = e
+	
 	calc(self)
 
+
+func parse(n, return_dict = false):
+	
+	if "e" in n:
+		
+		var parts = n.split("e")
+		
+		var m = float(parts[0].replace(",", ""))
+		var e = int(parts[1])
+		
+		if return_dict:
+			return {"mantissa": m, "exponent": e}
+		
+		mantissa = m
+		exponent = e
+		
+		return
+	
+	
+	var m = float(n)
+	var e = 0
+	
+	if return_dict:
+		return {"mantissa": m, "exponent": e}
+	
+	mantissa = m
+	exponent = e
+
+
 func type_check(n):
-	if typeof(n) == TYPE_INT or typeof(n) == TYPE_REAL:
-		return {"mantissa":float(n), "exponent":0}
-	elif typeof(n) == TYPE_STRING:
-		if not "e" in n:
+	
+	match typeof(n):
+		
+		TYPE_INT, TYPE_REAL:
+			
 			return {"mantissa":float(n), "exponent":0}
-		return {"mantissa":float(n.split("e")[0]), "exponent":int(n.split("e")[1])}
-	else:
-		return n
+		
+		TYPE_STRING:
+			
+			return parse(n, true)
+		
+		_:
+			
+			return n
+
 
 func calc(big = self):
 	
@@ -52,6 +95,7 @@ func calc(big = self):
 	
 	big.exponent += temp_exponent
 	big.mantissa /= pow(10, temp_exponent)
+
 
 func percent(n):
 	
@@ -130,7 +174,6 @@ func s(n):
 
 func power(n:int):
 	if n < 0:
-		#printerr("BIG ERROR: NEGATIVE EXPONENTS NOT SUPPORTED!")
 		mantissa = 1.0
 		exponent = 0
 		return self
@@ -188,12 +231,9 @@ func isLargerThan(n):
 	if exponent > n.exponent:
 		return true
 	elif exponent == n.exponent:
-		if mantissa > n.mantissa:
-			return true
-		else:
-			return false
-	else:
-		return false
+		return mantissa > n.mantissa
+	
+	return false
 
 func isLargerThanOrEqualTo(n):
 	if isEqualTo(n):
@@ -217,8 +257,8 @@ func isLessThan(n):
 		return true
 	elif exponent == n.exponent:
 		return mantissa < n.mantissa
-	else:
-		return false
+	
+	return false
 
 func isLessThanOrEqualTo(n):
 	
@@ -254,9 +294,6 @@ func roundDown():
 		mantissa = stepify(mantissa, 0.0001)
 	return self
 
-func log10(x):
-	return log(x) * 0.4342944819032518
-
 func toString():
 	
 	if exponent < 6:
@@ -281,11 +318,10 @@ func toEngineering():
 func toLog():
 	
 	var dec = "." + str(floor(abs(log(mantissa) / log(10) * 100))).pad_zeros(2)
-	if dec == ".00":
-		dec = ""
+	
 	return "e" + format_exponent(exponent) + dec
 
-func format_exponent(value) -> String:
+func format_exponent(value: int) -> String:
 	
 	if value < 1000:
 		return str(value) # 100
@@ -308,3 +344,5 @@ func format_exponent(value) -> String:
 
 func toFloat():
 	return mantissa * pow(10, exponent)
+
+

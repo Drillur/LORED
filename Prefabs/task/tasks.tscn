@@ -17,7 +17,7 @@ expand_margin_right = 2.0
 expand_margin_top = 4.0
 expand_margin_bottom = 4.0
 shadow_color = Color( 0.054902, 0.054902, 0.054902, 1 )
-shadow_size = 10
+shadow_size = 3
 
 [node name="tasks" type="MarginContainer"]
 margin_bottom = 35.0
@@ -53,7 +53,7 @@ modulate = Color( 1, 0, 0.631373, 0.6 )
 position = Vector2( 17.5, 17.5 )
 scale = Vector2( 1.03125, 1.03125 )
 frames = ExtResource( 6 )
-frame = 1
+frame = 3
 speed_scale = 2.0
 playing = true
 

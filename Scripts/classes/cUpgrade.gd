@@ -16,7 +16,6 @@ class Description:
 var desc := Description.new("gay")
 
 
-var path : String
 var requires := ""
 var required_by := []
 var requirements_met : bool = true
@@ -32,7 +31,10 @@ var color: Color
 var unlocked := false
 var times_purchased := 0
 
+var stage: String
+var normal := true
 
+var autobuyer_key: String
 
 func _init(
 		_name: String,
@@ -49,7 +51,10 @@ func _init(
 	set_d = Num.new(_set_d)
 	
 	type = _type
-	path = type.split(" ")[0] + type.split(" ")[1].split(" ")[0]
+	
+	stage = type[1]
+	if "m" in type:
+		normal = false
 	
 	if " crit" in type or " add" in type:
 		d.b = Big.new(0)

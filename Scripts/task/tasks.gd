@@ -57,6 +57,9 @@ func flying_numbers(f: Dictionary):
 	ready_task_count -= 1
 	time_since_last_shake = 0.0
 	
+	var left_x = rect_global_position.x + rect_size.x / 2
+	var ypos = rect_global_position.y - 5
+	
 	var i = 0
 	for x in f:
 		
@@ -69,22 +72,17 @@ func flying_numbers(f: Dictionary):
 		yield(t, "timeout")
 		t.queue_free()
 		
-		var rollx :int= rand_range(-30,30)
+		left_x += rand_range(-10,10)
 		
 		if x == "growth":
-			rt.get_node("map/loreds").lored[x].w_bonus_output(x, f[x])
+			rt.get_node(rt.gnLOREDs).cont[x].w_bonus_output(x, f[x])
 		
 		var key = "flying freaking numbers " + str(i)
 		
 		effects_content[key] = prefabs.d_text.instance()
-		effects_content[key].text = "+ " + f[x].toString()
-		effects_content[key].add_color_override("font_color", rt.r_lored_color(x))
-		effects_content[key].get_node("icon").set_texture(gv.sprite[x])
-		effects_content[key].init(true,-50)
-		get_parent().get_parent().add_child(effects_content[key])
+		effects_content[key].init(false,-50, "+ " + f[x].toString(), gv.sprite[x], gv.g[x].color)
+		rt.get_node("texts").add_child(effects_content[key])
 		
-		var left_x = rollx + rt.get_node("misc/taq").rect_position.x + rect_size.x / 2
-		var ypos = get_node("/root/Root/misc/taq").rect_position.y - 17
 		if i == 0:
 			effects_content[key].rect_position = Vector2(left_x, ypos)
 		else:
@@ -130,6 +128,8 @@ func _generate_random_task() -> taq.Task:
 		rall /= 10
 	rall /= gv.hax_pow
 	
+	if gv.stats.tasks_completed < 3:
+		rall /= 2
 	if gv.stats.tasks_completed < 5:
 		rall /= 2
 	if gv.stats.tasks_completed < 30:
@@ -145,6 +145,8 @@ func _generate_random_task() -> taq.Task:
 		var short = rt.w_index_to_short(roll)
 		
 		if not gv.g[short].unlocked:
+			continue
+		if not gv.g[short].active:
 			continue
 		if short == "growth" and not gv.g["jo"].active:
 			continue
@@ -299,12 +301,15 @@ func _generate_random_task() -> taq.Task:
 					dink.m(1.25)
 				
 				var reward: Big = Big.new(dink).m(rand_range(0.9,1.1))
-				if reward.isLessThan(1): reward = Big.new()
-				if reward.isLessThan(10): reward.roundDown()
+				
+				if reward.isLessThan(1):
+					reward.mantissa = 1.0
+				elif reward.exponent < 2:
+					reward.mantissa = round(reward.mantissa)
 				
 				rr[rt.w_index_to_short(roll)] = reward
 	
-	var _task = taq.Task.new(name, desc, rr, r, step, icon, rt.r_lored_color(f))
+	var _task = taq.Task.new(name, desc, rr, r, step, icon, gv.g[f].color)
 	
 	_task.code = stepify(rand_range(0,100.0), .01)
 	while _task.code in content.keys():
@@ -531,8 +536,6 @@ func erase(_erase := -1.0) -> void:
 		taq.cur_tasks -= 1
 		content.erase(_erase)
 		add_task(_generate_random_task())
-	
-	#Vector2(800 - rect_size.x - 12, 600 - rect_size.y - 14 - rt.get_node("misc/quest").content.rect_size.y - 10)
 
 
 func w_shake_self() -> void:

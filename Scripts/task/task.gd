@@ -83,7 +83,7 @@ func _on_task_pressed(manual := true):
 		return
 	
 	if manual:
-		rt.get_node("map/tip")._call("no")
+		rt.get_node("global_tip")._call("no")
 	
 	gv.stats.tasks_completed += 1
 	

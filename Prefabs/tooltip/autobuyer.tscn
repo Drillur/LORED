@@ -24,7 +24,7 @@ __meta__ = {
 margin_left = 10.0
 margin_top = 10.0
 margin_right = 207.0
-margin_bottom = 103.0
+margin_bottom = 180.0
 
 [node name="Panel2" type="Panel" parent="VBoxContainer"]
 margin_right = 197.0
@@ -59,20 +59,20 @@ text = "Will purchase"
 
 [node name="low_fuel" type="VBoxContainer" parent="VBoxContainer"]
 visible = false
-margin_top = 28.0
-margin_right = 207.0
-margin_bottom = 82.0
+margin_top = 33.0
+margin_right = 197.0
+margin_bottom = 108.0
 alignment = 1
 
 [node name="Panel" type="Panel" parent="VBoxContainer/low_fuel"]
-margin_right = 207.0
+margin_right = 197.0
 margin_bottom = 2.0
 rect_min_size = Vector2( 0, 2 )
 custom_styles/panel = SubResource( 1 )
 
 [node name="title" type="Label" parent="VBoxContainer/low_fuel"]
 margin_top = 6.0
-margin_right = 207.0
+margin_right = 197.0
 margin_bottom = 23.0
 custom_fonts/font = ExtResource( 6 )
 custom_colors/font_color = Color( 0.501961, 0.501961, 0.501961, 1 )
@@ -80,15 +80,14 @@ text = "Low Fuel"
 align = 1
 
 [node name="desc" type="Label" parent="VBoxContainer/low_fuel"]
-margin_left = 5.0
 margin_top = 27.0
-margin_right = 202.0
-margin_bottom = 54.0
+margin_right = 197.0
+margin_bottom = 75.0
 rect_min_size = Vector2( 197, 0 )
 size_flags_horizontal = 4
 custom_fonts/font = ExtResource( 7 )
 custom_colors/font_color = Color( 0.764706, 0.733333, 0.603922, 1 )
-text = "This LORED has less than 10% of its base fuel capacity, so it will not be purchased."
+text = "This LORED has less fuel than twice its fuel drain, so it will not be purchased."
 align = 1
 autowrap = true
 
@@ -267,33 +266,6 @@ text = "If this LORED's net output (per second) is less than 0, it will be purch
 align = 1
 autowrap = true
 
-[node name="limitbreak" type="VBoxContainer" parent="VBoxContainer"]
-visible = false
-margin_top = 33.0
-margin_right = 197.0
-margin_bottom = 96.0
-alignment = 1
-
-[node name="title" type="Label" parent="VBoxContainer/limitbreak"]
-margin_right = 197.0
-margin_bottom = 17.0
-custom_fonts/font = ExtResource( 6 )
-custom_colors/font_color = Color( 0.501961, 0.501961, 0.501961, 1 )
-text = "Limit Break"
-align = 1
-
-[node name="desc" type="Label" parent="VBoxContainer/limitbreak"]
-margin_top = 21.0
-margin_right = 197.0
-margin_bottom = 63.0
-rect_min_size = Vector2( 197, 0 )
-size_flags_horizontal = 4
-custom_fonts/font = ExtResource( 7 )
-custom_colors/font_color = Color( 0.764706, 0.733333, 0.603922, 1 )
-text = "If this LORED *would* have negative net output without its Limit Break bonus, then it will be purchased."
-align = 1
-autowrap = true
-
 [node name="toomuchmalig" type="VBoxContainer" parent="VBoxContainer"]
 visible = false
 margin_top = 33.0
@@ -334,7 +306,7 @@ __meta__ = {
 [node name="set_key" type="VBoxContainer" parent="VBoxContainer"]
 margin_top = 38.0
 margin_right = 197.0
-margin_bottom = 93.0
+margin_bottom = 97.0
 alignment = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/set_key"]
@@ -361,14 +333,14 @@ text = "Key LORED"
 [node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/set_key"]
 margin_top = 28.0
 margin_right = 197.0
-margin_bottom = 55.0
+margin_bottom = 59.0
 rect_min_size = Vector2( 197, 0 )
 size_flags_horizontal = 4
 alignment = 1
 
 [node name="desc" type="Label" parent="VBoxContainer/set_key/HBoxContainer2"]
 margin_right = 143.0
-margin_bottom = 27.0
+margin_bottom = 31.0
 size_flags_horizontal = 3
 custom_fonts/font = ExtResource( 7 )
 custom_colors/font_color = Color( 0.764706, 0.733333, 0.603922, 1 )
@@ -379,7 +351,7 @@ autowrap = true
 [node name="default" type="Label" parent="VBoxContainer/set_key/HBoxContainer2"]
 margin_left = 147.0
 margin_right = 197.0
-margin_bottom = 27.0
+margin_bottom = 31.0
 rect_min_size = Vector2( 50, 0 )
 size_flags_horizontal = 8
 custom_fonts/font = ExtResource( 7 )

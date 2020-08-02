@@ -15,6 +15,8 @@ var task := "no"
 var last_task : String
 var inhand := Big.new(0)
 
+var color: Color
+
 var level := 1
 var d : Num # output; damage, basically
 var output_modifier := Big.new()
@@ -29,11 +31,16 @@ var hold := false
 var speed : Num
 var crit := Num.new(0.0) # crit chance
 
+var stage: String
+var fuel_source: String
+var borer := true
+
+
+var autobuyer_key: String
+
 # all upgrades that benefit this LORED will go here with the key as the type of benefit.
 # benefactors["out"] = up["GEARED OILS"].d * up["BIG TOUGH BOY"].d
 var benefactors := {}
-
-
 
 func _init(
 	_name: String,
@@ -45,6 +52,17 @@ func _init(
 	
 	name = _name
 	type = _type
+	
+	stage = type[1]
+	
+	if "ele" in type:
+		fuel_source = "jo"
+	elif "bur" in type:
+		fuel_source = "coal"
+	
+	if "fur " in type:
+		borer = false
+	
 	b = _burn
 	cost = _cost
 	speed = Num.new(_speed)
@@ -88,6 +106,8 @@ func sync_d():
 	var lb_percent = max(f.f.percent(f.t), 1)
 	d.m.m(lb_percent)
 	d.m.m(modifier_from_growin_on_me)
+	if type[1] in gv.overcharge_list:
+		d.m.m(gv.lb_d)
 	d.m.m(gv.hax_pow)
 	
 	d.sync()
@@ -99,7 +119,7 @@ func sync_fc():
 	
 	
 	if gv.up["upgrade_description"].active():
-		fc.m.m(10)
+		fc.m.m(2)
 	
 	if "s1" in type and "bur " in type:
 		if gv.up["upgrade_name"].active():
@@ -204,6 +224,9 @@ func sync_b():
 		b[x].sync()
 
 
+
+
+
 func ___________________():
 	#lol
 	pass
@@ -237,7 +260,8 @@ func net(get_raw_power := false, ignore_halt := false) -> Array:
 			gay.m(Big.new(1).a(Big.new(gv.g["irono"].crit.t).d(10)))
 			gain.a(gay)
 		
-		gain.a(witch(false).m(60))
+		if active:
+			gain.a(witch(false).m(60))
 	
 	if get_raw_power:
 		return [gain, drain]
@@ -328,6 +352,80 @@ func net(get_raw_power := false, ignore_halt := false) -> Array:
 	
 	return [gain, drain]
 
+
+func bought():
+	
+	
+	# price
+	if true:
+		
+		for c in cost:
+			gv.g[c].r.s(cost[c].t)
+			gv.emit_signal("lored_updated", c, "amount")
+		
+		increase_cost()
+	
+	# task stuff
+	if taq.cur_quest != "":
+		
+		match short:
+			"coal":
+				if "Coal LORED bought" in taq.quest.step:
+					taq.quest.step["Coal LORED bought"].f = Big.new()
+						
+			"stone":
+				if "Stone LORED bought" in taq.quest.step:
+					taq.quest.step["Stone LORED bought"].f = Big.new()
+			"iron":
+				if "Iron LORED bought" in taq.quest.step:
+					taq.quest.step["Iron LORED bought"].f = Big.new()
+			"cop":
+				if "Copper LORED bought" in taq.quest.step:
+					taq.quest.step["Copper LORED bought"].f = Big.new()
+	
+	gv.emit_signal("lored_updated", short, "d")
+	
+	# already owned; upgrading
+	if active:
+		
+		level += 1
+		output_modifier.m(2)
+		fc.b.m(2)
+		f.b.m(2)
+		
+		sync()
+		
+		if short == "coal" and f.f.isLessThan(Big.new(speed.t).m(fc.t).m(2)):
+			f.f.a(Big.new(speed.t).m(fc.t).m(2))
+		
+		gv.emit_signal("lored_updated", short, "buy modulate")
+		
+		for x in b:
+			gv.emit_signal("lored_updated", x, "net")
+		
+		return
+	
+	# not owned
+	if true:
+		
+		active = true
+		unlocked = true
+		
+		gv.emit_signal("lored_updated", short, "buy modulate")
+
+func increase_cost() -> void:
+	
+	var mod := 3.0
+	
+	if gv.up["upgrade_name"].active():
+		if type[1] == "1" and "bur " in type:
+			mod = 2.75
+	if gv.up["upgrade_description"].active():
+		mod *= 0.9
+	
+	cost_modifier.m(mod)
+
+
 func is_baby(gx_type: int = int(type[1])) -> bool:
 	
 	# compares self and gx.
@@ -349,32 +447,19 @@ func is_baby(gx_type: int = int(type[1])) -> bool:
 	
 	return true
 
-func fuel_lored_net_loss(gx: LORED) -> float:
+func fuel_lored_net_loss(gx: LORED) -> Big:
 	
 	var less = Big.new(gx.fc.t).m(4)
-	var max_fuel = Big.new(gx.f.t).m(gv.overcharge) if gx.type[1] in gv.overcharge_list else Big.new(gx.f.t)
-	max_fuel.s(less)
 	
 	if gx.f.f.isLessThan(Big.new(gx.f.t).s(less)):
-		return Big.new(gx.fc.t).m(120).m(less_from_full(gx.f.f, max_fuel))
-	
-	if gx.f.f.isLessThan(max_fuel):
 		if gx.halt:
-			return Big.new(gx.fc.t).m(60).m(less_from_full(gx.f.f, max_fuel))
-		return Big.new(gx.fc.t).m(120).m(less_from_full(gx.f.f, max_fuel))
+			return Big.new(gx.fc.t).m(60)
+		return Big.new(gx.fc.t).m(120)
 	
 	if gx.halt:
-		return 0.0
+		return Big.new(0)
 	
-	return Big.new(gx.fc.t).m(60).m(less_from_full(gx.f.f, max_fuel))
-
-func less_from_full(current: Big, _max: Big) -> Big:
-	if not gv.up["RELATIVITY"].active():
-		return Big.new()
-	# if 1% fuel, returns 99x
-	# if 60% fuel, returns 40x
-	# 1 - (current / max)
-	return Big.new(1).s(current.percent(_max)).m(100)
+	return Big.new(gx.fc.t).m(60)
 
 
 func active() -> bool:
@@ -475,3 +560,85 @@ func w_get_losing() -> float:
 		per_sec += gv.g[x].d.t / gv.g[x].speed.t * 60 * gv.g[x].b[short].t
 	
 	return per_sec
+
+
+
+func autobuy() -> bool:
+	
+	if not gv.up[autobuyer_key].active():
+		return false
+	
+	if not active:
+		return true
+	
+	if halt:
+		return false
+	
+	# low fuel
+	if true:
+		
+		var minimum_fuel = Big.new(fc.t).m(2)
+		
+		if f.f.isLessThan(minimum_fuel):
+			return false
+	
+	if autobuy_upgrade_check():
+		return true
+	
+	# if ingredient LORED per_sec < per_sec, don't buy
+	for x in b:
+		
+		var consm = Big.new(b[x].t).m(60).m(d.t.percent(speed.t))
+		
+		if gv.g[x].halt:
+			if Big.new(gv.g[x].net(true)[0]).s(Big.new(consm).m(2)).isLessThan(0):
+				if not gv.g[x].cost_check():
+					return false
+		else:
+			
+			var net = gv.g[x].net()
+			if net[0].isLargerThanOrEqualTo(net[1]):
+				net = Big.new(net[0]).s(net[1])
+				if consm.isLargerThan(net):
+					if not gv.g[x].cost_check():
+						return false
+			else:
+				return false
+	
+	if key_lored:
+		return true
+	
+	var net = net()
+	if net[0].isLargerThan(net[1]):
+		return false
+	
+	return true
+
+
+func autobuy_upgrade_check() -> bool:
+	
+	if "1" == type[1]:
+		if gv.up["don't take candy from babies"].active() and level < 6:
+			return true
+	
+	match short:
+		"malig":
+			if gv.up["THE WITCH OF LOREDELITH"].active():
+				return true
+		"iron", "cop":
+			if gv.up["IT'S SPREADIN ON ME"].active():
+				return true
+		"irono":
+			if gv.up["I RUN"].active():
+				return true
+		"copo":
+			if gv.up["THE THIRD"].active():
+				return true
+		"coal":
+			if gv.up["wait that's not fair"].active():
+				return true
+	
+	return false
+
+
+

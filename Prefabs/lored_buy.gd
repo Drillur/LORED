@@ -27,7 +27,9 @@ func _physics_process(_delta):
 	life -= 1
 	
 	if alpha <= 0.03:
+		set_physics_process(false)
 		queue_free()
+		return
 	
 	if life <= 0:
 		alpha *= 0.9

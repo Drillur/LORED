@@ -28,14 +28,6 @@ func _physics_process(delta):
 			$done.show()
 		return
 	
-	if taq.quest.name == "Menu!":
-		if rt.get_node("misc/menu").visible:
-			taq.quest.step["Menu opened"].f.mantissa = 1.0
-		if rt.get_node("misc/menu/ScrollContainer/MarginContainer/VBoxContainer/options").visible:
-			taq.quest.step["Options tab opened"].f.mantissa = 1.0
-		if rt.get_node("misc/qol_displays/resource_bar").visible:
-			taq.quest.step["Resource bar displayed"].f.mantissa = 1.0
-	
 	fps += delta
 	if fps > rt.FPS:
 		fps -= rt.FPS

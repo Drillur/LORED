@@ -8,6 +8,9 @@ var content := {}
 var set_blah := {}
 var fps := {}
 
+
+
+
 func _ready():
 	
 	hide()
@@ -55,11 +58,9 @@ func _ready():
 		$ScrollContainer.rect_size.y = 390
 		_on_ScrollContainer_resized()
 		#position = Vector2(10, 10)#10 + 38 + 10)
-		position = Vector2(800 / 2 - $ScrollContainer.rect_size.x / 2, 600 / 2 - $ScrollContainer.rect_size.y / 2)
+		position = Vector2(get_viewport_rect().size.x / 2 - $ScrollContainer.rect_size.x / 2, get_viewport_rect().size.y / 2 - $ScrollContainer.rect_size.y / 2)
 		$ScrollContainer/MarginContainer/VBoxContainer/options.hide()
 		$ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/tooltips.hide()
-		if not $ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/resource_bar.pressed:
-			$ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/net.hide()
 		if not $ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/flying_numbers.pressed:
 			$ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/crits_only.hide()
 		
@@ -75,7 +76,7 @@ func init(f: Dictionary) -> void:
 	for x in gv.g:
 		content["resource_text"][x] = prefabs["resource_text"].instance()
 		$ScrollContainer/MarginContainer/VBoxContainer/stats/CenterContainer/VBoxContainer/resources/CenterContainer/VBoxContainer.add_child(content["resource_text"][x])
-		content["resource_text"][x].add_color_override("font_color", rt.r_lored_color(x))
+		content["resource_text"][x].add_color_override("font_color", gv.g[x].color)
 	
 	var i = 0
 	for x in rt.tip:
@@ -88,22 +89,6 @@ func init(f: Dictionary) -> void:
 	
 	# notation_type
 	$ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/notation_type.select(f["notation_type"])
-	
-	# resource_bar
-	if true:
-		
-		$ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/resource_bar.pressed = f["resource_bar"]
-		rt.get_node("misc/qol_displays/resource_bar").visible = f["resource_bar"]
-		rt.get_node("misc/qol_displays/resource_bar").r_adjust()
-		
-		# net
-		if true:
-			
-			$ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/net.visible = f["resource_bar"]
-			$ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/net/CenterContainer/net.pressed = f["resource_bar_net"]
-			
-			# status_color
-			$ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/net/CenterContainer/status_color.pressed = f["status_color"]
 	
 	# performance // save cpu
 	if rt.PLATFORM != "browser":
@@ -124,19 +109,9 @@ func init(f: Dictionary) -> void:
 	# animations
 	$ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/animations.pressed = f["animations"]
 	if not f["animations"]:
-		for x in rt.get_node("map/loreds").lored:
-			rt.get_node("map/loreds").lored[x].get_node("worker").animation = "ww"
-			rt.get_node("map/loreds").lored[x].get_node("worker").playing = true
-	
-	# limit break
-	$ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/limit_break_text.pressed = f["limit_break_text"]
-	$ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/lb_flash.pressed = f["lb_flash"]
-	if not gv.up["Limit Break"].active():
-		$ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/limit_break_text.hide()
-		$ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/lb_flash.hide()
-	else:
-		$ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/limit_break_text.show()
-		$ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/lb_flash.show()
+		for x in gv.g:
+			rt.get_node(rt.gnLOREDs).cont[x].get_node("worker").animation = "ww"
+			rt.get_node(rt.gnLOREDs).cont[x].get_node("worker").playing = true
 	
 	# on_save
 	if true:
@@ -161,16 +136,18 @@ func init(f: Dictionary) -> void:
 	
 	# tooltip_autobuyer
 	$ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/tooltips/CenterContainer/VBoxContainer/autobuyer.pressed = f["tooltip_autobuyer"]
+	get_node("ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/tooltips/CenterContainer/VBoxContainer/cost only").visible = not f["tooltip_autobuyer"]
+	get_node("ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/tooltips/CenterContainer/VBoxContainer/cost only/crits_only").pressed = f["tooltip_cost_only"]
 	
 	# ref
 	if true:
 		
-		$ScrollContainer/MarginContainer/VBoxContainer/stats/CenterContainer/VBoxContainer/runs/CenterContainer/VBoxContainer/s1count.add_color_override("font_color", rt.r_lored_color("malig"))
-		$ScrollContainer/MarginContainer/VBoxContainer/stats/CenterContainer/VBoxContainer/runs/CenterContainer/VBoxContainer/s1time.add_color_override("font_color", rt.r_lored_color("malig"))
-		$ScrollContainer/MarginContainer/VBoxContainer/stats/CenterContainer/VBoxContainer/runs/CenterContainer/VBoxContainer/s1last_time.add_color_override("font_color", rt.r_lored_color("malig"))
-		$ScrollContainer/MarginContainer/VBoxContainer/stats/CenterContainer/VBoxContainer/runs/CenterContainer/VBoxContainer/s2count.add_color_override("font_color", rt.r_lored_color("tum"))
-		$ScrollContainer/MarginContainer/VBoxContainer/stats/CenterContainer/VBoxContainer/runs/CenterContainer/VBoxContainer/s2time.add_color_override("font_color", rt.r_lored_color("tum"))
-		$ScrollContainer/MarginContainer/VBoxContainer/stats/CenterContainer/VBoxContainer/runs/CenterContainer/VBoxContainer/s2last_time.add_color_override("font_color", rt.r_lored_color("tum"))
+		$ScrollContainer/MarginContainer/VBoxContainer/stats/CenterContainer/VBoxContainer/runs/CenterContainer/VBoxContainer/s1count.add_color_override("font_color", gv.g["malig"].color)
+		$ScrollContainer/MarginContainer/VBoxContainer/stats/CenterContainer/VBoxContainer/runs/CenterContainer/VBoxContainer/s1time.add_color_override("font_color", gv.g["malig"].color)
+		$ScrollContainer/MarginContainer/VBoxContainer/stats/CenterContainer/VBoxContainer/runs/CenterContainer/VBoxContainer/s1last_time.add_color_override("font_color", gv.g["malig"].color)
+		$ScrollContainer/MarginContainer/VBoxContainer/stats/CenterContainer/VBoxContainer/runs/CenterContainer/VBoxContainer/s2count.add_color_override("font_color", gv.g["tum"].color)
+		$ScrollContainer/MarginContainer/VBoxContainer/stats/CenterContainer/VBoxContainer/runs/CenterContainer/VBoxContainer/s2time.add_color_override("font_color", gv.g["tum"].color)
+		$ScrollContainer/MarginContainer/VBoxContainer/stats/CenterContainer/VBoxContainer/runs/CenterContainer/VBoxContainer/s2last_time.add_color_override("font_color", gv.g["tum"].color)
 		
 		$ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/on_save.hide()
 
@@ -202,7 +179,7 @@ func _physics_process(delta):
 func r_resource_text() -> void:
 	
 	for x in gv.g:
-		if not rt.get_node("map/loreds").lored[x].visible:
+		if not rt.get_node(rt.gnLOREDs).cont[x].visible:
 			content["resource_text"][x].hide()
 			continue
 		content["resource_text"][x].text = gv.stats.r_gained[x].toString() + " " + gv.g[x].name
@@ -318,38 +295,31 @@ func b_option_pressed(option: String, node) -> void:
 	gv.menu.option[option] = node.pressed
 	
 	match option:
+		"tooltip_autobuyer":
+			get_node("ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/tooltips/CenterContainer/VBoxContainer/cost only").visible = not node.pressed
 		"tank_my_pc":
 			if node.pressed:
 				for x in gv.g:
-					for v in rt.get_node("map/loreds").lored[x].fps:
-						rt.get_node("map/loreds").lored[x].fps[v].t *= 0.1
+					for v in rt.get_node(rt.gnLOREDs).cont[x].fps:
+						rt.get_node(rt.gnLOREDs).cont[x].fps[v].t *= 0.1
 			else:
 				for x in gv.g:
-					for v in rt.get_node("map/loreds").lored[x].fps:
-						rt.get_node("map/loreds").lored[x].fps[v].t *= 10
+					for v in rt.get_node(rt.gnLOREDs).cont[x].fps:
+						rt.get_node(rt.gnLOREDs).cont[x].fps[v].t *= 10
 		"performance":
 			if rt.PLATFORM != "browser":
 				OS.set_low_processor_usage_mode(node.pressed)
-		"lb_flash":
-			rt.get_node("map/loreds").r_update_lb_flash()
-		"status_color":
-			if not gv.menu.option[option]:
-				for x in gv.g:
-					rt.get_node("misc/qol_displays/resource_bar").content[x].add_color_override("font_color", rt.r_lored_color(x))
-		"held_window":
-			rt.instances["qol"]["held"].visible = gv.menu.option[option]
-			rt.get_node("misc/qol_displays").rect_size.x = 1
-		"resource_bar":
-			rt.get_node("misc/qol_displays/resource_bar").visible = gv.menu.option[option]
-			$ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/net.visible = gv.menu.option[option]
 		"animations":
-			for x in rt.get_node("map/loreds").lored:
-				if not node.pressed:
-					rt.get_node("map/loreds").lored[x].get_node("worker").animation = "ww"
-					rt.get_node("map/loreds").lored[x].get_node("worker").playing = true
+			for x in rt.get_node(rt.gnLOREDs).cont:
+				if not x in gv.g.keys():
 					continue
-				if gv.g[x].progress.f.isLargerThan(0): rt.get_node("map/loreds").lored[x].get_node("worker").animation = "ff"
-				rt.get_node("map/loreds").lored[x].get_node("worker").playing = false
+				if not node.pressed:
+					rt.get_node(rt.gnLOREDs).cont[x].get_node(rt.get_node(rt.gnLOREDs).cont[x].gnframes).animation = "ww"
+					rt.get_node(rt.gnLOREDs).cont[x].get_node(rt.get_node(rt.gnLOREDs).cont[x].gnframes).playing = true
+					continue
+				if gv.g[x].progress.f.isLargerThan(0):
+					rt.get_node(rt.gnLOREDs).cont[x].get_node(rt.get_node(rt.gnLOREDs).cont[x].gnframes).animation = "ff"
+				rt.get_node(rt.gnLOREDs).cont[x].get_node(rt.get_node(rt.gnLOREDs).cont[x].gnframes).playing = false
 
 func _on_ScrollContainer_resized():
 	$bg.rect_size = $ScrollContainer.rect_size
@@ -372,12 +342,10 @@ func _on_b_save_now_pressed():
 
 func _on_delete_pressed():
 	
-	rt.b_reset(0)
+	rt.reset(0)
 	rt.get_node("misc/task").w_complete_reset()
 	rt.b_tabkey(KEY_ESCAPE)
 	rt.b_tabkey(KEY_1)
-	gv.menu.option["resource_bar"] = false
-	rt.get_node("misc/qol_displays/resource_bar").hide()
 	rt.save_fps = 0.0
 	
 	var save_file = File.new()
@@ -406,7 +374,14 @@ func _on_import_save_pressed() -> void:
 func _on_FileDialog_file_selected(path: String) -> void:
 	rt.e_save("export", path)
 func _on_Import_file_selected(path: String) -> void:
+	
+	rt._ready_define_loreds(0)
+	
 	rt.game_start(rt.e_load(path))
+	
+	rt.get_tree().reload_current_scene()
+	
+	rt.e_save()
 
 
 func _on_Discord_pressed() -> void:

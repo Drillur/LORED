@@ -109,7 +109,8 @@ func init(_task: taq.Task) -> void:
 	
 	gn_name.text = _name(task.name)
 	gn_desc.text = desc(task.step, task.desc)
-	$v/m/bg.modulate = rt.r_lored_color(task.icon.key)
+	if task.icon.key in gv.g.keys():
+		$v/m/bg.modulate = gv.g[task.icon.key].color
 	gn_icon.texture = task.icon.texture
 	
 	tags(task.name)
@@ -164,7 +165,13 @@ func step(step: Dictionary) -> void:
 		cont.step[x] = src.step.instance()
 		cont.step[x].get_node("v/h/icon/Sprite").texture = r_set_icon(x)
 		cont.step[x].get_node("v/h/step/desc").text = x
-		var color = rt.r_lored_color(rt.w_name_to_short(x.split(" produced")[0]))
+		var color: Color
+		if "LORED bought" in x:
+			color = gv.g[rt.w_name_to_short(x.split(" LORED")[0])].color
+		elif " produced" in x and not "Combined resources" in x:
+			color = gv.g[rt.w_name_to_short(x.split(" produced")[0])].color
+		else:
+			color = Color(0.8, 0.8, 0.8)
 		cont.step[x].get_node("v/h/step/val").add_color_override("font_color", color)
 		if " produced" in x:
 			cont.step[x].get_node("v/ct").modulate = color
@@ -192,7 +199,7 @@ func resource_reward(rr: Dictionary) -> void:
 		cont.rr[x].get_node("HBoxContainer/icon/Sprite").texture = gv.sprite[x]
 		cont.rr[x].get_node("HBoxContainer/VBoxContainer/type").text = gv.g[x].name
 		cont.rr[x].get_node("HBoxContainer/VBoxContainer/val").text = task.resource_reward[x].toString()
-		cont.rr[x].get_node("HBoxContainer/VBoxContainer/val").add_color_override("font_color", rt.r_lored_color(x))
+		cont.rr[x].get_node("HBoxContainer/VBoxContainer/val").add_color_override("font_color", gv.g[x].color)
 		
 		if i % 2 == 0:
 			cont.rr[x].get_node("bg").hide()

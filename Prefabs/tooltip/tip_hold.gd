@@ -24,7 +24,7 @@ func used_by():
 		return
 	
 	$v/used_by.show()
-	$v/used_by/bg.self_modulate = rt.r_lored_color(lored_key)
+	$v/used_by/bg.self_modulate = gv.g[lored_key].color
 	
 	var i = 0
 	for x in gv.g[lored_key].used_by:
@@ -35,7 +35,7 @@ func used_by():
 		var per_sec = Big.new(gv.g[x].d.t).m(60).d(gv.g[x].speed.t)
 		
 		cont[x] = src.tip_lored_b.instance()
-		cont[x].setup_used_by(lored_key, x, per_sec, rt.r_lored_color(x))
+		cont[x].setup_used_by(lored_key, x, per_sec, gv.g[x].color)
 		$v/used_by/v.add_child(cont[x])
 		
 		if i % 2 == 0:

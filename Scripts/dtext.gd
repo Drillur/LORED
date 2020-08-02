@@ -10,7 +10,12 @@ var go_behind : bool = true
 
 
 
-func init(gobehind := true, set_unique_death := 0):
+func init(gobehind := true, set_unique_death := 0, _text := "", icon = gv.sprite["unknown"], color := Color(1,1,1)):
+	
+	text = _text
+	$icon.texture = icon
+	self_modulate = color
+	
 	go_behind = gobehind
 	death = set_unique_death
 
@@ -36,7 +41,8 @@ func _physics_process(_delta):
 	
 	life -= 1
 	
-	if (death - death) + (life - death) < 20: alpha_decay = 0.9
+	if (death - death) + (life - death) < 20:
+		alpha_decay = 0.9
 	
 	if life > death:
 		return

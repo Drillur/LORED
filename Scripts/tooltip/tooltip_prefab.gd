@@ -59,7 +59,7 @@ func _call(source : String, color := Color(1,1,1)) -> void:
 			
 			var f := type.split("lored ")[1]
 			
-			$bg.self_modulate = rt.r_lored_color(f)
+			$bg.self_modulate = gv.g[f].color
 			
 			lored_buy_lored(f)
 		
@@ -72,10 +72,13 @@ func _call(source : String, color := Color(1,1,1)) -> void:
 			
 			if f in rt.tasks.keys():
 				content["taq"].init(taq.quest)
-				$bg.self_modulate = rt.r_lored_color(taq.quest.icon.key)
+				if taq.quest.icon.key in gv.g.keys():
+					$bg.self_modulate = gv.g[taq.quest.icon.key].color
+				else:
+					$bg.self_modulate = Color(0.764706, 0.733333, 0.603922)
 			else:
 				content["taq"].init(taq.task[stepify(float(type.split("taq ")[1]), 0.01)])
-				$bg.self_modulate = rt.r_lored_color(taq.task[stepify(float(type.split("taq ")[1]), 0.01)].icon.key)
+				$bg.self_modulate = gv.g[taq.task[stepify(float(type.split("taq ")[1]), 0.01)].icon.key].color
 		
 		elif "buy upgrade" in type:
 			
@@ -97,7 +100,7 @@ func _call(source : String, color := Color(1,1,1)) -> void:
 			
 			content["halt"].setup(f)
 			
-			$bg.self_modulate = rt.r_lored_color(f)
+			$bg.self_modulate = gv.g[f].color
 		
 		elif "tip hold lored" in type:
 			
@@ -108,7 +111,7 @@ func _call(source : String, color := Color(1,1,1)) -> void:
 			
 			content["hold"].setup(f)
 			
-			$bg.self_modulate = rt.r_lored_color(f)
+			$bg.self_modulate = gv.g[f].color
 		
 		elif "fuel lored" in type:
 			
@@ -126,7 +129,7 @@ func _call(source : String, color := Color(1,1,1)) -> void:
 			add_child(content["lored stats"])
 			content["lored stats"].setup(f)
 			
-			$bg.self_modulate = rt.r_lored_color(f)
+			$bg.self_modulate = gv.g[f].color
 	
 	rect_size = Vector2(0,0)
 	
@@ -159,7 +162,7 @@ func r_tip(move_tip := false) -> void:
 				
 				fps_autobuy -= 1
 				
-				if rt.get_node("map/loreds").lored[f].autobuy():
+				if gv.g[f].autobuy():
 					content["autobuyer"].get_node("VBoxContainer/going_to_buy/check").pressed = true
 				else:
 					content["autobuyer"].get_node("VBoxContainer/going_to_buy/check").pressed = false
@@ -221,56 +224,56 @@ func r_tip(move_tip := false) -> void:
 			
 			var f := type.split("lored ")[1]
 			
-			var pos : Vector2 = rt.get_node("map/loreds").lored[f].rect_position
-			var size : Vector2 = rt.get_node("map/loreds").lored[f].rect_size
+			var pos : Vector2 = rt.get_node(rt.gnLOREDs).cont[f].rect_global_position
+			var size : Vector2 = rt.get_node(rt.gnLOREDs).cont[f].rect_size
 			
-			if gv.menu.option["resource_bar"]:
-				y_buffer = 90
+			pos.y -= 15
+			
+			y_buffer = 70
+			
+			if pos.x + size.x <= get_viewport_rect().size.x / 2:
+				rect_position = Vector2(
+					pos.x + size.x + 20,
+					pos.y
+				)
 			else:
-				y_buffer = 10
+				rect_position = Vector2(
+					pos.x - rect_size.x - 10,
+					pos.y
+				)
 			
-			var posy = pos.y - 4
-			if pos.y > 300 - rt.get_node("map").get_global_position().y:
-				posy = pos.y + size.y - rect_size.y + 13
-			
-			if abs(pos.x + size.x) <= 400 - rt.get_node("map").get_global_position().x:
-				rect_position = Vector2(pos.x + size.x  + 64 + 15 + ((win.x / 2) - 400), posy + ((win.y / 2) - 300))
-			else:
-				rect_position = Vector2(pos.x - rect_size.x - 15 + ((win.x / 2) - 400), posy + ((win.y / 2) - 300))
-			
-			var gtaq = rt.get_node("misc/taq")
-			
-			if rt.get_node("map").get_global_position().y + rect_position.y < y_buffer:
-				rect_position.y -= rt.get_node("map").get_global_position().y + rect_position.y - y_buffer
-			if rt.get_node("map").get_global_position().y + rect_position.y + rect_size.y > gtaq.rect_position.y + 10:
-				rect_position.y -= rt.get_node("map").get_global_position().y + rect_position.y + rect_size.y - gtaq.rect_position.y + 10
+			if rect_position.y < y_buffer:
+				rect_position.y = y_buffer
+			elif rect_position.y > get_viewport_rect().size.y - rect_size.y - rt.get_node("m/v/bot").rect_size.y - 10:
+				rect_position.y = get_viewport_rect().size.y - rect_size.y - rt.get_node("m/v/bot").rect_size.y - 10
+#			var posy = pos.y
+#			if pos.y > get_viewport_rect().size.y / 2 - rt.get_node("map").get_global_position().y:
+#				posy = pos.y + size.y - rect_size.y + 13
+#
+#			if rect_position.y < y_buffer:
+#				rect_position.y -= rect_position.y - y_buffer
+#			if rect_position.y + rect_size.y > gtaq.y + 10:
+#				rect_position.y -= rect_position.y + rect_size.y - gtaq.y + 10
 			return
 		
 		elif "taq " in type:
 			
-			var _taq = rt.get_node("misc/taq")
+			var gntaq = rt.get_node(rt.gntaq).rect_global_position
+			
 			rect_position = Vector2(
-				_taq.rect_position.x + _taq.rect_size.x - rect_size.x,
-				_taq.rect_position.y - rect_size.y - 10
+				win.x - rect_size.x - 10,
+				gntaq.y - rect_size.y - 10
 			)
 			return
 		
 		elif "upgrade" in type:
 			
-			if "reset" in gv.up[type.split("upgrade ")[1]].type:
-				rect_position = Vector2(rt.get_node("map").get_global_position().x + (289 - (289 / 2) + (106 / 2)), 62 - rt.get_node("map").get_global_position().y)
-				return
+			rect_position = Vector2(
+				rt.get_node(rt.gnupcon).rect_position.x + rt.get_node(rt.gnupcon).rect_size.x + 10,
+				rt.get_node(rt.gnupcon).rect_position.y
+			)
 			
-			var f := type.split("upgrade ")[1]
-			
-			var pos : Vector2 = rt.upc[gv.up[f].path][f].rect_position
-			var size : Vector2 = rt.upc[gv.up[f].path][f].rect_size
-			
-			if pos.x + size.x > 400:
-				#y_buffer = 60
-				rect_position = Vector2(pos.x - rect_size.x - 15 + ((win.x / 2) - 400), pos.y + size.y / 2 - (rect_size.y / 2) - 6 + ((win.y / 2) - 300))
-			else:
-				rect_position = Vector2(pos.x + size.x + 15 + ((win.x / 2) - 400), pos.y + size.y / 2 - (rect_size.y / 2) - 6 + ((win.y / 2) - 300))
+			return
 		
 		# lines below this took me 90 minutes to figure out. am i retarded?
 		if rt.get_node("map").get_global_position().y + rect_position.y + rect_size.y > win.y:
@@ -326,7 +329,7 @@ func price_flash() -> void:
 
 func autobuyer(_lored: String, _height: int) -> int:
 	
-	if not gv.up[rt.get_node("map/loreds").lored[_lored].my_autobuyer].active():
+	if not gv.up[gv.g[_lored].autobuyer_key].active():
 		return 0
 	
 	content["autobuyer"] = rt.prefab.tip_autobuyer.instance()
@@ -378,7 +381,7 @@ func lored_buy_lored(key: String) -> void:
 		content[x].get_node("HBoxContainer/icon/Sprite").texture = gv.sprite[x]
 		
 		# colors
-		var color: Color = rt.r_lored_color(x)
+		var color: Color = gv.g[x].color
 		content[x].get_node("HBoxContainer/VBoxContainer/val").add_color_override("font_color", color)
 		content[x].get_node("HBoxContainer/time").add_color_override("font_color", color)
 		
@@ -394,10 +397,10 @@ func lored_buy_lored(key: String) -> void:
 		
 		i += 1
 	
+	if not gv.menu.option["tooltip_autobuyer"] and gv.menu.option["tooltip_cost_only"]:
+		return
 	
-	var autobuyer = rt.get_node("map/loreds").lored[key].my_autobuyer
-	
-	if not gv.up[autobuyer].active():
+	if not gv.up[gv.g[key].autobuyer_key].active():
 		return
 	
 	content["autobuyer"] = src.autobuyer.instance()

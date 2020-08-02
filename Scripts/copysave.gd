@@ -22,12 +22,13 @@ func _pressed():
 					dir.remove(rt.SAVE_LOC)
 					return
 				get_parent().get_node("t").text = "Save deleted! Game reset!"
-				rt.b_reset(0)
+				rt.reset(0)
 				rt.get_node("misc/task").w_complete_reset()
 				rt.b_tabkey(KEY_ESCAPE)
-				for x in rt.g.size():
-					if x <= 1: continue
-					rt.get_node("map/loreds").get_child(x).visible = false
+				for x in gv.g:
+					if x in ["coal", "stone"]:
+						continue
+					rt.get_node(rt.gnLOREDs).cont[x].hide()
 
 func _on_copy_button_down():
 	rt.get_node("map").status = "no"

@@ -1,29 +1,37 @@
-[gd_scene load_steps=19 format=2]
+[gd_scene load_steps=29 format=2]
 
-[ext_resource path="res://Scripts/Root.gd" type="Script" id=1]
+[ext_resource path="res://Scripts/_Root.gd" type="Script" id=1]
 [ext_resource path="res://Scripts/map.gd" type="Script" id=2]
 [ext_resource path="res://Scripts/lored_master.gd" type="Script" id=3]
 [ext_resource path="res://Scripts/upgrade/upgrade_master.gd" type="Script" id=4]
 [ext_resource path="res://Scripts/tooltip/tooltip_master.gd" type="Script" id=5]
 [ext_resource path="res://Prefabs/upgrade/upgrade_container.tscn" type="PackedScene" id=6]
+[ext_resource path="res://Prefabs/Limit Break.tscn" type="PackedScene" id=7]
 [ext_resource path="res://Scripts/task/quests.gd" type="Script" id=8]
-[ext_resource path="res://Scripts/tab/tab_master.gd" type="Script" id=12]
+[ext_resource path="res://Prefabs/lored/LORED List.tscn" type="PackedScene" id=9]
+[ext_resource path="res://Scenes/resources.gd" type="Script" id=10]
+[ext_resource path="res://Styles/Master Theme.tres" type="Theme" id=11]
+[ext_resource path="res://Sprites/tab/alert.png" type="Texture" id=12]
+[ext_resource path="res://Sprites/tab/s1n.png" type="Texture" id=13]
+[ext_resource path="res://Sprites/tab/t0.png" type="Texture" id=14]
+[ext_resource path="res://Sprites/tab/s2.png" type="Texture" id=15]
+[ext_resource path="res://Fonts/Roboto-BlackItalic.ttf" type="DynamicFontData" id=16]
+[ext_resource path="res://Sprites/tab/alert2.png" type="Texture" id=17]
 [ext_resource path="res://Fonts/Roboto-Medium.ttf" type="DynamicFontData" id=29]
-[ext_resource path="res://Scripts/resource_bar.gd" type="Script" id=42]
-
-[sub_resource type="StyleBoxFlat" id=1]
-bg_color = Color( 0, 0, 0, 1 )
-border_color = Color( 0.117647, 0.117647, 0.117647, 1 )
-shadow_color = Color( 0.666667, 0, 0, 1 )
-shadow_size = 30000
-
-[sub_resource type="StyleBoxFlat" id=2]
-bg_color = Color( 0, 0, 0, 1 )
-border_color = Color( 0.117647, 0.117647, 0.117647, 1 )
-shadow_color = Color( 0.67, 0, 0.63, 0.75 )
-shadow_size = 30000
 
 [sub_resource type="StyleBoxFlat" id=3]
+bg_color = Color( 0.0588235, 0.0588235, 0.0588235, 1 )
+draw_center = false
+border_width_bottom = 3
+border_color = Color( 1, 0, 0.631373, 0.301961 )
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+expand_margin_left = 10.0
+expand_margin_right = 10.0
+expand_margin_top = 10.0
+expand_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxFlat" id=4]
 bg_color = Color( 0.1, 0.1, 0.1, 1 )
 border_width_left = 1
 border_width_top = 1
@@ -31,19 +39,19 @@ border_width_right = 1
 border_width_bottom = 1
 border_color = Color( 1, 0, 0.63, 0.35 )
 shadow_color = Color( 0.054902, 0.054902, 0.054902, 1 )
-shadow_size = 10
+shadow_size = 3
 
-[sub_resource type="StyleBoxFlat" id=4]
-bg_color = Color( 0.06, 0.06, 0.06, 1 )
+[sub_resource type="StyleBoxFlat" id=5]
+bg_color = Color( 0.0588235, 0.0588235, 0.0588235, 1 )
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
 border_color = Color( 1, 0, 0.631373, 0.25098 )
 shadow_color = Color( 0.054902, 0.054902, 0.054902, 1 )
-shadow_size = 10
+shadow_size = 3
 
-[sub_resource type="StyleBoxFlat" id=5]
+[sub_resource type="StyleBoxFlat" id=6]
 bg_color = Color( 0.0784314, 0.0784314, 0.0784314, 1 )
 border_width_left = 1
 border_width_top = 1
@@ -51,29 +59,48 @@ border_width_right = 1
 border_width_bottom = 1
 border_color = Color( 1, 0, 0.631373, 0.301961 )
 shadow_color = Color( 0.054902, 0.054902, 0.054902, 1 )
-shadow_size = 10
+shadow_size = 3
 
-[sub_resource type="DynamicFont" id=6]
+[sub_resource type="DynamicFont" id=7]
 size = 30
 outline_size = 2
 outline_color = Color( 0, 0, 0, 0.301961 )
 font_data = ExtResource( 29 )
 
-[sub_resource type="StyleBoxFlat" id=7]
-bg_color = Color( 0.0784314, 0.0784314, 0.0784314, 0.901961 )
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color( 1, 0, 0.631373, 0.301961 )
-expand_margin_top = 4.0
-expand_margin_bottom = 4.0
-shadow_color = Color( 0.054902, 0.054902, 0.054902, 1 )
-shadow_size = 10
-anti_aliasing = false
-
 [sub_resource type="StyleBoxFlat" id=8]
+bg_color = Color( 0.164706, 0.164706, 0.164706, 1 )
+border_width_left = 1
+border_width_right = 1
+border_color = Color( 0.0627451, 0.0627451, 0.0627451, 1 )
+border_blend = true
+
+[sub_resource type="StyleBoxFlat" id=9]
+bg_color = Color( 0.0588235, 0.0588235, 0.0588235, 1 )
 draw_center = false
+border_width_top = 3
+border_color = Color( 1, 0, 0.631373, 0.301961 )
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+expand_margin_left = 10.0
+expand_margin_right = 10.0
+expand_margin_top = 10.0
+expand_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxFlat" id=10]
+draw_center = false
+
+[sub_resource type="SpriteFrames" id=11]
+animations = [ {
+"frames": [ ExtResource( 12 ), ExtResource( 17 ) ],
+"loop": true,
+"name": "default",
+"speed": 1.0
+} ]
+
+[sub_resource type="DynamicFont" id=12]
+outline_size = 2
+outline_color = Color( 0, 0, 0, 1 )
+font_data = ExtResource( 16 )
 
 [node name="Root" type="Node2D"]
 script = ExtResource( 1 )
@@ -94,73 +121,70 @@ __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="t0" type="Panel" parent="map/misc"]
-visible = false
-margin_left = -68131.8
-margin_top = -76595.9
-margin_right = 68823.2
-margin_bottom = -28266.9
-size_flags_horizontal = 3
-size_flags_vertical = 3
-custom_styles/panel = SubResource( 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="t1" type="Panel" parent="map/misc"]
-visible = false
-margin_left = -90151.9
-margin_top = 28902.3
-margin_right = 46803.2
-margin_bottom = 77231.3
-size_flags_horizontal = 3
-size_flags_vertical = 3
-custom_styles/panel = SubResource( 2 )
-
 [node name="loreds" type="Node2D" parent="map"]
 script = ExtResource( 3 )
 
 [node name="upgrades" type="Node2D" parent="map"]
 script = ExtResource( 4 )
 
-[node name="s1nup" type="Node2D" parent="map/upgrades"]
-
-[node name="s1mup" type="Node2D" parent="map/upgrades"]
-
-[node name="s2nup" type="Node2D" parent="map/upgrades"]
-
-[node name="s2mup" type="Node2D" parent="map/upgrades"]
-
-[node name="tip" type="Node2D" parent="map"]
-script = ExtResource( 5 )
-
-[node name="misc" type="Node2D" parent="."]
+[node name="m" type="MarginContainer" parent="."]
+margin_right = 1024.0
+margin_bottom = 768.0
+custom_constants/margin_right = 0
+custom_constants/margin_top = 0
+custom_constants/margin_left = 0
+custom_constants/margin_bottom = 0
 __meta__ = {
-"_edit_lock_": true
+"_edit_use_anchors_": false
 }
 
-[node name="tabs" type="Node2D" parent="misc"]
-script = ExtResource( 12 )
+[node name="v" type="VBoxContainer" parent="m"]
+margin_right = 1024.0
+margin_bottom = 768.0
+custom_constants/separation = 0
 
-[node name="menu_button" type="Button" parent="misc"]
+[node name="top" type="MarginContainer" parent="m/v"]
+margin_right = 1024.0
+margin_bottom = 74.0
+custom_constants/margin_right = 10
+custom_constants/margin_top = 10
+custom_constants/margin_left = 10
+custom_constants/margin_bottom = 10
+
+[node name="bg" type="Panel" parent="m/v/top"]
 margin_left = 10.0
 margin_top = 10.0
-margin_right = 48.0
-margin_bottom = 48.0
+margin_right = 1014.0
+margin_bottom = 64.0
+custom_styles/panel = SubResource( 3 )
+
+[node name="h" type="HBoxContainer" parent="m/v/top"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 1014.0
+margin_bottom = 64.0
+custom_constants/separation = 10
+
+[node name="menu_button" type="Button" parent="m/v/top/h"]
+margin_top = 7.0
+margin_right = 40.0
+margin_bottom = 47.0
+rect_min_size = Vector2( 40, 40 )
 focus_mode = 0
 mouse_default_cursor_shape = 2
-custom_styles/hover = SubResource( 3 )
-custom_styles/pressed = SubResource( 4 )
-custom_styles/normal = SubResource( 5 )
+size_flags_vertical = 4
+custom_styles/hover = SubResource( 4 )
+custom_styles/pressed = SubResource( 5 )
+custom_styles/normal = SubResource( 6 )
 __meta__ = {
 "_edit_group_": true,
 "_edit_use_anchors_": false
 }
 
-[node name="Label" type="Label" parent="misc/menu_button"]
+[node name="Label" type="Label" parent="m/v/top/h/menu_button"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-custom_fonts/font = SubResource( 6 )
+custom_fonts/font = SubResource( 7 )
 custom_colors/font_color = Color( 1, 0, 0.631373, 0.301961 )
 text = "="
 align = 1
@@ -169,59 +193,210 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="qol_displays" type="HBoxContainer" parent="misc"]
-margin_left = 61.0
-margin_top = 14.0
-margin_right = 790.0
-margin_bottom = 81.0
-mouse_filter = 2
-custom_constants/separation = 15
-__meta__ = {
-"_edit_use_anchors_": false
-}
+[node name="resources" type="MarginContainer" parent="m/v/top/h"]
+margin_left = 50.0
+margin_right = 54.0
+margin_bottom = 54.0
+script = ExtResource( 10 )
 
-[node name="resource_bar" type="Panel" parent="misc/qol_displays"]
-margin_right = 729.0
-margin_bottom = 67.0
-rect_min_size = Vector2( 729, 67 )
-size_flags_horizontal = 4
-size_flags_vertical = 0
-custom_styles/panel = SubResource( 7 )
-script = ExtResource( 42 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
+[node name="s1" type="HBoxContainer" parent="m/v/top/h/resources"]
+margin_right = 4.0
+margin_bottom = 54.0
+custom_constants/separation = 10
 
-[node name="taq" type="HBoxContainer" parent="misc"]
-margin_left = 620.0
-margin_top = 545.0
-margin_right = 790.0
-margin_bottom = 590.0
-grow_horizontal = 0
+[node name="buffer" type="Panel" parent="m/v/top/h/resources/s1"]
+margin_right = 4.0
+margin_bottom = 54.0
+rect_min_size = Vector2( 4, 0 )
+custom_styles/panel = SubResource( 8 )
+
+[node name="s2" type="HBoxContainer" parent="m/v/top/h/resources"]
+visible = false
+margin_right = 4.0
+margin_bottom = 54.0
+custom_constants/separation = 10
+
+[node name="buffer" type="Panel" parent="m/v/top/h/resources/s2"]
+margin_right = 4.0
+margin_bottom = 40.0
+rect_min_size = Vector2( 4, 0 )
+custom_styles/panel = SubResource( 8 )
+
+[node name="Limit Break" parent="m/v/top/h" instance=ExtResource( 7 )]
+anchor_right = 0.0
+margin_left = 869.0
+margin_right = 1004.0
+size_flags_horizontal = 10
+
+[node name="LORED List" parent="m/v" instance=ExtResource( 9 )]
+margin_top = 74.0
+margin_right = 1024.0
+margin_bottom = 703.0
+size_flags_vertical = 3
+
+[node name="bot" type="MarginContainer" parent="m/v"]
+margin_top = 703.0
+margin_right = 1024.0
+margin_bottom = 768.0
+custom_constants/margin_right = 10
+custom_constants/margin_top = 10
+custom_constants/margin_left = 10
+custom_constants/margin_bottom = 10
+
+[node name="bg" type="Panel" parent="m/v/bot"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 1014.0
+margin_bottom = 55.0
+custom_styles/panel = SubResource( 9 )
+
+[node name="h" type="HBoxContainer" parent="m/v/bot"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 1014.0
+margin_bottom = 55.0
+custom_constants/separation = 10
+alignment = 1
+
+[node name="taq" type="HBoxContainer" parent="m/v/bot/h"]
+margin_left = 834.0
+margin_right = 1004.0
+margin_bottom = 45.0
+size_flags_horizontal = 10
 custom_constants/separation = 14
 alignment = 2
 __meta__ = {
-"_edit_group_": true,
 "_edit_use_anchors_": false
 }
 
-[node name="quest" type="Panel" parent="misc/taq"]
+[node name="quest" type="Panel" parent="m/v/bot/h/taq"]
 margin_right = 170.0
 margin_bottom = 45.0
 rect_min_size = Vector2( 170, 45 )
 size_flags_horizontal = 8
 size_flags_vertical = 8
-custom_styles/panel = SubResource( 8 )
+custom_styles/panel = SubResource( 10 )
 script = ExtResource( 8 )
+
+[node name="lored texts" type="Node2D" parent="m"]
+
+[node name="up_container" parent="m" instance=ExtResource( 6 )]
+visible = false
+margin_left = 329.0
+margin_top = 184.0
+margin_right = 694.0
+margin_bottom = 584.0
+size_flags_horizontal = 4
+size_flags_vertical = 6
+
+[node name="misc" type="Node2D" parent="."]
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="tabs" type="MarginContainer" parent="misc"]
+margin_top = 74.0
+margin_right = 73.0
+margin_bottom = 234.0
+custom_constants/margin_right = 10
+custom_constants/margin_top = 10
+custom_constants/margin_left = 10
+custom_constants/margin_bottom = 10
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="v" type="VBoxContainer" parent="misc/tabs"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 63.0
+margin_bottom = 150.0
+custom_constants/separation = 10
+
+[node name="upgrades" type="Button" parent="misc/tabs/v"]
+visible = false
+margin_right = 53.0
+margin_bottom = 40.0
+rect_min_size = Vector2( 0, 40 )
+focus_mode = 0
+mouse_default_cursor_shape = 2
+theme = ExtResource( 11 )
+
+[node name="Sprite" type="Sprite" parent="misc/tabs/v/upgrades"]
+position = Vector2( 26, 20 )
+texture = ExtResource( 13 )
+
+[node name="alert" type="AnimatedSprite" parent="misc/tabs/v/upgrades"]
+visible = false
+show_behind_parent = true
+position = Vector2( 63, 23 )
+rotation = 0.693008
+scale = Vector2( 1.5, 1.5 )
+frames = SubResource( 11 )
+frame = 1
+playing = true
+
+[node name="s1" type="Button" parent="misc/tabs/v"]
+visible = false
+margin_top = 50.0
+margin_right = 53.0
+margin_bottom = 90.0
+rect_min_size = Vector2( 0, 40 )
+focus_mode = 0
+mouse_default_cursor_shape = 2
+theme = ExtResource( 11 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Sprite" type="Sprite" parent="misc/tabs/v/s1"]
+position = Vector2( 26, 20 )
+texture = ExtResource( 14 )
+
+[node name="Label" type="Label" parent="misc/tabs/v/s1"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_fonts/font = SubResource( 12 )
+custom_colors/font_color = Color( 0.804688, 0.804688, 0.804688, 1 )
+text = "1"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="s2" type="Button" parent="misc/tabs/v"]
+visible = false
+margin_top = 100.0
+margin_right = 53.0
+margin_bottom = 140.0
+rect_min_size = Vector2( 0, 40 )
+focus_mode = 0
+mouse_default_cursor_shape = 2
+theme = ExtResource( 11 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Sprite" type="Sprite" parent="misc/tabs/v/s2"]
+position = Vector2( 26, 20 )
+texture = ExtResource( 15 )
+
+[node name="Label" type="Label" parent="misc/tabs/v/s2"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_fonts/font = SubResource( 12 )
+custom_colors/font_color = Color( 0.804688, 0.804688, 0.804688, 1 )
+text = "2"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="upgrades" type="Node2D" parent="."]
 
-[node name="up_container" parent="." instance=ExtResource( 6 )]
-visible = false
-margin_left = 227.0
-margin_top = 326.0
-margin_right = 573.0
-margin_bottom = 586.0
+[node name="texts" type="Node2D" parent="."]
 
 [node name="global_tip" type="Node2D" parent="."]
 script = ExtResource( 5 )
@@ -229,12 +404,15 @@ script = ExtResource( 5 )
 [node name="Button" type="Button" parent="."]
 visible = false
 margin_left = 10.0
-margin_top = 58.0
-margin_right = 48.0
-margin_bottom = 98.0
+margin_top = 17.0
+margin_right = 50.0
+margin_bottom = 57.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
-[connection signal="button_down" from="misc/menu_button" to="." method="_on_menu_button_button_down"]
-[connection signal="pressed" from="misc/menu_button" to="." method="_on_menu_button_pressed"]
+[connection signal="button_down" from="m/v/top/h/menu_button" to="." method="_on_menu_button_button_down"]
+[connection signal="pressed" from="m/v/top/h/menu_button" to="." method="_on_menu_button_pressed"]
+[connection signal="pressed" from="misc/tabs/v/upgrades" to="." method="_on_upgrades_pressed"]
+[connection signal="pressed" from="misc/tabs/v/s1" to="." method="_on_s1_pressed"]
+[connection signal="pressed" from="misc/tabs/v/s2" to="." method="_on_s2_pressed"]
 [connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]

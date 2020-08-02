@@ -42,7 +42,7 @@ func format_val_small(_sign: int, value: float) -> String:
 	# for numbers less than 100
 	
 	if value < 1:
-		return String(stepify(_sign * value, .001)) # 0.059
+		return String(stepify(_sign * value, .001))# 0.059
 	if value < 10:
 		return String(stepify(_sign * value, .01)) # 5.43
 	return String(stepify(_sign * value, .1)) # 22.8
