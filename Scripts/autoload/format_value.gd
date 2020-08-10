@@ -25,10 +25,8 @@ func f(value: float) -> String:
 		match gv.menu.option["notation_type"]:
 			NotationType.ENGINEERING:
 				return format_val_eng(_sign, value) # 20e6
-			NotationType.SCIENTIFIC:
+			_: #NotationType.SCIENTIFIC:
 				return format_val_sci(_sign, value) # 2e7
-			_:
-				return format_val_log(_sign, value)
 	
 	if value < 100.0:
 		return format_val_small(_sign, value) # 10.0
@@ -68,6 +66,7 @@ func format_val_medium(_sign: int, value: float) -> String:
 func format_val_eng(_sign: int, value: float) -> String:
 	
 	# engineering notation
+	# example: 50e6
 	
 	var rounded: float = round(value)
 	var _exp: float = stepify((String(rounded).length() - 1) - 1, 3)
@@ -79,20 +78,11 @@ func format_val_eng(_sign: int, value: float) -> String:
 func format_val_sci(_sign: int, value: float) -> String:
 	
 	# scientific notation
+	# example: 5.0e7
 	
 	var _exp := String(value).split(".")[0].length() - 1
 	var coefficient := value / pow(10, _exp)
 	return String(stepify(_sign * coefficient, .01)) + "e" + String(_exp)
-
-
-func format_val_log(_sign: int, value: float) -> String:
-	
-	# logarithmic notation
-	
-	var to_log_10 = str(stepify(log(value) / log(10) * 10,0.01))
-	if _sign == -1:
-		to_log_10 = "-" + to_log_10
-	return to_log_10
 
 
 func step(coefficient: float) -> float:

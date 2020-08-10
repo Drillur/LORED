@@ -173,11 +173,7 @@ func s(n):
 	return self
 
 func power(n:int):
-	if n < 0:
-		mantissa = 1.0
-		exponent = 0
-		return self
-	if n == 0:
+	if n <= 0:
 		mantissa = 1.0
 		exponent = 0
 		return self
@@ -189,14 +185,14 @@ func power(n:int):
 		if n % 2 == 0: #n is even
 			exponent = exponent + exponent
 			mantissa = mantissa * mantissa
-			n = n / 2
+			n /= 2
 		else:
 			y_mantissa = mantissa * y_mantissa
 			y_exponent = exponent + y_exponent
 			exponent = exponent + exponent
 			mantissa = mantissa * mantissa
 			n = (n-1) / 2
-
+	
 	exponent = y_exponent + exponent
 	mantissa = y_mantissa * mantissa
 	calc(self)

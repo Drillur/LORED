@@ -1,4 +1,4 @@
-[gd_scene load_steps=29 format=2]
+[gd_scene load_steps=30 format=2]
 
 [ext_resource path="res://Scripts/_Root.gd" type="Script" id=1]
 [ext_resource path="res://Scripts/map.gd" type="Script" id=2]
@@ -17,9 +17,10 @@
 [ext_resource path="res://Sprites/tab/s2.png" type="Texture" id=15]
 [ext_resource path="res://Fonts/Roboto-BlackItalic.ttf" type="DynamicFontData" id=16]
 [ext_resource path="res://Sprites/tab/alert2.png" type="Texture" id=17]
+[ext_resource path="res://Sprites/resources/liq.png" type="Texture" id=18]
 [ext_resource path="res://Fonts/Roboto-Medium.ttf" type="DynamicFontData" id=29]
 
-[sub_resource type="StyleBoxFlat" id=3]
+[sub_resource type="StyleBoxFlat" id=1]
 bg_color = Color( 0.0588235, 0.0588235, 0.0588235, 1 )
 draw_center = false
 border_width_bottom = 3
@@ -31,7 +32,7 @@ expand_margin_right = 10.0
 expand_margin_top = 10.0
 expand_margin_bottom = 10.0
 
-[sub_resource type="StyleBoxFlat" id=4]
+[sub_resource type="StyleBoxFlat" id=2]
 bg_color = Color( 0.1, 0.1, 0.1, 1 )
 border_width_left = 1
 border_width_top = 1
@@ -41,7 +42,7 @@ border_color = Color( 1, 0, 0.63, 0.35 )
 shadow_color = Color( 0.054902, 0.054902, 0.054902, 1 )
 shadow_size = 3
 
-[sub_resource type="StyleBoxFlat" id=5]
+[sub_resource type="StyleBoxFlat" id=3]
 bg_color = Color( 0.0588235, 0.0588235, 0.0588235, 1 )
 border_width_left = 1
 border_width_top = 1
@@ -51,7 +52,7 @@ border_color = Color( 1, 0, 0.631373, 0.25098 )
 shadow_color = Color( 0.054902, 0.054902, 0.054902, 1 )
 shadow_size = 3
 
-[sub_resource type="StyleBoxFlat" id=6]
+[sub_resource type="StyleBoxFlat" id=4]
 bg_color = Color( 0.0784314, 0.0784314, 0.0784314, 1 )
 border_width_left = 1
 border_width_top = 1
@@ -61,20 +62,20 @@ border_color = Color( 1, 0, 0.631373, 0.301961 )
 shadow_color = Color( 0.054902, 0.054902, 0.054902, 1 )
 shadow_size = 3
 
-[sub_resource type="DynamicFont" id=7]
+[sub_resource type="DynamicFont" id=5]
 size = 30
 outline_size = 2
 outline_color = Color( 0, 0, 0, 0.301961 )
 font_data = ExtResource( 29 )
 
-[sub_resource type="StyleBoxFlat" id=8]
+[sub_resource type="StyleBoxFlat" id=6]
 bg_color = Color( 0.164706, 0.164706, 0.164706, 1 )
 border_width_left = 1
 border_width_right = 1
 border_color = Color( 0.0627451, 0.0627451, 0.0627451, 1 )
 border_blend = true
 
-[sub_resource type="StyleBoxFlat" id=9]
+[sub_resource type="StyleBoxFlat" id=7]
 bg_color = Color( 0.0588235, 0.0588235, 0.0588235, 1 )
 draw_center = false
 border_width_top = 3
@@ -86,10 +87,10 @@ expand_margin_right = 10.0
 expand_margin_top = 10.0
 expand_margin_bottom = 10.0
 
-[sub_resource type="StyleBoxFlat" id=10]
+[sub_resource type="StyleBoxFlat" id=8]
 draw_center = false
 
-[sub_resource type="SpriteFrames" id=11]
+[sub_resource type="SpriteFrames" id=9]
 animations = [ {
 "frames": [ ExtResource( 12 ), ExtResource( 17 ) ],
 "loop": true,
@@ -97,7 +98,7 @@ animations = [ {
 "speed": 1.0
 } ]
 
-[sub_resource type="DynamicFont" id=12]
+[sub_resource type="DynamicFont" id=10]
 outline_size = 2
 outline_color = Color( 0, 0, 0, 1 )
 font_data = ExtResource( 16 )
@@ -156,7 +157,7 @@ margin_left = 10.0
 margin_top = 10.0
 margin_right = 1014.0
 margin_bottom = 64.0
-custom_styles/panel = SubResource( 3 )
+custom_styles/panel = SubResource( 1 )
 
 [node name="h" type="HBoxContainer" parent="m/v/top"]
 margin_left = 10.0
@@ -173,9 +174,9 @@ rect_min_size = Vector2( 40, 40 )
 focus_mode = 0
 mouse_default_cursor_shape = 2
 size_flags_vertical = 4
-custom_styles/hover = SubResource( 4 )
-custom_styles/pressed = SubResource( 5 )
-custom_styles/normal = SubResource( 6 )
+custom_styles/hover = SubResource( 2 )
+custom_styles/pressed = SubResource( 3 )
+custom_styles/normal = SubResource( 4 )
 __meta__ = {
 "_edit_group_": true,
 "_edit_use_anchors_": false
@@ -184,7 +185,7 @@ __meta__ = {
 [node name="Label" type="Label" parent="m/v/top/h/menu_button"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-custom_fonts/font = SubResource( 7 )
+custom_fonts/font = SubResource( 5 )
 custom_colors/font_color = Color( 1, 0, 0.631373, 0.301961 )
 text = "="
 align = 1
@@ -208,7 +209,7 @@ custom_constants/separation = 10
 margin_right = 4.0
 margin_bottom = 54.0
 rect_min_size = Vector2( 4, 0 )
-custom_styles/panel = SubResource( 8 )
+custom_styles/panel = SubResource( 6 )
 
 [node name="s2" type="HBoxContainer" parent="m/v/top/h/resources"]
 visible = false
@@ -220,7 +221,7 @@ custom_constants/separation = 10
 margin_right = 4.0
 margin_bottom = 40.0
 rect_min_size = Vector2( 4, 0 )
-custom_styles/panel = SubResource( 8 )
+custom_styles/panel = SubResource( 6 )
 
 [node name="Limit Break" parent="m/v/top/h" instance=ExtResource( 7 )]
 anchor_right = 0.0
@@ -248,7 +249,7 @@ margin_left = 10.0
 margin_top = 10.0
 margin_right = 1014.0
 margin_bottom = 55.0
-custom_styles/panel = SubResource( 9 )
+custom_styles/panel = SubResource( 7 )
 
 [node name="h" type="HBoxContainer" parent="m/v/bot"]
 margin_left = 10.0
@@ -275,7 +276,7 @@ margin_bottom = 45.0
 rect_min_size = Vector2( 170, 45 )
 size_flags_horizontal = 8
 size_flags_vertical = 8
-custom_styles/panel = SubResource( 10 )
+custom_styles/panel = SubResource( 8 )
 script = ExtResource( 8 )
 
 [node name="lored texts" type="Node2D" parent="m"]
@@ -332,15 +333,13 @@ show_behind_parent = true
 position = Vector2( 63, 23 )
 rotation = 0.693008
 scale = Vector2( 1.5, 1.5 )
-frames = SubResource( 11 )
-frame = 1
+frames = SubResource( 9 )
 playing = true
 
 [node name="s1" type="Button" parent="misc/tabs/v"]
 visible = false
-margin_top = 50.0
 margin_right = 53.0
-margin_bottom = 90.0
+margin_bottom = 40.0
 rect_min_size = Vector2( 0, 40 )
 focus_mode = 0
 mouse_default_cursor_shape = 2
@@ -356,7 +355,7 @@ texture = ExtResource( 14 )
 [node name="Label" type="Label" parent="misc/tabs/v/s1"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-custom_fonts/font = SubResource( 12 )
+custom_fonts/font = SubResource( 10 )
 custom_colors/font_color = Color( 0.804688, 0.804688, 0.804688, 1 )
 text = "1"
 align = 1
@@ -367,9 +366,9 @@ __meta__ = {
 
 [node name="s2" type="Button" parent="misc/tabs/v"]
 visible = false
-margin_top = 100.0
+margin_top = 50.0
 margin_right = 53.0
-margin_bottom = 140.0
+margin_bottom = 90.0
 rect_min_size = Vector2( 0, 40 )
 focus_mode = 0
 mouse_default_cursor_shape = 2
@@ -385,7 +384,62 @@ texture = ExtResource( 15 )
 [node name="Label" type="Label" parent="misc/tabs/v/s2"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-custom_fonts/font = SubResource( 12 )
+custom_fonts/font = SubResource( 10 )
+custom_colors/font_color = Color( 0.804688, 0.804688, 0.804688, 1 )
+text = "2"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="s3" type="Button" parent="misc/tabs/v"]
+visible = false
+margin_right = 53.0
+margin_bottom = 40.0
+rect_min_size = Vector2( 0, 40 )
+mouse_default_cursor_shape = 2
+theme = ExtResource( 11 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Sprite" type="Sprite" parent="misc/tabs/v/s3"]
+position = Vector2( 26, 20 )
+texture = ExtResource( 18 )
+
+[node name="Label" type="Label" parent="misc/tabs/v/s3"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_fonts/font = SubResource( 10 )
+custom_colors/font_color = Color( 0.804688, 0.804688, 0.804688, 1 )
+text = "3"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="s4" type="Button" parent="misc/tabs/v"]
+visible = false
+margin_top = 50.0
+margin_right = 53.0
+margin_bottom = 90.0
+rect_min_size = Vector2( 0, 40 )
+mouse_default_cursor_shape = 2
+theme = ExtResource( 11 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Sprite" type="Sprite" parent="misc/tabs/v/s4"]
+position = Vector2( 26, 20 )
+texture = ExtResource( 18 )
+
+[node name="Label" type="Label" parent="misc/tabs/v/s4"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_fonts/font = SubResource( 10 )
 custom_colors/font_color = Color( 0.804688, 0.804688, 0.804688, 1 )
 text = "2"
 align = 1
@@ -415,4 +469,6 @@ __meta__ = {
 [connection signal="pressed" from="misc/tabs/v/upgrades" to="." method="_on_upgrades_pressed"]
 [connection signal="pressed" from="misc/tabs/v/s1" to="." method="_on_s1_pressed"]
 [connection signal="pressed" from="misc/tabs/v/s2" to="." method="_on_s2_pressed"]
+[connection signal="pressed" from="misc/tabs/v/s3" to="." method="_on_s2_pressed"]
+[connection signal="pressed" from="misc/tabs/v/s4" to="." method="_on_s2_pressed"]
 [connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]

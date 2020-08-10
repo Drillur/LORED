@@ -13,7 +13,10 @@ var go_behind : bool = true
 func init(gobehind := true, set_unique_death := 0, _text := "", icon = gv.sprite["unknown"], color := Color(1,1,1)):
 	
 	text = _text
-	$icon.texture = icon
+	if icon == gv.sprite["unknown"]:
+		$icon.hide()
+	else:
+		$icon.texture = icon
 	self_modulate = color
 	
 	go_behind = gobehind

@@ -588,28 +588,37 @@ func autobuy() -> bool:
 	# if ingredient LORED per_sec < per_sec, don't buy
 	for x in b:
 		
+		if gv.g[x].hold:
+			return false
+		
 		var consm = Big.new(b[x].t).m(60).m(d.t.percent(speed.t))
+		# how much this lored consumes from the ingredient lored (x)
 		
 		if gv.g[x].halt:
-			if Big.new(gv.g[x].net(true)[0]).s(Big.new(consm).m(2)).isLessThan(0):
+			
+			var consm2 = Big.new(consm).m(2)
+			if consm2.isLessThan(gv.g[x].net(true)[0]):
 				if not gv.g[x].cost_check():
 					return false
+		
 		else:
 			
 			var net = gv.g[x].net()
-			if net[0].isLargerThanOrEqualTo(net[1]):
-				net = Big.new(net[0]).s(net[1])
-				if consm.isLargerThan(net):
-					if not gv.g[x].cost_check():
-						return false
-			else:
+			
+			if net[0].isLessThan(net[1]):
 				return false
+			
+			net = Big.new(net[0]).s(net[1])
+			if consm.isLargerThan(net):
+				if not gv.g[x].cost_check():
+					return false
 	
 	if key_lored:
 		return true
 	
 	var net = net()
 	if net[0].isLargerThan(net[1]):
+		# if total gain per sec is greater than total loss per sec
 		return false
 	
 	return true

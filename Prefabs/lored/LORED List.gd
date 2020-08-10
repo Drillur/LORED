@@ -5,6 +5,7 @@ extends MarginContainer
 var src := {
 	lored = preload("res://Prefabs/lored/LORED.tscn"),
 	hbox = preload("res://Prefabs/template/HBoxContainer 10 separation.tscn"),
+	cacodemons = preload("res://Prefabs/lored/Cacodemons.tscn"),
 }
 
 var cont := {}
@@ -18,6 +19,7 @@ func setup():
 	
 	setup_s1()
 	setup_s2()
+	setup_s3()
 
 func setup_s2():
 	
@@ -96,6 +98,16 @@ func setup_s1():
 	
 	cont["coal"].show()
 	cont["stone"].show()
+
+func setup_s3():
+	
+	var i = 0
+	cont["h3" + str(i)] = src.hbox.instance()
+	get_node("sc/v/s3").add_child(cont["h3" + str(i)])
+	
+	cont["cacodemons"] = src.cacodemons.instance()
+	cont["h3" + str(i)].add_child(cont["cacodemons"])
+	cont["cacodemons"].setup()
 
 func r_autobuy(specific_lored := ""):
 	

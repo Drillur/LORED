@@ -23,8 +23,8 @@ func lb_xp_check():
 		
 		lb_d.a(1)
 		
-		var result = Big.new(lb_d).square().toFloat() * 1.5
-		lb_xp.t = Big.new("1e" + str(result))
+		var exponent = Big.new(lb_d).square().toFloat() * 1.5
+		lb_xp.t = Big.new("1e" + str(exponent))
 		if lb_xp.t.isLessThan(Big.new(lb_d).m(1000)):
 			lb_xp.t = Big.new(lb_d).m(1000)
 		
@@ -377,3 +377,22 @@ class PowersOf10:
 		return powers[power]
 
 var powers_of_10 = PowersOf10.new()
+
+
+enum R {
+	consumed_spirit,
+	
+}
+var r := []
+
+signal cac_leveled_up(key) # class_cacodemon.gd -> Cacodemons.gd
+signal cac_xp_gained(key) # class_cacodemon.gd -> Cacodemons.gd
+var cac := []
+
+func _ready():
+	
+	for x in R:
+		r.append(Big.new(0))
+	
+	for x in 100:
+		cac.append(Cacodemon.new(x))

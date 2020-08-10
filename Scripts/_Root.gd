@@ -583,59 +583,8 @@ func game_start(successful_load: bool) -> void:
 	# hax
 	if true:
 		
-		if not hax == 1:
-			
-			# upgrades
-			if true:
-				
-				for x in gv.up:
-					#break
-					gv.up[x].requires = ""
-				gv.up["Limit Break"].have = true
-				#up["AUTOSHOVELER"].have = true
-			
-			# resources
-			if true:
-				
-				#gv.g["malig"].r.a(Big.new(gv.up["ROUTINE"].cost["malig"].t).m(1.99))
-				
-				if not gv.up["THE WITCH OF LOREDELITH"].have:
-					gv.g["iron"].r.a(100000)
-					gv.g["cop"].r.a(100000)
-					gv.g["stone"].r.a(500000)
-					#gv.g["malig"].r.a(5"1e6"00)
-					gv.g["conc"].r.a(500000)
-					gv.g["water"].r.a(25)
-					#gv.g["malig"].r.a(10)
-					if hax > 1:
-						gv.g["tum"].r.a("5e6")
-			
-			if hax > 1:
-				$map/upgrades.r_update("all")
-				for x in tasks:
-					for v in tasks[x].step:
-						tasks[x].step[v].b = Big.new()
-			
-			for x in gv.g:
-				if hax > 1:
-					if not gv.up["THE WITCH OF LOREDELITH"].have:
-						#g[x].speed.b *= 0.1
-						for v in gv.g[x].cost:
-							gv.g[v].r.a(gv.g[x].cost[v].t)
-					gv.g[x].r.a(100)
-				if "s1" in gv.g[x].type:
-					if not gv.up["THE WITCH OF LOREDELITH"].have:
-						gv.g[x].r.a(500000)
-				#g[x].active = true
-				#if not up["THE WITCH OF LOREDELITH"].have: if hax > 1: g[x].output_modifier.b *= 100.0
-			
-		
-		if hax < 1:
-			#up["SOCCER DUDE"].have = true
-			#if up["SOCCER DUDE"].d == 1.0: up["SOCCER DUDE"].d *= w_set_d("SOCCER DUDE")
-			pass
-		
-		w_aa()
+		#unlock_tab("3")
+		pass
 	
 	# tasks
 	if true:
@@ -749,10 +698,18 @@ func _input(ev):
 	
 	if Input.is_key_pressed(KEY_1):
 		b_tabkey(KEY_1)
-		return#1864712072202289200
+		return
 	
 	if Input.is_key_pressed(KEY_2):
 		b_tabkey(KEY_2)
+		return
+	
+	if Input.is_key_pressed(KEY_3):
+		b_tabkey(KEY_3)
+		return
+	
+	if Input.is_key_pressed(KEY_4):
+		b_tabkey(KEY_4)
 		return
 	
 	
@@ -793,6 +750,10 @@ func _input(ev):
 		return
 	
 	if Input.is_key_pressed(KEY_KP_ENTER) or Input.is_key_pressed(KEY_SPACE) or Input.is_key_pressed(KEY_ENTER):
+		
+		if not "tasks" in content_tasks.keys():
+			return
+		
 		if content_tasks["tasks"].ready_task_count > 0:
 			var _content = []
 			for x in taq.task:
@@ -1492,20 +1453,17 @@ func reset_upgrades(reset_type: int, manual: bool):
 		$map/upgrades.own_list_good[x] = false
 	
 	# routine reset; don't reset every upgrade
-	if reset_type == 1:
-		if gv.up["DUNKUS"].active() and gv.up["CHUNKUS"].active():
-			return
 	
 	if reset_type >= 1:
 		for x in gv.stats.up_list["s1"]:
 			reset_upgrade(x, reset_type)
-	
+			
 	if reset_type >= 2:
 		for x in gv.stats.up_list["s2"]:
 			reset_upgrade(x, reset_type)
 
 func reset_upgrade(x: String, reset_type: int):
-	
+	print(x)
 	# make refundable upgrade owned
 	if gv.up[x].refundable and str(reset_type) == gv.up[x].type[1]:
 		
@@ -1557,10 +1515,10 @@ func reset_upgrade(x: String, reset_type: int):
 			var s1first_half := "MUD THYME PEPPER GARLIC TEXAS RYE ANCHOVE COVE GROUNDER GRANDMA GRANDPA GRANDER GRINDER ORE ASSIST I ORE ASSIST C SAND SALT SAALNDT LIGHTER SHOVEL FLANK RIB "
 			
 			if x + " " in s1first_half:
-				if gv.up["CHUNKUS"].refundable or gv.up["CHUNKUS"].have:
+				if gv.up["CHUNKUS"].refundable or gv.up["CHUNKUS"].active():
 					return
 			if x + " " in s1sec_half:
-				if gv.up["DUNKUS"].refundable or gv.up["DUNKUS"].have:
+				if gv.up["DUNKUS"].refundable or gv.up["DUNKUS"].active():
 					return
 	
 	# reset every other upgrade:
@@ -2339,7 +2297,9 @@ func load_tasks(data: Dictionary, keys: Array, pre_beta_4: bool):
 
 
 func _on_Button_pressed() -> void:
-	
+	#print(gv.r[gv.R.consumed_spirit].toString())
+	gv.cac[0].xp.f = Big.new(gv.cac[0].xp.t)
+	gv.cac[0].progress.f = gv.cac[0].progress.t
 	return
 	gv.g["malig"].r.a(1)
 	gv.g["malig"].r.m(2)

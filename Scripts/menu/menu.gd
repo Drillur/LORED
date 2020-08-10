@@ -109,9 +109,10 @@ func init(f: Dictionary) -> void:
 	# animations
 	$ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/animations.pressed = f["animations"]
 	if not f["animations"]:
+		var gnframes = rt.get_node(rt.gnLOREDs).cont["coal"].gnframes
 		for x in gv.g:
-			rt.get_node(rt.gnLOREDs).cont[x].get_node("worker").animation = "ww"
-			rt.get_node(rt.gnLOREDs).cont[x].get_node("worker").playing = true
+			rt.get_node(rt.gnLOREDs).cont[x].get_node(gnframes).animation = "ww"
+			rt.get_node(rt.gnLOREDs).cont[x].get_node(gnframes).playing = true
 	
 	# on_save
 	if true:

@@ -35,20 +35,20 @@ var fps := {
 
 
 
-var gnamount = "h/h/ref/h/v/amount"
-var gntask = "h/h/ref/task"
+var gnamount = "h/h/lored/h/v/amount"
+var gntask = "h/h/lored/task"
 var gntaskf = gntask + "/f"
-var gnfuel = "h/h/ref/fuel/fuel"
+var gnfuel = "h/h/lored/fuel/fuel"
 var gnfuelf = gnfuel + "/f"
-var gnnet = "h/h/ref/h/v/net"
+var gnnet = "h/h/lored/h/v/net"
 
-var gnicon = "h/h/ref/h/icon/Sprite"
-var gnfuelicon = "h/h/ref/fuel/fuel_icon/Sprite"
+var gnicon = "h/h/lored/h/icon/Sprite"
+var gnfuelicon = "h/h/lored/fuel/fuel_icon/Sprite"
 var gnframes = "h/h/animation/AnimatedSprite"
 
-var gnhold = "h/interactables/v/h/hold"
-var gnhalt = "h/interactables/v/h/halt"
-var gnbuy = "h/interactables/v/buy"
+var gnhold = "h/interactables/lored/h/hold"
+var gnhalt = "h/interactables/lored/h/halt"
+var gnbuy = "h/interactables/lored/buy"
 
 
 var frame_set := {}
@@ -78,13 +78,13 @@ func setup(_key: String) -> void:
 func r_setup():
 	
 	# text
-	get_node("h/h/ref/h/v/name").text = gv.g[key].name
+	get_node("h/h/lored/h/v/name").text = gv.g[key].name
 	r_update_halt(gv.g[key].halt)
 	
 	# icons
 	r_update_hold(gv.g[key].hold)
-	get_node("h/h/ref/h/icon/Sprite").texture = gv.sprite[key]
-	get_node("h/h/ref/fuel/fuel_icon/Sprite").texture = gv.sprite["coal"] if "bur " in gv.g[key].type else gv.sprite["jo"]
+	get_node("h/h/lored/h/icon/Sprite").texture = gv.sprite[key]
+	get_node("h/h/lored/fuel/fuel_icon/Sprite").texture = gv.sprite["coal"] if "bur " in gv.g[key].type else gv.sprite["jo"]
 	
 	if key in gv.anim.keys():
 		get_node(gnframes).frames = gv.anim[key]
@@ -94,24 +94,19 @@ func r_setup():
 	# color
 	var fuel_color = get_fuel_color()
 	
-	#get_node("bg").self_modulate = gv.g[key].color
 	get_node("bg2").self_modulate = gv.g[key].color
 	
 	get_node(gnframes).self_modulate = get_faded_color()
-	#get_node("h/h/ref/fuel/fuel").self_modulate = fuel_color
-	get_node("h/h/ref/fuel/fuel/f").self_modulate = fuel_color
-	get_node("h/h/ref/fuel/fuel/f/flair").self_modulate = fuel_color
+	get_node("h/h/lored/fuel/fuel/f").self_modulate = fuel_color
+	get_node("h/h/lored/fuel/fuel/f/flair").self_modulate = fuel_color
 	
 	get_node(gnhold + "/icon").self_modulate = gv.g[key].color
 	get_node(gnhalt + "/text").self_modulate = gv.g[key].color
 	get_node(gnbuy + "/autobuywheel").self_modulate = gv.g[key].color
 	get_node("h/h/animation").self_modulate = gv.g[key].color
 	get_node(gnamount).self_modulate = gv.g[key].color
-	get_node("h/h/ref/task/d").self_modulate = gv.g[key].color
-	#get_node(gnnet).self_modulate = gv.g[key].color
-	#get_node(gntask).self_modulate = gv.g[key].color
-	get_node("h/h/ref/task/f").self_modulate = gv.g[key].color
-	get_node("h/h/ref/task/f/flair").self_modulate = gv.g[key].color
+	get_node("h/h/lored/task/d").self_modulate = gv.g[key].color
+	get_node("h/h/lored/task/f").modulate = gv.g[key].color
 	
 	if key in incomplete_animation_list:
 		anim_complete = false
@@ -475,9 +470,9 @@ func r_wm_tasks(beginning: bool):
 		if gv.menu.option["crits_only"]:
 			if not crit: luck_to_go = false
 		
-		if get_node("h/h/ref/h/v/amount").rect_global_position.y < rt.get_node("m/v/top").rect_global_position.y + rt.get_node("m/v/top").rect_size.y:
+		if get_node("h/h/lored/h/v/amount").rect_global_position.y < rt.get_node("m/v/top").rect_global_position.y + rt.get_node("m/v/top").rect_size.y:
 			luck_to_go = false
-		elif get_node("h/h/ref/h/v/amount").rect_global_position.y > rt.get_node("m/v/bot").rect_global_position.y:
+		elif get_node("h/h/lored/h/v/amount").rect_global_position.y > rt.get_node("m/v/bot").rect_global_position.y:
 			luck_to_go = false
 		
 		if luck_to_go:
@@ -491,8 +486,8 @@ func r_wm_tasks(beginning: bool):
 					output["hi"].text += " (Crit!)"
 			
 			var pos = Vector2(
-				get_node("h/h/ref/h/v/amount").rect_global_position.x + int(rand_range(-10,10)),
-				get_node("h/h/ref/h/v/amount").rect_global_position.y - 15
+				get_node("h/h/lored/h/v/amount").rect_global_position.x + int(rand_range(-10,10)),
+				get_node("h/h/lored/h/v/amount").rect_global_position.y - 15
 			)
 			
 			
@@ -763,7 +758,7 @@ func r_net():
 
 func r_d():
 	
-	get_node("h/h/ref/task/d").text = "+" + gv.g[key].d.t.toString()
+	get_node("h/h/lored/task/d").text = "+" + gv.g[key].d.t.toString()
 
 func r_progress():
 	

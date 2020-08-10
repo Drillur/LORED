@@ -15,6 +15,11 @@ _global_script_classes=[ {
 "path": "res://Scripts/classes/Big.gd"
 }, {
 "base": "Reference",
+"class": "Cacodemon",
+"language": "GDScript",
+"path": "res://Scripts/classes/class_cacodemon.gd"
+}, {
+"base": "Reference",
 "class": "FPS",
 "language": "GDScript",
 "path": "res://Scripts/classes/class_FPS.gd"
@@ -66,6 +71,7 @@ _global_script_classes=[ {
 } ]
 _global_script_class_icons={
 "Big": "",
+"Cacodemon": "",
 "FPS": "",
 "FormatValue": "",
 "GlobalVariables": "",
@@ -82,8 +88,9 @@ _global_script_class_icons={
 
 config/name="LORED"
 run/main_scene="res://Scenes/Root.tscn"
-config/icon="res://Sprites/misc/splash.png"
-config/Version="2.0.1"
+boot_splash/image="res://Sprites/misc/splash.png"
+config/icon="res://Sprites/misc/icon.png"
+config/Version="2.0.4"
 
 [autoload]
 

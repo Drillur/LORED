@@ -5,6 +5,7 @@ extends "res://Scripts/classes/cObject.gd"
 var name: String
 var type: String
 var cost := {}
+var key = 0
 
 
 func cost_check() -> bool:
