@@ -15,8 +15,6 @@ var ready_task_count = 0
 var time_since_last_shake = 0.0
 var last_y := 0.0
 
-func _ready():
-	randomize()
 func _physics_process(delta):
 	
 	shake()
@@ -124,7 +122,7 @@ func _generate_random_task() -> taq.Task:
 	if rall_spike < 5: rall *= 10 # rare task
 	if rall_spike < 0.1: rall *= 100 # spike task
 	
-	if rt.tasks["Horse Doodie"].complete:
+	if rt.quests["Horse Doodie"].complete:
 		rall /= 10
 	rall /= gv.hax_pow
 	
@@ -284,7 +282,7 @@ func _generate_random_task() -> taq.Task:
 				var progression_mod :float= gv.stats.tasks_completed / 10
 				if progression_mod < 1: progression_mod = 1.0
 				if progression_mod > 100: progression_mod = 100.0
-				var quest_mod = 10.0 if rt.tasks["Horse Doodie"].complete else 1.0
+				var quest_mod = 10.0 if rt.quests["Horse Doodie"].complete else 1.0
 				
 				var dink: Big = Big.new(gv.g[b].net(true)[0]).m(progression_mod).m(time).m(quest_mod)
 				if "(Rare)" in name: dink.m(rand_range(1,3))

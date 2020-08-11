@@ -147,6 +147,7 @@ __meta__ = {
 }
 
 [node name="d" type="Label" parent="v/task"]
+visible = false
 self_modulate = Color( 1, 0, 0, 1 )
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -156,6 +157,22 @@ custom_fonts/font = SubResource( 2 )
 custom_colors/font_color = Color( 0.803922, 0.803922, 0.803922, 1 )
 custom_colors/font_color_shadow = Color( 0.235294, 0, 0, 1 )
 text = "+12.3e123"
+align = 2
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="consumed spirits" type="Label" parent="v/task"]
+self_modulate = Color( 1, 0, 0, 1 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = -5.0
+rect_min_size = Vector2( 74, 0 )
+custom_fonts/font = SubResource( 2 )
+custom_colors/font_color = Color( 0.803922, 0.803922, 0.803922, 1 )
+custom_colors/font_color_shadow = Color( 0.235294, 0, 0, 1 )
+text = "12.3e123"
 align = 2
 valign = 1
 __meta__ = {

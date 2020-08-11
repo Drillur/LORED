@@ -140,7 +140,7 @@ func tags(_name: String) -> void:
 
 func desc(step: Dictionary, desc: String) -> String:
 	
-	if not task.name in rt.tasks.keys():
+	if not task.name in rt.quests.keys():
 		if step.size() == 1:
 			for x in step.keys():
 				if " purchased" in x:

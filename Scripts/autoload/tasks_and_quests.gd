@@ -31,6 +31,7 @@ class Task:
 	var effect_loaded := false
 	var color := Color(0,0,0)
 	var total_points := Big.new(0)
+	
 	func _init(nam : String, des : String, rr : Dictionary, r : Dictionary, stepz : Dictionary, _icon : Dictionary, _color: Color):
 		name = nam
 		desc = des
@@ -42,6 +43,13 @@ class Task:
 		color = _color
 		for x in step:
 			total_points.a(step[x].b)
+	
+	func reset():
+		
+		complete = false
+		
+		for s in step:
+			step[s].f = Big.new(0)
 
 
 func new_quest(_quest: Task) -> void:
@@ -53,4 +61,3 @@ func new_quest(_quest: Task) -> void:
 	content = prefabs.TASK.instance()
 	get_node("/root/Root/m/v/bot/h/taq/quest").add_child(content)
 	content.init()
-	

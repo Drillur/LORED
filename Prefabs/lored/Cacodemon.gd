@@ -13,7 +13,7 @@ const level_flash_colors := {
 	5: Color(0, 0, 0, 0),
 }
 
-var src := {
+const src := {
 	ft = preload("res://Prefabs/dtext.tscn"),
 }
 var cont := {}
@@ -21,27 +21,30 @@ var cont := {}
 var fps := {
 	"task": FPS.new(0.01, true),
 	"xp": FPS.new(0.1),
+	"consumed spirits": FPS.new(0.01, false)
 }
 
 var last_d: Big # used to tell how much leveling up boosted d
 
 var key: int
 
-var gnd := "v/task/d"
-var gnProgressBarF := "v/task/f"
-var gnProgressBarT := "v/task"
-var gnProgressTextF := "v/task/text f"
-#var gnProgressTextT := "v/task/text t"
-var gnXpBarF := "v/xp/f"
-var gnXpBarT := "v/xp"
-var gnLevelUp := "level up"
+const gn_consumed_spirits := "v/task/consumed spirits"
+const gnd := "v/task/d"
+const gnProgressBarF := "v/task/f"
+const gnProgressBarT := "v/task"
+const gnProgressTextF := "v/task/text f"
+#const gnProgressTextT := "v/task/text t"
+const gnXpBarF := "v/xp/f"
+const gnXpBarT := "v/xp"
+const gnLevelUp := "level up"
+
 
 
 func _ready():
 	
 	set_physics_process(false)
 	
-	get_node(gnLevelUp).self_modulate = level_flash_colors[4]
+	get_node(gnLevelUp).self_modulate = level_flash_colors[level_flash_colors.size() - 1]
 	
 	hide()
 
@@ -101,6 +104,12 @@ func ref():
 				r_task()
 			"xp":
 				r_xp()
+			"consumed spirits":
+				r_consumed_spirits()
+
+func r_consumed_spirits():
+	
+	get_node(gn_consumed_spirits).text = gv.cac[key].consumed_spirits.toString()
 
 func r_task():
 	
@@ -157,3 +166,6 @@ func activate():
 	gv.cac[key].active = true
 	set_physics_process(true)
 	show()
+	
+	gv.cacodemons += 1
+	gv.increase_cac_cost()

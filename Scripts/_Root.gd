@@ -2,14 +2,13 @@ class_name _root
 extends Node2D
 
 const PLATFORM = "pc" # keep lower-case
+const DEFAULT_KEY_LOREDS := ["stone", "conc", "malig", "water", "lead", "tree", "soil", "steel", "wire", "glass", "tum"]
 
 const SAVE := {
 	MAIN = "user://save.lored",
 	NEW = "user://new_save.lored",
 	OLD = "user://last_save.lored"
 }
-
-var FPS = 0.04
 
 const prefab := {
 	tasks = preload("res://Prefabs/task/tasks.tscn"),
@@ -22,6 +21,9 @@ const prefab := {
 	
 	"progress_texture_limit_break": preload("res://Prefabs/lored/progress_texture_limit_break.tscn"),
 }
+
+
+var FPS = 0.04
 
 
 var content := {}
@@ -41,15 +43,16 @@ var time_fps = 0.0
 
 var menu_window = 0
 
-var gnLOREDs = "m/v/LORED List"
-var gntaq = "m/v/bot/h/taq"
-var gnquest = gntaq + "/quest"
-var gnLB = "m/v/top/h/Limit Break"
-var gnupcon = "m/up_container"
-var gnalert = "misc/tabs/v/upgrades/alert"
+const gnLOREDs = "m/v/LORED List"
+const gntaq = "m/v/bot/h/taq"
+const gnquest = gntaq + "/quest"
+const gnLB = "m/v/top/h/Limit Break"
+const gnupcon = "m/up_container"
+const gnalert = "misc/tabs/v/upgrades/alert"
+const gn_patch = "m/Patch Notes"
 
-# nam : String, des : String, rr : Dictionary, 	r : Dictionary, stepz : Dictionary, ico : Texture
-var tasks := {
+# actually quests*
+var quests := {
 	
 	"Intro!": taq.Task.new(
 		"Intro!",
@@ -328,7 +331,7 @@ var tip := {}
 var task_awaiting := "no"
 
 
-const DEFAULT_KEY_LOREDS := " stone conc malig water lead tree soil steel wire glass tum "
+
 
 var hax = 1 # 1 for normal
 
@@ -463,6 +466,7 @@ func game_start(successful_load: bool) -> void:
 	
 	if not successful_load:
 		gv.g["stone"].r = Big.new(5)
+		get_node("m/Patch Notes").hide()
 	else:
 		for x in gv.g:
 			if gv.g[x].unlocked:
@@ -556,8 +560,8 @@ func game_start(successful_load: bool) -> void:
 		if true:
 			
 			for x in gv.g:
-				if not gv.g[x].active:
-					continue
+				
+				gv.emit_signal("lored_updated", x, "d")
 			
 			get_node(gnLOREDs).r_autobuy()
 		
@@ -583,26 +587,28 @@ func game_start(successful_load: bool) -> void:
 	# hax
 	if true:
 		
-		#unlock_tab("3")
+		if gv.s3_time:
+			unlock_tab("1")
+			unlock_tab("3")
 		pass
 	
 	# tasks
 	if true:
 		
-		if not get_node(gnLOREDs).cont["water"].visible and tasks["A New Leaf"].complete:
+		if not get_node(gnLOREDs).cont["water"].visible and quests["A New Leaf"].complete:
 			get_node(gnLOREDs).cont["water"].show()
 			get_node(gnLOREDs).cont["seed"].show()
 			get_node(gnLOREDs).cont["tree"].show()
 		
-		if tasks["Spread"].complete and not tasks["Consume"].complete:
+		if quests["Spread"].complete and not quests["Consume"].complete:
 			if gv.g["malig"].r.isLessThan(10) and not gv.g["tar"].active:
 				gv.g["malig"].r = Big.new(10)
 		
-		for x in tasks:
-			if tasks[x].complete:
+		for x in quests:
+			if quests[x].complete:
 				continue
 			if taq.cur_quest == "":
-				taq.new_quest(tasks[x])
+				taq.new_quest(quests[x])
 				break
 		
 		if taq.cur_quest == "":
@@ -622,7 +628,7 @@ func _ready_define_loreds(reset_type : int):
 			if reset_type < int(gv.g[x].type[1]): continue
 		
 		
-		if " " + x + " " in DEFAULT_KEY_LOREDS:
+		if x in DEFAULT_KEY_LOREDS:
 			gv.g[x].key_lored = true
 		
 		gv.g[x].level = 1
@@ -1129,26 +1135,26 @@ func w_distribute_upgrade_buff(benefactor : String) -> void:
 func w_task_effects(which := []) -> void:
 	
 	if which == []:
-		for x in tasks:
+		for x in quests:
 			which.append(x)
 	
 	for x in which:
 		
-		if not tasks[x].complete:
+		if not quests[x].complete:
 			continue
-		if tasks[x].effect_loaded:
+		if quests[x].effect_loaded:
 			print("effect loaded", x)
 			continue
-		tasks[x].effect_loaded = true
+		quests[x].effect_loaded = true
 		
-		for v in tasks[x].reward:
+		for v in quests[x].reward:
 			if not "New LORED: " in v:
 				continue
 			var key = w_name_to_short(v.split("New LORED: ")[1])
 			gv.g[key].unlocked = true
 			get_node(gnLOREDs).cont[key].show()
 		
-		if "Max tasks +1" in tasks[x].reward.keys():
+		if "Max tasks +1" in quests[x].reward.keys():
 			taq.max_tasks += 1
 		
 		match x:
@@ -1172,7 +1178,7 @@ func w_task_effects(which := []) -> void:
 			"A New Leaf":
 				unlock_tab("1")
 				unlock_tab("2")
-				get_node("misc/menu").w_display_run(tasks[x].complete)
+				get_node("misc/menu").w_display_run(quests[x].complete)
 			"Welcome to LORED":
 				unlock_tab("s1n")
 			"Consume":
@@ -1244,7 +1250,8 @@ func activate_lb_effects():
 		if "1" in gv.overcharge_list:
 			gv.overcharge_list.erase("1")
 			gv.overcharge_list.erase("2")
-			get_node(gnLB).hide()
+		
+		get_node(gnLB).hide()
 
 
 # reflective funcs
@@ -1348,6 +1355,7 @@ func reset(reset_type: int, manual := true) -> void:
 	# did not re-write anything below this line for this new reset func
 	reset_loreds(reset_type)
 	reset_tasks(reset_type)
+	reset_limit_break(reset_type)
 	
 	# ref
 	if true:
@@ -1370,14 +1378,16 @@ func reset(reset_type: int, manual := true) -> void:
 				if not gv.menu.tabs_unlocked["s2n"]:
 					unlock_tab("s2n", true)
 	
-	gv.up["Limit Break"].sync()
-	
 	if manual:
 		b_tabkey(KEY_1)
 	
 	gv.menu.f = "ye"
 	
 	get_node(gnupcon).sync()
+	
+	if reset_type == 0:
+		get_tree().reload_current_scene()
+		
 
 func reset_stats(reset_type: int):
 	
@@ -1434,6 +1444,7 @@ func reset_upgrades(reset_type: int, manual: bool):
 			
 			gv.up[x].have = false
 			gv.up[x].active = true
+			
 			gv.up[x].sync()
 			
 			if x == "I DRINK YOUR MILKSHAKE":
@@ -1441,8 +1452,11 @@ func reset_upgrades(reset_type: int, manual: bool):
 			
 			get_node(gnupcon).cont[x].r_update()
 		
+		# sync again just in case?
+		for x in gv.up:
+			gv.up[x].sync()
 		
-		gv.overcharge_list.clear()
+		# upgrade tabs are locked in the reset func
 		
 		return
 	
@@ -1463,7 +1477,7 @@ func reset_upgrades(reset_type: int, manual: bool):
 			reset_upgrade(x, reset_type)
 
 func reset_upgrade(x: String, reset_type: int):
-	print(x)
+	
 	# make refundable upgrade owned
 	if gv.up[x].refundable and str(reset_type) == gv.up[x].type[1]:
 		
@@ -1540,7 +1554,13 @@ func reset_upgrade(x: String, reset_type: int):
 func reset_resources(reset_type: int):
 	
 	if reset_type == 0:
-		return # resources not handled here i guess
+		
+		for x in gv.g:
+			
+			gv.g[x].r = Big.new(0)
+			gv.emit_signal("lored_updated", x, "amount")
+		
+		return
 	
 	
 	if reset_type >= 1 and not gv.up["CONDUCT"].active():
@@ -1635,7 +1655,6 @@ func reset_loreds(reset_type: int):
 			
 			gv.g[x].sync()
 			
-			gv.emit_signal("lored_updated", x, "amount")
 			gv.emit_signal("lored_updated", x, "net")
 		
 		get_node(gnLOREDs).r_autobuy()
@@ -1653,11 +1672,31 @@ func reset_loreds(reset_type: int):
 
 func reset_tasks(reset_type: int):
 	
+	if reset_type == 0:
+		
+		for t in quests:
+			quests[t].reset()
+		
+		
+		var list = []
+		for x in taq.task:
+			list.append(x)
+		
+		for x in list:
+			content_tasks["tasks"].content[x].kill_yourself()
+		
+		taq.max_tasks = 1
+		
+		content_tasks["tasks"].ready_task_count = 0
+		content_tasks["tasks"].queue_free()
+		content_tasks.erase("tasks")
+		
+		return
+	
 	var list = []
 	for x in taq.task:
-		if reset_type > 0:
-			if int(gv.g[taq.task[x].icon.key].type[1]) > reset_type:
-				continue
+		if int(gv.g[taq.task[x].icon.key].type[1]) > reset_type:
+			continue
 		if "{Spike}" in taq.task[x].name:
 			continue
 		list.append(x)
@@ -1666,9 +1705,20 @@ func reset_tasks(reset_type: int):
 		content_tasks["tasks"].content[x].kill_yourself()
 		var bla = content_tasks["tasks"].ready_task_count
 		content_tasks["tasks"].ready_task_count = max(0, bla - 1)
-	if reset_type > 0:
-		content_tasks["tasks"].hit_max_tasks()
+	
+	content_tasks["tasks"].hit_max_tasks()
 
+func reset_limit_break(reset_type: int):
+	
+	if reset_type == 0:
+		
+		gv.reset_lb()
+		
+		activate_lb_effects()
+		
+		return
+	
+	gv.up["Limit Break"].sync()
 
 
 
@@ -1787,13 +1837,10 @@ func unlock_tab(which: String, unlock := true):
 	if "s" in which:
 		get_node(gnupcon).get_node("top/" + which).visible = unlock
 	
-	if which == "s1n" and gv.menu.tabs_unlocked[which]:
-		get_node("misc/tabs/v/upgrades").show() 
+	if which == "s1n":
+		get_node("misc/tabs/v/upgrades").visible = unlock
 	elif which.length() == 1:
 		get_node("misc/tabs/v/s" + which).visible = gv.menu.tabs_unlocked[which]
-	
-	if which == "s1n" and unlock:
-		get_node("misc/tabs/v/upgrades").show()
 
 
 func e_save(type := "normal", path := SAVE.MAIN):
@@ -1838,8 +1885,8 @@ func e_save(type := "normal", path := SAVE.MAIN):
 	# tasks
 	if true:
 		
-		for x in tasks:
-			save.data["task " + x + " complete"] = tasks[x].complete
+		for x in quests:
+			save.data["task " + x + " complete"] = quests[x].complete
 		
 		if taq.cur_quest != "":
 			
@@ -2034,6 +2081,8 @@ func e_load(path := SAVE.MAIN) -> bool:
 		
 		break
 	
+	get_node(gn_patch).setup(save.game_version)
+	
 	if not "2" in save.game_version[0]:
 		print("Save from 1.2c or earlier--what the heck, have you really not played since then? Welcome back, jeez!")
 		return false
@@ -2069,10 +2118,10 @@ func e_load(path := SAVE.MAIN) -> bool:
 	# fin & misc
 	if true:
 		
-		if tasks["Pretty Wet"].complete:
+		if quests["Pretty Wet"].complete:
 			var butt = ["Intro!", "More Intro!", "Welcome to LORED", "Upgrades!", "Tasks!"]
 			for x in butt:
-				tasks[x].complete = true
+				quests[x].complete = true
 	
 	return true
 
@@ -2243,14 +2292,14 @@ func load_loreds(data: Dictionary, keys: Array, pre_beta_4: bool):
 
 func load_tasks(data: Dictionary, keys: Array, pre_beta_4: bool):
 	
-	for x in tasks:
+	for x in quests:
 		if "task " + x + " complete" in keys:
-			tasks[x].complete = data["task " + x + " complete"]
+			quests[x].complete = data["task " + x + " complete"]
 	
 	if "load quest" in keys:
 		if data["load quest"]:
-			if data["on quest"] in tasks.keys():
-				taq.new_quest(tasks[data["on quest"]])
+			if data["on quest"] in quests.keys():
+				taq.new_quest(quests[data["on quest"]])
 				for x in taq.quest.step:
 					if not "quest step " + x + " f" in keys:
 						continue

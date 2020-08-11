@@ -70,7 +70,7 @@ func _call(source : String, color := Color(1,1,1)) -> void:
 			content["taq"] = src.taq_tip.instance()
 			add_child(content["taq"])
 			
-			if f in rt.tasks.keys():
+			if f in rt.quests.keys():
 				content["taq"].init(taq.quest)
 				if taq.quest.icon.key in gv.g.keys():
 					$bg.self_modulate = gv.g[taq.quest.icon.key].color

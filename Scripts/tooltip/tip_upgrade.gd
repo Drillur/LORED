@@ -8,8 +8,6 @@ var content := {}
 
 func init(key : String) -> int:
 	
-	randomize()
-	
 	$name.text = key
 	if not gv.up[key].requires == "":
 		if gv.up[gv.up[key].requires].have:

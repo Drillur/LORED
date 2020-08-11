@@ -344,15 +344,14 @@ func _on_b_save_now_pressed():
 func _on_delete_pressed():
 	
 	rt.reset(0)
-	rt.get_node("misc/task").w_complete_reset()
 	rt.b_tabkey(KEY_ESCAPE)
 	rt.b_tabkey(KEY_1)
 	rt.save_fps = 0.0
 	
 	var save_file = File.new()
-	if save_file.file_exists(rt.SAVE_LOC):
+	if save_file.file_exists(rt.SAVE.MAIN):
 		var dir = Directory.new()
-		dir.remove(rt.SAVE_LOC)
+		dir.remove(rt.SAVE.MAIN)
 
 func hide_cascading_save_buttons()->void:
 	

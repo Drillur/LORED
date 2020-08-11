@@ -11,6 +11,8 @@ var crit := false
 var critcrit := false
 var anim_complete := true
 
+var first_sec := 0.0
+
 var key = "copo"
 
 var slow_fps := 1.0
@@ -282,6 +284,9 @@ func _physics_process(delta: float) -> void:
 	wm_lored(gv.g[key])
 	
 	fps()
+	
+	if first_sec < 1:
+		first_sec += delta
 
 
 func autobuy():
@@ -716,10 +721,11 @@ func ref(x: String):
 	# funcs that should only be done when the LORED is visible
 	
 	# catches
-	if not visible:
-		return
-	if not rt.get_node(rt.gnLOREDs + "/sc/v/s" + gv.g[key].type[1]).visible:
-		return
+	if first_sec >= 1:
+		if not visible:
+			return
+		if not rt.get_node(rt.gnLOREDs + "/sc/v/s" + gv.g[key].type[1]).visible:
+			return
 	
 	
 	match x:
@@ -947,7 +953,7 @@ func buy(manual := false):
 
 func b_ubu_s2n_check() -> bool:
 	
-	if not rt.tasks["The Heart of Things"].complete:
+	if not rt.quests["The Heart of Things"].complete:
 		return false
 	
 	for x in ["soil", "seed", "water", "tree", "sand", "draw", "axe", "liq", "steel", "wire", "glass", "hard", "wood", "humus"]:

@@ -4,12 +4,64 @@ extends Node
 # invoke with gv
 
 var hax_pow := 1.0 # 1.0 for normal
+const s3_time := true
+
+
+const PATCH_NOTES := {
+	
+	# [0] is if there are more changes made than can be listed (>= 6)
+	# [0] determines if the /more Label node in Patch Version.tscn is visible
+	
+	"2.1.1": [
+		false,
+		"Fixed a bug where some LORED UI elements would not update correctly.",
+		"Hard resetting will now correctly correctly reset everything.",
+	],
+	"2.1.0": [
+		false,
+		"Added this patch notes thingy!",
+		"Hard resetting will now correctly reset everything.",
+	],
+	"2.0.4": [
+		false,
+		"LORED autobuyers will now not purchase if any of their ingredient LOREDs are on hold.",
+		"Updated the game icon to match the Itch.io thumbnail.",
+	],
+	"2.0.3": [
+		false,
+		"Fixed a bug where Metastasizing with both DUNKUS and CHUNKUS owned and active would not turn pending Malignant upgrades into owned upgrades.",
+	],
+	"2.0.2": [
+		false,
+		"Fixed bugs that were preventing the game from running.",
+	],
+	"2.0.1": [
+		false,
+		"Saves from 2.0 BETA (3) and earlier (until 1.x) will now load properly.",
+		"The upgrade menu button will now correctly only appear if the Welcome to LORED quest is complete.",
+		"The LORED Discord link has been shifted up in the menu.",
+		"Shadows on the Quest element and the Menu button have been reduced to not overlap the red line by them.",
+	],
+	"2.0.0": [
+		true,
+		"Limit Break has been re-worked.",
+		"LORED and upgrade UI have been re-designed.",
+		"Many performance improvements have been made.",
+		"Base resolution increased from 800x600 to 1024x768.",
+		"Water demands have been reduced.",
+	],
+}
+
 
 signal limit_break_leveled_up(which) # here -> Limit Break.gd
 var lb_xp = Ob.Num.new(1000)
 var lb_d = Big.new(1)
 var overcharge_list := []
 
+func reset_lb():
+	lb_xp = Ob.Num.new(1000)
+	lb_d = Big.new(1)
+	overcharge_list.clear()
 func lb_xp_check():
 	
 	if lb_xp.f.isLessThan(lb_xp.t):
@@ -43,7 +95,7 @@ func increase_lb_xp(value, type):
 
 # signals are emitted in multiple places but may only be received in one place
 
-signal lored_updated(_lored, _updated_stat) # lored.gd -> lored_master.gd
+signal lored_updated(_lored, _updated_stat) # LORED.gd -> LORED List.gd
 signal amount_updated(key)
 signal net_updated(net)
 
@@ -386,10 +438,32 @@ enum R {
 var r := []
 
 signal cac_leveled_up(key) # class_cacodemon.gd -> Cacodemons.gd
-signal cac_xp_gained(key) # class_cacodemon.gd -> Cacodemons.gd
+signal cac_fps(fps_key, key) # class_cacodemon.gd -> Cacodemons.gd
+var cac_cost := {
+	"embryo": Big.new(1),
+	"blood": Big.new(1000),
+	"bone": Big.new(100),
+}
+
+func increase_cac_cost():
+	
+	cac_cost["blood"].m(3)
+	cac_cost["bone"].m(3)
+	
+	if cac_cost["embryo"].isLessThan(10):
+		cac_cost["embryo"].a(cacodemons - 1)
+	else:
+		cac_cost["embryo"].m(1.1)
+	
+	if cac_cost["embryo"].isLessThan(100):
+		cac_cost["embryo"].roundDown()
+
 var cac := []
+var cacodemons = 0
 
 func _ready():
+	
+	randomize()
 	
 	for x in R:
 		r.append(Big.new(0))

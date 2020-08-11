@@ -23,7 +23,6 @@ func _pressed():
 					return
 				get_parent().get_node("t").text = "Save deleted! Game reset!"
 				rt.reset(0)
-				rt.get_node("misc/task").w_complete_reset()
 				rt.b_tabkey(KEY_ESCAPE)
 				for x in gv.g:
 					if x in ["coal", "stone"]:

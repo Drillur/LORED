@@ -9,6 +9,7 @@
 [ext_resource path="res://Fonts/Roboto-MediumItalic.ttf" type="DynamicFontData" id=7]
 [ext_resource path="res://Prefabs/lored/Cacodemons.tscn" type="PackedScene" id=8]
 [ext_resource path="res://Sprites/misc/hold_false.png" type="Texture" id=9]
+[ext_resource path="res://Styles/Labels/name.tres" type="DynamicFont" id=10]
 [ext_resource path="res://Styles/Labels/halt_text.tres" type="DynamicFont" id=12]
 [ext_resource path="res://Fonts/Roboto-Black.ttf" type="DynamicFontData" id=13]
 [ext_resource path="res://Styles/Labels/Num.tres" type="DynamicFont" id=14]
@@ -83,12 +84,6 @@ expand_margin_right = 2.0
 expand_margin_top = 2.0
 expand_margin_bottom = 2.0
 shadow_color = Color( 0, 0, 0, 0.294118 )
-
-[sub_resource type="DynamicFont" id=6]
-size = 14
-outline_size = 1
-outline_color = Color( 0, 0, 0, 1 )
-font_data = ExtResource( 2 )
 
 [sub_resource type="DynamicFont" id=7]
 size = 14
@@ -246,7 +241,7 @@ modulate = Color( 0.806152, 0.806152, 0.806152, 1 )
 margin_right = 80.0
 margin_bottom = 17.0
 rect_min_size = Vector2( 80, 0 )
-custom_fonts/font = SubResource( 6 )
+custom_fonts/font = ExtResource( 10 )
 text = "Copper Ore"
 
 [node name="amount" type="Label" parent="h/h/lored/h/v"]
@@ -475,7 +470,7 @@ visible = false
 position = Vector2( 33, 14 )
 scale = Vector2( 0.6, 0.6 )
 frames = ExtResource( 15 )
-frame = 2
+frame = 3
 playing = true
 
 [node name="cac" type="VBoxContainer" parent="h/interactables"]
@@ -501,7 +496,7 @@ visible = false
 position = Vector2( 33, 14 )
 scale = Vector2( 0.6, 0.6 )
 frames = ExtResource( 15 )
-frame = 1
+frame = 2
 playing = true
 
 [node name="lv" type="MarginContainer" parent="."]

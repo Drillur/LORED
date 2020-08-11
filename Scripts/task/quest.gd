@@ -88,7 +88,7 @@ func b_end_task() -> void:
 	rt.get_node("global_tip")._call("no")
 	
 	$done.hide()
-	rt.tasks[taq.quest.name].complete = true
+	rt.quests[taq.quest.name].complete = true
 	
 	randomize()
 	

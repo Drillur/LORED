@@ -24,10 +24,10 @@ func quest_ended() -> void:
 	
 	taq.cur_quest = ""
 	
-	for x in rt.tasks:
-		if rt.tasks[x].complete:
+	for x in rt.quests:
+		if rt.quests[x].complete:
 			continue
-		taq.new_quest(rt.tasks[x])
+		taq.new_quest(rt.quests[x])
 		break
 	
 	if taq.cur_quest == "":

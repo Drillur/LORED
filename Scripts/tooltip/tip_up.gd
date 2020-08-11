@@ -21,8 +21,6 @@ var src := {
 
 func init(_key: String) -> void:
 	
-	randomize()
-	
 	key = _key
 	
 	required_upgrades_purchased = requirements()
