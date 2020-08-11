@@ -90,7 +90,7 @@ config/name="LORED"
 run/main_scene="res://Scenes/Root.tscn"
 boot_splash/image="res://Sprites/misc/splash.png"
 config/icon="res://Sprites/misc/icon.png"
-config/Version="2.1.1"
+config/Version="2.1.3"
 
 [autoload]
 

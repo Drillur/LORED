@@ -470,7 +470,7 @@ visible = false
 position = Vector2( 33, 14 )
 scale = Vector2( 0.6, 0.6 )
 frames = ExtResource( 15 )
-frame = 3
+frame = 13
 playing = true
 
 [node name="cac" type="VBoxContainer" parent="h/interactables"]
@@ -496,7 +496,7 @@ visible = false
 position = Vector2( 33, 14 )
 scale = Vector2( 0.6, 0.6 )
 frames = ExtResource( 15 )
-frame = 2
+frame = 12
 playing = true
 
 [node name="lv" type="MarginContainer" parent="."]

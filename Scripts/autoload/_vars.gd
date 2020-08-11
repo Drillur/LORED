@@ -12,6 +12,15 @@ const PATCH_NOTES := {
 	# [0] is if there are more changes made than can be listed (>= 6)
 	# [0] determines if the /more Label node in Patch Version.tscn is visible
 	
+	"2.1.3": [
+		false,
+		"Definitely fixed the hard reset feature.",
+	],
+	"2.1.2": [
+		false,
+		"Once again, permanently fixed hard resetting so that it will always and forever work.",
+		"Removed the option to \"increase the FPS of every element by 10x\". Better performance options will come in the future.",
+	],
 	"2.1.1": [
 		false,
 		"Fixed a bug where some LORED UI elements would not update correctly.",

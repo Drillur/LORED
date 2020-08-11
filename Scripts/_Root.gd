@@ -364,7 +364,6 @@ func _ready():
 			gv.menu.option["im_ss_show_hint"] = true
 			gv.menu.option["task auto"] = false
 			gv.menu.option["performance"] = true
-			gv.menu.option["tank_my_pc"] = false
 			
 			OS.set_low_processor_usage_mode(true)
 		
@@ -605,11 +604,18 @@ func game_start(successful_load: bool) -> void:
 				gv.g["malig"].r = Big.new(10)
 		
 		for x in quests:
-			if quests[x].complete:
-				continue
-			if taq.cur_quest == "":
-				taq.new_quest(quests[x])
+			
+			if taq.cur_quest != "":
 				break
+			
+			if quests[x].complete:
+				print(x, " complete")
+				continue
+			
+			taq.new_quest(quests[x])
+			print("visible")
+			get_node(gnquest).show()
+			break
 		
 		if taq.cur_quest == "":
 			get_node(gnquest).hide()
@@ -1682,10 +1688,14 @@ func reset_tasks(reset_type: int):
 		for x in taq.task:
 			list.append(x)
 		
+		taq.max_tasks = 1
+		taq.cur_quest = ""
+		
+		if not "tasks" in content_tasks.keys():
+			return
+		
 		for x in list:
 			content_tasks["tasks"].content[x].kill_yourself()
-		
-		taq.max_tasks = 1
 		
 		content_tasks["tasks"].ready_task_count = 0
 		content_tasks["tasks"].queue_free()
@@ -2264,10 +2274,6 @@ func load_loreds(data: Dictionary, keys: Array, pre_beta_4: bool):
 		
 		if gv.menu.option["on_save_halt"] and "g" + x + " halt" in keys: gv.g[x].halt = data["g" + x + " halt"]
 		if gv.menu.option["on_save_hold"] and "g" + x + " hold" in keys: gv.g[x].hold = data["g" + x + " hold"]
-		
-		if gv.menu.option["tank_my_pc"]:
-			for v in get_node(gnLOREDs).cont[x].fps:
-				get_node(gnLOREDs).cont[x].fps[v]["t"] *= 0.1
 		
 		gv.g[x].task = data["g" + x + " task"]
 		

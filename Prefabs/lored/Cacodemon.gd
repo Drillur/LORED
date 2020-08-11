@@ -53,7 +53,8 @@ func setup(_key: int):
 	
 	key = _key
 	
-	last_d = gv.cac[key].consumed_spirit_gain(gv.cac[key].d.t)
+	last_d = gv.cac[key].consumed_spirit_gain()
+	get_node(gnProgressBarF).modulate = gv.cac[key].color
 	
 	sync()
 
@@ -61,7 +62,7 @@ func sync():
 	
 	# called on boot and when Cacodemon levels up
 	
-	get_node(gnd).text = "+" + gv.cac[key].consumed_spirit_gain(gv.cac[key].d.t).toString()
+	get_node(gnd).text = "+" + gv.cac[key].consumed_spirit_gain().toString()
 	#get_node(gnProgressTextT).text = fval.f(gv.cac[key].progress.t)
 	
 	
@@ -128,7 +129,7 @@ func level_up():
 	# amount improved! # flying texts
 	if true:
 		
-		var oom = Big.new(gv.cac[key].consumed_spirit_gain(gv.cac[key].d.t)).d(last_d)
+		var oom = Big.new(gv.cac[key].consumed_spirit_gain()).d(last_d)
 		
 		var pos = Vector2(
 			rect_global_position.x,
@@ -145,7 +146,7 @@ func level_up():
 		
 		cont[_key].init(false, 0, "x" + oom.toString() + "!", gv.sprite["unknown"], Color(1, 0, 0, 0.8))
 		
-		last_d = gv.cac[key].consumed_spirit_gain(gv.cac[key].d.t)
+		last_d = gv.cac[key].consumed_spirit_gain()
 	
 	# flash gold!
 	for f in 6:
@@ -169,3 +170,11 @@ func activate():
 	
 	gv.cacodemons += 1
 	gv.increase_cac_cost()
+
+
+func _on_mouse_exited() -> void:
+	rt.get_node("global_tip")._call("no")
+func _on_back_mouse_entered() -> void:
+	rt.get_node("global_tip")._call("cac " + str(key))
+
+

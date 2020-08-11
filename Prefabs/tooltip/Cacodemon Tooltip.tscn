@@ -1,14 +1,15 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://Sprites/resources/carc.png" type="Texture" id=1]
 [ext_resource path="res://Fonts/Roboto-BlackItalic.ttf" type="DynamicFontData" id=2]
 [ext_resource path="res://Fonts/Roboto-Medium.ttf" type="DynamicFontData" id=3]
 [ext_resource path="res://Styles/Labels/Button.tres" type="DynamicFont" id=4]
+[ext_resource path="res://Prefabs/tooltip/Cacodemon Tooltip.gd" type="Script" id=5]
 
 [sub_resource type="StyleBoxFlat" id=5]
 bg_color = Color( 1, 1, 1, 0.0509804 )
-expand_margin_left = 10.0
-expand_margin_right = 10.0
+expand_margin_left = 8.0
+expand_margin_right = 8.0
 expand_margin_top = 5.0
 expand_margin_bottom = 5.0
 
@@ -27,13 +28,32 @@ outline_color = Color( 0, 0, 0, 1 )
 extra_spacing_top = -2
 font_data = ExtResource( 3 )
 
+[sub_resource type="StyleBoxFlat" id=6]
+bg_color = Color( 0.14902, 0.14902, 0.14902, 1 )
+shadow_size = 2
+
+[sub_resource type="StyleBoxFlat" id=7]
+bg_color = Color( 0.411765, 0.411765, 0.411765, 1 )
+
+[sub_resource type="StyleBoxFlat" id=8]
+bg_color = Color( 1, 1, 1, 1 )
+
+[sub_resource type="DynamicFont" id=9]
+size = 11
+outline_size = 2
+outline_color = Color( 0, 0, 0, 1 )
+extra_spacing_top = -1
+extra_spacing_bottom = -1
+font_data = ExtResource( 3 )
+
 [node name="Cacodemon Tooltip" type="MarginContainer"]
-margin_right = 151.0
-margin_bottom = 66.0
+margin_right = 209.0
+margin_bottom = 139.0
 custom_constants/margin_right = 10
 custom_constants/margin_top = 10
 custom_constants/margin_left = 10
 custom_constants/margin_bottom = 10
+script = ExtResource( 5 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -41,12 +61,12 @@ __meta__ = {
 [node name="v" type="VBoxContainer" parent="."]
 margin_left = 10.0
 margin_top = 10.0
-margin_right = 213.0
-margin_bottom = 99.0
+margin_right = 199.0
+margin_bottom = 129.0
 custom_constants/separation = 10
 
 [node name="title" type="MarginContainer" parent="v"]
-margin_right = 203.0
+margin_right = 189.0
 margin_bottom = 46.0
 custom_constants/margin_top = 5
 custom_constants/margin_bottom = 5
@@ -56,13 +76,13 @@ __meta__ = {
 
 [node name="bg" type="Panel" parent="v/title"]
 margin_top = 5.0
-margin_right = 203.0
+margin_right = 189.0
 margin_bottom = 41.0
 custom_styles/panel = SubResource( 5 )
 
 [node name="h" type="HBoxContainer" parent="v/title"]
 margin_top = 5.0
-margin_right = 203.0
+margin_right = 189.0
 margin_bottom = 41.0
 
 [node name="icon" type="Panel" parent="v/title/h"]
@@ -78,18 +98,18 @@ texture = ExtResource( 1 )
 
 [node name="v" type="VBoxContainer" parent="v/title/h"]
 margin_left = 40.0
-margin_right = 203.0
+margin_right = 148.0
 margin_bottom = 36.0
 alignment = 1
 
 [node name="name" type="Label" parent="v/title/h/v"]
-self_modulate = Color( 1, 0.494118, 0, 1 )
-margin_right = 163.0
+self_modulate = Color( 0.717647, 0.941176, 0.92549, 1 )
+margin_right = 108.0
 margin_bottom = 19.0
 size_flags_horizontal = 3
 custom_fonts/font = SubResource( 3 )
 custom_colors/font_color = Color( 0.8, 0.8, 0.8, 1 )
-text = "Cacodemon Torxxakan"
+text = "Cacodemon Ab"
 valign = 1
 
 [node name="level" type="Label" parent="v/title/h/v"]
@@ -103,21 +123,97 @@ text = "Level 5"
 
 [node name="consumed spirits" type="VBoxContainer" parent="v"]
 margin_top = 56.0
-margin_right = 203.0
+margin_right = 189.0
 margin_bottom = 89.0
 
 [node name="d" type="Label" parent="v/consumed spirits"]
 self_modulate = Color( 1, 0, 0, 1 )
-margin_right = 203.0
+margin_right = 189.0
 margin_bottom = 16.0
 custom_fonts/font = ExtResource( 4 )
 custom_colors/font_color = Color( 0.797852, 0.797852, 0.797852, 1 )
+custom_colors/font_color_shadow = Color( 0.235294, 0, 0, 1 )
 text = "+10"
 
 [node name="flair" type="Label" parent="v/consumed spirits"]
 margin_top = 20.0
-margin_right = 95.0
+margin_right = 189.0
 margin_bottom = 33.0
 size_flags_horizontal = 0
 custom_fonts/font = SubResource( 4 )
-text = "Consumed Spirits"
+custom_colors/font_color = Color( 0.800781, 0.800781, 0.800781, 1 )
+text = "Consumed Spirits per consumption"
+
+[node name="xp" type="Panel" parent="v"]
+margin_top = 99.0
+margin_right = 189.0
+margin_bottom = 119.0
+rect_min_size = Vector2( 68, 20 )
+mouse_filter = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_styles/panel = SubResource( 6 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="f" type="Panel" parent="v/xp"]
+modulate = Color( 0.827451, 0.117647, 0.866667, 1 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = -187.0
+rect_min_size = Vector2( 2, 0 )
+mouse_filter = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+custom_styles/panel = SubResource( 7 )
+__meta__ = {
+"_edit_group_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="flair" type="Panel" parent="v/xp/f"]
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -2.0
+rect_min_size = Vector2( 2, 0 )
+mouse_filter = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+custom_styles/panel = SubResource( 8 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="text f" type="Label" parent="v/xp"]
+self_modulate = Color( 0.827451, 0.117647, 0.866667, 1 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 5.0
+rect_min_size = Vector2( 55, 0 )
+size_flags_horizontal = 6
+custom_fonts/font = SubResource( 9 )
+custom_colors/font_color = Color( 0.803922, 0.803922, 0.803922, 1 )
+text = "9,998"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="text t" type="Label" parent="v/xp"]
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -100.0
+margin_right = -5.0
+rect_min_size = Vector2( 55, 0 )
+size_flags_horizontal = 6
+custom_fonts/font = SubResource( 9 )
+custom_colors/font_color = Color( 0.804688, 0.804688, 0.804688, 1 )
+text = "9,999"
+align = 2
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}

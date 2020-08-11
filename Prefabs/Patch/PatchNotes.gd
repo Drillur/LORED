@@ -41,6 +41,10 @@ func setup(version: String):
 	
 	for p in gv.PATCH_NOTES:
 		
+		# makes sure that this loop doesn't take too much time or performance
+		if display.size() == 10:
+			break
+		
 		var p_versions = p.split(".")
 		
 		# example:

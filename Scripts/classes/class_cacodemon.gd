@@ -10,6 +10,7 @@ var output_mod := Big.new(1)
 var inhand := Big.new(1)
 var xp := Num.new(4)
 var xp_gain := Num.new(1)
+var color: Color
 
 var consumed_spirits := Big.new(0)
 
@@ -26,6 +27,7 @@ func _init(_key: int) -> void:
 	setup()
 	
 	name = get_name()
+	type = get_type() # color gets set here, too
 
 
 func setup():
@@ -59,7 +61,7 @@ func work():
 		
 	
 	
-func consumed_spirit_gain(base: Big) -> Big:
+func consumed_spirit_gain(base: Big = d.t) -> Big:
 	
 	var gain: Big = Big.new(log(base.mantissa) / log(10))#Big.new(base).d(100)
 	
@@ -208,3 +210,24 @@ func get_name() -> String:
 		name = name.replace("aaa", triple + with + triple)
 	
 	return name
+
+func get_type() -> String:
+	
+	var roll = int(rand_range(0, 5))
+	
+	match roll:
+		0:
+			color = Color(0.7184, 0.857422, 0.395218)
+			return "Wendigo"
+		1:
+			color = Color(1, 0.494118, 0)
+			return "Cacodemon"
+		2:
+			color = Color(1, 0.644531, 0.715347)
+			return "Devil"
+		3:
+			color = Color(0.717647, 0.941176, 0.92549)
+			return "Barghest"
+		_:
+			color = Color(0.636784, 0.590706, 0.927734)
+			return "Dybbuk"

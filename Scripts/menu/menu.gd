@@ -96,9 +96,6 @@ func init(f: Dictionary) -> void:
 	else:
 		$ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/perf.hide()
 	
-	# tank_my_pc // Increase FPS
-	$ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/tank_my_pc.pressed = f["tank_my_pc"]
-	
 	# flying_numbers
 	$ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/flying_numbers.pressed = f["flying_numbers"]
 	$ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/crits_only.visible = f["flying_numbers"]
@@ -298,15 +295,6 @@ func b_option_pressed(option: String, node) -> void:
 	match option:
 		"tooltip_autobuyer":
 			get_node("ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/tooltips/CenterContainer/VBoxContainer/cost only").visible = not node.pressed
-		"tank_my_pc":
-			if node.pressed:
-				for x in gv.g:
-					for v in rt.get_node(rt.gnLOREDs).cont[x].fps:
-						rt.get_node(rt.gnLOREDs).cont[x].fps[v].t *= 0.1
-			else:
-				for x in gv.g:
-					for v in rt.get_node(rt.gnLOREDs).cont[x].fps:
-						rt.get_node(rt.gnLOREDs).cont[x].fps[v].t *= 10
 		"performance":
 			if rt.PLATFORM != "browser":
 				OS.set_low_processor_usage_mode(node.pressed)
