@@ -5,13 +5,24 @@ extends Node
 
 var hax_pow := 1.0 # 1.0 for normal
 const s3_time := true
-
+const DEFAULT_KEY_LOREDS := ["stone", "conc", "malig", "water", "lead", "tree", "soil", "steel", "wire", "glass", "tum", "wood"]
 
 const PATCH_NOTES := {
 	
-	# [0] is if there are more changes made than can be listed (>= 6)
+	# [0] is if there are more changes made than can be listed (> 5)
 	# [0] determines if the /more Label node in Patch Version.tscn is visible
 	
+	"2.2.0": [
+		false,
+		"Refactored the code for how LOREDs sync upgrade bonuses, resulting in improved performance.",
+		"Totally reworked the pacing of Stage 2.",
+		"Removed a bunch of boring upgrades."
+	],
+	
+	"2.1.4": [
+		false,
+		"In save texts, the version is now included in the encrypted code.",
+	],
 	"2.1.3": [
 		false,
 		"Definitely fixed the hard reset feature.",
@@ -31,6 +42,7 @@ const PATCH_NOTES := {
 		"Added this patch notes thingy!",
 		"Hard resetting will now correctly reset everything.",
 	],
+	
 	"2.0.4": [
 		false,
 		"LORED autobuyers will now not purchase if any of their ingredient LOREDs are on hold.",
@@ -62,15 +74,27 @@ const PATCH_NOTES := {
 }
 
 
+const loreds_required_for_s2_autoup_upgrades_to_begin_purchasing := ["seed", "tree", "water", "soil", "humus", "sand", "glass", "liq", "steel", "hard", "axe", "wood", "draw","wire"]
+var s2_upgrades_may_be_autobought := false
+
+func check_for_the_s2_shit():
+	if s2_upgrades_may_be_autobought:
+		return
+	for x in loreds_required_for_s2_autoup_upgrades_to_begin_purchasing:
+		if not g[x].active:
+			return
+	s2_upgrades_may_be_autobought = true
+
+const PREFAB := {
+	"flash": preload("res://Prefabs/Flash.tscn")
+}
+
 signal limit_break_leveled_up(which) # here -> Limit Break.gd
 var lb_xp = Ob.Num.new(1000)
-var lb_d = Big.new(1)
-var overcharge_list := []
 
 func reset_lb():
 	lb_xp = Ob.Num.new(1000)
-	lb_d = Big.new(1)
-	overcharge_list.clear()
+	up["Limit Break"].effects[0].effect.t = Big.new()
 func lb_xp_check():
 	
 	if lb_xp.f.isLessThan(lb_xp.t):
@@ -82,21 +106,28 @@ func lb_xp_check():
 		
 		lb_xp.f.s(lb_xp.t)
 		
-		lb_d.a(1)
+		up["Limit Break"].effects[0].effect.a.a(1)
 		
-		var exponent = Big.new(lb_d).square().toFloat() * 1.5
+		var exponent = Big.new(up["Limit Break"].effects[0].effect.a).a(1).square().toFloat() * 1.5
 		lb_xp.t = Big.new("1e" + str(exponent))
-		if lb_xp.t.isLessThan(Big.new(lb_d).m(1000)):
-			lb_xp.t = Big.new(lb_d).m(1000)
+		if lb_xp.t.isLessThan(Big.new(up["Limit Break"].effects[0].effect.a).m(1000)):
+			lb_xp.t = Big.new(up["Limit Break"].effects[0].effect.a).m(1000)
 		
 		if lb_xp.f.isLessThan(lb_xp.t):
 			break
 	
+	up["Limit Break"].effects[0].effect.sync()
+	
+	for x in stats.g_list["s1"] + stats.g_list["s2"]:
+		g[x].d.lbm = up["Limit Break"].effects[0].effect.t
+		g[x].d.sync()
+		emit_signal("lored_updated", x, "d")
+	
 	emit_signal("limit_break_leveled_up", "color")
 
-func increase_lb_xp(value, type):
+func increase_lb_xp(value):
 	
-	if not type in overcharge_list:
+	if not gv.up["Limit Break"].active():
 		return
 	
 	lb_xp.f.a(value)
@@ -105,11 +136,10 @@ func increase_lb_xp(value, type):
 # signals are emitted in multiple places but may only be received in one place
 
 signal lored_updated(_lored, _updated_stat) # LORED.gd -> LORED List.gd
-signal amount_updated(key)
+signal amount_updated(key) # LORED.gd -> resources.gd
 signal net_updated(net)
 
 signal upgrade_purchased(key, routine) # Upgrade Slot.gd -> up_container.gd
-
 
 const LIMIT_BREAK_COLORS := {
 	0: Color(0.121569, 0.819608, 0.376471),
@@ -130,6 +160,11 @@ const LIMIT_BREAK_COLORS := {
 }
 
 const sprite := {
+	"embryo" : preload("res://Sprites/resources/carc.png"),
+	"bone" : preload("res://Sprites/resources/carc.png"),
+	"blood" : preload("res://Sprites/resources/carc.png"),
+	"spirit" : preload("res://Sprites/resources/carc.png"),
+	
 	"coal" : preload("res://Sprites/resources/coal.png"),
 	"stone" : preload("res://Sprites/resources/stone.png"),
 	"irono" : preload("res://Sprites/resources/irono.png"),
@@ -312,6 +347,57 @@ var g := {
 	"gale" : LORED,
 }
 var up := {}
+const COLORS := {
+	"ciga": Color(0.929412, 0.584314, 0.298039),
+	"toba": Color(0.639216, 0.454902, 0.235294),
+	"plast": Color(0.85, 0.85, 0.85),
+	"pulp": Color(0.94902, 0.823529, 0.54902),
+	"paper": Color(0.792157, 0.792157, 0.792157),
+	"lead": Color(0.53833, 0.714293, 0.984375),
+	"gale": Color(0.701961, 0.792157, 0.929412),
+	"coal": Color(0.7, 0, 1),
+	"stone": Color(0.79, 0.79, 0.79),
+	"irono": Color(0, 0.517647, 0.905882),
+	"copo": Color(0.7, 0.33, 0),
+	"iron": Color(0.07, 0.89, 1),
+	"cop": Color(1, 0.74, 0.05),
+	"growth": Color(0.79, 1, 0.05),
+	"jo": Color(1, 0.98, 0),
+	"conc": Color(0.35, 0.35, 0.35),
+	"malig": Color(0.88, .12, .35),
+	"tar": Color(.56, .44, 1),
+	"soil": Color(0.737255, 0.447059, 0),
+	"oil": Color(.65, .3, .66),
+	"tum": Color(1, .54, .54),
+	"glass": Color(0.81, 0.93, 1.0),
+	"wire": Color(0.9, 0.6, 0.14),
+	"seed": Color(1, 0.878431, 0.431373),
+	"abeewithdaggers": Color(1, 0.878431, 0.431373),
+	"sand": Color(.87, .70, .45),
+	"wood": Color(0.545098, 0.372549, 0.015686),
+	"water": Color(0.14902, 0.52549, 0.792157),
+	"tree": Color(0.772549, 1, 0.247059),
+	"pet": Color(0.76, 0.53, 0.14),
+	"axe": Color(0.691406, 0.646158, 0.586075),
+	"hard": Color(0.92549, 0.690196, 0.184314),
+	"carc": Color(0.772549, 0.223529, 0.192157),
+	"steel": Color(0.607843, 0.802328, 0.878431),
+	"draw": Color(0.333333, 0.639216, 0.811765),
+	"liq": Color(0.27, 0.888, .9),
+	"humus": Color(0.458824, 0.25098, 0),
+	
+	"thewitchofloredelith": Color(0.937255, 0.501961, 0.776471),
+	"s1n": Color(0.733333, 0.458824, 0.031373),
+	"s1m": Color(0.878431, 0.121569, 0.34902),
+	"s2n": Color(0.47451, 0.870588, 0.694118),
+	"s2m": Color(1, 0.541176, 0.541176),
+	"s1": Color(0.8, 0.8, 0.8),
+	"s2": Color(0.8, 0.8, 0.8),
+	"s3": Color(0.8, 0.8, 0.8),
+	"s4": Color(0.8, 0.8, 0.8),
+	"copy": Color(0.8, 0.8, 0.8),
+	"grey": Color(0.8, 0.8, 0.8),
+}
 
 var open_upgrade_folder := "no"
 
@@ -326,8 +412,6 @@ class Menu:
 	var f := "ye"
 	var tab := "1"
 	var tab_vertical := [0, 0, 0, 0]
-	var upgrades_owned := {}
-	var tabs_unlocked := {}
 	var option := {}
 var menu := Menu.new()
 
@@ -369,9 +453,9 @@ func time_remaining(
 	var incoming_amount := Big.new(0)
 	
 	
-	if not gv.g[lored_key].progress.t.isEqualTo(0):
+	if not gv.g[lored_key].progress.t == 0.0:
 		
-		var percent_task_complete = gv.g[lored_key].progress.f.percent(gv.g[lored_key].progress.t)
+		var percent_task_complete = gv.g[lored_key].progress.f / gv.g[lored_key].progress.t
 		
 		incoming_amount.a(gv.g[lored_key].d.t)
 		incoming_amount.m(percent_task_complete)
@@ -439,20 +523,20 @@ class PowersOf10:
 
 var powers_of_10 = PowersOf10.new()
 
-
-enum R {
-	consumed_spirit,
-	
+var r := {
+	"spirit": Big.new(0),
+	"blood": Big.new(0),
+	"embryo": Big.new(0),
+	"bone": Big.new(0),
 }
-var r := []
+var color := {
+	"spirit": Color(0.9,0.9,0.9),
+}
 
 signal cac_leveled_up(key) # class_cacodemon.gd -> Cacodemons.gd
 signal cac_fps(fps_key, key) # class_cacodemon.gd -> Cacodemons.gd
-var cac_cost := {
-	"embryo": Big.new(1),
-	"blood": Big.new(1000),
-	"bone": Big.new(100),
-}
+signal cac_consumed # class_cacodemon.gd -> Cacodemons.gd
+signal cac_slain(key) # class_cacodemon.gd -> Cacodemons.gd
 
 func increase_cac_cost():
 	
@@ -469,13 +553,18 @@ func increase_cac_cost():
 
 var cac := []
 var cacodemons = 0
+var cac_cost := {
+	"embryo": Big.new(1),
+	"blood": Big.new(1000),
+	"bone": Big.new(100),
+}
 
 func _ready():
 	
 	randomize()
 	
-	for x in R:
-		r.append(Big.new(0))
+	for x in g:
+		r[x] = Big.new(0)
 	
 	for x in 100:
 		cac.append(Cacodemon.new(x))

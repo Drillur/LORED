@@ -1,0 +1,79 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://Fonts/Roboto-Black.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://Fonts/Roboto-MediumItalic.ttf" type="DynamicFontData" id=2]
+[ext_resource path="res://Styles/Panels/bg.tres" type="StyleBox" id=3]
+
+[sub_resource type="DynamicFont" id=1]
+outline_size = 2
+outline_color = Color( 0, 0, 0, 1 )
+font_data = ExtResource( 1 )
+
+[sub_resource type="DynamicFont" id=2]
+size = 11
+outline_size = 1
+outline_color = Color( 0, 0, 0, 1 )
+font_data = ExtResource( 2 )
+
+[sub_resource type="StyleBoxFlat" id=3]
+bg_color = Color( 1, 1, 1, 0.05 )
+expand_margin_left = 10.0
+expand_margin_right = 10.0
+expand_margin_top = 5.0
+expand_margin_bottom = 5.0
+
+[sub_resource type="StyleBoxFlat" id=4]
+draw_center = false
+
+[node name="MarginContainer" type="MarginContainer"]
+margin_right = 60.0
+margin_bottom = 41.0
+size_flags_horizontal = 0
+custom_constants/margin_right = 10
+custom_constants/margin_top = 5
+custom_constants/margin_left = 10
+custom_constants/margin_bottom = 5
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="bg" type="Panel" parent="."]
+margin_left = 10.0
+margin_top = 5.0
+margin_right = 50.0
+margin_bottom = 36.0
+custom_styles/panel = ExtResource( 3 )
+
+[node name="v" type="VBoxContainer" parent="."]
+margin_left = 10.0
+margin_top = 5.0
+margin_right = 50.0
+margin_bottom = 36.0
+custom_constants/separation = -2
+
+[node name="effect" type="Label" parent="v"]
+margin_right = 40.0
+margin_bottom = 19.0
+custom_fonts/font = SubResource( 1 )
+custom_colors/font_color = Color( 1, 0.666667, 0, 1 )
+text = "1.35x"
+align = 1
+
+[node name="type" type="Label" parent="v"]
+margin_left = 3.0
+margin_top = 17.0
+margin_right = 36.0
+margin_bottom = 31.0
+size_flags_horizontal = 4
+custom_fonts/font = SubResource( 2 )
+custom_colors/font_color = Color( 0.798828, 0.798828, 0.798828, 1 )
+custom_colors/font_outline_modulate = Color( 0, 0, 0, 1 )
+text = "Output"
+
+[node name="Buy" type="Button" parent="."]
+margin_left = 10.0
+margin_top = 5.0
+margin_right = 50.0
+margin_bottom = 36.0
+custom_styles/hover = SubResource( 3 )
+custom_styles/normal = SubResource( 4 )

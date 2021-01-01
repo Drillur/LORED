@@ -1,7 +1,6 @@
 extends Node2D
 
 onready var tip_lored_prefab = preload("res://Prefabs/tooltip/tip_lored.tscn")
-onready var price_prefab = preload("res://Prefabs/price.tscn")
 onready var tip_halt_prefab = preload("res://Prefabs/tooltip/tip_halt.tscn")
 onready var tip_hold_prefab = preload("res://Prefabs/tooltip/tip_hold.tscn")
 onready var tip_upgrade = preload("res://Prefabs/tooltip/tip_upgrade.tscn")

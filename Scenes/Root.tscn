@@ -1,15 +1,13 @@
-[gd_scene load_steps=31 format=2]
+[gd_scene load_steps=29 format=2]
 
 [ext_resource path="res://Scripts/_Root.gd" type="Script" id=1]
 [ext_resource path="res://Scripts/map.gd" type="Script" id=2]
-[ext_resource path="res://Scripts/lored_master.gd" type="Script" id=3]
-[ext_resource path="res://Scripts/upgrade/upgrade_master.gd" type="Script" id=4]
 [ext_resource path="res://Scripts/tooltip/tooltip_master.gd" type="Script" id=5]
 [ext_resource path="res://Prefabs/upgrade/upgrade_container.tscn" type="PackedScene" id=6]
 [ext_resource path="res://Prefabs/Limit Break.tscn" type="PackedScene" id=7]
 [ext_resource path="res://Scripts/task/quests.gd" type="Script" id=8]
 [ext_resource path="res://Prefabs/lored/LORED List.tscn" type="PackedScene" id=9]
-[ext_resource path="res://Scenes/resources.gd" type="Script" id=10]
+[ext_resource path="res://Scripts/resources.gd" type="Script" id=10]
 [ext_resource path="res://Styles/Master Theme.tres" type="Theme" id=11]
 [ext_resource path="res://Sprites/tab/alert.png" type="Texture" id=12]
 [ext_resource path="res://Sprites/tab/s1n.png" type="Texture" id=13]
@@ -113,21 +111,6 @@ __meta__ = {
 
 [node name="map" type="Area2D" parent="."]
 script = ExtResource( 2 )
-__meta__ = {
-"_edit_lock_": true
-}
-
-[node name="misc" type="Node2D" parent="map"]
-rotation = 0.785398
-__meta__ = {
-"_edit_lock_": true
-}
-
-[node name="loreds" type="Node2D" parent="map"]
-script = ExtResource( 3 )
-
-[node name="upgrades" type="Node2D" parent="map"]
-script = ExtResource( 4 )
 
 [node name="m" type="MarginContainer" parent="."]
 margin_right = 1024.0
@@ -221,6 +204,18 @@ custom_constants/separation = 10
 [node name="buffer" type="Panel" parent="m/v/top/h/resources/s2"]
 margin_right = 4.0
 margin_bottom = 40.0
+rect_min_size = Vector2( 4, 0 )
+custom_styles/panel = SubResource( 6 )
+
+[node name="s3" type="HBoxContainer" parent="m/v/top/h/resources"]
+visible = false
+margin_right = 4.0
+margin_bottom = 54.0
+custom_constants/separation = 10
+
+[node name="buffer" type="Panel" parent="m/v/top/h/resources/s3"]
+margin_right = 4.0
+margin_bottom = 54.0
 rect_min_size = Vector2( 4, 0 )
 custom_styles/panel = SubResource( 6 )
 
@@ -406,6 +401,7 @@ visible = false
 margin_right = 53.0
 margin_bottom = 40.0
 rect_min_size = Vector2( 0, 40 )
+focus_mode = 0
 mouse_default_cursor_shape = 2
 theme = ExtResource( 11 )
 __meta__ = {
@@ -465,10 +461,8 @@ script = ExtResource( 5 )
 
 [node name="Button" type="Button" parent="."]
 visible = false
-margin_left = 10.0
-margin_top = 17.0
-margin_right = 50.0
-margin_bottom = 57.0
+margin_right = 25.0
+margin_bottom = 27.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -477,6 +471,6 @@ __meta__ = {
 [connection signal="pressed" from="misc/tabs/v/upgrades" to="." method="_on_upgrades_pressed"]
 [connection signal="pressed" from="misc/tabs/v/s1" to="." method="_on_s1_pressed"]
 [connection signal="pressed" from="misc/tabs/v/s2" to="." method="_on_s2_pressed"]
-[connection signal="pressed" from="misc/tabs/v/s3" to="." method="_on_s2_pressed"]
+[connection signal="pressed" from="misc/tabs/v/s3" to="." method="_on_s3_pressed"]
 [connection signal="pressed" from="misc/tabs/v/s4" to="." method="_on_s2_pressed"]
 [connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]

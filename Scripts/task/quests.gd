@@ -11,6 +11,15 @@ const prefabs = {
 var content_effects := {}
 
 
+#when i began quest to buy upgrade_name, i already had it, but it didn't count for quest progress
+
+
+func _physics_process(delta: float) -> void:
+	
+	if taq.cur_quest == "":
+		return
+	
+	objective_check(taq.cur_quest)
 
 func quest_ended() -> void:
 	
@@ -18,7 +27,7 @@ func quest_ended() -> void:
 	
 	flying_texts(taq.quest.resource_reward)
 	
-	match taq.quest.name:
+	match taq.cur_quest:
 		"Spike":
 			gv.menu.option["task auto"] = true
 	
@@ -32,6 +41,7 @@ func quest_ended() -> void:
 	
 	if taq.cur_quest == "":
 		hide()
+		set_physics_process(false)
 	
 	if "tasks" in rt.content_tasks.keys():
 		if taq.cur_tasks < taq.max_tasks:
@@ -42,7 +52,7 @@ func quest_ended() -> void:
 func flying_texts(resource_reward = {}) -> void:
 	
 	for x in resource_reward:
-		gv.g[x].r.a(resource_reward[x])
+		gv.r[x].a(resource_reward[x])
 		gv.emit_signal("lored_updated", x, "amount")
 	
 	var left_x = rect_global_position.x + rect_size.x / 2
@@ -84,3 +94,20 @@ func flying_texts(resource_reward = {}) -> void:
 		
 		
 		i += 1
+
+
+func objective_check(quest: String):
+	
+	var key: String
+	
+	match quest:
+		
+		"The Loop":
+			
+			key = "upgrade_name purchased"
+			
+			if taq.quest.step[key].f.isEqualTo(1):
+				return
+			
+			if gv.up["upgrade_name"].have:
+				taq.quest.step[key].f = Big.new(1)

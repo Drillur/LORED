@@ -6,8 +6,6 @@ onready var rt = get_node("/root/Root")
 var code := 0.0
 var fps := 0.0
 
-var killing_self := false
-
 
 func init(_icon:Dictionary, _code:float, _tp_border_color: Color) -> void:
 	
@@ -29,9 +27,6 @@ func _physics_process(delta):
 	
 	if not code in taq.task.keys():
 		set_physics_process(false)
-		return
-	
-	if killing_self:
 		return
 	
 	if $tp.value >= 100:
@@ -79,7 +74,7 @@ func _on_task_pressed(manual := true):
 	
 	if $tp.value < 100:
 		if manual:
-			rt.get_node("global_tip").tip.content["taq"].flash_incomplete_steps = true
+			rt.get_node("global_tip").tip.cont["taq"].flash_incomplete_steps = true
 		return
 	
 	if manual:
@@ -92,12 +87,11 @@ func _on_task_pressed(manual := true):
 	finish_up()
 
 func kill_yourself():
+	set_physics_process(false)
 	hide()
 	get_parent().get_parent().content.erase(code)
 	taq.task.erase(code)
-	killing_self = true
 	taq.cur_tasks -= 1
-	#get_parent().get_parent().ready_task_count += 1
 	queue_free()
 
 func finish_up():
@@ -117,7 +111,7 @@ func finish_up():
 				taq.quest.step["Spike tasks completed"].f = A
 	
 	for x in taq.task[code].resource_reward:
-		gv.g[x].r.a(taq.task[code].resource_reward[x].toScientific())
+		gv.r[x].a(taq.task[code].resource_reward[x].toScientific())
 		gv.emit_signal("lored_updated", x, "amount")
 		gv.g[x].task_and_quest_check(taq.task[code].resource_reward[x])
 	
@@ -125,11 +119,13 @@ func finish_up():
 		
 		break
 	
-	var gayzo = {}
-	for x in taq.task[code].resource_reward:
-		gayzo[x] = Big.new(taq.task[code].resource_reward[x])
-	
-	get_parent().get_parent().flying_numbers(gayzo)
+	if gv.menu.option["flying_numbers"]:
+		var gayzo = {}
+		for x in taq.task[code].resource_reward:
+			gayzo[x] = Big.new(taq.task[code].resource_reward[x])
+		get_parent().get_parent().flying_numbers(gayzo)
+	else:
+		get_parent().get_parent().flying_numbers()
 	
 	taq.task.erase(code)
 	

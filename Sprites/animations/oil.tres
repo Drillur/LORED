@@ -1,14 +1,15 @@
 [gd_resource type="SpriteFrames" load_steps=10 format=2]
 
-[ext_resource path="res://Sprites/oil/g4.png" type="Texture" id=1]
-[ext_resource path="res://Sprites/oil/g5.png" type="Texture" id=2]
-[ext_resource path="res://Sprites/oil/g6.png" type="Texture" id=3]
-[ext_resource path="res://Sprites/oil/g7.png" type="Texture" id=4]
-[ext_resource path="res://Sprites/oil/g0.png" type="Texture" id=5]
-[ext_resource path="res://Sprites/oil/g1.png" type="Texture" id=6]
-[ext_resource path="res://Sprites/oil/g2.png" type="Texture" id=7]
-[ext_resource path="res://Sprites/oil/g3.png" type="Texture" id=8]
-[ext_resource path="res://Sprites/oil/wait.png" type="Texture" id=9]
+[ext_resource path="res://Sprites/animations/oil/g4.png" type="Texture" id=1]
+[ext_resource path="res://Sprites/animations/oil/g5.png" type="Texture" id=2]
+[ext_resource path="res://Sprites/animations/oil/g6.png" type="Texture" id=3]
+[ext_resource path="res://Sprites/animations/oil/g7.png" type="Texture" id=4]
+[ext_resource path="res://Sprites/animations/oil/g0.png" type="Texture" id=5]
+[ext_resource path="res://Sprites/animations/oil/g1.png" type="Texture" id=6]
+[ext_resource path="res://Sprites/animations/oil/g2.png" type="Texture" id=7]
+[ext_resource path="res://Sprites/animations/oil/g3.png" type="Texture" id=8]
+[ext_resource path="res://Sprites/animations/oil/wait.png" type="Texture" id=9]
+
 
 [resource]
 animations = [ {

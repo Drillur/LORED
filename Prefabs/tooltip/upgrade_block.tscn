@@ -3,7 +3,7 @@
 [ext_resource path="res://Sprites/resources/axe.png" type="Texture" id=1]
 [ext_resource path="res://Fonts/Roboto-BlackItalic.ttf" type="DynamicFontData" id=2]
 [ext_resource path="res://Fonts/Roboto-Medium.ttf" type="DynamicFontData" id=3]
-[ext_resource path="res://Scripts/tooltip/upgrade_block.gd" type="Script" id=4]
+[ext_resource path="res://Prefabs/Scripts/upgrade_block.gd" type="Script" id=4]
 
 [sub_resource type="StyleBoxFlat" id=1]
 bg_color = Color( 1, 1, 1, 0.0509804 )

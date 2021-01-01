@@ -11,9 +11,9 @@ func init(key : String) -> int:
 	$name.text = key
 	if not gv.up[key].requires == "":
 		if gv.up[gv.up[key].requires].have:
-			$icon.texture = gv.sprite[gv.up[key].main_lored_target]
+			$icon.texture = gv.sprite[gv.up[key].icon]
 	else:
-		$icon.texture = gv.sprite[gv.up[key].main_lored_target]
+		$icon.texture = gv.sprite[gv.up[key].icon]
 	var required_upgrades_purchased : bool = true
 	if not gv.up[key].requires == "":
 		if gv.up[key].normal and not gv.up[gv.up[key].requires].have and not gv.up[gv.up[key].requires].refundable:

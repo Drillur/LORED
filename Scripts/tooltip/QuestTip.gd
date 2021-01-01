@@ -109,8 +109,7 @@ func init(_task: taq.Task) -> void:
 	
 	gn_name.text = _name(task.name)
 	gn_desc.text = desc(task.step, task.desc)
-	if task.icon.key in gv.g.keys():
-		$v/m/bg.modulate = gv.g[task.icon.key].color
+	$v/m/bg.modulate = gv.COLORS[task.icon.key]
 	gn_icon.texture = task.icon.texture
 	
 	tags(task.name)
@@ -240,6 +239,10 @@ func r_set_icon(resource : String) -> Texture:
 			continue
 		if "Pulp" in resource and gv.g[x].name == "Wood":
 			continue
+		if "Copper Ore" in resource and gv.g[x].name == "Copper":
+			continue
+		if "Iron Ore" in resource and gv.g[x].name == "Iron":
+			continue
 		
 		blah = x
 		break
@@ -249,7 +252,7 @@ func r_set_icon(resource : String) -> Texture:
 	
 	# upgrade
 	if "purchased" in resource:
-		return gv.sprite[gv.up[resource.split(" purchased")[0]].main_lored_target]
+		return gv.sprite[gv.up[resource.split(" purchased")[0]].icon]
 	
 	# buy lored
 	if "bought" in resource:

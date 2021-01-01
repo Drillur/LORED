@@ -16,7 +16,7 @@ func init(_lored: String) -> int:
 		hide_set_key()
 		return int(rect_size.y)
 	else:
-		if " " + _lored + " " in rt.DEFAULT_KEY_LOREDS:
+		if _lored in gv.DEFAULT_KEY_LOREDS:
 			$VBoxContainer/set_key/HBoxContainer2/default.text = "Default: true"
 	
 	if not gv.g[_lored].active:
@@ -72,10 +72,10 @@ func key_check(key: bool) -> bool:
 func upgrade_check(_lored: String) -> bool:
 	
 	var x = "don't take candy from babies" if gv.up["don't take candy from babies"].active() else ""
-	if not "1" == gv.g[_lored].type[1] or gv.g[_lored].level > 5:
+	if not "1" == gv.g[_lored].type[1] or gv.g[_lored].level > 4:
 		x = ""
 	
-	if x != "" and gv.g[_lored].level < 6:
+	if x != "" and gv.g[_lored].level < 5:
 		$VBoxContainer/level.show()
 	
 	if x == "":

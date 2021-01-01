@@ -2,7 +2,8 @@
 
 [ext_resource path="res://Styles/Labels/Button.tres" type="DynamicFont" id=1]
 [ext_resource path="res://Styles/Labels/Desc.tres" type="DynamicFont" id=2]
-[ext_resource path="res://Prefabs/Patch/Patch Version.gd" type="Script" id=3]
+[ext_resource path="res://Prefabs/Scripts/Patch Version.gd" type="Script" id=3]
+
 
 [sub_resource type="StyleBoxFlat" id=1]
 bg_color = Color( 1, 1, 1, 0.0196078 )

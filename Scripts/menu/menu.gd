@@ -48,7 +48,6 @@ func _ready():
 	if true:
 		
 		$ScrollContainer/MarginContainer/VBoxContainer/stats/CenterContainer/VBoxContainer/b_runs.hide()
-		$ScrollContainer/MarginContainer/VBoxContainer/tutorial_pen.hide()
 		$ScrollContainer/MarginContainer/VBoxContainer/version.text = ProjectSettings.get_setting("application/config/Version")
 		$ScrollContainer/MarginContainer/VBoxContainer/save.hide()
 		
@@ -77,12 +76,6 @@ func init(f: Dictionary) -> void:
 		content["resource_text"][x] = prefabs["resource_text"].instance()
 		$ScrollContainer/MarginContainer/VBoxContainer/stats/CenterContainer/VBoxContainer/resources/CenterContainer/VBoxContainer.add_child(content["resource_text"][x])
 		content["resource_text"][x].add_color_override("font_color", gv.g[x].color)
-	
-	var i = 0
-	for x in rt.tip:
-		get_node("ScrollContainer/MarginContainer/VBoxContainer/tutorial_pen/CenterContainer/VBoxContainer/b" + str(i) + "/Label").text = x
-		get_node(set_blah[x]).text = rt.tip[x]
-		i += 1
 	
 	# fps
 	$ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/fps.select(f["FPS"])
@@ -272,8 +265,8 @@ func _on_fps_item_selected(id):
 		7: rt.FPS = 0.01666
 func _on_notation_type_item_selected(id):
 	gv.menu.option["notation_type"] = id
-func _on_notation_for_item_selected(id):
-	gv.menu.option["notation_for"] = id
+	for x in gv.g:
+		gv.emit_signal("lored_updated", x, "d")
 
 func _on_crits_only_pressed():
 	b_option_pressed("crits_only", $ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/crits_only/CenterContainer/crits_only)
@@ -306,7 +299,7 @@ func b_option_pressed(option: String, node) -> void:
 					rt.get_node(rt.gnLOREDs).cont[x].get_node(rt.get_node(rt.gnLOREDs).cont[x].gnframes).animation = "ww"
 					rt.get_node(rt.gnLOREDs).cont[x].get_node(rt.get_node(rt.gnLOREDs).cont[x].gnframes).playing = true
 					continue
-				if gv.g[x].progress.f.isLargerThan(0):
+				if gv.g[x].progress.f > 0:
 					rt.get_node(rt.gnLOREDs).cont[x].get_node(rt.get_node(rt.gnLOREDs).cont[x].gnframes).animation = "ff"
 				rt.get_node(rt.gnLOREDs).cont[x].get_node(rt.get_node(rt.gnLOREDs).cont[x].gnframes).playing = false
 
@@ -374,3 +367,14 @@ func _on_Import_file_selected(path: String) -> void:
 
 func _on_Discord_pressed() -> void:
 	OS.shell_open("https://discord.gg/xJeBZxt")
+
+
+
+
+
+func _on_FixNAN_pressed() -> void:
+	fix_inf_nums()
+
+func fix_inf_nums():
+	
+	gv.lb_xp.f = Big.new(0)

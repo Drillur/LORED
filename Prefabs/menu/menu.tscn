@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=2]
+[gd_scene load_steps=28 format=2]
 
 [ext_resource path="res://Styles/Labels/Button.tres" type="DynamicFont" id=1]
 [ext_resource path="res://Styles/Labels/whatevertheseneedseveremanagement.tres" type="DynamicFont" id=2]
@@ -67,20 +67,6 @@ border_width_left = 1
 border_width_right = 1
 border_color = Color( 0.75, 0.64, 0.04, 0.5 )
 
-[sub_resource type="StyleBoxFlat" id=8]
-bg_color = Color( 1, 1, 1, 0.0313726 )
-draw_center = false
-border_width_left = 1
-border_width_right = 1
-border_color = Color( 0.24, 0.39, 0.78, 0.5 )
-
-[sub_resource type="StyleBoxFlat" id=9]
-bg_color = Color( 1, 1, 1, 0.0313726 )
-draw_center = false
-border_width_left = 1
-border_width_right = 1
-border_color = Color( 0.24, 0.39, 0.78, 0.5 )
-
 [sub_resource type="StyleBoxFlat" id=10]
 bg_color = Color( 0.6, 0.6, 0.6, 0.364706 )
 
@@ -110,7 +96,7 @@ __meta__ = {
 
 [node name="MarginContainer" type="MarginContainer" parent="ScrollContainer"]
 margin_right = 150.0
-margin_bottom = 857.0
+margin_bottom = 490.0
 mouse_filter = 1
 size_flags_horizontal = 2
 size_flags_vertical = 2
@@ -120,14 +106,14 @@ __meta__ = {
 
 [node name="flair" type="Panel" parent="ScrollContainer/MarginContainer"]
 margin_right = 150.0
-margin_bottom = 857.0
+margin_bottom = 490.0
 rect_min_size = Vector2( 10, 10 )
 mouse_filter = 1
 custom_styles/panel = SubResource( 2 )
 
 [node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer/MarginContainer"]
 margin_right = 150.0
-margin_bottom = 857.0
+margin_bottom = 490.0
 
 [node name="title" type="Label" parent="ScrollContainer/MarginContainer/VBoxContainer"]
 margin_right = 150.0
@@ -182,6 +168,7 @@ __meta__ = {
 }
 
 [node name="options" type="MarginContainer" parent="ScrollContainer/MarginContainer/VBoxContainer"]
+visible = false
 margin_top = 92.0
 margin_right = 150.0
 margin_bottom = 416.0
@@ -536,9 +523,9 @@ __meta__ = {
 }
 
 [node name="b_save" type="Button" parent="ScrollContainer/MarginContainer/VBoxContainer"]
-margin_top = 420.0
+margin_top = 92.0
 margin_right = 150.0
-margin_bottom = 455.0
+margin_bottom = 127.0
 rect_min_size = Vector2( 150, 35 )
 focus_mode = 0
 mouse_default_cursor_shape = 2
@@ -884,9 +871,9 @@ texture = ExtResource( 11 )
 centered = false
 
 [node name="b_stats" type="Button" parent="ScrollContainer/MarginContainer/VBoxContainer"]
-margin_top = 459.0
+margin_top = 131.0
 margin_right = 150.0
-margin_bottom = 494.0
+margin_bottom = 166.0
 rect_min_size = Vector2( 150, 35 )
 focus_mode = 0
 mouse_default_cursor_shape = 2
@@ -1108,11 +1095,12 @@ margin_right = 127.0
 margin_bottom = 5.0
 rect_min_size = Vector2( 120, 0 )
 
-[node name="b_tutorial_pen" type="Button" parent="ScrollContainer/MarginContainer/VBoxContainer"]
-margin_top = 498.0
+[node name="FixNAN" type="Button" parent="ScrollContainer/MarginContainer/VBoxContainer"]
+visible = false
+margin_top = 170.0
 margin_right = 150.0
-margin_bottom = 533.0
-rect_min_size = Vector2( 150, 35 )
+margin_bottom = 215.0
+rect_min_size = Vector2( 150, 45 )
 focus_mode = 0
 mouse_default_cursor_shape = 2
 size_flags_horizontal = 6
@@ -1124,389 +1112,25 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label" type="Label" parent="ScrollContainer/MarginContainer/VBoxContainer/b_tutorial_pen"]
+[node name="Label" type="Label" parent="ScrollContainer/MarginContainer/VBoxContainer/FixNAN"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_right = -1.00002
 custom_fonts/font = ExtResource( 1 )
-custom_colors/font_color = Color( 0.243137, 0.392157, 0.784314, 1 )
-text = "Tutorial Pen"
-align = 1
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="tutorial_pen" type="MarginContainer" parent="ScrollContainer/MarginContainer/VBoxContainer"]
-visible = false
-margin_top = 209.0
-margin_right = 150.0
-margin_bottom = 517.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="flair" type="Panel" parent="ScrollContainer/MarginContainer/VBoxContainer/tutorial_pen"]
-margin_right = 150.0
-margin_bottom = 308.0
-rect_min_size = Vector2( 10, 10 )
-custom_styles/panel = SubResource( 8 )
-
-[node name="CenterContainer" type="CenterContainer" parent="ScrollContainer/MarginContainer/VBoxContainer/tutorial_pen"]
-margin_right = 150.0
-margin_bottom = 308.0
-
-[node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer/MarginContainer/VBoxContainer/tutorial_pen/CenterContainer"]
-margin_left = 10.0
-margin_top = 39.0
-margin_right = 140.0
-margin_bottom = 269.0
-
-[node name="b0" type="Button" parent="ScrollContainer/MarginContainer/VBoxContainer/tutorial_pen/CenterContainer/VBoxContainer"]
-margin_right = 130.0
-margin_bottom = 35.0
-rect_min_size = Vector2( 130, 35 )
-focus_mode = 0
-mouse_default_cursor_shape = 2
-size_flags_horizontal = 5
-custom_styles/hover = ExtResource( 3 )
-custom_styles/pressed = ExtResource( 4 )
-custom_styles/normal = ExtResource( 5 )
-__meta__ = {
-"_edit_group_": true,
-"_edit_use_anchors_": false
-}
-
-[node name="Label" type="Label" parent="ScrollContainer/MarginContainer/VBoxContainer/tutorial_pen/CenterContainer/VBoxContainer/b0"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_right = -1.00002
-custom_fonts/font = ExtResource( 1 )
-custom_colors/font_color = Color( 0.243137, 0.392157, 0.784314, 1 )
-text = "big peepees"
+custom_colors/font_color = Color( 0.933333, 0.345098, 0.141176, 1 )
+text = "Attempt to fix
+INF or NAN numbers"
 align = 1
 valign = 1
 autowrap = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
-
-[node name="MarginContainer" type="MarginContainer" parent="ScrollContainer/MarginContainer/VBoxContainer/tutorial_pen/CenterContainer/VBoxContainer"]
-visible = false
-margin_top = 39.0
-margin_right = 130.0
-margin_bottom = 81.0
-
-[node name="flair" type="Panel" parent="ScrollContainer/MarginContainer/VBoxContainer/tutorial_pen/CenterContainer/VBoxContainer/MarginContainer"]
-margin_right = 130.0
-margin_bottom = 48.0
-rect_min_size = Vector2( 10, 10 )
-custom_styles/panel = SubResource( 9 )
-
-[node name="CenterContainer" type="CenterContainer" parent="ScrollContainer/MarginContainer/VBoxContainer/tutorial_pen/CenterContainer/VBoxContainer/MarginContainer"]
-margin_right = 130.0
-margin_bottom = 48.0
-
-[node name="Label" type="Label" parent="ScrollContainer/MarginContainer/VBoxContainer/tutorial_pen/CenterContainer/VBoxContainer/MarginContainer/CenterContainer"]
-margin_left = 5.0
-margin_right = 125.0
-margin_bottom = 48.0
-rect_min_size = Vector2( 120, 0 )
-size_flags_vertical = 1
-custom_fonts/font = ExtResource( 8 )
-custom_colors/font_color = Color( 0.498039, 0.498039, 0.498039, 1 )
-text = "Hey this is a whole freakin piece of shit fuck"
-autowrap = true
-
-[node name="b1" type="Button" parent="ScrollContainer/MarginContainer/VBoxContainer/tutorial_pen/CenterContainer/VBoxContainer"]
-margin_top = 39.0
-margin_right = 130.0
-margin_bottom = 74.0
-rect_min_size = Vector2( 130, 35 )
-focus_mode = 0
-mouse_default_cursor_shape = 2
-size_flags_horizontal = 5
-custom_styles/hover = ExtResource( 3 )
-custom_styles/pressed = ExtResource( 4 )
-custom_styles/normal = ExtResource( 5 )
-__meta__ = {
-"_edit_group_": true,
-"_edit_use_anchors_": false
-}
-
-[node name="Label" type="Label" parent="ScrollContainer/MarginContainer/VBoxContainer/tutorial_pen/CenterContainer/VBoxContainer/b1"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_right = -1.00002
-custom_fonts/font = ExtResource( 1 )
-custom_colors/font_color = Color( 0.243137, 0.392157, 0.784314, 1 )
-text = "boobie doobie doo"
-align = 1
-valign = 1
-autowrap = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="MarginContainer2" type="MarginContainer" parent="ScrollContainer/MarginContainer/VBoxContainer/tutorial_pen/CenterContainer/VBoxContainer"]
-visible = false
-margin_top = 78.0
-margin_right = 130.0
-margin_bottom = 120.0
-
-[node name="flair" type="Panel" parent="ScrollContainer/MarginContainer/VBoxContainer/tutorial_pen/CenterContainer/VBoxContainer/MarginContainer2"]
-margin_right = 130.0
-margin_bottom = 48.0
-rect_min_size = Vector2( 10, 10 )
-custom_styles/panel = SubResource( 9 )
-
-[node name="CenterContainer" type="CenterContainer" parent="ScrollContainer/MarginContainer/VBoxContainer/tutorial_pen/CenterContainer/VBoxContainer/MarginContainer2"]
-margin_right = 130.0
-margin_bottom = 48.0
-
-[node name="Label" type="Label" parent="ScrollContainer/MarginContainer/VBoxContainer/tutorial_pen/CenterContainer/VBoxContainer/MarginContainer2/CenterContainer"]
-margin_left = 5.0
-margin_right = 125.0
-margin_bottom = 48.0
-rect_min_size = Vector2( 120, 0 )
-size_flags_vertical = 1
-custom_fonts/font = ExtResource( 8 )
-custom_colors/font_color = Color( 0.498039, 0.498039, 0.498039, 1 )
-text = "Hey this is a whole freakin piece of shit fuck"
-autowrap = true
-
-[node name="b2" type="Button" parent="ScrollContainer/MarginContainer/VBoxContainer/tutorial_pen/CenterContainer/VBoxContainer"]
-margin_top = 78.0
-margin_right = 130.0
-margin_bottom = 113.0
-rect_min_size = Vector2( 130, 35 )
-focus_mode = 0
-mouse_default_cursor_shape = 2
-size_flags_horizontal = 5
-custom_styles/hover = ExtResource( 3 )
-custom_styles/pressed = ExtResource( 4 )
-custom_styles/normal = ExtResource( 5 )
-__meta__ = {
-"_edit_group_": true,
-"_edit_use_anchors_": false
-}
-
-[node name="Label" type="Label" parent="ScrollContainer/MarginContainer/VBoxContainer/tutorial_pen/CenterContainer/VBoxContainer/b2"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_right = -1.00002
-custom_fonts/font = ExtResource( 1 )
-custom_colors/font_color = Color( 0.243137, 0.392157, 0.784314, 1 )
-text = "boobie doobie doo"
-align = 1
-valign = 1
-autowrap = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="MarginContainer3" type="MarginContainer" parent="ScrollContainer/MarginContainer/VBoxContainer/tutorial_pen/CenterContainer/VBoxContainer"]
-visible = false
-margin_top = 117.0
-margin_right = 130.0
-margin_bottom = 159.0
-
-[node name="flair" type="Panel" parent="ScrollContainer/MarginContainer/VBoxContainer/tutorial_pen/CenterContainer/VBoxContainer/MarginContainer3"]
-margin_right = 130.0
-margin_bottom = 48.0
-rect_min_size = Vector2( 10, 10 )
-custom_styles/panel = SubResource( 9 )
-
-[node name="CenterContainer" type="CenterContainer" parent="ScrollContainer/MarginContainer/VBoxContainer/tutorial_pen/CenterContainer/VBoxContainer/MarginContainer3"]
-margin_right = 130.0
-margin_bottom = 48.0
-
-[node name="Label" type="Label" parent="ScrollContainer/MarginContainer/VBoxContainer/tutorial_pen/CenterContainer/VBoxContainer/MarginContainer3/CenterContainer"]
-margin_left = 5.0
-margin_right = 125.0
-margin_bottom = 48.0
-rect_min_size = Vector2( 120, 0 )
-size_flags_vertical = 1
-custom_fonts/font = ExtResource( 8 )
-custom_colors/font_color = Color( 0.498039, 0.498039, 0.498039, 1 )
-text = "Hey this is a whole freakin piece of shit fuck"
-autowrap = true
-
-[node name="b3" type="Button" parent="ScrollContainer/MarginContainer/VBoxContainer/tutorial_pen/CenterContainer/VBoxContainer"]
-margin_top = 117.0
-margin_right = 130.0
-margin_bottom = 152.0
-rect_min_size = Vector2( 130, 35 )
-focus_mode = 0
-mouse_default_cursor_shape = 2
-size_flags_horizontal = 5
-custom_styles/hover = ExtResource( 3 )
-custom_styles/pressed = ExtResource( 4 )
-custom_styles/normal = ExtResource( 5 )
-__meta__ = {
-"_edit_group_": true,
-"_edit_use_anchors_": false
-}
-
-[node name="Label" type="Label" parent="ScrollContainer/MarginContainer/VBoxContainer/tutorial_pen/CenterContainer/VBoxContainer/b3"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_right = -1.00002
-custom_fonts/font = ExtResource( 1 )
-custom_colors/font_color = Color( 0.243137, 0.392157, 0.784314, 1 )
-text = "boobie doobie doo"
-align = 1
-valign = 1
-autowrap = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="MarginContainer4" type="MarginContainer" parent="ScrollContainer/MarginContainer/VBoxContainer/tutorial_pen/CenterContainer/VBoxContainer"]
-visible = false
-margin_top = 156.0
-margin_right = 130.0
-margin_bottom = 198.0
-
-[node name="flair" type="Panel" parent="ScrollContainer/MarginContainer/VBoxContainer/tutorial_pen/CenterContainer/VBoxContainer/MarginContainer4"]
-margin_right = 130.0
-margin_bottom = 48.0
-rect_min_size = Vector2( 10, 10 )
-custom_styles/panel = SubResource( 9 )
-
-[node name="CenterContainer" type="CenterContainer" parent="ScrollContainer/MarginContainer/VBoxContainer/tutorial_pen/CenterContainer/VBoxContainer/MarginContainer4"]
-margin_right = 130.0
-margin_bottom = 48.0
-
-[node name="Label" type="Label" parent="ScrollContainer/MarginContainer/VBoxContainer/tutorial_pen/CenterContainer/VBoxContainer/MarginContainer4/CenterContainer"]
-margin_left = 5.0
-margin_right = 125.0
-margin_bottom = 48.0
-rect_min_size = Vector2( 120, 0 )
-size_flags_vertical = 1
-custom_fonts/font = ExtResource( 8 )
-custom_colors/font_color = Color( 0.498039, 0.498039, 0.498039, 1 )
-text = "Hey this is a whole freakin piece of shit fuck"
-autowrap = true
-
-[node name="b4" type="Button" parent="ScrollContainer/MarginContainer/VBoxContainer/tutorial_pen/CenterContainer/VBoxContainer"]
-margin_top = 156.0
-margin_right = 130.0
-margin_bottom = 191.0
-rect_min_size = Vector2( 130, 35 )
-focus_mode = 0
-mouse_default_cursor_shape = 2
-size_flags_horizontal = 5
-custom_styles/hover = ExtResource( 3 )
-custom_styles/pressed = ExtResource( 4 )
-custom_styles/normal = ExtResource( 5 )
-__meta__ = {
-"_edit_group_": true,
-"_edit_use_anchors_": false
-}
-
-[node name="Label" type="Label" parent="ScrollContainer/MarginContainer/VBoxContainer/tutorial_pen/CenterContainer/VBoxContainer/b4"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_right = -1.00002
-custom_fonts/font = ExtResource( 1 )
-custom_colors/font_color = Color( 0.243137, 0.392157, 0.784314, 1 )
-text = "boobie doobie doo"
-align = 1
-valign = 1
-autowrap = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="MarginContainer5" type="MarginContainer" parent="ScrollContainer/MarginContainer/VBoxContainer/tutorial_pen/CenterContainer/VBoxContainer"]
-visible = false
-margin_top = 195.0
-margin_right = 130.0
-margin_bottom = 237.0
-
-[node name="flair" type="Panel" parent="ScrollContainer/MarginContainer/VBoxContainer/tutorial_pen/CenterContainer/VBoxContainer/MarginContainer5"]
-margin_right = 130.0
-margin_bottom = 48.0
-rect_min_size = Vector2( 10, 10 )
-custom_styles/panel = SubResource( 9 )
-
-[node name="CenterContainer" type="CenterContainer" parent="ScrollContainer/MarginContainer/VBoxContainer/tutorial_pen/CenterContainer/VBoxContainer/MarginContainer5"]
-margin_right = 130.0
-margin_bottom = 48.0
-
-[node name="Label" type="Label" parent="ScrollContainer/MarginContainer/VBoxContainer/tutorial_pen/CenterContainer/VBoxContainer/MarginContainer5/CenterContainer"]
-margin_left = 5.0
-margin_right = 125.0
-margin_bottom = 48.0
-rect_min_size = Vector2( 120, 0 )
-size_flags_vertical = 1
-custom_fonts/font = ExtResource( 8 )
-custom_colors/font_color = Color( 0.498039, 0.498039, 0.498039, 1 )
-text = "Hey this is a whole freakin piece of shit fuck"
-autowrap = true
-
-[node name="b5" type="Button" parent="ScrollContainer/MarginContainer/VBoxContainer/tutorial_pen/CenterContainer/VBoxContainer"]
-margin_top = 195.0
-margin_right = 130.0
-margin_bottom = 230.0
-rect_min_size = Vector2( 130, 35 )
-focus_mode = 0
-mouse_default_cursor_shape = 2
-size_flags_horizontal = 5
-custom_styles/hover = ExtResource( 3 )
-custom_styles/pressed = ExtResource( 4 )
-custom_styles/normal = ExtResource( 5 )
-__meta__ = {
-"_edit_group_": true,
-"_edit_use_anchors_": false
-}
-
-[node name="Label" type="Label" parent="ScrollContainer/MarginContainer/VBoxContainer/tutorial_pen/CenterContainer/VBoxContainer/b5"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_right = -1.00002
-custom_fonts/font = ExtResource( 1 )
-custom_colors/font_color = Color( 0.243137, 0.392157, 0.784314, 1 )
-text = "boobie doobie doo"
-align = 1
-valign = 1
-autowrap = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="MarginContainer6" type="MarginContainer" parent="ScrollContainer/MarginContainer/VBoxContainer/tutorial_pen/CenterContainer/VBoxContainer"]
-visible = false
-margin_top = 234.0
-margin_right = 130.0
-margin_bottom = 276.0
-
-[node name="flair" type="Panel" parent="ScrollContainer/MarginContainer/VBoxContainer/tutorial_pen/CenterContainer/VBoxContainer/MarginContainer6"]
-margin_right = 130.0
-margin_bottom = 48.0
-rect_min_size = Vector2( 10, 10 )
-custom_styles/panel = SubResource( 9 )
-
-[node name="CenterContainer" type="CenterContainer" parent="ScrollContainer/MarginContainer/VBoxContainer/tutorial_pen/CenterContainer/VBoxContainer/MarginContainer6"]
-margin_right = 130.0
-margin_bottom = 48.0
-
-[node name="Label" type="Label" parent="ScrollContainer/MarginContainer/VBoxContainer/tutorial_pen/CenterContainer/VBoxContainer/MarginContainer6/CenterContainer"]
-margin_left = 5.0
-margin_right = 125.0
-margin_bottom = 48.0
-rect_min_size = Vector2( 120, 0 )
-size_flags_vertical = 1
-custom_fonts/font = ExtResource( 8 )
-custom_colors/font_color = Color( 0.498039, 0.498039, 0.498039, 1 )
-text = "Hey this is a whole freakin piece of shit fuck"
-autowrap = true
 
 [node name="disc" type="VBoxContainer" parent="ScrollContainer/MarginContainer/VBoxContainer"]
-margin_top = 537.0
+margin_top = 170.0
 margin_right = 150.0
-margin_bottom = 670.0
+margin_bottom = 303.0
 
 [node name="disc_text" type="Label" parent="ScrollContainer/MarginContainer/VBoxContainer/disc"]
 margin_right = 150.0
@@ -1558,9 +1182,9 @@ rect_min_size = Vector2( 0, 1 )
 custom_styles/panel = SubResource( 10 )
 
 [node name="daily" type="VBoxContainer" parent="ScrollContainer/MarginContainer/VBoxContainer"]
-margin_top = 674.0
+margin_top = 307.0
 margin_right = 150.0
-margin_bottom = 813.0
+margin_bottom = 446.0
 
 [node name="flair" type="Label" parent="ScrollContainer/MarginContainer/VBoxContainer/daily"]
 margin_right = 150.0
@@ -1608,13 +1232,13 @@ rect_min_size = Vector2( 0, 1 )
 custom_styles/panel = SubResource( 10 )
 
 [node name="copyright" type="Label" parent="ScrollContainer/MarginContainer/VBoxContainer"]
-margin_top = 817.0
+margin_top = 450.0
 margin_right = 150.0
-margin_bottom = 857.0
+margin_bottom = 490.0
 rect_min_size = Vector2( 0, 40 )
 custom_fonts/font = ExtResource( 2 )
 custom_colors/font_color = Color( 0.498039, 0.498039, 0.498039, 1 )
-text = "(C) Copywrite 1992 all writes wreserved ur mom"
+text = "© Copywrite 1992 all writes wreserved ur mom"
 align = 1
 valign = 1
 autowrap = true
@@ -1708,26 +1332,7 @@ __meta__ = {
 [connection signal="pressed" from="ScrollContainer/MarginContainer/VBoxContainer/stats/CenterContainer/VBoxContainer/b_runs" to="." method="_on_b_pressed" binds= [ "ScrollContainer/MarginContainer/VBoxContainer/stats/CenterContainer/VBoxContainer/runs" ]]
 [connection signal="button_down" from="ScrollContainer/MarginContainer/VBoxContainer/stats/CenterContainer/VBoxContainer/bresources" to="." method="_on_button_down"]
 [connection signal="pressed" from="ScrollContainer/MarginContainer/VBoxContainer/stats/CenterContainer/VBoxContainer/bresources" to="." method="_on_b_pressed" binds= [ "ScrollContainer/MarginContainer/VBoxContainer/stats/CenterContainer/VBoxContainer/resources" ]]
-[connection signal="button_down" from="ScrollContainer/MarginContainer/VBoxContainer/b_tutorial_pen" to="." method="_on_button_down"]
-[connection signal="pressed" from="ScrollContainer/MarginContainer/VBoxContainer/b_tutorial_pen" to="." method="_on_b_pressed" binds= [ "ScrollContainer/MarginContainer/VBoxContainer/tutorial_pen" ]]
-[connection signal="button_down" from="ScrollContainer/MarginContainer/VBoxContainer/tutorial_pen/CenterContainer/VBoxContainer/b0" to="." method="_on_button_down"]
-[connection signal="pressed" from="ScrollContainer/MarginContainer/VBoxContainer/tutorial_pen/CenterContainer/VBoxContainer/b0" to="." method="_on_b_pressed" binds= [ "ScrollContainer/MarginContainer/VBoxContainer/tutorial_pen/CenterContainer/VBoxContainer/MarginContainer" ]]
-[connection signal="ready" from="ScrollContainer/MarginContainer/VBoxContainer/tutorial_pen/CenterContainer/VBoxContainer/MarginContainer/CenterContainer/Label" to="." method="_on_Label_ready" binds= [ "ScrollContainer/MarginContainer/VBoxContainer/tutorial_pen/CenterContainer/VBoxContainer/MarginContainer/CenterContainer/Label", "Upgrading LOREDs" ]]
-[connection signal="button_down" from="ScrollContainer/MarginContainer/VBoxContainer/tutorial_pen/CenterContainer/VBoxContainer/b1" to="." method="_on_button_down"]
-[connection signal="pressed" from="ScrollContainer/MarginContainer/VBoxContainer/tutorial_pen/CenterContainer/VBoxContainer/b1" to="." method="_on_b_pressed" binds= [ "ScrollContainer/MarginContainer/VBoxContainer/tutorial_pen/CenterContainer/VBoxContainer/MarginContainer2" ]]
-[connection signal="ready" from="ScrollContainer/MarginContainer/VBoxContainer/tutorial_pen/CenterContainer/VBoxContainer/MarginContainer2/CenterContainer/Label" to="." method="_on_Label_ready" binds= [ "ScrollContainer/MarginContainer/VBoxContainer/tutorial_pen/CenterContainer/VBoxContainer/MarginContainer2/CenterContainer/Label", "Hotkeys" ]]
-[connection signal="button_down" from="ScrollContainer/MarginContainer/VBoxContainer/tutorial_pen/CenterContainer/VBoxContainer/b2" to="." method="_on_button_down"]
-[connection signal="pressed" from="ScrollContainer/MarginContainer/VBoxContainer/tutorial_pen/CenterContainer/VBoxContainer/b2" to="." method="_on_b_pressed" binds= [ "ScrollContainer/MarginContainer/VBoxContainer/tutorial_pen/CenterContainer/VBoxContainer/MarginContainer3" ]]
-[connection signal="ready" from="ScrollContainer/MarginContainer/VBoxContainer/tutorial_pen/CenterContainer/VBoxContainer/MarginContainer3/CenterContainer/Label" to="." method="_on_Label_ready" binds= [ "ScrollContainer/MarginContainer/VBoxContainer/tutorial_pen/CenterContainer/VBoxContainer/MarginContainer3/CenterContainer/Label", "Status colors" ]]
-[connection signal="button_down" from="ScrollContainer/MarginContainer/VBoxContainer/tutorial_pen/CenterContainer/VBoxContainer/b3" to="." method="_on_button_down"]
-[connection signal="pressed" from="ScrollContainer/MarginContainer/VBoxContainer/tutorial_pen/CenterContainer/VBoxContainer/b3" to="." method="_on_b_pressed" binds= [ "ScrollContainer/MarginContainer/VBoxContainer/tutorial_pen/CenterContainer/VBoxContainer/MarginContainer4" ]]
-[connection signal="ready" from="ScrollContainer/MarginContainer/VBoxContainer/tutorial_pen/CenterContainer/VBoxContainer/MarginContainer4/CenterContainer/Label" to="." method="_on_Label_ready" binds= [ "ScrollContainer/MarginContainer/VBoxContainer/tutorial_pen/CenterContainer/VBoxContainer/MarginContainer4/CenterContainer/Label", "Critical strikes" ]]
-[connection signal="button_down" from="ScrollContainer/MarginContainer/VBoxContainer/tutorial_pen/CenterContainer/VBoxContainer/b4" to="." method="_on_button_down"]
-[connection signal="pressed" from="ScrollContainer/MarginContainer/VBoxContainer/tutorial_pen/CenterContainer/VBoxContainer/b4" to="." method="_on_b_pressed" binds= [ "ScrollContainer/MarginContainer/VBoxContainer/tutorial_pen/CenterContainer/VBoxContainer/MarginContainer5" ]]
-[connection signal="ready" from="ScrollContainer/MarginContainer/VBoxContainer/tutorial_pen/CenterContainer/VBoxContainer/MarginContainer5/CenterContainer/Label" to="." method="_on_Label_ready" binds= [ "ScrollContainer/MarginContainer/VBoxContainer/tutorial_pen/CenterContainer/VBoxContainer/MarginContainer5/CenterContainer/Label", "Offline earnings" ]]
-[connection signal="button_down" from="ScrollContainer/MarginContainer/VBoxContainer/tutorial_pen/CenterContainer/VBoxContainer/b5" to="." method="_on_button_down"]
-[connection signal="pressed" from="ScrollContainer/MarginContainer/VBoxContainer/tutorial_pen/CenterContainer/VBoxContainer/b5" to="." method="_on_b_pressed" binds= [ "ScrollContainer/MarginContainer/VBoxContainer/tutorial_pen/CenterContainer/VBoxContainer/MarginContainer6" ]]
-[connection signal="ready" from="ScrollContainer/MarginContainer/VBoxContainer/tutorial_pen/CenterContainer/VBoxContainer/MarginContainer6/CenterContainer/Label" to="." method="_on_Label_ready" binds= [ "ScrollContainer/MarginContainer/VBoxContainer/tutorial_pen/CenterContainer/VBoxContainer/MarginContainer6/CenterContainer/Label", "Notation" ]]
+[connection signal="pressed" from="ScrollContainer/MarginContainer/VBoxContainer/FixNAN" to="." method="_on_FixNAN_pressed"]
 [connection signal="button_down" from="ScrollContainer/MarginContainer/VBoxContainer/disc/Discord" to="." method="_on_button_down"]
 [connection signal="pressed" from="ScrollContainer/MarginContainer/VBoxContainer/disc/Discord" to="." method="_on_Discord_pressed"]
 [connection signal="file_selected" from="FileDialog" to="." method="_on_FileDialog_file_selected"]

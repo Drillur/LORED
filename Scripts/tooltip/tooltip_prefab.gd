@@ -55,9 +55,6 @@ func _call(source : String, color := Color(1,1,1)) -> void:
 		
 		if "buy lored" in type:
 			
-			cont["vbox"] = src.vbox.instance()
-			add_child(cont["vbox"])
-			
 			var f := type.split("lored ")[1]
 			
 			$bg.self_modulate = gv.g[f].color
@@ -66,12 +63,22 @@ func _call(source : String, color := Color(1,1,1)) -> void:
 		
 		elif "cac " in type:
 			
+			grow_horizontal = Control.GROW_DIRECTION_END
+			
 			var f = int(type.split(" ")[1])
 			cont["cac"] = src.cacodemon.instance()
 			cont["cac"].setup(f)
 			add_child(cont["cac"])
 			
 			$bg.self_modulate = gv.cac[f].color
+		
+		elif "summon cac" in type:
+			
+			grow_horizontal = Control.GROW_DIRECTION_END
+			
+			add_cost("cac", gv.cac_cost)
+			
+			$bg.self_modulate = Color(1,0,0)
 		
 		elif "taq " in type:
 			
@@ -94,7 +101,7 @@ func _call(source : String, color := Color(1,1,1)) -> void:
 			
 			var f := type.split("upgrade ")[1]
 			
-			$bg.self_modulate = rt.r_lored_color(gv.up[f].main_lored_target)
+			$bg.self_modulate = gv.COLORS[gv.up[f].icon]
 			
 			cont["tip up"] = get_parent().tip_upgrade.instance()
 			add_child(cont["tip up"])
@@ -154,21 +161,9 @@ func r_tip(move_tip := false) -> void:
 		
 		if "buy lored" in type:
 			
-			#rect_size = cont["vbox"].rect_size
-			
-			var f := type.split("lored ")[1]
-			
-			for x in gv.g[f].cost:
-				cont[x].get_node("HBoxContainer/VBoxContainer/val").text = gv.g[x].r.toString() + " / " + gv.g[f].cost[x].t.toString()
-				if gv.g[x].r.isLargerThanOrEqualTo(gv.g[f].cost[x].t):
-					cont[x].get_node("HBoxContainer/time").hide()
-					cont[x].get_node("HBoxContainer/check").show()
-				else:
-					cont[x].get_node("HBoxContainer/check").hide()
-					cont[x].get_node("HBoxContainer/time").show()
-					cont[x].get_node("HBoxContainer/time").text = gv.time_remaining(x, gv.g[x].r, gv.g[f].cost[x].t, false)
-			
 			if "autobuyer" in cont.keys() and fps_autobuy >= 1:
+				
+				var f := type.split("lored ")[1]
 				
 				fps_autobuy -= 1
 				
@@ -193,27 +188,14 @@ func r_tip(move_tip := false) -> void:
 				match f:
 					"I DRINK YOUR MILKSHAKE":
 						if gv.up[f].active():
-							cont["tip up"].get_node("VBoxContainer/effects/v/idym/val").text = gv.up[f].set_d.t.toString() + "x"
+							cont["tip up"].get_node("VBoxContainer/effects/v/idym/val").text = "+" + gv.up["I DRINK YOUR MILKSHAKE"].effects[0].effect.print()
 					"IT'S GROWIN ON ME", "IT'S SPREADIN ON ME":
 						if gv.up["IT'S GROWIN ON ME"].active():
-							cont["tip up"].get_node("VBoxContainer/effects/v/igom_iron/val").text = gv.g["iron"].modifier_from_growin_on_me.toString() + "x"
-							cont["tip up"].get_node("VBoxContainer/effects/v/igom_cop/val").text = gv.g["cop"].modifier_from_growin_on_me.toString() + "x"
+							cont["tip up"].get_node("VBoxContainer/effects/v/igom_iron/val").text = gv.up["IT'S GROWIN ON ME"].effects[0].effect.print() + "x"
+							cont["tip up"].get_node("VBoxContainer/effects/v/igom_cop/val").text = gv.up["IT'S GROWIN ON ME"].effects[1].effect.print() + "x"
 						if gv.up["IT'S SPREADIN ON ME"].active():
-							cont["tip up"].get_node("VBoxContainer/effects/v/igom_irono/val").text = gv.g["irono"].modifier_from_growin_on_me.toString() + "x"
-							cont["tip up"].get_node("VBoxContainer/effects/v/igom_copo/val").text = gv.g["copo"].modifier_from_growin_on_me.toString() + "x"
-			
-			# price
-			if cont["tip up"].get_node("VBoxContainer/m").visible:
-				
-				for x in gv.up[f].cost:
-					cont["tip up"].cont[x].get_node("HBoxContainer/VBoxContainer/val").text = gv.g[x].r.toString() + " / " + gv.up[f].cost[x].t.toString()
-					if gv.g[x].r.isLargerThanOrEqualTo(gv.up[f].cost[x].t):
-						cont["tip up"].cont[x].get_node("HBoxContainer/time").hide()
-						cont["tip up"].cont[x].get_node("HBoxContainer/check").show()
-					else:
-						cont["tip up"].cont[x].get_node("HBoxContainer/check").hide()
-						cont["tip up"].cont[x].get_node("HBoxContainer/time").show()
-						cont["tip up"].cont[x].get_node("HBoxContainer/time").text = gv.time_remaining(x, gv.g[x].r, gv.up[f].cost[x].t, false)
+							cont["tip up"].get_node("VBoxContainer/effects/v/igom_irono/val").text = gv.up["IT'S SPREADIN ON ME"].effects[0].effect.print() + "x"
+							cont["tip up"].get_node("VBoxContainer/effects/v/igom_copo/val").text = gv.up["IT'S SPREADIN ON ME"].effects[1].effect.print() + "x"
 	
 	if rect_size != cont[cont.keys()[0]].rect_size:
 		rect_size = cont[cont.keys()[0]].rect_size
@@ -241,25 +223,27 @@ func r_tip(move_tip := false) -> void:
 			
 			y_buffer = 70
 			
-			if pos.x + size.x <= get_viewport_rect().size.x / 2:
-				rect_position = Vector2(
+			if pos.x + size.x <= win.x / 2:
+				grow_horizontal = Control.GROW_DIRECTION_END
+				rect_global_position = Vector2(
 					pos.x + size.x + 20,
 					pos.y
 				)
 			else:
-				rect_position = Vector2(
+				grow_horizontal = Control.GROW_DIRECTION_BEGIN
+				rect_global_position = Vector2(
 					pos.x - rect_size.x - 10,
 					pos.y
 				)
 			
 			if rect_position.y < y_buffer:
 				rect_position.y = y_buffer
-			elif rect_position.y > get_viewport_rect().size.y - rect_size.y - rt.get_node("m/v/bot").rect_size.y - 10:
-				rect_position.y = get_viewport_rect().size.y - rect_size.y - rt.get_node("m/v/bot").rect_size.y - 10
-				
+			elif rect_position.y > win.y - rect_size.y - rt.get_node("m/v/bot").rect_size.y - 10:
+				rect_position.y = win.y - rect_size.y - rt.get_node("m/v/bot").rect_size.y - 10
+			
 			return
 		
-		elif "cac " in type:
+		elif "cac" in type:
 			
 			var pos : Vector2 = rt.get_node(rt.gnLOREDs).cont["cacodemons"].rect_global_position
 			var size : Vector2 = rt.get_node(rt.gnLOREDs).cont["cacodemons"].rect_size
@@ -272,8 +256,8 @@ func r_tip(move_tip := false) -> void:
 			
 			if rect_position.y < y_buffer:
 				rect_position.y = y_buffer
-			elif rect_position.y > get_viewport_rect().size.y - rect_size.y - rt.get_node("m/v/bot").rect_size.y - 10:
-				rect_position.y = get_viewport_rect().size.y - rect_size.y - rt.get_node("m/v/bot").rect_size.y - 10
+			elif rect_position.y > win.y - rect_size.y - rt.get_node("m/v/bot").rect_size.y - 10:
+				rect_position.y = win.y - rect_size.y - rt.get_node("m/v/bot").rect_size.y - 10
 				
 			return
 		
@@ -283,7 +267,7 @@ func r_tip(move_tip := false) -> void:
 			
 			rect_position = Vector2(
 				win.x - rect_size.x - 10,
-				gntaq.y - rect_size.y - 10
+				gntaq.y - rect_size.y - 20
 			)
 			return
 		
@@ -320,7 +304,7 @@ func price_flash() -> void:
 	if price_flash_i == 0:
 		for x in cost_dict:
 			
-			if gv.g[x].r.isLargerThanOrEqualTo(cost_dict[x].t):
+			if gv.r[x].isLargerThanOrEqualTo(cost_dict[x].t):
 				continue
 			
 			if "buy lored" in type:
@@ -350,7 +334,7 @@ func price_flash() -> void:
 
 func autobuyer(_lored: String, _height: int) -> int:
 	
-	if not gv.up[gv.g[_lored].autobuyer_key].active():
+	if not gv.g[_lored].autobuy:
 		return 0
 	
 	cont["autobuyer"] = rt.prefab.tip_autobuyer.instance()
@@ -385,31 +369,35 @@ func _on_tip_mouse_entered():
 
 func lored_buy_lored(key: String) -> void:
 	
-	var f = gv.g[key].cost
-	var i := 0
+	add_cost(key, gv.g[key].cost)
 	
-	for x in f:
-		
-		var val := Big.new(f[x].t)
+	if not gv.menu.option["tooltip_autobuyer"] and gv.menu.option["tooltip_cost_only"]:
+		return
+	
+	if not gv.g[key].autobuy:
+		return
+	
+	cont["autobuyer"] = src.autobuyer.instance()
+	cont["vbox"].get_node("vbox").add_child(cont["autobuyer"])
+	cont["autobuyer"].init(key)
+
+func add_cost(key: String, cost: Dictionary):
+	
+	cont["vbox"] = src.vbox.instance()
+	add_child(cont["vbox"])
+	
+	var i := 0
+	for x in cost:
 		
 		cont[x] = src.price.instance()
 		
-		# texts
-		cont[x].get_node("HBoxContainer/VBoxContainer/val").text = gv.g[x].r.toString() + " / " + val.toString()
-		cont[x].get_node("HBoxContainer/VBoxContainer/type").text = gv.g[x].name
+		var _name = ""
+		var _color = ""
+		if key == "cac":
+			_name = "cac"
+			_color = Color(1,0,0)
+		cont[x].setup(key, x, _name, _color)
 		
-		# texture
-		cont[x].get_node("HBoxContainer/icon/Sprite").texture = gv.sprite[x]
-		
-		# colors
-		var color: Color = gv.g[x].color
-		cont[x].get_node("HBoxContainer/VBoxContainer/val").add_color_override("font_color", color)
-		cont[x].get_node("HBoxContainer/time").add_color_override("font_color", color)
-		
-		# visibility
-		if gv.g[x].r.isLargerThan(val):
-			cont[x].get_node("HBoxContainer/time").hide()
-			cont[x].get_node("HBoxContainer/check").show()
 		
 		# alternate backgrounds
 		if i % 2 == 1: cont[x].get_node("bg").show()
@@ -417,13 +405,3 @@ func lored_buy_lored(key: String) -> void:
 		cont["vbox"].get_node("vbox").add_child(cont[x])
 		
 		i += 1
-	
-	if not gv.menu.option["tooltip_autobuyer"] and gv.menu.option["tooltip_cost_only"]:
-		return
-	
-	if not gv.up[gv.g[key].autobuyer_key].active():
-		return
-	
-	cont["autobuyer"] = src.autobuyer.instance()
-	cont["vbox"].get_node("vbox").add_child(cont["autobuyer"])
-	cont["autobuyer"].init(key)

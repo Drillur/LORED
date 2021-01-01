@@ -162,7 +162,7 @@ margin_bottom = 36.0
 [node name="icon" type="Panel" parent="v/m/h"]
 visible = false
 margin_right = 36.0
-margin_bottom = 41.0
+margin_bottom = 36.0
 rect_min_size = Vector2( 36, 36 )
 custom_styles/panel = SubResource( 6 )
 

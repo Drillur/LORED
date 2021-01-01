@@ -2,10 +2,11 @@ extends MarginContainer
 
 onready var rt = get_node("/root/Root")
 
-onready var gn_icon = get_node("VBoxContainer/MarginContainer/HBoxContainer/icon/Sprite")
-onready var gn_name = get_node("VBoxContainer/MarginContainer/HBoxContainer/name")
+onready var gn_icon = get_node("VBoxContainer/title/h/icon/Sprite")
+onready var gn_name = get_node("VBoxContainer/title/h/v/name")
+onready var gn_progress = get_node("VBoxContainer/title/h/v/progress")
 onready var gn_desc = get_node("VBoxContainer/desc")
-onready var gn_false = get_node("VBoxContainer/Active/false")
+onready var gn_desc2 = get_node("VBoxContainer/desc2")
 onready var gn_permanent = get_node("VBoxContainer/Active/permanent")
 onready var gn_refundable = get_node("VBoxContainer/Active/refundable")
 
@@ -28,8 +29,6 @@ func init(_key: String) -> void:
 	rect_size = Vector2(0, 0)
 	
 	labels_and_textures()
-	
-	inactive_or_permanent()
 	
 	effects()
 	
@@ -57,7 +56,7 @@ func price_stuff() -> void:
 			return
 	
 	$VBoxContainer/m.show()
-	get_node("VBoxContainer/m/bg").self_modulate = rt.r_lored_color(gv.up[key].main_lored_target)
+	get_node("VBoxContainer/m/bg").self_modulate = gv.COLORS[gv.up[key].icon]
 	
 	var f = gv.up[key].cost
 	var i := 0
@@ -68,22 +67,7 @@ func price_stuff() -> void:
 		
 		cont[x] = src.price.instance()
 		
-		# texts
-		cont[x].get_node("HBoxContainer/VBoxContainer/val").text = gv.g[x].r.toString() + " / " + val.toString()
-		cont[x].get_node("HBoxContainer/VBoxContainer/type").text = gv.g[x].name
-		
-		# texture
-		cont[x].get_node("HBoxContainer/icon/Sprite").texture = gv.sprite[x]
-		
-		# colors
-		var color: Color = gv.g[x].color
-		cont[x].get_node("HBoxContainer/VBoxContainer/val").add_color_override("font_color", color)
-		cont[x].get_node("HBoxContainer/time").add_color_override("font_color", color)
-		
-		# visibility
-		if gv.g[x].r > val:
-			cont[x].get_node("HBoxContainer/time").hide()
-			cont[x].get_node("HBoxContainer/check").show()
+		cont[x].setup(key, x)
 		
 		# alternate backgrounds
 		if i % 2 == 1: cont[x].get_node("bg").show()
@@ -101,17 +85,16 @@ func refundable() -> void:
 
 func requirements() -> bool:
 	
-	if gv.up[key].requires == "":
-		return true
-	
-	if not gv.up[gv.up[key].requires].have and not gv.up[gv.up[key].requires].refundable:
+	for x in gv.up[key].requires:
 		
-		cont[gv.up[key].requires] = src.require.instance()
-		$VBoxContainer/requires/v.add_child(cont[gv.up[key].requires])
-		cont[gv.up[key].requires].init(gv.up[key].requires)
-		$VBoxContainer/requires.show()
-		
-		return false
+		if not (gv.up[x].have or gv.up[x].refundable):# and gv.up[x].refundable:
+			
+			cont[x] = src.require.instance()
+			$VBoxContainer/requires/v.add_child(cont[x])
+			cont[x].init(x)
+			$VBoxContainer/requires.show()
+			
+			return false
 	
 	return true
 
@@ -134,7 +117,7 @@ func effects() -> void:
 	
 	
 	get_node("VBoxContainer/effects").show()
-	get_node("VBoxContainer/effects/bg").self_modulate = gv.g[gv.up[key].main_lored_target].color
+	get_node("VBoxContainer/effects/bg").self_modulate = gv.g[gv.up[key].icon].color
 	
 	match key:
 		
@@ -158,7 +141,7 @@ func labels_and_textures() -> void:
 	
 	if required_upgrades_purchased:
 		
-		gn_icon.texture = gv.sprite[gv.up[key].main_lored_target]
+		gn_icon.texture = gv.sprite[gv.up[key].icon]
 		gn_desc.text = gv.up[key].desc.f
 	
 	else:
@@ -166,23 +149,26 @@ func labels_and_textures() -> void:
 		gn_icon.texture = gv.sprite["unknown"]
 		gn_desc.text = random_desc()
 
-func inactive_or_permanent():
-	
-	match key:
-		"upgrade_name", "upgrade_description", "RED NECROMANCY":
-			gn_permanent.show()
-			return
-	
-	if not gv.up[key].have:
-		return
-	
-	if not gv.up[key].active:
-		gn_false.show()
-
 func random_desc() -> String:
 	
-	var roll : int = rand_range(0,32)
+	var roll : int = rand_range(0,40)
 	match roll:
+		39:
+			return "Instantly deletes your sugar and caffeine addictions, and fills your fridge with water bottles."
+		38:
+			return "Stocks your bathroom cabinets with flushable wipes."
+		37:
+			return "When your next Chapstick buff expires, it will have a 50% chance to apply another Chapstick buff automatically."
+		36:
+			return "Uber has 50% better customer service."
+		35:
+			return "Twitter deletes all of their servers and shuts down permanently."
+		34:
+			return "Blows the Wind of God™ on Covid-19, destroying it forever and never allowing it to come back."
+		33:
+			return "Cyberpunk 2077 now additionally allows the customization of nipples."
+		32:
+			return "Halo Infinite has an increased 25% chance to be good."
 		31:
 			return "Causes every LORED to become a Super Sonic Racer. Everybody. Everybody. Everybody. Everybody. Everybody. Everybody. Everybody. Everybody. Everybody. Everybody. EVERYBODY."
 		30:
@@ -249,3 +235,13 @@ func random_desc() -> String:
 			return "You have now spent 10x the amount of time with your parents and grandparents, for free."
 		_:
 			return "Who the frick knows what this upgrade does?"
+
+
+func r_desc2():
+	
+	if gv.up[key].progress.f == 0:
+		gn_desc2.hide()
+		return
+	
+	gn_desc2.show()
+	#gn_desc2.text = 

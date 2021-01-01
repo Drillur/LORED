@@ -42,18 +42,19 @@ func init(_tasks := []):
 	
 	for x in _tasks:
 		add_task(x)
-	
-	hit_max_tasks()
 
 func hit_max_tasks():
 	while taq.cur_tasks < taq.max_tasks:
 		add_task(_generate_random_task())
 
 
-func flying_numbers(f: Dictionary):
+func flying_numbers(f := {}):
 	
 	ready_task_count -= 1
 	time_since_last_shake = 0.0
+	
+	if not gv.menu.option["flying_numbers"]:
+		return
 	
 	var left_x = rect_global_position.x + rect_size.x / 2
 	var ypos = rect_global_position.y - 5
@@ -110,6 +111,7 @@ func _generate_random_task() -> taq.Task:
 	
 	var roll : int = 0#rand_range(0, 2)
 	var type : String
+	var key: String
 	
 	match roll:
 		0:
@@ -117,10 +119,10 @@ func _generate_random_task() -> taq.Task:
 	
 	# difficulty of step
 	var rall : float = rand_range(20,200) # 20-199
-	var rall_spike :float=rand_range(0,100) if gv.stats.tasks_completed > 15 else 10.0
+	var rarity_roll :float=rand_range(0,100) if gv.stats.tasks_completed > 15 else 10.0
 	
-	if rall_spike < 5: rall *= 10 # rare task
-	if rall_spike < 0.1: rall *= 100 # spike task
+	if rarity_roll < 5: rall *= 10 # rare task
+	if rarity_roll < 0.1: rall *= 100 # spike task
 	
 	if rt.quests["Horse Doodie"].complete:
 		rall /= 10
@@ -138,18 +140,17 @@ func _generate_random_task() -> taq.Task:
 	# which LORED is the step messing with
 	while true:
 		
-		roll = rand_range(0, gv.g.size())
+		key = gv.g.keys()[randi() % gv.g.size()]
 		
-		var short = rt.w_index_to_short(roll)
+		if not gv.g[key].unlocked:
+			continue
+		if not gv.g[key].active:
+			continue
+		if key == "growth" and not gv.g["jo"].active:
+			continue
 		
-		if not gv.g[short].unlocked:
-			continue
-		if not gv.g[short].active:
-			continue
-		if short == "growth" and not gv.g["jo"].active:
-			continue
 		var cont := false
-		for x in gv.g[short].b:
+		for x in gv.g[key].b:
 			if not gv.g[x].active:
 				cont = true
 				break
@@ -157,7 +158,7 @@ func _generate_random_task() -> taq.Task:
 		if cont:
 			continue
 		
-		for x in gv.g[short].b:
+		for x in gv.g[key].b:
 			
 			if "no" in gv.menu.f:
 				if int(gv.g[x].type[1]) <= int(gv.menu.f.split("no s")[1]):
@@ -171,11 +172,9 @@ func _generate_random_task() -> taq.Task:
 		if cont:
 			continue
 		
-		if "2" == gv.g[short].type[1] and gv.stats.run[1] == 1:
+		if "2" == gv.g[key].type[1] and gv.stats.run[1] == 1:
 			rall *= 0.1
 		break
-	
-	var f : String = rt.w_index_to_short(roll)
 	
 	var name : String
 	var desc : String
@@ -185,7 +184,7 @@ func _generate_random_task() -> taq.Task:
 	var icon := {texture = gv.sprite["unknown"], key = "unknown"}
 	
 	var rr_size := 1
-	if rall_spike >= 0.1:
+	if rarity_roll >= 0.1:
 		roll = rand_range(0, 100)
 		if roll > 95: rr_size = 4
 		elif roll > 85: rr_size = 3
@@ -198,17 +197,17 @@ func _generate_random_task() -> taq.Task:
 	if true:
 		
 		# icon
-		icon.key = f
-		icon.texture = gv.sprite[f]
+		icon.key = key
+		icon.texture = gv.sprite[key]
 		
 		# name
 		while true:
 			
-			name = generate_task_name(f)
+			name = generate_task_name(key)
 			
-			if rall_spike <= 0.1:
+			if rarity_roll <= 0.1:
 				name = name + " {Spike}"
-			elif rall_spike <= 5:
+			elif rarity_roll <= 5:
 				name = name + " (Rare)"
 			
 			if not name in content.keys():
@@ -218,14 +217,14 @@ func _generate_random_task() -> taq.Task:
 		match type:
 			"collect":
 				
-				var net = Big.new(gv.g[f].net(true)[0])
+				var net = Big.new(gv.g[key].net(true)[0])
 				
-				var amount: Big = Big.new(rall).m(Big.new(Big.max(gv.g[f].d.b, net))).m(rr_size)
+				var amount: Big = Big.new(rall).m(Big.new(Big.max(gv.g[key].d.b, net))).m(rr_size)
 				
-				step[gv.g[f].name + " produced"] = Ob.Num.new(amount)
+				step[gv.g[key].name + " produced"] = Ob.Num.new(amount)
 				time.a(amount).d(60)
 				time.d(Big.new(Big.max(net, 0.05)))
-				desc = "Collect " + gv.g[f].name + "."
+				desc = "Collect " + gv.g[key].name + "."
 	
 	# resource_reward
 	if true:
@@ -239,6 +238,9 @@ func _generate_random_task() -> taq.Task:
 					2:
 						gg = "tum"
 				var reward = Big.new(Big.max(gv.stats.most_resources_gained, gv.stats.run[gv.stats.highest_run - 1] * 1000))
+				var cawk = Big.new(gv.g[gg].net(true)[0]).m(1000)
+				if reward.isLessThan(cawk):
+					reward.a(cawk)
 				reward.m(rand_range(0.9, 1.1))
 				rr[gg] = reward
 			
@@ -249,10 +251,10 @@ func _generate_random_task() -> taq.Task:
 				
 				while true:
 					
-					roll = rand_range(0, gv.g.size())
+					roll = int(rand_range(0, gv.g.size()))
 					b = rt.w_index_to_short(roll)
 					
-					if rall_spike < 5:
+					if rarity_roll < 5:
 						if b + " " in blacklist: continue
 					if b == "growth" and not gv.g["jo"].active: continue
 					if b in "malig tum":
@@ -275,7 +277,6 @@ func _generate_random_task() -> taq.Task:
 						break
 					
 					if cont: continue
-					if b in rr.keys(): continue
 					
 					break
 				
@@ -285,7 +286,7 @@ func _generate_random_task() -> taq.Task:
 				var quest_mod = 10.0 if rt.quests["Horse Doodie"].complete else 1.0
 				
 				var dink: Big = Big.new(gv.g[b].net(true)[0]).m(progression_mod).m(time).m(quest_mod)
-				if "(Rare)" in name: dink.m(rand_range(1,3))
+				if "(Rare)" in name: dink.m(rand_range(1.0, 3.0))
 				
 				#dink *= 1 + time
 				
@@ -305,9 +306,14 @@ func _generate_random_task() -> taq.Task:
 				elif reward.exponent < 2:
 					reward.mantissa = round(reward.mantissa)
 				
-				rr[rt.w_index_to_short(roll)] = reward
+				var _key = rt.w_index_to_short(roll)
+				
+				if _key in rr.keys():
+					rr[_key].a(reward)
+				else:
+					rr[_key] = reward
 	
-	var _task = taq.Task.new(name, desc, rr, r, step, icon, gv.g[f].color)
+	var _task = taq.Task.new(name, desc, rr, r, step, icon, gv.g[key].color)
 	
 	_task.code = stepify(rand_range(0,100.0), .01)
 	while _task.code in content.keys():
@@ -518,6 +524,56 @@ func generate_task_name(lored : String, roll := 0) -> String:
 					return "Delicious!"
 				2:
 					return "Suck faster!"
+		"steel":
+			match roll:
+				0: return "Pounder"
+				1: return "Corona Blacksmith"
+				2: return "For the Steelless"
+		"axe":
+			match roll:
+				0: return "Quantity Over Quality"
+				1: return "Automataxed"
+				2: return "Factory Axes"
+		"hard":
+			match roll:
+				0: return "OnlyHardwoodFans"
+				1: return "Hardhat Zone"
+				2: return "Free $10k Life Insurance!"
+		"wire":
+			match roll:
+				0: return "Knickers"
+				1: return "Cookies"
+				2: return "Have Some Lunch!"
+		"draw":
+			match roll:
+				0: return "Doodley"
+				1: return "Paper or Electronic?"
+				2: return "Ctrl-Z in Bulk"
+		"pulp":
+			match roll:
+				0: return "Jus' securin' my jerb, hyere."
+				1: return "You 'kin fuck my girlfriend and shoot my mother, but don'tchu dare say a bad word about my truck."
+				2: return "http://FarmerMingle.com"
+		"carc":
+			match roll:
+				0: return "Pretty sure that thing's evil"
+				1: return "Devil's Dance"
+				2: return "Pleasure Over Wisdom"
+		"lead":
+			match roll:
+				0: return "What is that, a magnet?"
+				1: return "Why's that guy so mad?"
+				2: return "He's just standing there... menacingly!"
+		"pet":
+			match roll:
+				0: return "BASTARD FROM A BASKET!"
+				1: return "I have a competition in me... I want no one else to succeed."
+				2: return "I hate most people."
+		"paper":
+			match roll:
+				0: return "Pen and Paper"
+				1: return "Papers, Please"
+				2: return "Paper Man"
 	
 	match roll:
 		0:

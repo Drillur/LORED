@@ -1,6 +1,11 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=10 format=2]
 
-[ext_resource path="res://Prefabs/lored/Cacodemons.gd" type="Script" id=1]
+[ext_resource path="res://Prefabs/Scripts/Cacodemons.gd" type="Script" id=1]
+[ext_resource path="res://Styles/Master Theme.tres" type="Theme" id=2]
+[ext_resource path="res://Styles/Labels/Button.tres" type="DynamicFont" id=3]
+[ext_resource path="res://Fonts/Roboto-BlackItalic.ttf" type="DynamicFontData" id=4]
+[ext_resource path="res://Styles/Labels/whatevertheseneedseveremanagement.tres" type="DynamicFont" id=5]
+
 
 [sub_resource type="StyleBoxFlat" id=1]
 bg_color = Color( 0.0976563, 0.0976563, 0.0976563, 1 )
@@ -19,24 +24,121 @@ expand_margin_top = 10.0
 expand_margin_bottom = 10.0
 anti_aliasing = false
 
+[sub_resource type="StyleBoxFlat" id=2]
+bg_color = Color( 0.0976563, 0.0976563, 0.0976563, 1 )
+border_width_left = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color( 0.254902, 0, 0.113725, 1 )
+expand_margin_left = 10.0
+expand_margin_right = 10.0
+expand_margin_bottom = 10.0
+anti_aliasing = false
+
+[sub_resource type="DynamicFont" id=3]
+size = 14
+outline_size = 2
+outline_color = Color( 0, 0, 0, 1 )
+font_data = ExtResource( 4 )
+
+[sub_resource type="StyleBoxFlat" id=4]
+bg_color = Color( 0.0976563, 0.0976563, 0.0976563, 1 )
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_color = Color( 0.254902, 0, 0.113725, 1 )
+expand_margin_left = 10.0
+expand_margin_right = 10.0
+expand_margin_top = 10.0
+anti_aliasing = false
+
 [node name="m" type="MarginContainer"]
-margin_right = 162.0
-margin_bottom = 230.0
-rect_min_size = Vector2( 162, 230 )
+margin_right = 177.0
+margin_bottom = 347.0
+rect_min_size = Vector2( 177, 347 )
 size_flags_horizontal = 0
+custom_constants/margin_right = 10
+custom_constants/margin_top = 10
+custom_constants/margin_left = 10
+custom_constants/margin_bottom = 10
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="sc" type="ScrollContainer" parent="."]
-margin_right = 162.0
-margin_bottom = 230.0
+[node name="bg" type="Panel" parent="."]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 167.0
+margin_bottom = 337.0
+custom_styles/panel = SubResource( 1 )
 
-[node name="m" type="MarginContainer" parent="sc"]
-margin_right = 120.0
-margin_bottom = 230.0
+[node name="v" type="VBoxContainer" parent="."]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 167.0
+margin_bottom = 337.0
+custom_constants/separation = 10
+
+[node name="m top" type="MarginContainer" parent="v"]
+margin_right = 157.0
+margin_bottom = 37.0
+custom_constants/margin_right = 0
+custom_constants/margin_top = 0
+custom_constants/margin_left = 0
+custom_constants/margin_bottom = 10
+
+[node name="bg" type="Panel" parent="v/m top"]
+margin_right = 157.0
+margin_bottom = 27.0
+custom_styles/panel = SubResource( 2 )
+
+[node name="consumed spirits" type="VBoxContainer" parent="v/m top"]
+margin_right = 157.0
+margin_bottom = 27.0
+custom_constants/separation = 1
+
+[node name="total" type="Label" parent="v/m top/consumed spirits"]
+self_modulate = Color( 1, 0, 0, 1 )
+margin_right = 157.0
+margin_bottom = 17.0
+rect_min_size = Vector2( 74, 0 )
+custom_fonts/font = SubResource( 3 )
+custom_colors/font_color = Color( 0.803922, 0.803922, 0.803922, 1 )
+custom_colors/font_color_shadow = Color( 0.235294, 0, 0, 1 )
+text = "12.3e123"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="flair" type="Label" parent="v/m top/consumed spirits"]
+margin_top = 18.0
+margin_right = 157.0
+margin_bottom = 27.0
+rect_min_size = Vector2( 74, 0 )
+custom_fonts/font = ExtResource( 5 )
+custom_colors/font_color = Color( 0.803922, 0.803922, 0.803922, 1 )
+text = "total Consumed Spirits"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="sc" type="ScrollContainer" parent="v"]
+margin_top = 47.0
+margin_right = 157.0
+margin_bottom = 280.0
+size_flags_vertical = 3
+scroll_horizontal_enabled = false
+
+[node name="m" type="MarginContainer" parent="v/sc"]
+margin_right = 157.0
+margin_bottom = 233.0
 rect_min_size = Vector2( 120, 0 )
+size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_constants/margin_right = 10
 custom_constants/margin_top = 10
@@ -46,18 +148,53 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="bg" type="Panel" parent="sc/m"]
+[node name="v" type="VBoxContainer" parent="v/sc/m"]
 margin_left = 10.0
 margin_top = 10.0
-margin_right = 110.0
-margin_bottom = 220.0
-custom_styles/panel = SubResource( 1 )
-
-[node name="v" type="VBoxContainer" parent="sc/m"]
-margin_left = 10.0
-margin_top = 10.0
-margin_right = 110.0
-margin_bottom = 220.0
+margin_right = 147.0
+margin_bottom = 223.0
 size_flags_horizontal = 3
 custom_constants/separation = 10
 alignment = 1
+
+[node name="m bot" type="MarginContainer" parent="v"]
+margin_top = 290.0
+margin_right = 157.0
+margin_bottom = 327.0
+custom_constants/margin_right = 0
+custom_constants/margin_top = 10
+custom_constants/margin_left = 0
+custom_constants/margin_bottom = 0
+
+[node name="bg" type="Panel" parent="v/m bot"]
+margin_top = 10.0
+margin_right = 157.0
+margin_bottom = 37.0
+custom_styles/panel = SubResource( 4 )
+
+[node name="summon" type="Button" parent="v/m bot"]
+margin_top = 10.0
+margin_right = 157.0
+margin_bottom = 37.0
+focus_mode = 0
+mouse_default_cursor_shape = 2
+theme = ExtResource( 2 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Label" type="Label" parent="v/m bot/summon"]
+self_modulate = Color( 1, 0, 0, 1 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_fonts/font = ExtResource( 3 )
+custom_colors/font_color = Color( 0.796875, 0.796875, 0.796875, 1 )
+text = "Summon"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="mouse_entered" from="v/m bot/summon" to="." method="_on_summon_mouse_entered"]
+[connection signal="mouse_exited" from="v/m bot/summon" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="v/m bot/summon" to="." method="_on_summon_pressed"]

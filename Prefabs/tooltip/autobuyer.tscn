@@ -24,7 +24,7 @@ __meta__ = {
 margin_left = 10.0
 margin_top = 10.0
 margin_right = 207.0
-margin_bottom = 180.0
+margin_bottom = 160.0
 
 [node name="Panel2" type="Panel" parent="VBoxContainer"]
 margin_right = 197.0
@@ -184,13 +184,13 @@ autowrap = true
 
 [node name="level" type="VBoxContainer" parent="VBoxContainer"]
 visible = false
-margin_top = 28.0
-margin_right = 207.0
-margin_bottom = 76.0
+margin_top = 33.0
+margin_right = 197.0
+margin_bottom = 77.0
 alignment = 1
 
 [node name="title" type="Label" parent="VBoxContainer/level"]
-margin_right = 207.0
+margin_right = 197.0
 margin_bottom = 17.0
 custom_fonts/font = ExtResource( 6 )
 custom_colors/font_color = Color( 0.501961, 0.501961, 0.501961, 1 )
@@ -198,15 +198,15 @@ text = "Low Level"
 align = 1
 
 [node name="desc" type="Label" parent="VBoxContainer/level"]
-margin_left = 8.0
+margin_left = 3.0
 margin_top = 21.0
-margin_right = 198.0
-margin_bottom = 48.0
+margin_right = 193.0
+margin_bottom = 44.0
 rect_min_size = Vector2( 190, 0 )
 size_flags_horizontal = 4
 custom_fonts/font = ExtResource( 7 )
 custom_colors/font_color = Color( 0.764706, 0.733333, 0.603922, 1 )
-text = "This LORED is below level 6, so it will be purchased whenever possible."
+text = "This LORED is below level 5, so it will be continuously purchased."
 align = 1
 autowrap = true
 
@@ -306,7 +306,7 @@ __meta__ = {
 [node name="set_key" type="VBoxContainer" parent="VBoxContainer"]
 margin_top = 38.0
 margin_right = 197.0
-margin_bottom = 97.0
+margin_bottom = 89.0
 alignment = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/set_key"]
@@ -333,14 +333,14 @@ text = "Key LORED"
 [node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/set_key"]
 margin_top = 28.0
 margin_right = 197.0
-margin_bottom = 59.0
+margin_bottom = 51.0
 rect_min_size = Vector2( 197, 0 )
 size_flags_horizontal = 4
 alignment = 1
 
 [node name="desc" type="Label" parent="VBoxContainer/set_key/HBoxContainer2"]
 margin_right = 143.0
-margin_bottom = 31.0
+margin_bottom = 23.0
 size_flags_horizontal = 3
 custom_fonts/font = ExtResource( 7 )
 custom_colors/font_color = Color( 0.764706, 0.733333, 0.603922, 1 )
@@ -351,7 +351,7 @@ autowrap = true
 [node name="default" type="Label" parent="VBoxContainer/set_key/HBoxContainer2"]
 margin_left = 147.0
 margin_right = 197.0
-margin_bottom = 31.0
+margin_bottom = 23.0
 rect_min_size = Vector2( 50, 0 )
 size_flags_horizontal = 8
 custom_fonts/font = ExtResource( 7 )

@@ -3,7 +3,8 @@
 [ext_resource path="res://Fonts/Roboto-Medium.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Styles/Labels/Desc.tres" type="DynamicFont" id=2]
 [ext_resource path="res://Styles/Panels/tag_bg.tres" type="StyleBox" id=3]
-[ext_resource path="res://Prefabs/tooltip/tip_halt.gd" type="Script" id=4]
+[ext_resource path="res://Prefabs/Scripts/tip_halt.gd" type="Script" id=4]
+
 
 [sub_resource type="DynamicFont" id=1]
 size = 12

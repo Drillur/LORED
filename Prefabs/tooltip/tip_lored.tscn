@@ -8,7 +8,7 @@
 [ext_resource path="res://Fonts/Roboto-MediumItalic.ttf" type="DynamicFontData" id=8]
 [ext_resource path="res://Styles/Panels/block_inside_tip.tres" type="StyleBox" id=9]
 
-[sub_resource type="GDScript" id=5]
+[sub_resource type="GDScript" id=1]
 script/source = "extends MarginContainer
 
 
@@ -49,7 +49,7 @@ func setup(key: String):
 	title().resume()
 	$v/active.show()
 	tags()
-	$v/m/h/v/level.add_color_override(\"font_color\", rt.r_lored_color(lored_key))
+	$v/m/h/v/level.add_color_override(\"font_color\", gv.COLORS[lored_key])
 	
 	burn()
 	
@@ -91,7 +91,7 @@ func burn():
 		return
 	
 	$v/b.show()
-	var selmod = rt.r_lored_color(lored_key)
+	var selmod = gv.COLORS[lored_key]
 	$v/b/bg.self_modulate = selmod
 	$v/active/RR/bg.self_modulate = selmod
 	var per_sec = Big.new(gv.g[lored_key].d.t).m(60).d(gv.g[lored_key].speed.t)
@@ -99,7 +99,7 @@ func burn():
 	var i = 0
 	for x in gv.g[lored_key].b:
 		
-		var b_color = rt.r_lored_color(x)
+		var b_color = gv.COLORS[x]
 		cont[x] = src.tip_lored_b.instance()
 		cont[x].setup_b(x, lored_key, per_sec, b_color)
 		$v/b/v.add_child(cont[x])
@@ -128,22 +128,22 @@ func r_update():
 	$v/active/haste/val.text = Big.new(gv.g[lored_key].speed.b).d(gv.g[lored_key].speed.t).toString() + \"x\"
 	
 	
-	var lv_out: Big = Big.new(pow(2, gv.g[lored_key].level - 1))
-	var out_mod: Big = Big.new(gv.g[lored_key].d.m).d(lv_out)
+	var dm: String = gv.g[lored_key].d.m.toString()
+	var dum_and_dlbm: String = Big.new(gv.g[lored_key].d.um).m(gv.g[lored_key].d.lbm).m(gv.g[lored_key].d.dm).toString()
 	
 	$v/active/RR/v/base/val.text = gv.g[lored_key].d.b.toString()
-	$v/active/RR/v/a/val.text = \"+\" + gv.g[lored_key].d.a.toString()
-	$v/active/RR/v/lv/val.text = lv_out.toString() + \"x\"
-	$v/active/RR/v/up/val.text = out_mod.toString() + \"x\"
+	$v/active/RR/v/a/val.text = \"+\" + Big.new(gv.g[lored_key].d.a).a(gv.g[lored_key].d.ua).a(gv.g[lored_key].d.da).toString()
+	$v/active/RR/v/lv/val.text = dm + \"x\"
+	$v/active/RR/v/up/val.text = dum_and_dlbm + \"x\"
 "
 
-[sub_resource type="DynamicFont" id=6]
+[sub_resource type="DynamicFont" id=2]
 size = 12
 outline_size = 2
 outline_color = Color( 0, 0, 0, 1 )
 font_data = ExtResource( 3 )
 
-[sub_resource type="StyleBoxFlat" id=7]
+[sub_resource type="StyleBoxFlat" id=3]
 bg_color = Color( 1, 1, 0, 0.2 )
 border_width_left = 1
 border_width_top = 1
@@ -156,7 +156,7 @@ expand_margin_top = 5.0
 expand_margin_bottom = 5.0
 anti_aliasing = false
 
-[sub_resource type="StyleBoxFlat" id=8]
+[sub_resource type="StyleBoxFlat" id=4]
 bg_color = Color( 0, 1, 0.93, 0.2 )
 border_width_left = 1
 border_width_top = 1
@@ -169,22 +169,22 @@ expand_margin_top = 5.0
 expand_margin_bottom = 5.0
 anti_aliasing = false
 
-[sub_resource type="StyleBoxFlat" id=1]
+[sub_resource type="StyleBoxFlat" id=5]
 bg_color = Color( 1, 1, 1, 0.0509804 )
 expand_margin_left = 8.0
 expand_margin_right = 8.0
 expand_margin_top = 5.0
 expand_margin_bottom = 5.0
 
-[sub_resource type="StyleBoxFlat" id=2]
+[sub_resource type="StyleBoxFlat" id=6]
 draw_center = false
 
-[sub_resource type="DynamicFont" id=3]
+[sub_resource type="DynamicFont" id=7]
 outline_size = 2
 outline_color = Color( 0, 0, 0, 1 )
 font_data = ExtResource( 2 )
 
-[sub_resource type="DynamicFont" id=4]
+[sub_resource type="DynamicFont" id=8]
 size = 12
 outline_size = 2
 outline_color = Color( 0, 0, 0, 1 )
@@ -224,7 +224,7 @@ custom_constants/margin_right = 10
 custom_constants/margin_top = 10
 custom_constants/margin_left = 10
 custom_constants/margin_bottom = 10
-script = SubResource( 5 )
+script = SubResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -232,8 +232,8 @@ __meta__ = {
 [node name="v" type="VBoxContainer" parent="."]
 margin_left = 10.0
 margin_top = 10.0
-margin_right = 88.0
-margin_bottom = 56.0
+margin_right = 121.0
+margin_bottom = 245.0
 
 [node name="tags" type="HBoxContainer" parent="v"]
 visible = false
@@ -264,7 +264,7 @@ margin_left = 5.0
 margin_top = 5.0
 margin_right = 28.0
 margin_bottom = 20.0
-custom_fonts/font = SubResource( 6 )
+custom_fonts/font = SubResource( 2 )
 text = "Halt"
 
 [node name="hold" type="MarginContainer" parent="v/tags"]
@@ -286,14 +286,14 @@ margin_left = 5.0
 margin_top = 5.0
 margin_right = 31.0
 margin_bottom = 20.0
-custom_styles/panel = SubResource( 7 )
+custom_styles/panel = SubResource( 3 )
 
 [node name="Label" type="Label" parent="v/tags/hold"]
 margin_left = 5.0
 margin_top = 5.0
 margin_right = 31.0
 margin_bottom = 20.0
-custom_fonts/font = SubResource( 6 )
+custom_fonts/font = SubResource( 2 )
 text = "Hold"
 
 [node name="baby" type="MarginContainer" parent="v/tags"]
@@ -315,18 +315,18 @@ margin_left = 5.0
 margin_top = 5.0
 margin_right = 33.0
 margin_bottom = 20.0
-custom_styles/panel = SubResource( 8 )
+custom_styles/panel = SubResource( 4 )
 
 [node name="Label" type="Label" parent="v/tags/baby"]
 margin_left = 5.0
 margin_top = 5.0
 margin_right = 33.0
 margin_bottom = 20.0
-custom_fonts/font = SubResource( 6 )
+custom_fonts/font = SubResource( 2 )
 text = "Baby"
 
 [node name="m" type="MarginContainer" parent="v"]
-margin_right = 78.0
+margin_right = 111.0
 margin_bottom = 46.0
 custom_constants/margin_top = 5
 custom_constants/margin_bottom = 5
@@ -336,13 +336,13 @@ __meta__ = {
 
 [node name="bg" type="Panel" parent="v/m"]
 margin_top = 5.0
-margin_right = 78.0
+margin_right = 111.0
 margin_bottom = 41.0
-custom_styles/panel = SubResource( 1 )
+custom_styles/panel = SubResource( 5 )
 
 [node name="h" type="HBoxContainer" parent="v/m"]
 margin_top = 5.0
-margin_right = 78.0
+margin_right = 111.0
 margin_bottom = 41.0
 
 [node name="icon" type="Panel" parent="v/m/h"]
@@ -350,7 +350,7 @@ margin_right = 36.0
 margin_bottom = 36.0
 rect_min_size = Vector2( 36, 36 )
 size_flags_vertical = 4
-custom_styles/panel = SubResource( 2 )
+custom_styles/panel = SubResource( 6 )
 
 [node name="Sprite" type="Sprite" parent="v/m/h/icon"]
 position = Vector2( 18, 18 )
@@ -358,25 +358,27 @@ texture = ExtResource( 1 )
 
 [node name="v" type="VBoxContainer" parent="v/m/h"]
 margin_left = 40.0
-margin_right = 78.0
+margin_right = 59.0
 margin_bottom = 36.0
 alignment = 1
 
 [node name="name" type="Label" parent="v/m/h/v"]
-margin_right = 38.0
-margin_bottom = 19.0
+margin_top = 8.0
+margin_right = 19.0
+margin_bottom = 27.0
 size_flags_horizontal = 3
-custom_fonts/font = SubResource( 3 )
+custom_fonts/font = SubResource( 7 )
 custom_colors/font_color = Color( 0.8, 0.8, 0.8, 1 )
 text = "Oil"
 valign = 1
 
 [node name="level" type="Label" parent="v/m/h/v"]
+visible = false
 margin_top = 23.0
 margin_right = 38.0
 margin_bottom = 36.0
 size_flags_horizontal = 0
-custom_fonts/font = SubResource( 4 )
+custom_fonts/font = SubResource( 8 )
 custom_colors/font_color = Color( 0.804688, 0.804688, 0.804688, 1 )
 text = "Level 5"
 
