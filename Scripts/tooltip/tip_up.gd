@@ -16,7 +16,6 @@ var required_upgrades_purchased := true
 var cont := {}
 var src := {
 	price = preload("res://Prefabs/tooltip/price.tscn"),
-	require = preload("res://Prefabs/tooltip/upgrade_block.tscn"),
 }
 
 
@@ -89,7 +88,7 @@ func requirements() -> bool:
 		
 		if not (gv.up[x].have or gv.up[x].refundable):# and gv.up[x].refundable:
 			
-			cont[x] = src.require.instance()
+			cont[x] = gv.SRC["upgrade block"].instance()
 			$VBoxContainer/requires/v.add_child(cont[x])
 			cont[x].init(x)
 			$VBoxContainer/requires.show()

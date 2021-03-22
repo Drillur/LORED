@@ -8,6 +8,8 @@ var lored_key: String
 var fps := 0.0
 var slow_fps := 0.0
 
+var gn_drain = 0
+
 func _ready():
 	
 	set_process(false)
@@ -17,6 +19,8 @@ func setup(key: String):
 	
 	lored_key = key
 	
+	gn_drain = get_node("v/drain/val")
+	
 	static_vals()
 
 func static_vals():
@@ -24,23 +28,31 @@ func static_vals():
 	var icon: Texture
 	var title: String
 	var color: Color
+	var fuel_source = gv.g[lored_key].fuel_source
 	
-	if "bur " in gv.g[lored_key].type:
-		icon = gv.sprite["coal"]
-		title = "Coal Storage"
-		color = gv.g["coal"].color
+	icon = gv.sprite[fuel_source]
+	color = gv.COLORS[fuel_source]
 	
-	elif "ele " in gv.g[lored_key].type:
-		icon = gv.sprite["jo"]
-		title = "Battery"
-		color = gv.g["jo"].color
+	match fuel_source:
+		"coal":
+			title = "Coal Storage"
+		"jo":
+			title = "Battery"
+		"water":
+			title = "Thirst"
+		"blood":
+			title = "Blood"
+			get_node("v/drain/desc").text = "Gain per second"
+		"mana":
+			title = "Mana"
+			get_node("v/drain/desc").text = "Gain per second"
 	
 	
 	$v/h/icon/Sprite.texture = icon
 	$v/h/step/title.text = title
 	
 	$v/h/step/val.add_color_override("font_color", color)
-	$v/drain/val.add_color_override("font_color", color)
+	gn_drain.add_color_override("font_color", color)
 	$v/ct.modulate = color
 	get_parent().get_node("bg").self_modulate = color
 	
@@ -62,7 +74,7 @@ func _physics_process(delta: float) -> void:
 func r_update():
 	
 	if fps > 0:
-		fps -= get_physics_process_delta_time()
+		fps -= gv.fps
 		return
 	fps += 0.01
 	
@@ -72,19 +84,18 @@ func r_update():
 func r_slow():
 	
 	if slow_fps > 0:
-		slow_fps -= get_physics_process_delta_time()
+		slow_fps -= gv.fps
 		return
 	slow_fps += 0.15
 	
-	var less = Big.new(gv.g[lored_key].fc.t).m(4)
-	var drain = Big.new(gv.g[lored_key].fc.t).m(60)
-	if gv.g[lored_key].f.f.isLessThan(Big.new(gv.g[lored_key].f.t).s(less)):
+	var drain = Big.new(gv.g[lored_key].fc.t)
+	if gv.g[lored_key].f.f.less(gv.g[lored_key].f.t) and not gv.g[lored_key].smart:
 		drain.m(2)
-	if drain.isLessThan(gv.g[lored_key].fc.t):
+	if drain.less(gv.g[lored_key].fc.t):
 		drain = Big.new(gv.g[lored_key].fc.t)
 	
 	# change to string
-	if gv.g[lored_key].f.f.isLessThan(Big.new(gv.g[lored_key].f.t).s(less)):
+	if gv.g[lored_key].f.f.less(gv.g[lored_key].f.t) and not gv.g[lored_key].smart:
 		drain = drain.toString() + "*"
 		get_node("v/less").show()
 	else:
@@ -92,5 +103,5 @@ func r_slow():
 		get_node("v/less").hide()
 		set_process(true)
 	
-	$v/drain/val.text = drain
+	gn_drain.text = drain
 	

@@ -15,39 +15,26 @@ func init() -> void:
 	self_modulate = col
 	$done/text.add_color_override("font_color", Color(col.r, col.g, col.b, 1.25))
 	$bar.modulate = col
-	$time.add_color_override("font_color", col)
 	
-	$icon.set_texture(taq.quest.icon.texture)
-	
-	rt.w_task_progress_check()
+	$icon.set_texture(taq.quest.icon)
 
 func _physics_process(delta):
 	
-	if $bar.value == 100:
+	if taq.quest.ready:
 		if not $done.visible:
 			$done.show()
 		return
 	
 	fps += delta
-	if fps > rt.FPS:
-		fps -= rt.FPS
+	if fps > gv.fps:
+		fps -= gv.fps
 		
-		var points: Big = Big.new(0)
+		get_node("bar").value = taq.quest.points.percent(taq.quest.total_points) * 100
 		
-		for x in taq.quest.step:
-			if typeof(taq.quest.step[x].f) == TYPE_NIL:
-				taq.quest.step[x].f = Big.new(0)
-			points.a(taq.quest.step[x].f)
-		points = Big.new(Big.min(points, taq.quest.total_points))
-		
-		get_node("bar").value = points.percent(taq.quest.total_points) * 100
-		
-		if points.isLargerThanOrEqualTo(Big.new(taq.quest.total_points).m(0.9995)):
+		if taq.quest.ready:
 			get_node("time").hide()
 			get_node("done").show()
 			get_node("view").hide()
-		
-		$time.text = w_get_time_remaining()
 	
 #	# shake if done
 #	while $done.visible:
@@ -59,16 +46,6 @@ func _physics_process(delta):
 #		w_shake_self()
 #
 #		break
-
-func w_get_time_remaining() -> String:
-	
-	if "Combined resources produced" in taq.quest.step.keys() or "Combined Stage 2 resources produced" in taq.quest.step.keys():
-		return ""
-	if not (taq.quest.step.size() == 1 and " produced" in taq.quest.step.keys()[0]):
-		return ""
-	
-	var gg = rt.w_name_to_short(taq.quest.step.keys()[0].split(" produced")[0])
-	return gv.time_remaining(gg, taq.quest.step.values()[0].f, taq.quest.step.values()[0].t, true)
 
 
 
@@ -88,15 +65,14 @@ func b_end_task() -> void:
 	rt.get_node("global_tip")._call("no")
 	
 	$done.hide()
-	rt.quests[taq.quest.name].complete = true
 	
-	randomize()
+	rt.quests[taq.quest.name].complete = true
 	
 	get_parent().quest_ended()
 	
 	queue_free()
 
 func _on_task_mouse_entered():
-	rt.get_node("global_tip")._call("taq " + taq.quest.name)#"quest " + taq.quest.name)
+	rt.get_node("global_tip")._call("taq quest " + str(taq.quest.key))#"quest " + taq.quest.name)
 func _on_task_mouse_exited():
 	rt.get_node("global_tip")._call("no")

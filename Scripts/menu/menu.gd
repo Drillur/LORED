@@ -64,10 +64,10 @@ func _ready():
 			$ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/crits_only.hide()
 		
 		
-		if "browser" in rt.PLATFORM:
+		if "browser" in gv.PLATFORM:
 			$ScrollContainer/MarginContainer/VBoxContainer/save/CenterContainer/VBoxContainer/import_save.hide()
 			$ScrollContainer/MarginContainer/VBoxContainer/save/CenterContainer/VBoxContainer/export_save.hide()
-		elif "pc" in rt.PLATFORM:
+		elif "pc" in gv.PLATFORM:
 			$ScrollContainer/MarginContainer/VBoxContainer/save/CenterContainer/VBoxContainer/b_print_save.hide()
 func init(f: Dictionary) -> void:
 	
@@ -84,7 +84,7 @@ func init(f: Dictionary) -> void:
 	$ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/notation_type.select(f["notation_type"])
 	
 	# performance // save cpu
-	if rt.PLATFORM != "browser":
+	if gv.PLATFORM != "browser":
 		$ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/perf.pressed = f["performance"]
 	else:
 		$ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/perf.hide()
@@ -98,11 +98,6 @@ func init(f: Dictionary) -> void:
 	
 	# animations
 	$ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/animations.pressed = f["animations"]
-	if not f["animations"]:
-		var gnframes = rt.get_node(rt.gnLOREDs).cont["coal"].gnframes
-		for x in gv.g:
-			rt.get_node(rt.gnLOREDs).cont[x].get_node(gnframes).animation = "ww"
-			rt.get_node(rt.gnLOREDs).cont[x].get_node(gnframes).playing = true
 	
 	# on_save
 	if true:
@@ -149,8 +144,8 @@ func _physics_process(delta):
 	
 	if $ScrollContainer/MarginContainer/VBoxContainer/stats/CenterContainer/VBoxContainer/resources.visible:
 		fps["resource_text"] += delta
-		if fps["resource_text"] >= rt.FPS:
-			fps["resource_text"] -= rt.FPS
+		if fps["resource_text"] >= gv.fps:
+			fps["resource_text"] -= gv.fps
 			r_resource_text()
 	
 	if $ScrollContainer/MarginContainer/VBoxContainer/stats/CenterContainer/VBoxContainer/runs.visible:
@@ -162,8 +157,8 @@ func _physics_process(delta):
 	if not $ScrollContainer/MarginContainer/VBoxContainer/save.visible: return
 	
 	fps["base"] += delta
-	if fps["base"] < rt.FPS: return
-	fps["base"] -= rt.FPS
+	if fps["base"] < gv.fps: return
+	fps["base"] -= gv.fps
 	
 	r_save_bar()
 
@@ -255,18 +250,16 @@ func _on_menu_hide():
 func _on_fps_item_selected(id):
 	gv.menu.option["FPS"] = id
 	match id:
-		0: rt.FPS = 1.0
-		1: rt.FPS = 0.2
-		2: rt.FPS = 0.1
-		3: rt.FPS = 0.0666
-		4: rt.FPS = 0.05
-		5: rt.FPS = 0.04
-		6: rt.FPS = 0.0333
-		7: rt.FPS = 0.01666
+		0: gv.fps = 1.0
+		1: gv.fps = 0.2
+		2: gv.fps = 0.1
+		3: gv.fps = 0.0666
+		4: gv.fps = 0.05
+		5: gv.fps = 0.04
+		6: gv.fps = 0.0333
+		7: gv.fps = 0.01666
 func _on_notation_type_item_selected(id):
 	gv.menu.option["notation_type"] = id
-	for x in gv.g:
-		gv.emit_signal("lored_updated", x, "d")
 
 func _on_crits_only_pressed():
 	b_option_pressed("crits_only", $ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/crits_only/CenterContainer/crits_only)
@@ -286,22 +279,13 @@ func b_option_pressed(option: String, node) -> void:
 	gv.menu.option[option] = node.pressed
 	
 	match option:
+		"afford check":
+			rt.get_node(rt.gnLOREDs).display_afford_checks()
 		"tooltip_autobuyer":
 			get_node("ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/tooltips/CenterContainer/VBoxContainer/cost only").visible = not node.pressed
 		"performance":
-			if rt.PLATFORM != "browser":
+			if gv.PLATFORM != "browser":
 				OS.set_low_processor_usage_mode(node.pressed)
-		"animations":
-			for x in rt.get_node(rt.gnLOREDs).cont:
-				if not x in gv.g.keys():
-					continue
-				if not node.pressed:
-					rt.get_node(rt.gnLOREDs).cont[x].get_node(rt.get_node(rt.gnLOREDs).cont[x].gnframes).animation = "ww"
-					rt.get_node(rt.gnLOREDs).cont[x].get_node(rt.get_node(rt.gnLOREDs).cont[x].gnframes).playing = true
-					continue
-				if gv.g[x].progress.f > 0:
-					rt.get_node(rt.gnLOREDs).cont[x].get_node(rt.get_node(rt.gnLOREDs).cont[x].gnframes).animation = "ff"
-				rt.get_node(rt.gnLOREDs).cont[x].get_node(rt.get_node(rt.gnLOREDs).cont[x].gnframes).playing = false
 
 func _on_ScrollContainer_resized():
 	$bg.rect_size = $ScrollContainer.rect_size

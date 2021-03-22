@@ -1,10 +1,9 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://Styles/Labels/Button.tres" type="DynamicFont" id=1]
 [ext_resource path="res://Scripts/task/quest.gd" type="Script" id=2]
 [ext_resource path="res://Styles/Panels/task_panel.tres" type="StyleBox" id=3]
 [ext_resource path="res://Sprites/misc/unknown.png" type="Texture" id=4]
-[ext_resource path="res://Styles/Labels/timer.tres" type="DynamicFont" id=5]
 [ext_resource path="res://Sprites/misc/circle.png" type="Texture" id=6]
 
 [sub_resource type="StyleBoxFlat" id=1]
@@ -142,17 +141,6 @@ custom_colors/font_color = Color( 0, 0.552941, 1, 1 )
 text = "Complete!"
 align = 1
 valign = 1
-
-[node name="time" type="Label" parent="."]
-margin_left = 29.0
-margin_right = 93.0
-margin_bottom = 45.0
-custom_fonts/font = ExtResource( 5 )
-align = 1
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 [connection signal="mouse_entered" from="." to="." method="_on_task_mouse_entered"]
 [connection signal="mouse_exited" from="." to="." method="_on_task_mouse_exited"]
 [connection signal="button_down" from="view" to="." method="_on_button_down"]

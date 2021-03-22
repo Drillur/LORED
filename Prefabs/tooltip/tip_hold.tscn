@@ -7,7 +7,6 @@
 [ext_resource path="res://Styles/Panels/block_inside_tip.tres" type="StyleBox" id=5]
 [ext_resource path="res://Fonts/Roboto-Black.ttf" type="DynamicFontData" id=6]
 
-
 [sub_resource type="StyleBoxFlat" id=1]
 bg_color = Color( 1, 1, 0, 0.211765 )
 border_width_left = 1
@@ -96,7 +95,7 @@ text = "Hold"
 
 [node name="desc" type="Label" parent="v"]
 margin_right = 205.0
-margin_bottom = 31.0
+margin_bottom = 23.0
 custom_fonts/font = ExtResource( 2 )
 custom_colors/font_color = Color( 0.804688, 0.804688, 0.804688, 1 )
 text = "Prevents or allows the use of this resource (except for fuel if appliccable)."
@@ -104,9 +103,9 @@ valign = 1
 autowrap = true
 
 [node name="used_by" type="MarginContainer" parent="v"]
-margin_top = 41.0
+margin_top = 33.0
 margin_right = 205.0
-margin_bottom = 79.0
+margin_bottom = 71.0
 custom_constants/margin_right = 10
 custom_constants/margin_top = 10
 custom_constants/margin_left = 10

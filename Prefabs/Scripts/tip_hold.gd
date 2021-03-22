@@ -32,7 +32,7 @@ func used_by():
 		if not gv.g[x].active:
 			continue
 		
-		var per_sec = Big.new(gv.g[x].d.t).m(60).d(gv.g[x].speed.t)
+		var per_sec = Big.new(gv.g[x].d.t).d(gv.g[x].speed.t)
 		
 		cont[x] = src.tip_lored_b.instance()
 		cont[x].setup_used_by(lored_key, x, per_sec, gv.g[x].color)

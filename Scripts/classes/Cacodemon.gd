@@ -5,19 +5,25 @@ extends "res://Scripts/classes/Purchasable.gd"
 
 var level := Big.new(1)
 
-var d := Num.new(1)
-var output_mod := Big.new(1)
+var d := Num.new(0.1)
+var misc_d := Num.new(1)
 var inhand := Big.new(1)
 var xp := Num.new(4)
 var xp_gain := Num.new(1)
 var color: Color
 
 var consumed_spirits := Big.new(0)
-var initial_host_cs := Big.new(0)
-var times_cs_sapped := 0
-const cs_loss := [0.1, 0.15, 0.2, 0.25, 0.3]
+var cs_peak: Big
 
-var progress := Float.new(500) # increments in terms of delta * 100
+var production := {
+	"flesh": Big.new(0.7),
+	"nearly dead": Big.new(0.7),
+	"terror": Big.new(0.7),
+	"corpse": Big.new(0.7),
+}
+var production_mod := Big.new(1)
+
+var progress := Float.new(5)
 var progress_gain := 1.0
 
 var active := false
@@ -31,96 +37,83 @@ func _init(_key: int) -> void:
 	
 	key = _key
 	
+	type = get_type() # color gets set here, too
+	
 	setup()
 	
 	name = get_name()
-	type = get_type() # color gets set here, too
 
 
 func setup():
 	
 	inhand = Big.new(d.t)
 	
-	pass
+	match type:
+		"Wendigo":
+			production["flesh"].m(2)
+		"Cacodemon":
+			production["terror"].m(2)
+		"Devil":
+			production["corpse"].m(2)
+		"Dybbuk":
+			production["nearly dead"].m(2)
+		"Barghest":
+			for x in production:
+				production[x] = Big.new(0.875)
 
 
 func sync():
 	
 	d.sync()
+	misc_d.sync()
 	progress.sync()
+	if progress.t > 43200:
+		progress.t = 43200.0
 	xp.sync()
 	xp_gain.sync()
+	
+	production_mod = Big.new(level).m(level).d(5)
+	if production_mod.less(1):
+		production_mod = Big.new(1)
 
+func start_task():
+	
+	inhand = Big.new(d.t)
 
+func finish_task():
+	
+	xp()
+	consumed_spirits.a(consumed_spirit_gain(inhand))
+	
+	for x in production:
+		
+		var roll = Big.new(production[x]).m(rand_range(0.5,1.5)).roundDown()
+		if roll.less(1):
+			continue
+		
+		gv.r[x].a(roll)
+		gv.emit_signal("item_produced", x)
 
-func work():
-	
-	if dead:
-		return
-	
-	if host:
-		if progress_gain > -0.5:
-			progress_gain -= 0.005
-		else:
-			progress_gain *= 1.01
-		
-	
-	if progress.f >= progress.t and not host:
-		
-		progress.f = 0.0
-		
-		xp()
-		
-		consumed_spirits.a(consumed_spirit_gain(inhand))
-		gv.emit_signal("cac_fps", "consumed spirits", key)
-		gv.emit_signal("cac_consumed")
-		
-		inhand = Big.new(d.t)
-	
-	if progress.f < 0:
-		
-		progress.f = progress.t
-		
-		var _cs_loss: Big = Big.new(initial_host_cs).m(cs_loss[times_cs_sapped])
-		
-		consumed_spirits.s(_cs_loss)
-		
-		gv.r["spirit"].a(_cs_loss)
-		gv.emit_signal("amount_updated", "spirit")
-		
-		times_cs_sapped += 1
-		
-		if times_cs_sapped == 5:
-			
-			print(key, " emitted")
-			gv.emit_signal("cac_slain", key)
-			dead = true
-			
-			return
-	
-	return
-	
-	var loss = Big.new(consumed_spirits).d(10000)
-	consumed_spirits.s(loss)
-	gv.r["spirit"].a(loss)
+func killed():
 	gv.emit_signal("amount_updated", "spirit")
+	gv.emit_signal("cac_slain", key)
+	active = false
+	dead = true
 
 func consumed_spirit_gain(base: Big = d.t) -> Big:
 	
-	var gain: Big = Big.new(log(base.mantissa) / log(10))#Big.new(base).d(100)
+	var gain: Big = Big.new(base).d(10)
 	
 	gain.a(max(base.exponent + 1, 1))
-	gain.m(output_mod)
-	gain.d(100)
+	gain.d(10)
 	
 	return gain
 
 func xp():
 	
 	xp.f.a(xp_gain.t)
-	gv.emit_signal("cac_fps", "xp", key)
 	
-	if xp.f.isLessThan(xp.t):
+	if xp.f.less(xp.t):
 		return
 	
 	level_up()
@@ -134,7 +127,9 @@ func level_up():
 	
 	d.m.m(2)
 	var output_increase = rand_range(1.08, 1.12)
-	output_mod.m(output_increase)
+	d.m.m(output_increase)
+	
+	misc_d.m.m(1.1)
 	
 	progress.m *= 1.03
 	
@@ -260,6 +255,14 @@ func get_type() -> String:
 	
 	var roll = int(rand_range(0, 5))
 	
+	if gv.cacodemons == 0:
+		match key:
+			0: roll = 0
+			1: roll = 3
+			2: roll = 4
+			3: roll = 2
+			4: roll = 1
+	
 	match roll:
 		0:
 			color = Color(0.7184, 0.857422, 0.395218)
@@ -280,5 +283,5 @@ func get_type() -> String:
 
 func selected_as_host():
 	
-	initial_host_cs = Big.new(consumed_spirits)
+	cs_peak = Big.new(consumed_spirits)
 	host = true

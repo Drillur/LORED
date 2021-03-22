@@ -3,56 +3,49 @@ extends Button
 
 onready var rt = get_node("/root/Root")
 
-var code := 0.0
+var task: Task
+
 var fps := 0.0
 
 
-func init(_icon:Dictionary, _code:float, _tp_border_color: Color) -> void:
+
+func init(_task: Task) -> void:
 	
-	code = _code
+	task = _task
+	
+	task.manager = self
 	
 	# ref
 	if true:
 		
-		$time.add_color_override("font_color", _tp_border_color)
-		$icon.texture = _icon.texture
-		$tp.self_modulate = Color(_tp_border_color.r, _tp_border_color.g, _tp_border_color.b, 0.5)
-		if "(Rare)" in taq.task[code].name:
+		$icon.texture = task.icon
+		$tp.self_modulate = Color(task.color.r, task.color.g, task.color.b, 0.5)
+		if task.type == gv.Quest.RANDOM_RARE:
 			$rare.show()
-		elif "{Spike}" in taq.task[code].name:
+		elif task.type == gv.Quest.RANDOM_SPIKE:
 			$spike.show()
+
 
 
 func _physics_process(delta):
 	
-	if not code in taq.task.keys():
-		set_physics_process(false)
-		return
+	return
 	
 	if $tp.value >= 100:
 		return
 	
 	fps += delta
-	if fps < rt.FPS:
+	if fps < gv.fps:
 		return
-	fps -= rt.FPS
-	
-	if taq.task[code].step.size() == 1 and " produced" in taq.task[code].step.keys()[0]:
-		var gg = rt.w_name_to_short(taq.task[code].step.keys()[0].split(" produced")[0])
-		$time.text = gv.time_remaining(gg, taq.task[code].step.values()[0].f, taq.task[code].step.values()[0].t, true)
-	else:
-		$time.text = ""
+	fps -= gv.fps
 	
 	r_update_tp()
 
 func r_update_tp() -> void:
 	
-	var points: Big = Big.new(0)
-	for x in taq.task[code].step:
-		points.a(taq.task[code].step[x].f)
-	$tp.value = points.percent(taq.task[code].total_points) * 100
+	$tp.value = task.points.percent(task.total_points) * 100
 	
-	if $tp.value >= 100:
+	if task.ready:
 		get_parent().get_parent().ready_task_count += 1
 		$time.text = ""
 		$tp.self_modulate = Color($tp.self_modulate.r, $tp.self_modulate.g, $tp.self_modulate.b, 1.0)
@@ -62,7 +55,7 @@ func r_update_tp() -> void:
 
 
 func _on_task_mouse_entered():
-	rt.get_node("global_tip")._call("taq " + str(code))#"task " + str(code))
+	rt.get_node("global_tip")._call("taq", {"random": task})#"task " + str(code))
 	$time.show()
 
 func _on_task_mouse_exited():
@@ -83,20 +76,20 @@ func _on_task_pressed(manual := true):
 	gv.stats.tasks_completed += 1
 	
 	hide()
-	get_parent().get_parent().erase(code) # erases this task from content too
+	get_parent().get_parent().content.remove(self) # erases this task from content too
 	finish_up()
 
 func kill_yourself():
 	set_physics_process(false)
 	hide()
-	get_parent().get_parent().content.erase(code)
-	taq.task.erase(code)
+	get_parent().get_parent().content.remove(self)
+	taq.task.erase(task)
 	taq.cur_tasks -= 1
 	queue_free()
 
 func finish_up():
 	
-	if taq.cur_quest != "":
+	if taq.cur_quest != -1:
 		
 		if "Tasks completed" in taq.quest.step.keys():
 			var A = Big.new(Big.min(Big.new(taq.quest.step["Tasks completed"].f).a(1), taq.quest.step["Tasks completed"].b))
@@ -110,24 +103,18 @@ func finish_up():
 				var A = Big.new(Big.min(Big.new(taq.quest.step["Spike tasks completed"].f).a(1), taq.quest.step["Spike tasks completed"].b))
 				taq.quest.step["Spike tasks completed"].f = A
 	
-	for x in taq.task[code].resource_reward:
-		gv.r[x].a(taq.task[code].resource_reward[x].toScientific())
-		gv.emit_signal("lored_updated", x, "amount")
-		gv.g[x].task_and_quest_check(taq.task[code].resource_reward[x])
-	
-	for x in taq.task[code].reward:
+	var gayzo = {}
+	for r in task.reward:
+		if not r.type == gv.TaskRequirement.REDSOURCE_PRODUCTION:
+			continue
 		
-		break
+		taq.progress(gv.TaskRequirement.RESOURCE_PRODUCTION, r.other_key, r.amount)
+		
+		gayzo[r.other_key] = Big.new(r.amount)
 	
-	if gv.menu.option["flying_numbers"]:
-		var gayzo = {}
-		for x in taq.task[code].resource_reward:
-			gayzo[x] = Big.new(taq.task[code].resource_reward[x])
-		get_parent().get_parent().flying_numbers(gayzo)
-	else:
-		get_parent().get_parent().flying_numbers()
+	get_parent().get_parent().flying_numbers(gayzo)
 	
-	taq.task.erase(code)
+	taq.task.erase(task)
 	
 	queue_free()
 

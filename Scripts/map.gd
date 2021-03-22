@@ -15,6 +15,11 @@ var mouse_in := "no"
 var pos := {}
 var size := {}
 
+
+func _ready() -> void:
+	set_physics_process(false)
+
+
 func init():
 	
 	pos["menu"] = rt.get_node("misc/menu").position

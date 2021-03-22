@@ -231,6 +231,19 @@ margin_right = 1024.0
 margin_bottom = 703.0
 size_flags_vertical = 3
 
+[node name="Bottom" type="HBoxContainer" parent="m/v"]
+margin_top = 703.0
+margin_right = 1024.0
+margin_bottom = 703.0
+
+[node name="Left" type="Panel" parent="m/v/Bottom"]
+size_flags_horizontal = 0
+
+[node name="Right" type="Panel" parent="m/v/Bottom"]
+margin_left = 1024.0
+margin_right = 1024.0
+size_flags_horizontal = 10
+
 [node name="bot" type="MarginContainer" parent="m/v"]
 margin_top = 703.0
 margin_right = 1024.0
@@ -398,8 +411,9 @@ __meta__ = {
 
 [node name="s3" type="Button" parent="misc/tabs/v"]
 visible = false
+margin_top = 50.0
 margin_right = 53.0
-margin_bottom = 40.0
+margin_bottom = 90.0
 rect_min_size = Vector2( 0, 40 )
 focus_mode = 0
 mouse_default_cursor_shape = 2
@@ -426,9 +440,8 @@ __meta__ = {
 
 [node name="s4" type="Button" parent="misc/tabs/v"]
 visible = false
-margin_top = 50.0
 margin_right = 53.0
-margin_bottom = 90.0
+margin_bottom = 40.0
 rect_min_size = Vector2( 0, 40 )
 mouse_default_cursor_shape = 2
 theme = ExtResource( 11 )
@@ -451,8 +464,6 @@ valign = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
-
-[node name="upgrades" type="Node2D" parent="."]
 
 [node name="texts" type="Node2D" parent="."]
 

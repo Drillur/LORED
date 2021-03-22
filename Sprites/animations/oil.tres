@@ -10,7 +10,6 @@
 [ext_resource path="res://Sprites/animations/oil/g3.png" type="Texture" id=8]
 [ext_resource path="res://Sprites/animations/oil/wait.png" type="Texture" id=9]
 
-
 [resource]
 animations = [ {
 "frames": [ ExtResource( 1 ), ExtResource( 2 ), ExtResource( 3 ), ExtResource( 4 ), ExtResource( 5 ), ExtResource( 6 ), ExtResource( 7 ), ExtResource( 8 ) ],

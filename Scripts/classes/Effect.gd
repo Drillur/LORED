@@ -57,13 +57,16 @@ func apply(upgrade_name: String):
 	
 	match type:
 		
+		"task":
+			for b in beneficiaries:
+				gv.g[b].task_list.append(other)
 		"cremover":
 			for b in beneficiaries:
 				gv.g[b].cost.erase(other)
 		"buff haste":
 			for x in gv.stats.up_list[type.split(" ")[1] + " buff"]:
 				for c in gv.up[x].effects:
-					if c.effect.b.isLessThanOrEqualTo(1.1) and c.type == type.split(" ")[1]:
+					if c.effect.b.less_equal(1.1) and c.type == type.split(" ")[1]:
 						if multiplicative:
 							c.effect.um.m(effect.t)
 						else:
@@ -72,7 +75,7 @@ func apply(upgrade_name: String):
 		"buff output":
 			for x in gv.stats.up_list[type.split(" ")[1] + " buff"]:
 				for c in gv.up[x].effects:
-					if c.effect.b.isEqualTo(1) and c.type == type.split(" ")[1]:
+					if c.effect.b.equal(1) and c.type == type.split(" ")[1]:
 						if multiplicative:
 							c.effect.um.m(effect.t)
 						else:
@@ -81,7 +84,7 @@ func apply(upgrade_name: String):
 		"buff crit":
 			for x in gv.stats.up_list[type.split(" ")[1] + " buff"]:
 				for c in gv.up[x].effects:
-					if c.effect.b.isEqualTo(1) and c.type == type.split(" ")[1]:
+					if c.effect.b.equal(1) and c.type == type.split(" ")[1]:
 						# crit cannot be multiplicative, that's just weird. so don't even account for it
 						c.effect.ua.a(effect.t)
 						gv.up[x].refresh()
@@ -118,9 +121,8 @@ func apply(upgrade_name: String):
 					gv.g[b].fc.sync()
 		"haste":
 			for b in beneficiaries:
-				gv.g[b].speed.um.d(effect.t)
+				gv.g[b].speed.um /= effect.t.toFloat()
 				gv.g[b].speed.sync()
-				gv.emit_signal("lored_updated", b, "autobuywheel")
 		"output":
 			for b in beneficiaries:
 				if multiplicative:
@@ -129,10 +131,10 @@ func apply(upgrade_name: String):
 				else:
 					gv.g[b].d.ua.a(effect.t)
 					gv.g[b].d.sync()
-				gv.emit_signal("lored_updated", b, "d")
 		"autob":
 			for b in beneficiaries:
 				gv.g[b].autobuy = true
+				gv.emit_signal("autobuyer_purchased", b)
 		"autoup":
 			for b in beneficiaries:
 				gv.up[b].autobuy = true
@@ -170,7 +172,7 @@ func remove(upgrade_name: String):
 		"buff haste":
 			for x in gv.stats.up_list[type.split(" ")[1] + " buff"]:
 				for c in gv.up[x].effects:
-					if c.effect.b.isLessThanOrEqualTo(1.1) and c.type == type.split(" ")[1]:
+					if c.effect.b.less_equal(1.1) and c.type == type.split(" ")[1]:
 						if multiplicative:
 							c.effect.um.d(effect.t)
 						else:
@@ -179,7 +181,7 @@ func remove(upgrade_name: String):
 		"buff output":
 			for x in gv.stats.up_list[type.split(" ")[1] + " buff"]:
 				for c in gv.up[x].effects:
-					if c.effect.b.isEqualTo(1) and c.type == type.split(" ")[1]:
+					if c.effect.b.equal(1) and c.type == type.split(" ")[1]:
 						if multiplicative:
 							c.effect.um.d(effect.t)
 						else:
@@ -188,7 +190,7 @@ func remove(upgrade_name: String):
 		"buff crit":
 			for x in gv.stats.up_list[type.split(" ")[1] + " buff"]:
 				for c in gv.up[x].effects:
-					if c.effect.b.isEqualTo(1) and c.type == type.split(" ")[1]:
+					if c.effect.b.equal(1) and c.type == type.split(" ")[1]:
 						# crit cannot be multiplicative, that's just weird. so don't even account for it
 						c.effect.ua.s(effect.t)
 						gv.up[x].refresh()
@@ -225,9 +227,8 @@ func remove(upgrade_name: String):
 					gv.g[b].fc.sync()
 		"haste":
 			for b in beneficiaries:
-				gv.g[b].speed.um.m(effect.t)
+				gv.g[b].speed.um *= effect.t.toFloat()
 				gv.g[b].speed.sync()
-				gv.emit_signal("lored_updated", b, "autobuywheel")
 		"output":
 			for b in beneficiaries:
 				if multiplicative:
@@ -236,10 +237,10 @@ func remove(upgrade_name: String):
 				else:
 					gv.g[b].d.ua.s(effect.t)
 					gv.g[b].d.sync()
-				gv.emit_signal("lored_updated", b, "d")
 		"autob":
 			for b in beneficiaries:
 				gv.g[b].autobuy = false
+				gv.emit_signal("autobuyer_purchased", b)
 		"autoup":
 			for b in beneficiaries:
 				gv.up[b].autobuy = false

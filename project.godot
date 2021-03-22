@@ -15,6 +15,11 @@ _global_script_classes=[ {
 "path": "res://Scripts/classes/Big.gd"
 }, {
 "base": "Reference",
+"class": "Buff",
+"language": "GDScript",
+"path": "res://Scripts/classes/Buff.gd"
+}, {
+"base": "Reference",
 "class": "Cacodemon",
 "language": "GDScript",
 "path": "res://Scripts/classes/Cacodemon.gd"
@@ -55,14 +60,34 @@ _global_script_classes=[ {
 "path": "res://Scripts/classes/Purchasable.gd"
 }, {
 "base": "Reference",
+"class": "Spell",
+"language": "GDScript",
+"path": "res://Scripts/classes/Spell.gd"
+}, {
+"base": "Reference",
 "class": "Statistics",
 "language": "GDScript",
 "path": "res://Scripts/classes/Stats.gd"
 }, {
 "base": "Reference",
+"class": "Task",
+"language": "GDScript",
+"path": "res://Scripts/classes/Task.gd"
+}, {
+"base": "Node",
+"class": "Unholy_Body",
+"language": "GDScript",
+"path": "res://Scripts/classes/Unholy Body.gd"
+}, {
+"base": "Reference",
 "class": "Upgrade",
 "language": "GDScript",
 "path": "res://Scripts/classes/Upgrade.gd"
+}, {
+"base": "Reference",
+"class": "UpgradeChain",
+"language": "GDScript",
+"path": "res://Scripts/classes/UpgradeChain.gd"
 }, {
 "base": "Node2D",
 "class": "_root",
@@ -76,6 +101,7 @@ _global_script_classes=[ {
 } ]
 _global_script_class_icons={
 "Big": "",
+"Buff": "",
 "Cacodemon": "",
 "Effect": "",
 "FPS": "",
@@ -84,8 +110,12 @@ _global_script_class_icons={
 "LORED": "",
 "Ob": "",
 "Purchasable": "",
+"Spell": "",
 "Statistics": "",
+"Task": "",
+"Unholy_Body": "",
 "Upgrade": "",
+"UpgradeChain": "",
 "_root": "",
 "_save": ""
 }
@@ -96,7 +126,7 @@ config/name="LORED"
 run/main_scene="res://Scenes/Root.tscn"
 boot_splash/image="res://Sprites/misc/splash.png"
 config/icon="res://Sprites/misc/icon.png"
-config/Version="2.2.0"
+config/Version="2.2.4"
 
 [autoload]
 
@@ -104,6 +134,10 @@ gv="*res://Scripts/autoload/_vars.gd"
 taq="*res://Scripts/autoload/tasks_and_quests.gd"
 fval="*res://Scripts/autoload/format_value.gd"
 Boot="*res://Scripts/autoload/Boot.gd"
+
+[debug]
+
+gdscript/completion/autocomplete_setters_and_getters=true
 
 [display]
 

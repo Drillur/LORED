@@ -1,9 +1,8 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://Sprites/misc/unknown.png" type="Texture" id=1]
 [ext_resource path="res://Sprites/misc/square_border.png" type="Texture" id=2]
 [ext_resource path="res://Scripts/task/task.gd" type="Script" id=3]
-[ext_resource path="res://Fonts/Roboto-MediumItalic.ttf" type="DynamicFontData" id=4]
 
 [sub_resource type="StyleBoxFlat" id=1]
 bg_color = Color( 0.101961, 0.101961, 0.101961, 0.94902 )
@@ -35,12 +34,6 @@ draw_center = false
 border_width_bottom = 1
 border_color = Color( 0.933333, 0.839216, 0, 1 )
 expand_margin_bottom = 1.0
-
-[sub_resource type="DynamicFont" id=6]
-size = 14
-outline_size = 4
-outline_color = Color( 0, 0, 0, 1 )
-font_data = ExtResource( 4 )
 
 [node name="task" type="Button"]
 margin_right = 35.0
@@ -92,19 +85,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
 custom_styles/panel = SubResource( 5 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="time" type="Label" parent="."]
-visible = false
-margin_top = -9.0
-margin_right = 35.0
-margin_bottom = 9.0
-custom_fonts/font = SubResource( 6 )
-text = "4s"
-align = 1
-valign = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }

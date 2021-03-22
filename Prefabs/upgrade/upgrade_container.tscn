@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=2]
+[gd_scene load_steps=26 format=2]
 
 [ext_resource path="res://Styles/Master Theme.tres" type="Theme" id=1]
 [ext_resource path="res://Fonts/Roboto-Medium.ttf" type="DynamicFontData" id=2]
@@ -64,8 +64,14 @@ expand_margin_bottom = 2.0
 
 [sub_resource type="StyleBoxFlat" id=11]
 draw_center = false
+border_width_bottom = 1
+border_color = Color( 1, 1, 1, 1 )
+expand_margin_bottom = 2.0
 
 [sub_resource type="StyleBoxFlat" id=12]
+draw_center = false
+
+[sub_resource type="StyleBoxFlat" id=13]
 bg_color = Color( 1, 1, 1, 1 )
 draw_center = false
 border_width_top = 2
@@ -73,19 +79,19 @@ border_color = Color( 0.804688, 0.804688, 0.804688, 1 )
 border_blend = true
 expand_margin_top = 10.0
 
-[sub_resource type="DynamicFont" id=13]
+[sub_resource type="DynamicFont" id=14]
 size = 14
 outline_size = 2
 outline_color = Color( 0.00392157, 0.00392157, 0.00392157, 1 )
 font_data = ExtResource( 8 )
 
-[sub_resource type="DynamicFont" id=14]
+[sub_resource type="DynamicFont" id=15]
 size = 14
 outline_size = 2
 outline_color = Color( 0.00392157, 0.00392157, 0.00392157, 1 )
 font_data = ExtResource( 2 )
 
-[sub_resource type="DynamicFont" id=15]
+[sub_resource type="DynamicFont" id=16]
 size = 14
 outline_size = 2
 outline_color = Color( 0, 0, 0, 1 )
@@ -402,7 +408,152 @@ custom_styles/hover = SubResource( 5 )
 custom_styles/pressed = SubResource( 6 )
 custom_styles/normal = SubResource( 7 )
 
+[node name="s3n" type="MarginContainer" parent="top"]
+margin_top = 116.0
+margin_right = 372.0
+margin_bottom = 135.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Panel" type="Panel" parent="top/s3n"]
+self_modulate = Color( 0.25098, 0.470588, 0.992157, 1 )
+margin_right = 372.0
+margin_bottom = 19.0
+custom_styles/panel = SubResource( 11 )
+
+[node name="h" type="HBoxContainer" parent="top/s3n"]
+margin_right = 372.0
+margin_bottom = 19.0
+
+[node name="Label" type="Label" parent="top/s3n/h"]
+margin_right = 132.0
+margin_bottom = 19.0
+custom_fonts/font = SubResource( 2 )
+custom_colors/font_color = Color( 0.796875, 0.796875, 0.796875, 1 )
+text = "(A) The Runed Dial"
+
+[node name="alert" type="Panel" parent="top/s3n/h"]
+visible = false
+margin_left = 165.0
+margin_top = 5.0
+margin_right = 173.0
+margin_bottom = 13.0
+rect_min_size = Vector2( 8, 8 )
+size_flags_horizontal = 8
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 3 )
+
+[node name="count" type="Label" parent="top/s3n/h"]
+margin_left = 292.0
+margin_right = 352.0
+margin_bottom = 19.0
+size_flags_horizontal = 10
+size_flags_vertical = 2
+custom_fonts/font = SubResource( 2 )
+custom_colors/font_color = Color( 0.796875, 0.796875, 0.796875, 1 )
+text = "103/103"
+
+[node name="Panel" type="Panel" parent="top/s3n/h"]
+margin_left = 356.0
+margin_top = 1.0
+margin_right = 372.0
+margin_bottom = 17.0
+rect_min_size = Vector2( 16, 16 )
+size_flags_horizontal = 8
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 4 )
+
+[node name="Sprite" type="Sprite" parent="top/s3n/h/Panel"]
+self_modulate = Color( 1, 0.541176, 0.541176, 1 )
+position = Vector2( 8, 8 )
+rotation = -1.5708
+scale = Vector2( 1.014, 1 )
+texture = ExtResource( 5 )
+
+[node name="Button" type="Button" parent="top/s3n"]
+margin_right = 372.0
+margin_bottom = 19.0
+focus_mode = 0
+mouse_default_cursor_shape = 2
+custom_styles/hover = SubResource( 5 )
+custom_styles/pressed = SubResource( 6 )
+custom_styles/normal = SubResource( 7 )
+
+[node name="s3m" type="MarginContainer" parent="top"]
+margin_top = 145.0
+margin_right = 372.0
+margin_bottom = 164.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Panel" type="Panel" parent="top/s3m"]
+self_modulate = Color( 0.670588, 0.34902, 0.890196, 1 )
+margin_right = 372.0
+margin_bottom = 19.0
+custom_styles/panel = SubResource( 11 )
+
+[node name="h" type="HBoxContainer" parent="top/s3m"]
+margin_right = 372.0
+margin_bottom = 19.0
+
+[node name="Label" type="Label" parent="top/s3m/h"]
+margin_right = 133.0
+margin_bottom = 19.0
+custom_fonts/font = SubResource( 2 )
+custom_colors/font_color = Color( 0.796875, 0.796875, 0.796875, 1 )
+text = "(S) Spirit Upgrades"
+
+[node name="alert" type="Panel" parent="top/s3m/h"]
+visible = false
+margin_left = 165.0
+margin_top = 5.0
+margin_right = 173.0
+margin_bottom = 13.0
+rect_min_size = Vector2( 8, 8 )
+size_flags_horizontal = 8
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 3 )
+
+[node name="count" type="Label" parent="top/s3m/h"]
+margin_left = 292.0
+margin_right = 352.0
+margin_bottom = 19.0
+size_flags_horizontal = 10
+size_flags_vertical = 2
+custom_fonts/font = SubResource( 2 )
+custom_colors/font_color = Color( 0.796875, 0.796875, 0.796875, 1 )
+text = "103/103"
+
+[node name="Panel" type="Panel" parent="top/s3m/h"]
+margin_left = 356.0
+margin_top = 1.0
+margin_right = 372.0
+margin_bottom = 17.0
+rect_min_size = Vector2( 16, 16 )
+size_flags_horizontal = 8
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 4 )
+
+[node name="Sprite" type="Sprite" parent="top/s3m/h/Panel"]
+self_modulate = Color( 1, 0.541176, 0.541176, 1 )
+position = Vector2( 8, 8 )
+rotation = -1.5708
+scale = Vector2( 1.014, 1 )
+texture = ExtResource( 5 )
+
+[node name="Button" type="Button" parent="top/s3m"]
+margin_right = 372.0
+margin_bottom = 19.0
+focus_mode = 0
+mouse_default_cursor_shape = 2
+custom_styles/hover = SubResource( 5 )
+custom_styles/pressed = SubResource( 6 )
+custom_styles/normal = SubResource( 7 )
+
 [node name="v" type="VBoxContainer" parent="."]
+visible = false
 margin_left = 10.0
 margin_top = 10.0
 margin_right = 382.0
@@ -433,7 +584,7 @@ margin_bottom = 36.0
 rect_min_size = Vector2( 32, 32 )
 size_flags_horizontal = 0
 size_flags_vertical = 4
-custom_styles/panel = SubResource( 11 )
+custom_styles/panel = SubResource( 12 )
 
 [node name="Sprite" type="Sprite" parent="v/header/h/icon"]
 position = Vector2( 16, 16 )
@@ -502,7 +653,7 @@ custom_styles/normal = SubResource( 7 )
 [node name="upgrades" type="ScrollContainer" parent="v"]
 margin_top = 50.0
 margin_right = 372.0
-margin_bottom = 343.0
+margin_bottom = 380.0
 rect_min_size = Vector2( 265, 110 )
 size_flags_vertical = 3
 custom_styles/bg = ExtResource( 4 )
@@ -513,11 +664,12 @@ __meta__ = {
 
 [node name="v" type="VBoxContainer" parent="v/upgrades"]
 margin_right = 372.0
-margin_bottom = 293.0
+margin_bottom = 330.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="s1n" type="MarginContainer" parent="v/upgrades/v"]
+visible = false
 margin_right = 372.0
 margin_bottom = 293.0
 size_flags_vertical = 3
@@ -555,18 +707,32 @@ custom_constants/separation = 10
 
 [node name="s2m" type="MarginContainer" parent="v/upgrades/v"]
 visible = false
-margin_top = 222.0
+margin_top = 148.0
 margin_right = 372.0
 margin_bottom = 293.0
 size_flags_vertical = 3
 
 [node name="v" type="VBoxContainer" parent="v/upgrades/v/s2m"]
 margin_right = 372.0
-margin_bottom = 71.0
+margin_bottom = 145.0
+size_flags_horizontal = 3
+custom_constants/separation = 10
+
+[node name="s3n" type="MarginContainer" parent="v/upgrades/v"]
+visible = false
+margin_top = 148.0
+margin_right = 372.0
+margin_bottom = 293.0
+size_flags_vertical = 3
+
+[node name="v" type="VBoxContainer" parent="v/upgrades/v/s3n"]
+margin_right = 372.0
+margin_bottom = 145.0
 size_flags_horizontal = 3
 custom_constants/separation = 10
 
 [node name="reset" type="MarginContainer" parent="v"]
+visible = false
 margin_top = 353.0
 margin_right = 372.0
 margin_bottom = 380.0
@@ -574,7 +740,7 @@ margin_bottom = 380.0
 [node name="bg" type="Panel" parent="v/reset"]
 margin_right = 372.0
 margin_bottom = 27.0
-custom_styles/panel = SubResource( 12 )
+custom_styles/panel = SubResource( 13 )
 
 [node name="b_reset" type="Button" parent="v/reset"]
 margin_right = 372.0
@@ -591,7 +757,7 @@ __meta__ = {
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_default_cursor_shape = 2
-custom_fonts/font = SubResource( 13 )
+custom_fonts/font = SubResource( 14 )
 custom_colors/font_color = Color( 0.796875, 0.796875, 0.796875, 1 )
 text = "Metastasize"
 align = 1
@@ -610,7 +776,7 @@ alignment = 1
 margin_right = 372.0
 margin_bottom = 17.0
 mouse_default_cursor_shape = 2
-custom_fonts/font = SubResource( 14 )
+custom_fonts/font = SubResource( 15 )
 custom_colors/font_color = Color( 0.796875, 0.796875, 0.796875, 1 )
 text = "Upgrade-purchasing phase is currently active."
 align = 1
@@ -632,7 +798,7 @@ focus_mode = 0
 mouse_default_cursor_shape = 2
 size_flags_horizontal = 0
 theme = ExtResource( 1 )
-custom_fonts/font = SubResource( 15 )
+custom_fonts/font = SubResource( 16 )
 text = "Cancel"
 __meta__ = {
 "_edit_group_": true
@@ -654,7 +820,7 @@ __meta__ = {
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_default_cursor_shape = 2
-custom_fonts/font = SubResource( 13 )
+custom_fonts/font = SubResource( 14 )
 custom_colors/font_color = Color( 0.796875, 0.796875, 0.796875, 1 )
 text = "Spread"
 align = 1
@@ -664,14 +830,12 @@ __meta__ = {
 }
 
 [node name="flying_texts" type="Node2D" parent="."]
-[connection signal="button_down" from="top/s1n/Button" to="." method="_on_button_down"]
 [connection signal="pressed" from="top/s1n/Button" to="." method="col_time" binds= [ "s1n" ]]
-[connection signal="button_down" from="top/s1m/Button" to="." method="_on_button_down"]
 [connection signal="pressed" from="top/s1m/Button" to="." method="col_time" binds= [ "s1m" ]]
-[connection signal="button_down" from="top/s2n/Button" to="." method="_on_button_down"]
 [connection signal="pressed" from="top/s2n/Button" to="." method="col_time" binds= [ "s2n" ]]
-[connection signal="button_down" from="top/s2m/Button" to="." method="_on_button_down"]
 [connection signal="pressed" from="top/s2m/Button" to="." method="col_time" binds= [ "s2m" ]]
+[connection signal="pressed" from="top/s3n/Button" to="." method="col_time" binds= [ "s3n" ]]
+[connection signal="pressed" from="top/s3m/Button" to="." method="col_time" binds= [ "s3m" ]]
 [connection signal="button_down" from="v/header/h/v/m/Button" to="." method="_on_button_down"]
 [connection signal="pressed" from="v/header/h/v/m/Button" to="." method="go_back"]
 [connection signal="mouse_entered" from="v/reset/b_reset" to="." method="_on_b_reset_mouse_entered"]

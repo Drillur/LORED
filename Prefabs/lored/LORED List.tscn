@@ -1,6 +1,8 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://Prefabs/Scripts/LORED List.gd" type="Script" id=1]
+[ext_resource path="res://Prefabs/Inventory.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Prefabs/lored/Cacodemons.tscn" type="PackedScene" id=3]
 
 [sub_resource type="StyleBoxFlat" id=1]
 bg_color = Color( 0.054902, 0.054902, 0.054902, 1 )
@@ -13,7 +15,7 @@ shadow_color = Color( 0.054902, 0.054902, 0.054902, 1 )
 
 [node name="LORED List" type="MarginContainer"]
 margin_right = 1022.0
-margin_bottom = 245.0
+margin_bottom = 561.0
 custom_constants/margin_right = 10
 custom_constants/margin_top = 10
 custom_constants/margin_left = 10
@@ -27,14 +29,14 @@ __meta__ = {
 margin_left = 10.0
 margin_top = 10.0
 margin_right = 1012.0
-margin_bottom = 235.0
+margin_bottom = 551.0
 custom_styles/panel = SubResource( 1 )
 
 [node name="sc" type="ScrollContainer" parent="."]
 margin_left = 10.0
 margin_top = 10.0
 margin_right = 1012.0
-margin_bottom = 235.0
+margin_bottom = 551.0
 size_flags_horizontal = 3
 scroll_horizontal_enabled = false
 
@@ -42,17 +44,15 @@ scroll_horizontal_enabled = false
 position = Vector2( -10, -10 )
 
 [node name="v" type="VBoxContainer" parent="sc"]
-margin_right = 1002.0
-margin_bottom = 225.0
+margin_right = 990.0
+margin_bottom = 568.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_constants/separation = 20
 alignment = 1
 
 [node name="s1" type="VBoxContainer" parent="sc/v"]
-margin_top = 112.0
-margin_right = 1002.0
-margin_bottom = 112.0
+margin_right = 990.0
 size_flags_horizontal = 3
 custom_constants/separation = 20
 alignment = 1
@@ -67,13 +67,30 @@ custom_constants/separation = 20
 alignment = 1
 
 [node name="s3" type="VBoxContainer" parent="sc/v"]
-visible = false
-margin_top = 132.0
-margin_right = 1002.0
-margin_bottom = 132.0
+margin_top = 20.0
+margin_right = 990.0
+margin_bottom = 568.0
 size_flags_horizontal = 3
 custom_constants/separation = 20
 alignment = 1
+
+[node name="m" parent="sc/v/s3" instance=ExtResource( 3 )]
+margin_left = 406.0
+margin_right = 583.0
+size_flags_horizontal = 4
+size_flags_vertical = 0
+
+[node name="v" type="VBoxContainer" parent="sc/v/s3"]
+margin_left = 410.0
+margin_top = 367.0
+margin_right = 580.0
+margin_bottom = 548.0
+size_flags_horizontal = 4
+size_flags_vertical = 8
+
+[node name="Inventory" parent="sc/v/s3/v" instance=ExtResource( 2 )]
+size_flags_horizontal = 10
+size_flags_vertical = 8
 
 [node name="s4" type="VBoxContainer" parent="sc/v"]
 visible = false

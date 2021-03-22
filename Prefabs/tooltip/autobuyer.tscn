@@ -24,7 +24,7 @@ __meta__ = {
 margin_left = 10.0
 margin_top = 10.0
 margin_right = 207.0
-margin_bottom = 160.0
+margin_bottom = 103.0
 
 [node name="Panel2" type="Panel" parent="VBoxContainer"]
 margin_right = 197.0
@@ -56,40 +56,6 @@ margin_bottom = 16.0
 custom_fonts/font = ExtResource( 3 )
 custom_colors/font_color = Color( 0.764706, 0.733333, 0.603922, 1 )
 text = "Will purchase"
-
-[node name="low_fuel" type="VBoxContainer" parent="VBoxContainer"]
-visible = false
-margin_top = 33.0
-margin_right = 197.0
-margin_bottom = 108.0
-alignment = 1
-
-[node name="Panel" type="Panel" parent="VBoxContainer/low_fuel"]
-margin_right = 197.0
-margin_bottom = 2.0
-rect_min_size = Vector2( 0, 2 )
-custom_styles/panel = SubResource( 1 )
-
-[node name="title" type="Label" parent="VBoxContainer/low_fuel"]
-margin_top = 6.0
-margin_right = 197.0
-margin_bottom = 23.0
-custom_fonts/font = ExtResource( 6 )
-custom_colors/font_color = Color( 0.501961, 0.501961, 0.501961, 1 )
-text = "Low Fuel"
-align = 1
-
-[node name="desc" type="Label" parent="VBoxContainer/low_fuel"]
-margin_top = 27.0
-margin_right = 197.0
-margin_bottom = 75.0
-rect_min_size = Vector2( 197, 0 )
-size_flags_horizontal = 4
-custom_fonts/font = ExtResource( 7 )
-custom_colors/font_color = Color( 0.764706, 0.733333, 0.603922, 1 )
-text = "This LORED has less fuel than twice its fuel drain, so it will not be purchased."
-align = 1
-autowrap = true
 
 [node name="upgrade" type="VBoxContainer" parent="VBoxContainer"]
 visible = false

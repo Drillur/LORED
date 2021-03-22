@@ -4,6 +4,7 @@ extends "res://Scripts/classes/Object.gd"
 
 var name: String
 var type: String
+var stage: String # "1", "3"
 var cost := {}
 var key = 0
 
@@ -13,7 +14,7 @@ var autobuy := false
 func cost_check() -> bool:
 	# returns true if can be afforded
 	for x in cost:
-		if gv.r[x].isLessThan(cost[x].t):
+		if gv.r[x].less(cost[x].t):
 			return false
 	return true
 

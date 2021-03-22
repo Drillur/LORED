@@ -1,0 +1,75 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://Styles/Labels/Flair.tres" type="DynamicFont" id=1]
+[ext_resource path="res://Styles/Labels/Big.tres" type="DynamicFont" id=2]
+[ext_resource path="res://Prefabs/Scripts/Unholy Body Manager.gd" type="Script" id=3]
+[ext_resource path="res://Styles/Panels/bg_smooth.tres" type="StyleBox" id=4]
+
+[node name="necro" type="VBoxContainer"]
+margin_right = 180.0
+margin_bottom = 41.0
+mouse_filter = 0
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="bars" type="HBoxContainer" parent="."]
+margin_right = 180.0
+mouse_filter = 2
+custom_constants/separation = 3
+
+[node name="m" type="MarginContainer" parent="."]
+margin_top = 4.0
+margin_right = 180.0
+margin_bottom = 41.0
+mouse_filter = 2
+size_flags_vertical = 0
+custom_constants/margin_right = 10
+custom_constants/margin_top = 10
+custom_constants/margin_left = 10
+custom_constants/margin_bottom = 10
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="bg" type="Panel" parent="m"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 170.0
+margin_bottom = 27.0
+mouse_filter = 2
+custom_styles/panel = ExtResource( 4 )
+
+[node name="v" type="VBoxContainer" parent="m"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 170.0
+margin_bottom = 27.0
+mouse_filter = 2
+
+[node name="h" type="HBoxContainer" parent="m/v"]
+margin_right = 160.0
+margin_bottom = 17.0
+mouse_filter = 2
+alignment = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="m/v/h"]
+margin_left = 10.0
+margin_top = 1.0
+margin_right = 137.0
+margin_bottom = 16.0
+custom_fonts/font = ExtResource( 1 )
+text = "Animate Unholy Bodies:"
+
+[node name="count" type="Label" parent="m/v/h"]
+margin_left = 141.0
+margin_right = 149.0
+margin_bottom = 17.0
+custom_fonts/font = ExtResource( 2 )
+text = "1"
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]

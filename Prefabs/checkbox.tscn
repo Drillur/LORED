@@ -11,3 +11,6 @@ custom_colors/font_color = Color( 0.4, 0.4, 0.4, 1 )
 custom_colors/font_color_hover = Color( 0.596078, 0.596078, 0.596078, 1 )
 custom_colors/font_color_pressed = Color( 0.498039, 0.498039, 0.498039, 1 )
 text = "resource bar"
+__meta__ = {
+"_edit_use_anchors_": false
+}

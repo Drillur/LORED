@@ -1,10 +1,11 @@
-[gd_scene load_steps=20 format=2]
+[gd_scene load_steps=22 format=2]
 
 [ext_resource path="res://Sprites/resources/axe.png" type="Texture" id=1]
 [ext_resource path="res://Fonts/Roboto-BlackItalic.ttf" type="DynamicFontData" id=2]
 [ext_resource path="res://Fonts/Roboto-Medium.ttf" type="DynamicFontData" id=3]
 [ext_resource path="res://Fonts/Roboto-Black.ttf" type="DynamicFontData" id=5]
 [ext_resource path="res://Styles/Panels/tag_bg.tres" type="StyleBox" id=6]
+[ext_resource path="res://Styles/Labels/Flair.tres" type="DynamicFont" id=7]
 [ext_resource path="res://Fonts/Roboto-MediumItalic.ttf" type="DynamicFontData" id=8]
 [ext_resource path="res://Styles/Panels/block_inside_tip.tres" type="StyleBox" id=9]
 
@@ -20,55 +21,71 @@ onready var ghold = $v/tags/hold
 onready var gbaby = $v/tags/baby
 onready var gicon = $v/m/h/icon/Sprite
 onready var gname = $v/m/h/v/name
+onready var gn_level = get_node(\"v/m/h/v/level\")
+onready var gn_raw_net = get_node(\"v/h/v/active/raw_net\")
+onready var gn_line = get_node(\"v/h/line\")
+onready var gn_smart = get_node(\"v/h/smart\")
+onready var gn_inventory = get_node(\"v/h/smart/inventory\")
+onready var gn_tasks = get_node(\"v/h/smart/tasks\")
 
 var src := {
 	tip_lored_b = preload(\"res://Prefabs/tooltip/tip_lored_b.tscn\"),
 }
 var cont := {}
 
-var lored_key: String
+var key: String
 
 var fps := 0.0
 
 
 
-func setup(key: String):
+func setup(_key: String):
 	
 	
-	lored_key = key
-	
+	key = _key
 	
 	title()
 	
 	
-	if not gv.g[lored_key].active:
+	if not gv.g[key].active:
 		set_physics_process(false)
+		get_node(\"v/h\").hide()
 		return
 	
 	
 	title().resume()
-	$v/active.show()
+	$v/h.show()
 	tags()
-	$v/m/h/v/level.add_color_override(\"font_color\", gv.COLORS[lored_key])
+	gn_level.add_color_override(\"font_color\", gv.COLORS[key])
 	
 	burn()
 	
-	$v/active/raw_net/val.text = gv.g[lored_key].net(true, true)[0].toString() + \"/s\"
-	
 	r_update()
+	
+	if gv.g[key].smart:
+		gn_raw_net.hide()
+		gn_line.show()
+		gn_smart.show()
+		task_shit()
+		inventory()
+	else:
+		gn_raw_net.show()
+		gn_line.hide()
+		gn_smart.hide()
+		$v/h/v/active/raw_net/val.text = gv.g[key].net(true, true)[0].toString() + \"/s\"
 	
 	rect_size = Vector2(0, 0)
 
 
 func tags():
 	
-	if gv.g[lored_key].halt:
+	if gv.g[key].halt:
 		ghalt.show()
 	
-	if gv.g[lored_key].hold:
+	if gv.g[key].hold:
 		ghold.show()
 	
-	if gv.g[lored_key].is_baby():
+	if gv.g[key].is_baby():
 		gbaby.show()
 	
 	for x in gtags.get_children():
@@ -78,31 +95,31 @@ func tags():
 
 func title():
 	
-	gicon.texture = gv.sprite[lored_key]
-	gname.text = gv.g[lored_key].name
+	gicon.texture = gv.sprite[key]
+	gname.text = gv.g[key].name
 	
 	yield()
 	
-	$v/m/h/v/level.show()
+	gn_level.show()
 
 func burn():
 	
-	if gv.g[lored_key].b.size() == 0:
+	if gv.g[key].b.size() == 0:
 		return
 	
-	$v/b.show()
-	var selmod = gv.COLORS[lored_key]
-	$v/b/bg.self_modulate = selmod
-	$v/active/RR/bg.self_modulate = selmod
-	var per_sec = Big.new(gv.g[lored_key].d.t).m(60).d(gv.g[lored_key].speed.t)
+	$v/h/v/b.show()
+	var selmod = gv.COLORS[key]
+	$v/h/v/b/bg.self_modulate = selmod
+	$v/h/v/active/RR/bg.self_modulate = selmod
+	var per_sec = Big.new(gv.g[key].d.t).d(gv.g[key].speed.t)
 	
 	var i = 0
-	for x in gv.g[lored_key].b:
+	for x in gv.g[key].b:
 		
 		var b_color = gv.COLORS[x]
 		cont[x] = src.tip_lored_b.instance()
-		cont[x].setup_b(x, lored_key, per_sec, b_color)
-		$v/b/v.add_child(cont[x])
+		cont[x].setup_b(x, key, per_sec, b_color)
+		$v/h/v/b/v.add_child(cont[x])
 		
 		if i % 2 == 0:
 			cont[x].get_node(\"bg\").hide()
@@ -114,27 +131,105 @@ func burn():
 func _physics_process(delta: float) -> void:
 	
 	fps += delta
-	if fps < rt.FPS:
+	if fps < gv.fps:
 		return
-	fps -= rt.FPS
+	fps -= gv.fps
 	
 	r_update()
 
 
 func r_update():
 	
-	$v/m/h/v/level.text = \"Level \" + fval.f(gv.g[lored_key].level)
-	$v/active/crit/val.text = gv.g[lored_key].crit.t.toString() + \"%\"
-	$v/active/haste/val.text = Big.new(gv.g[lored_key].speed.b).d(gv.g[lored_key].speed.t).toString() + \"x\"
+	gn_level.text = \"Level \" + fval.f(gv.g[key].level)
+	$v/h/v/active/crit/val.text = gv.g[key].crit.t.toString() + \"%\"
+	$v/h/v/active/haste/val.text = Big.new(gv.g[key].speed.b).d(gv.g[key].speed.t).toString() + \"x\"
 	
 	
-	var dm: String = gv.g[lored_key].d.m.toString()
-	var dum_and_dlbm: String = Big.new(gv.g[lored_key].d.um).m(gv.g[lored_key].d.lbm).m(gv.g[lored_key].d.dm).toString()
+	var dm: String = gv.g[key].d.m.toString()
+	var dum_and_dlbm: String = Big.new(gv.g[key].d.um).m(gv.g[key].d.lbm).m(gv.g[key].d.dm).toString()
 	
-	$v/active/RR/v/base/val.text = gv.g[lored_key].d.b.toString()
-	$v/active/RR/v/a/val.text = \"+\" + Big.new(gv.g[lored_key].d.a).a(gv.g[lored_key].d.ua).a(gv.g[lored_key].d.da).toString()
-	$v/active/RR/v/lv/val.text = dm + \"x\"
-	$v/active/RR/v/up/val.text = dum_and_dlbm + \"x\"
+	$v/h/v/active/RR/v/base/val.text = gv.g[key].d.b.toString()
+	$v/h/v/active/RR/v/a/val.text = \"+\" + Big.new(gv.g[key].d.a).a(gv.g[key].d.ua).a(gv.g[key].d.da).toString()
+	$v/h/v/active/RR/v/lv/val.text = dm + \"x\"
+	$v/h/v/active/RR/v/up/val.text = dum_and_dlbm + \"x\"
+
+func task_shit():
+	
+	var i = 0
+	for x in gv.g[key].task_list:
+		
+		cont[x] = gv.SRC[\"task entry\"].instance()
+		gn_tasks.add_child(cont[x])
+		cont[x].get_node(\"h/action\").text = x.capitalize()
+		
+		if i % 2 == 0:
+			cont[x].get_node(\"bg\").hide()
+		i += 1
+
+var used_items := {
+	\"hunt\": [\"arrow\", \"water flask\"],
+	\"witch\": [\"bits\", \"pieces\", \"parts\", \"portions\", \"crumbs\", \"slices\", \"samples\", \"shards\", ],
+}
+
+func inventory():
+	
+	if not key in used_items:
+		get_node(\"v/h/smart/inventory\").hide()
+		return
+	
+	var i = 0
+	for x in used_items[key]:
+		
+		cont[x] = gv.SRC[\"task entry\"].instance()
+		cont[x].get_node(\"h/icon\").hide()
+		gn_inventory.add_child(cont[x])
+		
+		if key == \"hunt\" and x == \"water flask\":
+			if not gv.g[key].can(\"use water flasks\"):
+				cont[x].hide()
+		
+		if i % 2 == 0:
+			cont[x].get_node(\"bg\").hide()
+		i += 1
+	
+	while true:
+		
+		for x in used_items[key]:
+			
+			var quantity: String
+			var _text = \"%s \" + x.capitalize()
+			var inventory_key = x
+			
+			match x:
+				\"parts\":
+					inventory_key = gv.Item.PARTS
+				\"pieces\":
+					inventory_key = gv.Item.PIECES
+				\"portions\":
+					inventory_key = gv.Item.PORTIONS
+				\"shards\":
+					inventory_key = gv.Item.SHARDS
+				\"samples\":
+					inventory_key = gv.Item.SAMPLES
+				\"slices\":
+					inventory_key = gv.Item.SLICES
+				\"bits\":
+					inventory_key = gv.Item.BITS
+				\"crumbs\":
+					inventory_key = gv.Item.CRUMBS
+			
+			if typeof(gv.g[key].inventory[inventory_key]) == TYPE_OBJECT:
+				quantity = gv.g[key].inventory[inventory_key].toString()
+			else:
+				quantity = fval.f(gv.g[key].inventory[x])
+			
+			cont[x].get_node(\"h/action\").text = _text % quantity
+		
+		var t = Timer.new()
+		add_child(t)
+		t.start(1)
+		yield(t, \"timeout\")
+		t.queue_free()
 "
 
 [sub_resource type="DynamicFont" id=2]
@@ -217,8 +312,15 @@ outline_color = Color( 0, 0, 0, 1 )
 extra_spacing_bottom = 3
 font_data = ExtResource( 8 )
 
+[sub_resource type="StyleBoxFlat" id=13]
+bg_color = Color( 1, 1, 1, 1 )
+corner_radius_top_left = 1
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 1
+
 [node name="tip_LORED" type="MarginContainer"]
-margin_right = 98.0
+margin_right = 79.0
 margin_bottom = 66.0
 custom_constants/margin_right = 10
 custom_constants/margin_top = 10
@@ -232,12 +334,12 @@ __meta__ = {
 [node name="v" type="VBoxContainer" parent="."]
 margin_left = 10.0
 margin_top = 10.0
-margin_right = 121.0
-margin_bottom = 245.0
+margin_right = 150.0
+margin_bottom = 224.0
 
 [node name="tags" type="HBoxContainer" parent="v"]
 visible = false
-margin_right = 78.0
+margin_right = 111.0
 
 [node name="halt" type="MarginContainer" parent="v/tags"]
 visible = false
@@ -326,7 +428,7 @@ custom_fonts/font = SubResource( 2 )
 text = "Baby"
 
 [node name="m" type="MarginContainer" parent="v"]
-margin_right = 111.0
+margin_right = 140.0
 margin_bottom = 46.0
 custom_constants/margin_top = 5
 custom_constants/margin_bottom = 5
@@ -336,13 +438,13 @@ __meta__ = {
 
 [node name="bg" type="Panel" parent="v/m"]
 margin_top = 5.0
-margin_right = 111.0
+margin_right = 140.0
 margin_bottom = 41.0
 custom_styles/panel = SubResource( 5 )
 
 [node name="h" type="HBoxContainer" parent="v/m"]
 margin_top = 5.0
-margin_right = 111.0
+margin_right = 140.0
 margin_bottom = 41.0
 
 [node name="icon" type="Panel" parent="v/m/h"]
@@ -382,24 +484,32 @@ custom_fonts/font = SubResource( 8 )
 custom_colors/font_color = Color( 0.804688, 0.804688, 0.804688, 1 )
 text = "Level 5"
 
-[node name="active" type="VBoxContainer" parent="v"]
-visible = false
+[node name="h" type="HBoxContainer" parent="v"]
 margin_top = 50.0
-margin_right = 111.0
-margin_bottom = 235.0
+margin_right = 140.0
+margin_bottom = 214.0
+custom_constants/separation = 8
 
-[node name="crit" type="HBoxContainer" parent="v/active"]
+[node name="v" type="VBoxContainer" parent="v/h"]
+margin_right = 111.0
+margin_bottom = 164.0
+
+[node name="active" type="VBoxContainer" parent="v/h/v"]
+margin_right = 111.0
+margin_bottom = 164.0
+
+[node name="crit" type="HBoxContainer" parent="v/h/v/active"]
 margin_right = 111.0
 margin_bottom = 17.0
 
-[node name="val" type="Label" parent="v/active/crit"]
+[node name="val" type="Label" parent="v/h/v/active/crit"]
 margin_right = 26.0
 margin_bottom = 17.0
 custom_fonts/font = SubResource( 9 )
 custom_colors/font_color = Color( 0.796875, 0.796875, 0.796875, 1 )
 text = "10%"
 
-[node name="text" type="Label" parent="v/active/crit"]
+[node name="text" type="Label" parent="v/h/v/active/crit"]
 margin_left = 30.0
 margin_top = 1.0
 margin_right = 86.0
@@ -408,19 +518,19 @@ custom_fonts/font = SubResource( 10 )
 custom_colors/font_color = Color( 0.796875, 0.796875, 0.796875, 1 )
 text = "crit chance"
 
-[node name="haste" type="HBoxContainer" parent="v/active"]
+[node name="haste" type="HBoxContainer" parent="v/h/v/active"]
 margin_top = 21.0
 margin_right = 111.0
 margin_bottom = 38.0
 
-[node name="val" type="Label" parent="v/active/haste"]
+[node name="val" type="Label" parent="v/h/v/active/haste"]
 margin_right = 27.0
 margin_bottom = 17.0
 custom_fonts/font = SubResource( 9 )
 custom_colors/font_color = Color( 0.796875, 0.796875, 0.796875, 1 )
 text = "1.2x"
 
-[node name="text" type="Label" parent="v/active/haste"]
+[node name="text" type="Label" parent="v/h/v/active/haste"]
 margin_left = 31.0
 margin_top = 1.0
 margin_right = 59.0
@@ -429,19 +539,20 @@ custom_fonts/font = SubResource( 10 )
 custom_colors/font_color = Color( 0.796875, 0.796875, 0.796875, 1 )
 text = "haste"
 
-[node name="raw_net" type="HBoxContainer" parent="v/active"]
+[node name="raw_net" type="HBoxContainer" parent="v/h/v/active"]
+visible = false
 margin_top = 42.0
 margin_right = 111.0
 margin_bottom = 59.0
 
-[node name="val" type="Label" parent="v/active/raw_net"]
+[node name="val" type="Label" parent="v/h/v/active/raw_net"]
 margin_right = 20.0
 margin_bottom = 17.0
 custom_fonts/font = SubResource( 9 )
 custom_colors/font_color = Color( 0.796875, 0.796875, 0.796875, 1 )
 text = "1/s"
 
-[node name="text" type="Label" parent="v/active/raw_net"]
+[node name="text" type="Label" parent="v/h/v/active/raw_net"]
 margin_left = 24.0
 margin_top = 1.0
 margin_right = 71.0
@@ -450,69 +561,69 @@ custom_fonts/font = SubResource( 10 )
 custom_colors/font_color = Color( 0.796875, 0.796875, 0.796875, 1 )
 text = "gross net"
 
-[node name="RR" type="MarginContainer" parent="v/active"]
-margin_top = 63.0
+[node name="RR" type="MarginContainer" parent="v/h/v/active"]
+margin_top = 42.0
 margin_right = 111.0
-margin_bottom = 185.0
+margin_bottom = 164.0
 custom_constants/margin_right = 10
 custom_constants/margin_top = 10
 custom_constants/margin_left = 10
 custom_constants/margin_bottom = 10
 
-[node name="bg" type="Panel" parent="v/active/RR"]
+[node name="bg" type="Panel" parent="v/h/v/active/RR"]
 margin_left = 10.0
 margin_top = 10.0
 margin_right = 101.0
 margin_bottom = 112.0
 custom_styles/panel = ExtResource( 9 )
 
-[node name="v" type="VBoxContainer" parent="v/active/RR"]
+[node name="v" type="VBoxContainer" parent="v/h/v/active/RR"]
 margin_left = 10.0
 margin_top = 10.0
 margin_right = 101.0
 margin_bottom = 112.0
 
-[node name="Label" type="Label" parent="v/active/RR/v"]
+[node name="Label" type="Label" parent="v/h/v/active/RR/v"]
 margin_right = 91.0
 margin_bottom = 18.0
 custom_fonts/font = SubResource( 11 )
 text = "Output"
 align = 1
 
-[node name="base" type="HBoxContainer" parent="v/active/RR/v"]
+[node name="base" type="HBoxContainer" parent="v/h/v/active/RR/v"]
 margin_top = 22.0
 margin_right = 91.0
 margin_bottom = 39.0
 
-[node name="val" type="Label" parent="v/active/RR/v/base"]
+[node name="val" type="Label" parent="v/h/v/active/RR/v/base"]
 margin_right = 8.0
 margin_bottom = 17.0
 custom_fonts/font = SubResource( 9 )
 custom_colors/font_color = Color( 0.796875, 0.796875, 0.796875, 1 )
 text = "1"
 
-[node name="text" type="Label" parent="v/active/RR/v/base"]
+[node name="text" type="Label" parent="v/h/v/active/RR/v/base"]
 margin_left = 12.0
 margin_top = 1.0
 margin_right = 36.0
 margin_bottom = 15.0
 custom_fonts/font = SubResource( 10 )
-custom_colors/font_color = Color( 0.796875, 0.796875, 0.796875, 1 )
+custom_colors/font_color = Color( 0.796078, 0.796078, 0.796078, 1 )
 text = "base"
 
-[node name="a" type="HBoxContainer" parent="v/active/RR/v"]
+[node name="a" type="HBoxContainer" parent="v/h/v/active/RR/v"]
 margin_top = 43.0
 margin_right = 91.0
 margin_bottom = 60.0
 
-[node name="val" type="Label" parent="v/active/RR/v/a"]
+[node name="val" type="Label" parent="v/h/v/active/RR/v/a"]
 margin_right = 15.0
 margin_bottom = 17.0
 custom_fonts/font = SubResource( 9 )
 custom_colors/font_color = Color( 0.796875, 0.796875, 0.796875, 1 )
 text = "+3"
 
-[node name="text" type="Label" parent="v/active/RR/v/a"]
+[node name="text" type="Label" parent="v/h/v/active/RR/v/a"]
 margin_left = 19.0
 margin_top = 1.0
 margin_right = 89.0
@@ -521,19 +632,19 @@ custom_fonts/font = SubResource( 10 )
 custom_colors/font_color = Color( 0.796875, 0.796875, 0.796875, 1 )
 text = "added to base"
 
-[node name="lv" type="HBoxContainer" parent="v/active/RR/v"]
+[node name="lv" type="HBoxContainer" parent="v/h/v/active/RR/v"]
 margin_top = 64.0
 margin_right = 91.0
 margin_bottom = 81.0
 
-[node name="val" type="Label" parent="v/active/RR/v/lv"]
+[node name="val" type="Label" parent="v/h/v/active/RR/v/lv"]
 margin_right = 15.0
 margin_bottom = 17.0
 custom_fonts/font = SubResource( 9 )
 custom_colors/font_color = Color( 0.796875, 0.796875, 0.796875, 1 )
 text = "x4"
 
-[node name="text" type="Label" parent="v/active/RR/v/lv"]
+[node name="text" type="Label" parent="v/h/v/active/RR/v/lv"]
 margin_left = 19.0
 margin_top = 1.0
 margin_right = 74.0
@@ -542,19 +653,19 @@ custom_fonts/font = SubResource( 10 )
 custom_colors/font_color = Color( 0.796875, 0.796875, 0.796875, 1 )
 text = "from levels"
 
-[node name="up" type="HBoxContainer" parent="v/active/RR/v"]
+[node name="up" type="HBoxContainer" parent="v/h/v/active/RR/v"]
 margin_top = 85.0
 margin_right = 91.0
 margin_bottom = 102.0
 
-[node name="val" type="Label" parent="v/active/RR/v/up"]
+[node name="val" type="Label" parent="v/h/v/active/RR/v/up"]
 margin_right = 15.0
 margin_bottom = 17.0
 custom_fonts/font = SubResource( 9 )
 custom_colors/font_color = Color( 0.796875, 0.796875, 0.796875, 1 )
 text = "x4"
 
-[node name="text" type="Label" parent="v/active/RR/v/up"]
+[node name="text" type="Label" parent="v/h/v/active/RR/v/up"]
 margin_left = 19.0
 margin_top = 1.0
 margin_right = 91.0
@@ -563,7 +674,7 @@ custom_fonts/font = SubResource( 10 )
 custom_colors/font_color = Color( 0.796875, 0.796875, 0.796875, 1 )
 text = "from upgrades"
 
-[node name="b" type="MarginContainer" parent="v"]
+[node name="b" type="MarginContainer" parent="v/h/v"]
 visible = false
 margin_top = 334.0
 margin_right = 134.0
@@ -573,22 +684,75 @@ custom_constants/margin_top = 10
 custom_constants/margin_left = 10
 custom_constants/margin_bottom = 10
 
-[node name="bg" type="Panel" parent="v/b"]
+[node name="bg" type="Panel" parent="v/h/v/b"]
 margin_left = 10.0
 margin_top = 10.0
 margin_right = 124.0
 margin_bottom = 28.0
 custom_styles/panel = ExtResource( 9 )
 
-[node name="v" type="VBoxContainer" parent="v/b"]
+[node name="v" type="VBoxContainer" parent="v/h/v/b"]
 margin_left = 10.0
 margin_top = 10.0
 margin_right = 124.0
 margin_bottom = 28.0
 
-[node name="Label" type="Label" parent="v/b/v"]
+[node name="Label" type="Label" parent="v/h/v/b/v"]
 margin_right = 114.0
 margin_bottom = 18.0
 custom_fonts/font = SubResource( 12 )
 text = "Ingredients"
 align = 1
+
+[node name="line" type="Panel" parent="v/h"]
+visible = false
+self_modulate = Color( 0.0980392, 0.0980392, 0.0980392, 1 )
+margin_left = 115.0
+margin_right = 117.0
+margin_bottom = 164.0
+rect_min_size = Vector2( 2, 0 )
+custom_styles/panel = SubResource( 13 )
+
+[node name="smart" type="VBoxContainer" parent="v/h"]
+margin_left = 119.0
+margin_right = 140.0
+margin_bottom = 164.0
+
+[node name="inventory" type="VBoxContainer" parent="v/h/smart"]
+margin_right = 21.0
+margin_bottom = 23.0
+
+[node name="buffer" type="Panel" parent="v/h/smart/inventory"]
+margin_right = 21.0
+
+[node name="buffer2" type="Panel" parent="v/h/smart/inventory"]
+margin_top = 4.0
+margin_right = 21.0
+margin_bottom = 4.0
+
+[node name="flair" type="Label" parent="v/h/smart/inventory"]
+margin_top = 8.0
+margin_right = 21.0
+margin_bottom = 23.0
+custom_fonts/font = ExtResource( 7 )
+text = "Has"
+
+[node name="tasks" type="VBoxContainer" parent="v/h/smart"]
+margin_top = 27.0
+margin_right = 21.0
+margin_bottom = 50.0
+
+[node name="buffer" type="Panel" parent="v/h/smart/tasks"]
+margin_right = 21.0
+
+[node name="buffer2" type="Panel" parent="v/h/smart/tasks"]
+margin_top = 4.0
+margin_right = 21.0
+margin_bottom = 4.0
+
+[node name="flair" type="Label" parent="v/h/smart/tasks"]
+margin_top = 8.0
+margin_right = 21.0
+margin_bottom = 23.0
+custom_fonts/font = ExtResource( 7 )
+text = "Can"

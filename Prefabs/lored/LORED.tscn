@@ -1,19 +1,24 @@
-[gd_scene load_steps=28 format=2]
+[gd_scene load_steps=37 format=2]
 
-[ext_resource path="res://Sprites/animations/axe.tres" type="SpriteFrames" id=1]
+[ext_resource path="res://Sprites/animations/wood.tres" type="SpriteFrames" id=1]
 [ext_resource path="res://Fonts/Roboto-BlackItalic.ttf" type="DynamicFontData" id=2]
 [ext_resource path="res://Sprites/resources/coal.png" type="Texture" id=3]
 [ext_resource path="res://Sprites/resources/axe.png" type="Texture" id=4]
 [ext_resource path="res://Styles/Master Theme.tres" type="Theme" id=5]
 [ext_resource path="res://Prefabs/Scripts/LORED.gd" type="Script" id=6]
 [ext_resource path="res://Fonts/Roboto-MediumItalic.ttf" type="DynamicFontData" id=7]
-[ext_resource path="res://Prefabs/lored/Cacodemons.tscn" type="PackedScene" id=8]
 [ext_resource path="res://Sprites/misc/hold_false.png" type="Texture" id=9]
 [ext_resource path="res://Styles/Labels/name.tres" type="DynamicFont" id=10]
+[ext_resource path="res://Scripts/lored/Progress Bar.gd" type="Script" id=11]
 [ext_resource path="res://Styles/Labels/halt_text.tres" type="DynamicFont" id=12]
 [ext_resource path="res://Fonts/Roboto-Black.ttf" type="DynamicFontData" id=13]
 [ext_resource path="res://Styles/Labels/Num.tres" type="DynamicFont" id=14]
 [ext_resource path="res://Sprites/animations/autobuyer.tres" type="SpriteFrames" id=15]
+[ext_resource path="res://Scripts/lored/AnimatedSprite.gd" type="Script" id=16]
+[ext_resource path="res://Scripts/lored/Fuel.gd" type="Script" id=17]
+[ext_resource path="res://Scripts/lored/Status Indicator.gd" type="Script" id=18]
+[ext_resource path="res://Styles/Labels/Flair.tres" type="DynamicFont" id=19]
+[ext_resource path="res://Prefabs/template/Check Box.tscn" type="PackedScene" id=20]
 
 [sub_resource type="StyleBoxFlat" id=1]
 bg_color = Color( 1, 1, 1, 0.027451 )
@@ -30,6 +35,13 @@ shadow_color = Color( 0.054902, 0.054902, 0.054902, 1 )
 shadow_size = 10
 
 [sub_resource type="StyleBoxFlat" id=2]
+bg_color = Color( 1, 1, 1, 0.4 )
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id=3]
 bg_color = Color( 1, 1, 1, 0.501961 )
 draw_center = false
 border_width_top = 2
@@ -43,7 +55,7 @@ expand_margin_bottom = 10.0
 shadow_color = Color( 0.054902, 0.054902, 0.054902, 1 )
 anti_aliasing = false
 
-[sub_resource type="StyleBoxFlat" id=3]
+[sub_resource type="StyleBoxFlat" id=4]
 bg_color = Color( 1, 1, 1, 0.0509804 )
 border_width_left = 10
 border_width_top = 10
@@ -59,13 +71,6 @@ expand_margin_left = 5.0
 expand_margin_right = 5.0
 expand_margin_top = 5.0
 expand_margin_bottom = 5.0
-
-[sub_resource type="StyleBoxFlat" id=4]
-bg_color = Color( 1, 1, 1, 0.4 )
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-corner_radius_bottom_right = 5
-corner_radius_bottom_left = 5
 
 [sub_resource type="StyleBoxFlat" id=5]
 bg_color = Color( 0.0784314, 0.0784314, 0.0784314, 1 )
@@ -109,11 +114,18 @@ outline_color = Color( 0, 0, 0, 1 )
 extra_spacing_top = 1
 font_data = ExtResource( 2 )
 
-[sub_resource type="StyleBoxFlat" id=11]
+[sub_resource type="DynamicFont" id=11]
+size = 12
+outline_size = 2
+outline_color = Color( 0, 0, 0, 1 )
+extra_spacing_top = 1
+font_data = ExtResource( 7 )
+
+[sub_resource type="StyleBoxFlat" id=12]
 bg_color = Color( 0.148438, 0.148438, 0.148438, 1 )
 shadow_size = 2
 
-[sub_resource type="StyleBoxFlat" id=12]
+[sub_resource type="StyleBoxFlat" id=13]
 bg_color = Color( 0.0745098, 0.0745098, 0.0745098, 1 )
 border_color = Color( 0.117647, 0.117647, 0.117647, 1 )
 border_blend = true
@@ -127,16 +139,26 @@ expand_margin_top = 5.0
 expand_margin_bottom = 5.0
 shadow_size = 3
 
-[sub_resource type="DynamicFont" id=13]
+[sub_resource type="DynamicFont" id=14]
 size = 11
 outline_size = 1
 outline_color = Color( 0, 0, 0, 1 )
 font_data = ExtResource( 7 )
 
+[sub_resource type="StyleBoxFlat" id=15]
+bg_color = Color( 0.14902, 0.14902, 0.14902, 1 )
+shadow_size = 2
+
+[sub_resource type="StyleBoxFlat" id=16]
+bg_color = Color( 0.411765, 0.411765, 0.411765, 1 )
+
+[sub_resource type="StyleBoxFlat" id=17]
+bg_color = Color( 1, 1, 1, 1 )
+
 [node name="LORED" type="MarginContainer"]
 anchor_right = 0.0125
-margin_right = 279.2
-margin_bottom = 102.0
+margin_right = 351.2
+margin_bottom = 122.0
 size_flags_vertical = 0
 custom_constants/margin_right = 10
 custom_constants/margin_top = 10
@@ -150,38 +172,48 @@ __meta__ = {
 [node name="bg" type="Panel" parent="."]
 margin_left = 10.0
 margin_top = 10.0
-margin_right = 282.0
-margin_bottom = 92.0
+margin_right = 354.0
+margin_bottom = 112.0
 custom_styles/panel = SubResource( 1 )
+
+[node name="status" type="Panel" parent="bg"]
+self_modulate = Color( 1, 0, 0, 1 )
+margin_left = -10.0
+margin_top = -10.0
+custom_styles/panel = SubResource( 2 )
+script = ExtResource( 18 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="bg2" type="Panel" parent="."]
 margin_left = 10.0
 margin_top = 10.0
-margin_right = 282.0
-margin_bottom = 92.0
+margin_right = 354.0
+margin_bottom = 112.0
 rect_min_size = Vector2( 0, 78 )
-custom_styles/panel = SubResource( 2 )
+custom_styles/panel = SubResource( 3 )
 
 [node name="h" type="HBoxContainer" parent="."]
 margin_left = 10.0
 margin_top = 10.0
-margin_right = 282.0
-margin_bottom = 92.0
+margin_right = 354.0
+margin_bottom = 112.0
 custom_constants/separation = 10
 
 [node name="h" type="HBoxContainer" parent="h"]
-margin_right = 186.0
-margin_bottom = 82.0
+margin_right = 258.0
+margin_bottom = 102.0
 custom_constants/separation = 10
 
 [node name="animation" type="Panel" parent="h/h"]
-margin_top = 7.0
+margin_top = 17.0
 margin_right = 68.0
-margin_bottom = 75.0
+margin_bottom = 85.0
 rect_min_size = Vector2( 68, 68 )
 size_flags_horizontal = 0
 size_flags_vertical = 4
-custom_styles/panel = SubResource( 3 )
+custom_styles/panel = SubResource( 4 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -190,27 +222,19 @@ __meta__ = {
 position = Vector2( 34, 34 )
 scale = Vector2( 2, 2 )
 frames = ExtResource( 1 )
-animation = "ww"
+animation = "ff"
+frame = 20
 playing = true
-
-[node name="status" type="Panel" parent="h/h/animation"]
-self_modulate = Color( 1, 0, 0, 1 )
-margin_left = -10.0
-margin_top = -17.0
-margin_bottom = -7.0
-custom_styles/panel = SubResource( 4 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
+script = ExtResource( 16 )
 
 [node name="lored" type="VBoxContainer" parent="h/h"]
 margin_left = 78.0
-margin_right = 186.0
-margin_bottom = 82.0
+margin_right = 258.0
+margin_bottom = 102.0
 rect_min_size = Vector2( 108, 0 )
 
 [node name="h" type="HBoxContainer" parent="h/h/lored"]
-margin_right = 108.0
+margin_right = 180.0
 margin_bottom = 36.0
 
 [node name="icon" type="Panel" parent="h/h/lored/h"]
@@ -230,8 +254,9 @@ texture = ExtResource( 4 )
 
 [node name="v" type="VBoxContainer" parent="h/h/lored/h"]
 margin_left = 40.0
-margin_right = 108.0
+margin_right = 180.0
 margin_bottom = 36.0
+size_flags_horizontal = 3
 custom_constants/separation = 0
 alignment = 1
 
@@ -248,28 +273,39 @@ text = "Copper Ore"
 modulate = Color( 0.806152, 0.806152, 0.806152, 1 )
 self_modulate = Color( 0.960784, 0.45098, 0, 1 )
 margin_top = 2.0
-margin_right = 68.0
+margin_right = 140.0
 margin_bottom = 19.0
 rect_min_size = Vector2( 68, 0 )
 custom_fonts/font = ExtResource( 14 )
 text = "123e123"
 
 [node name="net" type="Label" parent="h/h/lored/h/v"]
+visible = false
 modulate = Color( 0.801758, 0.801758, 0.801758, 1 )
-margin_top = 19.0
+margin_top = 17.0
 margin_right = 68.0
-margin_bottom = 33.0
+margin_bottom = 31.0
 custom_fonts/font = SubResource( 6 )
 text = "123e12/s"
 
+[node name="item name" type="Label" parent="h/h/lored/h/v"]
+modulate = Color( 0.801758, 0.801758, 0.801758, 1 )
+margin_top = 19.0
+margin_right = 140.0
+margin_bottom = 34.0
+custom_fonts/font = ExtResource( 19 )
+text = "Wants to cast Hex"
+autowrap = true
+
 [node name="task" type="Panel" parent="h/h/lored"]
 margin_top = 40.0
-margin_right = 108.0
-margin_bottom = 60.0
-rect_min_size = Vector2( 40, 20 )
+margin_right = 180.0
+margin_bottom = 80.0
+rect_min_size = Vector2( 180, 40 )
 size_flags_horizontal = 3
 size_flags_vertical = 4
 custom_styles/panel = SubResource( 7 )
+script = ExtResource( 11 )
 
 [node name="f" type="Panel" parent="h/h/lored/task"]
 anchor_right = 1.0
@@ -306,16 +342,33 @@ rect_min_size = Vector2( 68, 0 )
 custom_fonts/font = SubResource( 10 )
 text = "+16"
 align = 2
+valign = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="task text" type="Label" parent="h/h/lored/task"]
+modulate = Color( 0.806152, 0.806152, 0.806152, 1 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 5.0
+margin_right = -5.00002
+rect_min_size = Vector2( 68, 0 )
+custom_fonts/font = SubResource( 11 )
+custom_constants/line_spacing = -1
+text = "You're super duper freaking cute"
 valign = 1
+autowrap = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="fuel" type="HBoxContainer" parent="h/h/lored"]
-margin_top = 64.0
-margin_right = 108.0
-margin_bottom = 82.0
+margin_top = 84.0
+margin_right = 180.0
+margin_bottom = 102.0
 mouse_filter = 0
+script = ExtResource( 17 )
 
 [node name="fuel_icon" type="Panel" parent="h/h/lored/fuel"]
 margin_right = 18.0
@@ -337,13 +390,13 @@ texture = ExtResource( 3 )
 [node name="fuel" type="Panel" parent="h/h/lored/fuel"]
 margin_left = 22.0
 margin_top = 4.0
-margin_right = 108.0
+margin_right = 180.0
 margin_bottom = 14.0
 rect_min_size = Vector2( 40, 10 )
 mouse_filter = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
-custom_styles/panel = SubResource( 11 )
+custom_styles/panel = SubResource( 12 )
 
 [node name="f" type="Panel" parent="h/h/lored/fuel/fuel"]
 anchor_right = 1.0
@@ -373,16 +426,11 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="cac" parent="h/h" instance=ExtResource( 8 )]
-visible = false
-margin_left = 78.0
-margin_right = 212.0
-
 [node name="interactables" type="MarginContainer" parent="h"]
-margin_left = 196.0
-margin_top = 4.0
-margin_right = 272.0
-margin_bottom = 78.0
+margin_left = 268.0
+margin_top = 14.0
+margin_right = 344.0
+margin_bottom = 88.0
 size_flags_horizontal = 0
 size_flags_vertical = 4
 custom_constants/margin_right = 5
@@ -395,7 +443,7 @@ margin_left = 5.0
 margin_top = 5.0
 margin_right = 71.0
 margin_bottom = 69.0
-custom_styles/panel = SubResource( 12 )
+custom_styles/panel = SubResource( 13 )
 
 [node name="lored" type="VBoxContainer" parent="h/interactables"]
 margin_left = 5.0
@@ -463,41 +511,72 @@ focus_mode = 0
 mouse_default_cursor_shape = 2
 size_flags_vertical = 0
 theme = ExtResource( 5 )
-custom_fonts/font = SubResource( 13 )
+custom_fonts/font = SubResource( 14 )
+enabled_focus_mode = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="autobuywheel" type="AnimatedSprite" parent="h/interactables/lored/buy"]
-visible = false
-position = Vector2( 33, 14 )
+position = Vector2( 33, 16 )
 scale = Vector2( 0.6, 0.6 )
 frames = ExtResource( 15 )
-frame = 7
+frame = 5
 playing = true
 
-[node name="cac" type="VBoxContainer" parent="h/interactables"]
-visible = false
-margin_left = 5.0
-margin_top = 5.0
-margin_right = 71.0
-margin_bottom = 69.0
-alignment = 1
+[node name="check" parent="h/interactables/lored/buy" instance=ExtResource( 20 )]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 1.0
+margin_top = 3.0
+margin_right = -29.0
+margin_bottom = -2.0
+focus_mode = 0
+mouse_filter = 1
+enabled_focus_mode = 0
 
-[node name="buy" type="Button" parent="h/interactables/cac"]
-margin_right = 60.0
-margin_bottom = 32.0
-rect_min_size = Vector2( 60, 32 )
-mouse_default_cursor_shape = 2
+[node name="quest" type="Panel" parent="h/interactables/lored"]
+visible = false
+margin_top = 68.0
+margin_right = 68.0
+margin_bottom = 73.0
+rect_min_size = Vector2( 68, 5 )
+mouse_filter = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_styles/panel = SubResource( 15 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="f" type="Panel" parent="h/interactables/lored/quest"]
+modulate = Color( 0.827451, 0.117647, 0.866667, 1 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = -63.0
+rect_min_size = Vector2( 2, 0 )
+mouse_filter = 2
+size_flags_horizontal = 0
 size_flags_vertical = 0
-theme = ExtResource( 5 )
-custom_fonts/font = SubResource( 13 )
-text = "Summon"
+custom_styles/panel = SubResource( 16 )
+__meta__ = {
+"_edit_group_": true,
+"_edit_use_anchors_": false
+}
 
-[node name="autobuywheel" type="AnimatedSprite" parent="h/interactables/cac/buy"]
-visible = false
-position = Vector2( 33, 14 )
-scale = Vector2( 0.6, 0.6 )
-frames = ExtResource( 15 )
-frame = 6
-playing = true
+[node name="flair" type="Panel" parent="h/interactables/lored/quest/f"]
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -2.0
+rect_min_size = Vector2( 2, 0 )
+mouse_filter = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+custom_styles/panel = SubResource( 17 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="lv" type="MarginContainer" parent="."]
 margin_left = 10.0
@@ -525,6 +604,3 @@ size_flags_vertical = 0
 [connection signal="mouse_entered" from="h/interactables/lored/buy" to="." method="_on_buy_mouse_entered"]
 [connection signal="mouse_exited" from="h/interactables/lored/buy" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="h/interactables/lored/buy" to="." method="_on_buy_pressed"]
-[connection signal="mouse_entered" from="h/interactables/cac/buy" to="." method="_on_buy_mouse_entered"]
-[connection signal="mouse_exited" from="h/interactables/cac/buy" to="." method="_on_mouse_exited"]
-[connection signal="pressed" from="h/interactables/cac/buy" to="." method="_on_buy_pressed"]

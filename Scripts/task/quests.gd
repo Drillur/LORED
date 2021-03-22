@@ -13,33 +13,25 @@ var content_effects := {}
 
 #when i began quest to buy upgrade_name, i already had it, but it didn't count for quest progress
 
-
-func _physics_process(delta: float) -> void:
-	
-	if taq.cur_quest == "":
-		return
-	
-	objective_check(taq.cur_quest)
-
 func quest_ended() -> void:
 	
-	rt.w_task_effects([taq.cur_quest])
+	flying_texts(taq.quest.reward)
 	
-	flying_texts(taq.quest.resource_reward)
+	taq.quest.turn_in()
 	
 	match taq.cur_quest:
-		"Spike":
+		gv.Quest.SPIKE:
 			gv.menu.option["task auto"] = true
 	
-	taq.cur_quest = ""
+	taq.cur_quest = -1
 	
 	for x in rt.quests:
-		if rt.quests[x].complete:
+		if rt.quests[x].complete or rt.quests[x].selectable:
 			continue
 		taq.new_quest(rt.quests[x])
 		break
 	
-	if taq.cur_quest == "":
+	if taq.cur_quest == -1:
 		hide()
 		set_physics_process(false)
 	
@@ -49,17 +41,22 @@ func quest_ended() -> void:
 	
 	rt.save_fps = 10.0
 
-func flying_texts(resource_reward = {}) -> void:
+func flying_texts(reward = []) -> void:
 	
-	for x in resource_reward:
-		gv.r[x].a(resource_reward[x])
-		gv.emit_signal("lored_updated", x, "amount")
+	var poop = []
+	
+	for r in reward:
+		if r.type == gv.QuestReward.RESOURCE:
+			poop.append(r)
+	
+	for p in poop:
+		gv.r[p.other_key].a(p.amount)
 	
 	var left_x = rect_global_position.x + rect_size.x / 2
 	var ypos = rect_global_position.y - 5
 	
 	var i := 0
-	for x in resource_reward:
+	for x in poop:
 		
 		var t = Timer.new()
 		t.set_wait_time(0.09)
@@ -72,13 +69,13 @@ func flying_texts(resource_reward = {}) -> void:
 		left_x += rand_range(-20, 20)
 		
 		if x == "growth":
-			rt.get_node(rt.gnLOREDs).cont[x].w_bonus_output(x, resource_reward[x])
+			rt.get_node(rt.gnLOREDs).cont[x].w_bonus_output(x.other_key, x.amount)
 		
 		var key = "task reward dtext" + str(i)
 		
 		# dtext
 		content_effects[key] = prefabs.D_TEXT.instance()
-		content_effects[key].init(false,-50, "+ " + resource_reward[x].toString(), gv.sprite[x], gv.g[x].color)
+		content_effects[key].init(false,-50, "+ " + x.amount.toString(), x.icon, x.color)
 		rt.get_node("texts").add_child(content_effects[key])
 		
 		if i == 0:
@@ -94,20 +91,3 @@ func flying_texts(resource_reward = {}) -> void:
 		
 		
 		i += 1
-
-
-func objective_check(quest: String):
-	
-	var key: String
-	
-	match quest:
-		
-		"The Loop":
-			
-			key = "upgrade_name purchased"
-			
-			if taq.quest.step[key].f.isEqualTo(1):
-				return
-			
-			if gv.up["upgrade_name"].have:
-				taq.quest.step[key].f = Big.new(1)

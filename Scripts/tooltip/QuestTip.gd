@@ -4,7 +4,6 @@ var src := {
 	step = preload("res://Prefabs/tooltip/QuestTipStep.tscn"),
 	reward = preload("res://Prefabs/tooltip/QuestTipReward.tscn"),
 	resource_reward = preload("res://Prefabs/tooltip/QuestTipResourceReward.tscn"),
-	up_block = preload("res://Prefabs/tooltip/upgrade_block.tscn"),
 }
 var cont := {
 	step = {},
@@ -21,9 +20,9 @@ onready var gn_steps := get_node("v/steps")
 onready var gn_rr := get_node("v/RR/v")
 onready var gn_r := get_node("v/R/v")
 
-var fps := 0.0
-var task: taq.Task
-var step_check := {}
+
+var fps := -0.1
+var task: Task
 
 var flash_incomplete_steps := false
 var flash_i := 0
@@ -43,9 +42,9 @@ func _physics_process(delta: float) -> void:
 	flash()
 	
 	fps += delta
-	if fps < rt.FPS:
+	if fps < gv.fps:
 		return
-	fps -= rt.FPS
+	fps -= gv.fps
 	
 	r_update()
 
@@ -53,20 +52,23 @@ func _physics_process(delta: float) -> void:
 func r_update() -> void:
 	
 	# step
-	for x in task.step:
-		cont.step[x].get_node("v/h/step/val").text = task.step[x].f.toString() + " / " + task.step[x].b.toString()
+	var i = 0
+	for r in task.req:
+		cont.step[i].get_node("v/h/step/val").text = r.progress.toString() + " / " + r.amount.toString()
 		
-		cont.step[x].get_node("v/ct/c").rect_size.x = task.step[x].f.percent(task.step[x].b) * cont.step[x].get_node("v/ct").rect_size.x
-		cont.step[x].get_node("v/ct/c").rect_size.x = min(cont.step[x].get_node("v/ct/c").rect_size.x, cont.step[x].get_node("v/ct").rect_size.x)
+		cont.step[i].get_node("v/ct/c").rect_size.x = r.progress.percent(r.amount) * cont.step[i].get_node("v/ct").rect_size.x
+		cont.step[i].get_node("v/ct/c").rect_size.x = min(cont.step[i].get_node("v/ct/c").rect_size.x, cont.step[i].get_node("v/ct").rect_size.x)
 		
-		if cont.step[x].get_node("v/ct/c").rect_size.x == cont.step[x].get_node("v/ct").rect_size.x:
-			if not step_check[x]:
-				
-				cont.step[x].get_node("v/ct").hide()
-				cont.step[x].get_node("v/h/check").show()
-				
-				set_process(true)
-				step_check[x] = true
+		i += 1
+		
+#		if cont.step[x].get_node("v/ct/c").rect_size.x == cont.step[x].get_node("v/ct").rect_size.x:
+#			if not step_check[x]:
+#
+#				cont.step[x].get_node("v/ct").hide()
+#				cont.step[x].get_node("v/h/check").show()
+#
+#				set_process(true)
+#				step_check[x] = true
 
 
 func flash():
@@ -103,49 +105,32 @@ func flash():
 
 
 
-func init(_task: taq.Task) -> void:
+func init(_task: Task) -> void:
 	
 	task = _task
 	
-	gn_name.text = _name(task.name)
-	gn_desc.text = desc(task.step, task.desc)
-	$v/m/bg.modulate = gv.COLORS[task.icon.key]
-	gn_icon.texture = task.icon.texture
+	gn_name.text = task.name
+	gn_desc.text = desc(task.req, task.desc)
+	$v/m/bg.modulate = task.color
+	gn_icon.texture = task.icon
 	
-	tags(task.name)
-	step(task.step)
-	resource_reward(task.resource_reward)
+	tags(task.key)
 	reward(task.reward)
+	req(task.req)
 	
 	#set_process(true)
 
-func _name(_name: String) -> String:
+func tags(type: int) -> void:
 	
-	if "(Rare)" in _name:
-		return _name.split(" (Rare)")[0]
-	
-	if "{Spike}" in _name:
-		return _name.split(" {Spike}")[0]
-	
-	return _name
-
-func tags(_name: String) -> void:
-	
-	if "(Rare)" in _name:
+	if type == gv.Quest.RANDOM_RARE:
 		$v/tags/rare.show()
-	
-	elif "{Spike}" in _name:
+	elif type == gv.Quest.RANDOM_SPIKE:
 		$v/tags/spike.show()
 
-func desc(step: Dictionary, desc: String) -> String:
+func desc(step: Array, desc: String) -> String:
 	
-	if not task.name in rt.quests.keys():
-		if step.size() == 1:
-			for x in step.keys():
-				if " purchased" in x:
-					return ""
-				if " produced" in x:
-					return ""
+	if task.random:
+		return ""
 	
 	# quests
 	if task.desc == "":
@@ -153,80 +138,59 @@ func desc(step: Dictionary, desc: String) -> String:
 	
 	gn_desc.show()
 	
+	if task.name in ["Witch", "Necro", "Blood", "Hunt"]:
+		
+		var poop = desc
+		poop = desc.format({"key": task.name, "level": fval.f(gv.g[task.name.to_lower()].level + 1)})
+		return poop 
+	
 	return desc
 
-func step(step: Dictionary) -> void:
+func req(requirements: Array) -> void:
 	
-	for x in step:
+	var i = 0
+	for r in requirements:
 		
-		step_check[x] = false
+		cont.step[i] = src.step.instance()
+		cont.step[i].get_node("v/h/icon/Sprite").texture = r.icon
 		
-		cont.step[x] = src.step.instance()
-		cont.step[x].get_node("v/h/icon/Sprite").texture = r_set_icon(x)
-		cont.step[x].get_node("v/h/step/desc").text = x
-		var color: Color
-		if "LORED bought" in x:
-			color = gv.g[rt.w_name_to_short(x.split(" LORED")[0])].color
-		elif " produced" in x and not "Combined resources" in x:
-			color = gv.g[rt.w_name_to_short(x.split(" produced")[0])].color
-		else:
-			color = Color(0.8, 0.8, 0.8)
-		cont.step[x].get_node("v/h/step/val").add_color_override("font_color", color)
-		if " produced" in x:
-			cont.step[x].get_node("v/ct").modulate = color
+		cont.step[i].get_node("v/h/step/desc").text = r.text
 		
-		gn_steps.add_child(cont.step[x])
+		# color
+		cont.step[i].get_node("v/h/step/val").add_color_override("font_color", r.color)
+		if r.type == gv.TaskRequirement.RESOURCE_PRODUCTION:
+			cont.step[i].get_node("v/ct").modulate = r.color
 		
-		if "purchased" in x:
+		gn_steps.add_child(cont.step[i])
+		
+		if r.type == gv.TaskRequirement.UPGRADE_PURCHASED:
 			
-			cont.up_block[x] = src.up_block.instance()
-			gn_steps.add_child(cont.up_block[x])
-			cont.up_block[x].init(x.split(" purchased")[0])
+			cont.up_block[i] = gv.SRC["upgrade block"].instance()
+			gn_steps.add_child(cont.up_block[i])
+			cont.up_block[i].init(r.req_key)
+		
+		i += 1
 	
 	r_update()
 
-func resource_reward(rr: Dictionary) -> void:
+func reward(reward: Array) -> void:
 	
-	if rr.size() == 0:
+	if reward.size() == 0:
 		$v/RR.hide()
 		return
 	
 	var i := 0
-	for x in rr:
-		
-		cont.rr[x] = src.resource_reward.instance()
-		cont.rr[x].get_node("HBoxContainer/icon/Sprite").texture = gv.sprite[x]
-		cont.rr[x].get_node("HBoxContainer/VBoxContainer/type").text = gv.g[x].name
-		cont.rr[x].get_node("HBoxContainer/VBoxContainer/val").text = task.resource_reward[x].toString()
-		cont.rr[x].get_node("HBoxContainer/VBoxContainer/val").add_color_override("font_color", gv.g[x].color)
-		
-		if i % 2 == 0:
-			cont.rr[x].get_node("bg").hide()
-		
-		gn_rr.add_child(cont.rr[x])
-		
-		i += 1
-
-func reward(r: Dictionary) -> void:
-	
-	if r.size() == 0:
-		return
-	
-	$v/R.show()
-	
-	var i = 0
-	for x in r:
-		
-		cont.r[x] = src.reward.instance()
-		cont.r[x].get_node("h/icon/Sprite").texture = task.reward[x]
-		cont.r[x].get_node("h/text").text = x
+	for r in reward:
+		cont.rr[i] = src.resource_reward.instance()
+		cont.rr[i].get_node("HBoxContainer/icon/Sprite").texture = r.icon
+		cont.rr[i].get_node("HBoxContainer/VBoxContainer/type").text = r.text
+		cont.rr[i].get_node("HBoxContainer/VBoxContainer/val").text = r.amount.toString()
+		cont.rr[i].get_node("HBoxContainer/VBoxContainer/val").add_color_override("font_color", r.color)
 		
 		if i % 2 == 0:
-			cont.r[x].get_node("bg").hide()
+			cont.rr[i].get_node("bg").hide()
 		
-		gn_r.add_child(cont.r[x])
-		
-		i += 1
+		gn_rr.add_child(cont.rr[i])
 
 func r_set_icon(resource : String) -> Texture:
 	
@@ -247,6 +211,9 @@ func r_set_icon(resource : String) -> Texture:
 		blah = x
 		break
 	
+	if blah == "":
+		blah = resource.split(" produced")[0]
+	
 	if "Tasks completed" in resource or "Rare or Spike tasks completed" in resource or "Spike tasks completed" in resource:
 		return gv.sprite["copy"]
 	
@@ -266,6 +233,9 @@ func r_set_icon(resource : String) -> Texture:
 	
 	if "produced" in resource:
 		return gv.sprite[blah]
+	
+	if " cast" in resource:
+		return gv.sprite["witch"]
 	
 	if "Have" in resource:
 		return gv.sprite[blah]

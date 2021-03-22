@@ -61,7 +61,7 @@ func _physics_process(delta: float) -> void:
 	get_node(gn.val).text = gv.r[key].toString() + " / " + total.toString()
 	
 	# visibility
-	if gv.r[key].isLargerThan(total):
+	if gv.r[key].greater(total):
 		get_node(gn.time).hide()
 		get_node("h/check").show()
 	else:

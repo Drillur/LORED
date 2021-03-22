@@ -17,7 +17,7 @@ expand_margin_right = 7.0
 expand_margin_top = 5.0
 expand_margin_bottom = 3.0
 
-[sub_resource type="StyleBoxFlat" id=3]
+[sub_resource type="StyleBoxFlat" id=2]
 bg_color = Color( 1, 0.658824, 0, 0.2 )
 border_width_left = 1
 border_width_top = 1
@@ -30,14 +30,14 @@ expand_margin_top = 5.0
 expand_margin_bottom = 5.0
 anti_aliasing = false
 
-[sub_resource type="StyleBoxFlat" id=4]
+[sub_resource type="StyleBoxFlat" id=3]
 bg_color = Color( 1, 1, 1, 0.0509804 )
 expand_margin_left = 8.0
 expand_margin_right = 8.0
 expand_margin_top = 3.0
 expand_margin_bottom = 3.0
 
-[sub_resource type="StyleBoxFlat" id=5]
+[sub_resource type="StyleBoxFlat" id=4]
 bg_color = Color( 0.247059, 0.247059, 0.247059, 1 )
 draw_center = false
 border_color = Color( 0.384314, 0.384314, 0.384314, 1 )
@@ -47,7 +47,7 @@ corner_radius_top_right = 2
 corner_radius_bottom_right = 2
 corner_radius_bottom_left = 2
 
-[sub_resource type="DynamicFont" id=6]
+[sub_resource type="DynamicFont" id=5]
 size = 14
 outline_size = 2
 outline_color = Color( 0, 0, 0, 1 )
@@ -55,31 +55,31 @@ extra_spacing_top = -1
 extra_spacing_bottom = -1
 font_data = ExtResource( 2 )
 
-[sub_resource type="DynamicFont" id=7]
+[sub_resource type="DynamicFont" id=6]
 size = 11
 outline_color = Color( 0, 0, 0, 1 )
 font_data = ExtResource( 4 )
 
-[sub_resource type="DynamicFont" id=8]
+[sub_resource type="DynamicFont" id=7]
 size = 12
 outline_size = 2
 outline_color = Color( 0, 0, 0, 1 )
 extra_spacing_bottom = 3
 font_data = ExtResource( 3 )
 
-[sub_resource type="DynamicFont" id=9]
+[sub_resource type="DynamicFont" id=8]
 size = 14
 outline_size = 2
 outline_color = Color( 0, 0, 0, 1 )
 font_data = ExtResource( 9 )
 
-[sub_resource type="DynamicFont" id=10]
+[sub_resource type="DynamicFont" id=9]
 size = 11
 outline_size = 2
 outline_color = Color( 0, 0, 0, 1 )
 font_data = ExtResource( 3 )
 
-[sub_resource type="DynamicFont" id=11]
+[sub_resource type="DynamicFont" id=10]
 size = 12
 outline_size = 2
 outline_color = Color( 0, 0, 0, 1 )
@@ -107,14 +107,14 @@ visible = false
 margin_left = 10.0
 margin_top = 10.0
 margin_right = 248.0
-margin_bottom = 99.0
+margin_bottom = 74.0
 custom_styles/panel = SubResource( 1 )
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 margin_left = 10.0
 margin_top = 10.0
 margin_right = 248.0
-margin_bottom = 99.0
+margin_bottom = 74.0
 
 [node name="Active" type="HBoxContainer" parent="VBoxContainer"]
 size_flags_horizontal = 0
@@ -137,7 +137,7 @@ margin_top = 5.0
 margin_right = 130.0
 margin_bottom = 20.0
 mouse_filter = 2
-custom_styles/panel = SubResource( 3 )
+custom_styles/panel = SubResource( 2 )
 
 [node name="Label" type="Label" parent="VBoxContainer/Active/refundable"]
 margin_left = 5.0
@@ -160,7 +160,7 @@ custom_constants/margin_bottom = 3
 margin_top = 3.0
 margin_right = 238.0
 margin_bottom = 39.0
-custom_styles/panel = SubResource( 4 )
+custom_styles/panel = SubResource( 3 )
 __meta__ = {
 "_edit_lock_": true
 }
@@ -180,7 +180,7 @@ margin_bottom = 36.0
 rect_min_size = Vector2( 36, 36 )
 size_flags_horizontal = 0
 size_flags_vertical = 4
-custom_styles/panel = SubResource( 5 )
+custom_styles/panel = SubResource( 4 )
 __meta__ = {
 "_edit_group_": true
 }
@@ -202,7 +202,7 @@ margin_right = 198.0
 margin_bottom = 36.0
 rect_min_size = Vector2( 45, 0 )
 size_flags_vertical = 3
-custom_fonts/font = SubResource( 6 )
+custom_fonts/font = SubResource( 5 )
 custom_colors/font_color = Color( 0.800781, 0.800781, 0.800781, 1 )
 text = "GRINDER"
 valign = 1
@@ -226,7 +226,7 @@ margin_top = 50.0
 margin_right = 238.0
 margin_bottom = 64.0
 size_flags_horizontal = 3
-custom_fonts/font = SubResource( 7 )
+custom_fonts/font = SubResource( 6 )
 custom_colors/font_color = Color( 0.827451, 0.827451, 0.827451, 1 )
 text = "One line"
 autowrap = true
@@ -257,7 +257,7 @@ margin_bottom = 28.0
 [node name="Label" type="Label" parent="VBoxContainer/effects/v"]
 margin_right = 218.0
 margin_bottom = 18.0
-custom_fonts/font = SubResource( 8 )
+custom_fonts/font = SubResource( 7 )
 text = "Effects"
 align = 1
 
@@ -271,7 +271,7 @@ size_flags_vertical = 0
 [node name="val" type="Label" parent="VBoxContainer/effects/v/idym"]
 margin_right = 27.0
 margin_bottom = 17.0
-custom_fonts/font = SubResource( 9 )
+custom_fonts/font = SubResource( 8 )
 custom_colors/font_color = Color( 0.701961, 0, 1, 1 )
 text = "+8.5"
 
@@ -280,7 +280,7 @@ margin_left = 31.0
 margin_top = 1.0
 margin_right = 120.0
 margin_bottom = 15.0
-custom_fonts/font = SubResource( 10 )
+custom_fonts/font = SubResource( 9 )
 custom_colors/font_color = Color( 0.799805, 0.799805, 0.799805, 1 )
 text = "Coal LORED boost"
 
@@ -294,7 +294,7 @@ size_flags_vertical = 0
 [node name="val" type="Label" parent="VBoxContainer/effects/v/igom_iron"]
 margin_right = 27.0
 margin_bottom = 17.0
-custom_fonts/font = SubResource( 9 )
+custom_fonts/font = SubResource( 8 )
 custom_colors/font_color = Color( 0.0705882, 0.890196, 1, 1 )
 text = "8.5x"
 
@@ -303,7 +303,7 @@ margin_left = 31.0
 margin_top = 1.0
 margin_right = 117.0
 margin_bottom = 15.0
-custom_fonts/font = SubResource( 10 )
+custom_fonts/font = SubResource( 9 )
 custom_colors/font_color = Color( 0.799805, 0.799805, 0.799805, 1 )
 text = "Iron LORED boost"
 
@@ -317,7 +317,7 @@ size_flags_vertical = 0
 [node name="val" type="Label" parent="VBoxContainer/effects/v/igom_cop"]
 margin_right = 27.0
 margin_bottom = 17.0
-custom_fonts/font = SubResource( 9 )
+custom_fonts/font = SubResource( 8 )
 custom_colors/font_color = Color( 1, 0.741176, 0.0509804, 1 )
 text = "8.5x"
 
@@ -326,21 +326,21 @@ margin_left = 31.0
 margin_top = 1.0
 margin_right = 133.0
 margin_bottom = 15.0
-custom_fonts/font = SubResource( 10 )
+custom_fonts/font = SubResource( 9 )
 custom_colors/font_color = Color( 0.799805, 0.799805, 0.799805, 1 )
 text = "Copper LORED boost"
 
 [node name="igom_irono" type="HBoxContainer" parent="VBoxContainer/effects/v"]
 visible = false
-margin_top = 22.0
+margin_top = 64.0
 margin_right = 218.0
-margin_bottom = 39.0
+margin_bottom = 81.0
 size_flags_vertical = 0
 
 [node name="val" type="Label" parent="VBoxContainer/effects/v/igom_irono"]
 margin_right = 27.0
 margin_bottom = 17.0
-custom_fonts/font = SubResource( 9 )
+custom_fonts/font = SubResource( 8 )
 custom_colors/font_color = Color( 0, 0.52, 0.91, 1 )
 text = "8.5x"
 
@@ -349,7 +349,7 @@ margin_left = 31.0
 margin_top = 1.0
 margin_right = 137.0
 margin_bottom = 15.0
-custom_fonts/font = SubResource( 10 )
+custom_fonts/font = SubResource( 9 )
 custom_colors/font_color = Color( 0.799805, 0.799805, 0.799805, 1 )
 text = "Iron Ore LORED boost"
 
@@ -363,7 +363,7 @@ size_flags_vertical = 0
 [node name="val" type="Label" parent="VBoxContainer/effects/v/igom_copo"]
 margin_right = 27.0
 margin_bottom = 17.0
-custom_fonts/font = SubResource( 9 )
+custom_fonts/font = SubResource( 8 )
 custom_colors/font_color = Color( 0.701961, 0.329412, 0, 1 )
 text = "8.5x"
 
@@ -372,7 +372,7 @@ margin_left = 31.0
 margin_top = 1.0
 margin_right = 153.0
 margin_bottom = 15.0
-custom_fonts/font = SubResource( 10 )
+custom_fonts/font = SubResource( 9 )
 custom_colors/font_color = Color( 0.799805, 0.799805, 0.799805, 1 )
 text = "Copper Ore LORED boost"
 
@@ -403,7 +403,7 @@ custom_constants/separation = 0
 [node name="Label" type="Label" parent="VBoxContainer/m/price"]
 margin_right = 218.0
 margin_bottom = 18.0
-custom_fonts/font = SubResource( 8 )
+custom_fonts/font = SubResource( 7 )
 text = "Cost"
 align = 1
 
@@ -433,7 +433,7 @@ margin_bottom = 25.0
 [node name="text" type="Label" parent="VBoxContainer/requires/v"]
 margin_right = 218.0
 margin_bottom = 15.0
-custom_fonts/font = SubResource( 11 )
+custom_fonts/font = SubResource( 10 )
 custom_colors/font_color = Color( 0.800781, 0.800781, 0.800781, 1 )
 text = "Required Upgrade"
 align = 1

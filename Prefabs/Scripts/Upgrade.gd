@@ -24,13 +24,10 @@ var fps := {
 	"autobuy": FPS.new(1, true),
 }
 
-var flash_timer := 0
-
 
 var routine := []
 
 var already_displayed_alert_guy := false
-
 
 
 func setup(_key, _folder):
@@ -61,9 +58,6 @@ func _physics_process(delta: float) -> void:
 				afford()
 			"autobuy":
 				autobuy()
-	
-	if flash_timer > 0:
-		r_flash()
 	
 	if gv.up[key].have:
 		set_physics_process(false)
@@ -125,25 +119,11 @@ func r_update_icon():
 	
 	get_node(gn.icon).texture = gv.sprite["unknown"]
 
-func r_flash(reset := false):
+func flash():
 	
-	if reset:
-		flash_timer = 0
-	
-	if flash_timer == 0:
-		
-		get_node("flash").show()
-		get_node("flash2").show()
-		flash_timer = 10
-		
-		return
-	
-	flash_timer -= 1
-	
-	if flash_timer == 5:
-		get_node("flash2").hide()
-	elif flash_timer == 0:
-		get_node("flash").hide()
+	cont["flash"] = gv.SRC["flash"].instance()
+	add_child(cont["flash"])
+	cont["flash"].flash(Color(1,1,1))
 
 func set_mouse_cursor_shape():
 	
@@ -151,11 +131,18 @@ func set_mouse_cursor_shape():
 		button.mouse_default_cursor_shape = Control.CURSOR_FORBIDDEN
 		return
 	
-	if "no" in gv.menu.f and "n" in gv.open_upgrade_folder and not gv.up[key].have:
-		button.mouse_default_cursor_shape = Control.CURSOR_FORBIDDEN
-		return
+	if "no" in gv.menu.f:
+		if "n" in gv.open_upgrade_folder and not gv.up[key].have:
+			button.mouse_default_cursor_shape = Control.CURSOR_FORBIDDEN
+			return
+		if "m" in gv.open_upgrade_folder and not gv.up[key].have:
+			if int(gv.up[key].stage) != int(gv.menu.f[4]):
+				button.mouse_default_cursor_shape = Control.CURSOR_FORBIDDEN
+				return
 	
 	if gv.up[key].have:
+		if key == "ROUTINE":
+			return
 		button.mouse_default_cursor_shape = Control.CURSOR_ARROW
 		return
 	
@@ -189,6 +176,11 @@ func get_purchase_modulate():
 	
 	var BAD := Color(1.3, 0, 0)
 	var GOOD := Color(0.376471, 1, 0)
+	
+	if key == "Carcinogenesis":
+		if gv.stats.upgrades_owned["s2m"] == 80:
+			return GOOD
+		return BAD
 	
 	if "reset" in gv.up[key].type:
 		return GOOD
@@ -269,7 +261,6 @@ func refundable(red_necro: bool) -> bool:
 	
 	for c in gv.up[key].cost:
 		gv.r[c].a(gv.up[key].cost[c].t)
-		gv.emit_signal("lored_updated", c, "amount")
 	
 	rt.get_node("global_tip")._call("no")
 	rt.get_node("global_tip")._call("buy upgrade " + key)
@@ -290,7 +281,7 @@ func required_upgrades_not_owned(manual: bool) -> bool:
 		if not gv.up[x].have and not gv.up[x].refundable:
 			_return_true = true
 			if manual and gv.open_upgrade_folder == folder:
-				rt.get_node(rt.gnupcon).cont[x].r_flash(true)
+				rt.get_node(rt.gnupcon).cont[x].flash()
 			break
 	
 	if _return_true:
@@ -299,6 +290,13 @@ func required_upgrades_not_owned(manual: bool) -> bool:
 	return false
 
 func cannot_afford(manual: bool) -> bool:
+	
+	# returns the opposite or whatever
+	
+	if key == "Carcinogenesis":
+		if gv.stats.upgrades_owned["s2m"] == 80:
+			return false
+		return true
 	
 	if not gv.up[key].cost_check():
 		if manual:
@@ -436,9 +434,8 @@ func routine_shit() -> void:
 	routine = get_routine_info()
 	
 	gv.r["tum"].a(routine[0]) # d
-	gv.emit_signal("lored_updated", "tum", "amount")
+	taq.progress(gv.TaskRequirement.RESOURCE_PRODUCTION, "tum", routine[0])
 	gv.r["malig"].s(routine[1]) # c
-	gv.emit_signal("lored_updated", "malig", "amount")
 	
 
 func get_routine_info() -> Array:
@@ -449,13 +446,13 @@ func get_routine_info() -> Array:
 	var routine_d: Big = Big.new(base)
 	var routine_c: Big = Big.new(gv.up["ROUTINE"].cost["malig"].t)
 	
-	if gv.r["malig"].isLargerThan(Big.new(routine_c).m(2)):
+	if gv.r["malig"].greater(Big.new(routine_c).m(2)):
 		
-		var _c: Big = Big.new(gv.r["malig"].percent(gv.up["ROUTINE"].cost["malig"].t)).roundDown().s(1)
+		var _c: Big = Big.new(gv.r["malig"]).d(gv.up["ROUTINE"].cost["malig"].t).roundDown().s(1)
 		_c.m(routine_c)
 		routine_c.a(_c)
 		
-		var relative: Big = Big.new(routine_c.percent(gv.up["ROUTINE"].cost["malig"].t)).roundDown().s(1)
+		var relative: Big = Big.new(routine_c).d(gv.up["ROUTINE"].cost["malig"].t).roundDown().s(1)
 		relative.m(base)
 		routine_d.a(relative)
 	
@@ -468,11 +465,12 @@ func upgrade_bought(manual: bool):
 	if mup_planning():
 		return
 	
-	get_node("unowned").hide()
-	
 	task_stuff()
 	
 	gv.up[key].purchased()
+	
+	if gv.up[key].have:
+		get_node("unowned").hide()
 	
 	set_mouse_cursor_shape()
 	
@@ -480,9 +478,19 @@ func upgrade_bought(manual: bool):
 	
 	if manual:
 		
+		if key == "Carcinogenesis":
+			rt.reset(3)
+			gv.r["embryo"].a(1)
+			rt.unlock_tab("3")
+			if not gv.g["hunt"].active:
+				gv.g["hunt"].manager.buy(false)
+				rt.quests["Hunt"].update()
+			taq.add_multi_quests([rt.quests["Hunt"], rt.quests["Witch"], rt.quests["Necro"], rt.quests["Blood"]])
+		
 		# tooltip
 		rt.get_node("global_tip")._call("no")
-		rt.get_node("global_tip")._call("buy upgrade " + key)
+		if not key in ["Carcinogenesis"]:
+			rt.get_node("global_tip")._call("buy upgrade " + key)
 		
 		if gv.up[key].normal:
 			pass
@@ -526,7 +534,7 @@ func mup_planning() -> bool:
 
 func task_stuff():
 	
-	if taq.cur_quest == "":
+	if taq.cur_quest == -1:
 		return
 	
 	for x in taq.quest.step:
@@ -564,7 +572,6 @@ func _kill_all_children(up : String) -> void:
 			
 			for c in gv.up[x].cost:
 				gv.r[c].a(gv.up[x].cost[c].t)
-				gv.emit_signal("lored_updated", c, "amount")
 			
 			#var poop = gv.up[key].type.split(" ")[0] + gv.up[key].type.split(" ")[1].split(" ")[0]
 			

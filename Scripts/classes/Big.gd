@@ -79,6 +79,11 @@ func type_check(n):
 
 func calc(big = self):
 	
+	if big.exponent < -9:
+		big.exponent = 0
+		big.mantissa = 0.0
+		return
+	
 	if big.mantissa >= 1 and big.mantissa < 10:
 		return
 	
@@ -104,6 +109,7 @@ func percent(n):
 	n = type_check(n)
 	
 	if n.mantissa == 0.0:
+		# prevents division of 0
 		return 0.0
 	
 	var bla = {"mantissa": float(mantissa), "exponent": int(exponent)}
@@ -172,7 +178,8 @@ func s(n):
 	
 	return self
 
-func power(n:int):
+func power(n):
+	
 	if n <= 0:
 		mantissa = 1.0
 		exponent = 0
@@ -181,21 +188,63 @@ func power(n:int):
 	var y_mantissa = 1
 	var y_exponent = 0
 	
-	while n > 1:
-		if n % 2 == 0: #n is even
-			exponent = exponent + exponent
-			mantissa = mantissa * mantissa
-			n /= 2
-		else:
-			y_mantissa = mantissa * y_mantissa
-			y_exponent = exponent + y_exponent
-			exponent = exponent + exponent
-			mantissa = mantissa * mantissa
-			n = (n-1) / 2
+	
+	# n is a floating point bullshit dick
+	if "." in str(n):
+		
+		var dec = float(str(n).split(".")[1])
+		
+		mantissa = (log(dec) / log(10)) * 10
+		
+		n = int(floor(n))
+		
+		while n > 1:
+			if n % 2 == 0: #n is even
+				exponent *= 2
+				mantissa *= mantissa
+				n /= 2
+			else:
+				y_mantissa = mantissa * y_mantissa
+				y_exponent = exponent + y_exponent
+				exponent *= 2
+				mantissa *= mantissa
+				n = (n-1) / 2
+		
+		exponent = y_exponent + exponent
+		mantissa = y_mantissa * mantissa
+		
+		calc()
+		return self
+	
+	else:
+		while n > 1:
+			if n % 2 == 0: #n is even
+				exponent = exponent + exponent
+				mantissa = mantissa * mantissa
+				n /= 2
+			else:
+				y_mantissa = mantissa * y_mantissa
+				y_exponent = exponent + y_exponent
+				exponent = exponent + exponent
+				mantissa = mantissa * mantissa
+				n = (n-1) / 2
 	
 	exponent = y_exponent + exponent
 	mantissa = y_mantissa * mantissa
-	calc(self)
+	
+	calc()
+	return self
+
+func shitty_pow(n):
+	
+	# only works in intervals of 0.5.
+	# will work with 1.5, 2, 2.5
+	if typeof(n) == TYPE_OBJECT:
+		n = n.toFloat()
+	
+	exponent *= n
+	
+	calc()
 	return self
 
 func square():
@@ -209,12 +258,12 @@ func square():
 	return self
 
 
-func isEqualTo(n):
+func equal(n):
 	n = type_check(n)
 	calc(n)
 	return n.mantissa == mantissa and n.exponent == exponent
 
-func isLargerThan(n):
+func greater(n):
 	
 	n = type_check(n)
 	calc(n)
@@ -231,15 +280,15 @@ func isLargerThan(n):
 	
 	return false
 
-func isLargerThanOrEqualTo(n):
-	if isEqualTo(n):
+func greater_equal(n):
+	if equal(n):
 		return true
-	return isLargerThan(n)
+	return greater(n)
 
 func isNegative() -> bool:
 	return mantissa < 0
 
-func isLessThan(n):
+func less(n):
 	
 	n = type_check(n)
 	calc(n)
@@ -256,29 +305,29 @@ func isLessThan(n):
 	
 	return false
 
-func isLessThanOrEqualTo(n):
+func less_equal(n):
 	
-	if isEqualTo(n):
+	if equal(n):
 		return true
 	
-	return isLessThan(n)
+	return less(n)
 
 static func min(m, n):
 	
-	if m.isLessThan(n):
+	if m.less(n):
 		return m
 	
 	return n
 
 static func max(m, n):
 	
-	if m.isLargerThan(n):
+	if m.greater(n):
 		return m
 	
 	return n
 
 func roundDown():
-	if exponent == 0:
+	if exponent <= 0:
 		mantissa = floor(mantissa)
 	elif exponent == 1:
 		mantissa = stepify(mantissa, 0.1)
@@ -293,7 +342,7 @@ func roundDown():
 func toString():
 	
 	if exponent < 6:
-		return fval.f(mantissa * pow(10, exponent))
+		return fval.f(toFloat())
 	
 	match gv.menu.option["notation_type"]:
 		0:

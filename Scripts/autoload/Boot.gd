@@ -3,8 +3,6 @@ extends Node
 
 func _ready() -> void:
 	
-	OS.set_low_processor_usage_mode(true)
-	
 	init()
 	setup()
 
@@ -13,8 +11,16 @@ func init():
 	init_loreds()
 	init_menu_and_stats()
 	init_upgrades()
+	init_quests()
 
 func init_loreds():
+	
+	# stage 3
+	
+	gv.g["hunt"] = LORED.new("hunt", "Hunt", "s3 water", {}, {}, 1)
+	gv.g["blood"] = LORED.new("blood", "Blood", "s3 blood", {}, {}, 1)
+	gv.g["necro"] = LORED.new("necro", "Necro", "s3 water", {}, {}, 1)
+	gv.g["witch"] = LORED.new("witch", "Witch", "s3 mana", {}, {}, 1)
 	
 	# stage 2
 	
@@ -95,6 +101,7 @@ func init_menu_and_stats():
 	gv.menu.option["im_ss_show_hint"] = true
 	gv.menu.option["task auto"] = false
 	gv.menu.option["performance"] = true
+	gv.menu.option["afford check"] = false
 	
 	
 	
@@ -119,8 +126,7 @@ func init_menu_and_stats():
 			gv.stats.upgrades_owned[key] = 0
 	
 	for x in gv.g:
-		
-		gv.stats.g_list["s" + gv.g[x].type[1]].append(x)
+		gv.stats.g_list["s" + gv.g[x].stage].append(x)
 
 func init_upgrades():
 	
@@ -152,6 +158,32 @@ func init_upgrades():
 #
 #		# s2 unlocking s3
 #		f = ""
+	
+	# re-buyables
+	if true:
+		
+		# s3n
+		if true:
+			
+			f = "Carcinogenesis"
+			gv.up[f] = Upgrade.new(f, "s3n rebuy", "Resets Radiative upgrades and then performs Chemotherapy, resetting Stage 1 and Stage 2 LOREDs and resources.\n\nRequires 80 Radiative upgrades.\nGains 1 Embryo.", "tum")
+		
+	
+	# uptasks
+	if true:
+		
+		# blood
+		if true:
+			
+			f = "Incision"
+			gv.up[f] = Upgrade.new(f, "s3n task", "The Blood LORED will now sacrifice his own blood.", "tum")
+			gv.up[f].effects.append(Effect.new("task", ["blood"], 1, "sacrifice own blood"))
+			#gv.up[f].cost["tum"] = Ob.Num.new("1e6")
+			#gv.up[f].requires.append("AUTOSENSU")
+			
+			f = "blood 0"
+			gv.chains[f] = UpgradeChain.new("", ["Incision"])
+			#gv.chains[f].effects.append(Effect.new("drain", ["blood"], 1.1))
 	
 	# upauto
 	if true:
@@ -1672,7 +1704,7 @@ func init_upgrades():
 		if true:
 			
 			f = "ROUTINE"
-			gv.up[f] = Upgrade.new(f, "s1m misc","Metastasizes and then resets this upgrade.", "s1m")
+			gv.up[f] = Upgrade.new(f, "s1m misc","Metastasizes and then resets this upgrade. Additionally, Normal upgrades now persist through Metastasis.", "s1m")
 			gv.up[f].cost["malig"] = Ob.Num.new("1e20")
 			gv.up[f].requires.append("RED NECROMANCY")
 			
@@ -1714,6 +1746,13 @@ func init_upgrades():
 			gv.up[f].cost["malig"] = Ob.Num.new("25e6")
 			gv.up[f].requires.append("ORE LORD")
 
+func init_quests():
+	
+	for q in gv.Quest.values():
+		if q == gv.Quest.RANDOM:
+			break
+		gv.quest.append(Task.new(q))
+
 
 func setup():
 	
@@ -1721,6 +1760,38 @@ func setup():
 	setup_upgrades()
 
 func setup_loreds():
+	
+	gv.g["blood"].speed.b = 40.0
+	gv.g["necro"].speed.b = 1.0
+	gv.g["hunt"].speed.b = 40.0
+	gv.g["witch"].speed.b = 40.0
+	
+	# task_list
+	if true:
+		
+		gv.g["hunt"].task_list.append("hunt beast")
+		
+		gv.g["necro"].task_list.append("resurrect corpse")
+		
+		gv.g["blood"].task_list.append("process growth")
+		
+		gv.g["witch"].task_list.append("cast hex")
+		
+		if gv.s3_time:
+			
+			#gv.g["witch"].inventory[gv.Item.PARTS].a(0)
+			
+			gv.g["hunt"].task_list.append("use water flasks")
+			
+			gv.g["blood"].task_list.append("sacrifice own blood")
+			gv.g["blood"].task_list.append("exsanguinate nearly dead")
+			gv.g["blood"].task_list.append("exsanguinate beast body")
+			gv.g["blood"].task_list.append("process tumors")
+			
+			gv.g["necro"].task_list.append("debone defiled dead")
+			gv.g["necro"].task_list.append("debone exsanguinated beast")
+			gv.g["necro"].task_list.append("flay corpse")
+			gv.g["necro"].task_list.append("resurrect flayed corpse")
 	
 	# things that cannot be done in cLORED.gd _init()
 	
@@ -1730,6 +1801,10 @@ func setup_loreds():
 			if gv.g[v].b.size() == 0: continue
 			if not x in gv.g[v].b.keys(): continue
 			gv.g[x].used_by.append(v)
+	
+	gv.stats.g_list["rare quest whitelist"] = gv.stats.g_list["s1"] + gv.stats.g_list["s2"]
+	for x in ["plast", "jo", "coal", "irono", "copo", "oil", "tar", "growth", "draw", "humus", "sand", "gale", "pulp", "paper", "soil", "toba", "tree"]:
+		gv.stats.g_list["rare quest whitelist"].erase(x)
 
 func setup_upgrades():
 	
@@ -1740,6 +1815,8 @@ func setup_upgrades():
 		if not "reset" in gv.up[x].type:
 			gv.stats.up_list["s" + gv.up[x].type[1]].append(x)
 			gv.stats.up_list["s" + gv.up[x].type[1] + n_or_m].append(x)
+			if gv.up[x].normal:
+				gv.stats.up_list["unowned s" + gv.up[x].type[1] + "n"].append(x)
 		
 		if "autob" in gv.up[x].type:
 			gv.up[x].desc.base = "Unlocks the Autobuyer for your " + gv.g[gv.up[x].icon].name + " LORED."
@@ -1758,9 +1835,15 @@ func setup_upgrades():
 			if x in gv.up[v].requires:
 				gv.up[x].required_by.append(v)
 	
+	for c in gv.chains:
+		for x in gv.chains[c].chain_keys:
+			gv.up[x].chain_length = gv.chains[c].chain_keys.size()
+			gv.up[x].chain_key = c
+	
 	gv.up["RED NECROMANCY"].effects.append(Effect.new("autoup", gv.stats.up_list["s1m"]))
 	gv.up["Now That's What I'm Talkin About, YeeeeeeaaaaaaaAAAAAAGGGGGHHH"].effects.append(Effect.new("autoup", gv.stats.up_list["s2n"]))
 	gv.up["we were so close, now you don't even think about me"].effects.append(Effect.new("autoup", gv.stats.up_list["s1n"]))
+	gv.up["ROUTINE"].effects.append(Effect.new("saveup", gv.stats.up_list["s1n"], 2))
 	
 	for x in gv.up:
 		if gv.up[x].requires.size() == 0:

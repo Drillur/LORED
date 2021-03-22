@@ -5,7 +5,6 @@
 [ext_resource path="res://Fonts/Roboto-Medium.ttf" type="DynamicFontData" id=3]
 [ext_resource path="res://Prefabs/Scripts/tip_lored_b.gd" type="Script" id=5]
 
-
 [sub_resource type="StyleBoxFlat" id=1]
 bg_color = Color( 1, 1, 1, 0.0509804 )
 expand_margin_left = 10.0

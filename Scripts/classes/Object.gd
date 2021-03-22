@@ -23,6 +23,8 @@ class Num:
 	var da := Big.new(0) # dynamic a
 	var dm := Big.new() # dynamic m
 	
+	#var spell_m := Big.new()
+	
 	var lbm := Big.new() # limit break m
 	
 	var b: Big # base
@@ -66,11 +68,28 @@ class Num:
 		t.m(dm)
 		t.m(lbm)
 		
-		if f.isLessThan(0):
+		if f.less(0):
 			f = Big.new(0)
 		if cap_f_to_t:
-			if f.isLargerThan(t):
+			if f.greater(t):
 				f = Big.new(t)
+	
+	func report():
+		
+		# prints every value;
+		# useful in finding errors
+		
+		print("--REPORT::")
+		print("f: ", f.toString())
+		print("a: ", a.toString())
+		print("m: ", m.toString())
+		print("ua: ", ua.toString())
+		print("um: ", um.toString())
+		print("da: ", da.toString())
+		print("dm: ", dm.toString())
+		print("lbm: ", lbm.toString())
+		print("b: ", b.toString())
+		print("t: ", t.toString())
 
 class Float:
 	

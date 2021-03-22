@@ -2,9 +2,6 @@ extends MarginContainer
 
 onready var rt = get_node("/root/Root")
 
-var src := {
-	upgrade_block = preload("res://Prefabs/tooltip/upgrade_block.tscn"),
-}
 var cont := {}
 
 
@@ -22,9 +19,6 @@ func init(_lored: String) -> int:
 	if not gv.g[_lored].active:
 		$VBoxContainer/inactive.show()
 		rect_size.y = 0
-		return int(rect_size.y)
-	
-	if fuel_check(_lored):
 		return int(rect_size.y)
 	
 	if upgrade_check(_lored):
@@ -49,14 +43,6 @@ func hide_set_key() -> void:
 	$VBoxContainer/set_key.hide()
 	rect_size.y = 0
 
-func fuel_check(x: String) -> bool:
-	
-	if gv.g[x].f.f.isLessThan(Big.new(gv.g[x].fc.t).m(2)):
-		$VBoxContainer/low_fuel.show()
-		rect_size.y = 0
-		return true
-	
-	return false
 
 
 func key_check(key: bool) -> bool:
@@ -105,7 +91,7 @@ func upgrade_init(key: String) -> void:
 	
 	$VBoxContainer/upgrade.show()
 	
-	cont[key] = src.upgrade_block.instance()
+	cont[key] = gv.SRC["upgrade block"].instance()
 	$VBoxContainer/upgrade.add_child(cont[key])
 	cont[key].init(key)
 	$VBoxContainer/upgrade.move_child(cont[key], 1)
@@ -115,7 +101,7 @@ func too_much_malig(key: String) -> bool:
 	if "s2" in gv.g[key].type:
 		return false
 	
-	if gv.g["malig"].r.isLessThan(gv.up["ROUTINE"].cost["malig"].t):
+	if gv.g["malig"].r.less(gv.up["ROUTINE"].cost["malig"].t):
 		return false
 	
 	$VBoxContainer/toomuchmalig.show()

@@ -48,7 +48,7 @@ func _physics_process(delta: float) -> void:
 
 func r_limit_break():
 	
-	var percent = gv.lb_xp.f.percent(gv.lb_xp.t)
+	var percent = clamp(gv.lb_xp.f.percent(gv.lb_xp.t), 0, 1)
 	
 	get_node(gncf).rect_size.x = min(percent * get_node(gnct).rect_size.x, get_node(gnct).rect_size.x)
 	

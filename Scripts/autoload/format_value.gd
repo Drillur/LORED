@@ -40,9 +40,9 @@ func format_val_small(_sign: int, value: float) -> String:
 	# for numbers less than 100
 	
 	if value < 1:
-		return String(stepify(_sign * value, .001))# 0.059
+		return String(stepify(_sign * value, 0.001)) # 0.059
 	if value < 10:
-		return String(stepify(_sign * value, .01)) # 5.43
+		return String(stepify(_sign * value, 0.01)) # 5.43
 	return String(stepify(_sign * value, .1)) # 22.8
 
 
@@ -80,6 +80,7 @@ func format_val_sci(_sign: int, value: float) -> String:
 	# scientific notation
 	# example: 5.0e7
 	
+	# 123,123,123.00123
 	var _exp := String(value).split(".")[0].length() - 1
 	var coefficient := value / pow(10, _exp)
 	return String(stepify(_sign * coefficient, .01)) + "e" + String(_exp)

@@ -10,12 +10,12 @@ script/source = "extends Label
 
 onready var rt = get_parent().rt
 
-var my_task : taq.Task
+var my_task: Task
 var step := {}
 var rr := {}
 var r := {}
 
-func init(task : taq.Task) -> int:
+func init(task: Task) -> int:
 	
 	my_task = task
 	step.clear()

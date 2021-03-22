@@ -23,6 +23,10 @@ var up_list := {
 	"s3m": [],
 	"s4n": [],
 	"s4m": [],
+	"unowned s1n": [],
+	"unowned s2n": [],
+	"unowned s3n": [],
+	"unowned s4n": [],
 }
 var upgrades_owned := {}
 var tabs_unlocked := {
@@ -36,6 +40,12 @@ var g_list := {
 	"s2": [],
 	"s3": [],
 	"s4": [],
+	"active": [],
+	"active s1": [],
+	"active s2": [],
+	"active s3": [],
+	"active s4": [],
+	"rare quest whitelist": [],
 }
 
 func _init(g : Array):

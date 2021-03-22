@@ -4,6 +4,8 @@ extends MarginContainer
 onready var rt = get_node("/root/Root")
 
 
+
+
 const level_flash_colors := {
 	0: Color(1, 0.909804, 0, 1.0),
 	1: Color(1, 0.909804, 0, 0.75),
@@ -18,25 +20,20 @@ const src := {
 }
 var cont := {}
 
-var fps := {
-	"task": FPS.new(0.01, true),
-	"xp": FPS.new(0.1),
-	"consumed spirits": FPS.new(0.01, true)
-}
-
 var last_d: Big # used to tell how much leveling up boosted d
 
 var key: int
+var task_timer := Timer.new()
 
-onready var gn_cacodemons = rt.get_node(rt.gnLOREDs).cont["cacodemons"]
-const gnTask := "v/v/task"
-const gn_consumed_spirits := gnTask + "/consumed spirits"
-const gnd := gnTask + "/d"
-const gnProgressBarF := gnTask + "/f"
-const gnProgressTextF := gnTask + "/text f"
-const gnXp := "v/v/xp"
-const gnXpBarF := gnXp + "/f"
-const gnLevelUp := "level up"
+onready var gn_cacodemons = rt.get_node(rt.gnLOREDs + "/sc/v/s3/m")
+onready var gn_task = get_node("v/v/task")
+onready var gn_CS_count = get_node("v/v/task/consumed spirits")
+onready var gn_xp_bar = get_node("v/v/xp")
+onready var gn_xp_bar_f = get_node("v/v/xp/f")
+onready var gn_host = get_node("host")
+onready var gn_attach = get_node("v/Attach")
+onready var gn_progress_bar_f = get_node("v/v/task/f")
+onready var gn_level_up = get_node("level up")
 const gn_offscreen := "offscreen"
 
 
@@ -44,9 +41,12 @@ func _ready():
 	
 	set_physics_process(false)
 	
-	get_node(gnLevelUp).self_modulate = level_flash_colors[level_flash_colors.size() - 1]
-	get_node(gnLevelUp).show()
-	get_node(gn_offscreen).hide()
+	add_child(task_timer)
+	
+	gn_level_up.self_modulate = level_flash_colors[level_flash_colors.size() - 1]
+	gn_level_up.show()
+	
+	gn_CS_count.text = "0"
 	
 	hide()
 
@@ -56,88 +56,54 @@ func setup(_key: int):
 	key = _key
 	
 	last_d = gv.cac[key].consumed_spirit_gain()
-	get_node(gnProgressBarF).modulate = gv.cac[key].color
-	
-	sync()
-
-func sync():
-	
-	# called on boot and when Cacodemon levels up
-	
-	get_node(gnd).text = "+" + gv.cac[key].consumed_spirit_gain().toString()
-	#get_node(gnProgressTextT).text = fval.f(gv.cac[key].progress.t)
-	
-	
-
-func _physics_process(delta: float) -> void:
-	
-	if gv.cac[key].dead:
-		set_physics_process(false)
-		hide()
-		return
-	
-	work()
-	
-	ref()
-
-func work():
-	
-	gv.cac[key].work()
-	
-	gv.cac[key].progress.f += get_physics_process_delta_time() * 100 * gv.cac[key].progress_gain
+	gn_progress_bar_f.modulate = gv.cac[key].color
 
 
-
-func ref():
+func start():
 	
-	if not rt.get_node(rt.gnLOREDs + "/sc/v/s3").visible:
-		return
-	
-	if not on_screen():
-		get_node(gn_offscreen).show()
-		return
-	get_node(gn_offscreen).hide()
-	
-	if gv.cac[key].host:
-		get_node("host").show()
-	
-	
-	for x in fps:
+	while not gv.cac[key].dead and not gv.cac[key].host:
 		
-		if not fps[x].process(get_physics_process_delta_time()):
-			continue
+		# if resetting same stage as lored, it cannot act
+		if "no" in gv.menu.f:
+			if int(gv.menu.f.split(" s")[1]) >= 3:
+				break
 		
-		match x:
-			"task":
-				r_task()
-			"xp":
-				r_xp()
-			"consumed spirits":
-				r_consumed_spirits()
-
-func r_consumed_spirits():
+		gv.cac[key].start_task()
+		tell_children_the_news()
+		
+		task_timer.start(gv.cac[key].progress.t)
+		yield(task_timer, "timeout")
+		task_timer.stop()
+		
+		gv.cac[key].finish_task()
+		
+		gn_CS_count.text = gv.cac[key].consumed_spirits.toString()
+		gn_xp_bar_f.rect_size.x = min(gv.cac[key].xp.f.percent(gv.cac[key].xp.t) * gn_xp_bar.rect_size.x, gn_xp_bar.rect_size.x)
 	
-	get_node(gn_consumed_spirits).text = gv.cac[key].consumed_spirits.toString()
-
-func r_task():
+	# after 1 second, will restart the func
 	
-	get_node(gnProgressBarF).rect_size.x = min(gv.cac[key].progress.f / gv.cac[key].progress.t * get_node(gnTask).rect_size.x, get_node(gnTask).rect_size.x)
-	get_node(gnProgressTextF).text = fval.f(gv.cac[key].progress.f) + "\n" + fval.f(gv.cac[key].progress.t)
-
-func r_xp():
+	var t = Timer.new()
+	add_child(t)
+	t.start(1)
+	yield(t, "timeout")
+	t.queue_free()
 	
-	get_node(gnXpBarF).rect_size.x = min(gv.cac[key].xp.f.percent(gv.cac[key].xp.t) * get_node(gnXp).rect_size.x, get_node(gnXp).rect_size.x)
+	start()
 
-
-func level_up():
+func tell_children_the_news():
 	
-	sync()
+	gn_task.start(gv.cac[key].progress.t, OS.get_ticks_msec())
+	
+	pass
+
+
+func r_level_up():
 	
 	if not on_screen():
 		return
 	
 	# amount improved! # flying texts
-	if true:
+	if gv.menu.option["flying_numbers"]:
 		
 		var oom = Big.new(gv.cac[key].consumed_spirit_gain()).d(last_d)
 		
@@ -161,29 +127,23 @@ func level_up():
 	# flash gold!
 	for f in 6:
 		
-		get_node(gnLevelUp).self_modulate = level_flash_colors[f]
+		gn_level_up.self_modulate = level_flash_colors[f]
 		
 		var t = Timer.new()
-		t.set_wait_time(0.05)
-		t.set_one_shot(true)
-		self.add_child(t)
-		t.start()
+		add_child(t)
+		t.start(0.05)
 		yield(t, "timeout")
 		t.queue_free()
 
 
 func activate():
 	
+	gv.cacodemons += 1
+	
 	gv.cac[key].active = true
-	set_physics_process(true)
 	show()
 	
-	gv.cacodemons += 1
-	gv.increase_cac_cost()
-	
-	if gv.cacodemons == 5:
-		gn_cacodemons.get_node(gn_cacodemons.gn_top).show()
-		gn_cacodemons.cac_consumed()
+	start()
 
 
 func _on_mouse_exited() -> void:
@@ -211,4 +171,43 @@ func _on_Attach_pressed() -> void:
 	
 	gv.cac[key].selected_as_host()
 	
-	get_node("v/Attach").hide()
+	task_timer.stop()
+	gn_task.halt()
+	
+	gn_host.show()
+	gn_attach.hide()
+	
+	var t = Timer.new()
+	add_child(t)
+	t.start(1)
+	yield(t, "timeout")
+	t.queue_free()
+	
+	host()
+
+func host():
+	
+	var loss := Big.new(1.1)
+	var i = 1
+	
+	while true:
+		
+		if loss.greater(gv.cac[key].consumed_spirits):
+			gv.r["spirit"].a(gv.cac[key].consumed_spirits)
+			gv.cac[key].consumed_spirits = Big.new(0)
+			break
+		
+		gv.cac[key].consumed_spirits.s(loss)
+		gn_CS_count.text = gv.cac[key].consumed_spirits.toString()
+		gv.r["spirit"].a(loss)
+		
+		i += 1
+		loss.m(loss)
+		
+		var t = Timer.new()
+		add_child(t)
+		t.start(1 / i)
+		yield(t, "timeout")
+		t.queue_free()
+	
+	gv.cac[key].killed()

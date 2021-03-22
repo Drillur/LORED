@@ -6,7 +6,6 @@
 [ext_resource path="res://Fonts/Roboto-Medium.ttf" type="DynamicFontData" id=4]
 [ext_resource path="res://Prefabs/Scripts/tip_lored_fuel.gd" type="Script" id=5]
 
-
 [sub_resource type="StyleBoxFlat" id=1]
 draw_center = false
 
@@ -49,11 +48,11 @@ font_data = ExtResource( 2 )
 
 [node name="Fuel" type="MarginContainer"]
 margin_right = 134.0
-margin_bottom = 91.0
+margin_bottom = 86.0
 custom_constants/margin_right = 10
 custom_constants/margin_top = 10
 custom_constants/margin_left = 10
-custom_constants/margin_bottom = 10
+custom_constants/margin_bottom = 5
 script = ExtResource( 5 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -101,6 +100,7 @@ custom_colors/font_color = Color( 0.796875, 0.796875, 0.796875, 1 )
 text = "Coal Storage"
 
 [node name="ct" type="Panel" parent="v"]
+modulate = Color( 0.231373, 0.384314, 0.917647, 1 )
 margin_top = 40.0
 margin_right = 114.0
 margin_bottom = 50.0

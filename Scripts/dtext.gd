@@ -4,13 +4,15 @@ var life := 50
 var death := 0
 var alpha := 1.25
 var alpha_decay := 0.99
-var direction :float= rand_range(0,201)
+var direction :float= (rand_range(0,201) - 100) * 0.005
 
-var go_behind : bool = true
+var go_behind := true
 
 
 
 func init(gobehind := true, set_unique_death := 0, _text := "", icon = gv.sprite["unknown"], color := Color(1,1,1)):
+	
+	set_physics_process(false)
 	
 	text = _text
 	if icon == gv.sprite["unknown"]:
@@ -23,11 +25,7 @@ func init(gobehind := true, set_unique_death := 0, _text := "", icon = gv.sprite
 	death = set_unique_death
 
 
-func _ready():
-	direction = (direction - 100) * 0.005
-
-
-func _physics_process(_delta):
+func _on_Timer_timeout() -> void:
 	
 	rect_position.y -= 0.013 * life
 	rect_position.x += direction
@@ -51,4 +49,3 @@ func _physics_process(_delta):
 		return
 	
 	queue_free()
-	set_physics_process(false)

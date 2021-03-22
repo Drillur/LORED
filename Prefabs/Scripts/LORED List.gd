@@ -5,14 +5,17 @@ extends MarginContainer
 var src := {
 	lored = preload("res://Prefabs/lored/LORED.tscn"),
 	hbox = preload("res://Prefabs/template/HBoxContainer 10 separation.tscn"),
-	cacodemons = preload("res://Prefabs/lored/Cacodemons.tscn"),
 }
 
 var cont := {}
 
+var g_keys = gv.g.keys()
 
 func _ready():
-	gv.connect("lored_updated", self, "r_update_lored")
+	get_node("sc/v/s3").hide()
+	
+	gv.connect("autobuyer_purchased", self, "autobuyer_purchased")
+	gv.connect("buff_spell_cast", self, "receive_buff")
 
 
 func setup():
@@ -20,6 +23,8 @@ func setup():
 	setup_s1()
 	setup_s2()
 	setup_s3()
+	
+	display_afford_checks()
 
 func setup_s2():
 	
@@ -67,17 +72,6 @@ func setup_s2():
 	add_stuffs("water", i)
 	add_stuffs("humus", i)
 
-func add_stuffs(key: String, i: int):
-	
-	cont[key] = src.lored.instance()
-	cont[key].setup(key)
-	
-	if not "h2" + str(i) in cont.keys():
-		cont["h2" + str(i)] = src.hbox.instance()
-		get_node("sc/v/s" + gv.g[key].type[1]).add_child(cont["h2" + str(i)])
-	
-	cont["h2" + str(i)].add_child(cont[key])
-
 func setup_s1():
 	
 	var i = 0
@@ -101,14 +95,52 @@ func setup_s1():
 
 func setup_s3():
 	
-	var i = 0
-	cont["h3" + str(i)] = src.hbox.instance()
-	get_node("sc/v/s3").add_child(cont["h3" + str(i)])
-	cont["cacodemons"] = src.cacodemons.instance()
-	cont["h3" + str(i)].add_child(cont["cacodemons"])
-	cont["cacodemons"].setup()
-
-
-func r_update_lored(_lored, _updated_stat) -> void:
+	cont["cacodemons"] = get_node("sc/v/s3/m")
 	
-	cont[_lored].fps[_updated_stat].set = true
+	var i = 0
+	add_stuffs("blood", i)
+	add_stuffs("witch", i)
+	
+	i += 1
+	
+	add_stuffs("necro", i)
+	add_stuffs("hunt", i)
+	
+	get_node("sc/v/s3").move_child(get_node("sc/v/s3/v"), get_node("sc/v/s3").get_child_count())
+
+func add_stuffs(key: String, i: int):
+	
+	cont[key] = src.lored.instance()
+	cont[key].setup(key)
+	
+	var stage = gv.g[key].stage
+	
+	if not "h" + stage + str(i) in cont.keys():
+		cont["h" + stage + str(i)] = src.hbox.instance()
+		get_node("sc/v/s" + stage).add_child(cont["h" + stage + str(i)])
+	
+	cont["h" + stage + str(i)].add_child(cont[key])
+
+
+
+func autobuyer_purchased(key):
+	cont[key].r_autobuy()
+
+func display_afford_checks():
+	
+	for x in cont:
+		
+		if not x in g_keys:
+			continue
+		
+		if gv.menu.option["afford check"]:
+			cont[x].gn_afford_check.show()
+			cont[x].gn_autobuywheel.position.x = 46
+			continue
+		
+		cont[x].gn_afford_check.hide()
+		cont[x].gn_autobuywheel.position.x = 33
+
+func receive_buff(spell: String, target := "") -> void:
+	
+	pass

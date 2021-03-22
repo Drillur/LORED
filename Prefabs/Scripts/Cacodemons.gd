@@ -13,38 +13,24 @@ var src := {
 const gnpapa := "v/sc/m/v"
 const gn_top := "v/m top"
 const gn_cs := "v/m top/consumed spirits"
-const gn_total_cs := gn_cs + "/total"
+onready var gn_total_cs := get_node("v/m top/consumed spirits/total")
 
-var fps := {
-	"total cs": FPS.new(0.25, false),
-}
+var can_attach_to := false
 
 
 func _ready() -> void:
 	
 	get_node(gn_top).hide()
-	
-	gv.connect("cac_consumed", self, "cac_consumed")
-
-
-
-func setup() -> void:
+	set_physics_process(false)
 	
 	gv.connect("cac_slain", self, "cac_slain")
 	gv.connect("cac_leveled_up", self, "update_leveled_up_cacodemon")
 	gv.connect("cac_fps", self, "cac_fps")
 	
-	instance_cacodemon(0)
-	
-	print(cont.keys())
-	if gv.s3_time:
-		cont[0].activate() #note remove later, make it activate() based on quest or in e_load()
+	if gv.cacodemons == 10:
+		get_node("v/m bot").hide()
 
 
-
-func _physics_process(delta: float) -> void:
-	
-	fps()
 
 
 
@@ -56,39 +42,36 @@ func instance_cacodemon(key: int, activate := false):
 	
 	if activate:
 		cont[key].activate()
-
-
-
-func cac_consumed():
-	if not get_node(gn_top).visible:
-		return
-	fps["total cs"].set = true
-
-func fps():
 	
-	for x in fps:
+	if not can_attach_to and key == 0:
+		cont[0].get_node("v/Attach").hide()
+	
+	if gv.cacodemons == 5:
+		get_node(gn_top).show()
+		calculate_total_cs()
+
+
+func calculate_total_cs():
+	
+	while true:
 		
-		if not fps[x].process(get_physics_process_delta_time()):
-			continue
+		var total_cs = Big.new(0)
 		
-		match x:
-			"total cs":
-				r_total_cs()
-
-func r_total_cs():
-	
-	var total_cs = Big.new(0)
-	
-	for x in gv.cac:
-		if not x.active:
-			break
-		total_cs.a(x.consumed_spirits)
-	
-	get_node(gn_total_cs).text = total_cs.toString()
-
+		for x in gv.cac:
+			if not x.active:
+				break
+			total_cs.a(x.consumed_spirits)
+		
+		gn_total_cs.text = total_cs.toString()
+		
+		var t = Timer.new()
+		add_child(t)
+		t.start(1)
+		yield(t, "timeout")
+		t.queue_free()
 
 func update_leveled_up_cacodemon(key: int):
-	cont[key].level_up()
+	cont[key].r_level_up()
 
 func cac_fps(fps_key: String, key: int):
 	
@@ -104,9 +87,9 @@ func cac_slain(key: int):
 		cont["spirit gained"].init(
 			false,
 			-60, # extra long life (by 1 sec)
-			gv.cac[key].initial_host_cs.toString(),
+			gv.cac[key].cs_peak.toString(),
 			gv.sprite["spirit"],
-			gv.color["spirit"]
+			gv.COLORS["spirit"]
 		)
 		cont["spirit gained"].rect_position = Vector2(
 			cont[key].rect_global_position.x + int(rand_range(0, cont[key].rect_size.x)),
@@ -127,11 +110,20 @@ func cac_slain(key: int):
 
 
 
-
 func _on_summon_pressed() -> void:
 	
-	if gv.cacodemons == 100:
+	if gv.cacodemons == 10:
+		get_node("v/m bot").hide()
 		return
+	
+	for c in gv.cac_cost:
+		if gv.r[c].less(gv.cac_cost[c]):
+			return
+	
+	for c in gv.cac_cost:
+		gv.r[c].s(gv.cac_cost[c])
+	
+	gv.increase_cac_cost()
 	
 	instance_cacodemon(gv.cacodemons, true)
 
@@ -142,3 +134,5 @@ func _on_mouse_exited() -> void:
 
 func _on_summon_mouse_entered() -> void:
 	rt.get_node("global_tip")._call("summon cac")
+
+

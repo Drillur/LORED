@@ -1,7 +1,6 @@
 class_name _root
 extends Node2D
 
-const PLATFORM = "pc" # keep lower-case
 
 const SAVE := {
 	MAIN = "user://save.lored",
@@ -17,8 +16,6 @@ const prefab := {
 	"dtext": preload("res://Prefabs/dtext.tscn"),
 	"confirmation popup": preload("res://Prefabs/lored_buy.tscn"),
 	"menu": preload("res://Prefabs/menu/menu.tscn"),
-	
-	"progress_texture_limit_break": preload("res://Prefabs/lored/progress_texture_limit_break.tscn"),
 }
 
 
@@ -29,7 +26,6 @@ var content := {}
 var content_tasks := {}
 var instances := {}
 var upgrade_dtexts := {}
-var afford_check_fps := 0.0
 
 var save_fps = 0.0
 var times_game_loaded = 0
@@ -50,281 +46,6 @@ const gnupcon = "m/up_container"
 const gnalert = "misc/tabs/v/upgrades/alert"
 const gn_patch = "m/Patch Notes"
 
-# actually quests*
-var quests := {
-	
-	"Intro!": taq.Task.new(
-		"Intro!",
-		"Your Stone LORED requires fuel to work. Buy a Coal LORED with the Stone you already have.",
-		{"stone" : Big.new(10)},
-		{},
-		{"Coal LORED bought": Ob.Num.new()},
-		{texture = gv.sprite["coal"], key = "coal"},
-		gv.COLORS["coal"]
-	),
-	"More Intro!": taq.Task.new(
-		"More Intro!",
-		"",
-		{"stone": Big.new(20), "iron": Big.new(20), "cop": Big.new(10)},
-		{"New LORED: Iron Ore": gv.sprite["irono"],
-		"New LORED: Copper Ore": gv.sprite["copo"],
-		"New LORED: Iron": gv.sprite["iron"],
-		"New LORED: Copper": gv.sprite["cop"]},
-		{"Stone produced": Ob.Num.new(10.0)},
-		{texture = gv.sprite["stone"], key = "stone"},
-		gv.COLORS["stone"]
-	),
-	"Welcome to LORED": taq.Task.new(
-		"Welcome to LORED",
-		"Upgrading LOREDs doubles their output and fuel burnt per tick.",
-		{"coal": Big.new(30), "stone" : Big.new(30)},
-		{"Normal Upgrade Menu": gv.sprite["s1n"]},
-		{"Stone LORED bought": Ob.Num.new()},
-		{texture = gv.sprite["stone"], key = "stone"},
-		gv.COLORS["stone"]
-	),
-	"Upgrades!": taq.Task.new(
-		"Upgrades!",
-		"Purchase the GRINDER upgrade in the Normal Upgrades menu. (Hotkey: ` or Q)",
-		{"iron" : Big.new(30), "cop": Big.new(30), "stone": Big.new(30)},
-		{"Task Board": gv.sprite["copy"]},
-		{"GRINDER purchased": Ob.Num.new()},
-		{texture = gv.sprite["s1n"], key = "s1n"},
-		gv.COLORS["s1n"]
-	),
-	
-	"Tasks!": taq.Task.new(
-		"Tasks!",
-		"Tasks are random, mini-quests. Upgrading LOREDs mid-task does not increase the amount required for the task.",
-		{},
-		{"Max tasks +1": gv.sprite["copy"]},
-		{"Tasks completed": Ob.Num.new(3)},
-		{texture = gv.sprite["copy"], key = "copy"},
-		gv.COLORS["grey"]
-	),
-	
-	"Pretty Wet": taq.Task.new(
-		"Pretty Wet",
-		"",
-		{"iron": Big.new(100), "cop": Big.new(100)},
-		{"New LORED: Growth": gv.sprite["growth"]},
-		{"Stone produced": Ob.Num.new(1000.0)},
-		{texture = gv.sprite["growth"], key = "growth"},
-		gv.COLORS["growth"]
-	),
-	"Progress": taq.Task.new(
-		"Progress",
-		"",
-		{"stone": Big.new(100)},
-		{},
-		{"RYE purchased": Ob.Num.new()},
-		{texture = gv.sprite["cop"], key = "cop"},
-		gv.COLORS["cop"]
-	),
-	"Electricy": taq.Task.new(
-		"Electricy",
-		"Some LOREDs run on electricity instead of coal!",
-		{"iron": Big.new(250), "cop": Big.new(250)},
-		{"New LORED: Joules": gv.sprite["jo"],
-		"New LORED: Concrete": gv.sprite["conc"]},
-		{"Combined resources produced": Ob.Num.new(10000.0)},
-		{texture = gv.sprite["jo"], key = "jo"},
-		gv.COLORS["jo"]
-	),
-	"Sandy Progress": taq.Task.new(
-		"Sandy Progress",
-		"",
-		{"stone": Big.new(100)},
-		{},
-		{"SAND purchased": Ob.Num.new()},
-		{texture = gv.sprite["growth"], key = "growth"},
-		gv.COLORS["growth"]
-	),
-	"Spread": taq.Task.new(
-		"Spread",
-		"",
-		{"iron": Big.new(1000), "cop": Big.new(1000), "malig": Big.new(10)},
-		{"New LORED: Oil": gv.sprite["oil"],
-		"New LORED: Tarballs": gv.sprite["tar"],
-		"New LORED: Malignancy": gv.sprite["malig"]},
-		{"Combined resources produced": Ob.Num.new(100000.0)},
-		{texture = gv.sprite["malig"], key = "malig"},
-		gv.COLORS["malig"]
-	),
-	
-	"Lots of Tasks!": taq.Task.new(
-		"Lots of Tasks!",
-		"",
-		{"iron": Big.new(1000), "cop": Big.new(1000)},
-		{"Max tasks +1": gv.sprite["copy"]},
-		{"Tasks completed": Ob.Num.new(10)},
-		{texture = gv.sprite["copy"], key = "copy"},
-		gv.COLORS["grey"]
-	),
-	
-	"Consume": taq.Task.new(
-		"Consume",
-		"",
-		{},
-		{"Malignant Upgrade Menu": gv.sprite["s1m"]},
-		{"Malignancy produced": Ob.Num.new(3000.0)},
-		{texture = gv.sprite["malig"], key = "malig"},
-		gv.COLORS["malig"]
-	),
-	
-	"Evolve": taq.Task.new(
-		"Evolve",
-		"Purchase Malignant upgrade SOCCER DUDE by resetting your game. You are free to save up Malignancy before resetting!",
-		{"malig": Big.new(1000)},
-		{},
-		{"SOCCER DUDE purchased": Ob.Num.new()},
-		{texture = gv.sprite["s1"], key = "s1"},
-		gv.COLORS["malig"]
-	),
-	"A Million Reasons to Grind": taq.Task.new(
-		"A Million Reasons to Grind",
-		"Hit SPACE, ENTER, or NUM PAD ENTER to turn in all tasks.",
-		{"iron": Big.new(100000), "cop": Big.new(100000), "stone": Big.new(199999), "growth": Big.new(600001)},
-		{"Max tasks +1": gv.sprite["copy"]},
-		{"Tasks completed": Ob.Num.new(50)},
-		{texture = gv.sprite["copy"], key = "copy"},
-		gv.COLORS["malig"]
-	),
-	
-	"The Loop": taq.Task.new(
-		"The Loop",
-		"",
-		{"conc": Big.new("1e9")},
-		{},
-		{"upgrade_name purchased": Ob.Num.new()},
-		{texture = gv.sprite["s2"], key = "s2"},
-		gv.COLORS["s2"]
-	),
-	
-	"A New Leaf": taq.Task.new(
-		"A New Leaf",
-		"Advances your existence to a Stage 2 presence.",
-		{"seed": Big.new(2), "soil": Big.new(25), "wood": Big.new(80)},
-		{"New LORED: Trees": gv.sprite["tree"], "New LORED: Water": gv.sprite["water"], "New LORED: Seeds": gv.sprite["seed"]},
-		{"Combined resources produced": Ob.Num.new("1e9")},
-		{texture = gv.sprite["s2"], key = "s2"},
-		gv.COLORS["s2"]
-	),
-	"Steel Pattern": taq.Task.new(
-		"Steel Pattern",
-		"",
-		{"hard": Big.new(95), "steel": Big.new(25)},
-		{"New LORED: Liquid Iron": gv.sprite["liq"], "New LORED: Steel": gv.sprite["steel"]},
-		{"Trees produced": Ob.Num.new(5.0)},
-		{texture = gv.sprite["steel"], key = "steel"},
-		gv.COLORS["steel"]
-	),
-	"Wire Trail": taq.Task.new(
-		"Wire Trail",
-		"",
-		{"wire": Big.new(20), "glass": Big.new(30)},
-		{"New LORED: Wire": gv.sprite["wire"], "New LORED: Draw Plate": gv.sprite["draw"]},
-		{"Steel produced": Ob.Num.new(5.0)},
-		{texture = gv.sprite["wire"], key = "wire"},
-		gv.COLORS["wire"]
-	),
-	"Hardwood Cycle": taq.Task.new(
-		"Hardwood Cycle",
-		"",
-		{"liq": Big.new(100), "axe": Big.new(5)},
-		{"New LORED: Wood": gv.sprite["wood"], "New LORED: Axes": gv.sprite["axe"], "New LORED: Hardwood": gv.sprite["hard"]},
-		{"Wire produced": Ob.Num.new(50.0)},
-		{texture = gv.sprite["hard"], key = "hard"},
-		gv.COLORS["hard"]
-	),
-	"Glass Pass": taq.Task.new(
-		"Glass Pass",
-		"",
-		{"steel": Big.new(50), "sand": Big.new(250)},
-		{"New LORED: Glass": gv.sprite["glass"], "New LORED: Sand": gv.sprite["sand"], "New LORED: Humus": gv.sprite["humus"], "New LORED: Soil": gv.sprite["soil"]},
-		{"Hardwood produced": Ob.Num.new(50.0)},
-		{texture = gv.sprite["glass"], key = "glass"},
-		gv.COLORS["glass"]
-	),
-	"The Heart of Things": taq.Task.new(
-		"The Heart of Things",
-		"",
-		{"steel": Big.new(50), "hard": Big.new(50), "wire": Big.new(50), "glass": Big.new(50)},
-		{"New LORED: Tumors": gv.sprite["tum"], "Extra-normal Upgrade Menu": gv.sprite["s2n"]},
-		{"Soil produced": Ob.Num.new(25.0)},
-		{texture = gv.sprite["tum"], key = "tum"},
-		gv.COLORS["tum"]
-	),
-	
-	"Spike": taq.Task.new(
-		"Spike",
-		"Rare and Spike tasks take longer than regular tasks, but they reward a lot more stuff!",
-		{"wood": Big.new(10000), "water": Big.new(20000), "liq": Big.new(30000)},
-		{"Tasks are automatically turned in": gv.sprite["copy"]},
-		{"Rare or Spike tasks completed": Ob.Num.new(3)},
-		{texture = gv.sprite["copy"], key = "copy"},
-		Color(0.933333, 0.839216, 0)
-	),
-	
-	"Lead by Example": taq.Task.new(
-		"Lead by Example",
-		"",
-		{},
-		{"New LORED: Galena": gv.sprite["gale"], "New LORED: Lead": gv.sprite["lead"]},
-		{"Hardwood produced": Ob.Num.new(200.0),"Wire produced": Ob.Num.new(200.0),"Glass produced": Ob.Num.new(200.0)},
-		{texture = gv.sprite["tum"], key = "tum"},
-		gv.COLORS["tum"]
-	),
-	"Paper or Plastic?": taq.Task.new(
-		"Paper or Plastic?",
-		"",
-		{"axe": Big.new(3000)},
-		{"New LORED: Wood Pulp": gv.sprite["pulp"], "New LORED: Paper": gv.sprite["paper"], "New LORED: Petroleum": gv.sprite["pet"], "New LORED: Plastic": gv.sprite["plast"]},
-		{"Lead produced": Ob.Num.new(800.0)},
-		{texture = gv.sprite["paper"], key = "paper"},
-		gv.COLORS["lead"]
-	),
-	"Carcinogenic": taq.Task.new(
-		"Carcinogenic",
-		"Hey, smoke up, Johnny!",
-		{},
-		{"New LORED: Tobacco": gv.sprite["toba"], "New LORED: Cigarettes": gv.sprite["ciga"], "New LORED: Carcinogens": gv.sprite["carc"]},
-		{"Paper produced": Ob.Num.new(100.0), "Plastic produced": Ob.Num.new(100.0)},
-		{texture = gv.sprite["carc"], key = "carc"},
-		gv.COLORS["paper"]
-	),
-	
-	"Cringey Progress": taq.Task.new(
-		"Cringey Progress",
-		"",
-		{"steel": Big.new(1000)},
-		{},
-		{"Sagan purchased": Ob.Num.new()},
-		{texture = gv.sprite["s2"], key = "s2"},
-		gv.COLORS["s2"]
-	),
-	
-	"Cancer Lord": taq.Task.new(
-		"Cancer Lord",
-		"Did you think you'd ever get here?",
-		{},
-		{"Radiative Upgrade Menu": gv.sprite["s2m"]},
-		{"Tumors produced": Ob.Num.new(5000.0)},
-		{texture = gv.sprite["tum"], key = "tum"},
-		gv.COLORS["tum"]
-	),
-	
-	"Horse Doodie": taq.Task.new(
-		"Horse Doodie",
-		"",
-		{},
-		{"10x easier tasks": gv.sprite["copy"]},
-		{"Spike tasks completed": Ob.Num.new(1)},
-		{texture = gv.sprite["copy"], key = "copy"},
-		Color(0.756863, 0, 0)
-	),
-}
-
 var task_awaiting := "no"
 
 
@@ -334,16 +55,24 @@ var hax = 1 # 1 for normal
 
 func _ready():
 	
+	OS.set_low_processor_usage_mode(true)
+	
+	gv.connect("quest reward", self, "quest reward")
+	
 	# menu and stats
 	if true:
 	
-		if "desktop" in PLATFORM:
+		if "desktop" in gv.PLATFORM:
 			gv.menu.option["FPS"] = 7
 		else:
 			gv.menu.option["FPS"] = 5
 	
 	get_node(gnLOREDs).setup()
 	get_node("m/v/top/h/resources").setup()
+	
+	for x in gv.g:
+		
+		get_node(gnLOREDs).cont[x].start_all()
 	
 	get_tree().get_root().connect("size_changed", self, "r_window_size_changed")
 	
@@ -386,12 +115,17 @@ func game_start(successful_load: bool) -> void:
 			
 			for x in gv.g:
 				
+				#get_node(gnLOREDs).cont[x].start_all()
 				get_node(gnLOREDs).cont[x].r_update_halt(gv.g[x].halt)
 				get_node(gnLOREDs).cont[x].r_update_hold(gv.g[x].hold)
 		
 		w_aa()
 		
-		w_task_progress_check()
+		# taq
+		if true:
+			
+			for x in [gv.Quest.WITCH, gv.Quest.HUNT, gv.Quest.BLOOD, gv.Quest.NECRO]:
+				gv.quest[x].update()
 	
 	# ref
 	if true:
@@ -400,8 +134,6 @@ func game_start(successful_load: bool) -> void:
 		if true:
 			
 			for x in gv.g:
-				
-				gv.emit_signal("lored_updated", x, "d")
 				
 				get_node(gnLOREDs).cont[x].r_autobuy()
 		
@@ -416,8 +148,9 @@ func game_start(successful_load: bool) -> void:
 		if true:
 			
 			get_node(gnupcon).init()
+			afford()
 		
-		w_task_effects()
+		check_all_quests()
 		
 		remove_surplus_tasks()
 		
@@ -427,35 +160,43 @@ func game_start(successful_load: bool) -> void:
 	# hax
 	if true:
 		
+#		if gv.test_s3:
+#			unlock_tab("3")
+		
 		if gv.s3_time:
 			unlock_tab("1")
+			unlock_tab("2")
 			unlock_tab("3")
+			for x in gv.g:
+				if gv.g[x].stage == "3":
+					gv.g[x].unlock()
 			unlock_tab("s1n")
 			get_node("Button").show()
-		pass
+			unlock_tab("s3n")
+			gv.r["flayed corpse"].a(10)
 	
 	# tasks
 	if true:
 		
-		if not get_node(gnLOREDs).cont["water"].visible and quests["A New Leaf"].complete:
+		if not get_node(gnLOREDs).cont["water"].visible and gv.quest[gv.Quest.A_NEW_LEAF].complete:
 			get_node(gnLOREDs).cont["water"].show()
 			get_node(gnLOREDs).cont["seed"].show()
 			get_node(gnLOREDs).cont["tree"].show()
 		
-		if quests["Spread"].complete and not quests["Consume"].complete:
-			if gv.r["malig"].isLessThan(10) and not gv.g["tar"].active:
+		if gv.quest[gv.Quest.SPREAD].complete and not gv.quest[gv.Quest.CONSUME].complete:
+			if gv.r["malig"].less(10) and not gv.g["tar"].active:
 				gv.r["malig"] = Big.new(10)
 		
-		for x in quests:
+		for x in gv.quest:
 			
-			if quests[x].complete:
+			if x.complete or x.selectable:
 				continue
 			
-			taq.new_quest(quests[x])
+			taq.new_quest(x)
 			get_node(gnquest).show()
 			break
 		
-		if taq.cur_quest == "":
+		if taq.cur_quest == -1:
 			get_node(gnquest).hide()
 		
 		if "tasks" in content_tasks.keys():
@@ -472,19 +213,16 @@ func _physics_process(delta):
 		
 		save_fps += delta
 		time_fps += delta
-		afford_check_fps += delta
 		
 		if save_fps > 10:
 			save_fps -= 10
-			if hax <= 1: e_save()
+			if hax <= 1 and not gv.test_s3:
+				e_save()
 		
 		if time_fps > 1:
 			time_fps -= 1
 			cur_clock = OS.get_unix_time()
 			cur_session += 1
-		
-		if afford_check_fps > 1:
-			afford()
 
 func _input(ev):
 	
@@ -526,6 +264,7 @@ func _input(ev):
 			return
 		
 		else:
+			b_close_menu()
 			show_alert_guy(false)
 			get_node(gnupcon).show()
 			return
@@ -547,6 +286,10 @@ func _input(ev):
 	if Input.is_key_pressed(KEY_R):
 		b_tabkey(KEY_R)
 		return
+
+	if Input.is_key_pressed(KEY_A):
+		b_tabkey(KEY_A)
+		return
 	
 	if Input.is_key_pressed(KEY_KP_ENTER) or Input.is_key_pressed(KEY_SPACE) or Input.is_key_pressed(KEY_ENTER):
 		
@@ -565,7 +308,7 @@ func _input(ev):
 					if content_tasks["tasks"].content[x].get_node("tp").value >= 100:
 						content_tasks["tasks"].content[x]._on_task_pressed()
 			return
-		if taq.cur_quest != "":
+		if taq.cur_quest != -1:
 			if taq.content.get_node("done").visible:
 				taq.content.b_end_task()
 				return
@@ -655,8 +398,7 @@ func w_total_per_sec(clock_dif : float) -> void:
 		# coal storage / battery gain
 		if fuel_gained:
 			
-			var fuel_gain = Big.new(gv.g[x].fc.t)
-			fuel_gain.m(clock_dif).m(60)
+			var fuel_gain = Big.new(gv.g[x].fc.t).m(clock_dif)
 			
 			gv.g[x].f.f = Big.new(Big.min(Big.new(gv.g[x].f.f).a(fuel_gain), gv.g[x].f.t))
 			gv.g[x].sync()
@@ -676,9 +418,9 @@ func w_total_per_sec(clock_dif : float) -> void:
 			
 			if "ye" in gv.menu.f:
 				if "bur " in gv.g[x].type:
-					consumed["coal"].a(Big.new(gv.g[x].fc.t).m(clock_dif).m(60))
+					consumed["coal"].a(Big.new(gv.g[x].fc.t).m(clock_dif))
 				if "ele " in gv.g[x].type:
-					consumed["jo"].a(Big.new(gv.g[x].fc.t).m(clock_dif).m(60))
+					consumed["jo"].a(Big.new(gv.g[x].fc.t).m(clock_dif))
 			
 			if "s1" in gv.g[x].type and "s1" in gv.menu.f: continue
 			elif "s2" in gv.g[x].type and "s2" in gv.menu.f: continue
@@ -689,7 +431,7 @@ func w_total_per_sec(clock_dif : float) -> void:
 		var _gained = Big.new(net[0]).m(clock_dif)
 		gained[x] = Big.new(_gained)
 		gv.stats.r_gained[x].a(_gained)
-		var per_sec = Big.new(gv.g[x].d.t).d(gv.g[x].speed.t).m(60).m(clock_dif)
+		var per_sec = Big.new(gv.g[x].d.t).d(gv.g[x].speed.t).m(clock_dif)
 		
 		# consumed
 		for v in gv.g[x].b:
@@ -703,7 +445,7 @@ func w_total_per_sec(clock_dif : float) -> void:
 		# routine
 		while true:
 			
-			if gained["malig"].isLessThan(gv.up["ROUTINE"].cost["malig"].t):
+			if gained["malig"].less(gv.up["ROUTINE"].cost["malig"].t):
 				break
 			var excess = Big.new(gained["malig"]).s(gv.up["ROUTINE"].cost["malig"].t)
 			excess.m(0.1)
@@ -716,19 +458,19 @@ func w_total_per_sec(clock_dif : float) -> void:
 	if true:
 		
 		var coal_efficiency : Big = Big.new(gained["coal"])
-		if consumed["coal"].isEqualTo(0):
+		if consumed["coal"].equal(0):
 			coal_efficiency = Big.new()
 		else:
 			coal_efficiency.d(consumed["coal"])
-		if coal_efficiency.isLargerThan(1) or Big.new(gv.r["coal"]).s(consumed["coal"]).isLargerThan(gv.g["coal"].d.t):
+		if coal_efficiency.greater(1) or Big.new(gv.r["coal"]).s(consumed["coal"]).greater(gv.g["coal"].d.t):
 			coal_efficiency = Big.new()
 		
 		var jo_efficiency : Big = Big.new(gained["jo"])
-		if consumed["jo"].isEqualTo(0):
+		if consumed["jo"].equal(0):
 			jo_efficiency = Big.new()
 		else:
 			jo_efficiency.d(consumed["jo"])
-		if jo_efficiency.isLargerThan(1) or Big.new(gv.r["jo"]).s(consumed["jo"]).isLargerThan(gv.g["jo"].d.t):
+		if jo_efficiency.greater(1) or Big.new(gv.r["jo"]).s(consumed["jo"]).greater(gv.g["jo"].d.t):
 			jo_efficiency = Big.new()
 		
 		print("WELCOME BACK!\n\nTime away: ", gv.big_to_time(Big.new(clock_dif)))
@@ -741,15 +483,15 @@ func w_total_per_sec(clock_dif : float) -> void:
 			if "bur " in gv.g[x].type: gain_reduction[x].m(coal_efficiency)
 			if "ele " in gv.g[x].type: gain_reduction[x].m(jo_efficiency)
 			
-			if consumed[x].isLessThan(gained[x]): continue
-			if Big.new(gv.r[x]).s(consumed[x]).isLargerThan(0): continue
+			if consumed[x].less(gained[x]): continue
+			if Big.new(gv.r[x]).s(consumed[x]).greater(0): continue
 			
 			if "bur " in gv.g[x].type: consumed_reduction[x].m(coal_efficiency)
 			if "ele " in gv.g[x].type: consumed_reduction[x].m(jo_efficiency)
 			
 			if num_of_consumers[x] == 0: num_of_consumers[x] = 1
 			
-			if consumed[x].isEqualTo(0): consumed[x] = Big.new()
+			if consumed[x].equal(0): consumed[x] = Big.new()
 			
 			
 			var uh = Big.new(gained[x].percent(consumed[x])).d(num_of_consumers[x])
@@ -763,13 +505,13 @@ func w_total_per_sec(clock_dif : float) -> void:
 		
 		for x in gain_reduction:
 			
-			if gain_reduction[x].isEqualTo(1): continue
+			if gain_reduction[x].equal(1): continue
 			
 			#prrint(":( alert! - ", x, " gains x", gain_reduction[x].toString(), " :: ", gained[x].toString(), " -> ", Big.new(gained[x]).m(gain_reduction[x]).toString())
 			gained[x].m(gain_reduction[x])
 		
 		# quest
-		if taq.cur_quest != "":
+		if taq.cur_quest != -1:
 			for x in gv.g:
 				for z in taq.quest.step:
 					if not "produced" in z:
@@ -780,7 +522,7 @@ func w_total_per_sec(clock_dif : float) -> void:
 		
 		for x in consumed_reduction:
 			
-			if consumed_reduction[x].isEqualTo(1): continue
+			if consumed_reduction[x].equal(1): continue
 			
 			print(x, " consumed x", consumed_reduction[x].toString(), " :: ", consumed[x].toString(), " -> ", Big.new(consumed[x]).m(consumed_reduction[x]).toString())
 			consumed[x].m(consumed_reduction[x])
@@ -803,7 +545,7 @@ func w_total_per_sec(clock_dif : float) -> void:
 						taq.task[x].step[v].f = Big.new(yikes)
 				continue
 			
-			var f = w_name_to_short(v.split(" produced")[0])
+			var f = v.split(" produced")[0].to_lower()
 			var ya = Big.new(Big.min(Big.new(taq.task[x].step[v].f).a(gained[f]), taq.task[x].step[v].b))
 			taq.task[x].step[v].f = Big.new(ya)
 	
@@ -814,13 +556,12 @@ func w_total_per_sec(clock_dif : float) -> void:
 			continue
 		
 		
-		if consumed[x].isLargerThan(gained[x]):
+		if consumed[x].greater(gained[x]):
 			consumed[x].s(gained[x])
-			if consumed[x].isLargerThan(gv.r[x]):
+			if consumed[x].greater(gv.r[x]):
 				gv.r[x] = Big.new(0)
 			else:
 				gv.r[x].s(consumed[x])
-				gv.emit_signal("lored_updated", x, "amount")
 			print(x, ": -", consumed[x].toString(), " (", gained[x].toString(), " gained, ", consumed[x].toString(), " drained)")
 		else:
 			gained[x].s(consumed[x])
@@ -828,11 +569,11 @@ func w_total_per_sec(clock_dif : float) -> void:
 			gv.r[x].a(gained[x])
 		
 		if x != "coal": continue
-		if gv.r[x].isLessThan(gv.g[x].d.t):
+		if gv.r[x].less(gv.g[x].d.t):
 			gv.r[x] = Big.new(gv.g[x].d.t)
 	
 	for x in gv.g:
-		if gv.r[x].isLessThan(0):#isNegative():
+		if gv.r[x].less(0):#isNegative():
 			gv.r[x] = Big.new(0)
 	
 	# upgrade-only stuff
@@ -844,28 +585,32 @@ func w_total_per_sec(clock_dif : float) -> void:
 				if not gv.g[x].active: continue
 				if not "bur " in gv.g[x].type: continue
 				num_of_burner_loreds += 1
-			var gay = Big.new(num_of_burner_loreds).m(60).m(clock_dif).m(0.0001)
+			var gay = Big.new(num_of_burner_loreds).m(clock_dif).m(0.0001)
 			gv.up["I DRINK YOUR MILKSHAKE"].effects[0].effect.a.a(gay)
 
 
 func afford():
 	
-	afford_check_fps = 0
-	
-	if not gv.up["we were so close, now you don't even think about me"].active():
-		for x in gv.stats.up_list["s1"]:
-			afford_check(x)
-	
-	if gv.stats.tabs_unlocked["2"]:
-		for x in gv.stats.up_list["s2"]:
-			afford_check(x)
+	while true:
+		
+		var t = Timer.new()
+		add_child(t)
+		t.start(1)
+		yield(t, "timeout")
+		t.queue_free()
+		
+		if not gv.up["we were so close, now you don't even think about me"].active():
+			for x in gv.stats.up_list["unowned s1n"]:
+				afford_check(x)
+		
+		if gv.stats.tabs_unlocked["2"]:
+			if not gv.up["Now That's What I'm Talkin About, YeeeeeeaaaaaaaAAAAAAGGGGGHHH"].active():
+				for x in gv.stats.up_list["unowned s2n"]:
+					afford_check(x)
 
 
 
 func afford_check(x: String):
-	
-	if not gv.up[x].normal:
-		return
 	
 	if gv.up[x].have:
 		get_node(gnupcon).alert(false, x)
@@ -875,13 +620,7 @@ func afford_check(x: String):
 		if not gv.up[u].have:
 			return
 	
-	# upgrade will be bought by its autobuyer
-	if gv.up[x].autobuy:
-		return
-	
 	if not gv.up[x].cost_check():
-		#if get_node(gnupcon).cont[x].already_displayed_alert_guy:
-			#get_node(gnupcon).cont[x].already_displayed_alert_guy = false
 		get_node(gnupcon).alert(false, x)
 		return
 	
@@ -902,99 +641,111 @@ func show_alert_guy(show := true):
 	
 	get_node(gnalert).visible = show
 
-func w_name_to_short(f: String) -> String:
-	for x in gv.g:
-		if gv.g[x].name == f:
-			return x
-	return "Did not send a proper name to w_name_to_short() in _Root.gd"
-	
-func w_index_to_short(f : int) -> String:
-	var i := 0
-	for x in gv.g:
-		if f == i: return x
-		i += 1
-	return "fucking oops"
 
-func w_task_effects(which := []) -> void:
+func quest_reward(type_key: int, other_key: String) -> void:
 	
-	if which == []:
-		for x in quests:
-			which.append(x)
-	
-	for x in which:
+	match type_key:
 		
-		if not quests[x].complete:
-			continue
-		if quests[x].effect_loaded:
-			continue
-		quests[x].effect_loaded = true
 		
-		for v in quests[x].reward:
-			if not "New LORED: " in v:
-				continue
-			var key = w_name_to_short(v.split("New LORED: ")[1])
-			gv.g[key].unlocked = true
-			get_node(gnLOREDs).cont[key].show()
+		gv.QuestReward.OTHER:
+			
+			match other_key:
+				
+				gv.Quest.UPGRADES:
+					
+					if not "tasks" in content_tasks.keys():
+						var _tasks := []
+						for v in taq.task:
+							_tasks.append(taq.task[v])
+						content_tasks["tasks"] = prefab.tasks.instance()
+						get_node(gntaq).add_child(content_tasks["tasks"])
+						get_node(gntaq).move_child(get_node(gnquest), 2)
+						content_tasks["tasks"].init(_tasks)
+				
+				gv.Quest.SPIKE:
+					
+					if "tasks" in content_tasks.keys():
+						content_tasks["tasks"].get_node("HBoxContainer/auto").show()
+						content_tasks["tasks"].get_node("HBoxContainer/auto/AnimatedSprite").show()
+						content_tasks["tasks"].get_node("HBoxContainer/auto/Label").hide()
+						for v in content_tasks["tasks"].content:
+							if content_tasks["tasks"].content[v].get_node("tp").value >= 100:
+								content_tasks["tasks"].content[v]._on_task_pressed()
 		
-		if "Max tasks +1" in quests[x].reward.keys():
-			taq.max_tasks += 1
-		
-		match x:
-			"Spike":
-				if "tasks" in content_tasks.keys():
-					content_tasks["tasks"].get_node("HBoxContainer/auto").show()
-					content_tasks["tasks"].get_node("HBoxContainer/auto/AnimatedSprite").show()
-					content_tasks["tasks"].get_node("HBoxContainer/auto/Label").hide()
-					for v in content_tasks["tasks"].content:
-						if content_tasks["tasks"].content[v].get_node("tp").value >= 100:
-							content_tasks["tasks"].content[v]._on_task_pressed()
-			"Upgrades!":
-				if not "tasks" in content_tasks.keys():
-					var _tasks := []
-					for v in taq.task:
-						_tasks.append(taq.task[v])
-					content_tasks["tasks"] = prefab.tasks.instance()
-					get_node(gntaq).add_child(content_tasks["tasks"])
-					get_node(gntaq).move_child(get_node(gnquest), 2)
-					content_tasks["tasks"].init(_tasks)
-			"A New Leaf":
-				unlock_tab("1")
-				unlock_tab("2")
-				get_node("misc/menu").w_display_run(quests[x].complete)
-			"Welcome to LORED":
-				unlock_tab("s1n")
-			"Consume":
-				unlock_tab("s1m")
-			"The Heart of Things":
-				gv.g["tum"].unlocked = true
-				if get_node(gnLOREDs).cont["seed"].b_ubu_s2n_check():
-					unlock_tab("s2n")
-			"Cancer Lord":
-				unlock_tab("s2m")
+		gv.QuestReward.STAGE:
+			unlock_tab(other_key)
+		gv.QuestReward.UPGRADE_MENU:
+			unlock_tab(other_key, true)
 
-
-
-func w_task_progress_check() -> void:
+func check_all_quests():
 	
-	if taq.cur_quest == "":
-		return
-	
-	match taq.quest.name:
-		"Intro!":
-			if gv.g["coal"].active:
-				taq.quest.step["Coal LORED bought"].f.mantissa = 1.0
-		"Sandy Progress":
-			if gv.up["SAND"].have:
-				taq.quest.step["SAND purchased"].f.mantissa = 1.0
-		"Upgrades!":
-			if gv.up["GRINDER"].have:
-				taq.quest.step["GRINDER purchased"].f.mantissa = 1.0
-		"Progress":
-			if gv.up["RYE"].have:
-				taq.quest.step["RYE purchased"].f.mantissa = 1.0
-		"Cringey Progress":
-			if gv.up["Sagan"].have:
-				taq.quest.step["Sagan purchased"].f.mantissa = 1.0
+	for q in gv.quest:
+		if q.complete:
+			q.turn_in()
+
+#func w_task_effects(which := []) -> void:
+#
+#	if which == []:
+#		for x in gv.quest:
+#			which.append(x)
+#
+#	for x in which:
+#
+#		if not quests[x].complete:
+#			continue
+#		if quests[x].effect_loaded:
+#			continue
+#		quests[x].effect_loaded = true
+#
+#		for v in quests[x].reward:
+#			if "New LORED: " in v:
+#				var key = v.split("New LORED: ")[1]
+#				gv.g[key].unlocked = true
+#				get_node(gnLOREDs).cont[key].show()
+#			if "Upgrade the %s LORED!" == v:
+#				var key = x.to_lower()
+#				gv.g[key].manager.buy(false)
+#
+#		if "Max tasks +1" in quests[x].reward.keys():
+#			taq.max_tasks += 1
+#
+#		match x:
+#			"Spike":
+#				if "tasks" in content_tasks.keys():
+#					content_tasks["tasks"].get_node("HBoxContainer/auto").show()
+#					content_tasks["tasks"].get_node("HBoxContainer/auto/AnimatedSprite").show()
+#					content_tasks["tasks"].get_node("HBoxContainer/auto/Label").hide()
+#					for v in content_tasks["tasks"].content:
+#						if content_tasks["tasks"].content[v].get_node("tp").value >= 100:
+#							content_tasks["tasks"].content[v]._on_task_pressed()
+#			"Upgrades!":
+#				if not "tasks" in content_tasks.keys():
+#					var _tasks := []
+#					for v in taq.task:
+#						_tasks.append(taq.task[v])
+#					content_tasks["tasks"] = prefab.tasks.instance()
+#					get_node(gntaq).add_child(content_tasks["tasks"])
+#					get_node(gntaq).move_child(get_node(gnquest), 2)
+#					content_tasks["tasks"].init(_tasks)
+#			"A New Leaf":
+#				unlock_tab("1")
+#				unlock_tab("2")
+#				get_node("misc/menu").w_display_run(quests[x].complete)
+#			"Welcome to LORED":
+#				unlock_tab("s1n")
+#			"Consume":
+#				unlock_tab("s1m")
+#			"The Heart of Things":
+#				gv.g["tum"].unlocked = true
+#				if get_node(gnLOREDs).cont["seed"].b_ubu_s2n_check():
+#					unlock_tab("s2n")
+#			"Cancer Lord":
+#				unlock_tab("s2m")
+#			"A Dark Discovery":
+#				unlock_tab("s3n")
+#				gv.g["hunt"].unlock()
+#				gv.g["witch"].unlock()
+
 
 
 
@@ -1047,6 +798,7 @@ func r_window_size_changed() -> void:
 func reset(reset_type: int, manual := true) -> void:
 	
 	reset_stats(reset_type)
+	
 	reset_upgrades(reset_type, manual)
 	reset_resources(reset_type)
 	reset_loreds(reset_type)
@@ -1066,6 +818,7 @@ func reset(reset_type: int, manual := true) -> void:
 			unlock_tab("s1m", false)
 			unlock_tab("s2n", false)
 			unlock_tab("s2m", false)
+			unlock_tab("s3n", false)
 			get_node(gnupcon).clear_alerts()
 		
 		if reset_type >= 2:
@@ -1089,6 +842,8 @@ func reset_stats(reset_type: int):
 	
 	if reset_type == 0:
 		
+		# full reset!
+
 		for x in gv.stats.run.size():
 			gv.stats.run[x] = 1
 			gv.stats.last_run_dur[x] = 0
@@ -1108,10 +863,9 @@ func reset_stats(reset_type: int):
 		
 		var gg = "malig"
 		match reset_type:
-			2:
-				gg = "tum"
+			2: gg = "tum"
 		
-		if gv.stats.most_resources_gained.isLessThan(gv.stats.r_gained[gg]):
+		if gv.stats.most_resources_gained.less(gv.stats.r_gained[gg]):
 			gv.stats.most_resources_gained = Big.new(gv.stats.r_gained[gg])
 			print("new highest resources gained: ", gv.stats.most_resources_gained.toString(), " (", gg, ")")
 	
@@ -1145,22 +899,17 @@ func reset_upgrades(reset_type: int, manual: bool):
 	
 	# for s2 upgrade autobuyers; won't buy if loreds in own_list aren't owned
 	
-#	for x in $map/upgrades.own_list_good:
-#		if x >= reset_type:
-#			continue
-#		$map/upgrades.own_list_good[x] = false
-	
 	# routine reset; don't reset every upgrade
-	
-	if reset_type >= 1:
-		for x in gv.stats.up_list["s1"]:
-			reset_upgrade(x, reset_type, manual)
 	
 	if reset_type >= 2:
 		
 		gv.s2_upgrades_may_be_autobought = false
 		
 		for x in gv.stats.up_list["s2"]:
+			reset_upgrade(x, reset_type, manual)
+	
+	if reset_type >= 1:
+		for x in gv.stats.up_list["s1"]:
 			reset_upgrade(x, reset_type, manual)
 	
 	for x in gv.up:
@@ -1173,13 +922,19 @@ func reset_upgrade(x: String, reset_type: int, manual: bool):
 	if not gv.up[x].have:
 		return
 	
+	if x in ["Limit Break"]:
+		gv.reset_lb()
+	
 	if int(gv.up[x].type[1]) == reset_type and not gv.up[x].normal:
 		
 		# ex: if Chemoing, and up[x] is type s2m, partial_reset() it
 		
+		if x in ["IT'S GROWIN ON ME", "I DRINK YOUR MILKSHAKE"]:
+			if not manual:
+				return
+		
 		gv.up[x].partial_reset()
-		if x in ["Limit Break"]:
-			gv.reset_lb()
+		
 		if manual and x == "PROCEDURE":
 			get_node(gnupcon).cont["ROUTINE"].routine_shit()
 		
@@ -1204,8 +959,8 @@ func reset_resources(reset_type: int):
 		for x in gv.g:
 			
 			gv.r[x] = Big.new(0)
-			gv.r["stone"].a(5)
-			gv.emit_signal("lored_updated", x, "amount")
+		
+		gv.r["stone"].a(5)
 		
 		return
 	
@@ -1241,17 +996,14 @@ func reset_resources(reset_type: int):
 			
 			gv.r[x] = Big.new(0)
 		
-		gv.r["wood"].a(Big.new(lb).m(150))
-		gv.r["soil"].a(Big.new(lb).m(50))
-		gv.r["tree"].a(Big.new(lb).m(5))
-		gv.r["steel"].a(Big.new(lb).m(150))
-		gv.r["hard"].a(Big.new(lb).m(150))
-		gv.r["wire"].a(Big.new(lb).m(150))
-		gv.r["glass"].a(Big.new(lb).m(150))
-		gv.r["axe"].a(Big.new(lb).m(50))
-	
-	for x in gv.g:
-		gv.emit_signal("lored_updated", x, "amount")
+		gv.r["wood"] = Big.new(lb).m(200)
+		gv.r["soil"] = Big.new(lb).m(50)
+		gv.r["tree"] = Big.new(lb).m(5)
+		gv.r["steel"] = Big.new(lb).m(200)
+		gv.r["hard"] = Big.new(lb).m(200)
+		gv.r["wire"] = Big.new(lb).m(200)
+		gv.r["glass"] = Big.new(lb).m(500)
+		gv.r["axe"] = Big.new(lb).m(50)
 
 func reset_loreds(reset_type: int):
 	
@@ -1275,8 +1027,6 @@ func reset_loreds(reset_type: int):
 		get_node(gnLOREDs).cont[x].get_node("h/h/animation/AnimatedSprite").playing = true
 		
 		if x == "coal" and gv.up["aw <3"].active():
-			if gv.menu.option["animations"]:
-				get_node(gnLOREDs).cont[x].get_node(get_node(gnLOREDs).cont[x].gnframes).animation = "ff"
 			
 			gv.g[x].partial_reset()
 			
@@ -1287,6 +1037,8 @@ func reset_loreds(reset_type: int):
 			continue
 		
 		gv.g[x].partial_reset()
+		
+		get_node(gnLOREDs).cont[x].update_net(true)
 
 func activate_refundable_upgrades(reset_type: int):
 	
@@ -1310,7 +1062,7 @@ func activate_refundable_upgrades(reset_type: int):
 		get_node(gnupcon).cont[x].upgrade_effects(true, true)
 		
 		# quest stuff
-		if taq.cur_quest != "":
+		if taq.cur_quest != -1:
 			for t in taq.quest.step:
 				if x in t:
 					taq.quest.step[t].f = Big.new()
@@ -1321,12 +1073,12 @@ func reset_tasks(reset_type: int):
 	
 	if reset_type == 0:
 		
-		for t in quests:
-			quests[t].reset()
+		for q in gv.quest:
+			q.reset()
 		
 		
 		taq.max_tasks = 1
-		taq.cur_quest = ""
+		taq.cur_quest = -1
 		taq.cur_tasks = 0
 		
 		if not "tasks" in content_tasks.keys():
@@ -1435,6 +1187,9 @@ func b_tabkey(key):
 		
 		KEY_R:
 			open_up_tab("s2m")
+		
+		KEY_A:
+			open_up_tab("s3n")
 
 func switch_tabs(target: String):
 	
@@ -1536,54 +1291,63 @@ func e_save(type := "normal", path := SAVE.MAIN):
 		for x in gv.stats.last_reset_clock.size():
 			save.data["save last reset clock " + String(x)] = gv.stats.last_reset_clock[x]
 	
+	
 	# tasks
 	if true:
 		
-		for x in quests:
-			save.data["task " + x + " complete"] = quests[x].complete
+		for q in gv.quest:
+			save.data["task " + str(q.key) + " complete"] = q.complete
 		
-		if taq.cur_quest != "":
+		if taq.cur_quest != -1:
 			
 			save.data["load quest"] = true
 			
 			save.data["on quest"] = taq.cur_quest
-			for x in taq.quest.step:
-				save.data["quest step " + x + " f"] = taq.quest.step[x].f.toScientific()
+			var i = 0
+			for r in taq.quest.req:
+				save.data["quest req progress " + str(i)] = r.progress.toScientific()
 		else:
 			save.data["load quest"] = false
 		
-		var i = 0
-		for x in taq.task:
+		var bla = 0
+		for t in taq.task:
 			
-			save.data["task " + str(i) + " name"] = taq.task[x].name
-			save.data["task " + str(i) + " desc"] = taq.task[x].desc
-			save.data["task " + str(i) + " icon"] = taq.task[x].icon.key
+			var key = str(bla)
 			
-			var ii := 0
-			for v in taq.task[x].step:
-				save.data["task " + str(i) + " step key " + str(ii)] = v
-				save.data["task " + str(i) + " b " + str(ii)] = taq.task[x].step[v].b.toScientific()
-				save.data["task " + str(i) + " f " + str(ii)] = taq.task[x].step[v].f.toScientific()
-				ii += 1
-			save.data["task " + str(i) + " steps"] = ii
+			save.data["task " + key + " name"] = t.name
+			save.data["task " + key + " key"] = t.key
+			save.data["task " + key + " icon"] = t.icon_key
 			
-			ii = 0
-			for v in taq.task[x].resource_reward:
-				save.data["task " + str(i) + " rr key " + str(ii)] = v
-				save.data["task " + str(i) + " rr " + str(ii)] = taq.task[x].resource_reward[v].toScientific()
-				ii += 1
-			save.data["task " + str(i) + " rr num"] = ii
+			var i = 0
+			for r in t.req:
+				save.data["task " + key + " step key " + str(i)] = r.type
+				save.data["task " + key + " b " + str(i)] = r.amount.toScientific()
+				save.data["task " + key + " f " + str(i)] = r.progress.toScientific()
+				i += 1
+			save.data["task " + str(i) + " steps"] = i
 			
-			ii = 0
-			for v in taq.task[x].reward:
-				save.data["task " + str(i) + " r key " + str(ii)] = v
-				save.data["task " + str(i) + " r " + str(ii)] = taq.task[x].reward[v].toScientific()
-				ii += 1
-			save.data["task " + str(i) + " r num"] = ii
+			i = 0
+			for r in t.reward:
+				
+				save.data["task " + key + " reward text " + str(i)] = r.text
+				save.data["task " + key + " reward icon_key " + str(i)] = r.icon_key
+				save.data["task " + key + " reward type " + str(i)] = str(r.type)
+				if "amount" in r.other_keys:
+					save.data["task " + key + " reward amount " + str(i)] = r.amount.toScientific()
+				else:
+					save.data["task " + key + " reward amount " + str(i)] = "0"
+				if "other_key" in r.other_keys:
+					save.data["task " + key + " reward other_key " + str(i)] = r.other_key
+				else:
+					save.data["task " + key + " reward other_key " + str(i)] = "NULL"
+				
+				i += 1
+			save.data["task " + key + " rewards"] = str(i)
 			
-			i += 1
+			bla += 1
 		
 		save.data["cur tasks"] = taq.cur_tasks
+	
 	
 	# upgrades
 	if true:
@@ -1656,6 +1420,7 @@ func e_save(type := "normal", path := SAVE.MAIN):
 				print(Marshalls.variant_to_base64(save.data))
 		
 		w_aa()
+
 func e_load(path := SAVE.MAIN) -> bool:
 	
 	var save_file = File.new()
@@ -1702,9 +1467,13 @@ func e_load(path := SAVE.MAIN) -> bool:
 	var keys = save.data.keys()
 	
 	load_stats(save.data, keys, pre_beta_4)
-	load_upgrades(save.data, keys, pre_beta_4)
+	load_upgrades(save.data, keys)
 	load_loreds(save.data, keys, pre_beta_4)
-	load_tasks(save.data, keys, pre_beta_4)
+	load_tasks(save.data, keys, save.game_version)
+
+	# X.Y.Z
+	# 2.1.0
+	# 1.2c
 	
 	# shit that needs to be done before offline earnings
 	if true:
@@ -1724,10 +1493,10 @@ func e_load(path := SAVE.MAIN) -> bool:
 	# fin & misc
 	if true:
 		
-		if quests["Pretty Wet"].complete:
-			var butt = ["Intro!", "More Intro!", "Welcome to LORED", "Upgrades!", "Tasks!"]
+		if gv.quest[gv.Quest.PRETTY_WET].complete:
+			var butt = [gv.Quest.INTRO, gv.Quest.MORE_INTRO, gv.Quest.WELCOME_TO_LORED, gv.Quest.UPGRADES, gv.Quest.TASKS]
 			for x in butt:
-				quests[x].complete = true
+				gv.quest[x].complete = true
 	
 	return true
 
@@ -1745,7 +1514,7 @@ func load_stats(data: Dictionary, keys: Array, pre_beta_4: bool):
 	for x in gv.menu.option:
 		
 		if not "option " + x in keys: continue
-		if PLATFORM == "browser" and x == "performance": continue
+		if gv.PLATFORM == "browser" and x == "performance": continue
 		
 		gv.menu.option[x] = data["option " + x]
 		if x == "on_save_menu_options" and not gv.menu.option[x]: break
@@ -1784,11 +1553,11 @@ func load_stats(data: Dictionary, keys: Array, pre_beta_4: bool):
 	if "most_resources_gained" in keys:
 		gv.stats.most_resources_gained = Big.new(data["most_resources_gained"])
 
-func load_upgrades(data: Dictionary, keys: Array, pre_beta_4: bool):
+func load_upgrades(data: Dictionary, keys: Array):
 	
 	if "Limit Break d" in keys:
 		gv.up["Limit Break"].effects[0].effect.a = Big.new(data["Limit Break d"])
-		gv.up["Limit Break"].effects[0].effect.sync()
+		gv.up["Limit Break"].sync_effects()
 		gv.lb_xp.t = Big.new(data["Limit Break xpt"])
 		gv.lb_xp.f = Big.new(data["Limit Break xpf"])
 		emit_signal("limit_break_leveled_up", "color")
@@ -1809,6 +1578,8 @@ func load_upgrades(data: Dictionary, keys: Array, pre_beta_4: bool):
 		if not "[" + x + "] have" in keys: continue
 		
 		gv.up[x].have = data["[" + x + "] have"]
+		if gv.up[x].have and gv.up[x].normal:
+			gv.stats.up_list["unowned s" + gv.up[x].type[1] + "n"].erase(x)
 		gv.up[x].refundable = data["[" + x + "] refundable"]
 		if "[" + x + "] times_purchased" in keys:
 			gv.up[x].times_purchased = data["[" + x + "] times_purchased"]
@@ -1820,8 +1591,6 @@ func load_upgrades(data: Dictionary, keys: Array, pre_beta_4: bool):
 		
 		if not gv.up[x].refundable:
 			if gv.up[x].active():
-				if x == "Now That's What I'm Talkin About, YeeeeeeaaaaaaaAAAAAAGGGGGHHH":
-					print("asjdhfkjlashdflkjashdflkj ahsd jflhkalhkjsdflk hj")
 				gv.up[x].apply()
 			continue
 		
@@ -1831,7 +1600,6 @@ func load_upgrades(data: Dictionary, keys: Array, pre_beta_4: bool):
 		
 		for c in gv.up[x].cost:
 			gv.r[c].a(gv.up[x].cost[c].t)
-			gv.emit_signal("lored_updated", c, "amount")
 	
 	for x in gv.up:
 		gv.up[x].sync()
@@ -1841,7 +1609,10 @@ func load_upgrades(data: Dictionary, keys: Array, pre_beta_4: bool):
 func load_loreds(data: Dictionary, keys: Array, pre_beta_4: bool):
 	
 	for x in gv.g:
-		
+		if gv.g[x].stage == "3":
+			continue
+		if not "g" + x + " active" in keys:
+			continue
 		gv.g[x].active = data["g" + x + " active"]
 		gv.r[x].a(Big.new(data["g" + x + " r"]))
 		if "g" + x + " unlocked" in keys:
@@ -1866,7 +1637,7 @@ func load_loreds(data: Dictionary, keys: Array, pre_beta_4: bool):
 		if gv.menu.option["on_save_halt"] and "g" + x + " halt" in keys: gv.g[x].halt = data["g" + x + " halt"]
 		if gv.menu.option["on_save_hold"] and "g" + x + " hold" in keys: gv.g[x].hold = data["g" + x + " hold"]
 		
-		gv.g[x].progress.f = int(rand_range(0, gv.g[x].progress.b / 2))
+		get_node(gnLOREDs).cont[x].start_all()
 		
 		if pre_beta_4:
 			
@@ -1876,73 +1647,78 @@ func load_loreds(data: Dictionary, keys: Array, pre_beta_4: bool):
 			
 			gv.g[x].f.f = Big.new(data["g" + x + " fuel"])
 		
-		if gv.menu.option["animations"] and gv.g[x].active and gv.g[x].unlocked:
-			get_node(gnLOREDs).cont[x].get_node("h/h/animation/AnimatedSprite").animation = "ff"
-		
 		gv.g[x].sync()
 
-func load_tasks(data: Dictionary, keys: Array, pre_beta_4: bool):
+func load_tasks(data: Dictionary, keys: Array, game_version: String):
 	
-	for x in quests:
-		if "task " + x + " complete" in keys:
-			quests[x].complete = data["task " + x + " complete"]
+	for q in gv.quest:
+		if "task " + str(q.key) + " complete" in keys:
+			q.complete = data["task " + str(q.key) + " complete"]
 	
 	if "load quest" in keys:
 		if data["load quest"]:
-			if data["on quest"] in quests.keys():
-				taq.new_quest(quests[data["on quest"]])
+			if data["on quest"] in gv.Quest:
+				taq.new_quest(gv.quest[data["on quest"]])
 				for x in taq.quest.step:
 					if not "quest step " + x + " f" in keys:
 						continue
 					
-					if pre_beta_4:
-						taq.quest.step[x].f = Big.new(fval.f(data["quest step " + x + " f"]))
-					else:
-						taq.quest.step[x].f = Big.new(data["quest step " + x + " f"])
+					taq.quest.step[x].f = Big.new(data["quest step " + x + " f"])
 	
-	var new_or_old = "cur tasks" if "cur tasks" in keys else "task count"
+	if int(game_version[2]) < 4:
+		return
 	
-	if new_or_old in keys:
-		if data[new_or_old] > 0:
+	if "cur tasks" in keys:
+		for i in data["cur tasks"]:
 			
-			for i in data[new_or_old]:
-				
-				if taq.cur_tasks >= taq.max_tasks:
-					break
-				
-				var name = data["task " + str(i) + " name"]
-				var desc = data["task " + str(i) + " desc"]
-				var icon = {texture = gv.sprite[data["task " + str(i) + " icon"]], key = data["task " + str(i) + " icon"]}
-				var steps := {}
-				var rr := {}
-				var r := {}
-				
-				for ii in data["task " + str(i) + " steps"]:
-					steps[data["task " + str(i) + " step key " + str(ii)]] = Ob.Num.new(data["task " + str(i) + " b " + str(ii)])
-					if pre_beta_4:
-						steps[data["task " + str(i) + " step key " + str(ii)]].f = Big.new(fval.f(data["task " + str(i) + " f " + str(ii)]))
-					else:
-						steps[data["task " + str(i) + " step key " + str(ii)]].f = Big.new(data["task " + str(i) + " f " + str(ii)])
-				
-				for ii in data["task " + str(i) + " rr num"]:
-					if pre_beta_4:
-						rr[data["task " + str(i) + " rr key " + str(ii)]] = Big.new(fval.f(data["task " + str(i) + " rr " + str(ii)]))
-					else:
-						rr[data["task " + str(i) + " rr key " + str(ii)]] = Big.new(data["task " + str(i) + " rr " + str(ii)])
-				
-				for ii in data["task " + str(i) + " r num"]:
-					r[data["task " + str(i) + " r key " + str(ii)]] = data["task " + str(i) + " r " + str(ii)]
-				
-				taq.task[float(i)] = taq.Task.new(name, desc, rr, r, steps, icon, gv.COLORS[data["task " + str(i) + " icon"]])
-				taq.task[float(i)].code = float(i)
+			if taq.cur_tasks >= taq.max_tasks:
+				break
+			if not "task " + str(i) + " name" in keys:
+				continue
+			
+			var pack := {}
+			var key = str(i)
+			
+			pack["name"] = data["task " + str(i) + " name"]
+			pack["icon_key"] = data["task " + str(i) + " icon"]
+			pack["reqs"] = []
+			pack["reward"] = []
+			
+			for ii in data["task " + str(i) + " rewards"]:
+				pack["reward"].append(
+					Task.Reward.new(
+						data["task " + key + " reward type " + str(ii)],
+						data["task " + key + " reward text " + str(ii)],
+						data["task " + key + " reward icon_key " + str(ii)],
+						{
+							"amount": data["task " + key + " reward amount " + str(i)],
+							"other_key": data["task " + key + " reward other_key " + str(i)]
+						}
+					)
+				)
+			
+			taq.task.append(Task.new(data["task " + key + " key"], pack))# name, desc, rr, r, steps, icon, gv.COLORS[data["task " + str(i) + " icon"]])
 
 
 func _on_Button_pressed() -> void:
 	
-	print(gv.up["Squeeomp"].autobuy)
+	#gv.r["flayed corpse"].a(3)
+	
+	#var Cawk = Big.new(100)
+	
+	#print(Big.new(Cawk).power(1.5).toString())
+	
 	
 	pass
 
 
 
+func can():
+	return true
 
+func my_func():
+	print("Hello")
+	
+	if yield():
+		return "test"
+	return "cock"

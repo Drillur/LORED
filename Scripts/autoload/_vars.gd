@@ -4,13 +4,46 @@ extends Node
 # invoke with gv
 
 var hax_pow := 1.0 # 1.0 for normal
-const s3_time := true
+var fps: float
+const PLATFORM = "pc" # keep lower-case
+const s3_time := false #true
+const test_s3 := true
 const DEFAULT_KEY_LOREDS := ["stone", "conc", "malig", "water", "lead", "tree", "soil", "steel", "wire", "glass", "tum", "wood"]
 
 const PATCH_NOTES := {
 	
 	# [0] is if there are more changes made than can be listed (> 5)
 	# [0] determines if the /more Label node in Patch Version.tscn is visible
+	
+	"2.2.4": [
+		false,
+		"Fixed a bug preventing access to Extra-normal upgrades.",
+		"Fixed a bunch of issues with the progress bars flashing or resetting prematurely.",
+		"Fixed an issue that allowed users to purchase Malignant or Radiative upgrades when they should not have been able to.",
+	],
+	
+	"2.2.3": [
+		false,
+		"Might have fixed an issue causing a crash when Metastasizing?",
+		"Possibly fixed some more softlocks.",
+		"Fixed a bug that prevented autobuyers from working when LOREDs are level 0.",
+		"The option to enable or disable animations has been fixed.",
+		"Polished some tooltips and fixed the accuracy of some values in tooltips.",
+	],
+	
+	"2.2.2": [
+		false,
+		"Fixed a bug that was preventing some saves from loading.",
+		"Fixed inflated per-second values. They should now be accurate!",
+	],
+	
+	"2.2.1": [
+		false,
+		"Added an option called \"Afford check\" that will make it much clearer when you can afford to upgrade a LORED.",
+		"As for performance, the FPS dropdown has returned. Please try 5 FPS if your framerate is already 5 because maybe then it will be 6.",
+		"Additionally, many unnecessary loops and physics_process methods across the code have been removed.",
+		"Stage 3 is on the horizon, finally! Woo!"
+	],
 	
 	"2.2.0": [
 		false,
@@ -74,6 +107,20 @@ const PATCH_NOTES := {
 }
 
 
+func _ready():
+	
+	randomize()
+	
+	for x in g:
+		r[x] = Big.new(0)
+	
+	for x in 10:
+		cac.append(Cacodemon.new(x))
+	
+	for x in SpellID:
+		spells.append(Spell.new(x))
+
+
 const loreds_required_for_s2_autoup_upgrades_to_begin_purchasing := ["seed", "tree", "water", "soil", "humus", "sand", "glass", "liq", "steel", "hard", "axe", "wood", "draw","wire"]
 var s2_upgrades_may_be_autobought := false
 
@@ -84,9 +131,14 @@ func check_for_the_s2_shit():
 		if not g[x].active:
 			return
 	s2_upgrades_may_be_autobought = true
+	get_node("/root/Root").unlock_tab("s2n")
 
-const PREFAB := {
-	"flash": preload("res://Prefabs/Flash.tscn")
+const SRC := {
+	"flash": preload("res://Prefabs/Flash.tscn"),
+	"task entry": preload("res://Prefabs/tooltip/tip_lored_task_entry.tscn"),
+	"unholy body manager": preload("res://Prefabs/lored/necro bar.tscn"),
+	"unholy body manager bar": preload("res://Prefabs/lored/Necro Unholy Body Bar.tscn"),
+	"upgrade block": preload("res://Prefabs/tooltip/upgrade_block.tscn"),
 }
 
 signal limit_break_leveled_up(which) # here -> Limit Break.gd
@@ -95,9 +147,10 @@ var lb_xp = Ob.Num.new(1000)
 func reset_lb():
 	lb_xp = Ob.Num.new(1000)
 	up["Limit Break"].effects[0].effect.t = Big.new()
+	up["Limit Break"].sync_effects()
 func lb_xp_check():
 	
-	if lb_xp.f.isLessThan(lb_xp.t):
+	if lb_xp.f.less(lb_xp.t):
 		return
 	
 	# level up!
@@ -110,18 +163,17 @@ func lb_xp_check():
 		
 		var exponent = Big.new(up["Limit Break"].effects[0].effect.a).a(1).square().toFloat() * 1.5
 		lb_xp.t = Big.new("1e" + str(exponent))
-		if lb_xp.t.isLessThan(Big.new(up["Limit Break"].effects[0].effect.a).m(1000)):
+		if lb_xp.t.less(Big.new(up["Limit Break"].effects[0].effect.a).m(1000)):
 			lb_xp.t = Big.new(up["Limit Break"].effects[0].effect.a).m(1000)
 		
-		if lb_xp.f.isLessThan(lb_xp.t):
+		if lb_xp.f.less(lb_xp.t):
 			break
 	
-	up["Limit Break"].effects[0].effect.sync()
+	up["Limit Break"].sync_effects()
 	
 	for x in stats.g_list["s1"] + stats.g_list["s2"]:
 		g[x].d.lbm = up["Limit Break"].effects[0].effect.t
 		g[x].d.sync()
-		emit_signal("lored_updated", x, "d")
 	
 	emit_signal("limit_break_leveled_up", "color")
 
@@ -135,9 +187,10 @@ func increase_lb_xp(value):
 
 # signals are emitted in multiple places but may only be received in one place
 
-signal lored_updated(_lored, _updated_stat) # LORED.gd -> LORED List.gd
+signal autobuyer_purchased(key) # -> LORED.gd
 signal amount_updated(key) # LORED.gd -> resources.gd
 signal net_updated(net)
+signal quest_reward(type_key, other_key) # -> Root.gd
 
 signal upgrade_purchased(key, routine) # Upgrade Slot.gd -> up_container.gd
 
@@ -160,10 +213,24 @@ const LIMIT_BREAK_COLORS := {
 }
 
 const sprite := {
+	
+	"mana" : preload("res://Sprites/upgrades/thewitchofloredelith.png"),
 	"embryo" : preload("res://Sprites/resources/carc.png"),
+	"nearly dead" : preload("res://Sprites/resources/carc.png"),
+	"terror" : preload("res://Sprites/resources/carc.png"),
+	"corpse" : preload("res://Sprites/resources/carc.png"),
 	"bone" : preload("res://Sprites/resources/carc.png"),
-	"blood" : preload("res://Sprites/resources/carc.png"),
 	"spirit" : preload("res://Sprites/resources/carc.png"),
+	"bagged beast" : preload("res://Sprites/resources/carc.png"),
+	"beast body" : preload("res://Sprites/resources/carc.png"),
+	"exsanguinated beast" : preload("res://Sprites/resources/carc.png"),
+	"meat" : preload("res://Sprites/resources/carc.png"),
+	"fur" : preload("res://Sprites/resources/carc.png"),
+	
+	"hunt" : preload("res://Sprites/resources/carc.png"),
+	"blood" : preload("res://Sprites/resources/carc.png"),
+	"necro" : preload("res://Sprites/resources/carc.png"),
+	"witch" : preload("res://Sprites/upgrades/thewitchofloredelith.png"),
 	
 	"coal" : preload("res://Sprites/resources/coal.png"),
 	"stone" : preload("res://Sprites/resources/stone.png"),
@@ -211,15 +278,15 @@ const sprite := {
 	"s1m" : preload("res://Sprites/tab/s1m.png"),
 	"s2n" : preload("res://Sprites/tab/s2n.png"),
 	"s2m" : preload("res://Sprites/tab/s2m.png"),
+	"s3n" : preload("res://Sprites/tab/s2n.png"),
+	"s3m" : preload("res://Sprites/tab/s2m.png"),
+	"s4n" : preload("res://Sprites/tab/s2n.png"),
+	"s4m" : preload("res://Sprites/tab/s2m.png"),
 	
 	# misc
-	"haste": preload("res://Sprites/misc/haste.png"),
-	"output": preload("res://Sprites/misc/output.png"),
-	
 	"hold_true" : preload("res://Sprites/misc/hold_true.png"),
 	"hold_false" : preload("res://Sprites/misc/hold_false.png"),
 	
-	"num" : preload("res://Sprites/misc/num.png"),
 	"true" : preload("res://Sprites/misc/bool.png"),
 	
 	"unknown" : preload("res://Sprites/misc/unknown.png"),
@@ -269,46 +336,8 @@ const anim = {
 	"humus" : preload("res://Sprites/animations/humus.tres"),
 }
 
-enum G {
-	coal,
-	stone,
-	stone,
-	tar,
-	malignancy,
-	oil,
-	growth,
-	joules,
-	concrete,
-	iron,
-	copper
-	iron_ore,
-	copper_ore,
-	tumors,
-	hard_wood,
-	wood,
-	axes,
-	draw_plate,
-	wire,
-	glass,
-	sand,
-	steel,
-	liquid_iron
-	trees,
-	water,
-	seeds,
-	soil,
-	humus,
-	carcinogens,
-	plastic,
-	petroleum,
-	cigarettes,
-	tobacco,
-	paper,
-	wood_pulp,
-	lead,
-	galena
-}
-var g := {
+var quest: Array
+var g := { #DO NOT RE-ARRANGE. ui depends on them being like this
 	"tar" : LORED,
 	"malig" : LORED,
 	"oil" : LORED,
@@ -345,8 +374,15 @@ var g := {
 	"pulp" : LORED,
 	"lead" : LORED,
 	"gale" : LORED,
+	
+	"hunt": LORED,
+	"blood": LORED,
+	"necro": LORED,
+	"witch": LORED,
 }
 var up := {}
+var chains := {}
+
 const COLORS := {
 	"ciga": Color(0.929412, 0.584314, 0.298039),
 	"toba": Color(0.639216, 0.454902, 0.235294),
@@ -375,7 +411,7 @@ const COLORS := {
 	"abeewithdaggers": Color(1, 0.878431, 0.431373),
 	"sand": Color(.87, .70, .45),
 	"wood": Color(0.545098, 0.372549, 0.015686),
-	"water": Color(0.14902, 0.52549, 0.792157),
+	"water": Color(0, 0.647059, 1),
 	"tree": Color(0.772549, 1, 0.247059),
 	"pet": Color(0.76, 0.53, 0.14),
 	"axe": Color(0.691406, 0.646158, 0.586075),
@@ -386,7 +422,31 @@ const COLORS := {
 	"liq": Color(0.27, 0.888, .9),
 	"humus": Color(0.458824, 0.25098, 0),
 	
+	"hunt": Color(0.88, .12, .35),
+	"necro": Color(0.88, .12, .35),
+	"witch": Color(0.937255, 0.501961, 0.776471),
+	
+	"spirit": Color(0.88, .12, .35),
+	"mana": Color(0.721569, 0.352941, 0.905882),
+	
+	"flayed corpse": Color(0.88, .12, .35),
+	"defiled dead": Color(0.88, .12, .35),
+	"corpse": Color(0.88, .12, .35),
+	"nearly dead": Color(0.88, .12, .35),
+	"flesh": Color(0.88, .12, .35),
+	"terror": Color(0.88, .12, .35),
+	"embryo": Color(0.88, .12, .35),
+	"blood": Color(0.88, 0, 0),
+	"bone": Color(0.88, .12, .35),
+	"wax": Color(0.88, .12, .35),
+	"fur": Color(0.88, .12, .35),
+	"meat": Color(0.88, .12, .35),
+	"bagged beast": Color(0.88, .12, .35),
+	"beast body": Color(0.88, .12, .35),
+	"exsanguinated beast": Color(0.88, .12, .35),
+	
 	"thewitchofloredelith": Color(0.937255, 0.501961, 0.776471),
+	"spike": Color(1, 0, 0),
 	"s1n": Color(0.733333, 0.458824, 0.031373),
 	"s1m": Color(0.878431, 0.121569, 0.34902),
 	"s2n": Color(0.47451, 0.870588, 0.694118),
@@ -429,7 +489,7 @@ func time_remaining(
 	
 	var net = gv.g[lored_key].net(true)
 	
-	if net[1].isLargerThan(net[0]):
+	if net[1].greater(net[0]):
 		return "-"
 	
 	net = net[0].s(net[1])
@@ -439,26 +499,22 @@ func time_remaining(
 		for x in gv.g[lored_key].used_by:
 			if not gv.g[x].active():
 				continue
-			less.a(Big.new(gv.g[x].d.t).m(60).d(gv.g[x].speed.t).m(gv.g[x].b[lored_key].t))
+			less.a(Big.new(gv.g[x].d.t).d(gv.g[x].speed.t).m(gv.g[x].b[lored_key].t))
 	
-	if less.isLargerThan(net):
+	if less.greater(net):
 		return "-"
 	
 	net.s(less)
 	
-	if net.isEqualTo(0):
+	if net.equal(0):
 		return "!?"
 	
 	var delta: Big = Big.new(total_amount).s(present_amount)
 	var incoming_amount := Big.new(0)
 	
 	
-	if not gv.g[lored_key].progress.t == 0.0:
-		
-		var percent_task_complete = gv.g[lored_key].progress.f / gv.g[lored_key].progress.t
-		
+	if not gv.g[lored_key].progress.b == 1.0:
 		incoming_amount.a(gv.g[lored_key].d.t)
-		incoming_amount.m(percent_task_complete)
 	
 	return big_to_time(Big.new(delta).s(incoming_amount).d(net))
 
@@ -466,105 +522,227 @@ func big_to_time(big: Big) -> String:
 	
 	# big should be equal to the amount of seconds required to complete the objective
 	
-	if big.isLessThan(0):
+	if big.less(0):
 		big = Big.new(0)
 	
-	if big.isLessThan(1) or big.toString()[0] == "-":
+	if big.less(1) or big.toString()[0] == "-":
 		return "!"
 	
-	if big.isLessThan(60):
+	if big.less(60):
 		return big.roundDown().toString() + "s"
 	
 	big.d(60) # minutes
 	
-	if big.isLessThan(60):
+	if big.less(60):
 		return big.roundDown().toString() + "m"
 	
 	big.d(60) # hours
 	
-	if big.isLessThan(24):
+	if big.less(24):
 		return big.roundDown().toString() + "h"
 	
 	big.d(24) # days
 	
-	if big.isLessThan(365):
+	if big.less(365):
 		return big.roundDown().toString() + "d"
 	
 	big.d(365) # years
 	
-	if big.isLessThan(10):
+	if big.less(10):
 		return big.roundDown().toString() + "y"
 	
 	big.d(10) # decades
 	
-	if big.isLessThan(100):
+	if big.less(100):
 		return big.roundDown().toString() + "dec"
 	
 	big.d(100) # centuries
 	
-	if big.isLessThan(1000):
+	if big.less(1000):
 		return big.roundDown().toString() + "cen"
 	
 	return big.roundDown().toString() + "mil"
 
 
-class PowersOf10:
-	
-	var powers := []
-	
-	func _init():
-		
-		for x in 3080:
-			powers.append(pow(10, x))#(Big.new("1e" + str(x)))
-	
-	func lookup(power: int):
-		
-		return powers[power]
-
-var powers_of_10 = PowersOf10.new()
+#class PowersOf10:
+#
+#	var powers := []
+#
+#	func _init():
+#
+#		for x in 3080:
+#			powers.append(pow(10, x))#(Big.new("1e" + str(x)))
+#
+#	func lookup(power: int):
+#
+#		return powers[power]
+#
+#var powers_of_10 = PowersOf10.new()
 
 var r := {
 	"spirit": Big.new(0),
 	"blood": Big.new(0),
 	"embryo": Big.new(0),
 	"bone": Big.new(0),
-}
-var color := {
-	"spirit": Color(0.9,0.9,0.9),
+	"flesh": Big.new(0),
+	"nearly dead": Big.new(0),
+	"corpse": Big.new(0),
+	"flayed corpse": Big.new(0),
+	"unholy body": Big.new(0),
+	"defiled dead": Big.new(0),
+	"terror": Big.new(0),
+	"wax": Big.new(0),
+	"fur": Big.new(0),
+	"meat": Big.new(0),
+	"bagged beast": Big.new(0),
+	"processed beast": Big.new(0),
+	"exsanguinated beast": Big.new(0),
 }
 
 signal cac_leveled_up(key) # class_cacodemon.gd -> Cacodemons.gd
 signal cac_fps(fps_key, key) # class_cacodemon.gd -> Cacodemons.gd
-signal cac_consumed # class_cacodemon.gd -> Cacodemons.gd
 signal cac_slain(key) # class_cacodemon.gd -> Cacodemons.gd
+
+signal item_produced(key) # somewhere -> Inventory.gd
 
 func increase_cac_cost():
 	
-	cac_cost["blood"].m(3)
-	cac_cost["bone"].m(3)
+	cac_cost["blood"].m(300)
+	cac_cost["bone"].m(300)
 	
-	if cac_cost["embryo"].isLessThan(10):
+	if cac_cost["embryo"].less(10):
 		cac_cost["embryo"].a(cacodemons - 1)
 	else:
 		cac_cost["embryo"].m(1.1)
 	
-	if cac_cost["embryo"].isLessThan(100):
+	if cac_cost["embryo"].less(100):
 		cac_cost["embryo"].roundDown()
 
 var cac := []
 var cacodemons = 0
 var cac_cost := {
 	"embryo": Big.new(1),
-	"blood": Big.new(1000),
-	"bone": Big.new(100),
+	"blood": Big.new(100),
+	"bone": Big.new(25),
+}
+var cac_chance_mod := Ob.Num.new(1)
+var spells := []
+enum SpellID {
+	HEX, # gives witch boon to random lored
+	STIM, # gives random s3 resources -- upgrades allow it to give any requested resource in any Cost tooltip
+}
+enum Item {
+	MANA, 
+	BITS, PIECES, PARTS, PORTIONS, # parts, pieces, and portions cost bits.
+	CRUMBS, SLICES, SAMPLES, SHARDS, # shards, samples, and slices cost crumbs.
+}
+enum Quest {
+	
+	# DO NOT REARRANGE.
+	# !!! Add new quests at the BOTTOM !!!
+	
+	# s1
+	INTRO,
+	MORE_INTRO,
+	WELCOME_TO_LORED,
+	UPGRADES,
+	TASKS,
+	PRETTY_WET,
+	PROGRESS,
+	ELECTRICY,
+	SANDY_PROGRESS,
+	SPREAD,
+	LOTS_OF_TASKS,
+	CONSUME,
+	EVOLVE,
+	A_MILLION_REASONS_TO_GRIND,
+	THE_LOOP,
+	
+	# s2
+	A_NEW_LEAF,
+	STEEL_PATTERN, WIRE_TRAIL, HARDWOOD_CYCLE, GLASS_PASS,
+	THE_HEART_OF_THINGS,
+	SPIKE,
+	LEAD_BY_EXAMPLE,
+	PAPER_OR_PLASTIC,
+	CARCINOGENIC,
+	CRINGEY_PROGRESS,
+	CANCER_LORD,
+	HORSE_DOODIE,
+	A_DARK_DISCOVERY,
+	
+	# s3
+	HUNT, WITCH, BLOOD, NECRO,
+	
+	# add new quests here
+	
+	# auto
+	RANDOM,
+	RANDOM_COMMON,
+	RANDOM_RARE,
+	RANDOM_SPIKE
+	
+	# do not add new quests here.
+}
+enum QuestReward {
+	NEW_LORED,
+	RESOURCE,
+	UPGRADE_MENU,
+	STAGE,
+	UPGRADE_LORED,
+	MAX_TASKS,
+	OTHER,
+}
+enum TaskRequirement {
+	RESOURCE_PRODUCTION,
+	SPELL_CAST,
+	SPIKE_TASKS_COMPLETED,
+	RARE_OR_SPIKE_TASKS_COMPLETED,
+	TASKS_COMPLETED,
+	UPGRADE_PURCHASED,
+	LORED_UPGRADED,
 }
 
-func _ready():
-	
-	randomize()
-	
-	for x in g:
-		r[x] = Big.new(0)
-	
-	for x in 100:
-		cac.append(Cacodemon.new(x))
+var item_names := [
+	"mana", "bits", "pieces", "parts", "portions", "crumbs","slices","samples","shards",
+]
+var active_buffs := []
+enum Buff {
+	HEX,
+}
+var spell_materials := {
+	"hex": {"mana": 1, "candle": 3, "orchid root": 1},
+}
+signal buff_spell_cast(spell, target) # LORED.gd -> LORED List.gd
+
+var unholy_bodies := {}
+var latest_unholy_body: int # key
+var ub_count := 0
+signal new_unholy_body(amount) # -> Unholy Body Manager.gd
+
+var animationless = ["hard", "draw", "carc", "tum", "axe", "wire", "soil", "pet", "paper", "lead", "steel", "plast", "pulp"]
+var max_frame = {
+	"humus":  9,
+	"gale":  22,
+	"ciga":  25,
+	"liq":  22,
+	"sand":  45,
+	"wood":  49,
+	"toba":  73,
+	"glass":  37,
+	"seed": 30,
+	"tree":  77,
+	"water": 25,
+	"coal":  25,
+	"stone":  27,
+	"irono":  28,
+	"copo":  25,
+	"iron":  47,
+	"cop":  30,
+	"growth":  40,
+	"conc":  57,
+	"jo":  32,
+	"malig":  36,
+	"tar":  29,
+	"oil":  8,
+}

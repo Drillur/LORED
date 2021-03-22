@@ -20,7 +20,7 @@ var tip = 0
 var tip_filled := false
 var type := "no"
 
-func _call(source : String, color := Color(1,1,1)) -> void:
+func _call(source : String, other := {}) -> void:
 	
 	if tip_filled:
 		if is_instance_valid(tip):
@@ -34,7 +34,7 @@ func _call(source : String, color := Color(1,1,1)) -> void:
 	
 	tip = prefab["tooltip"].instance()
 	add_child(tip)
-	tip._call(type,color)
+	tip._call(type, other)
 	tip_filled = true
 
 

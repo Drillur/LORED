@@ -184,7 +184,7 @@ autowrap = true
 [node name="desc" type="Label" parent="v"]
 visible = false
 margin_top = 44.0
-margin_right = 150.0
+margin_right = 200.0
 margin_bottom = 59.0
 rect_min_size = Vector2( 200, 0 )
 size_flags_horizontal = 3

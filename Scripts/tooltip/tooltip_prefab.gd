@@ -20,9 +20,11 @@ const src := {
 	taq_tip = preload("res://Prefabs/tooltip/QuestTip.tscn"),
 	tip_lored_fuel = preload("res://Prefabs/tooltip/tip_lored_fuel.tscn"),
 	cacodemon = preload("res://Prefabs/tooltip/Cacodemon Tooltip.tscn"),
+	item_tip = preload("res://Prefabs/tooltip/Item.tscn"),
+	unholy_bodies_tip = preload("res://Prefabs/tooltip/Unholy Bodies Tip.tscn"),
 }
 
-var viewed_task : taq.Task
+var viewed_task : Task
 
 func _process(delta: float) -> void:
 	r_tip(true)
@@ -35,8 +37,8 @@ func _physics_process(delta):
 		fps_autobuy += delta
 	
 	fps += delta
-	if fps < rt.FPS: return
-	fps -= rt.FPS
+	if fps < gv.fps: return
+	fps -= gv.fps
 	
 	r_tip()
 
@@ -47,7 +49,7 @@ func _input(event: InputEvent) -> void:
 		define_key()
 
 
-func _call(source : String, color := Color(1,1,1)) -> void:
+func _call(source : String, other: Dictionary) -> void:
 	
 	type = source
 	
@@ -60,6 +62,29 @@ func _call(source : String, color := Color(1,1,1)) -> void:
 			$bg.self_modulate = gv.g[f].color
 			
 			lored_buy_lored(f)
+		
+		elif "buy smart lored" in type:
+			var key := type.split("lored ")[1]
+			$bg.self_modulate = gv.g[key].color
+			
+			var quest_key := key.capitalize()
+			
+			cont["taq"] = src.taq_tip.instance()
+			add_child(cont["taq"])
+			
+			cont["taq"].init(rt.quests[quest_key])
+		
+		elif "unholy bodies tip" in type:
+			
+			cont[type] = src.unholy_bodies_tip.instance()
+			add_child(cont[type])
+			$bg.self_modulate = gv.COLORS["necro"]
+		
+		elif "item:" in type:
+			
+			var item_key = type.split(":")[1]
+			item_tip(item_key)
+			$bg.self_modulate = gv.COLORS[item_key]
 		
 		elif "cac " in type:
 			
@@ -82,20 +107,20 @@ func _call(source : String, color := Color(1,1,1)) -> void:
 		
 		elif "taq " in type:
 			
-			var f := type.split("taq ")[1]
-			
 			cont["taq"] = src.taq_tip.instance()
 			add_child(cont["taq"])
 			
-			if f in rt.quests.keys():
+			if "quest" in type:
+				
+				var quest := type.split("taq quest ")[1]
+				
 				cont["taq"].init(taq.quest)
-				if taq.quest.icon.key in gv.g.keys():
-					$bg.self_modulate = gv.g[taq.quest.icon.key].color
-				else:
-					$bg.self_modulate = Color(0.764706, 0.733333, 0.603922)
+				$bg.self_modulate = taq.quest.color
+			
 			else:
-				cont["taq"].init(taq.task[stepify(float(type.split("taq ")[1]), 0.01)])
-				$bg.self_modulate = gv.g[taq.task[stepify(float(type.split("taq ")[1]), 0.01)].icon.key].color
+				var index = type.split(" ")[1]
+				cont["taq"].init(taq.task[index])
+				$bg.self_modulate = taq.task[index].color
 		
 		elif "buy upgrade" in type:
 			
@@ -176,6 +201,7 @@ func r_tip(move_tip := false) -> void:
 					var set_key = cont["autobuyer"].get_node("VBoxContainer/set_key")
 					set_key.get_node("HBoxContainer/check").pressed = gv.g[f].key_lored
 		
+		
 		elif "tip up" in cont.keys():
 			
 			if cont["tip up"].rect_size != rect_size:
@@ -243,6 +269,18 @@ func r_tip(move_tip := false) -> void:
 			
 			return
 		
+		elif "unholy bodies tip" in type:
+			var bla = rt.get_node(rt.gnLOREDs).cont["necro"]
+			rect_position = Vector2(
+				bla.rect_global_position.x + bla.rect_size.x + 10,
+				bla.rect_global_position.y
+			)
+		elif "item:" in type:
+			var bla = rt.get_node("m/v/LORED List/sc/v/s3/v/Inventory")
+			rect_position = Vector2(
+				bla.rect_global_position.x - rect_size.x - 10,
+				bla.rect_global_position.y + bla.rect_size.y - rect_size.y
+			)
 		elif "cac" in type:
 			
 			var pos : Vector2 = rt.get_node(rt.gnLOREDs).cont["cacodemons"].rect_global_position
@@ -304,7 +342,7 @@ func price_flash() -> void:
 	if price_flash_i == 0:
 		for x in cost_dict:
 			
-			if gv.r[x].isLargerThanOrEqualTo(cost_dict[x].t):
+			if gv.r[x].greater_equal(cost_dict[x].t):
 				continue
 			
 			if "buy lored" in type:
@@ -360,6 +398,11 @@ func define_key() -> void:
 	
 	cont["autobuyer"].get_node("VBoxContainer/set_key/HBoxContainer/check").pressed = gv.g[f].key_lored
 
+func item_tip(key: String):
+	
+	cont[key] = src.item_tip.instance()
+	cont[key].init(key)
+	add_child(cont[key])
 
 
 
@@ -394,7 +437,7 @@ func add_cost(key: String, cost: Dictionary):
 		var _name = ""
 		var _color = ""
 		if key == "cac":
-			_name = "cac"
+			_name = x.capitalize()
 			_color = Color(1,0,0)
 		cont[x].setup(key, x, _name, _color)
 		

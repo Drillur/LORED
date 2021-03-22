@@ -1,0 +1,17 @@
+[gd_scene format=2]
+
+[node name="Skill Tree" type="MarginContainer"]
+margin_right = 40.0
+margin_bottom = 40.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="blood" type="VBoxContainer" parent="."]
+margin_right = 40.0
+margin_bottom = 40.0
+custom_constants/separation = 10
+
+[node name="h0" type="HBoxContainer" parent="blood"]
+margin_right = 40.0
+custom_constants/separation = 10

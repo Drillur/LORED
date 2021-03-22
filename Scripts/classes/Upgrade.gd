@@ -6,6 +6,8 @@ extends "res://Scripts/classes/Purchasable.gd"
 var desc := Description.new("description")
 
 var effects := []
+var chain_key := ""
+var chain_length := 0
 
 var other = 0
 
@@ -30,7 +32,6 @@ var persist := 0
 # if 1, persist will save this upgrade from being reset on a reset_type 1 reset
 # but if s2 reset, while persist == 1, this upgrade WILL be reset
 
-var stage: int
 var normal: bool
 
 
@@ -45,11 +46,12 @@ func _init(
 	) -> void:
 	
 	name = _name
+	key = _name
 	desc.base = _desc
 	
 	type = _type
 	
-	stage = int(type[1])
+	stage = type[1]
 	normal = true if "n" == type[2] else false
 	
 	icon = _icon
@@ -65,8 +67,17 @@ func purchased():
 	
 	takeaway_price()
 	apply()
+	
+	if "rebuy" in type:
+		have = false
 
 func apply():
+	
+	if applied:
+		return
+	
+	if normal:
+		gv.stats.up_list["unowned s" + type[1] + "n"].erase(key)
 	
 	for e in effects:
 		e.apply(name)
@@ -79,6 +90,7 @@ func remove(reset := false):
 			e.reset(name)
 		else:
 			e.remove(name)
+	
 	applied = false
 
 
@@ -90,15 +102,17 @@ func takeaway_price():
 	
 	for c in cost:
 		gv.r[c].s(cost[c].t)
-		gv.emit_signal("lored_updated", c, "amount")
 
 func sync():
 	
-	for e in effects:
-		e.sync()
-	
+	sync_effects()
 	sync_cost()
 	sync_desc()
+
+func sync_effects():
+	
+	for e in effects:
+		e.sync()
 
 func refresh():
 	
@@ -162,6 +176,9 @@ func reset(reset_type := 0) -> bool:
 	
 	remove(true)
 	
+	if normal:
+		gv.stats.up_list["unowned s" + type[1] + "n"].append(key)
+	
 	have = false
 	active = true
 	
@@ -170,6 +187,5 @@ func reset(reset_type := 0) -> bool:
 func partial_reset():
 	
 	# for upgrades like IT'S GROWIN ON ME which needs to have its effect values reset
-	
 	for e in effects:
 		e.effect.reset()

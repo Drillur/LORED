@@ -25,7 +25,12 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="Timer" type="Timer" parent="."]
+wait_time = 0.015
+autostart = true
+
 [node name="icon" type="Sprite" parent="."]
 position = Vector2( -15, 10 )
 scale = Vector2( 0.75, 0.75 )
 texture = ExtResource( 3 )
+[connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]

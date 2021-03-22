@@ -2,7 +2,7 @@ extends MarginContainer
 
 
 
-const TOP_KEYS := ["malig", "tum", "spirit"]
+const TOP_KEYS := ["malig", "tum", "terror"]
 
 var cont := {}
 var src := {
@@ -25,14 +25,8 @@ func setup():
 		cont[g].setup(g)
 		cont[g].r_amount()
 		
-		var bla: String
-		match i:
-			1: bla = "malig"
-			2: bla = "tum"
-			3: bla = "spirit"
-		
-		get_node("s" + str(i)).add_child(cont[bla])
-		get_node("s" + str(i)).move_child(cont[bla], 0)
+		get_node("s" + str(i)).add_child(cont[g])
+		get_node("s" + str(i)).move_child(cont[g], 0)
 		
 		i += 1
 
@@ -44,7 +38,7 @@ func net(key: String, net: Array):
 		return
 	
 	# remove positive from list
-	if net[0].isLargerThan(net[1]):
+	if net[0].greater(net[1]):
 		if key in cont.keys():
 			cont[key].queue_free()
 			cont.erase(key)
@@ -61,11 +55,11 @@ func net(key: String, net: Array):
 		return
 	
 	# if 0 net, don't add
-	if Big.new(net[0]).s(net[1]).isEqualTo(0):
+	if Big.new(net[0]).s(net[1]).equal(0):
 		return
 	
 	# if not *too* negative, don't add
-	if net[1].isLessThan(Big.new(net[0])):
+	if net[1].less(Big.new(net[0])):
 		return
 	
 	# don't add if negative due to halt
