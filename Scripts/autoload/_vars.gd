@@ -3,11 +3,11 @@ extends Node
 
 # invoke with gv
 
-var hax_pow := 1.0 # 1.0 for normal
+const hax_pow := 1.0 # 1.0 for normal
 var fps: float
-const PLATFORM = "pc" # keep lower-case
-const s3_time := false #true
-const test_s3 := true
+const PLATFORM = "pc" # keep lower-case # "browser", "pc"
+const dev_mode := false
+const test_s3 := false
 const DEFAULT_KEY_LOREDS := ["stone", "conc", "malig", "water", "lead", "tree", "soil", "steel", "wire", "glass", "tum", "wood"]
 
 const PATCH_NOTES := {
@@ -15,15 +15,88 @@ const PATCH_NOTES := {
 	# [0] is if there are more changes made than can be listed (> 5)
 	# [0] determines if the /more Label node in Patch Version.tscn is visible
 	
+#	 "3.0.0": [
+#		false,
+#		"LOREDs now think out-loud and may speak to each other.",
+#	],
+	
+	"2.2.16": [
+		"Offline earnings have been removed; Offline Boost has been added. Check out the tooltip of the offline boost HUD for more info.",
+		"Fixed an issue that was causing the game to freeze after resetting.",
+		"The zoom slider can no longer be altered with the mouse wheel.",
+	],
+	
+	"2.2.15": [
+		"Changed button UI on upgrades and LOREDs. The intent is to make LORED upgrade buttons more clear, and to make it easier to tell when you can afford to upgrade a LORED or purchase an upgrade.",
+		"Improved the color blind mode. When enabled, LORED upgrade buttons and now also upgrade buttons have a checkbox that display when you can afford them.",
+		"Squished some buggies.",
+	],
+	
+	"2.2.14": [
+		"Fixed a bug that prevented the Windows version from importing saves.",
+		"Working on improving button design; changes made to upgrade and LORED upgrade buttons are WIP.",
+	],
+	
+	"2.2.13": [
+		"Offline earnings reduced from 1.0x to 0.25x.",
+		"Adjusted autobuyer logic. (Pretty sure it was busted from a change made in 2.2.8.)",
+		"Updated autobuyer tooltips!",
+		"Updated upgrade tooltips!",
+		"Fixed various bugs.",
+	],
+	
+	"2.2.12": [
+		"LOREDs no longer randomly freeze!",
+	],
+	
+	"2.2.11": [
+		"The Pulp LORED is no longer being bullied.",
+	],
+	
+	"2.2.10": [
+		"LOREDs now take the proper amount of resources, instead of 1.",
+		"Flying numbers no longer appear in the browser version, as they are too laggy.",
+	],
+	
+	"2.2.9": [
+		"Fixed the base fuel storage amounts of every LORED.",
+	],
+	
+	"2.2.8": [
+		"Attempted to fix a game-breaking issue.",
+	],
+	
+	"2.2.7": [
+		"The game no longer needs to be paused to select which Malignant or Radiative upgrades you want to purchase. Simply buy them as you go, and then to activate them, reset whenever you're ready.",
+		"Tasks no longer become incompletable.",
+		"You can no longer get a task for a LORED that cannot produce any resources. Example: Growth, before you've unlocked Joules.",
+		"After hard-resetting, you can no longer get a task for a LORED that you had unlocked in the previous save (until you unlock it again).",
+		"Balanced the difficulty and rewards of tasks.",
+		"LORED tooltips have been updated.",
+		"Progress bars no longer stutter or flash. :thumbsup:",
+		"Animations no longer stutter or flash. The Water LORED's animation has been fixed, too. :otherthumbsup:",
+		"Fixed timers!",
+	],
+	
+	"2.2.6": [
+		"Fixed a bug where tasks would not get removed upon a hard reset.",
+		"Fixed a bug where turning in A Million Reasons to Grind would crash the game.",
+	],
+	
+	"2.2.5": [
+		"Changed the base resolution to 1280x720.",
+		"The stretch mode of the entire game has changed to maintain its aspect ratio.",
+	],
+	
 	"2.2.4": [
-		false,
+		"Added a zoom option in the menu!",
+		"The under-the-hood workings of the script that runs tasks and quests has been re-written, so Tasks and Quests have received a fresh UI update!",
 		"Fixed a bug preventing access to Extra-normal upgrades.",
 		"Fixed a bunch of issues with the progress bars flashing or resetting prematurely.",
 		"Fixed an issue that allowed users to purchase Malignant or Radiative upgrades when they should not have been able to.",
 	],
 	
 	"2.2.3": [
-		false,
 		"Might have fixed an issue causing a crash when Metastasizing?",
 		"Possibly fixed some more softlocks.",
 		"Fixed a bug that prevented autobuyers from working when LOREDs are level 0.",
@@ -32,13 +105,11 @@ const PATCH_NOTES := {
 	],
 	
 	"2.2.2": [
-		false,
 		"Fixed a bug that was preventing some saves from loading.",
 		"Fixed inflated per-second values. They should now be accurate!",
 	],
 	
 	"2.2.1": [
-		false,
 		"Added an option called \"Afford check\" that will make it much clearer when you can afford to upgrade a LORED.",
 		"As for performance, the FPS dropdown has returned. Please try 5 FPS if your framerate is already 5 because maybe then it will be 6.",
 		"Additionally, many unnecessary loops and physics_process methods across the code have been removed.",
@@ -46,58 +117,47 @@ const PATCH_NOTES := {
 	],
 	
 	"2.2.0": [
-		false,
 		"Refactored the code for how LOREDs sync upgrade bonuses, resulting in improved performance.",
 		"Totally reworked the pacing of Stage 2.",
 		"Removed a bunch of boring upgrades."
 	],
 	
 	"2.1.4": [
-		false,
 		"In save texts, the version is now included in the encrypted code.",
 	],
 	"2.1.3": [
-		false,
 		"Definitely fixed the hard reset feature.",
 	],
 	"2.1.2": [
-		false,
 		"Once again, permanently fixed hard resetting so that it will always and forever work.",
 		"Removed the option to \"increase the FPS of every element by 10x\". Better performance options will come in the future.",
 	],
 	"2.1.1": [
-		false,
 		"Fixed a bug where some LORED UI elements would not update correctly.",
 		"Hard resetting will now correctly correctly reset everything.",
 	],
 	"2.1.0": [
-		false,
 		"Added this patch notes thingy!",
 		"Hard resetting will now correctly reset everything.",
 	],
 	
 	"2.0.4": [
-		false,
 		"LORED autobuyers will now not purchase if any of their ingredient LOREDs are on hold.",
 		"Updated the game icon to match the Itch.io thumbnail.",
 	],
 	"2.0.3": [
-		false,
 		"Fixed a bug where Metastasizing with both DUNKUS and CHUNKUS owned and active would not turn pending Malignant upgrades into owned upgrades.",
 	],
 	"2.0.2": [
-		false,
 		"Fixed bugs that were preventing the game from running.",
 	],
 	"2.0.1": [
-		false,
 		"Saves from 2.0 BETA (3) and earlier (until 1.x) will now load properly.",
 		"The upgrade menu button will now correctly only appear if the Welcome to LORED quest is complete.",
 		"The LORED Discord link has been shifted up in the menu.",
 		"Shadows on the Quest element and the Menu button have been reduced to not overlap the red line by them.",
 	],
 	"2.0.0": [
-		true,
 		"Limit Break has been re-worked.",
 		"LORED and upgrade UI have been re-designed.",
 		"Many performance improvements have been made.",
@@ -124,6 +184,8 @@ func _ready():
 const loreds_required_for_s2_autoup_upgrades_to_begin_purchasing := ["seed", "tree", "water", "soil", "humus", "sand", "glass", "liq", "steel", "hard", "axe", "wood", "draw","wire"]
 var s2_upgrades_may_be_autobought := false
 
+var fresh_run := true
+
 func check_for_the_s2_shit():
 	if s2_upgrades_may_be_autobought:
 		return
@@ -134,11 +196,26 @@ func check_for_the_s2_shit():
 	get_node("/root/Root").unlock_tab("s2n")
 
 const SRC := {
+	"alert": preload("res://Prefabs/alert.tscn"),
+	"emote": preload("res://Prefabs/lored/Emote.tscn"),
 	"flash": preload("res://Prefabs/Flash.tscn"),
+	
+	"task": preload("res://Prefabs/task/Task.tscn"),
 	"task entry": preload("res://Prefabs/tooltip/tip_lored_task_entry.tscn"),
 	"unholy body manager": preload("res://Prefabs/lored/necro bar.tscn"),
 	"unholy body manager bar": preload("res://Prefabs/lored/Necro Unholy Body Bar.tscn"),
 	"upgrade block": preload("res://Prefabs/tooltip/upgrade_block.tscn"),
+	
+	"price": preload("res://Prefabs/tooltip/price.tscn"),
+	
+	"tooltip/LORED": preload("res://Prefabs/tooltip/LORED.tscn"),
+	"tooltip/autobuyer": preload("res://Prefabs/tooltip/AutobuyerTooltip.tscn"),
+	"tooltip/upgrade": preload("res://Prefabs/tooltip/Upgrade Tooltip.tscn"),
+	"tooltip/offline boost": preload("res://Prefabs/tooltip/Off Tooltip.tscn"),
+	
+	"label": preload("res://Prefabs/template/Label.tscn"),
+	"job label": preload("res://Prefabs/template/job label.tscn"),
+	"button label": preload("res://Prefabs/template/Button Label.tscn"),
 }
 
 signal limit_break_leveled_up(which) # here -> Limit Break.gd
@@ -286,8 +363,6 @@ const sprite := {
 	# misc
 	"hold_true" : preload("res://Sprites/misc/hold_true.png"),
 	"hold_false" : preload("res://Sprites/misc/hold_false.png"),
-	
-	"true" : preload("res://Sprites/misc/bool.png"),
 	
 	"unknown" : preload("res://Sprites/misc/unknown.png"),
 	"copy" : preload("res://Sprites/tab/savetoclipboard.png"),
@@ -446,13 +521,15 @@ const COLORS := {
 	"exsanguinated beast": Color(0.88, .12, .35),
 	
 	"thewitchofloredelith": Color(0.937255, 0.501961, 0.776471),
-	"spike": Color(1, 0, 0),
+	"spike": Color(0.76, 0, 0),
+	"rare": Color(0.93, .84, 0),
+	"common": Color(0.35, 0.35, 0.35),
 	"s1n": Color(0.733333, 0.458824, 0.031373),
 	"s1m": Color(0.878431, 0.121569, 0.34902),
 	"s2n": Color(0.47451, 0.870588, 0.694118),
 	"s2m": Color(1, 0.541176, 0.541176),
-	"s1": Color(0.8, 0.8, 0.8),
-	"s2": Color(0.8, 0.8, 0.8),
+	"s1": Color(0.878431, 0.121569, 0.34902),
+	"s2": Color(1, 0.541176, 0.541176),
 	"s3": Color(0.8, 0.8, 0.8),
 	"s4": Color(0.8, 0.8, 0.8),
 	"copy": Color(0.8, 0.8, 0.8),
@@ -465,11 +542,6 @@ var open_upgrade_folder := "no"
 var stats : Statistics
 
 class Menu:
-	
-	# When metastasizing, menu.f = "no s1"
-	# when ... chemotherapying, menu.f = "no s2"
-	
-	var f := "ye"
 	var tab := "1"
 	var tab_vertical := [0, 0, 0, 0]
 	var option := {}
@@ -479,32 +551,19 @@ var menu := Menu.new()
 func time_remaining(
 	lored_key: String,
 	present_amount: Big,
-	total_amount: Big,
-	task_or_quest: bool) -> String:
+	total_amount: Big) -> String:
 	
 	
 	if gv.g[lored_key].halt:
-		return "=/="
+		return "Halt"
 	
 	
-	var net = gv.g[lored_key].net(true)
+	var net = gv.g[lored_key].net()
 	
 	if net[1].greater(net[0]):
 		return "-"
 	
 	net = net[0].s(net[1])
-	
-	var less: Big = Big.new(0)
-	if not gv.g[lored_key].hold and not task_or_quest:
-		for x in gv.g[lored_key].used_by:
-			if not gv.g[x].active():
-				continue
-			less.a(Big.new(gv.g[x].d.t).d(gv.g[x].speed.t).m(gv.g[x].b[lored_key].t))
-	
-	if less.greater(net):
-		return "-"
-	
-	net.s(less)
 	
 	if net.equal(0):
 		return "!?"
@@ -513,12 +572,19 @@ func time_remaining(
 	var incoming_amount := Big.new(0)
 	
 	
-	if not gv.g[lored_key].progress.b == 1.0:
+	if gv.g[lored_key].working:
 		incoming_amount.a(gv.g[lored_key].d.t)
 	
-	return big_to_time(Big.new(delta).s(incoming_amount).d(net))
+	return parse_time(Big.new(delta).s(incoming_amount).d(net))
 
-func big_to_time(big: Big) -> String:
+func parse_time(value) -> String:
+	
+	if typeof(value) == TYPE_OBJECT:
+		return parse_time_big(value)
+	else:
+		return parse_time_float(value)
+
+func parse_time_big(big: Big) -> String:
 	
 	# big should be equal to the amount of seconds required to complete the objective
 	
@@ -563,6 +629,45 @@ func big_to_time(big: Big) -> String:
 	
 	return big.roundDown().toString() + "mil"
 
+func parse_time_float(val: float) -> String:
+	
+	if val < 1:
+		return "!"
+	
+	if val < 60:
+		return str(floor(val)) + "s"
+	
+	val /= 60
+	
+	if val < 60:
+		return str(floor(val)) + "m"
+	
+	val /= 60
+	
+	if val < 24:
+		return str(floor(val)) + "h"
+	
+	val /= 24
+	
+	if val < 365:
+		return str(floor(val)) + "d"
+	
+	val /= 365
+	
+	if val < 10:
+		return str(floor(val)) + "y"
+	
+	val /= 10
+	
+	if val < 100:
+		return str(floor(val)) + "dec"
+	
+	val /= 100
+	
+	if val < 1000:
+		return str(floor(val)) + "cen"
+	
+	return str(floor(val)) + "mil"
 
 #class PowersOf10:
 #
@@ -669,9 +774,9 @@ enum Quest {
 	CRINGEY_PROGRESS,
 	CANCER_LORD,
 	HORSE_DOODIE,
-	A_DARK_DISCOVERY,
 	
 	# s3
+	A_DARK_DISCOVERY,
 	HUNT, WITCH, BLOOD, NECRO,
 	
 	# add new quests here
@@ -696,11 +801,15 @@ enum QuestReward {
 enum TaskRequirement {
 	RESOURCE_PRODUCTION,
 	SPELL_CAST,
-	SPIKE_TASKS_COMPLETED,
 	RARE_OR_SPIKE_TASKS_COMPLETED,
 	TASKS_COMPLETED,
 	UPGRADE_PURCHASED,
+	UPGRADES_PURCHASED,
 	LORED_UPGRADED,
+}
+enum Job{
+	BORER_DIG,
+	FURNACE_COOK,
 }
 
 var item_names := [
@@ -746,3 +855,15 @@ var max_frame = {
 	"tar":  29,
 	"oil":  8,
 }
+
+var off_boost := false
+var offline_time := 0.0
+var off_boost_time: float
+var off_d := 1.0
+var off_locked := false
+var receives_off_boost := [
+	false,
+	false,
+	false,
+	false
+]

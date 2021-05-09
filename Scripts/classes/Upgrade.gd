@@ -18,11 +18,13 @@ var requirements_met := true
 
 var refundable := false
 var icon: String # used to be mlt (main lored target)
+var stage_key: String
 var color: Color
 var unlocked := false
 var times_purchased := 0
 
-
+var manager: MarginContainer
+var active_tooltip: MarginContainer
 
 var have := false
 var active := true
@@ -52,6 +54,7 @@ func _init(
 	type = _type
 	
 	stage = type[1]
+	stage_key = type.split(" ")[0]
 	normal = true if "n" == type[2] else false
 	
 	icon = _icon
@@ -82,6 +85,14 @@ func apply():
 	for e in effects:
 		e.apply(name)
 	applied = true
+
+func refund():
+	if not refundable:
+		return
+	refundable = false
+	sync_cost()
+	for c in cost:
+		gv.r[c].a(cost[c].t)
 
 func remove(reset := false):
 	
@@ -133,6 +144,8 @@ func sync_desc():
 	
 	desc.f = desc.base
 	
+	
+	
 	if "{other}" in desc.f:
 		desc.f = desc.f.format({"other": other.print()})
 	
@@ -179,6 +192,7 @@ func reset(reset_type := 0) -> bool:
 	if normal:
 		gv.stats.up_list["unowned s" + type[1] + "n"].append(key)
 	
+	refund()
 	have = false
 	active = true
 	

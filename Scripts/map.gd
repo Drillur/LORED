@@ -48,13 +48,11 @@ func _input(ev):
 			rt.get_node("misc/menu").hide()
 		
 		var upcon = rt.get_node(rt.gnupcon)
-		if rt.get_node(rt.gnupcon).visible and mouse_out(pos["upgrade button"], size["upgrade button"]) and mouse_out(upcon.rect_global_position, upcon.rect_size):
+		if rt.get_node(rt.gnupcon).visible and mouse_out(pos["upgrade button"], size["upgrade button"]) and mouse_out(upcon.rect_global_position, upcon.rect_size * rt.scale):
 			rt.get_node(rt.gnupcon).hide()
 			rt.get_node(rt.gnupcon).go_back()
 		
 		status = "no"
 
-func mouse_out(pos:Vector2, size:Vector2) -> bool:
-	if ((mpos.x > pos.x + size.x) or (mpos.x < pos.x)) or ((mpos.y < pos.y) or (mpos.y > pos.y + size.y)):
-		return true
-	return false
+func mouse_out(_pos:Vector2, _size:Vector2) -> bool:
+	return ((mpos.x > _pos.x + _size.x) or (mpos.x < _pos.x)) or ((mpos.y < _pos.y) or (mpos.y > _pos.y + _size.y))

@@ -8,6 +8,11 @@ var content := {}
 var set_blah := {}
 var fps := {}
 
+onready var gn := {
+	save = get_node("ScrollContainer/MarginContainer/VBoxContainer/save/CenterContainer/VBoxContainer/autosave/bar"),
+	save_f = get_node("ScrollContainer/MarginContainer/VBoxContainer/save/CenterContainer/VBoxContainer/autosave/bar/f"),
+	save_label = get_node("ScrollContainer/MarginContainer/VBoxContainer/save/CenterContainer/VBoxContainer/autosave/Label"),
+}
 
 
 
@@ -27,14 +32,9 @@ func _ready():
 		fps["base"] = 0.0
 		
 		var node = $ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/fps
-		node.add_item("1 fps") # 0
-		node.add_item("5 fps")
-		node.add_item("10 fps")
-		node.add_item("15 fps") # 3
-		node.add_item("20 fps") # 4
-		node.add_item("25 fps") # 5
-		node.add_item("30 fps") # 6
-		node.add_item("60 fps") # 7
+		node.add_item("15 fps")
+		node.add_item("30 fps")
+		node.add_item("60 fps")
 		node.select(gv.menu.option["FPS"])
 		_on_fps_item_selected(gv.menu.option["FPS"])
 		
@@ -46,6 +46,10 @@ func _ready():
 	
 	# ref
 	if true:
+		
+		if gv.PLATFORM == "pc":
+			get_node("ScrollContainer/MarginContainer/VBoxContainer/copyright").hide()
+			get_node("ScrollContainer/MarginContainer/VBoxContainer/line2").hide()
 		
 		$ScrollContainer/MarginContainer/VBoxContainer/stats/CenterContainer/VBoxContainer/b_runs.hide()
 		$ScrollContainer/MarginContainer/VBoxContainer/version.text = ProjectSettings.get_setting("application/config/Version")
@@ -60,6 +64,10 @@ func _ready():
 		position = Vector2(get_viewport_rect().size.x / 2 - $ScrollContainer.rect_size.x / 2, get_viewport_rect().size.y / 2 - $ScrollContainer.rect_size.y / 2)
 		$ScrollContainer/MarginContainer/VBoxContainer/options.hide()
 		$ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/tooltips.hide()
+		if gv.PLATFORM == "browser":
+			gv.menu.option["flying_numbers"] = false
+			$ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/flying_numbers.pressed = false
+			$ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/flying_numbers.hide()
 		if not $ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/flying_numbers.pressed:
 			$ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/crits_only.hide()
 		
@@ -99,6 +107,13 @@ func init(f: Dictionary) -> void:
 	# animations
 	$ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/animations.pressed = f["animations"]
 	
+	# zoom
+	if "zoom" in f:
+		get_node("ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/Zoom").value = f["zoom"]
+	
+	
+	
+	
 	# on_save
 	if true:
 		
@@ -120,6 +135,10 @@ func init(f: Dictionary) -> void:
 	# tooltip_fuel
 	$ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/tooltips/CenterContainer/VBoxContainer/fuel.pressed = f["tooltip_fuel"]
 	
+	# color blind
+	$'ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/color blind'.pressed = f["color blind"]
+	color_blind(f["color blind"])
+	
 	# tooltip_autobuyer
 	$ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/tooltips/CenterContainer/VBoxContainer/autobuyer.pressed = f["tooltip_autobuyer"]
 	get_node("ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/tooltips/CenterContainer/VBoxContainer/cost only").visible = not f["tooltip_autobuyer"]
@@ -128,12 +147,12 @@ func init(f: Dictionary) -> void:
 	# ref
 	if true:
 		
-		$ScrollContainer/MarginContainer/VBoxContainer/stats/CenterContainer/VBoxContainer/runs/CenterContainer/VBoxContainer/s1count.add_color_override("font_color", gv.g["malig"].color)
-		$ScrollContainer/MarginContainer/VBoxContainer/stats/CenterContainer/VBoxContainer/runs/CenterContainer/VBoxContainer/s1time.add_color_override("font_color", gv.g["malig"].color)
-		$ScrollContainer/MarginContainer/VBoxContainer/stats/CenterContainer/VBoxContainer/runs/CenterContainer/VBoxContainer/s1last_time.add_color_override("font_color", gv.g["malig"].color)
-		$ScrollContainer/MarginContainer/VBoxContainer/stats/CenterContainer/VBoxContainer/runs/CenterContainer/VBoxContainer/s2count.add_color_override("font_color", gv.g["tum"].color)
-		$ScrollContainer/MarginContainer/VBoxContainer/stats/CenterContainer/VBoxContainer/runs/CenterContainer/VBoxContainer/s2time.add_color_override("font_color", gv.g["tum"].color)
-		$ScrollContainer/MarginContainer/VBoxContainer/stats/CenterContainer/VBoxContainer/runs/CenterContainer/VBoxContainer/s2last_time.add_color_override("font_color", gv.g["tum"].color)
+		$ScrollContainer/MarginContainer/VBoxContainer/stats/CenterContainer/VBoxContainer/runs/CenterContainer/VBoxContainer/s1count.add_color_override("font_color", gv.COLORS["malig"])
+		$ScrollContainer/MarginContainer/VBoxContainer/stats/CenterContainer/VBoxContainer/runs/CenterContainer/VBoxContainer/s1time.add_color_override("font_color", gv.COLORS["malig"])
+		$ScrollContainer/MarginContainer/VBoxContainer/stats/CenterContainer/VBoxContainer/runs/CenterContainer/VBoxContainer/s1last_time.add_color_override("font_color", gv.COLORS["malig"])
+		$ScrollContainer/MarginContainer/VBoxContainer/stats/CenterContainer/VBoxContainer/runs/CenterContainer/VBoxContainer/s2count.add_color_override("font_color", gv.COLORS["tum"])
+		$ScrollContainer/MarginContainer/VBoxContainer/stats/CenterContainer/VBoxContainer/runs/CenterContainer/VBoxContainer/s2time.add_color_override("font_color", gv.COLORS["tum"])
+		$ScrollContainer/MarginContainer/VBoxContainer/stats/CenterContainer/VBoxContainer/runs/CenterContainer/VBoxContainer/s2last_time.add_color_override("font_color", gv.COLORS["tum"])
 		
 		$ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/on_save.hide()
 
@@ -250,14 +269,9 @@ func _on_menu_hide():
 func _on_fps_item_selected(id):
 	gv.menu.option["FPS"] = id
 	match id:
-		0: gv.fps = 1.0
-		1: gv.fps = 0.2
-		2: gv.fps = 0.1
-		3: gv.fps = 0.0666
-		4: gv.fps = 0.05
-		5: gv.fps = 0.04
-		6: gv.fps = 0.0333
-		7: gv.fps = 0.01666
+		0: gv.fps = 0.0666 # 15
+		1: gv.fps = 0.0333 # 30
+		2: gv.fps = 0.0166 # 60
 func _on_notation_type_item_selected(id):
 	gv.menu.option["notation_type"] = id
 
@@ -279,8 +293,8 @@ func b_option_pressed(option: String, node) -> void:
 	gv.menu.option[option] = node.pressed
 	
 	match option:
-		"afford check":
-			rt.get_node(rt.gnLOREDs).display_afford_checks()
+		"color blind":
+			color_blind(node.pressed)
 		"tooltip_autobuyer":
 			get_node("ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/tooltips/CenterContainer/VBoxContainer/cost only").visible = not node.pressed
 		"performance":
@@ -300,11 +314,12 @@ func _on_menu_visibility_changed():
 	if not $ScrollContainer/MarginContainer/VBoxContainer/save.visible: return
 	r_save_bar()
 
-func r_save_bar(f = get_node("ScrollContainer/MarginContainer/VBoxContainer/save/CenterContainer/VBoxContainer/CenterContainer/TextureProgress")) -> void:
-	f.value = rt.save_fps * 10
+func r_save_bar() -> void:
+	gn.save_f.rect_size.x = min(rt.save_fps / 30 * gn.save.rect_size.x, gn.save.rect_size.x)
 
 func _on_b_save_now_pressed():
-	rt.save_fps = 10.0
+	rt.save_fps = 0.0
+	rt.e_save()
 
 func _on_delete_pressed():
 	
@@ -355,10 +370,44 @@ func _on_Discord_pressed() -> void:
 
 
 
+func _on_Zoom_value_changed(value: float):#, ignore_conversion = false) -> void:
+	gv.menu.option["zoom"] = value
+	match int(value):
+		0: value = 0.75
+		10: value = 0.8
+		20: value = 0.85
+		30: value = 0.9
+		40: value = 0.95
+		50: value = 1.00
+		60: value = 1.05
+		70: value = 1.1
+		80: value = 1.15
+		90: value = 1.2
+		100: value = 1.25
+	get_node("ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/zoom_flair").text = "Zoom: " + str(value) + "x"
+	rt.scale = Vector2(value, value)
+	rt.r_window_size_changed()
 
-func _on_FixNAN_pressed() -> void:
-	fix_inf_nums()
-
-func fix_inf_nums():
+func update_cur_session(duration: int):
 	
-	gv.lb_xp.f = Big.new(0)
+	if get_node("ScrollContainer/MarginContainer/VBoxContainer/stats").visible:
+		var time = convert_int_to_time(duration)
+		get_node("ScrollContainer/MarginContainer/VBoxContainer/stats/CenterContainer/VBoxContainer/cur_session").text = "Current session duration: " + time
+
+func convert_int_to_time(val: int) -> String:
+	if val < 60:
+		return str(val)
+	
+	if val < 3600:
+		var remainder = val % 60
+		val = floor(val / 60)
+		return str(val) + ":" + str("%02d" % remainder)
+	
+	var _min = (val % 3600) / 60 # minutes
+	val = floor(val / 3600) # hours
+	return str(val) + ":" + str("%02d" % _min)
+
+func color_blind(_set: bool) -> void:
+	for x in gv.g:
+		gv.g[x].manager.color_blind.visible = _set
+	rt.get_node(rt.gnupcon).r_update()

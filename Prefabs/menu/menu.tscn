@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=2]
+[gd_scene load_steps=32 format=2]
 
 [ext_resource path="res://Styles/Labels/Button.tres" type="DynamicFont" id=1]
 [ext_resource path="res://Styles/Labels/whatevertheseneedseveremanagement.tres" type="DynamicFont" id=2]
@@ -8,7 +8,7 @@
 [ext_resource path="res://Scripts/menu/menu.gd" type="Script" id=6]
 [ext_resource path="res://Fonts/Roboto-BlackItalic.ttf" type="DynamicFontData" id=7]
 [ext_resource path="res://Styles/Labels/Desc.tres" type="DynamicFont" id=8]
-[ext_resource path="res://Sprites/misc/horizontal_bar_textured.png" type="Texture" id=9]
+[ext_resource path="res://Fonts/Roboto-Black.ttf" type="DynamicFontData" id=9]
 [ext_resource path="res://Sprites/misc/dailystickfigure.png" type="Texture" id=10]
 [ext_resource path="res://Sprites/tab/savedelete.png" type="Texture" id=11]
 [ext_resource path="res://Styles/Containers/bg ScrollContainer.tres" type="StyleBox" id=12]
@@ -54,23 +54,41 @@ border_width_right = 1
 border_color = Color( 0.380392, 0.6, 0.270588, 0.501961 )
 
 [sub_resource type="StyleBoxFlat" id=6]
-bg_color = Color( 1, 1, 1, 0.0313726 )
-draw_center = false
-border_width_left = 1
-border_width_right = 1
-border_color = Color( 0.75, 0.64, 0.04, 0.5 )
+bg_color = Color( 0.14902, 0.14902, 0.14902, 1 )
+shadow_size = 2
 
 [sub_resource type="StyleBoxFlat" id=7]
+bg_color = Color( 0.411765, 0.411765, 0.411765, 1 )
+
+[sub_resource type="StyleBoxFlat" id=8]
+bg_color = Color( 1, 1, 1, 1 )
+
+[sub_resource type="StyleBoxFlat" id=9]
 bg_color = Color( 1, 1, 1, 0.0313726 )
 draw_center = false
 border_width_left = 1
 border_width_right = 1
 border_color = Color( 0.75, 0.64, 0.04, 0.5 )
 
-[sub_resource type="StyleBoxFlat" id=8]
+[sub_resource type="StyleBoxFlat" id=10]
+bg_color = Color( 1, 1, 1, 0.0313726 )
+draw_center = false
+border_width_left = 1
+border_width_right = 1
+border_color = Color( 0.75, 0.64, 0.04, 0.5 )
+
+[sub_resource type="StyleBoxFlat" id=11]
 bg_color = Color( 0.6, 0.6, 0.6, 0.364706 )
 
-[sub_resource type="StyleBoxFlat" id=9]
+[sub_resource type="DynamicFont" id=12]
+size = 12
+outline_size = 1
+outline_color = Color( 0, 0, 0, 1 )
+extra_spacing_top = -2
+extra_spacing_bottom = -2
+font_data = ExtResource( 9 )
+
+[sub_resource type="StyleBoxFlat" id=13]
 draw_center = false
 
 [node name="menu" type="Node2D"]
@@ -96,7 +114,7 @@ __meta__ = {
 
 [node name="MarginContainer" type="MarginContainer" parent="ScrollContainer"]
 margin_right = 150.0
-margin_bottom = 760.0
+margin_bottom = 869.0
 mouse_filter = 1
 size_flags_horizontal = 2
 size_flags_vertical = 2
@@ -106,14 +124,14 @@ __meta__ = {
 
 [node name="flair" type="Panel" parent="ScrollContainer/MarginContainer"]
 margin_right = 150.0
-margin_bottom = 760.0
+margin_bottom = 869.0
 rect_min_size = Vector2( 10, 10 )
 mouse_filter = 1
 custom_styles/panel = SubResource( 2 )
 
 [node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer/MarginContainer"]
 margin_right = 150.0
-margin_bottom = 760.0
+margin_bottom = 869.0
 
 [node name="title" type="Label" parent="ScrollContainer/MarginContainer/VBoxContainer"]
 margin_right = 150.0
@@ -170,25 +188,25 @@ __meta__ = {
 [node name="options" type="MarginContainer" parent="ScrollContainer/MarginContainer/VBoxContainer"]
 margin_top = 92.0
 margin_right = 150.0
-margin_bottom = 358.0
+margin_bottom = 391.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="flair" type="Panel" parent="ScrollContainer/MarginContainer/VBoxContainer/options"]
 margin_right = 150.0
-margin_bottom = 266.0
+margin_bottom = 299.0
 rect_min_size = Vector2( 10, 10 )
 custom_styles/panel = SubResource( 4 )
 
 [node name="CenterContainer" type="CenterContainer" parent="ScrollContainer/MarginContainer/VBoxContainer/options"]
 margin_right = 150.0
-margin_bottom = 266.0
+margin_bottom = 299.0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer"]
 margin_left = 17.0
 margin_right = 132.0
-margin_bottom = 266.0
+margin_bottom = 299.0
 
 [node name="fps" type="OptionButton" parent="ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer"]
 margin_right = 115.0
@@ -291,26 +309,44 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="afford check" type="CheckBox" parent="ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer"]
+[node name="color blind" type="CheckBox" parent="ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer"]
 margin_top = 164.0
 margin_right = 115.0
 margin_bottom = 188.0
-hint_tooltip = "A checkbox on LORED purchase buttons that get automatically marked when you can afford that LORED."
 focus_mode = 0
 custom_fonts/font = ExtResource( 2 )
 custom_colors/font_color = Color( 0.4, 0.4, 0.4, 1 )
 custom_colors/font_color_hover = Color( 0.596078, 0.596078, 0.596078, 1 )
 custom_colors/font_color_pressed = Color( 0.498039, 0.498039, 0.498039, 1 )
-enabled_focus_mode = 0
-text = "Afford check"
+text = "Color blind"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="b_on_save" type="Button" parent="ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer"]
+[node name="zoom_flair" type="Label" parent="ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer"]
 margin_top = 192.0
 margin_right = 115.0
-margin_bottom = 227.0
+margin_bottom = 201.0
+hint_tooltip = "Hint: use the mouse wheel to change this."
+custom_fonts/font = ExtResource( 2 )
+custom_colors/font_color = Color( 0.596078, 0.596078, 0.596078, 1 )
+text = "Zoom: 1x"
+align = 1
+
+[node name="Zoom" type="HSlider" parent="ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer"]
+margin_top = 205.0
+margin_right = 115.0
+margin_bottom = 221.0
+hint_tooltip = "Hint: use the mouse wheel to change this."
+step = 10.0
+value = 50.0
+rounded = true
+scrollable = false
+
+[node name="b_on_save" type="Button" parent="ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer"]
+margin_top = 225.0
+margin_right = 115.0
+margin_bottom = 260.0
 rect_min_size = Vector2( 90, 35 )
 focus_mode = 0
 mouse_default_cursor_shape = 2
@@ -403,9 +439,9 @@ __meta__ = {
 }
 
 [node name="b_tooltips" type="Button" parent="ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer"]
-margin_top = 231.0
+margin_top = 264.0
 margin_right = 115.0
-margin_bottom = 266.0
+margin_bottom = 299.0
 rect_min_size = Vector2( 90, 35 )
 focus_mode = 0
 mouse_default_cursor_shape = 2
@@ -540,9 +576,9 @@ __meta__ = {
 }
 
 [node name="b_save" type="Button" parent="ScrollContainer/MarginContainer/VBoxContainer"]
-margin_top = 362.0
+margin_top = 395.0
 margin_right = 150.0
-margin_bottom = 397.0
+margin_bottom = 430.0
 rect_min_size = Vector2( 150, 35 )
 focus_mode = 0
 mouse_default_cursor_shape = 2
@@ -572,57 +608,86 @@ __meta__ = {
 visible = false
 margin_top = 131.0
 margin_right = 150.0
-margin_bottom = 554.0
+margin_bottom = 552.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="flair" type="Panel" parent="ScrollContainer/MarginContainer/VBoxContainer/save"]
 margin_right = 150.0
-margin_bottom = 423.0
+margin_bottom = 421.0
 rect_min_size = Vector2( 10, 10 )
 custom_styles/panel = SubResource( 5 )
 
 [node name="CenterContainer" type="CenterContainer" parent="ScrollContainer/MarginContainer/VBoxContainer/save"]
 margin_right = 150.0
-margin_bottom = 423.0
+margin_bottom = 421.0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer/MarginContainer/VBoxContainer/save/CenterContainer"]
 margin_left = 30.0
 margin_right = 120.0
-margin_bottom = 423.0
+margin_bottom = 421.0
 
-[node name="Label" type="Label" parent="ScrollContainer/MarginContainer/VBoxContainer/save/CenterContainer/VBoxContainer"]
+[node name="autosave" type="MarginContainer" parent="ScrollContainer/MarginContainer/VBoxContainer/save/CenterContainer/VBoxContainer"]
 margin_right = 90.0
-margin_bottom = 15.0
-rect_min_size = Vector2( 0, 15 )
+margin_bottom = 25.0
+
+[node name="bar" type="Panel" parent="ScrollContainer/MarginContainer/VBoxContainer/save/CenterContainer/VBoxContainer/autosave"]
+margin_right = 90.0
+margin_bottom = 25.0
+rect_min_size = Vector2( 68, 5 )
+mouse_filter = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_styles/panel = SubResource( 6 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="f" type="Panel" parent="ScrollContainer/MarginContainer/VBoxContainer/save/CenterContainer/VBoxContainer/autosave/bar"]
+modulate = Color( 0.380392, 0.6, 0.270588, 1 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = -63.0
+rect_min_size = Vector2( 2, 0 )
+mouse_filter = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+custom_styles/panel = SubResource( 7 )
+__meta__ = {
+"_edit_group_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="flair" type="Panel" parent="ScrollContainer/MarginContainer/VBoxContainer/save/CenterContainer/VBoxContainer/autosave/bar/f"]
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -2.0
+rect_min_size = Vector2( 2, 0 )
+mouse_filter = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+custom_styles/panel = SubResource( 8 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="ScrollContainer/MarginContainer/VBoxContainer/save/CenterContainer/VBoxContainer/autosave"]
+margin_right = 90.0
+margin_bottom = 25.0
+rect_min_size = Vector2( 0, 25 )
 size_flags_vertical = 1
 custom_fonts/font = ExtResource( 2 )
 custom_colors/font_color = Color( 0.498039, 0.498039, 0.498039, 1 )
-text = "Auto-saving!"
+text = "Auto-saving."
 align = 1
 valign = 1
 
-[node name="CenterContainer" type="CenterContainer" parent="ScrollContainer/MarginContainer/VBoxContainer/save/CenterContainer/VBoxContainer"]
-margin_top = 19.0
-margin_right = 90.0
-margin_bottom = 27.0
-
-[node name="TextureProgress" type="TextureProgress" parent="ScrollContainer/MarginContainer/VBoxContainer/save/CenterContainer/VBoxContainer/CenterContainer"]
-margin_left = 13.0
-margin_right = 77.0
-margin_bottom = 8.0
-step = 0.1
-value = 50.0
-texture_under = ExtResource( 9 )
-texture_progress = ExtResource( 9 )
-tint_under = Color( 0.38, 0.6, 0.27, 0.5 )
-tint_progress = Color( 0.380392, 0.6, 0.270588, 1 )
-
 [node name="b_save_now" type="Button" parent="ScrollContainer/MarginContainer/VBoxContainer/save/CenterContainer/VBoxContainer"]
-margin_top = 31.0
+margin_top = 29.0
 margin_right = 90.0
-margin_bottom = 66.0
+margin_bottom = 64.0
 rect_min_size = Vector2( 90, 35 )
 focus_mode = 0
 mouse_default_cursor_shape = 2
@@ -650,9 +715,9 @@ __meta__ = {
 }
 
 [node name="export_save" type="Button" parent="ScrollContainer/MarginContainer/VBoxContainer/save/CenterContainer/VBoxContainer"]
-margin_top = 70.0
+margin_top = 68.0
 margin_right = 90.0
-margin_bottom = 105.0
+margin_bottom = 103.0
 rect_min_size = Vector2( 90, 35 )
 focus_mode = 0
 mouse_default_cursor_shape = 2
@@ -680,9 +745,9 @@ __meta__ = {
 }
 
 [node name="import_save" type="Button" parent="ScrollContainer/MarginContainer/VBoxContainer/save/CenterContainer/VBoxContainer"]
-margin_top = 109.0
+margin_top = 107.0
 margin_right = 90.0
-margin_bottom = 144.0
+margin_bottom = 142.0
 rect_min_size = Vector2( 90, 35 )
 focus_mode = 0
 mouse_default_cursor_shape = 2
@@ -710,9 +775,9 @@ __meta__ = {
 }
 
 [node name="b_print_save" type="Button" parent="ScrollContainer/MarginContainer/VBoxContainer/save/CenterContainer/VBoxContainer"]
-margin_top = 148.0
+margin_top = 146.0
 margin_right = 90.0
-margin_bottom = 188.0
+margin_bottom = 186.0
 rect_min_size = Vector2( 90, 40 )
 focus_mode = 0
 mouse_default_cursor_shape = 2
@@ -741,9 +806,9 @@ __meta__ = {
 }
 
 [node name="b_delete_save_now2" type="Button" parent="ScrollContainer/MarginContainer/VBoxContainer/save/CenterContainer/VBoxContainer"]
-margin_top = 192.0
+margin_top = 190.0
 margin_right = 90.0
-margin_bottom = 227.0
+margin_bottom = 225.0
 rect_min_size = Vector2( 90, 35 )
 focus_mode = 0
 mouse_default_cursor_shape = 2
@@ -770,9 +835,9 @@ __meta__ = {
 }
 
 [node name="b_delete_save_now3" type="Button" parent="ScrollContainer/MarginContainer/VBoxContainer/save/CenterContainer/VBoxContainer"]
-margin_top = 231.0
+margin_top = 229.0
 margin_right = 90.0
-margin_bottom = 271.0
+margin_bottom = 269.0
 rect_min_size = Vector2( 90, 40 )
 focus_mode = 0
 mouse_default_cursor_shape = 2
@@ -801,9 +866,9 @@ __meta__ = {
 }
 
 [node name="b_delete_save_now4" type="Button" parent="ScrollContainer/MarginContainer/VBoxContainer/save/CenterContainer/VBoxContainer"]
-margin_top = 275.0
+margin_top = 273.0
 margin_right = 90.0
-margin_bottom = 315.0
+margin_bottom = 313.0
 rect_min_size = Vector2( 90, 40 )
 focus_mode = 0
 mouse_default_cursor_shape = 2
@@ -832,9 +897,9 @@ __meta__ = {
 }
 
 [node name="b_delete_save_now5" type="Button" parent="ScrollContainer/MarginContainer/VBoxContainer/save/CenterContainer/VBoxContainer"]
-margin_top = 319.0
+margin_top = 317.0
 margin_right = 90.0
-margin_bottom = 359.0
+margin_bottom = 357.0
 rect_min_size = Vector2( 90, 40 )
 focus_mode = 0
 mouse_default_cursor_shape = 2
@@ -865,9 +930,9 @@ __meta__ = {
 
 [node name="delete" type="Button" parent="ScrollContainer/MarginContainer/VBoxContainer/save/CenterContainer/VBoxContainer"]
 margin_left = 15.0
-margin_top = 363.0
+margin_top = 361.0
 margin_right = 75.0
-margin_bottom = 423.0
+margin_bottom = 421.0
 rect_min_size = Vector2( 60, 60 )
 focus_mode = 0
 mouse_default_cursor_shape = 2
@@ -888,9 +953,9 @@ texture = ExtResource( 11 )
 centered = false
 
 [node name="b_stats" type="Button" parent="ScrollContainer/MarginContainer/VBoxContainer"]
-margin_top = 401.0
+margin_top = 434.0
 margin_right = 150.0
-margin_bottom = 436.0
+margin_bottom = 469.0
 rect_min_size = Vector2( 150, 35 )
 focus_mode = 0
 mouse_default_cursor_shape = 2
@@ -920,25 +985,25 @@ __meta__ = {
 visible = false
 margin_top = 170.0
 margin_right = 150.0
-margin_bottom = 418.0
+margin_bottom = 273.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="flair" type="Panel" parent="ScrollContainer/MarginContainer/VBoxContainer/stats"]
 margin_right = 150.0
-margin_bottom = 248.0
+margin_bottom = 103.0
 rect_min_size = Vector2( 10, 10 )
-custom_styles/panel = SubResource( 6 )
+custom_styles/panel = SubResource( 9 )
 
 [node name="CenterContainer" type="CenterContainer" parent="ScrollContainer/MarginContainer/VBoxContainer/stats"]
 margin_right = 150.0
-margin_bottom = 248.0
+margin_bottom = 103.0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer/MarginContainer/VBoxContainer/stats/CenterContainer"]
 margin_left = 7.0
 margin_right = 142.0
-margin_bottom = 248.0
+margin_bottom = 103.0
 
 [node name="b_runs" type="Button" parent="ScrollContainer/MarginContainer/VBoxContainer/stats/CenterContainer/VBoxContainer"]
 margin_right = 135.0
@@ -968,16 +1033,17 @@ __meta__ = {
 }
 
 [node name="runs" type="MarginContainer" parent="ScrollContainer/MarginContainer/VBoxContainer/stats/CenterContainer/VBoxContainer"]
-margin_top = 39.0
+visible = false
+margin_top = 68.0
 margin_right = 135.0
-margin_bottom = 209.0
+margin_bottom = 238.0
 rect_min_size = Vector2( 135, 0 )
 
 [node name="flair" type="Panel" parent="ScrollContainer/MarginContainer/VBoxContainer/stats/CenterContainer/VBoxContainer/runs"]
 margin_right = 135.0
 margin_bottom = 170.0
 rect_min_size = Vector2( 10, 10 )
-custom_styles/panel = SubResource( 7 )
+custom_styles/panel = SubResource( 10 )
 
 [node name="CenterContainer" type="CenterContainer" parent="ScrollContainer/MarginContainer/VBoxContainer/stats/CenterContainer/VBoxContainer/runs"]
 margin_right = 135.0
@@ -1061,9 +1127,9 @@ valign = 1
 autowrap = true
 
 [node name="bresources" type="Button" parent="ScrollContainer/MarginContainer/VBoxContainer/stats/CenterContainer/VBoxContainer"]
-margin_top = 213.0
+margin_top = 39.0
 margin_right = 135.0
-margin_bottom = 248.0
+margin_bottom = 74.0
 rect_min_size = Vector2( 135, 35 )
 focus_mode = 0
 mouse_default_cursor_shape = 2
@@ -1099,7 +1165,7 @@ rect_min_size = Vector2( 135, 0 )
 margin_right = 135.0
 margin_bottom = 10.0
 rect_min_size = Vector2( 10, 10 )
-custom_styles/panel = SubResource( 7 )
+custom_styles/panel = SubResource( 10 )
 
 [node name="CenterContainer" type="CenterContainer" parent="ScrollContainer/MarginContainer/VBoxContainer/stats/CenterContainer/VBoxContainer/resources"]
 margin_right = 135.0
@@ -1111,6 +1177,18 @@ margin_top = 5.0
 margin_right = 127.0
 margin_bottom = 5.0
 rect_min_size = Vector2( 120, 0 )
+
+[node name="cur_session" type="Label" parent="ScrollContainer/MarginContainer/VBoxContainer/stats/CenterContainer/VBoxContainer"]
+margin_top = 78.0
+margin_right = 135.0
+margin_bottom = 103.0
+rect_min_size = Vector2( 0, 25 )
+custom_fonts/font = ExtResource( 2 )
+custom_colors/font_color = Color( 0.596078, 0.596078, 0.596078, 1 )
+text = "Current session duration: x"
+align = 1
+valign = 1
+autowrap = true
 
 [node name="FixNAN" type="Button" parent="ScrollContainer/MarginContainer/VBoxContainer"]
 visible = false
@@ -1145,9 +1223,9 @@ __meta__ = {
 }
 
 [node name="disc" type="VBoxContainer" parent="ScrollContainer/MarginContainer/VBoxContainer"]
-margin_top = 440.0
+margin_top = 473.0
 margin_right = 150.0
-margin_bottom = 573.0
+margin_bottom = 606.0
 
 [node name="disc_text" type="Label" parent="ScrollContainer/MarginContainer/VBoxContainer/disc"]
 margin_right = 150.0
@@ -1196,12 +1274,33 @@ margin_top = 132.0
 margin_right = 150.0
 margin_bottom = 133.0
 rect_min_size = Vector2( 0, 1 )
-custom_styles/panel = SubResource( 8 )
+custom_styles/panel = SubResource( 11 )
+
+[node name="copyright" type="Label" parent="ScrollContainer/MarginContainer/VBoxContainer"]
+margin_left = 5.0
+margin_top = 610.0
+margin_right = 145.0
+margin_bottom = 677.0
+rect_min_size = Vector2( 140, 40 )
+size_flags_horizontal = 4
+custom_fonts/font = SubResource( 12 )
+custom_colors/font_color = Color( 0.772549, 0.298039, 0.298039, 1 )
+text = "If you are not playing LORED on Itch.io, Newgrounds, or Kongregate, please stop and go do that instead. "
+align = 1
+valign = 1
+autowrap = true
+
+[node name="line2" type="Panel" parent="ScrollContainer/MarginContainer/VBoxContainer"]
+margin_top = 681.0
+margin_right = 150.0
+margin_bottom = 682.0
+rect_min_size = Vector2( 0, 1 )
+custom_styles/panel = SubResource( 11 )
 
 [node name="daily" type="VBoxContainer" parent="ScrollContainer/MarginContainer/VBoxContainer"]
-margin_top = 577.0
+margin_top = 686.0
 margin_right = 150.0
-margin_bottom = 716.0
+margin_bottom = 825.0
 
 [node name="flair" type="Label" parent="ScrollContainer/MarginContainer/VBoxContainer/daily"]
 margin_right = 150.0
@@ -1219,7 +1318,7 @@ margin_top = 34.0
 margin_right = 150.0
 margin_bottom = 97.0
 rect_min_size = Vector2( 0, 63 )
-custom_styles/panel = SubResource( 9 )
+custom_styles/panel = SubResource( 13 )
 
 [node name="Sprite" type="Sprite" parent="ScrollContainer/MarginContainer/VBoxContainer/daily/Panel"]
 modulate = Color( 1, 0, 0.631373, 0.52549 )
@@ -1246,12 +1345,12 @@ margin_top = 138.0
 margin_right = 150.0
 margin_bottom = 139.0
 rect_min_size = Vector2( 0, 1 )
-custom_styles/panel = SubResource( 8 )
+custom_styles/panel = SubResource( 11 )
 
-[node name="copyright" type="Label" parent="ScrollContainer/MarginContainer/VBoxContainer"]
-margin_top = 720.0
+[node name="copyright2" type="Label" parent="ScrollContainer/MarginContainer/VBoxContainer"]
+margin_top = 829.0
 margin_right = 150.0
-margin_bottom = 760.0
+margin_bottom = 869.0
 rect_min_size = Vector2( 0, 40 )
 custom_fonts/font = ExtResource( 2 )
 custom_colors/font_color = Color( 0.498039, 0.498039, 0.498039, 1 )
@@ -1303,8 +1402,9 @@ __meta__ = {
 [connection signal="pressed" from="ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/crits_only/CenterContainer/crits_only" to="." method="_on_crits_only_pressed"]
 [connection signal="button_down" from="ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/animations" to="." method="_on_button_down"]
 [connection signal="pressed" from="ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/animations" to="." method="_on_animations_pressed"]
-[connection signal="button_down" from="ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/afford check" to="." method="_on_button_down"]
-[connection signal="pressed" from="ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/afford check" to="." method="_on_option_pressed" binds= [ "afford check", "ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/afford check" ]]
+[connection signal="button_down" from="ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/color blind" to="." method="_on_button_down"]
+[connection signal="pressed" from="ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/color blind" to="." method="_on_option_pressed" binds= [ "color blind", "ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/color blind" ]]
+[connection signal="value_changed" from="ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/Zoom" to="." method="_on_Zoom_value_changed"]
 [connection signal="button_down" from="ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/b_on_save" to="." method="_on_button_down"]
 [connection signal="pressed" from="ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/b_on_save" to="." method="_on_b_pressed" binds= [ "ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/on_save" ]]
 [connection signal="button_down" from="ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/on_save/CenterContainer/VBoxContainer/halt" to="." method="_on_button_down"]

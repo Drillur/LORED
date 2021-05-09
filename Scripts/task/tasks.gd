@@ -1,12 +1,14 @@
-extends MarginContainer
+extends HBoxContainer
 
 onready var rt = get_node("/root/Root")
+onready var gn_off = get_node("auto/off")
+onready var gn_on = get_node("auto/on")
 
 const prefabs := {
-	block = preload("res://Prefabs/task/random_task_block.tscn"),
 	task_complete = preload("res://Prefabs/lored_buy.tscn"),
 	d_text = preload("res://Prefabs/dtext.tscn"),
 }
+
 
 var content := []
 var effects_content := {}
@@ -15,7 +17,7 @@ var ready_task_count = 0
 var time_since_last_shake = 0.0
 var last_y := 0.0
 
-func _physics_process(delta):
+func _physics_process(_delta):
 	
 	shake()
 
@@ -34,47 +36,36 @@ func shake() -> void:
 	
 	w_shake_self()
 
-func init(_tasks := []):
+func finished_task(_flying_numbers := {}):
 	
-	if not gv.menu.option["task auto"]:
-		$HBoxContainer/auto/Label.show()
-		$HBoxContainer/auto/AnimatedSprite.hide()
-	
-	for x in _tasks:
-		add_task(x)
-
-func hit_max_tasks():
-	while taq.cur_tasks < taq.max_tasks:
-		add_task(Task.new(gv.Quest.RANDOM))
-
-
-func flying_numbers(f := {}):
+	taq.hit_max_tasks()
 	
 	ready_task_count -= 1
 	time_since_last_shake = 0.0
 	
+	flying_numbers(_flying_numbers)
+
+func flying_numbers(f := {}):
+	
 	if not gv.menu.option["flying_numbers"]:
 		return
 	
-	var left_x = rect_global_position.x + rect_size.x / 2
-	var ypos = rect_global_position.y - 5
+	var left_x = rect_global_position.x / rt.scale.x + (rect_size.x / rt.scale.x) / 2
+	var ypos = rect_global_position.y / rt.scale.y - 5
 	
 	var i = 0
 	for x in f:
 		
-		rt.save_fps -= 0.09
 		var t = Timer.new()
-		t.set_wait_time(0.09)
-		t.set_one_shot(true)
-		self.add_child(t)
-		t.start()
+		add_child(t)
+		t.start(0.09)
 		yield(t, "timeout")
 		t.queue_free()
 		
 		left_x += rand_range(-10,10)
 		
 		if x == "growth":
-			rt.get_node(rt.gnLOREDs).cont[x].w_bonus_output(x, f[x])
+			gv.g[x].manager.w_bonus_output(x, f[x])
 		
 		var key = "flying freaking numbers " + str(i)
 		
@@ -95,28 +86,26 @@ func flying_numbers(f := {}):
 		i += 1
 
 
-func add_task(task: Task) -> void:
-	
-	#task.code = stepify(task.code, 0.01)
+func add_task(_task: Task) -> void:
 	
 	var i = content.size()
-	content.append(prefabs.block.instance())
-	$HBoxContainer.add_child(content[i])
-	$HBoxContainer.move_child(content[i], 0)
-	taq.task.append(task)
-	content[i].init(task)
+	content.append(gv.SRC["task"].instance())
+	add_child(content[i])
+	move_child(content[i], 0)
+	content[i].init(_task)
+
+
+func update_auto():
 	
-	taq.cur_tasks += 1
-
-
-
+	gn_on.visible = gv.menu.option["task auto"]
+	gn_off.visible = not gv.menu.option["task auto"]
 
 func erase(_erase := -1.0) -> void:
 	
 	if _erase != -1.0:
 		taq.cur_tasks -= 1
 		content.erase(_erase)
-		add_task(Task.new(gv.Quest.RANDOM))
+		taq.add_task(Task.new(gv.Quest.RANDOM))
 
 
 func w_shake_self() -> void:
@@ -218,13 +207,9 @@ func _on_auto_pressed() -> void:
 	
 	if not gv.menu.option["task auto"]:
 		gv.menu.option["task auto"] = true
-		$HBoxContainer/auto/Label.hide()
-		$HBoxContainer/auto/AnimatedSprite.show()
-		for x in content:
-			if content[x].get_node("tp").value >= 100:
-				content[x]._on_task_pressed()
-		return
+		for t in taq.task:
+			t.attempt_turn_in(false)
+	else:
+		gv.menu.option["task auto"] = false
 	
-	gv.menu.option["task auto"] = false
-	$HBoxContainer/auto/Label.show()
-	$HBoxContainer/auto/AnimatedSprite.hide()
+	update_auto()

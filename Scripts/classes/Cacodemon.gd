@@ -253,32 +253,24 @@ func get_name() -> String:
 
 func get_type() -> String:
 	
-	var roll = int(rand_range(0, 5))
+	var roll = int(rand_range(0, 4))
 	
 	if gv.cacodemons == 0:
-		match key:
-			0: roll = 0
-			1: roll = 3
-			2: roll = 4
-			3: roll = 2
-			4: roll = 1
+		roll = key
 	
 	match roll:
 		0:
 			color = Color(0.7184, 0.857422, 0.395218)
 			return "Wendigo"
 		1:
-			color = Color(1, 0.494118, 0)
-			return "Cacodemon"
-		2:
-			color = Color(1, 0.644531, 0.715347)
-			return "Devil"
-		3:
 			color = Color(0.717647, 0.941176, 0.92549)
 			return "Barghest"
-		_:
+		2:
 			color = Color(0.636784, 0.590706, 0.927734)
 			return "Dybbuk"
+		_:
+			color = Color(1, 0.494118, 0)
+			return "Cacodemon"
 
 
 func selected_as_host():

@@ -23,8 +23,6 @@ func setup():
 	setup_s1()
 	setup_s2()
 	setup_s3()
-	
-	display_afford_checks()
 
 func setup_s2():
 	
@@ -122,24 +120,8 @@ func add_stuffs(key: String, i: int):
 	cont["h" + stage + str(i)].add_child(cont[key])
 
 
-
 func autobuyer_purchased(key):
 	cont[key].r_autobuy()
-
-func display_afford_checks():
-	
-	for x in cont:
-		
-		if not x in g_keys:
-			continue
-		
-		if gv.menu.option["afford check"]:
-			cont[x].gn_afford_check.show()
-			cont[x].gn_autobuywheel.position.x = 46
-			continue
-		
-		cont[x].gn_afford_check.hide()
-		cont[x].gn_autobuywheel.position.x = 33
 
 func receive_buff(spell: String, target := "") -> void:
 	

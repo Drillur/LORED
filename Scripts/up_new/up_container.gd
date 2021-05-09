@@ -39,7 +39,6 @@ const gnlocked := "v/header/h/v/options/locked"
 const gnIcon := "v/header/h/icon/Sprite"
 
 const gnreset := "v/reset/b_reset"
-const gnfinalize := "v/reset/cancel/h/finalize"
 
 
 
@@ -59,7 +58,7 @@ func _ready():
 
 func procedure():
 	
-	while gv.up["PROCEDURE"].active() and visible and gv.open_upgrade_folder == "s1m" and gv.r["malig"].greater_equal(gv.up["ROUTINE"].cost["malig"].t):
+	while not confirmed and gv.up["PROCEDURE"].active() and visible and gv.open_upgrade_folder == "s1m" and gv.r["malig"].greater_equal(gv.up["ROUTINE"].cost["malig"].t):
 		
 		var routine = rt.get_node(rt.gnupcon).cont["ROUTINE"].get_routine_info()[0].toString()
 		
@@ -491,11 +490,11 @@ func init() -> void:
 		
 		#i += 1
 		instance_block("Carcinogenesis", parent_path, "h" + str(i))
-#	print("not yet added to s2m: {")
+#	rint("not yet added to s2m: {")
 #	for x in gv.stats.up_list["s2m"]:
 #		if not x in cont.keys():
-#			print(gv.up[x].cost["tum"].t.toString(), " - ", x)
-#	print("}")
+#			rint(gv.up[x].cost["tum"].t.toString(), " - ", x)
+#	rint("}")
 	
 	
 	sync()
@@ -522,6 +521,7 @@ func instance_block(
 	
 	cont[hbox_name].add_child(cont[upgrade_key])
 	cont[upgrade_key].setup(upgrade_key, folder)
+	yield(cont[upgrade_key], "ready")
 
 
 const LOW_QUALITY = ["coal", "irono", "copo", "jo", "oil", "tar", "draw", "sand", "seed", "soil", "humus", "pet", "plast", "ciga", "toba", "paper", "pulp", "gale", "soil"]
@@ -576,85 +576,72 @@ func _on_b_reset_mouse_entered() -> void:
 	if gv.open_upgrade_folder == "no":
 		return
 	
-	var reset_name: String = get_node(gnreset + "/Label").text.to_upper()
-	if "(" in reset_name:
-		reset_name = reset_name.split(" (")[0]
+	var reset_name := get_reset_name().to_upper()
 	
 	rt.get_node("global_tip")._call("buy upgrade " + reset_name)
 
-func _on_finalize_mouse_entered() -> void:
-	
-	if gv.open_upgrade_folder == "no":
-		return
-	
-	var finalize_name: String = get_node(gnfinalize + "/Label").text.split(" ")[0].to_upper()
-	
-	rt.get_node("global_tip")._call("buy upgrade " + finalize_name)
 
-
+var confirmed := false
 func _on_b_reset_pressed() -> void:
 	
-	r_reset("resetting")
-	rt.get_node("global_tip")._call("no")
+	if confirmed:
+		rt.reset(int(gv.open_upgrade_folder[1]))
+		confirmed_false()
+		return
 	
-	gv.menu.f = "no s" + gv.open_upgrade_folder[1]
+	confirmed = true
+	get_node(gnreset + "/Label").text = "Confirm"
+	
+	var t = Timer.new()
+	add_child(t)
+	t.start(2)
+	yield(t, "timeout")
+	t.queue_free()
+	
+	if confirmed:
+		confirmed_false()
 
-func _on_finalize_pressed() -> void:
-	
-	r_reset("finalize")
-	
-	rt.reset(int(gv.menu.f[4]))
-
-func _on_b_cancel_pressed() -> void:
-	
-	for x in gv.stats.up_list[gv.menu.f.split("no ")[1] + "m"]:
-		
-		if not gv.up[x].refundable:
-			continue
-		
-		cont[x].refundable(false)
-	
-	update_folder()
-	
-	r_reset("cancel reset")
+func confirmed_false():
+	confirmed = false
+	set_gnreset()
 
 
 
-func r_reset(type: String):
-	
-	match type:
-		
-		"finalize":
-			
-			get_node("v/reset/cancel").hide()
-			get_node(gnreset).show()
-			go_back()
-			hide()
-		
-		"cancel reset":
-			
-			get_node("v/reset/cancel").hide()
-			get_node(gnreset).show()
-			
-			gv.menu.f = "ye"
-			
-			r_setup_setup()
-		
-		"resetting":
-			
-			get_node(gnreset).hide()
-			get_node("v/reset/cancel").show()
-		
-		"setup":
-			
-			if ("ye" in gv.menu.f) or ("no" in gv.menu.f and gv.open_upgrade_folder[1] == gv.menu.f[4]):
-				
-				r_setup_setup()
-			
-			else:
-				
-				get_node("v/reset/cancel/h/finalize").hide()
-				return
+#func r_reset(type: String):
+#
+#	match type:
+#
+#		"finalize":
+#
+#			get_node("v/reset/cancel").hide()
+#			get_node(gnreset).show()
+#			go_back()
+#			hide()
+#
+#		"cancel reset":
+#
+#			get_node("v/reset/cancel").hide()
+#			get_node(gnreset).show()
+#
+#			gv.menuf = "ye"
+#
+#			r_setup_setup()
+#
+#		"resetting":
+#
+#			get_node(gnreset).hide()
+#			get_node("v/reset/cancel").show()
+#
+#		"setup":
+#
+#			if ("ye" in gv.menuf) or ("no" in gv.menuf and gv.open_upgrade_folder[1] == gv.menuf[4]):
+#
+#				r_setup_setup()
+#
+#			else:
+#
+#				get_node("v/reset/cancel/h/finalize").hide()
+#				return
 
 func r_setup_setup():
 	
@@ -664,34 +651,34 @@ func r_setup_setup():
 		
 		return
 	
+	set_gnreset()
+	
+	get_node("v/reset").show()
+
+func set_gnreset():
+	
+	
 	var mod_color: Color
-	var reset_name: String
-	var finalize_name: String
+	var reset_name := get_reset_name()
 	
 	if gv.open_upgrade_folder == "s1m":
 		mod_color = gv.g["malig"].color
-		reset_name = "Metastasize"
-		finalize_name = "Spread (Reset Stage 1)"
 	elif gv.open_upgrade_folder == "s2m":
 		mod_color = gv.g["tum"].color
-		reset_name = "Chemotherapy"
-		finalize_name = "Recover (Reset Stage 1 & 2)"
-	
-	get_node("v/reset").show()
-	get_node("v/reset/cancel/h/finalize").show()
 	
 	get_node("v/reset/bg").self_modulate = mod_color
 	get_node(gnreset + "/Label").self_modulate = mod_color
-	get_node(gnfinalize + "/Label").self_modulate = mod_color
-	
 	get_node(gnreset + "/Label").text = reset_name
-	get_node(gnfinalize + "/Label").text = finalize_name
-	
-	if not "ye" in gv.menu.f:
-		r_reset("resetting")
-	
 
-
+func get_reset_name() -> String:
+	
+	if gv.open_upgrade_folder == "s1m":
+		return "Metastasize"
+	if gv.open_upgrade_folder == "s2m":
+		return "Chemotherapy"
+	
+	print_debug("get_reset_name() in up_container.gd should not have been called at this point, pls fix")
+	return "oops"
 
 
 func col_time(node: String) -> void:
@@ -724,13 +711,11 @@ func col_time(node: String) -> void:
 	
 	update_folder()
 	
-	r_reset("setup")
+	r_setup_setup()
 	
 	var t = Timer.new()
-	t.set_wait_time(0.01)
-	t.set_one_shot(true)
-	self.add_child(t)
-	t.start()
+	add_child(t)
+	t.start(0.01)
 	yield(t, "timeout")
 	t.queue_free()
 	
@@ -811,8 +796,11 @@ func upgrade_purchased(key: String, routine := []):
 	
 	# flying texts below
 	
-	var rollx :int= rand_range(-10, 10) + get_global_mouse_position().x - rect_position.x
-	var rolly :int= rand_range(-10, 10) + get_global_mouse_position().y - rect_position.y
+	if not gv.menu.option["flying_numbers"]:
+		return
+	
+	var rollx :int= randi() % 20 - 10 + get_global_mouse_position().x - rect_position.x
+	var rolly :int= randi() % 20 - 10 + get_global_mouse_position().y - rect_position.y
 	
 	var i := 0
 	

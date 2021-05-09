@@ -1,13 +1,22 @@
-[gd_scene load_steps=17 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://Fonts/Roboto-BlackItalic.ttf" type="DynamicFontData" id=1]
-[ext_resource path="res://Sprites/resources/axe.png" type="Texture" id=2]
 [ext_resource path="res://Fonts/Roboto-Medium.ttf" type="DynamicFontData" id=3]
 [ext_resource path="res://Fonts/Roboto-MediumItalic.ttf" type="DynamicFontData" id=4]
 [ext_resource path="res://Scripts/tooltip/QuestTip.gd" type="Script" id=5]
 [ext_resource path="res://Styles/Panels/block_inside_tip.tres" type="StyleBox" id=6]
 
-[sub_resource type="StyleBoxFlat" id=1]
+[sub_resource type="StyleBoxFlat" id=9]
+bg_color = Color( 1, 1, 1, 0.0509804 )
+expand_margin_left = 10.0
+expand_margin_right = 10.0
+expand_margin_top = 10.0
+expand_margin_bottom = 10.0
+
+[sub_resource type="DynamicFont" id=10]
+font_data = ExtResource( 1 )
+
+[sub_resource type="StyleBoxFlat" id=11]
 bg_color = Color( 0.929412, 0.839216, 0, 0.211765 )
 border_width_left = 1
 border_width_top = 1
@@ -20,13 +29,12 @@ expand_margin_top = 5.0
 expand_margin_bottom = 5.0
 anti_aliasing = false
 
-[sub_resource type="DynamicFont" id=2]
+[sub_resource type="DynamicFont" id=12]
 size = 12
-outline_size = 2
 outline_color = Color( 0, 0, 0, 1 )
-font_data = ExtResource( 3 )
+font_data = ExtResource( 4 )
 
-[sub_resource type="StyleBoxFlat" id=3]
+[sub_resource type="StyleBoxFlat" id=6]
 bg_color = Color( 0.76, 0, 0, 0.2 )
 border_width_left = 1
 border_width_top = 1
@@ -39,37 +47,12 @@ expand_margin_top = 5.0
 expand_margin_bottom = 5.0
 anti_aliasing = false
 
-[sub_resource type="DynamicFont" id=4]
+[sub_resource type="DynamicFont" id=7]
 size = 12
-outline_size = 2
 outline_color = Color( 0, 0, 0, 1 )
 font_data = ExtResource( 3 )
-
-[sub_resource type="StyleBoxFlat" id=5]
-bg_color = Color( 1, 1, 1, 0.0509804 )
-expand_margin_left = 10.0
-expand_margin_right = 10.0
-
-[sub_resource type="StyleBoxFlat" id=6]
-draw_center = false
-
-[sub_resource type="DynamicFont" id=7]
-font_data = ExtResource( 1 )
 
 [sub_resource type="DynamicFont" id=8]
-size = 12
-outline_size = 2
-outline_color = Color( 0, 0, 0, 1 )
-font_data = ExtResource( 3 )
-
-[sub_resource type="DynamicFont" id=9]
-size = 12
-outline_size = 2
-outline_color = Color( 0, 0, 0, 1 )
-extra_spacing_bottom = 3
-font_data = ExtResource( 4 )
-
-[sub_resource type="DynamicFont" id=10]
 size = 12
 outline_size = 2
 outline_color = Color( 0, 0, 0, 1 )
@@ -77,131 +60,133 @@ extra_spacing_bottom = 3
 font_data = ExtResource( 4 )
 
 [node name="QuestTip" type="MarginContainer"]
-margin_right = 137.0
-margin_bottom = 106.0
-custom_constants/margin_right = 10
-custom_constants/margin_top = 10
-custom_constants/margin_left = 10
-custom_constants/margin_bottom = 10
+margin_right = 172.0
+margin_bottom = 61.0
+custom_constants/margin_right = 12
+custom_constants/margin_top = 12
+custom_constants/margin_left = 12
+custom_constants/margin_bottom = 12
 script = ExtResource( 5 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="v" type="VBoxContainer" parent="."]
-margin_left = 10.0
-margin_top = 10.0
-margin_right = 127.0
-margin_bottom = 96.0
+margin_left = 12.0
+margin_top = 12.0
+margin_right = 160.0
+margin_bottom = 49.0
 
-[node name="tags" type="HBoxContainer" parent="v"]
-margin_right = 117.0
+[node name="header" type="MarginContainer" parent="v"]
+margin_right = 148.0
+margin_bottom = 29.0
+custom_constants/margin_top = 0
+custom_constants/margin_bottom = 10
 
-[node name="rare" type="MarginContainer" parent="v/tags"]
-visible = false
-margin_right = 34.0
-margin_bottom = 25.0
-custom_constants/margin_right = 5
-custom_constants/margin_top = 5
-custom_constants/margin_left = 5
-custom_constants/margin_bottom = 5
+[node name="bg" type="Panel" parent="v/header"]
+margin_right = 148.0
+margin_bottom = 19.0
+custom_styles/panel = SubResource( 9 )
 
-[node name="bg" type="Panel" parent="v/tags/rare"]
-margin_left = 5.0
-margin_top = 5.0
-margin_right = 29.0
-margin_bottom = 20.0
-custom_styles/panel = SubResource( 1 )
+[node name="h" type="HBoxContainer" parent="v/header"]
+margin_right = 148.0
+margin_bottom = 19.0
 
-[node name="Label" type="Label" parent="v/tags/rare"]
-margin_left = 5.0
-margin_top = 5.0
-margin_right = 29.0
-margin_bottom = 20.0
-custom_fonts/font = SubResource( 2 )
-text = "Rare"
-
-[node name="spike" type="MarginContainer" parent="v/tags"]
-visible = false
-margin_right = 39.0
-margin_bottom = 25.0
-custom_constants/margin_right = 5
-custom_constants/margin_top = 5
-custom_constants/margin_left = 5
-custom_constants/margin_bottom = 5
-
-[node name="bg" type="Panel" parent="v/tags/spike"]
-margin_left = 5.0
-margin_top = 5.0
-margin_right = 34.0
-margin_bottom = 20.0
-custom_styles/panel = SubResource( 3 )
-
-[node name="Label" type="Label" parent="v/tags/spike"]
-margin_left = 5.0
-margin_top = 5.0
-margin_right = 34.0
-margin_bottom = 20.0
-custom_fonts/font = SubResource( 4 )
-text = "Spike"
-
-[node name="m" type="MarginContainer" parent="v"]
-margin_top = 4.0
-margin_right = 117.0
-margin_bottom = 40.0
-
-[node name="bg" type="Panel" parent="v/m"]
-margin_right = 117.0
-margin_bottom = 36.0
-custom_styles/panel = SubResource( 5 )
-
-[node name="h" type="HBoxContainer" parent="v/m"]
-margin_right = 117.0
-margin_bottom = 36.0
-
-[node name="icon" type="Panel" parent="v/m/h"]
-visible = false
-margin_right = 36.0
-margin_bottom = 36.0
-rect_min_size = Vector2( 36, 36 )
-custom_styles/panel = SubResource( 6 )
-
-[node name="Sprite" type="Sprite" parent="v/m/h/icon"]
-position = Vector2( 18, 18 )
-texture = ExtResource( 2 )
-
-[node name="name" type="Label" parent="v/m/h"]
-margin_right = 117.0
-margin_bottom = 36.0
-rect_min_size = Vector2( 0, 36 )
+[node name="name" type="Label" parent="v/header/h"]
+margin_right = 148.0
+margin_bottom = 19.0
+rect_min_size = Vector2( 148, 0 )
 size_flags_horizontal = 3
-custom_fonts/font = SubResource( 7 )
+custom_fonts/font = SubResource( 10 )
 custom_colors/font_color = Color( 0.800781, 0.800781, 0.800781, 1 )
-text = "b"
+text = "Test"
 valign = 1
 autowrap = true
 
+[node name="rare" type="MarginContainer" parent="v/header/h"]
+visible = false
+margin_left = 195.0
+margin_right = 228.0
+margin_bottom = 25.0
+size_flags_vertical = 4
+custom_constants/margin_right = 5
+custom_constants/margin_top = 5
+custom_constants/margin_left = 5
+custom_constants/margin_bottom = 5
+
+[node name="bg" type="Panel" parent="v/header/h/rare"]
+margin_left = 5.0
+margin_top = 5.0
+margin_right = 28.0
+margin_bottom = 20.0
+custom_styles/panel = SubResource( 11 )
+
+[node name="Label" type="Label" parent="v/header/h/rare"]
+margin_left = 5.0
+margin_top = 5.0
+margin_right = 28.0
+margin_bottom = 20.0
+custom_fonts/font = SubResource( 12 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+text = "Rare"
+
+[node name="spike" type="MarginContainer" parent="v/header/h"]
+visible = false
+margin_left = 189.0
+margin_right = 228.0
+margin_bottom = 25.0
+size_flags_vertical = 4
+custom_constants/margin_right = 5
+custom_constants/margin_top = 5
+custom_constants/margin_left = 5
+custom_constants/margin_bottom = 5
+
+[node name="bg" type="Panel" parent="v/header/h/spike"]
+margin_left = 5.0
+margin_top = 5.0
+margin_right = 34.0
+margin_bottom = 20.0
+custom_styles/panel = SubResource( 6 )
+
+[node name="Label" type="Label" parent="v/header/h/spike"]
+margin_left = 5.0
+margin_top = 5.0
+margin_right = 34.0
+margin_bottom = 20.0
+custom_fonts/font = SubResource( 12 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+text = "Spike"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="desc" type="Label" parent="v"]
 visible = false
-margin_top = 44.0
+margin_top = 40.0
 margin_right = 200.0
-margin_bottom = 59.0
+margin_bottom = 55.0
 rect_min_size = Vector2( 200, 0 )
 size_flags_horizontal = 3
-custom_fonts/font = SubResource( 8 )
+custom_fonts/font = SubResource( 7 )
 custom_colors/font_color = Color( 0.796875, 0.796875, 0.796875, 1 )
 text = "1"
 autowrap = true
 
 [node name="steps" type="VBoxContainer" parent="v"]
-margin_top = 44.0
-margin_right = 117.0
-margin_bottom = 44.0
+margin_top = 33.0
+margin_right = 148.0
+margin_bottom = 33.0
+
+[node name="rewards" type="VBoxContainer" parent="v"]
+margin_top = 37.0
+margin_right = 148.0
+margin_bottom = 37.0
 
 [node name="RR" type="MarginContainer" parent="v"]
-margin_top = 48.0
-margin_right = 117.0
-margin_bottom = 86.0
+visible = false
+margin_top = 41.0
+margin_right = 148.0
+margin_bottom = 79.0
 custom_constants/margin_right = 10
 custom_constants/margin_top = 10
 custom_constants/margin_left = 10
@@ -210,49 +195,19 @@ custom_constants/margin_bottom = 10
 [node name="bg" type="Panel" parent="v/RR"]
 margin_left = 10.0
 margin_top = 10.0
-margin_right = 107.0
+margin_right = 138.0
 margin_bottom = 28.0
 custom_styles/panel = ExtResource( 6 )
 
 [node name="v" type="VBoxContainer" parent="v/RR"]
 margin_left = 10.0
 margin_top = 10.0
-margin_right = 107.0
+margin_right = 138.0
 margin_bottom = 28.0
 
 [node name="Label" type="Label" parent="v/RR/v"]
-margin_right = 97.0
+margin_right = 128.0
 margin_bottom = 18.0
-custom_fonts/font = SubResource( 9 )
-text = "Resource Rewards"
-align = 1
-
-[node name="R" type="MarginContainer" parent="v"]
-visible = false
-margin_top = 109.0
-margin_right = 229.0
-margin_bottom = 147.0
-custom_constants/margin_right = 10
-custom_constants/margin_top = 10
-custom_constants/margin_left = 10
-custom_constants/margin_bottom = 10
-
-[node name="bg" type="Panel" parent="v/R"]
-margin_left = 10.0
-margin_top = 10.0
-margin_right = 219.0
-margin_bottom = 28.0
-custom_styles/panel = ExtResource( 6 )
-
-[node name="v" type="VBoxContainer" parent="v/R"]
-margin_left = 10.0
-margin_top = 10.0
-margin_right = 219.0
-margin_bottom = 28.0
-
-[node name="Label" type="Label" parent="v/R/v"]
-margin_right = 209.0
-margin_bottom = 18.0
-custom_fonts/font = SubResource( 10 )
-text = "Other Rewards"
+custom_fonts/font = SubResource( 8 )
+text = "Rewards"
 align = 1

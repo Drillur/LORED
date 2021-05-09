@@ -2,8 +2,8 @@ extends HBoxContainer
 
 var key: String
 var fuel_source := "coal"
-onready var gn_f = get_node("fuel/f")
-onready var gn_t = get_node("fuel")
+onready var gn_f = get_node("bar/f")
+onready var gn_t = get_node("bar")
 
 
 func _ready() -> void:
@@ -25,12 +25,8 @@ func start() -> void:
 	
 	while gv.g[key].unlocked and gv.g[key].active:
 		
-		# if resetting same stage as lored, it cannot act
-		if "no" in gv.menu.f:
-			if int(gv.g[key].stage) <= int(gv.menu.f.split(" s")[1]):
-				break
-		
-		if gv.g[key].progress.b != 1:
+		if gv.g[key].working:
+			
 			gv.g[key].f.f.s(Big.new(gv.g[key].fc.t).m(gv.fps))
 		
 		if gv.g[fuel_source].is_baby(int(gv.g[key].type[1])):
@@ -88,11 +84,6 @@ func blood_start():
 	
 	while gv.g[key].unlocked and gv.g[key].active and gv.g[key].f.f.less(gv.g[key].f.t):
 		
-		# if resetting same stage as lored, it cannot act
-		if "no" in gv.menu.f:
-			if int(gv.g[key].stage) <= int(gv.menu.f.split(" s")[1]):
-				break
-		
 		gv.g[key].f.f.a(Big.new(gv.g[key].fc.t).m(gv.fps))
 		
 		gn_f.rect_size.x =  min(gv.g[key].f.f.percent(gv.g[key].f.t) * gn_t.rect_size.x, gn_t.rect_size.x)
@@ -117,12 +108,7 @@ func blood_start():
 
 func hunt_start():
 	
-	while gv.g[key].unlocked and gv.g[key].active and gv.g[key].progress.b != 1:
-		
-		# if resetting same stage as lored, it cannot act
-		if "no" in gv.menu.f:
-			if int(gv.g[key].stage) <= int(gv.menu.f.split(" s")[1]):
-				break
+	while gv.g[key].unlocked and gv.g[key].active and gv.g[key].working:
 		
 		gv.g[key].f.f.s(Big.new(gv.g[key].fc.t).m(gv.fps))
 		

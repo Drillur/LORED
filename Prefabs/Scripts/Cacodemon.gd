@@ -63,11 +63,6 @@ func start():
 	
 	while not gv.cac[key].dead and not gv.cac[key].host:
 		
-		# if resetting same stage as lored, it cannot act
-		if "no" in gv.menu.f:
-			if int(gv.menu.f.split(" s")[1]) >= 3:
-				break
-		
 		gv.cac[key].start_task()
 		tell_children_the_news()
 		

@@ -9,58 +9,48 @@ var key: String
 var folder: String
 
 const gn := {
-	icon = "Button/Sprite",
 	inactive = "n/tags/inactive",
 	pending = "n/tags/pending",
 }
+onready var icon = get_node("upgrade icon")
 onready var button = get_node("Button")
+onready var afford = get_node("afford")
+onready var shadow = get_node("unowned shadow")
+onready var color_blind = get_node("color blind")
 
 var src := {
 	cannot_deactivate_prefab = preload("res://Prefabs/lored_buy.tscn"),
 }
 var cont := {}
-var fps := {
-	"afford": FPS.new(0.25, true),
-	"autobuy": FPS.new(1, true),
-}
-
 
 var routine := []
 
 var already_displayed_alert_guy := false
-
 
 func setup(_key, _folder):
 	
 	key = _key
 	folder = _folder
 	
+	gv.up[key].manager = self
+	
 	name = key
 	
-	if gv.up[key].have:
-		get_node("unowned").hide()
-	
-	r_update_icon()
-	
-	#if gv.up[key].progress.t == 1:
-	#	get_node("n/progress").hide()
-
-
-func _physics_process(delta: float) -> void:
-	
-	for f in fps:
-		
-		if not fps[f].process(delta):
-			continue
-		
-		match f:
-			"afford":
-				afford()
-			"autobuy":
-				autobuy()
+	color_blind.self_modulate = gv.up[key].color
+	afford.self_modulate = gv.up[key].color
+	button.self_modulate = gv.up[key].color
+	shadow.self_modulate = gv.up[key].color
+	get_node("icon shadow").self_modulate = gv.up[key].color
 	
 	if gv.up[key].have:
-		set_physics_process(false)
+		shadow.hide()
+	
+	icon.init(key)
+	
+	afford()
+	
+	loop_1s()
+	loop_025s()
 
 
 func _on_Button_mouse_entered() -> void:
@@ -99,25 +89,16 @@ func r_update():
 	# called in up_container.gd
 	
 	tags()
-	r_update_icon()
+	icon.update()
 	afford()
 	
+	color_blind.visible = gv.menu.option["color blind"] and not gv.up[key].have and not gv.up[key].refundable and not icon.lock.visible
+	
 	if gv.up[key].refundable:
-		get_node("unowned").hide()
+		shadow.hide()
 		return
 	
-	if not gv.up[key].have:
-		get_node("unowned").show()
-	else:
-		get_node("unowned").hide()
-
-func r_update_icon():
-	
-	if gv.up[key].have or gv.up[key].requirements():
-		get_node(gn.icon).texture = gv.sprite[gv.up[key].icon]
-		return
-	
-	get_node(gn.icon).texture = gv.sprite["unknown"]
+	shadow.visible = not gv.up[key].have
 
 func flash():
 	
@@ -126,19 +107,6 @@ func flash():
 	cont["flash"].flash(Color(1,1,1))
 
 func set_mouse_cursor_shape():
-	
-	if "ye" in gv.menu.f and "m" in gv.open_upgrade_folder and not gv.up[key].have:
-		button.mouse_default_cursor_shape = Control.CURSOR_FORBIDDEN
-		return
-	
-	if "no" in gv.menu.f:
-		if "n" in gv.open_upgrade_folder and not gv.up[key].have:
-			button.mouse_default_cursor_shape = Control.CURSOR_FORBIDDEN
-			return
-		if "m" in gv.open_upgrade_folder and not gv.up[key].have:
-			if int(gv.up[key].stage) != int(gv.menu.f[4]):
-				button.mouse_default_cursor_shape = Control.CURSOR_FORBIDDEN
-				return
 	
 	if gv.up[key].have:
 		if key == "ROUTINE":
@@ -160,45 +128,72 @@ func tags():
 
 func afford():
 	
-	if gv.open_upgrade_folder != folder:
+	if icon.lock.visible:
+		afford.hide()
+		button.modulate = Color(0.6,0.6,0.6)
 		return
 	
 	if gv.up[key].have or gv.up[key].refundable:
+		afford.modulate = Color(0.2, 0.2, 0.2)
+		button.modulate = Color(0.2, 0.2, 0.2)
 		return
 	
-	if get_node(gn.icon).texture == gv.sprite["unknown"]:
-		get_node("unowned").self_modulate = Color(1,1,1)
-	else:
-		get_node("unowned").self_modulate = get_purchase_modulate()
-
-
-func get_purchase_modulate():
+	if gv.open_upgrade_folder != folder:
+		return
 	
-	var BAD := Color(1.3, 0, 0)
-	var GOOD := Color(0.376471, 1, 0)
+	if can_purchase():
+		afford.show()
+		afford.modulate = Color(1,1,1)
+		button.modulate = Color(1,1,1)
+		color_blind.pressed = true
+	else:
+		afford.hide()
+		button.modulate = Color(0.6,0.6,0.6)
+		color_blind.pressed = false
+
+
+func can_purchase() -> bool:
+	
+	# returns false if BAD
+	# returns true if GOOD
 	
 	if key == "Carcinogenesis":
 		if gv.stats.upgrades_owned["s2m"] == 80:
-			return GOOD
-		return BAD
+			return true
+		return false
 	
 	if "reset" in gv.up[key].type:
-		return GOOD
+		return true
 	
-	return GOOD if gv.up[key].cost_check() else BAD
-	
-	var tier := int(gv.up[key].type[1])
-	var menu_tier := int(gv.menu.f.split("no s")[1])
-	
-	if gv.up[key].normal:
-		if menu_tier >= tier: return BAD
-	else:
-		if not menu_tier == tier: return BAD
-	
-	return GOOD if gv.up[key].cost_check() else BAD
+	return gv.up[key].cost_check()
 
+func loop_025s():
+	
+	while true:
+		
+		var t = Timer.new()
+		add_child(t)
+		t.start(0.25)
+		yield(t, "timeout")
+		t.queue_free()
+		
+		afford()
+	
+
+func loop_1s():
+	
+	while true:
+		
+		var t = Timer.new()
+		add_child(t)
+		t.start(1)
+		yield(t, "timeout")
+		t.queue_free()
+		
+		autobuy()
 
 func autobuy():
+	
 	if not gv.up[key].autobuy:
 		return
 	
@@ -213,7 +208,70 @@ func autobuy():
 func ______________():
 	pass
 
-
+func upgrade_bought(manual: bool, red_necro := false):
+	
+	if gv.up[key].normal or red_necro:
+		
+		taq.progress(gv.TaskRequirement.UPGRADE_PURCHASED, key)
+		taq.progress(gv.TaskRequirement.UPGRADES_PURCHASED, gv.up[key].stage_key)
+		
+		gv.up[key].purchased()
+		
+		if gv.up[key].have:
+			shadow.hide()
+		
+		set_mouse_cursor_shape()
+		
+		upgrade_effects(true)
+		
+		if manual:
+			
+			if key == "Carcinogenesis":
+				rt.reset(3)
+				gv.r["embryo"].a(1)
+				rt.unlock_tab("3")
+				if not gv.g["hunt"].active:
+					gv.g["hunt"].unlock()
+					gv.g["hunt"].manager.buy(false)
+					gv.g["witch"].unlock()
+					gv.quest[gv.Quest.HUNT].update()
+				taq.add_multi_quests([gv.quest[gv.Quest.HUNT], gv.quest[gv.Quest.WITCH], gv.quest[gv.Quest.NECRO], gv.quest[gv.Quest.BLOOD]])
+			
+			# tooltip
+			rt.get_node("global_tip")._call("no")
+			if not key in ["Carcinogenesis"]:
+				rt.get_node("global_tip")._call("buy upgrade " + key)
+			
+			if gv.up[key].normal:
+				pass
+		
+		# task
+		if key in rt.task_awaiting and not rt.on_task:
+			rt.get_node("misc/task")._clear_board()
+			rt.get_node("misc/task")._call_board()
+		
+		gv.stats.upgrades_owned[folder] += 1
+		rt.get_node(rt.gnupcon).sync()
+		
+		w_update_other_upgrades_or_something()
+		rt.afford()
+		
+		gv.emit_signal("upgrade_purchased", key, routine)
+		
+		r_update()
+	
+	else:
+		
+		gv.up[key].refundable = true
+		gv.up[key].takeaway_price()
+		
+		r_update()
+		
+		w_update_other_upgrades_or_something()
+		
+		gv.up[key].active_tooltip.display()
+	
+	afford()
 
 func buy_upgrade(manual := true, red_necro := false) -> void:
 	
@@ -227,7 +285,7 @@ func buy_upgrade(manual := true, red_necro := false) -> void:
 	if unowned_catches(manual, red_necro):
 		return
 	
-	upgrade_bought(manual)
+	upgrade_bought(manual, red_necro)
 
 func unowned_catches(manual: bool, red_necro: bool) -> bool:
 	
@@ -308,31 +366,31 @@ func cannot_afford(manual: bool) -> bool:
 	return false
 
 
-func owned_correct_menu_and_type() -> bool:
-	
-	if "cremover" in gv.up[key].type:
-		return false
-	
-	if "no" in gv.menu.f:
-		if gv.up[key].normal:
-			return false
-	
-	elif "ye" in gv.menu.f:
-		
-		if key in ["upgrade_name", "upgrade_description", "RED NECROMANCY"]:
-			
-			cont["nah"] = src.cannot_deactivate_prefab.instance()
-			cont["nah"].text = get_no_message()
-			cont["nah"].rect_position = Vector2(cont["nah"].rect_position.x, cont["nah"].rect_position.y - 20)
-			add_child(cont["nah"])
-			
-			return false
-	
-	return true
+#func owned_correct_menu_and_type() -> bool:
+#
+#	if "cremover" in gv.up[key].type:
+#		return false
+#
+#	if "no" in gv.menuf:
+#		if gv.up[key].normal:
+#			return false
+#
+#	elif "ye" in gv.menuf:
+#
+#		if key in ["upgrade_name", "upgrade_description", "RED NECROMANCY"]:
+#
+#			cont["nah"] = src.cannot_deactivate_prefab.instance()
+#			cont["nah"].text = get_no_message()
+#			cont["nah"].rect_position = Vector2(cont["nah"].rect_position.x, cont["nah"].rect_position.y - 20)
+#			add_child(cont["nah"])
+#
+#			return false
+#
+#	return true
 
 func get_no_message() -> String:
 	
-	var roll : int = rand_range(0, 29)
+	var roll : int = randi() % 29
 	
 	match roll:
 		0:
@@ -396,7 +454,7 @@ func get_no_message() -> String:
 		_:
 			return "You better not."
 
-func upgrade_effects(active: bool, first_purchase: bool):
+func upgrade_effects(active: bool):
 	
 	match key:
 		
@@ -414,10 +472,7 @@ func upgrade_effects(active: bool, first_purchase: bool):
 		
 		"ROUTINE":
 			
-			if not "ye" in gv.menu.f:
-				return
-			
-			get_node("unowned").show()
+			shadow.show()
 			afford()
 			
 			#r_set_shadow("not owned")
@@ -458,88 +513,7 @@ func get_routine_info() -> Array:
 	
 	return [routine_d, routine_c]
 
-func upgrade_bought(manual: bool):
-	
-	# commented lines are in class_upgrades
-	
-	if mup_planning():
-		return
-	
-	task_stuff()
-	
-	gv.up[key].purchased()
-	
-	if gv.up[key].have:
-		get_node("unowned").hide()
-	
-	set_mouse_cursor_shape()
-	
-	upgrade_effects(true, true)
-	
-	if manual:
-		
-		if key == "Carcinogenesis":
-			rt.reset(3)
-			gv.r["embryo"].a(1)
-			rt.unlock_tab("3")
-			if not gv.g["hunt"].active:
-				gv.g["hunt"].manager.buy(false)
-				rt.quests["Hunt"].update()
-			taq.add_multi_quests([rt.quests["Hunt"], rt.quests["Witch"], rt.quests["Necro"], rt.quests["Blood"]])
-		
-		# tooltip
-		rt.get_node("global_tip")._call("no")
-		if not key in ["Carcinogenesis"]:
-			rt.get_node("global_tip")._call("buy upgrade " + key)
-		
-		if gv.up[key].normal:
-			pass
-	
-	# task
-	if key in rt.task_awaiting and not rt.on_task:
-		rt.get_node("misc/task")._clear_board()
-		rt.get_node("misc/task")._call_board()
-	
-	gv.stats.upgrades_owned[folder] += 1
-	rt.get_node(rt.gnupcon).sync()
-	
-	w_update_other_upgrades_or_something()
-	rt.afford()
-	
-	gv.emit_signal("upgrade_purchased", key, routine)
 
-func mup_planning() -> bool:
-	
-	if "ye" in gv.menu.f:
-		return false
-	
-	if gv.up[key].type[1] != gv.menu.f.split("no s")[1]:
-		return false
-	
-	gv.up[key].refundable = true
-	gv.up[key].takeaway_price()
-	
-	r_update()
-	
-	w_update_other_upgrades_or_something()
-	
-	# "s1n" == "1"
-#	if folder == gv.menu.tab:
-#		rt.get_node("global_tip")._call("no")
-#		rt.get_node("global_tip")._call("buy upgrade " + key)
-	
-	rt.get_node(rt.gnupcon).update_folder()
-	
-	return true
-
-func task_stuff():
-	
-	if taq.cur_quest == -1:
-		return
-	
-	for x in taq.quest.step:
-		if key in x:
-			taq.quest.step[x].f = Big.new()
 
 func w_update_other_upgrades_or_something():
 	
@@ -591,3 +565,11 @@ func alert(show := true):
 
 
 
+
+
+func _on_button2_mouse_exited() -> void:
+	pass # Replace with function body.
+
+
+func _on_button2_pressed() -> void:
+	pass # Replace with function body.

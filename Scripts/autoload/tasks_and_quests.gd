@@ -2,18 +2,15 @@ extends Node
 
 # access with taq
 
-const prefabs = {
-	TASK = preload("res://Prefabs/task/task.tscn"),
-}
-
 var quest = 0
 var multi_quests := []
 var cur_quest := -1
 
-var max_tasks := 1
+var max_tasks := 0
 var cur_tasks := 0
 var task := []
 
+var task_manager: HBoxContainer
 
 var content = 0
 
@@ -23,13 +20,14 @@ var content = 0
 
 func new_quest(_quest: Task) -> void:
 	
-	cur_quest = _quest.key
+	quest = _quest
+	cur_quest = quest.key
 	
-	quest = Task.new(cur_quest)
-	
-	content = prefabs.TASK.instance()
+	content = gv.SRC["task"].instance()
 	get_node("/root/Root/m/v/bot/h/taq/quest").add_child(content)
-	content.init()
+	content.init(quest)
+	
+	quest.check_already_complete()
 
 
 func progress(type: int, req_key := "", amount = Big.new(1)) -> void:
@@ -53,7 +51,7 @@ func add_multi_quests(quests: Array) -> void:
 		if not q in multi_quests:
 			
 			gv.g[q.name.to_lower()].upgrade_quest = q
-			gv.g[q.name.to_lower()].manager.r_quest()
+			q.manager = gv.g[q.name.to_lower()].manager
 			multi_quests.append(q)
 #
 #func get_task_code() -> int:
@@ -67,7 +65,7 @@ func add_multi_quests(quests: Array) -> void:
 #		if i == t.code
 func generate_task_name(lored : String, roll := 0) -> String:
 	
-	roll = rand_range(0, 3)
+	roll = randi() % 3
 	
 	match lored:
 		"glass":
@@ -129,7 +127,7 @@ func generate_task_name(lored : String, roll := 0) -> String:
 				2:
 					return "The LORED Wars"
 		"humus":
-			roll = rand_range(0, 4)
+			roll = randi() % 4
 			match roll:
 				0:
 					return "nobody even knows what this is"
@@ -140,7 +138,7 @@ func generate_task_name(lored : String, roll := 0) -> String:
 				3:
 					return "A Horse With No Name"
 		"soil":
-			roll = rand_range(0, 4)
+			roll = randi() % 4
 			match roll:
 				0:
 					return "d"
@@ -298,7 +296,7 @@ func generate_task_name(lored : String, roll := 0) -> String:
 		"pulp":
 			match roll:
 				0: return "Jus' securin' my jerb, hyere."
-				1: return "You 'kin fuck my girlfriend and shoot my mother, but don'tchu dare say a bad word about my truck."
+				1: return "don'tchu dare say a bad word about my truck"
 				2: return "http://FarmerMingle.com"
 		"carc":
 			roll = randi() % 4
@@ -316,7 +314,7 @@ func generate_task_name(lored : String, roll := 0) -> String:
 		"pet":
 			match roll:
 				0: return "BASTARD FROM A BASKET!"
-				1: return "I have a competition in me... I want no one else to succeed."
+				1: return "A COMPETITION"
 				2: return "I hate most people."
 		"paper":
 			match roll:
@@ -331,7 +329,7 @@ func generate_task_name(lored : String, roll := 0) -> String:
 		"plast":
 			match roll:
 				0: return "I'll carry your stuff, no problem!"
-				1: return "Hey! Uh-I-I-I'm good for the environment, I swear!"
+				1: return "Environment-friendly"
 				2: return "I've got this task in the bag!"
 	
 	match roll:
@@ -341,3 +339,16 @@ func generate_task_name(lored : String, roll := 0) -> String:
 			return "placeholder1"
 	
 	return "placeholder2"
+
+
+func hit_max_tasks():
+	while taq.cur_tasks < taq.max_tasks:
+		add_task(Task.new(gv.Quest.RANDOM))
+
+func add_task(_task: Task) -> void:
+	
+	task.append(_task)
+	
+	task_manager.add_task(_task)
+	
+	taq.cur_tasks += 1

@@ -3,7 +3,6 @@
 [ext_resource path="res://Fonts/Roboto-BlackItalic.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Prefabs/Scripts/lored_buy.gd" type="Script" id=2]
 
-
 [sub_resource type="DynamicFont" id=1]
 size = 18
 outline_size = 2

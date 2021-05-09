@@ -4,6 +4,10 @@ extends AnimatedSprite
 
 var key: String
 var animationless := false
+var long_anim := false
+var first_loop: bool
+
+onready var timer = get_node("Timer")
 
 
 func init(_key: String) -> void:
@@ -16,12 +20,18 @@ func init(_key: String) -> void:
 	if key in gv.animationless:
 		animationless = true
 	
+	if key in ["water", "seed"]:
+		long_anim = true
+		first_loop = true
+	
 	animation = "ww"
 	frame = 0
 	playing = false
 	
 
 func start(threshold: float, start_time: int):
+	
+	stop()
 	
 	if animationless or (not gv.menu.option["animations"]):
 		if not animation == "ww":
@@ -38,27 +48,28 @@ func start(threshold: float, start_time: int):
 	
 	threshold *= 1000
 	
+	if long_anim:
+		if first_loop:
+			first_loop = false
+		else:
+			first_loop = true
+			start_time -= threshold
+	
 	var i = get_i(start_time)
-	r_update(i, threshold)
 	
 	while i < threshold:
 		
-		var t = Timer.new()
-		add_child(t)
-		t.start(gv.fps)
-		yield(t, "timeout")
-		t.queue_free()
+		frame = int(i / threshold * gv.max_frame[key])
+		
+		timer.start(gv.fps)
+		yield(timer, "timeout")
 		
 		i = get_i(start_time)
-		
-		r_update(i, threshold)
 
+func stop():
+	timer.stop()
 
 func get_i(start_time: int) -> int:
-	if key in ["water", "seeds"]:
-		return (OS.get_ticks_msec() - start_time) * 2
+	if long_anim:
+		return (OS.get_ticks_msec() - start_time) / 2
 	return OS.get_ticks_msec() - start_time
-
-func r_update(i, threshold):
-	
-	frame = int(i / threshold * gv.max_frame[key])

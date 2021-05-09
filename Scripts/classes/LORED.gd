@@ -4,26 +4,39 @@ extends "res://Scripts/classes/Purchasable.gd"
 
 
 var manager: MarginContainer
+var upgrade_quest: Task
+var current_job: Job
 
 var unlocked := false
 var active := false
 var key_lored := false
 var borer := true
 var smart := false
+var working := false
+var halt := false
+var hold := false
+var sync_queued := true
 
-var upgrade_quest: Task
 
+var b := {} # burn (ingredients burned per task)
 var buff_keys := {}
-var buffs := [] # buffs that have been applied directly to THIS Lored
+var inventory: Dictionary
 
+var buffs := [] # buffs that have been applied directly to THIS Lored
 var used_by := []
 var task_list := []
+var emote_pool := []
+var jobs := []
+var dynamics := []
 
-var progress := Float.new()
+var inhand := Big.new(0)
+var witch := Big.new(0)
+
+var spell_target := ""
 var task := "no"
 var task_text := ""
 var last_task : String
-var inhand := Big.new(0)
+var fuel_source: String
 
 var color: Color
 
@@ -31,22 +44,33 @@ var level := 1
 var d : Num # output; damage, basically
 var f := Num.new() # fuel
 var fc := Num.new() # fuel cost
-var b := {} # burn (ingredients burned per task)
-var halt := false
-var hold := false
-var sync_queued := true
-var speed: Float
 var crit := Num.new(0.0) # crit chance
+var speed: Float
 
-var spell_target := ""
+var times_purchased := 0
 
-var inventory: Dictionary
 
-var witch := Big.new(0)
-
-var fuel_source: String
-
-var dynamics := []
+class Emote:
+	var message: String
+	var size: Vector2
+	var has_reply := false
+	var reply_key: String
+	var reply_message: String
+	var reply_size: Vector2
+	var requires_unlock := false
+	var required_unlock_key: String
+	func _init(_m, _s, _r_key := "", _r_m := "", _r_s = Vector2.ZERO, _required_unlock_key := "") -> void:
+		message = _m
+		size = _s
+		if _required_unlock_key != "":
+			requires_unlock = true
+			required_unlock_key = _required_unlock_key
+		if _r_key == "":
+			return
+		has_reply = true
+		reply_key = _r_key
+		reply_message = _r_m
+		reply_size = _r_s
 
 
 func _init(
@@ -108,8 +132,10 @@ func _init(
 	
 	b = _burn
 	cost = _cost
-	speed = Float.new(_speed / 60)
+	speed = Float.new(_speed)
+	speed.haxm = gv.hax_pow
 	d = Num.new(_base_d)
+	d.haxm = gv.hax_pow
 	
 	color = gv.COLORS[key]
 	
@@ -142,8 +168,7 @@ func _init(
 				fc.b = Big.new(0.09)
 				f.b = Big.new(100)
 	else:
-		f.b = Big.new(fc.b).m(2000)
-		f.b.m(speed.b).m(0.0125)
+		f.b = Big.new(fc.b).m(speed.b).m(40)
 	
 	f.sync()
 	if key == "stone":
@@ -151,8 +176,100 @@ func _init(
 	else:
 		f.f = Big.new(f.t)
 	
+	match key:
+		"iron":
+			emote_pool.append(Emote.new("bread is good,\nbut toast is better!", Vector2(130, 45)))
+			emote_pool.append(Emote.new("thanks for working so hard, Stone!", Vector2(130, 45), "stone", "i couldn't do it without you, buddy!", Vector2(140, 45)))
+			emote_pool.append(Emote.new("Iron Ore's methods may be extreme, but we need him nonetheless!", Vector2(135, 73), "irono", "i can hear you, but i'm going to pretend like i can't", Vector2(105, 73)))
+			#emote_pool.append(Emote.new("Growth must be so smart to make Growth out of Iron and Copper.", Vector2(160, 59), "growth", "you're too kind! actually, all you do i--AHHHH OH GAWD", Vector2(140, 59)))
+			emote_pool.append(Emote.new("Hardwood, can i borrow your helmet?", Vector2(100, 59), "hard", "yes, but actually no", Vector2(80, 45), "hard"))
+			emote_pool.append(Emote.new("i shouldn't have left that one in for so long", Vector2(150, 45)))
+			emote_pool.append(Emote.new("at this point, i'm going to need more toasters", Vector2(150, 45)))
+			emote_pool.append(Emote.new("my arm is getting tired", Vector2(90, 45)))
+			emote_pool.append(Emote.new("i think i need a helmet", Vector2(70, 59)))
+		
+		"cop":
+			emote_pool.append(Emote.new("delicious!", Vector2(80, 39)))
+			emote_pool.append(Emote.new(":)", Vector2(39, 39)))
+			emote_pool.append(Emote.new("anyone want sm' more?", Vector2(90, 45)))
+			emote_pool.append(Emote.new("sit close, it's cold out there", Vector2(100, 45)))
+			emote_pool.append(Emote.new("can i get some more firewood?", Vector2(110, 45), "wood", "i got you, bro!", Vector2(100, 39)))
+			emote_pool.append(Emote.new("stay awhile and listen to the fire", Vector2(110, 45)))
+			emote_pool.append(Emote.new("dark thoughts, bright fire.\nsit with me", Vector2(105, 59)))
+			emote_pool.append(Emote.new("thank you, Copper Ore, i appreciate you!", Vector2(145, 45), "copo", "gee, thanks!", Vector2(60, 45)))
+		
+		"copo":
+			
+			emote_pool.append(Emote.new("it's a working man i am!", Vector2(95, 45)))
+			emote_pool.append(Emote.new("i've been down underground", Vector2(105, 45)))
+			emote_pool.append(Emote.new("i swear to god if i ever see the sun,", Vector2(120, 45)))
+			emote_pool.append(Emote.new("or for any length of time, i can hold it in my mind,", Vector2(125, 59)))
+			emote_pool.append(Emote.new("i never again will go down underground!", Vector2(140, 45)))
+			
+			emote_pool.append(Emote.new("at the age of sixteen years, i quarreled with my peers", Vector2(180, 45)))
+			emote_pool.append(Emote.new("i swear there will never be another one", Vector2(140, 45)))
+			emote_pool.append(Emote.new("in the dark recess of the mine, where you age before your time", Vector2(140, 59)))
+			emote_pool.append(Emote.new("and the coal dust lies heavy on your lungs", Vector2(105, 59)))
+			
+			emote_pool.append(Emote.new("it's a working man i am!", Vector2(95, 45)))
+			emote_pool.append(Emote.new("i've been down underground", Vector2(105, 45)))
+			emote_pool.append(Emote.new("i swear to god if i ever see the sun,", Vector2(120, 45)))
+			emote_pool.append(Emote.new("or for any length of time, i can hold it in my mind,", Vector2(125, 59)))
+			emote_pool.append(Emote.new("i never again will go down underground!", Vector2(140, 45)))
+			
+			emote_pool.append(Emote.new("at the age of sixty-four, if i live that long,", Vector2(100, 59)))
+			emote_pool.append(Emote.new("i'll greet you at the door and gently lead you by the arm", Vector2(140, 59)))
+			emote_pool.append(Emote.new("in the dark recess of the mine, i can take you back in time", Vector2(140, 59)))
+			emote_pool.append(Emote.new("and tell you of the hardships that were there!", Vector2(175, 45)))
+		
+		"irono":
+			
+			emote_pool.append(Emote.new("DIE", Vector2(39, 39)))
+			emote_pool.append(Emote.new("KILL", Vector2(39, 39)))
+			emote_pool.append(Emote.new("GAH!", Vector2(45, 39)))
+			emote_pool.append(Emote.new("BAH!", Vector2(45, 39)))
+			emote_pool.append(Emote.new("this is what you GET", Vector2(85, 45)))
+			emote_pool.append(Emote.new("RAHHugH", Vector2(75, 39)))
+			emote_pool.append(Emote.new("MMUHRRaahhHRcK", Vector2(77, 45)))
+			emote_pool.append(Emote.new("please die!", Vector2(50, 45)))
+			emote_pool.append(Emote.new("can someone pass me some more shells?", Vector2(150, 45), "stone", "no, you creep!", Vector2(60,45)))
+		
+		"stone":
+			emote_pool.append(Emote.new("this one has a sweet edge!", Vector2(95, 45)))
+			emote_pool.append(Emote.new("was that a hacky sack?", Vector2(90, 45)))
+			emote_pool.append(Emote.new("my bag is getting heavy :(", Vector2(70, 59)))
+			emote_pool.append(Emote.new("my back smarts :(", Vector2(70, 45)))
+			emote_pool.append(Emote.new("hey, i found one you might like!", Vector2(115, 45)))
+			emote_pool.append(Emote.new("gotta go fast!", Vector2(60, 45)))
+			emote_pool.append(Emote.new("i wonder how much this one is worth.", Vector2(140, 45)))
+			emote_pool.append(Emote.new("i don't like it when Iron Ore shoots rocks.", Vector2(155, 45), "irono", "rather i shoot you?", Vector2(80, 45)))
+			
+		"coal":
+			
+			emote_pool.append(Emote.new("dig, dig!", Vector2(45, 45)))
+			emote_pool.append(Emote.new("glad to help!", Vector2(65, 45)))
+			emote_pool.append(Emote.new("is this lump yours?\njust kidding!", Vector2(100, 59)))
+			emote_pool.append(Emote.new("i hope my posture is good!", Vector2(80, 59)))
+			emote_pool.append(Emote.new("i'm grateful for my shovel.", Vector2(105, 45)))
+			emote_pool.append(Emote.new("if you didn't get enough, go ahead and take some more!", Vector2(145, 59), "jo", "don't mind if i do!", Vector2(80, 45)))
+			emote_pool.append(Emote.new("i always liked playing support.", Vector2(120, 45)))
+			emote_pool.append(Emote.new("why is this stuff purple?", Vector2(95, 45)))
+	
 
 
+func off_boost():
+	
+	if gv.off_boost:
+		if gv.receives_off_boost[int(stage) - 1]:
+			speed.off_m = 2
+			d.off_m = gv.off_d
+			speed.sync()
+			d.sync()
+	else:
+		speed.off_m = 1
+		d.off_m = 1.0
+		speed.sync()
+		d.sync()
 
 func sync():
 	
@@ -164,7 +281,6 @@ func sync():
 	sync_dynamics()
 	
 	f.sync()
-	progress.sync()
 	d.sync()
 	fc.sync()
 	speed.sync()
@@ -178,10 +294,6 @@ func sync():
 		gv.r[key] = Big.new(0)
 	if gv.r[key].mantissa < 0:
 		gv.r[key].mantissa = 0.0
-	
-	if gv.hax_pow != 1:
-		d.t.m(gv.hax_pow)
-		speed.t /= gv.hax_pow
 
 func sync_dynamics() -> void:
 	
@@ -238,27 +350,27 @@ func net(get_raw_power := false, ignore_halt := false) -> Array:
 	
 	# returns [gain, drain]
 	
-	var gain = Big.new(d.t).d(speed.t).m(Big.new(1).a(crit.t.percent(10)))
+	var gain = Big.new(d.t).d(speed.t).m(Big.new(1).a(crit.t.percent(10))).d(jobs[0].base_duration)
 	var drain = Big.new(0)
 	
 	if not active:
-		gain.m(0)
+		gain = Big.new(0)
 	
 	# upgrade-specific per_sec bonuses
 	if true:
 		
-		if key == "cop" and gv.up["THE THIRD"].active() and gv.g["copo"].active():
-			var gay = Big.new(gv.g["copo"].d.t).d(gv.g["copo"].speed.t)
+		if key == "cop" and gv.up["THE THIRD"].active() and gv.g["copo"].active:
+			var gay = Big.new(gv.g["copo"].d.t).d(gv.g["copo"].speed.t).d(gv.g["copo"].jobs[0].base_duration)
 			gay.m(Big.new(1).a(Big.new(gv.g["copo"].crit.t).d(10)))
 			gain.a(gay)
 		
-		if key == "stone" and gv.up["wait that's not fair"].active() and gv.g["stone"].active():
-			var gay = Big.new(gv.g["coal"].d.t).d(gv.g["coal"].speed.t)
+		if key == "stone" and gv.up["wait that's not fair"].active() and gv.g["coal"].active:
+			var gay = Big.new(gv.g["coal"].d.t).d(gv.g["coal"].speed.t).d(gv.g["coal"].jobs[0].base_duration)
 			gay.m(Big.new(1).a(Big.new(gv.g["coal"].crit.t).d(10)))
 			gain.a(gay)
 		
-		if key == "iron" and gv.up["I RUN"].active() and not gv.g["iron"].active():
-			var gay = Big.new(gv.g["irono"].d.t).d(gv.g["irono"].speed.t)
+		if key == "iron" and gv.up["I RUN"].active() and gv.g["irono"].active:
+			var gay = Big.new(gv.g["irono"].d.t).d(gv.g["irono"].speed.t).d(gv.g["irono"].jobs[0].base_duration)
 			gay.m(Big.new(1).a(Big.new(gv.g["irono"].crit.t).d(10)))
 			gain.a(gay)
 		
@@ -267,7 +379,7 @@ func net(get_raw_power := false, ignore_halt := false) -> Array:
 				for x in buffs:
 					if x.key == gv.Buff.HEX:
 						gain.a(x.get_net())
-				gain.a(witch)
+			gain.a(witch)
 	
 	if get_raw_power:
 		return [gain, drain]
@@ -276,17 +388,17 @@ func net(get_raw_power := false, ignore_halt := false) -> Array:
 	if not ignore_halt:
 		
 		if halt:
-			gain.m(0)
+			gain = Big.new(0)
 		
 		# all below: candy from babies
 		while "bur " in type:
 			if gv.up["don't take candy from babies"].active():
 				if int(type[1]) > 1 and gv.g["coal"].level <= 5:
 					if f.f.less(Big.new(f.t).m(0.1)):
-						gain.m(0)
+						gain = Big.new(0)
 						break
 			if f.f.less(Big.new(f.t).m(0.1)) and not gv.g["coal"].active:
-				gain.m(0)
+				gain = Big.new(0)
 				break
 			break
 		
@@ -294,20 +406,20 @@ func net(get_raw_power := false, ignore_halt := false) -> Array:
 			if gv.up["don't take candy from babies"].active():
 				if int(type[1]) > 1 and gv.g["jo"].level <= 5:
 					if f.f.less(Big.new(f.t).m(0.1)):
-						gain.m(0)
+						gain = Big.new(0)
 						break
 			if f.f.less(Big.new(f.t).m(0.1)) and not gv.g["jo"].active:
-				gain.m(0)
+				gain = Big.new(0)
 				break
 			break
 		
 		for x in b:
 			if gv.up["don't take candy from babies"].active():
 				if gv.g[x].type[1] == "1" and int(type[1]) > 1 and gv.g[x].level <= 5:
-					gain.m(0)
+					gain = Big.new(0)
 					break
 			if not gv.g[x].hold: continue
-			gain.m(0)
+			gain = Big.new(0)
 			break
 	
 	# fuel lored
@@ -316,6 +428,15 @@ func net(get_raw_power := false, ignore_halt := false) -> Array:
 		for x in gv.g:
 			
 			if not gv.g[x].active:
+				continue
+			
+			var cont := false
+			for _b in gv.g[x].b:
+				if gv.g[_b].hold:
+					cont = true
+				if cont:
+					break
+			if cont:
 				continue
 			
 			if (key == "coal" and "bur " in gv.g[x].type) or (key == "jo" and "ele " in gv.g[x].type):
@@ -349,7 +470,7 @@ func net(get_raw_power := false, ignore_halt := false) -> Array:
 		if is_baby(int(gv.g[x].type[1])):
 			continue
 		
-		var gay = Big.new(gv.g[x].d.t).d(gv.g[x].speed.t).m(gv.g[x].b[key].t)
+		var gay = Big.new(gv.g[x].d.t).d(gv.g[x].speed.t).m(gv.g[x].b[key].t).d(gv.g[x].jobs[0].base_duration)
 		drain.a(gay)
 	
 	if drain.exponent < -10:
@@ -365,6 +486,8 @@ func unlock():
 
 func bought():
 	
+	times_purchased += 1
+	
 	# price
 	if true:
 		
@@ -377,6 +500,8 @@ func bought():
 	if taq.cur_quest != -1:
 		
 		taq.progress(gv.TaskRequirement.LORED_UPGRADED, key)
+	
+	gv.stats.g_list["active s" + str(stage)].append(key)
 	
 	# already owned; upgrading
 	if active:
@@ -403,8 +528,6 @@ func bought():
 		
 		active = true
 		unlocked = true
-		
-		gv.stats.g_list["active s" + str(stage)].append(key)
 		
 		if not gv.s2_upgrades_may_be_autobought:
 			if key in gv.loreds_required_for_s2_autoup_upgrades_to_begin_purchasing:
@@ -473,10 +596,8 @@ func witch() -> void:
 	
 	if halt or stage != "1" or not gv.up["THE WITCH OF LOREDELITH"].active():
 		return
-	if "no" in gv.menu.f:
-		return
 	
-	witch = Big.new(d.t).m(0.01).m(speed.b / speed.t).m(60)
+	witch = Big.new(d.t).m(0.01).m(speed.b / speed.t).m(60).d(jobs[0].base_duration)
 	
 	if gv.up["GRIMOIRE"].active():
 		witch.m(log(gv.stats.run[0]))
@@ -494,7 +615,7 @@ func w_get_losing() -> float:
 			if (key == "coal" and "bur " in gv.g[x].type) or (key == "jo" and "ele " in gv.g[x].type):
 				
 				var go_for_it := true
-				while f.level <= 5:
+				while f.level < 5:
 					if not gv.up["don't take candy from babies"].active(): break
 					if int(gv.g[x].type[1]) >= 2: go_for_it = false
 					break
@@ -543,7 +664,7 @@ func autobuy() -> bool:
 		if gv.g[x].hold:
 			return false
 		
-		var consm = Big.new(b[x].t).m(d.t.percent(speed.t))
+		var consm = Big.new(b[x].t).m(d.t).d(speed.t).d(jobs[0].base_duration)
 		# how much this lored consumes from the ingredient lored (x)
 		
 		if gv.g[x].halt:
@@ -578,16 +699,12 @@ func autobuy() -> bool:
 
 func autobuy_upgrade_check() -> bool:
 	
-	if "1" == type[1]:
-		if gv.up["don't take candy from babies"].active() and level < 6:
-			return true
+	if stage == "1" and gv.up["don't take candy from babies"].active() and level < 5:
+		return true
 	
 	match key:
-		"malig":
+		"malig", "iron", "cop":
 			if gv.up["THE WITCH OF LOREDELITH"].active():
-				return true
-		"iron", "cop":
-			if gv.up["IT'S SPREADIN ON ME"].active():
 				return true
 		"irono":
 			if gv.up["I RUN"].active():
@@ -605,7 +722,6 @@ func autobuy_upgrade_check() -> bool:
 func reset():
 	
 	f.reset()
-	progress.reset()
 	d.reset()
 	fc.reset()
 	speed.reset()
@@ -614,7 +730,11 @@ func reset():
 	for x in b:
 		b[x].reset()
 	
+	active = true if key == "stone" else false
 	unlocked = true if key in ["stone", "coal"] else false
+	
+	if key == "stone":
+		f.f = Big.new(fc.b).m(speed.b).m(1.02)
 	
 	halfway_reset_stuff()
 
@@ -630,13 +750,12 @@ func halfway_reset_stuff():
 	hold = false
 	
 	f.sync()
-	f.f = Big.new(f.t)
+	if key != "stone":
+		f.f = Big.new(f.t)
 	
 	witch()
 	
 	inhand = Big.new(0)
-	progress.f = 0.0
-	progress.b = 1.0
 	
 	manager.stop()
 	
@@ -656,10 +775,6 @@ func partial_reset():
 	halfway_reset_stuff()
 
 func logic() -> String:
-	
-	if "no" in gv.menu.f:
-		if int(stage) <= int(gv.menu.f.split(" s")[1]):
-			return "idle"
 	
 	if halt:
 		return "idle"
@@ -702,6 +817,16 @@ func logic() -> String:
 	
 	return "cook " + key
 
+func can_work() -> bool:
+	
+	if not gv.g[fuel_source].unlocked:
+		return false
+	
+	for _b in b:
+		if not gv.g[_b].unlocked:
+			return false
+	
+	return true
 func can(_task: String) -> bool:
 	return _task in task_list
 

@@ -33,10 +33,9 @@ func init(key : String) -> int:
 	
 	if not gv.up[key].have:
 		
-		if "no" in rt.menu.f and gv.up[key].refundable:
+		if gv.up[key].refundable:
 			
 			$refund.show()
-			var refund_type : String = rt.menu.f.split("no ")[1]
 			
 			var price : float
 			
@@ -46,7 +45,7 @@ func init(key : String) -> int:
 			if key == "Limit Break":
 				get_parent().content["tip up"].get_node("refund").text = "You do not own this upgrade until you reset."
 			else:
-				get_parent().content["tip up"].get_node("refund").init(refund_type, fval.f(price))
+				get_parent().content["tip up"].get_node("refund").init("s" + gv.up[key].stage, fval.f(price))
 			height = 30
 		
 		else:

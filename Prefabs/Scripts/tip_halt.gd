@@ -15,7 +15,7 @@ func setup(_key):
 	r_update()
 
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	
 	rect_size = Vector2(0, 0)
 	set_process(false)

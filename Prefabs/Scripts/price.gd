@@ -25,6 +25,8 @@ func setup(__owner: String, _key, _name = "", _color = ""):
 	key = _key
 	_owner = __owner
 	
+	$bg.self_modulate = gv.COLORS[key]
+	
 	# text
 	if _name == "":
 		_name = gv.g[key].name
@@ -69,4 +71,4 @@ func _physics_process(delta: float) -> void:
 		if _owner == "cac":
 			return
 		get_node(gn.time).show()
-		get_node(gn.time).text = gv.time_remaining(key, gv.r[key], total, false)
+		get_node(gn.time).text = gv.time_remaining(key, gv.r[key], total)

@@ -1,156 +1,116 @@
 extends MarginContainer
 
-onready var rt = get_node("/root/Root")
 
-onready var gn_icon = get_node("VBoxContainer/title/h/icon/Sprite")
-onready var gn_name = get_node("VBoxContainer/title/h/v/name")
-onready var gn_progress = get_node("VBoxContainer/title/h/v/progress")
-onready var gn_desc = get_node("VBoxContainer/desc")
-onready var gn_desc2 = get_node("VBoxContainer/desc2")
-onready var gn_permanent = get_node("VBoxContainer/Active/permanent")
-onready var gn_refundable = get_node("VBoxContainer/Active/refundable")
+onready var icon = get_node("v/header/v/h/icon")
+onready var gn_name = get_node("v/header/v/h/name")
+onready var desc = get_node("v/desc")
+onready var req = get_node("v/req")
+onready var req_icon = get_node("v/req/v/h/icon")
+onready var req_name = get_node("v/req/v/h/name")
+onready var price = get_node("v/price")
+onready var refundable = get_node("v/header/v/refundable")
 
-var key := ""
-var required_upgrades_purchased := true
-
+var up: Upgrade
 var cont := {}
-var src := {
-	price = preload("res://Prefabs/tooltip/price.tscn"),
-}
+var price_filled := false
 
 
-func init(_key: String) -> void:
+func init(_upgrade_key: String) -> void:
 	
-	key = _key
+	up = gv.up[_upgrade_key]
+	up.active_tooltip = self
 	
-	required_upgrades_purchased = requirements()
+	icon.init(_upgrade_key)
+	gn_name.text = up.name
 	
-	rect_size = Vector2(0, 0)
-	
-	labels_and_textures()
-	
-	effects()
-	
-	price_stuff()
-	
-	refundable()
-	
-	rect_size = Vector2(0, 0)
+	display()
 
+func display():
+	
+	refundable.visible = up.refundable
+	
+	if not up.requirements():
+		req.show()
+		req_icon.init(up.requires[0])
+		req_name.text = gv.up[up.requires[0]].name
+		desc.bbcode_text = random_desc()
+	else:
+		req.hide()
+		set_desc()
+		price_stuff()
+	
+	var t = Timer.new()
+	add_child(t)
+	t.start(.05)
+	yield(t, "timeout")
+	t.queue_free()
+	
+	rect_size = Vector2.ZERO
+
+func set_desc():
+	
+	up.sync_desc()
+	desc.bbcode_text = up.desc.f
+	
+	match up.key:
+		
+		"I DRINK YOUR MILKSHAKE":
+			desc.bbcode_text += " (+[b][color=#" + gv.COLORS["coal"].to_html() + "]" + up.effects[0].effect.print() + "[/color][/b])"
+		
+		"IT'S GROWIN ON ME", "IT'S SPREADIN ON ME":
+			desc.bbcode_text += " ("
+			if gv.up["IT'S GROWIN ON ME"].active():
+				desc.bbcode_text += " +[b][color=#" + gv.COLORS["iron"].to_html() + "]" + gv.up["IT'S GROWIN ON ME"].effects[0].effect.print() + "[/color][/b],"
+				desc.bbcode_text += " +[b][color=#" + gv.COLORS["cop"].to_html() + "]" + gv.up["IT'S GROWIN ON ME"].effects[1].effect.print() + "[/color][/b]"
+			
+			if gv.up["IT'S SPREADIN ON ME"].active():
+				desc.bbcode_text += ", +[b][color=#" + gv.COLORS["irono"].to_html() + "]" + gv.up["IT'S SPREADIN ON ME"].effects[0].effect.print() + "[/color][/b],"
+				desc.bbcode_text += " +[b][color=#" + gv.COLORS["copo"].to_html() + "]" + gv.up["IT'S SPREADIN ON ME"].effects[1].effect.print() + "[/color][/b]"
+			desc.bbcode_text += ")"
+	
+	if desc.rect_size.x > 240:
+		desc.rect_min_size.x = 240
 
 func price_stuff() -> void:
 	
-	# catches
-	if true:
-		
-		if not required_upgrades_purchased:
-			return
-		if gv.up[key].have:
-			return
-		if gv.up[key].refundable:
-			return
-		if "reset" in gv.up[key].type:
-			return
-		if gv.up[key].cost.size() == 0:
-			return
+	if price_filled:
+		return
 	
-	$VBoxContainer/m.show()
-	get_node("VBoxContainer/m/bg").self_modulate = gv.COLORS[gv.up[key].icon]
+	price.hide()
 	
-	var f = gv.up[key].cost
+	if up.have:
+		return
+	if up.refundable:
+		return
+	if "reset" in up.type:
+		return
+	if up.cost.size() == 0:
+		return
+	
+	price.show()
+	
 	var i := 0
 	
-	for x in f:
+	for x in up.cost:
 		
-		var val: Big = Big.new(f[x].t)
+		#var val: Big = Big.new(f[x].t)
 		
-		cont[x] = src.price.instance()
+		cont[x] = gv.SRC["price"].instance()
 		
-		cont[x].setup(key, x)
+		cont[x].setup(up.key, x)
 		
 		# alternate backgrounds
 		if i % 2 == 1: cont[x].get_node("bg").show()
 		
-		get_node("VBoxContainer/m/price").add_child(cont[x])
+		price.add_child(cont[x])
 		
 		i += 1
-
-func refundable() -> void:
 	
-	if not gv.up[key].refundable:
-		return
-	
-	gn_refundable.show()
-
-func requirements() -> bool:
-	
-	for x in gv.up[key].requires:
-		
-		if not (gv.up[x].have or gv.up[x].refundable):# and gv.up[x].refundable:
-			
-			cont[x] = gv.SRC["upgrade block"].instance()
-			$VBoxContainer/requires/v.add_child(cont[x])
-			cont[x].init(x)
-			$VBoxContainer/requires.show()
-			
-			return false
-	
-	return true
-
-func effects() -> void:
-	
-	var upgrades_with_effects := [
-		"IT'S GROWIN ON ME",
-		"IT'S SPREADIN ON ME",
-		"I DRINK YOUR MILKSHAKE"
-	]
-	
-	# catches
-	if not key in upgrades_with_effects:
-		return
-	if not gv.up[key].active():
-		return
-	if not gv.up[key].have:
-		return
-	
-	
-	
-	get_node("VBoxContainer/effects").show()
-	get_node("VBoxContainer/effects/bg").self_modulate = gv.g[gv.up[key].icon].color
-	
-	match key:
-		
-		"I DRINK YOUR MILKSHAKE":
-			
-			get_node("VBoxContainer/effects/v/idym").show()
-		
-		"IT'S GROWIN ON ME", "IT'S SPREADIN ON ME":
-			
-			if gv.up["IT'S GROWIN ON ME"].active():
-				get_node("VBoxContainer/effects/v/igom_iron").show()
-				get_node("VBoxContainer/effects/v/igom_cop").show()
-			
-			if gv.up["IT'S SPREADIN ON ME"].active():
-				get_node("VBoxContainer/effects/v/igom_irono").show()
-				get_node("VBoxContainer/effects/v/igom_copo").show()
-
-func labels_and_textures() -> void:
-	
-	gn_name.text = gv.up[key].name
-	
-	if required_upgrades_purchased:
-		
-		gn_icon.texture = gv.sprite[gv.up[key].icon]
-		gn_desc.text = gv.up[key].desc.f
-	
-	else:
-		
-		gn_icon.texture = gv.sprite["unknown"]
-		gn_desc.text = random_desc()
+	price_filled = true
 
 func random_desc() -> String:
 	
-	var roll : int = rand_range(0,40)
+	var roll : int = randi() % 40
 	match roll:
 		39:
 			return "Instantly deletes your sugar and caffeine addictions, and fills your fridge with water bottles."
@@ -171,7 +131,7 @@ func random_desc() -> String:
 		31:
 			return "Causes every LORED to become a Super Sonic Racer. Everybody. Everybody. Everybody. Everybody. Everybody. Everybody. Everybody. Everybody. Everybody. Everybody. EVERYBODY."
 		30:
-			return "Jeremy Soule creates a 30-hour soundtrack for a little internet game called LORED."
+			return "Jeremy Soule creates a 30-hour soundtrack for a little game called LORED."
 		1:
 			return "This upgrade could do ANYTHING. It could unlock the WIN command. You don't know."
 		2:
@@ -234,13 +194,3 @@ func random_desc() -> String:
 			return "You have now spent 10x the amount of time with your parents and grandparents, for free."
 		_:
 			return "Who the frick knows what this upgrade does?"
-
-
-func r_desc2():
-	
-	if gv.up[key].progress.f == 0:
-		gn_desc2.hide()
-		return
-	
-	gn_desc2.show()
-	#gn_desc2.text = 

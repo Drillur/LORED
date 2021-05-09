@@ -98,7 +98,7 @@ margin_right = 205.0
 margin_bottom = 23.0
 custom_fonts/font = ExtResource( 2 )
 custom_colors/font_color = Color( 0.804688, 0.804688, 0.804688, 1 )
-text = "Prevents or allows the use of this resource (except for fuel if appliccable)."
+text = "Prevents or allows the use of this resource (except for fuel)."
 valign = 1
 autowrap = true
 

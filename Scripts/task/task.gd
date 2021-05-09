@@ -1,125 +1,86 @@
-extends Button
-
+extends MarginContainer
 
 onready var rt = get_node("/root/Root")
 
+onready var gn_done = get_node("done")
+onready var gn_button = get_node("Button")
+onready var gn_icon = get_node("m/h/icon/icon")
+onready var gn_progress = get_node("progress")
+onready var gn_progress_f = get_node("progress/f")
+onready var gn_progress_flair = get_node("progress/f/flair")
+onready var gn_quest_name = get_node("m/h/quest_name")
+
 var task: Task
 
-var fps := 0.0
+func _ready():
+	set_physics_process(false)
 
+func _on_Button_pressed(manual: bool) -> void:
+	task.attempt_turn_in(manual)
 
+func _on_Button_mouse_exited() -> void:
+	rt.get_node("global_tip")._call("no")
+func _on_Button_mouse_entered() -> void:
+	if task.random:
+		rt.get_node("global_tip")._call("taq ", {"task": task})
+	else:
+		rt.get_node("global_tip")._call("taq quest " + str(taq.quest.key))#"quest " + taq.quest.name)
 
 func init(_task: Task) -> void:
 	
 	task = _task
-	
 	task.manager = self
 	
-	# ref
-	if true:
-		
-		$icon.texture = task.icon
-		$tp.self_modulate = Color(task.color.r, task.color.g, task.color.b, 0.5)
-		if task.type == gv.Quest.RANDOM_RARE:
-			$rare.show()
-		elif task.type == gv.Quest.RANDOM_SPIKE:
-			$spike.show()
+	gn_progress_f.modulate = task.color
+	gn_done.self_modulate = task.color
+	
+	gn_icon.set_texture(task.icon)
+	
+	if not task.random:
+		rect_min_size.x = 170
+		gn_quest_name.text = task.name
+		gn_quest_name.show()
+		gn_quest_name.modulate = task.color
+	
+	var t = Timer.new()
+	add_child(t)
+	t.start(0.01)
+	yield(t, "timeout")
+	t.queue_free()
+	
+	r_update()
 
+func ready():
+	gn_done.show()
+	gn_button.show()
+	gn_button.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	gn_progress_f.rect_size.x = gn_progress.rect_size.x
+	gn_progress_flair.hide()
+	if task.random:
+		taq.task_manager.ready_task_count += 1
 
-
-func _physics_process(delta):
-	
-	return
-	
-	if $tp.value >= 100:
-		return
-	
-	fps += delta
-	if fps < gv.fps:
-		return
-	fps -= gv.fps
-	
-	r_update_tp()
-
-func r_update_tp() -> void:
-	
-	$tp.value = task.points.percent(task.total_points) * 100
+func r_update():
 	
 	if task.ready:
-		get_parent().get_parent().ready_task_count += 1
-		$time.text = ""
-		$tp.self_modulate = Color($tp.self_modulate.r, $tp.self_modulate.g, $tp.self_modulate.b, 1.0)
-		
-		if gv.menu.option["task auto"]:
-			_on_task_pressed(false)
-
-
-func _on_task_mouse_entered():
-	rt.get_node("global_tip")._call("taq", {"random": task})#"task " + str(code))
-	$time.show()
-
-func _on_task_mouse_exited():
-	rt.get_node("global_tip")._call("no")
-	$time.hide()
-
-
-func _on_task_pressed(manual := true):
-	
-	if $tp.value < 100:
-		if manual:
-			rt.get_node("global_tip").tip.cont["taq"].flash_incomplete_steps = true
 		return
 	
-	if manual:
-		rt.get_node("global_tip")._call("no")
-	
-	gv.stats.tasks_completed += 1
-	
-	hide()
-	get_parent().get_parent().content.remove(self) # erases this task from content too
-	finish_up()
-
-func kill_yourself():
-	set_physics_process(false)
-	hide()
-	get_parent().get_parent().content.remove(self)
-	taq.task.erase(task)
-	taq.cur_tasks -= 1
-	queue_free()
-
-func finish_up():
-	
-	if taq.cur_quest != -1:
-		
-		if "Tasks completed" in taq.quest.step.keys():
-			var A = Big.new(Big.min(Big.new(taq.quest.step["Tasks completed"].f).a(1), taq.quest.step["Tasks completed"].b))
-			taq.quest.step["Tasks completed"].f = A
-		elif "Rare or Spike tasks completed" in taq.quest.step.keys():
-			if $rare.visible or $spike.visible:
-				var A = Big.new(Big.min(Big.new(taq.quest.step["Rare or Spike tasks completed"].f).a(1), taq.quest.step["Rare or Spike tasks completed"].b))
-				taq.quest.step["Rare or Spike tasks completed"].f = A
-		elif "Spike tasks completed" in taq.quest.step.keys():
-			if $spike.visible:
-				var A = Big.new(Big.min(Big.new(taq.quest.step["Spike tasks completed"].f).a(1), taq.quest.step["Spike tasks completed"].b))
-				taq.quest.step["Spike tasks completed"].f = A
-	
-	var gayzo = {}
-	for r in task.reward:
-		if not r.type == gv.TaskRequirement.REDSOURCE_PRODUCTION:
-			continue
-		
-		taq.progress(gv.TaskRequirement.RESOURCE_PRODUCTION, r.other_key, r.amount)
-		
-		gayzo[r.other_key] = Big.new(r.amount)
-	
-	get_parent().get_parent().flying_numbers(gayzo)
-	
-	taq.task.erase(task)
-	
-	queue_free()
+	gn_progress_f.rect_size.x = task.points.percent(task.total_points) * gn_progress.rect_size.x
 
 
-
-
-func _on_task_button_down():
+func _on_button_down():
 	rt.get_node("map").status = "no"
+
+func _on_done_pressed():
+	b_end_task()
+
+func b_end_task() -> void:
+	
+	rt.quests[taq.quest.name].complete = true
+	
+	get_parent().quest_ended()
+	
+	queue_free()
+
+
+
+

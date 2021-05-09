@@ -98,7 +98,7 @@ func cac_slain(key: int):
 		
 		rt.get_node("m/lored texts").add_child(cont["spirit gained"])
 	
-	var previous_pos = cont[key].get_index()
+	#var previous_pos = cont[key].get_index()
 	
 	cont[key].queue_free()
 	cont.erase(key)

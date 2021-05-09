@@ -1,0 +1,286 @@
+[gd_scene load_steps=9 format=2]
+
+[ext_resource path="res://Fonts/Roboto-BlackItalic.ttf" type="DynamicFontData" id=2]
+[ext_resource path="res://Fonts/Roboto-Medium.ttf" type="DynamicFontData" id=3]
+[ext_resource path="res://Prefabs/tooltip/Off Tooltip.gd" type="Script" id=7]
+
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 1, 1, 1, 0.0509804 )
+expand_margin_left = 10.0
+expand_margin_right = 10.0
+expand_margin_top = 10.0
+expand_margin_bottom = 10.0
+
+[sub_resource type="DynamicFont" id=2]
+font_data = ExtResource( 2 )
+
+[sub_resource type="DynamicFont" id=3]
+size = 12
+font_data = ExtResource( 3 )
+
+[sub_resource type="StyleBoxFlat" id=5]
+bg_color = Color( 1, 1, 1, 0.8 )
+
+[sub_resource type="StyleBoxFlat" id=4]
+bg_color = Color( 1, 1, 1, 0.5 )
+
+[node name="Off Tooltip" type="MarginContainer"]
+margin_right = 281.0
+margin_bottom = 338.0
+rect_min_size = Vector2( 281, 0 )
+custom_constants/margin_right = 10
+custom_constants/margin_top = 10
+custom_constants/margin_left = 10
+custom_constants/margin_bottom = 10
+script = ExtResource( 7 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="v" type="VBoxContainer" parent="."]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 271.0
+margin_bottom = 328.0
+
+[node name="header" type="MarginContainer" parent="v"]
+margin_right = 261.0
+margin_bottom = 58.0
+custom_constants/margin_right = 10
+custom_constants/margin_top = 10
+custom_constants/margin_left = 10
+custom_constants/margin_bottom = 10
+__meta__ = {
+"_editor_description_": ""
+}
+
+[node name="bg" type="Panel" parent="v/header"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 251.0
+margin_bottom = 48.0
+custom_styles/panel = SubResource( 1 )
+
+[node name="v" type="VBoxContainer" parent="v/header"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 251.0
+margin_bottom = 48.0
+
+[node name="Label" type="Label" parent="v/header/v"]
+margin_right = 241.0
+margin_bottom = 19.0
+custom_fonts/font = SubResource( 2 )
+custom_colors/font_color = Color( 0.8, 0.8, 0.8, 1 )
+text = "Offline Boost"
+
+[node name="time offline" type="Label" parent="v/header/v"]
+margin_top = 23.0
+margin_right = 241.0
+margin_bottom = 38.0
+custom_fonts/font = SubResource( 3 )
+custom_colors/font_color = Color( 0.8, 0.8, 0.8, 1 )
+text = "You were offline for %s!"
+autowrap = true
+
+[node name="logic" type="VBoxContainer" parent="v"]
+margin_top = 62.0
+margin_right = 261.0
+margin_bottom = 238.0
+
+[node name="lock" type="HBoxContainer" parent="v/logic"]
+visible = false
+margin_right = 304.0
+margin_bottom = 92.0
+custom_constants/separation = 10
+
+[node name="dot" type="Panel" parent="v/logic/lock"]
+self_modulate = Color( 1, 0.329412, 0, 1 )
+margin_top = 43.0
+margin_right = 6.0
+margin_bottom = 49.0
+rect_min_size = Vector2( 6, 6 )
+size_flags_horizontal = 4
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 5 )
+
+[node name="ingredient net" type="VBoxContainer" parent="v/logic/lock"]
+margin_left = 16.0
+margin_right = 304.0
+margin_bottom = 92.0
+size_flags_horizontal = 3
+
+[node name="flair" type="Label" parent="v/logic/lock/ingredient net"]
+margin_right = 288.0
+margin_bottom = 19.0
+custom_fonts/font = SubResource( 2 )
+custom_colors/font_color = Color( 0.8, 0.8, 0.8, 1 )
+text = "Locked"
+
+[node name="Label2" type="Label" parent="v/logic/lock/ingredient net"]
+margin_top = 23.0
+margin_right = 288.0
+margin_bottom = 92.0
+rect_min_size = Vector2( 288, 0 )
+custom_fonts/font = SubResource( 3 )
+custom_colors/font_color = Color( 0.8, 0.8, 0.8, 1 )
+text = "You have not unlocked every LORED in the highest tier Stage, so these boosts are disabled. Don't worry! Your time offline will continue to accrue; you may benefit from it yet! Nothing is lost, just postponed."
+autowrap = true
+
+[node name="haste" type="HBoxContainer" parent="v/logic"]
+margin_right = 261.0
+margin_bottom = 38.0
+custom_constants/separation = 10
+
+[node name="dot" type="Panel" parent="v/logic/haste"]
+self_modulate = Color( 0, 1, 0, 1 )
+margin_top = 16.0
+margin_right = 6.0
+margin_bottom = 22.0
+rect_min_size = Vector2( 6, 6 )
+size_flags_horizontal = 4
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 4 )
+
+[node name="ingredient net" type="VBoxContainer" parent="v/logic/haste"]
+margin_left = 16.0
+margin_right = 261.0
+margin_bottom = 38.0
+size_flags_horizontal = 3
+
+[node name="flair" type="Label" parent="v/logic/haste/ingredient net"]
+margin_right = 245.0
+margin_bottom = 19.0
+custom_fonts/font = SubResource( 2 )
+custom_colors/font_color = Color( 0.8, 0.8, 0.8, 1 )
+text = "LORED Haste x2"
+
+[node name="Label2" type="Label" parent="v/logic/haste/ingredient net"]
+margin_top = 23.0
+margin_right = 245.0
+margin_bottom = 38.0
+custom_fonts/font = SubResource( 3 )
+custom_colors/font_color = Color( 0.8, 0.8, 0.8, 1 )
+text = "This boost divides your time offline by 2."
+autowrap = true
+
+[node name="output" type="HBoxContainer" parent="v/logic"]
+margin_top = 42.0
+margin_right = 261.0
+margin_bottom = 98.0
+custom_constants/separation = 10
+
+[node name="dot" type="Panel" parent="v/logic/output"]
+self_modulate = Color( 0, 1, 0, 1 )
+margin_top = 25.0
+margin_right = 6.0
+margin_bottom = 31.0
+rect_min_size = Vector2( 6, 6 )
+size_flags_horizontal = 4
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 4 )
+
+[node name="ingredient net" type="VBoxContainer" parent="v/logic/output"]
+margin_left = 16.0
+margin_right = 261.0
+margin_bottom = 56.0
+size_flags_horizontal = 3
+
+[node name="flair" type="Label" parent="v/logic/output/ingredient net"]
+margin_right = 245.0
+margin_bottom = 19.0
+custom_fonts/font = SubResource( 2 )
+custom_colors/font_color = Color( 0.8, 0.8, 0.8, 1 )
+text = "LORED Output x%s"
+
+[node name="Label" type="Label" parent="v/logic/output/ingredient net"]
+margin_top = 23.0
+margin_right = 245.0
+margin_bottom = 56.0
+custom_fonts/font = SubResource( 3 )
+custom_colors/font_color = Color( 0.8, 0.8, 0.8, 1 )
+text = "The time cap is 60m, so time beyond that instead grants an output boost."
+autowrap = true
+
+[node name="time extension" type="HBoxContainer" parent="v/logic"]
+margin_top = 102.0
+margin_right = 261.0
+margin_bottom = 176.0
+custom_constants/separation = 10
+
+[node name="dot" type="Panel" parent="v/logic/time extension"]
+self_modulate = Color( 0, 1, 0, 1 )
+margin_top = 34.0
+margin_right = 6.0
+margin_bottom = 40.0
+rect_min_size = Vector2( 6, 6 )
+size_flags_horizontal = 4
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 4 )
+
+[node name="ingredient net" type="VBoxContainer" parent="v/logic/time extension"]
+margin_left = 16.0
+margin_right = 261.0
+margin_bottom = 74.0
+size_flags_horizontal = 3
+
+[node name="flair" type="Label" parent="v/logic/time extension/ingredient net"]
+margin_right = 245.0
+margin_bottom = 19.0
+custom_fonts/font = SubResource( 2 )
+custom_colors/font_color = Color( 0.8, 0.8, 0.8, 1 )
+text = "Time Extension: +%s"
+
+[node name="Label" type="Label" parent="v/logic/time extension/ingredient net"]
+margin_top = 23.0
+margin_right = 245.0
+margin_bottom = 74.0
+custom_fonts/font = SubResource( 3 )
+custom_colors/font_color = Color( 0.8, 0.8, 0.8, 1 )
+text = "The output boost cap is 10x. This cap takes priority over the time cap, so boost beyond that will instead extend the time."
+autowrap = true
+
+[node name="pausable" type="MarginContainer" parent="v"]
+margin_top = 242.0
+margin_right = 261.0
+margin_bottom = 318.0
+custom_constants/margin_right = 10
+custom_constants/margin_top = 10
+custom_constants/margin_left = 10
+custom_constants/margin_bottom = 10
+__meta__ = {
+"_editor_description_": ""
+}
+
+[node name="bg" type="Panel" parent="v/pausable"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 251.0
+margin_bottom = 66.0
+custom_styles/panel = SubResource( 1 )
+
+[node name="v" type="VBoxContainer" parent="v/pausable"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 251.0
+margin_bottom = 66.0
+
+[node name="Label" type="Label" parent="v/pausable/v"]
+margin_right = 241.0
+margin_bottom = 19.0
+custom_fonts/font = SubResource( 2 )
+custom_colors/font_color = Color( 0.8, 0.8, 0.8, 1 )
+text = "Pausable"
+
+[node name="Label2" type="Label" parent="v/pausable/v"]
+margin_top = 23.0
+margin_right = 241.0
+margin_bottom = 56.0
+custom_fonts/font = SubResource( 3 )
+custom_colors/font_color = Color( 0.8, 0.8, 0.8, 1 )
+text = "Press T at any time to pause or resume the offline bonus."
+autowrap = true
+
+[node name="Timer" type="Timer" parent="."]
+one_shot = true
+autostart = true

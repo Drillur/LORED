@@ -60,7 +60,7 @@ func tick() -> void:
 	
 	tick_count += 1
 	
-	#print("duration_elapsed: ", duration_elapsed)
+	#rint("duration_elapsed: ", duration_elapsed)
 	
 	match key:
 		

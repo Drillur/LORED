@@ -13,26 +13,36 @@ var some_started := false
 var net: Array
 
 var lored: LORED
-var key = "copo"
+var key := "copo"
 
+var emotes := {
+	"emote cd": false,
+	"net - time when last positive": 0,
+}
+var emote: MarginContainer
+var last_emote_index := -1
 
 var gn_frames = 0
 var gn_progress_bar = 0
-var gn_fuel = 0
 var gn_status = 0
 var gn_net = 0
 var gn_amount = 0
 var gn_d = 0
 var gn_buy = 0
-var gn_afford_check = 0
 var gn_task_text = 0
 var gn_item_name = 0
 var gn_autobuywheel = 0
+onready var autobuywheel = get_node("v/interactables/lored/h/buy/h/autobuy/as")
+onready var fuel = get_node("v/fuel")
+onready var fuel_bar = get_node("v/fuel/bar")
+onready var fuel_bar_f = get_node("v/fuel/bar/f")
+onready var afford = get_node("v/interactables/lored/h/buy/afford")
 var gn_quest = 0
+var gn_quest_f = 0
+onready var color_blind = get_node("v/interactables/lored/h/buy/h/color blind")
 
-var gnhold = "h/interactables/lored/h/hold"
-var gnhalt = "h/interactables/lored/h/halt"
-var gnbuy = "h/interactables/lored/buy"
+var gnhold = "v/interactables/lored/h/hold"
+var gnhalt = "v/interactables/lored/h/halt"
 
 
 var frame_set := {}
@@ -40,6 +50,7 @@ var max_frames : int = 25
 var halfway_frame : int = 13
 
 var cont := {}
+var emoting := false
 var output := {} # dict holding every output text prefab
 
 var src := {
@@ -61,19 +72,18 @@ func setup(_key: String) -> void:
 
 func allocate_gn():
 	
-	gn_progress_bar = get_node("h/h/lored/task")
-	gn_frames = get_node("h/h/animation/AnimatedSprite")
-	gn_fuel = get_node("h/h/lored/fuel")
+	gn_progress_bar = get_node("v/h/lored/task")
+	gn_frames = get_node("v/h/animation/AnimatedSprite")
 	gn_status = get_node("bg/status")
-	gn_net = get_node("h/h/lored/h/v/net")
-	gn_amount = get_node("h/h/lored/h/v/amount")
-	gn_d = get_node("h/h/lored/task/d")
-	gn_buy = get_node("h/interactables/lored/buy")
-	gn_afford_check = get_node("h/interactables/lored/buy/check")
-	gn_task_text = get_node("h/h/lored/task/task text")
-	gn_item_name = get_node("h/h/lored/h/v/item name")
-	gn_autobuywheel = get_node("h/interactables/lored/buy/autobuywheel")
-	gn_quest = get_node("h/interactables/lored/quest")
+	gn_net = get_node("v/h/lored/h/v/net")
+	gn_amount = get_node("v/h/lored/h/v/amount")
+	gn_d = get_node("v/h/lored/task/d")
+	gn_buy = get_node("v/interactables/lored/h/buy/button")
+	gn_task_text = get_node("v/h/lored/task/task text")
+	gn_item_name = get_node("v/h/lored/h/v/item name")
+	gn_autobuywheel = get_node("v/interactables/lored/h/buy/h/autobuy")
+	gn_quest = get_node("v/interactables/lored/quest")
+	gn_quest_f = get_node("v/interactables/lored/quest/f")
 
 func start_some():
 	
@@ -96,8 +106,12 @@ func start_some():
 	
 	if not lored.smart:
 		r_d()
+	
+	emote()
 	r_buy_modulate()
 	gn_frames.init(key)
+	fuel.init(key)
+	
 	autobuy()
 	r_autobuywheel()
 	gn_status.init(key, Color(lored.color.r, lored.color.g, lored.color.b, 1))
@@ -117,16 +131,17 @@ func start_all():
 	start()
 	if not lored.smart:
 		update_net() # not first
-	gn_fuel.init(key)
 	witch()
 	softlock_check()
 
 func r_setup():
 	
+	yield(self, "ready")
+	
 	allocate_gn()
 	
 	# text
-	get_node("h/h/lored/h/v/name").text = lored.name
+	get_node("v/h/lored/h/v/name").text = lored.name
 	r_update_halt(lored.halt)
 	gn_net.text = "0/s"
 	gn_d.text = "+" + lored.d.t.toString()
@@ -135,30 +150,35 @@ func r_setup():
 	
 	# icons
 	r_update_hold(lored.hold)
-	get_node("h/h/lored/h/icon/Sprite").texture = gv.sprite[key]
-	get_node("h/h/lored/fuel/fuel_icon/Sprite").texture = gv.sprite[lored.fuel_source]
+	get_node("v/h/lored/h/icon/Sprite").texture = gv.sprite[key]
+	get_node("v/fuel/fuel_icon/Sprite").texture = gv.sprite[lored.fuel_source]
 	
 	# color
+	color_blind.self_modulate = lored.color
+	get_node("v/interactables/bg").self_modulate = lored.color
+	gn_buy.self_modulate = lored.color
+	afford.self_modulate = lored.color
+	get_node(gnhalt).self_modulate = lored.color
+	get_node(gnhold).modulate = lored.color
 	get_node("bg2").self_modulate = lored.color
 	if key == "witch":
 		gn_amount.self_modulate = gv.COLORS["witch"]
 	
 	gn_frames.self_modulate = get_faded_color()
-	get_node("h/h/lored/fuel/fuel/f").self_modulate = gv.COLORS[lored.fuel_source]
-	get_node("h/h/lored/fuel/fuel/f/flair").self_modulate = gv.COLORS[lored.fuel_source]
 	
-	get_node(gnhold + "/icon").self_modulate = lored.color
-	get_node(gnhalt + "/text").self_modulate = lored.color
-	gn_autobuywheel.self_modulate = lored.color
-	get_node("h/h/animation").self_modulate = lored.color
+	fuel_bar_f.modulate = gv.COLORS[lored.fuel_source]
+	
+	#get_node(gnhold + "/icon").self_modulate = lored.color
+	get_node(gnhalt).add_color_override("font_color", lored.color)
+	gn_autobuywheel.modulate = lored.color
+	get_node("v/h/animation").self_modulate = lored.color
 	gn_amount.self_modulate = lored.color
-	gn_afford_check.self_modulate = gv.COLORS[key]
-	get_node("h/h/lored/task/d").self_modulate = lored.color
-	get_node("h/h/lored/task/f").modulate = lored.color
+	get_node("v/h/lored/task/d").self_modulate = lored.color
+	get_node("v/h/lored/task/f").modulate = lored.color
 	gn_quest.self_modulate = lored.color
 	gn_quest.get_node("f").modulate = lored.color
 	
-	get_node(gnhalt + "/text").text = "=="
+	get_node(gnhalt).text = "=="
 	
 	if lored.smart:
 		gn_progress_bar.rect_min_size.x = 180
@@ -174,9 +194,9 @@ func r_setup():
 			"witch":
 				gn_amount.hide()
 			"necro":
-				gn_fuel.hide()
+				fuel.hide()
 				cont["ubm"] = gv.SRC["unholy body manager"].instance()
-				get_node("h/h/lored").add_child(cont["ubm"])
+				get_node("v/h/lored").add_child(cont["ubm"])
 	else:
 		gn_task_text.hide()
 		gn_item_name.hide()
@@ -188,7 +208,7 @@ func r_setup():
 	# frames
 	if true:
 		
-		gn_autobuywheel.frame = int(rand_range(0, 16))
+		autobuywheel.frame = int(rand_range(0, 16))
 		
 		frame_set[key] = false
 		frame_set[key + " last"] = 0
@@ -264,9 +284,6 @@ func _on_buy_pressed() -> void:
 
 func _on_halt_pressed():
 	
-	if "no" in gv.menu.f:
-		if int(lored.type[1]) <= int(gv.menu.f.split("no s")[1]): return
-	
 	match lored.halt:
 		true:
 			lored.halt = false
@@ -283,9 +300,6 @@ func _on_halt_pressed():
 	r_update_halt(lored.halt)
 
 func _on_hold_pressed():
-	
-	if "no" in gv.menu.f:
-		if int(lored.type[1]) <= int(gv.menu.f.split("no s")[1]): return
 	
 	match lored.hold:
 		true: lored.hold = false
@@ -304,11 +318,6 @@ func _on_hold_pressed():
 func autobuy():
 	
 	while lored.unlocked and lored.active:
-		
-		# if resetting same stage as lored, it cannot act
-		if "no" in gv.menu.f:
-			if int(lored.type[1]) <= int(gv.menu.f.split(" s")[1]):
-				break
 		
 		if not lored.autobuy:
 			break
@@ -337,44 +346,35 @@ func autobuy():
 
 func start():
 	
-	while lored.unlocked and lored.active:
+	
+	while lored.unlocked and lored.active and not lored.halt:
 		
-		# if resetting same stage as lored, it cannot act
-		if "no" in gv.menu.f:
-			if int(lored.type[1]) <= int(gv.menu.f.split(" s")[1]):
-				break
+		if lored.sync_queued:
+			lored.sync()
 		
-		# ready to begin a new task
-		if lored.progress.b == 1:
-			
-			lored.inhand = Big.new(lored.d.t)
-			lored.task = lored.logic()
-			
-			# if idle, restart loop
-			if (lored.task == "idle") or ("na " in lored.task):
-				if lored.smart:
-					task_master()
-					gn_task_text.text = lored.task_text
-				break
-			
-			task_master()
-			display_relevant_count()
-			lored.progress.sync()
-			
-			if lored.smart:
-				gn_task_text.text = lored.task_text
+		if not lored.working:
+			for j in lored.jobs:
+				if j.try():
+					break
+		
+		
+		if not lored.working:
+			break
 		
 		tell_children_the_news()
 		
 		var t = Timer.new()
 		add_child(t)
-		t.start(lored.progress.t)
+		t.start(lored.current_job.duration)
 		yield(t, "timeout")
 		t.queue_free()
 		
-		task_master(false)
+		lored.current_job.complete()
 	
 	# after 1 second, will restart the func
+	
+	if lored.working:
+		print_debug(key, " is not working")
 	
 	gn_frames.animation = "ww"
 	
@@ -387,7 +387,9 @@ func start():
 	start()
 
 func stop():
+	kill_emote()
 	gn_progress_bar.stop()
+	fuel_bar_f.rect_size.x = fuel_bar.rect_size.x
 
 func task_master(beginning := true):
 	
@@ -398,8 +400,6 @@ func task_master(beginning := true):
 			
 			if lored.sync_queued:
 				lored.sync()
-			else:
-				lored.progress.sync()
 			
 			if "cook " in lored.task:
 				
@@ -767,10 +767,10 @@ func task_master(beginning := true):
 
 func tell_children_the_news():
 	
-	gn_progress_bar.start(lored.progress.t, OS.get_ticks_msec())
+	gn_progress_bar.start(lored.current_job.duration, OS.get_ticks_msec())
 	
 	if not lored.smart:
-		gn_frames.start(lored.progress.t, OS.get_ticks_msec())
+		gn_frames.start(lored.current_job.duration, OS.get_ticks_msec())
 
 func display_relevant_count():
 	
@@ -818,15 +818,13 @@ func update_net(one_shot := false):
 	
 	while lored.active or one_shot:
 		
-		# if resetting same stage as lored, it cannot act
-		if "no" in gv.menu.f:
-			if int(lored.type[1]) <= int(gv.menu.f.split(" s")[1]):
-				break
-		
 		if gv.up["THE WITCH OF LOREDELITH"].active():
 			lored.witch()
 		
 		if one_shot:
+			net = lored.net()
+			r_net()
+			gv.emit_signal("net_updated", key, net)
 			return
 		
 		break
@@ -848,10 +846,6 @@ func update_net(one_shot := false):
 func witch():
 	
 	while lored.active() and (not lored.halt) and (gv.up["THE WITCH OF LOREDELITH"].active() or gv.Buff.HEX in lored.buff_keys.keys()):
-		# if resetting same stage as lored, it cannot act
-		if "no" in gv.menu.f:
-			if int(lored.type[1]) <= int(gv.menu.f.split(" s")[1]):
-				break
 		
 		var witch_mod_fps: Big = Big.new(lored.witch).m(gv.fps)
 		
@@ -887,9 +881,9 @@ func flying_texts():
 		if not crit:
 			return
 	
-	if get_node("h/h/lored/h/v/amount").rect_global_position.y < rt.get_node("m/v/top").rect_global_position.y + rt.get_node("m/v/top").rect_size.y:
+	if get_node("v/h/lored/h/v/amount").rect_global_position.y < rt.get_node("m/v/top").rect_global_position.y + rt.get_node("m/v/top").rect_size.y:
 		return
-	elif get_node("h/h/lored/h/v/amount").rect_global_position.y > rt.get_node("m/v/bot").rect_global_position.y:
+	elif get_node("v/h/lored/h/v/amount").rect_global_position.y > rt.get_node("m/v/bot").rect_global_position.y:
 		return
 	
 	output["hi"] = src.output.instance()
@@ -897,8 +891,10 @@ func flying_texts():
 	if crit:
 		if critcrit:
 			output["hi"].text += " (Power crit!)"
+			critcrit = false
 		else:
 			output["hi"].text += " (Crit!)"
+		crit = false
 	
 	var pos = Vector2(30,15)
 	output["hi"].rect_position = pos
@@ -906,7 +902,6 @@ func flying_texts():
 
 func w_output_master(f) -> void:
 	
-	f.inhand.m(w_crit_roll(true))
 	w_bonus_output(f.key, f.inhand)
 	
 	gv.r[f.key].a(f.inhand)
@@ -915,9 +910,9 @@ func w_output_master(f) -> void:
 	gv.stats.r_gained[f.key].a(f.inhand)
 	flying_texts()
 
-func w_bonus_output(key : String, inhand : Big) -> void:
+func w_bonus_output(_key : String, inhand : Big) -> void:
 	
-	match key:
+	match _key:
 		"coal":
 			if gv.up["wait that's not fair"].active():
 				var bla = Big.new(inhand).m(10)
@@ -950,43 +945,10 @@ func w_bonus_output(key : String, inhand : Big) -> void:
 					gv.up["IT'S SPREADIN ON ME"].effects[0].effect.a.a(buff)
 					gv.up["IT'S SPREADIN ON ME"].effects[1].effect.a.a(buff)
 
-func w_crit_roll(by_thine_own_hand : bool) -> Big:
-	
-	var f := Big.new(1)
-	
-	var roll := rand_range(0,100)
-	if lored.crit.t.greater_equal(roll):
-		f.m(rand_range(7.5, 12.5))
-		if by_thine_own_hand: crit = true
-	
-	if lored.type[1] == "1":
-		
-		if not gv.up["the athore coments al totol lies!"].active():
-			return f
-		
-		roll = rand_range(0,100)
-		if roll <= 1:
-			f.m(rand_range(7.5, 12.5))
-			if by_thine_own_hand: critcrit = true
-	
-	return f
-
 
 func softlock_check():
 	
 	while true:
-		
-		# softlock checks done out of "ye" can be done above here
-		
-		if not "ye" in gv.menu.f:
-			
-			var t = Timer.new()
-			add_child(t)
-			t.start(3)
-			yield(t, "timeout")
-			t.queue_free()
-			
-			continue
 		
 		softlock_wood_cycle()
 		softlock_no_seeds()
@@ -1008,7 +970,7 @@ func softlock_not_enough_wire():
 		return
 	
 	if gv.r["wire"].less(20):
-		print("You couldn't afford to purchase the Draw Plate LORED, so you've been given 20 Wire.")
+		print_debug("You couldn't afford to purchase the Draw Plate LORED, so you've been given 20 Wire.")
 		gv.r["wire"].a(20)
 
 func softlock_wood_cycle():
@@ -1020,8 +982,6 @@ func softlock_wood_cycle():
 	
 	for x in axe_wood_hard:
 		
-		if not gv.g[x].progress.f == 0:
-			return
 		if gv.g[x].halt:
 			return
 		
@@ -1032,7 +992,7 @@ func softlock_wood_cycle():
 		if gv.r["hard"].greater(Big.new(gv.g["axe"].d.t).m(gv.g["axe"].b["hard"].t)):
 			return
 	
-	print("Axes, Wood, and Hardwood dropped low enough that none of them could take from each other, so you've been given free resources.")
+	print_debug("Axes, Wood, and Hardwood dropped low enough that none of them could take from each other, so you've been given free resources.")
 	
 	for x in axe_wood_hard:
 		gv.r[x].a(gv.g[x].d.t)
@@ -1049,7 +1009,7 @@ func softlock_no_seeds():
 	if gv.r["seed"].greater_equal(Big.new(gv.g["tree"].d.t).m(gv.g["tree"].b["seed"].t)):
 		return
 	
-	print("You didn't have enough Seeds to produce any Trees to be able to afford the Seed LORED, so you've been given free Trees.")
+	print_debug("You didn't have enough Seeds to produce any Trees to be able to afford the Seed LORED, so you've been given free Trees.")
 	
 	gv.r["tree"].a(2)
 
@@ -1067,9 +1027,10 @@ func softlock_no_steel_for_liq():
 	if gv.r[key].greater(gv.g["liq"].cost["steel"].t):
 		return
 	
-	print("You didn't have enough Steel to purchase a Liquid Iron LORED, so you've been given free Steel.")
+	print_debug("You didn't have enough Steel to purchase a Liquid Iron LORED, so you've been given free Steel.")
 	
 	gv.r[key] = Big.new(gv.g["liq"].cost["steel"].t)
+
 
 
 func r_amount():
@@ -1107,9 +1068,11 @@ func r_net():
 	var _net = [Big.new(net[0]), Big.new(net[1])]
 	
 	if _net[0].greater_equal(_net[1]):
+		emotes["net - time when last positive"] = OS.get_ticks_msec()
 		_net[0].s(_net[1])
 		net_text = _net[0].toString()
 	else:
+		emotes["net - time when last positive"] = OS.get_ticks_msec()
 		_net[1].s(_net[0])
 		net_text = "-" + _net[1].toString()
 	
@@ -1129,22 +1092,30 @@ func r_d():
 
 func r_buy_modulate():
 	
-	var BAD := Color(1.5, 0, 0, 1)
-	var GOOD := Color(1, 1, 1, 1.25)
-	
 	while true:
 		
-		var bla = lored.cost_check()
-		
-		gn_buy.self_modulate = GOOD if bla else BAD
-		if gv.menu.option["afford check"]:
-			gn_afford_check.pressed = true if bla else false
+		set_buy_modulate()
 		
 		var t = Timer.new()
 		add_child(t)
-		t.start(0.1)
+		t.start(0.25)
 		yield(t, "timeout")
 		t.queue_free()
+
+func set_buy_modulate():
+	
+	var BAD := Color(1, 0, 0)
+	var GOOD := Color(0.6, 1, 0)
+	
+	match lored.cost_check():
+		true:
+			gn_buy.modulate = Color(1,1,1)
+			afford.modulate = Color(1,1,1)
+			color_blind.pressed = true
+		false:
+			afford.modulate = Color(0.2,0.2,0.2)
+			gn_buy.modulate = Color(0.5,0.5,0.5)
+			color_blind.pressed = false
 
 func r_autobuy() -> void:
 	
@@ -1159,7 +1130,7 @@ func r_autobuywheel():
 	while true:
 		if not gn_autobuywheel.visible:
 			break
-		gn_autobuywheel.speed_scale = lored.speed.b / lored.speed.t
+		autobuywheel.speed_scale = lored.speed.b / lored.speed.t
 		
 		var t = Timer.new()
 		add_child(t)
@@ -1177,8 +1148,8 @@ func r_autobuywheel():
 
 func r_update_halt(halt:bool) -> void:
 	match halt:
-		true: get_node(gnhalt + "/text").text = "=/="
-		false: get_node(gnhalt + "/text").text = "=="
+		true: get_node(gnhalt).text = "=/="
+		false: get_node(gnhalt).text = "=="
 
 func r_update_hold(hold:bool) -> void:
 	match hold:
@@ -1193,25 +1164,12 @@ func r_mouse_cursor():
 	
 	gn_buy.mouse_default_cursor_shape = Control.CURSOR_FORBIDDEN
 
-func r_quest() -> void:
-	
-	while true:
-		
-		var points: Big = Big.new(0)
-		
-		for x in lored.upgrade_quest.step:
-			if typeof(lored.upgrade_quest.step[x].f) == TYPE_NIL:
-				lored.upgrade_quest.step[x].f = Big.new(0)
-			points.a(lored.upgrade_quest.step[x].f)
-		points = Big.new(Big.min(points, lored.upgrade_quest.total_points))
-		
-		gn_quest.get_node("f").rect_size.x = points.percent(lored.upgrade_quest.total_points) * gn_quest.rect_size.x
-		
-		var t = Timer.new()
-		add_child(t)
-		t.start(0.25)
-		yield(t, "timeout")
-		t.queue_free()
+func r_update() -> void:
+	# called by task class
+	gn_quest_f.rect_size.x = min(lored.upgrade_quest.points.percent(lored.upgrade_quest.total_points) * gn_quest.rect_size.x, gn_quest.rect_size.x)
+func ready() -> void:
+	# called by task class
+	gn_quest_f.rect_size.x = gn_quest.rect_size.x
 
 func random_shit():
 	
@@ -1221,7 +1179,7 @@ func random_shit():
 			rt.unlock_tab("s2n")
 
 
-func manage_buff(buff: Buff) -> void:
+func manage_buff(buff) -> void:
 	
 	if buff.key in lored.buff_keys.keys():
 		lored.buff_keys[buff.key] += 1
@@ -1247,18 +1205,14 @@ func manage_buff(buff: Buff) -> void:
 func buy(manual := false):
 	
 	# catches
-	if true:
-		
-		if not lored.cost_check():
-			if manual and is_instance_valid(rt.get_node("global_tip").tip):
-				rt.get_node("global_tip").tip.price_flash = true
-			return
-		
-		if lored.type[1] in gv.menu.f:
-			return
+	if not lored.cost_check():
+		if manual and is_instance_valid(rt.get_node("global_tip").tip):
+			rt.get_node("global_tip").tip.price_flash = true
+		return
 	
 	lored.bought()
 	update_net(true)
+	set_buy_modulate()
 	
 	for b in lored.b:
 		if gv.g[b].active:
@@ -1277,6 +1231,18 @@ func buy(manual := false):
 	get_node("lv/n").add_child(cont["lored up"])
 	cont["lored up"].rect_rotation = -10
 	
+	match key:
+		"stone":
+			pass
+		"coal":
+			if lored.times_purchased == 2:
+				if gv.dev_mode:
+					speak("whoa!", Vector2(50,39))
+					continue
+			if lored.times_purchased == 1:
+				if gv.dev_mode:
+					speak("hi", Vector2(39,39))
+	
 	# not owned
 	if lored.level == 1:
 		
@@ -1289,7 +1255,142 @@ func buy(manual := false):
 		if key in rt.task_awaiting and not rt.on_task:
 			rt.get_node("misc/task")._clear_board()
 			rt.get_node("misc/task")._call_board()
+	
+	if lored.times_purchased == 1:
+		rt.off_check()
 
+
+func emote():
+	
+	if not gv.dev_mode:
+		return
+	
+	#note delete this if
+	if lored.emote_pool.size() == 0:
+		return
+	
+	while not lored.unlocked:
+		
+		var t = Timer.new()
+		add_child(t)
+		var time = 10
+		t.start(time)
+		yield(t, "timeout")
+		t.queue_free()
+	
+	while lored.unlocked and not lored.active:
+		
+		var t = Timer.new()
+		add_child(t)
+		var time = 1
+		t.start(time)
+		yield(t, "timeout")
+		t.queue_free()
+	
+	while lored.active:
+		
+		var time = randi() % 90 + 30 # 30-120 sec
+		if false:
+			time = randi() % 10 + 10 # 10-20
+		
+		var t = Timer.new()
+		add_child(t)
+		t.start(time)
+		yield(t, "timeout")
+		t.queue_free()
+		
+		while emoting:
+			
+			# wait for current message to go away.
+			
+			if true:
+				var tt = Timer.new()
+				add_child(tt)
+				tt.start(1)
+				yield(tt, "timeout")
+				tt.queue_free()
+			
+			if not emoting:
+				var tt = Timer.new()
+				add_child(tt)
+				tt.start(3)
+				yield(tt, "timeout")
+				tt.queue_free()
+		
+		if not lored.active:
+			break
+		
+		var roll: int
+		
+		if key == "copo":
+			
+			#roll = randi() % lored.emote_pool.size()
+			if last_emote_index == lored.emote_pool.size() - 1:
+				roll = 0
+			else:
+				roll = last_emote_index + 1
+		
+		else:
+			while true:
+				roll = randi() % lored.emote_pool.size()
+				if roll == last_emote_index:
+					continue
+				if lored.emote_pool[roll].requires_unlock:
+					if not gv.g[lored.emote_pool[roll].required_unlock_key].unlocked:
+						continue
+				break
+		
+		last_emote_index = roll
+		var _emote = lored.emote_pool[roll]
+		
+		if key == "copo":
+			if emoting:
+				kill_emote()
+		
+		speak(_emote.message, _emote.size)
+		
+		if _emote.has_reply and gv.g[_emote.reply_key].unlocked:
+			gv.g[_emote.reply_key].manager.reply(_emote.reply_message, _emote.reply_size)
+	
+	emote()
+
+func reply(message: String, _size: Vector2):
+	
+	var t = Timer.new()
+	add_child(t)
+	t.start(max(message.length() / 10, 3))
+	yield(t, "timeout")
+	t.queue_free()
+	
+	speak(message, _size)
+
+func speak(message := "", _size := Vector2.ZERO):
+	
+	if emoting:
+		return
+	
+	emoting = true
+	
+	emote = gv.SRC["emote"].instance()
+	
+	if message != "":
+		emote.init(self, key, message, _size)
+		emote.rect_position = Vector2(43 - (emote.rect_size.x / 2), 90 - (emote.rect_size.y / 2))
+		get_node("texts").add_child(emote)
+	
+	var t = Timer.new()
+	add_child(t)
+	t.start(max(message.length() / 5, 3))
+	yield(t, "timeout")
+	t.queue_free()
+	
+	kill_emote()
+
+func kill_emote():
+	
+	if is_instance_valid(emote):
+		emote.die()
+	
 func b_ubu_s2n_check() -> bool:
 	
 	if not rt.quests["The Heart of Things"].complete:

@@ -23,6 +23,9 @@ class Num:
 	var da := Big.new(0) # dynamic a
 	var dm := Big.new() # dynamic m
 	
+	var haxm := 1.0
+	var off_m := 1.0
+	
 	#var spell_m := Big.new()
 	
 	var lbm := Big.new() # limit break m
@@ -68,6 +71,9 @@ class Num:
 		t.m(dm)
 		t.m(lbm)
 		
+		t.m(haxm)
+		t.m(off_m)
+		
 		if f.less(0):
 			f = Big.new(0)
 		if cap_f_to_t:
@@ -79,17 +85,17 @@ class Num:
 		# prints every value;
 		# useful in finding errors
 		
-		print("--REPORT::")
-		print("f: ", f.toString())
-		print("a: ", a.toString())
-		print("m: ", m.toString())
-		print("ua: ", ua.toString())
-		print("um: ", um.toString())
-		print("da: ", da.toString())
-		print("dm: ", dm.toString())
-		print("lbm: ", lbm.toString())
-		print("b: ", b.toString())
-		print("t: ", t.toString())
+		print_debug("--REPORT::")
+		print_debug("f: ", f.toString())
+		print_debug("a: ", a.toString())
+		print_debug("m: ", m.toString())
+		print_debug("ua: ", ua.toString())
+		print_debug("um: ", um.toString())
+		print_debug("da: ", da.toString())
+		print_debug("dm: ", dm.toString())
+		print_debug("lbm: ", lbm.toString())
+		print_debug("b: ", b.toString())
+		print_debug("t: ", t.toString())
 
 class Float:
 	
@@ -100,6 +106,10 @@ class Float:
 	
 	var ua := 0.0
 	var um := 1.0
+	
+	var haxm := 1.0
+	
+	var off_m := 1
 	
 	var b: float # base
 	var t: float # total after upgrades/buffs
@@ -130,6 +140,9 @@ class Float:
 		
 		t *= m
 		t *= um
+		
+		t /= haxm
+		t /= off_m
 		
 		if f < 0:
 			f = 0.0

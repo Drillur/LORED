@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/bool.png-6765841a8fd30068ef1bbb1a5fbd3097.stex"
+path="res://.import/upgrade_icon.png-c0c48caa74742e070d4fdaae417f278d.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Sprites/misc/bool.png"
-dest_files=[ "res://.import/bool.png-6765841a8fd30068ef1bbb1a5fbd3097.stex" ]
+source_file="res://Sprites/upgrades/upgrade_icon.png"
+dest_files=[ "res://.import/upgrade_icon.png-c0c48caa74742e070d4fdaae417f278d.stex" ]
 
 [params]
 

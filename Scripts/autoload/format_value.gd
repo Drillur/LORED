@@ -13,6 +13,8 @@ onready var Root = get_node("/root/Root")
 
 func f(value: float) -> String:
 	
+	# warnings-disable
+	
 	# master func; redirects depending on value
 	
 	if value == 0.0:

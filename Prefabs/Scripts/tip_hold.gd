@@ -32,7 +32,7 @@ func used_by():
 		if not gv.g[x].active:
 			continue
 		
-		var per_sec = Big.new(gv.g[x].d.t).d(gv.g[x].speed.t)
+		var per_sec = Big.new(gv.g[x].d.t).d(gv.g[x].speed.t).d(gv.g[x].jobs[0].base_duration)
 		
 		cont[x] = src.tip_lored_b.instance()
 		cont[x].setup_used_by(lored_key, x, per_sec, gv.g[x].color)
@@ -48,7 +48,7 @@ func used_by():
 
 
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	
 	rect_size = Vector2(0, 0)
 	set_process(false)

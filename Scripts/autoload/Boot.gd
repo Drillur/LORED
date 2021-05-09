@@ -25,60 +25,60 @@ func init_loreds():
 	# stage 2
 	
 	# main
-	gv.g["tum"] = LORED.new("tum", "Tumors", "s2 ele fur ", {"growth": Ob.Num.new(10.0), "malig": Ob.Num.new(5.0), "carc": Ob.Num.new(3.0)}, {"hard" : Ob.Num.new(50.0), "wire" : Ob.Num.new(150.0), "glass": Ob.Num.new(150.0), "steel": Ob.Num.new(100.0)}, 1000.0)
+	gv.g["tum"] = LORED.new("tum", "Tumors", "s2 ele fur ", {"growth": Ob.Num.new(10.0), "malig": Ob.Num.new(5.0), "carc": Ob.Num.new(3.0)}, {"hard" : Ob.Num.new(50.0), "wire" : Ob.Num.new(150.0), "glass": Ob.Num.new(150.0), "steel": Ob.Num.new(100.0)}, 6.66)
 	
 	# hardwood
-	gv.g["hard"] = LORED.new("hard", "Hardwood", "s2 ele fur ", {"wood": Ob.Num.new(2.0), "conc": Ob.Num.new()}, {"iron" : Ob.Num.new(3500.0), "conc" : Ob.Num.new(350.0), "wire": Ob.Num.new(35.0)}, 275.0)
-	gv.g["wood"] = LORED.new("wood", "Wood", "s2 ele fur ", {"axe": Ob.Num.new(0.2), "tree": Ob.Num.new(0.04)}, {"cop" : Ob.Num.new(4500.0), "wire": Ob.Num.new(15.0)}, 300.0, 25.0)
-	gv.g["axe"] = LORED.new("axe", "Axes", "s2 ele fur ", {"hard": Ob.Num.new(0.8), "steel": Ob.Num.new(0.25)}, {"iron" : Ob.Num.new(1000.0), "hard": Ob.Num.new(55.0)}, 420.0)
+	gv.g["hard"] = LORED.new("hard", "Hardwood", "s2 ele fur ", {"wood": Ob.Num.new(2.0), "conc": Ob.Num.new()}, {"iron" : Ob.Num.new(3500.0), "conc" : Ob.Num.new(350.0), "wire": Ob.Num.new(35.0)}, 1.833)
+	gv.g["wood"] = LORED.new("wood", "Wood", "s2 ele fur ", {"axe": Ob.Num.new(0.2), "tree": Ob.Num.new(0.04)}, {"cop" : Ob.Num.new(4500.0), "wire": Ob.Num.new(15.0)}, 2.0, 25.0)
+	gv.g["axe"] = LORED.new("axe", "Axes", "s2 ele fur ", {"hard": Ob.Num.new(0.8), "steel": Ob.Num.new(0.25)}, {"iron" : Ob.Num.new(1000.0), "hard": Ob.Num.new(55.0)}, 2.8)
 	
 	# wire
-	gv.g["draw"] = LORED.new("draw", "Draw Plate", "s2 bur fur ", {"steel": Ob.Num.new(0.5)}, {"iron" : Ob.Num.new(900.0), "conc": Ob.Num.new(300.0), "wire": Ob.Num.new(20.0)}, 600.0)
-	gv.g["wire"] = LORED.new("wire", "Wire", "s2 ele fur ", {"cop": Ob.Num.new(5.0), "draw": Ob.Num.new(0.4)}, {"stone" : Ob.Num.new(13000.0), "glass": Ob.Num.new(30.0)}, 300.0)
+	gv.g["draw"] = LORED.new("draw", "Draw Plate", "s2 bur fur ", {"steel": Ob.Num.new(0.5)}, {"iron" : Ob.Num.new(900.0), "conc": Ob.Num.new(300.0), "wire": Ob.Num.new(20.0)}, 4.0)
+	gv.g["wire"] = LORED.new("wire", "Wire", "s2 ele fur ", {"cop": Ob.Num.new(5.0), "draw": Ob.Num.new(0.4)}, {"stone" : Ob.Num.new(13000.0), "glass": Ob.Num.new(30.0)}, 2.0)
 	
 	# glass
-	gv.g["glass"] = LORED.new("glass", "Glass", "s2 ele fur ", {"sand": Ob.Num.new(6.0)}, {"cop" : Ob.Num.new(6000.0), "steel": Ob.Num.new(40.0)}, 350.0)
-	gv.g["sand"] = LORED.new("sand", "Sand", "s2 bur fur ", {"humus": Ob.Num.new(0.6)}, {"iron" : Ob.Num.new(700.0), "cop": Ob.Num.new(2850.0)}, 250.0, 2.5)
+	gv.g["glass"] = LORED.new("glass", "Glass", "s2 ele fur ", {"sand": Ob.Num.new(6.0)}, {"cop" : Ob.Num.new(6000.0), "steel": Ob.Num.new(40.0)}, 2.33)
+	gv.g["sand"] = LORED.new("sand", "Sand", "s2 bur fur ", {"humus": Ob.Num.new(0.6)}, {"iron" : Ob.Num.new(700.0), "cop": Ob.Num.new(2850.0)}, 1.6, 2.5)
 	
 	# steel
-	gv.g["steel"] = LORED.new("steel", "Steel", "s2 ele fur ", {"liq": Ob.Num.new(8.0)}, {"iron" : Ob.Num.new(15000.0), "cop" : Ob.Num.new(3000.0), "hard": Ob.Num.new(35.0)}, 800.0)
-	gv.g["liq"] = LORED.new("liq", "Liquid Iron", "s2 ele fur ", {"iron": Ob.Num.new(10.0)}, {"conc": Ob.Num.new(900.0), "steel" : Ob.Num.new(25.0)}, 250.0)
+	gv.g["steel"] = LORED.new("steel", "Steel", "s2 ele fur ", {"liq": Ob.Num.new(8.0)}, {"iron" : Ob.Num.new(15000.0), "cop" : Ob.Num.new(3000.0), "hard": Ob.Num.new(35.0)}, 5.333)
+	gv.g["liq"] = LORED.new("liq", "Liquid Iron", "s2 ele fur ", {"iron": Ob.Num.new(10.0)}, {"conc": Ob.Num.new(900.0), "steel" : Ob.Num.new(25.0)}, 1.6)
 	
 	# carc
-	gv.g["carc"] = LORED.new("carc", "Carcinogens", "s2 ele fur ", {"malig": Ob.Num.new(3.0), "ciga": Ob.Num.new(6.0), "plast": Ob.Num.new(5.0)}, {"growth": Ob.Num.new(8500.0), "conc": Ob.Num.new(2000.0), "steel": Ob.Num.new(150.0), "lead": Ob.Num.new(800.0)}, 450.0)
-	gv.g["plast"] = LORED.new("plast", "Plastic", "s2 ele fur ", {"coal": Ob.Num.new(5.0), "pet": Ob.Num.new()}, {"stone": Ob.Num.new(10000.0), "tar": Ob.Num.new(700.0)}, 375.0)
-	gv.g["pet"] = LORED.new("pet", "Petroleum", "s2 bur fur ", {"oil": Ob.Num.new(3.0)}, {"iron": Ob.Num.new(3000.0), "cop" : Ob.Num.new(4000.0), "glass" : Ob.Num.new(130.0)}, 300.0)
-	gv.g["ciga"] = LORED.new("ciga", "Cigarettes", "s2 ele fur ", {"tar": Ob.Num.new(4.0), "toba": Ob.Num.new(), "paper": Ob.Num.new(0.25)}, {"hard" : Ob.Num.new(50.0), "wire" : Ob.Num.new(120.0)}, 155.0)
-	gv.g["toba"] = LORED.new("toba", "Tobacco", "s2 bur fur ", {"water": Ob.Num.new(2.0), "seed": Ob.Num.new()}, {"soil": Ob.Num.new(3.0), "hard": Ob.Num.new(15.0)}, 500.0)
-	gv.g["paper"] = LORED.new("paper", "Paper", "s2 bur fur ", {"pulp": Ob.Num.new(0.6)}, {"conc": Ob.Num.new(1200.0), "steel": Ob.Num.new(15.0)}, 320.0)
-	gv.g["pulp"] = LORED.new("pulp", "Wood Pulp", "s2 ele fur ", {"stone": Ob.Num.new(2.0), "wood": Ob.Num.new(1.0)}, {"wire": Ob.Num.new(15.0), "glass": Ob.Num.new(30.0)}, 400.0, 5.0)
+	gv.g["carc"] = LORED.new("carc", "Carcinogens", "s2 ele fur ", {"malig": Ob.Num.new(3.0), "ciga": Ob.Num.new(6.0), "plast": Ob.Num.new(5.0)}, {"growth": Ob.Num.new(8500.0), "conc": Ob.Num.new(2000.0), "steel": Ob.Num.new(150.0), "lead": Ob.Num.new(800.0)}, 3.0)
+	gv.g["plast"] = LORED.new("plast", "Plastic", "s2 ele fur ", {"coal": Ob.Num.new(5.0), "pet": Ob.Num.new()}, {"stone": Ob.Num.new(10000.0), "tar": Ob.Num.new(700.0)}, 2.5)
+	gv.g["pet"] = LORED.new("pet", "Petroleum", "s2 bur fur ", {"oil": Ob.Num.new(3.0)}, {"iron": Ob.Num.new(3000.0), "cop" : Ob.Num.new(4000.0), "glass" : Ob.Num.new(130.0)}, 2.0)
+	gv.g["ciga"] = LORED.new("ciga", "Cigarettes", "s2 ele fur ", {"tar": Ob.Num.new(4.0), "toba": Ob.Num.new(), "paper": Ob.Num.new(0.25)}, {"hard" : Ob.Num.new(50.0), "wire" : Ob.Num.new(120.0)}, 1.033)
+	gv.g["toba"] = LORED.new("toba", "Tobacco", "s2 bur fur ", {"water": Ob.Num.new(2.0), "seed": Ob.Num.new()}, {"soil": Ob.Num.new(3.0), "hard": Ob.Num.new(15.0)}, 3.33)
+	gv.g["paper"] = LORED.new("paper", "Paper", "s2 bur fur ", {"pulp": Ob.Num.new(0.6)}, {"conc": Ob.Num.new(1200.0), "steel": Ob.Num.new(15.0)}, 2.133)
+	gv.g["pulp"] = LORED.new("pulp", "Wood Pulp", "s2 ele fur ", {"stone": Ob.Num.new(2.0), "wood": Ob.Num.new(1.0)}, {"wire": Ob.Num.new(15.0), "glass": Ob.Num.new(30.0)}, 2.66, 5.0)
 	
-	gv.g["lead"] = LORED.new("lead", "Lead", "s2 bur fur ", {"gale": Ob.Num.new()}, {"stone": Ob.Num.new(400.0), "growth": Ob.Num.new(800.0)}, 300.0)
-	gv.g["gale"] = LORED.new("gale", "Galena", "s2 bur bore ", {}, {"stone": Ob.Num.new(1100.0), "wire": Ob.Num.new(200.0)}, 250.0)
+	gv.g["lead"] = LORED.new("lead", "Lead", "s2 bur fur ", {"gale": Ob.Num.new()}, {"stone": Ob.Num.new(400.0), "growth": Ob.Num.new(800.0)}, 2.0)
+	gv.g["gale"] = LORED.new("gale", "Galena", "s2 bur bore ", {}, {"stone": Ob.Num.new(1100.0), "wire": Ob.Num.new(200.0)}, 1.6)
 	
 	# life
-	gv.g["seed"] = LORED.new("seed", "Seeds", "s2 bur fur ", {"water": Ob.Num.new(1.5)}, {"cop": Ob.Num.new(800.0), "tree" : Ob.Num.new(2.0)}, 300.0)
-	gv.g["tree"] = LORED.new("tree", "Trees", "s2 ele fur ", {"water": Ob.Num.new(6.0), "seed": Ob.Num.new()}, {"growth": Ob.Num.new(150.0), "soil" : Ob.Num.new(25.0)}, 1200.0)
-	gv.g["soil"] = LORED.new("soil", "Soil", "s2 bur fur ", {"humus": Ob.Num.new(1.5)}, {"conc": Ob.Num.new(1000.0), "hard" : Ob.Num.new(40.0)}, 300.0)
-	gv.g["humus"] = LORED.new("humus", "Humus", "s2 ele fur ", {"growth": Ob.Num.new(0.5), "water": Ob.Num.new()}, {"iron": Ob.Num.new(600.0), "cop" : Ob.Num.new(600.0), "glass" : Ob.Num.new(30.0)}, 275.0)
-	gv.g["water"] = LORED.new("water", "Water", "s2 bur bore ", {}, {"stone": Ob.Num.new(2500.0), "wood" : Ob.Num.new(80.0)}, 200.0)
+	gv.g["seed"] = LORED.new("seed", "Seeds", "s2 bur fur ", {"water": Ob.Num.new(1.5)}, {"cop": Ob.Num.new(800.0), "tree" : Ob.Num.new(2.0)}, 2.0)
+	gv.g["tree"] = LORED.new("tree", "Trees", "s2 ele fur ", {"water": Ob.Num.new(6.0), "seed": Ob.Num.new()}, {"growth": Ob.Num.new(150.0), "soil" : Ob.Num.new(25.0)}, 8.0)
+	gv.g["soil"] = LORED.new("soil", "Soil", "s2 bur fur ", {"humus": Ob.Num.new(1.5)}, {"conc": Ob.Num.new(1000.0), "hard" : Ob.Num.new(40.0)}, 2.0)
+	gv.g["humus"] = LORED.new("humus", "Humus", "s2 ele fur ", {"growth": Ob.Num.new(0.5), "water": Ob.Num.new()}, {"iron": Ob.Num.new(600.0), "cop" : Ob.Num.new(600.0), "glass" : Ob.Num.new(30.0)}, 1.83)
+	gv.g["water"] = LORED.new("water", "Water", "s2 bur bore ", {}, {"stone": Ob.Num.new(2500.0), "wood" : Ob.Num.new(80.0)}, 1.3)
 	
 	
 	
 	# stage 1
 	
-	gv.g["malig"] = LORED.new("malig", "Malignancy", "s1 ele fur key ", {"growth" : Ob.Num.new(), "tar" : Ob.Num.new()}, {"iron" : Ob.Num.new(900.0), "cop" : Ob.Num.new(900.0), "conc" : Ob.Num.new(50.0)}, 300.0)
-	gv.g["tar"] = LORED.new("tar", "Tarballs", "s1 ele fur ", {"growth" : Ob.Num.new(), "oil" : Ob.Num.new()}, {"iron" : Ob.Num.new(350.0), "malig" : Ob.Num.new(10.0)}, 250.0)
-	gv.g["oil"] = LORED.new("oil", "Oil", "s1 bur bore ", {}, {"cop" : Ob.Num.new(250.0), "conc" : Ob.Num.new(250.0)}, 30.0, 0.075)
-	gv.g["growth"] = LORED.new("growth", "Growth", "s1 ele fur key ", { "iron" : Ob.Num.new(), "cop" : Ob.Num.new()}, { "stone" : Ob.Num.new(900.0) }, 400.0)
-	gv.g["conc"] = LORED.new("conc", "Concrete", "s1 bur fur key ", {"stone" : Ob.Num.new()}, {"iron" : Ob.Num.new(90.0), "cop" : Ob.Num.new(150.0)}, 600.0)
-	gv.g["jo"] = LORED.new("jo", "Joules", "s1 bur fur ", {"coal" : Ob.Num.new()}, {"conc" : Ob.Num.new(25.0)}, 500.0)
-	gv.g["iron"] = LORED.new("iron", "Iron", "s1 bur fur ", { "irono" : Ob.Num.new() }, { "stone" : Ob.Num.new(9.0), "cop" : Ob.Num.new(8.0) }, 300.0)
-	gv.g["cop"] = LORED.new("cop", "Copper","s1 bur fur ", { "copo" : Ob.Num.new() }, { "stone" : Ob.Num.new(9.0), "iron" : Ob.Num.new(8.0) }, 300.0)
-	gv.g["irono"] = LORED.new("irono", "Iron Ore", "s1 bur bore ", {}, { "stone" : Ob.Num.new(8.0) }, 250.0)
-	gv.g["copo"] = LORED.new("copo", "Copper Ore", "s1 bur bore ", {}, { "stone" : Ob.Num.new(8.0) }, 250.0)
-	gv.g["coal"] = LORED.new("coal", "Coal", "s1 bur bore ", {}, { "stone" : Ob.Num.new(5.0) }, 200.0)
-	gv.g["stone"] = LORED.new("stone", "Stone", "s1 bur bore key ", {}, { "iron" : Ob.Num.new(25.0), "cop" : Ob.Num.new(15.0) }, 150.0)
+	gv.g["malig"] = LORED.new("malig", "Malignancy", "s1 ele fur key ", {"growth" : Ob.Num.new(), "tar" : Ob.Num.new()}, {"iron" : Ob.Num.new(900.0), "cop" : Ob.Num.new(900.0), "conc" : Ob.Num.new(50.0)}, 2.0)
+	gv.g["tar"] = LORED.new("tar", "Tarballs", "s1 ele fur ", {"growth" : Ob.Num.new(), "oil" : Ob.Num.new()}, {"iron" : Ob.Num.new(350.0), "malig" : Ob.Num.new(10.0)}, 1.6)
+	gv.g["oil"] = LORED.new("oil", "Oil", "s1 bur bore ", {}, {"cop" : Ob.Num.new(1.6), "conc" : Ob.Num.new(250.0)}, 0.2, 0.075)
+	gv.g["growth"] = LORED.new("growth", "Growth", "s1 ele fur key ", { "iron" : Ob.Num.new(), "cop" : Ob.Num.new()}, { "stone" : Ob.Num.new(900.0) }, 2.6)
+	gv.g["conc"] = LORED.new("conc", "Concrete", "s1 bur fur key ", {"stone" : Ob.Num.new()}, {"iron" : Ob.Num.new(90.0), "cop" : Ob.Num.new(150.0)}, 4.0)
+	gv.g["jo"] = LORED.new("jo", "Joules", "s1 bur fur ", {"coal" : Ob.Num.new()}, {"conc" : Ob.Num.new(25.0)}, 3.3)
+	gv.g["iron"] = LORED.new("iron", "Iron", "s1 bur fur ", { "irono" : Ob.Num.new() }, { "stone" : Ob.Num.new(9.0), "cop" : Ob.Num.new(8.0) }, 2.0)
+	gv.g["cop"] = LORED.new("cop", "Copper","s1 bur fur ", { "copo" : Ob.Num.new() }, { "stone" : Ob.Num.new(9.0), "iron" : Ob.Num.new(8.0) }, 2.0)
+	gv.g["irono"] = LORED.new("irono", "Iron Ore", "s1 bur bore ", {}, { "stone" : Ob.Num.new(8.0) }, 1.6)
+	gv.g["copo"] = LORED.new("copo", "Copper Ore", "s1 bur bore ", {}, { "stone" : Ob.Num.new(8.0) }, 1.6)
+	gv.g["coal"] = LORED.new("coal", "Coal", "s1 bur bore ", {}, { "stone" : Ob.Num.new(5.0) }, 1.3)
+	gv.g["stone"] = LORED.new("stone", "Stone", "s1 bur bore key ", {}, { "iron" : Ob.Num.new(25.0), "cop" : Ob.Num.new(15.0) }, 1.0)
 
 func init_menu_and_stats():
 	
@@ -101,7 +101,8 @@ func init_menu_and_stats():
 	gv.menu.option["im_ss_show_hint"] = true
 	gv.menu.option["task auto"] = false
 	gv.menu.option["performance"] = true
-	gv.menu.option["afford check"] = false
+	gv.menu.option["color blind"] = false
+	gv.menu.option["zoom"] = 50
 	
 	
 	
@@ -135,23 +136,11 @@ func init_upgrades():
 	# upreset
 	if true:
 		
-		# s2m
-		if true:
-			
-			f = "CHEMOTHERAPY"
-			gv.up[f] = Upgrade.new(f, "s2m reset", "Resets Normal, Malignant, and Extra-normal upgrades, and Stage 1 and Stage 2 resources (except Tumors).", "tum")
-			
-			f = "RECOVER"
-			gv.up["RECOVER"] = Upgrade.new(f, "s2m reset", "Begin your recovery period. Apply your radiative upgrades to your new life. (Blocks the purchase of Radiative upgrades until your next chemotherapy dose.)")
+		f = "CHEMOTHERAPY"
+		gv.up[f] = Upgrade.new(f, "s2m reset", "Resets Normal, Malignant, and Extra-normal upgrades, and Stage 1 and Stage 2 resources (except Tumors).\n\nBegin your recovery period. Apply your Radiative upgrades to your new life.", "tum")
 		
-		# s1m
-		if true:
-			
-			f = "METASTASIZE"
-			gv.up["METASTASIZE"] = Upgrade.new(f, "s1m reset","Resets Normal upgrades and Stage 1 resources (except Malignancy)", "malig")
-			
-			f = "SPREAD"
-			gv.up[f] = Upgrade.new(f, "s1m reset", "Spread to and apply your malignant upgrades to a new host. (Blocks the purchase of Malignant upgrades until your next Metastasis.)")
+		f = "METASTASIZE"
+		gv.up["METASTASIZE"] = Upgrade.new(f, "s1m reset","Resets Normal upgrades and Stage 1 resources (except Malignancy).\n\nSpread to and apply your Malignant upgrades to a new host.", "malig")
 	
 #	# upunlock
 #	if true:
@@ -949,7 +938,7 @@ func init_upgrades():
 		if true:
 			
 			f = "John Peter Bain, TotalBiscuit"
-			gv.up[f] = Upgrade.new(f, "s2n output", "Stage 2 output x{e0}.\n\"I am here to ask and answer one simple question: WTF is LORED?\"", "s2")
+			gv.up[f] = Upgrade.new(f, "s2n output", "Stage 2 output x{e0}.\n\"[i]I am here to ask and answer one simple question: WTF is LORED?\"[/i]", "s2")
 			gv.up[f].effects.append(Effect.new("output", gv.stats.g_list["s2"], 2.0))
 			gv.up[f].cost["carc"] = Ob.Num.new("1e12") # t
 			gv.up[f].cost["tum"] = Ob.Num.new("10e9")
@@ -1630,7 +1619,7 @@ func init_upgrades():
 			if true:
 				
 				f = "upgrade_description"
-				gv.up[f] = Upgrade.new(f, "s2m misc", "Reduces the cost increase of every LORED by 10%; LORED fuel drain x{e0}.", "s2")
+				gv.up[f] = Upgrade.new(f, "s2m misc", "Reduces the cost increase of every Stage 1 and 2 LORED by 10%; LORED fuel drain x{e0}.", "s2")
 				gv.up[f].effects.append(Effect.new("drain", gv.g.keys(), 2.0))
 				gv.up[f].cost["tum"] = Ob.Num.new("1e24")
 				gv.up[f].requires.append("Tolkien")
@@ -1692,7 +1681,7 @@ func init_upgrades():
 				gv.up[f].requires.append("THE WITCH OF LOREDELITH")
 				
 				f = "THE WITCH OF LOREDELITH"
-				gv.up[f] = Upgrade.new(f, "s2m misc","Stage 1 LOREDs gain Circe's powerful boon.", "thewitchofloredelith")
+				gv.up[f] = Upgrade.new(f, "s2m misc","Stage 1 LOREDs gain Circe's powerful boon, which produces 1% of their net output per tick, multiplied by their haste.", "thewitchofloredelith")
 				gv.up[f].cost["tum"] = Ob.Num.new("1e12")
 				
 				f = "GRIMOIRE"
@@ -1741,7 +1730,7 @@ func init_upgrades():
 			gv.up[f].cost["malig"] = Ob.Num.new(2000.0)
 			
 			f = "upgrade_name"
-			gv.up[f] = Upgrade.new(f, "s1m misc","Reduces the cost increase of every Stage 1 LORED from x3.0 to x2.75; Stage 1 burner LORED fuel drain x{e0}.", "s1")
+			gv.up[f] = Upgrade.new(f, "s1m misc","Reduces the cost increase of every Stage 1 LORED from x3.0 to x2.75; Coal drain for fuel by Stage 1 LOREDs x{e0}.", "s1")
 			gv.up[f].effects.append(Effect.new("drain", ["coal", "irono", "stone", "copo", "iron", "cop", "conc", "jo", "oil"], 10.0))
 			gv.up[f].cost["malig"] = Ob.Num.new("25e6")
 			gv.up[f].requires.append("ORE LORD")
@@ -1749,6 +1738,9 @@ func init_upgrades():
 func init_quests():
 	
 	for q in gv.Quest.values():
+		if q == gv.Quest.A_DARK_DISCOVERY:
+			if not gv.dev_mode:
+				break
 		if q == gv.Quest.RANDOM:
 			break
 		gv.quest.append(Task.new(q))
@@ -1766,6 +1758,13 @@ func setup_loreds():
 	gv.g["hunt"].speed.b = 40.0
 	gv.g["witch"].speed.b = 40.0
 	
+	for x in gv.stats.g_list["s1"] + gv.stats.g_list["s2"]:
+		if gv.g[x].b.size() > 0:
+			gv.g[x].jobs.append(Job.new(gv.Job.FURNACE_COOK, x))
+		else:
+			gv.g[x].jobs.append(Job.new(gv.Job.BORER_DIG, x))
+	
+	
 	# task_list
 	if true:
 		
@@ -1777,7 +1776,7 @@ func setup_loreds():
 		
 		gv.g["witch"].task_list.append("cast hex")
 		
-		if gv.s3_time:
+		if gv.test_s3:
 			
 			#gv.g["witch"].inventory[gv.Item.PARTS].a(0)
 			

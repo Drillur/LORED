@@ -2,23 +2,17 @@ extends MarginContainer
 
 
 const gn_version = "h/version"
-const gn_more = "h/changes/more"
+onready var changes = get_node("h/changes")
 
 
 func setup(version: String):
 	
+	yield(self, "ready")
+	
 	get_node(gn_version).text = version
 	
-	var i = 0
 	for x in gv.PATCH_NOTES[version]:
 		
-		if typeof(x) == TYPE_BOOL:
-			continue
-		
-		get_node("h/changes/t" + str(i)).text = "- " + x
-		get_node("h/changes/t" + str(i)).show()
-		
-		i += 1
-	
-	if gv.PATCH_NOTES[version][0]:
-		get_node(gn_more).show()
+		var poop = gv.SRC["label"].instance()
+		poop.text = "- " + x
+		changes.add_child(poop)

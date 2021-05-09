@@ -4,7 +4,6 @@ onready var rt = get_node("/root/Root")
 
 
 var fps := 0.0
-var fps_autobuy := 1.0
 var price_flash := false
 var price_flash_i := 0
 
@@ -15,7 +14,6 @@ var cont := {}
 
 const src := {
 	vbox = preload("res://Prefabs/tooltip/VBoxContainer.tscn"),
-	autobuyer = preload("res://Prefabs/tooltip/autobuyer.tscn"),
 	price = preload("res://Prefabs/tooltip/price.tscn"),
 	taq_tip = preload("res://Prefabs/tooltip/QuestTip.tscn"),
 	tip_lored_fuel = preload("res://Prefabs/tooltip/tip_lored_fuel.tscn"),
@@ -26,15 +24,12 @@ const src := {
 
 var viewed_task : Task
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	r_tip(true)
 
 func _physics_process(delta):
 	
 	price_flash()
-	
-	if fps_autobuy < 1.0:
-		fps_autobuy += delta
 	
 	fps += delta
 	if fps < gv.fps: return
@@ -43,10 +38,6 @@ func _physics_process(delta):
 	r_tip()
 
 
-func _input(event: InputEvent) -> void:
-	
-	if Input.is_key_pressed(KEY_K):
-		define_key()
 
 
 func _call(source : String, other: Dictionary) -> void:
@@ -63,16 +54,34 @@ func _call(source : String, other: Dictionary) -> void:
 			
 			lored_buy_lored(f)
 		
-		elif "buy smart lored" in type:
-			var key := type.split("lored ")[1]
-			$bg.self_modulate = gv.g[key].color
+		elif "offline boost" == type:
 			
-			var quest_key := key.capitalize()
+			cont[type] = gv.SRC["tooltip/offline boost"].instance()
+			cont[type].init()
+			add_child(cont[type])
+			$bg.self_modulate = Color(1, 0.796078, 0)
+		
+		elif "buy smart lored" in type:
+			
+			var key := type.split("lored ")[1]
+			var quest_key: int
+			
+			match key:
+				"hunt":
+					quest_key = gv.Quest.HUNT
+				"necro":
+					quest_key = gv.Quest.NECRO
+				"witch":
+					quest_key = gv.Quest.WITCH
+				"blood":
+					quest_key = gv.Quest.BLOOD
+			
+			$bg.self_modulate = gv.g[key].color
 			
 			cont["taq"] = src.taq_tip.instance()
 			add_child(cont["taq"])
 			
-			cont["taq"].init(rt.quests[quest_key])
+			cont["taq"].init(gv.quest[quest_key])
 		
 		elif "unholy bodies tip" in type:
 			
@@ -112,15 +121,15 @@ func _call(source : String, other: Dictionary) -> void:
 			
 			if "quest" in type:
 				
-				var quest := type.split("taq quest ")[1]
+				#var quest := type.split("taq quest ")[1]
 				
 				cont["taq"].init(taq.quest)
 				$bg.self_modulate = taq.quest.color
 			
 			else:
-				var index = type.split(" ")[1]
-				cont["taq"].init(taq.task[index])
-				$bg.self_modulate = taq.task[index].color
+				
+				cont["taq"].init(other["task"])
+				$bg.self_modulate = other["task"].color
 		
 		elif "buy upgrade" in type:
 			
@@ -128,7 +137,7 @@ func _call(source : String, other: Dictionary) -> void:
 			
 			$bg.self_modulate = gv.COLORS[gv.up[f].icon]
 			
-			cont["tip up"] = get_parent().tip_upgrade.instance()
+			cont["tip up"] = gv.SRC["tooltip/upgrade"].instance()
 			add_child(cont["tip up"])
 			
 			cont["tip up"].init(f)
@@ -167,9 +176,13 @@ func _call(source : String, other: Dictionary) -> void:
 			
 			var f := type.split("lored ")[1]
 			
-			cont["lored stats"] = get_parent().tip_lored_prefab.instance()
-			add_child(cont["lored stats"])
-			cont["lored stats"].setup(f)
+			cont["whatever"] = gv.SRC["tooltip/LORED"].instance()
+			cont["whatever"].init(f)
+			add_child(cont["whatever"])
+			
+#			cont["lored stats"] = get_parent().tip_lored_prefab.instance()
+#			add_child(cont["lored stats"])
+#			cont["lored stats"].setup(f)
 			
 			$bg.self_modulate = gv.g[f].color
 	
@@ -180,48 +193,6 @@ func _call(source : String, other: Dictionary) -> void:
 
 
 func r_tip(move_tip := false) -> void:
-	
-	# text
-	if true:
-		
-		if "buy lored" in type:
-			
-			if "autobuyer" in cont.keys() and fps_autobuy >= 1:
-				
-				var f := type.split("lored ")[1]
-				
-				fps_autobuy -= 1
-				
-				if gv.g[f].autobuy():
-					cont["autobuyer"].get_node("VBoxContainer/going_to_buy/check").pressed = true
-				else:
-					cont["autobuyer"].get_node("VBoxContainer/going_to_buy/check").pressed = false
-				
-				if cont["autobuyer"].get_node("VBoxContainer/set_key").visible:
-					var set_key = cont["autobuyer"].get_node("VBoxContainer/set_key")
-					set_key.get_node("HBoxContainer/check").pressed = gv.g[f].key_lored
-		
-		
-		elif "tip up" in cont.keys():
-			
-			if cont["tip up"].rect_size != rect_size:
-				rect_size = cont["tip up"].rect_size
-				move_tip = true
-			
-			var f := type.split("upgrade ")[1]
-			
-			if cont["tip up"].get_node("VBoxContainer/effects").visible:
-				match f:
-					"I DRINK YOUR MILKSHAKE":
-						if gv.up[f].active():
-							cont["tip up"].get_node("VBoxContainer/effects/v/idym/val").text = "+" + gv.up["I DRINK YOUR MILKSHAKE"].effects[0].effect.print()
-					"IT'S GROWIN ON ME", "IT'S SPREADIN ON ME":
-						if gv.up["IT'S GROWIN ON ME"].active():
-							cont["tip up"].get_node("VBoxContainer/effects/v/igom_iron/val").text = gv.up["IT'S GROWIN ON ME"].effects[0].effect.print() + "x"
-							cont["tip up"].get_node("VBoxContainer/effects/v/igom_cop/val").text = gv.up["IT'S GROWIN ON ME"].effects[1].effect.print() + "x"
-						if gv.up["IT'S SPREADIN ON ME"].active():
-							cont["tip up"].get_node("VBoxContainer/effects/v/igom_irono/val").text = gv.up["IT'S SPREADIN ON ME"].effects[0].effect.print() + "x"
-							cont["tip up"].get_node("VBoxContainer/effects/v/igom_copo/val").text = gv.up["IT'S SPREADIN ON ME"].effects[1].effect.print() + "x"
 	
 	if rect_size != cont[cont.keys()[0]].rect_size:
 		rect_size = cont[cont.keys()[0]].rect_size
@@ -243,7 +214,7 @@ func r_tip(move_tip := false) -> void:
 			var f := type.split("lored ")[1]
 			
 			var pos : Vector2 = rt.get_node(rt.gnLOREDs).cont[f].rect_global_position
-			var size : Vector2 = rt.get_node(rt.gnLOREDs).cont[f].rect_size
+			var size : Vector2 = rt.get_node(rt.gnLOREDs).cont[f].rect_size * rt.scale
 			
 			pos.y -= 15
 			
@@ -252,14 +223,14 @@ func r_tip(move_tip := false) -> void:
 			if pos.x + size.x <= win.x / 2:
 				grow_horizontal = Control.GROW_DIRECTION_END
 				rect_global_position = Vector2(
-					pos.x + size.x + 20,
-					pos.y
+					pos.x / rt.scale.x + size.x + 20,
+					pos.y / rt.scale.y
 				)
 			else:
 				grow_horizontal = Control.GROW_DIRECTION_BEGIN
 				rect_global_position = Vector2(
-					pos.x - rect_size.x - 10,
-					pos.y
+					pos.x / rt.scale.x - rect_size.x - 10,
+					pos.y / rt.scale.y
 				)
 			
 			if rect_position.y < y_buffer:
@@ -269,6 +240,11 @@ func r_tip(move_tip := false) -> void:
 			
 			return
 		
+		elif "offline boost" == type:
+			rect_position = Vector2(
+				win.x / rt.scale.x - rect_size.x - 10,
+				rt.get_node("m/v/top").rect_size.y / rt.scale.x + 10
+			)
 		elif "unholy bodies tip" in type:
 			var bla = rt.get_node(rt.gnLOREDs).cont["necro"]
 			rect_position = Vector2(
@@ -304,8 +280,8 @@ func r_tip(move_tip := false) -> void:
 			var gntaq = rt.get_node(rt.gntaq).rect_global_position
 			
 			rect_position = Vector2(
-				win.x - rect_size.x - 10,
-				gntaq.y - rect_size.y - 20
+				win.x / rt.scale.x - rect_size.x - 10,
+				gntaq.y / rt.scale.x - rect_size.y - 20
 			)
 			return
 		
@@ -382,22 +358,6 @@ func autobuyer(_lored: String, _height: int) -> int:
 	
 	return cont["autobuyer"].init(_lored) + 20
 
-func define_key() -> void:
-	
-	if not "autobuyer" in cont.keys():
-		return
-	if not gv.menu.option["tooltip_autobuyer"]:
-		return
-	
-	var f := type.split("lored ")[1]
-	
-	if gv.g[f].key_lored:
-		gv.g[f].key_lored = false
-	else:
-		gv.g[f].key_lored = true
-	
-	cont["autobuyer"].get_node("VBoxContainer/set_key/HBoxContainer/check").pressed = gv.g[f].key_lored
-
 func item_tip(key: String):
 	
 	cont[key] = src.item_tip.instance()
@@ -414,15 +374,15 @@ func lored_buy_lored(key: String) -> void:
 	
 	add_cost(key, gv.g[key].cost)
 	
-	if not gv.menu.option["tooltip_autobuyer"] and gv.menu.option["tooltip_cost_only"]:
-		return
-	
 	if not gv.g[key].autobuy:
 		return
 	
-	cont["autobuyer"] = src.autobuyer.instance()
+	if not gv.menu.option["tooltip_autobuyer"] and gv.menu.option["tooltip_cost_only"]:
+		return
+	
+	cont["autobuyer"] = gv.SRC["tooltip/autobuyer"].instance()
 	cont["vbox"].get_node("vbox").add_child(cont["autobuyer"])
-	cont["autobuyer"].init(key)
+	cont["autobuyer"].setup(key)
 
 func add_cost(key: String, cost: Dictionary):
 	
@@ -443,7 +403,9 @@ func add_cost(key: String, cost: Dictionary):
 		
 		
 		# alternate backgrounds
-		if i % 2 == 1: cont[x].get_node("bg").show()
+		if i % 2 == 1:
+			cont[x].get_node("bg").show()
+			#cont[x].get_node("bg").self_modulate = gv.COLORS[x]
 		
 		cont["vbox"].get_node("vbox").add_child(cont[x])
 		

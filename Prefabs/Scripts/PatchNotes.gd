@@ -37,7 +37,7 @@ func setup(version: String):
 		return
 	
 	
-	var versions = version.split(".")
+	var s_keys = version.split(".")
 	
 	for p in gv.PATCH_NOTES:
 		
@@ -45,7 +45,7 @@ func setup(version: String):
 		if display.size() == 10:
 			break
 		
-		var p_versions = p.split(".")
+		var p_keys = p.split(".")
 		
 		# example:
 		
@@ -56,9 +56,9 @@ func setup(version: String):
 		# versions[1] == 0
 		# versions[2] == 3
 		
-		# p_versions[0] == 2
-		# p_versions[1] == 1
-		# p_versions[2] == 0
+		# (p_keys[0]) == 2
+		# p_keys[1] == 1
+		# p_keys[2] == 0
 		
 		# DO display patch notes for versions:
 		# 2.0.4, 2.1.0
@@ -66,18 +66,18 @@ func setup(version: String):
 		# DO NOT display patch notes for versions:
 		# 2.0.0, 2.0.1, 2.0.2, 2.0.3
 		
-		if versions[0] < p_versions[0]:
+		if int(s_keys[0]) < int(p_keys[0]):
 			display.append(p)
 			continue
 		
-		if versions[1] < p_versions[1]:
-			if versions[0] <= p_versions[0]:
+		if int(s_keys[1]) < int(p_keys[1]):
+			if int(s_keys[0]) <= int(p_keys[0]):
 				display.append(p)
 				continue
 		
-		if versions[2] < p_versions[2]:
-			if versions[1] <= p_versions[1]:
-				if versions[0] <= p_versions[0]:
+		if int(s_keys[2]) < int(p_keys[2]):
+			if int(s_keys[1]) <= int(p_keys[1]):
+				if int(s_keys[0]) <= int(p_keys[0]):
 					display.append(p)
 	
 	if display.size() == 0:

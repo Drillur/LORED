@@ -9,21 +9,16 @@ const SAVE := {
 }
 
 const prefab := {
-	tasks = preload("res://Prefabs/task/tasks.tscn"),
-	
-	tip_autobuyer = preload("res://Prefabs/tooltip/autobuyer.tscn"),
-	
 	"dtext": preload("res://Prefabs/dtext.tscn"),
 	"confirmation popup": preload("res://Prefabs/lored_buy.tscn"),
 	"menu": preload("res://Prefabs/menu/menu.tscn"),
 }
 
 
-var FPS = 0.04
 
 
 var content := {}
-var content_tasks := {}
+onready var gn_tasks = get_node("m/v/bot/h/taq/tasks")
 var instances := {}
 var upgrade_dtexts := {}
 
@@ -33,18 +28,17 @@ var loredalert = ""
 
 var cur_clock = OS.get_unix_time()
 var last_clock = OS.get_unix_time()
-var cur_session = 0
-var time_fps = 0.0
+var cur_session := 0
 
 var menu_window = 0
 
 const gnLOREDs = "m/v/LORED List"
 const gntaq = "m/v/bot/h/taq"
 const gnquest = gntaq + "/quest"
-const gnLB = "m/v/top/h/Limit Break"
+const gnLB = "m/v/top/h/r/Limit Break"
 const gnupcon = "m/up_container"
 const gnalert = "misc/tabs/v/upgrades/alert"
-const gn_patch = "m/Patch Notes"
+onready var gn_patch = get_node("m/Patch Notes")
 
 var task_awaiting := "no"
 
@@ -57,25 +51,25 @@ func _ready():
 	
 	OS.set_low_processor_usage_mode(true)
 	
-	gv.connect("quest reward", self, "quest reward")
+	gv.connect("quest_reward", self, "quest_reward")
 	
 	# menu and stats
 	if true:
-	
-		if "desktop" in gv.PLATFORM:
-			gv.menu.option["FPS"] = 7
+		
+		if "pc" in gv.PLATFORM:
+			gv.menu.option["FPS"] = 2
 		else:
-			gv.menu.option["FPS"] = 5
+			gv.menu.option["FPS"] = 1
 	
 	get_node(gnLOREDs).setup()
 	get_node("m/v/top/h/resources").setup()
+	taq.task_manager = gn_tasks
 	
 	for x in gv.g:
 		
 		get_node(gnLOREDs).cont[x].start_all()
 	
 	get_tree().get_root().connect("size_changed", self, "r_window_size_changed")
-	
 	
 	game_start(e_load())
 
@@ -86,6 +80,8 @@ func game_start(successful_load: bool) -> void:
 	if not successful_load:
 		gv.r["stone"] = Big.new(5)
 		get_node("m/Patch Notes").hide()
+		off_check()
+		offline_boost(0.0)
 	else:
 		for x in gv.g:
 			if gv.g[x].unlocked:
@@ -93,8 +89,8 @@ func game_start(successful_load: bool) -> void:
 			if gv.g[x].active:
 				gv.g[x].unlocked = true
 	
-	print("highest run: ", gv.stats.highest_run)
-	print("most_resources_gained: ", gv.stats.most_resources_gained.toString())
+	print_debug("highest run: ", gv.stats.highest_run)
+	print_debug("most_resources_gained: ", gv.stats.most_resources_gained.toString())
 	
 	# work
 	if true:
@@ -121,11 +117,16 @@ func game_start(successful_load: bool) -> void:
 		
 		w_aa()
 		
+		fix_shit()
+		
+		update_clock()
+		
 		# taq
 		if true:
 			
-			for x in [gv.Quest.WITCH, gv.Quest.HUNT, gv.Quest.BLOOD, gv.Quest.NECRO]:
-				gv.quest[x].update()
+			if gv.dev_mode:
+				for x in [gv.Quest.WITCH, gv.Quest.HUNT, gv.Quest.BLOOD, gv.Quest.NECRO]:
+					gv.quest[x].update()
 	
 	# ref
 	if true:
@@ -136,6 +137,8 @@ func game_start(successful_load: bool) -> void:
 			for x in gv.g:
 				
 				get_node(gnLOREDs).cont[x].r_autobuy()
+			
+			emote_ville()
 		
 		# menu and tab shit
 		if true:
@@ -150,20 +153,32 @@ func game_start(successful_load: bool) -> void:
 			get_node(gnupcon).init()
 			afford()
 		
-		check_all_quests()
+		# task shit
+		if true:
+			gn_tasks.update_auto()
 		
 		remove_surplus_tasks()
 		
 		# map
 		$map.init()
 	
+	#offline_earnings(1.0)
 	# hax
 	if true:
 		
-#		if gv.test_s3:
-#			unlock_tab("3")
+		if gv.hax_pow < 1:
+			for q in gv.quest:
+				if q.key == gv.Quest.HORSE_DOODIE:
+					break
+				for x in gv.stats.g_list["s1"] + gv.stats.g_list["s2"]:
+					gv.r[x].a("1e10")
+					gv.g[x].manager.buy()
+				q.turn_in(false)
 		
-		if gv.s3_time:
+		if gv.dev_mode:
+			$Button.show()
+		
+		if gv.test_s3:
 			unlock_tab("1")
 			unlock_tab("2")
 			unlock_tab("3")
@@ -187,20 +202,28 @@ func game_start(successful_load: bool) -> void:
 			if gv.r["malig"].less(10) and not gv.g["tar"].active:
 				gv.r["malig"] = Big.new(10)
 		
-		for x in gv.quest:
-			
-			if x.complete or x.selectable:
-				continue
-			
-			taq.new_quest(x)
-			get_node(gnquest).show()
-			break
+		if taq.cur_quest == -1:
+			for x in gv.quest:
+				
+				if x.complete or x.selectable:
+					continue
+				
+				taq.new_quest(x)
+				get_node(gnquest).show()
+				break
 		
 		if taq.cur_quest == -1:
 			get_node(gnquest).hide()
 		
-		if "tasks" in content_tasks.keys():
-			content_tasks["tasks"].hit_max_tasks()
+		taq.hit_max_tasks()
+	
+	var t = Timer.new()
+	add_child(t)
+	t.start(0.1)
+	yield(t, "timeout")
+	t.queue_free()
+	
+	r_window_size_changed()
 
 
 func _physics_process(delta):
@@ -211,18 +234,29 @@ func _physics_process(delta):
 	# work
 	if true:
 		
-		save_fps += delta
-		time_fps += delta
+		if not gv.dev_mode:
+			save_fps += delta
 		
-		if save_fps > 10:
-			save_fps -= 10
-			if hax <= 1 and not gv.test_s3:
-				e_save()
+		if save_fps > 30:
+			save_fps -= 30
+			e_save()
+
+func update_clock():
+	
+	while true:
 		
-		if time_fps > 1:
-			time_fps -= 1
-			cur_clock = OS.get_unix_time()
-			cur_session += 1
+		cur_clock = OS.get_unix_time()
+		
+		var t = Timer.new()
+		add_child(t)
+		t.start(1)
+		yield(t, "timeout")
+		t.queue_free()
+		
+		cur_session += 1
+		
+		menu_window.update_cur_session(cur_session)
+	
 
 func _input(ev):
 	
@@ -248,6 +282,15 @@ func _input(ev):
 	if Input.is_key_pressed(KEY_4):
 		b_tabkey(KEY_4)
 		return
+	
+	if Input.is_key_pressed(KEY_T):
+		if not gv.off_locked:
+			if is_instance_valid($misc/Off):
+				if $misc/Off.paused:
+					resume_off()
+				else:
+					pause_off()
+				return
 	
 	
 	if ev.is_action_pressed("ui_upgrade_menu"):
@@ -293,25 +336,20 @@ func _input(ev):
 	
 	if Input.is_key_pressed(KEY_KP_ENTER) or Input.is_key_pressed(KEY_SPACE) or Input.is_key_pressed(KEY_ENTER):
 		
-		if not "tasks" in content_tasks.keys():
-			return
-		
-		if content_tasks["tasks"].ready_task_count > 0:
+		if gn_tasks.ready_task_count > 0:
 			var _content = []
 			for x in taq.task:
-				_content.append(taq.task[x].code)
+				_content.append(x)
 			if $global_tip.tip_filled:
 				if "taq" in $global_tip.tip.type:
 					$global_tip._call("no")
 			for x in _content:
-				if x in content_tasks["tasks"].content.keys():
-					if content_tasks["tasks"].content[x].get_node("tp").value >= 100:
-						content_tasks["tasks"].content[x]._on_task_pressed()
+				x.attempt_turn_in(false)
 			return
+		
 		if taq.cur_quest != -1:
-			if taq.content.get_node("done").visible:
-				taq.content.b_end_task()
-				return
+			taq.quest.attempt_turn_in(false)
+		
 		return
 	
 	if Input.is_key_pressed(KEY_EQUAL):
@@ -348,6 +386,11 @@ func _on_upgrades_pressed() -> void:
 	get_node(gnupcon).show()
 	get_node(gnalert).hide()
 
+func _on_mouse_exited() -> void:
+	get_node("global_tip")._call("no")
+
+func _on_Off_Boost_mouse_entered() -> void:
+	get_node("global_tip")._call("offline boost")
 
 func _on_s1_pressed() -> void:
 	b_tabkey(KEY_1)
@@ -359,16 +402,115 @@ func _on_s3_pressed() -> void:
 	b_tabkey(KEY_3)
 
 
-# working funcs
+
+func fix_shit():
+	
+	if gv.stats.run[0] == 1 and gv.r["growth"].less(10) and gv.g["growth"].f.f.less(3):
+		gv.g["growth"].f.f = Big.new(3)
+
 func w_aa():
 	for x in gv.g:
 		gv.g[x].sync()
 
+func offline_boost(time_offline: float) -> void:
+	
+	gv.offline_time = time_offline
+	print("time offline: ", gv.parse_time(gv.offline_time))
+	
+	time_offline /= 2
+	
+	
+	if time_offline == 0.0:
+		get_node("m/v/top/h/r/Off Boost").setup(time_offline)
+		return
+	
+	gv.off_boost = true
+	
+	if time_offline > 3600:
+		if time_offline / 3600 > 10:
+			gv.off_d = 10
+			time_offline /= 10
+			#time_offline /= time_offline
+		else:
+			gv.off_d = time_offline / 3600
+			time_offline = 3600
+	
+	gv.off_boost_time = time_offline
+	
+	for x in gv.g:
+		gv.g[x].off_boost()
+	
+	$misc/Off.start(time_offline)
+	get_node("m/v/top/h/r/Off Boost").setup(time_offline)
+	if gv.off_locked:
+		pause_off()
+	yield($misc/Off, "timeout")
+	$misc/Off.queue_free()
+	
+	gv.off_boost = false
+	
+	for x in gv.g:
+		gv.g[x].off_boost()
+
+func pause_off() -> void:
+	
+	if not is_instance_valid($misc/Off):
+		return
+	
+	var o = $misc/Off
+	
+	o.paused = true
+	gv.off_boost = not o.paused
+	
+	for x in gv.g:
+		gv.g[x].off_boost()
+func resume_off() -> void:
+	
+	if not is_instance_valid($misc/Off):
+		return
+	
+	var o = $misc/Off
+	
+	o.paused = false
+	gv.off_boost = not o.paused
+	
+	for x in gv.g:
+		gv.g[x].off_boost()
+func off_check():
+	
+	var i = 1
+	for x in gv.receives_off_boost:
+		if not x:
+			var one_baddie := false
+			for L in gv.stats.g_list["s" + str(i)]:
+				if not gv.g[L].unlocked:
+					one_baddie = true
+					break
+			if not one_baddie:
+				gv.receives_off_boost[i - 1] = true
+				print_debug("Stage ", str(i), " is now receiving Offline Boosts!")
+				for L in gv.stats.g_list["s" + str(i)]:
+					gv.g[L].off_boost()
+		i += 1
+	
+	var one_false := false
+	i = 1
+	for x in gv.receives_off_boost:
+		if not x:
+			if gv.stats.tabs_unlocked[str(i)]:
+				one_false = true
+		i += 1
+	gv.off_locked = one_false
+	if one_false:
+		if not get_node("misc/Off").paused:
+			pause_off()
+			print_debug("Offline Boost is halted while you are unlocking every LORED in the highest unlocked Stage.")
+	else:
+		if get_node("misc/Off").paused and gv.off_boost_time > 0:
+			resume_off()
+			print_debug("Every LORED in the highest unlocked Stage is unlocked; resuming Offline Boost.")
 
 func w_total_per_sec(clock_dif : float) -> void:
-	
-	if "no" in gv.menu.f:
-		return
 	
 	var gained := {}
 	var consumed := {}
@@ -416,27 +558,23 @@ func w_total_per_sec(clock_dif : float) -> void:
 		# fuel consumption
 		if true:
 			
-			if "ye" in gv.menu.f:
-				if "bur " in gv.g[x].type:
-					consumed["coal"].a(Big.new(gv.g[x].fc.t).m(clock_dif))
-				if "ele " in gv.g[x].type:
-					consumed["jo"].a(Big.new(gv.g[x].fc.t).m(clock_dif))
-			
-			if "s1" in gv.g[x].type and "s1" in gv.menu.f: continue
-			elif "s2" in gv.g[x].type and "s2" in gv.menu.f: continue
+			if "bur " in gv.g[x].type:
+				consumed["coal"].a(Big.new(gv.g[x].fc.t).m(clock_dif))
+			if "ele " in gv.g[x].type:
+				consumed["jo"].a(Big.new(gv.g[x].fc.t).m(clock_dif))
 		
 		var net = gv.g[x].net(true)
 		
 		# gained
-		var _gained = Big.new(net[0]).m(clock_dif)
+		var _gained = Big.new(net[0]).m(clock_dif).m(0.25)
 		gained[x] = Big.new(_gained)
 		gv.stats.r_gained[x].a(_gained)
-		var per_sec = Big.new(gv.g[x].d.t).d(gv.g[x].speed.t).m(clock_dif)
+		var per_sec = Big.new(gv.g[x].d.t).d(gv.g[x].speed.t).m(clock_dif).d(gv.g[x].jobs[0].base_duration)
 		
 		# consumed
 		for v in gv.g[x].b:
 			# by this point, every lored here will be active. see 2 sections up
-			consumed[v] = Big.new(per_sec).m(gv.g[x].b[v].t)
+			consumed[v] = Big.new(per_sec).m(gv.g[x].b[v].t).m(0.25)
 			num_of_consumers[v] += 1
 	
 	# unique gained reductions
@@ -447,8 +585,7 @@ func w_total_per_sec(clock_dif : float) -> void:
 			
 			if gained["malig"].less(gv.up["ROUTINE"].cost["malig"].t):
 				break
-			var excess = Big.new(gained["malig"]).s(gv.up["ROUTINE"].cost["malig"].t)
-			excess.m(0.1)
+			var excess = Big.new(gained["malig"]).s(gv.up["ROUTINE"].cost["malig"].t).m(0.25).m(0.1)
 			
 			gained["malig"] = Big.new(gv.up["ROUTINE"].cost["malig"].t).a(excess)
 			
@@ -473,8 +610,8 @@ func w_total_per_sec(clock_dif : float) -> void:
 		if jo_efficiency.greater(1) or Big.new(gv.r["jo"]).s(consumed["jo"]).greater(gv.g["jo"].d.t):
 			jo_efficiency = Big.new()
 		
-		print("WELCOME BACK!\n\nTime away: ", gv.big_to_time(Big.new(clock_dif)))
-		print("coal/joule efficiency: ", coal_efficiency.toString(), "/", jo_efficiency.toString(), "\n")
+		print_debug("WELCOME BACK!\n\nTime away: ", gv.big_to_time(Big.new(clock_dif)))
+		print_debug("coal/joule efficiency: ", coal_efficiency.toString(), "/", jo_efficiency.toString(), "\n")
 		
 		for x in gv.g:
 			
@@ -510,44 +647,16 @@ func w_total_per_sec(clock_dif : float) -> void:
 			#prrint(":( alert! - ", x, " gains x", gain_reduction[x].toString(), " :: ", gained[x].toString(), " -> ", Big.new(gained[x]).m(gain_reduction[x]).toString())
 			gained[x].m(gain_reduction[x])
 		
-		# quest
-		if taq.cur_quest != -1:
-			for x in gv.g:
-				for z in taq.quest.step:
-					if not "produced" in z:
-						continue
-					if gv.g[x].name in z or z == "Combined resources produced" or (z == "Combined Stage 2 resources produced" and "s2" in gv.g[x].type):
-						var a = Big.new(taq.quest.step[z].f).a(gained[x])
-						taq.quest.step[z].f = Big.new(Big.min(a, taq.quest.step[z].b))
-		
 		for x in consumed_reduction:
 			
 			if consumed_reduction[x].equal(1): continue
 			
-			print(x, " consumed x", consumed_reduction[x].toString(), " :: ", consumed[x].toString(), " -> ", Big.new(consumed[x]).m(consumed_reduction[x]).toString())
+			print_debug(x, " consumed x", consumed_reduction[x].toString(), " :: ", consumed[x].toString(), " -> ", Big.new(consumed[x]).m(consumed_reduction[x]).toString())
 			consumed[x].m(consumed_reduction[x])
 			gained[x] = Big.new(0)
 	
-	# task stuff
-	for x in taq.task:
-		for v in taq.task[x].step:
-			
-			if not "produced" in v:
-				continue
-			
-			if "resources produced" in v:
-				for b in gained:
-					if "Combined resources produced" == v and "s1" in gv.g[b].type:
-						var yikes = Big.new(Big.min(Big.new(taq.task[x].step[v].f).a(gained[b]), taq.task[x].step[v].b))
-						taq.task[x].step[v].f = Big.new(yikes)
-					elif "Combined Stage 2 resources produced" == v and "s2" in gv.g[b].type:
-						var yikes = Big.new(Big.min(Big.new(taq.task[x].step[v].f).a(gained[b]), taq.task[x].step[v].b))
-						taq.task[x].step[v].f = Big.new(yikes)
-				continue
-			
-			var f = v.split(" produced")[0].to_lower()
-			var ya = Big.new(Big.min(Big.new(taq.task[x].step[v].f).a(gained[f]), taq.task[x].step[v].b))
-			taq.task[x].step[v].f = Big.new(ya)
+	for x in gv.g:
+		taq.progress(gv.TaskRequirement.RESOURCE_PRODUCTION, x, gained[x])
 	
 	# subtract consumed from gained
 	for x in gv.g:
@@ -557,15 +666,17 @@ func w_total_per_sec(clock_dif : float) -> void:
 		
 		
 		if consumed[x].greater(gained[x]):
+			var net = Big.new(consumed[x]).s(gained[x])
+			#rint(x, ": -", net.toString(), " (", gained[x].toString(), " gained, ", consumed[x].toString(), " drained)")
 			consumed[x].s(gained[x])
 			if consumed[x].greater(gv.r[x]):
 				gv.r[x] = Big.new(0)
 			else:
 				gv.r[x].s(consumed[x])
-			print(x, ": -", consumed[x].toString(), " (", gained[x].toString(), " gained, ", consumed[x].toString(), " drained)")
 		else:
+			var net = Big.new(gained[x]).s(consumed[x])
+			#rint(x, ": +", net.toString(), " (", gained[x].toString(), " gained, ", consumed[x].toString(), " drained)")
 			gained[x].s(consumed[x])
-			print(x, ": +", consumed[x].toString(), " (", gained[x].toString(), " gained, ", consumed[x].toString(), " drained)")
 			gv.r[x].a(gained[x])
 		
 		if x != "coal": continue
@@ -589,13 +700,42 @@ func w_total_per_sec(clock_dif : float) -> void:
 			gv.up["I DRINK YOUR MILKSHAKE"].effects[0].effect.a.a(gay)
 
 
+
+var emote_events := {
+	"whoa!": false,
+	"i'm so glad Coal is back": false,
+}
+func emote_ville():
+	
+	while true:
+		
+		var t = Timer.new()
+		add_child(t)
+		t.start(2)
+		yield(t, "timeout")
+		t.queue_free()
+		
+		for x in emote_events:
+			if emote_events[x] == true:
+				for v in emote_events:
+					emote_events[v] = true
+				break
+			
+			match x:
+				"i'm so glad Coal is back":
+					if gv.g["stone"].f.f.greater(1):
+						if gv.dev_mode:
+							gv.g["stone"].manager.speak("i'm so glad to have Coal back again", Vector2(128, 45))
+							gv.g["coal"].manager.reply("thank you :)", Vector2(55, 45))
+							emote_events[x] = true
+
 func afford():
 	
 	while true:
 		
 		var t = Timer.new()
 		add_child(t)
-		t.start(1)
+		t.start(5)
 		yield(t, "timeout")
 		t.queue_free()
 		
@@ -603,7 +743,7 @@ func afford():
 			for x in gv.stats.up_list["unowned s1n"]:
 				afford_check(x)
 		
-		if gv.stats.tabs_unlocked["2"]:
+		if gv.stats.tabs_unlocked["2"] and gv.stats.tabs_unlocked["s2n"]:
 			if not gv.up["Now That's What I'm Talkin About, YeeeeeeaaaaaaaAAAAAAGGGGGHHH"].active():
 				for x in gv.stats.up_list["unowned s2n"]:
 					afford_check(x)
@@ -649,39 +789,24 @@ func quest_reward(type_key: int, other_key: String) -> void:
 		
 		gv.QuestReward.OTHER:
 			
-			match other_key:
+			match int(other_key):
 				
 				gv.Quest.UPGRADES:
 					
-					if not "tasks" in content_tasks.keys():
-						var _tasks := []
-						for v in taq.task:
-							_tasks.append(taq.task[v])
-						content_tasks["tasks"] = prefab.tasks.instance()
-						get_node(gntaq).add_child(content_tasks["tasks"])
-						get_node(gntaq).move_child(get_node(gnquest), 2)
-						content_tasks["tasks"].init(_tasks)
+					gn_tasks.show()
 				
 				gv.Quest.SPIKE:
 					
-					if "tasks" in content_tasks.keys():
-						content_tasks["tasks"].get_node("HBoxContainer/auto").show()
-						content_tasks["tasks"].get_node("HBoxContainer/auto/AnimatedSprite").show()
-						content_tasks["tasks"].get_node("HBoxContainer/auto/Label").hide()
-						for v in content_tasks["tasks"].content:
-							if content_tasks["tasks"].content[v].get_node("tp").value >= 100:
-								content_tasks["tasks"].content[v]._on_task_pressed()
+					gv.menu.option["task auto"] = true
+					gn_tasks.get_node("auto").show()
+					gn_tasks.update_auto()
+					for t in taq.task:
+						t.attempt_turn_in(false)
 		
 		gv.QuestReward.STAGE:
 			unlock_tab(other_key)
 		gv.QuestReward.UPGRADE_MENU:
 			unlock_tab(other_key, true)
-
-func check_all_quests():
-	
-	for q in gv.quest:
-		if q.complete:
-			q.turn_in()
 
 #func w_task_effects(which := []) -> void:
 #
@@ -712,21 +837,21 @@ func check_all_quests():
 #		match x:
 #			"Spike":
 #				if "tasks" in content_tasks.keys():
-#					content_tasks["tasks"].get_node("HBoxContainer/auto").show()
-#					content_tasks["tasks"].get_node("HBoxContainer/auto/AnimatedSprite").show()
-#					content_tasks["tasks"].get_node("HBoxContainer/auto/Label").hide()
-#					for v in content_tasks["tasks"].content:
-#						if content_tasks["tasks"].content[v].get_node("tp").value >= 100:
-#							content_tasks["tasks"].content[v]._on_task_pressed()
+#					gn_tasks.get_node("HBoxContainer/auto").show()
+#					gn_tasks.get_node("HBoxContainer/auto/AnimatedSprite").show()
+#					gn_tasks.get_node("HBoxContainer/auto/Label").hide()
+#					for v in gn_tasks.content:
+#						if gn_tasks.content[v].get_node("tp").value >= 100:
+#							gn_tasks.content[v]._on_task_pressed()
 #			"Upgrades!":
 #				if not "tasks" in content_tasks.keys():
 #					var _tasks := []
 #					for v in taq.task:
 #						_tasks.append(taq.task[v])
-#					content_tasks["tasks"] = prefab.tasks.instance()
-#					get_node(gntaq).add_child(content_tasks["tasks"])
+#					gn_tasks = prefab.tasks.instance()
+#					get_node(gntaq).add_child(gn_tasks)
 #					get_node(gntaq).move_child(get_node(gnquest), 2)
-#					content_tasks["tasks"].init(_tasks)
+#					gn_tasks.init(_tasks)
 #			"A New Leaf":
 #				unlock_tab("1")
 #				unlock_tab("2")
@@ -755,13 +880,12 @@ func remove_surplus_tasks():
 	if taq.cur_tasks <= taq.max_tasks:
 		return
 	
-	print(taq.cur_tasks, " tasks; the maximum is ", taq.max_tasks, ". Deleting some.")
+	print_debug(taq.cur_tasks, " tasks; the maximum is ", taq.max_tasks, ". Deleting some.")
 	
-	for x in content_tasks["tasks"].content.keys():
-		
+	for x in taq.task:
 		if taq.cur_tasks == taq.max_tasks:
 			break
-		content_tasks["tasks"].content[x].kill_yourself()
+		x.die(false)
 
 
 func activate_lb_effects():
@@ -782,16 +906,16 @@ func r_window_size_changed() -> void:
 	var win :Vector2= get_viewport_rect().size
 	var node = 0
 	
-	get_node("m").rect_size = win
+	get_node("m").rect_size = Vector2(win.x / scale.x, win.y / scale.y)
 	
 	get_node(gnupcon).get_node("v/upgrades").scroll_vertical = 0
 	
 	# menu
 	if true:
 		node = menu_window.get_node("ScrollContainer")
-		menu_window.position = Vector2(int(win.x / 2 - node.rect_size.x / 2), int(win.y / 2 - node.rect_size.y / 2))
-		$map.pos["menu"] = menu_window.position
-
+		menu_window.position = Vector2(int((win.x / 2 - node.rect_size.x / 2) / scale.x), int((win.y / 2 - node.rect_size.y / 2) / scale.y))
+		$map.pos["menu"] = menu_window.position * scale
+		$map.size["menu"] = node.rect_size * scale
 
 
 
@@ -830,8 +954,6 @@ func reset(reset_type: int, manual := true) -> void:
 	if manual:
 		b_tabkey(KEY_1)
 	
-	gv.menu.f = "ye"
-	
 	get_node(gnupcon).sync()
 	
 	if reset_type == 0:
@@ -843,7 +965,7 @@ func reset_stats(reset_type: int):
 	if reset_type == 0:
 		
 		# full reset!
-
+		
 		for x in gv.stats.run.size():
 			gv.stats.run[x] = 1
 			gv.stats.last_run_dur[x] = 0
@@ -851,6 +973,7 @@ func reset_stats(reset_type: int):
 		
 		gv.stats.most_resources_gained = Big.new(0)
 		gv.stats.highest_run = 1
+		gv.stats.tasks_completed = 0
 		
 		return
 	
@@ -867,13 +990,20 @@ func reset_stats(reset_type: int):
 		
 		if gv.stats.most_resources_gained.less(gv.stats.r_gained[gg]):
 			gv.stats.most_resources_gained = Big.new(gv.stats.r_gained[gg])
-			print("new highest resources gained: ", gv.stats.most_resources_gained.toString(), " (", gg, ")")
 	
 	for x in reset_type:
 		
+		gv.stats.g_list["active s" + str(x + 1)].clear()
 		gv.stats.run[x] += 1
 		gv.stats.last_run_dur[x] = OS.get_unix_time() - gv.stats.last_reset_clock[x]
 		gv.stats.last_reset_clock[x] = OS.get_unix_time()
+	
+	gv.stats.g_list["active s1"].append("coal")
+	gv.stats.g_list["active s1"].append("stone")
+	gv.stats.g_list["active s1"].append("irono")
+	gv.stats.g_list["active s1"].append("copo")
+	gv.stats.g_list["active s1"].append("cop")
+	gv.stats.g_list["active s1"].append("iron")
 
 func reset_upgrades(reset_type: int, manual: bool):
 	
@@ -900,32 +1030,31 @@ func reset_upgrades(reset_type: int, manual: bool):
 	# for s2 upgrade autobuyers; won't buy if loreds in own_list aren't owned
 	
 	# routine reset; don't reset every upgrade
-	
-	if reset_type >= 2:
-		
-		gv.s2_upgrades_may_be_autobought = false
-		
-		for x in gv.stats.up_list["s2"]:
-			reset_upgrade(x, reset_type, manual)
-	
-	if reset_type >= 1:
-		for x in gv.stats.up_list["s1"]:
+	for r in range(reset_type, 0, -1):
+		if r == 2:
+			gv.s2_upgrades_may_be_autobought = false
+		for x in gv.stats.up_list["s" + str(r)]:
 			reset_upgrade(x, reset_type, manual)
 	
 	for x in gv.up:
 		if not x in get_node(gnupcon).cont.keys():
 			continue
-		get_node(gnupcon).cont[x].r_update_icon()
+		gv.up[x].manager.icon.update()
 
 func reset_upgrade(x: String, reset_type: int, manual: bool):
 	
-	if not gv.up[x].have:
+	var up = gv.up[x]
+	
+	if not up.have:
+		if up.refundable and int(up.type[1]) < reset_type:
+			up.refund()
+			get_node(gnupcon).cont[up.key].r_update()
 		return
 	
 	if x in ["Limit Break"]:
 		gv.reset_lb()
 	
-	if int(gv.up[x].type[1]) == reset_type and not gv.up[x].normal:
+	if int(up.type[1]) == reset_type and not up.normal:
 		
 		# ex: if Chemoing, and up[x] is type s2m, partial_reset() it
 		
@@ -933,7 +1062,7 @@ func reset_upgrade(x: String, reset_type: int, manual: bool):
 			if not manual:
 				return
 		
-		gv.up[x].partial_reset()
+		up.partial_reset()
 		
 		if manual and x == "PROCEDURE":
 			get_node(gnupcon).cont["ROUTINE"].routine_shit()
@@ -942,15 +1071,14 @@ func reset_upgrade(x: String, reset_type: int, manual: bool):
 	
 	# send reset_type, which means
 	# if another upgrade has caused the upgrade in question (x) to perist through reset, it will return here immediately
-	if gv.up[x].reset(reset_type):
+	if up.reset(reset_type):
 		
 		get_node(gnupcon).cont[x].r_update()
-		get_node(gnupcon).cont[x].upgrade_effects(false, false)
-		get_node(gnupcon).cont[x].set_physics_process(true)
+		get_node(gnupcon).cont[x].upgrade_effects(false)
 		
 		# ref
 		get_node(gnupcon).cont[x].r_update()
-		gv.stats.upgrades_owned[gv.up[x].type.split(" ", true, 1)[0]] -= 1
+		gv.stats.upgrades_owned[up.type.split(" ", true, 1)[0]] -= 1
 
 func reset_resources(reset_type: int):
 	
@@ -1010,8 +1138,8 @@ func reset_loreds(reset_type: int):
 	if reset_type == 0:
 		for x in gv.g:
 			gv.g[x].reset()
-			if not (x == "coal" or x == "stone"):
-				get_node(gnLOREDs).cont[x].hide()
+			if not gv.g[x].unlocked:
+				gv.g[x].manager.hide()
 		return
 	
 	if gv.up["dust"].active():
@@ -1023,14 +1151,14 @@ func reset_loreds(reset_type: int):
 		if int(gv.g[x].type[1]) > reset_type:
 			continue
 		
-		get_node(gnLOREDs).cont[x].get_node("h/h/animation/AnimatedSprite").animation = "ww"
-		get_node(gnLOREDs).cont[x].get_node("h/h/animation/AnimatedSprite").playing = true
+		get_node(gnLOREDs).cont[x].gn_frames.animation = "ww"
+		get_node(gnLOREDs).cont[x].gn_frames.playing = true
 		
 		if x == "coal" and gv.up["aw <3"].active():
 			
 			gv.g[x].partial_reset()
 			
-			gv.g[x].bought()
+			gv.g[x].manager.buy()
 			
 			gv.r["stone"].a(5)
 			
@@ -1059,13 +1187,11 @@ func activate_refundable_upgrades(reset_type: int):
 		
 		gv.up[x].apply()
 		
-		get_node(gnupcon).cont[x].upgrade_effects(true, true)
+		get_node(gnupcon).cont[x].upgrade_effects(true)
 		
 		# quest stuff
-		if taq.cur_quest != -1:
-			for t in taq.quest.step:
-				if x in t:
-					taq.quest.step[t].f = Big.new()
+		taq.progress(gv.TaskRequirement.UPGRADE_PURCHASED, x)
+		taq.progress(gv.TaskRequirement.UPGRADES_PURCHASED, gv.up[x].stage_key)
 		
 		get_node(gnupcon).cont[x].r_update()
 
@@ -1073,27 +1199,20 @@ func reset_tasks(reset_type: int):
 	
 	if reset_type == 0:
 		
+		taq.cur_quest = -1
+		
 		for q in gv.quest:
 			q.reset()
 		
+		for t in taq.task:
+			t.die(false)
 		
-		taq.max_tasks = 1
-		taq.cur_quest = -1
+		taq.task.clear()
 		taq.cur_tasks = 0
+		taq.max_tasks = 0
 		
-		if not "tasks" in content_tasks.keys():
-			return
-		
-		var list = []
-		for x in taq.task:
-			list.append(x)
-		
-		for x in list:
-			content_tasks["tasks"].content[x].kill_yourself()
-		
-		content_tasks["tasks"].ready_task_count = 0
-		content_tasks["tasks"].queue_free()
-		content_tasks.erase("tasks")
+		gn_tasks.ready_task_count = 0
+		gn_tasks.hide()
 		
 		return
 	
@@ -1101,18 +1220,20 @@ func reset_tasks(reset_type: int):
 	
 	var list = []
 	for x in taq.task:
-		if int(gv.g[taq.task[x].icon.key].type[1]) > reset_type:
+		if int(gv.g[x.req[0].req_key].type[1]) > reset_type:
 			continue
-		if "{Spike}" in taq.task[x].name:
+		if x.key == gv.Quest.RANDOM_SPIKE:
 			continue
 		list.append(x)
 	
 	for x in list:
-		content_tasks["tasks"].content[x].kill_yourself()
-		var bla = content_tasks["tasks"].ready_task_count
-		content_tasks["tasks"].ready_task_count = max(0, bla - 1)
+		x.die(false)
+		var bla = gn_tasks.ready_task_count
+		gn_tasks.ready_task_count = max(0, bla - 1)
 	
-	content_tasks["tasks"].hit_max_tasks()
+	#taq.task.clear()
+	
+	taq.hit_max_tasks()
 
 func reset_limit_break(reset_type: int):
 	
@@ -1156,6 +1277,9 @@ func b_tabkey(key):
 				
 				return
 			
+			if gn_patch.visible:
+				return
+			
 			# open the menu
 			if not $misc/menu.visible:
 				$misc/menu.show()
@@ -1195,6 +1319,8 @@ func switch_tabs(target: String):
 	
 	if not gv.stats.tabs_unlocked[target[1]]:
 		return
+	
+	b_close_menu()
 	
 	var int_tab = int(gv.menu.tab) - 1
 	gv.menu.tab_vertical[int_tab] = get_node(gnLOREDs + "/sc").scroll_vertical
@@ -1241,6 +1367,8 @@ func b_move_map(x, y):
 
 func unlock_tab(which: String, unlock := true):
 	
+	# which may be "s2n", "3"
+	
 	gv.stats.tabs_unlocked[which] = unlock
 	
 	if "s" in which:
@@ -1250,7 +1378,31 @@ func unlock_tab(which: String, unlock := true):
 		get_node("misc/tabs/v/upgrades").visible = unlock
 	elif which.length() == 1:
 		get_node("misc/tabs/v/s" + which).visible = gv.stats.tabs_unlocked[which]
+	
+	off_check()
 
+
+func version_older_than(_save_version: String, _version: String) -> bool:
+	
+	# _version == the version at hand, to be compared with _save version
+	
+	var _save_version_split = _save_version.split(".")
+	var _version_split = _version.split(".")
+	
+	var save = {x = int(_save_version_split[0]), y = int(_save_version_split[1]), z = int(_save_version_split[2])}
+	var version = {x = int(_version_split[0]), y = int(_version_split[1]), z = int(_version_split[2])}
+	
+	# save version is either OLDER than version, or EQUAL to version.
+	# returns TRUE if OLDER, FALSE if EQUAL
+	
+	if save.x < version.x:
+		return true
+	if save.y < version.y:
+		return true
+	if save.z < version.z:
+		return true
+	
+	return false
 
 func e_save(type := "normal", path := SAVE.MAIN):
 	
@@ -1258,6 +1410,9 @@ func e_save(type := "normal", path := SAVE.MAIN):
 	
 	# menu and stats
 	if true:
+		
+		for e in emote_events:
+			save.data[e] = emote_events[e]
 		
 		save.game_version = ProjectSettings.get_setting("application/config/Version")
 		
@@ -1280,23 +1435,19 @@ func e_save(type := "normal", path := SAVE.MAIN):
 		save.data["most_resources_gained"] = gv.stats.most_resources_gained.toScientific()
 		save.data["stats.highest_run"] = gv.stats.highest_run
 		
-		var ref := [Big.new(0), Big.new(0)]
-		for x in gv.up:
-			if gv.up[x].cost.size() == 0: continue
-			if not gv.up[x].normal and gv.up[x].refundable:
-				ref[0].a(gv.up[x].cost.values()[0].t)
-		save.data["ref_0"] = ref[0].toScientific()
-		save.data["ref_1"] = ref[1].toScientific()
-		
 		for x in gv.stats.last_reset_clock.size():
 			save.data["save last reset clock " + String(x)] = gv.stats.last_reset_clock[x]
+		
+		if is_instance_valid($misc/Off):
+			save.data["off time"] = str($misc/Off.time_left)
+			save.data["off d"] = str(gv.off_d)
 	
 	
 	# tasks
 	if true:
 		
 		for q in gv.quest:
-			save.data["task " + str(q.key) + " complete"] = q.complete
+			save.data["quest " + str(q.key) + " complete"] = q.complete
 		
 		if taq.cur_quest != -1:
 			
@@ -1306,47 +1457,54 @@ func e_save(type := "normal", path := SAVE.MAIN):
 			var i = 0
 			for r in taq.quest.req:
 				save.data["quest req progress " + str(i)] = r.progress.toScientific()
+				i += 1
 		else:
 			save.data["load quest"] = false
+		
+		
 		
 		var bla = 0
 		for t in taq.task:
 			
-			var key = str(bla)
+			var key = "task " + str(bla)
 			
-			save.data["task " + key + " name"] = t.name
-			save.data["task " + key + " key"] = t.key
-			save.data["task " + key + " icon"] = t.icon_key
+			save.data[key + " name"] = t.name
+			save.data[key + " key"] = str(t.key)
+			save.data[key + " icon"] = t.icon_key
 			
 			var i = 0
 			for r in t.req:
-				save.data["task " + key + " step key " + str(i)] = r.type
-				save.data["task " + key + " b " + str(i)] = r.amount.toScientific()
-				save.data["task " + key + " f " + str(i)] = r.progress.toScientific()
+				save.data[key + " req type " + str(i)] = r.type
+				save.data[key + " req_key " + str(i)] = r.req_key
+				save.data[key + " icon_key " + str(i)] = r.icon_key
+				save.data[key + " amount " + str(i)] = r.amount.toScientific()
+				save.data[key + " progress " + str(i)] = r.progress.toScientific()
 				i += 1
-			save.data["task " + str(i) + " steps"] = i
+			save.data[key + " req count"] = str(i)
 			
 			i = 0
 			for r in t.reward:
 				
-				save.data["task " + key + " reward text " + str(i)] = r.text
-				save.data["task " + key + " reward icon_key " + str(i)] = r.icon_key
-				save.data["task " + key + " reward type " + str(i)] = str(r.type)
+				save.data[key + " reward type " + str(i)] = str(r.type)
+				save.data[key + " reward text " + str(i)] = r.text
+				save.data[key + " reward icon_key " + str(i)] = r.icon_key
+				
 				if "amount" in r.other_keys:
-					save.data["task " + key + " reward amount " + str(i)] = r.amount.toScientific()
+					save.data[key + " reward amount " + str(i)] = r.amount.toScientific()
 				else:
-					save.data["task " + key + " reward amount " + str(i)] = "0"
+					save.data[key + " reward amount " + str(i)] = "0"
 				if "other_key" in r.other_keys:
-					save.data["task " + key + " reward other_key " + str(i)] = r.other_key
+					save.data[key + " reward other_key " + str(i)] = r.other_key
 				else:
-					save.data["task " + key + " reward other_key " + str(i)] = "NULL"
+					save.data[key + " reward other_key " + str(i)] = "NULL"
 				
 				i += 1
-			save.data["task " + key + " rewards"] = str(i)
+			
+			save.data[key + " rewards"] = str(i)
 			
 			bla += 1
 		
-		save.data["cur tasks"] = taq.cur_tasks
+		save.data["cur tasks"] = bla
 	
 	
 	# upgrades
@@ -1383,6 +1541,7 @@ func e_save(type := "normal", path := SAVE.MAIN):
 			save.data["g" + x + " active"] = gv.g[x].active
 			save.data["g" + x + " unlocked"] = gv.g[x].unlocked
 			save.data["g" + x + " key"] = gv.g[x].key_lored
+			save.data["g" + x + " times purchased"] = gv.g[x].times_purchased
 			
 			if not gv.g[x].active:
 				continue
@@ -1427,7 +1586,7 @@ func e_load(path := SAVE.MAIN) -> bool:
 	var save := _save.new()
 	
 	# file shit
-	while true:
+	if true:
 		
 		if not save_file.file_exists(path):
 			return false
@@ -1447,15 +1606,12 @@ func e_load(path := SAVE.MAIN) -> bool:
 			save.data =  Marshalls.base64_to_variant(save_lines[0])
 			save.game_version = save.data["game version"]
 		
-		
 		save_file.close()
-		
-		break
 	
-	get_node(gn_patch).setup(save.game_version)
+	gn_patch.setup(save.game_version)
 	
 	if not "2" in save.game_version[0]:
-		print("Save from 1.2c or earlier--what the heck, have you really not played since then? Welcome back, jeez!")
+		print_debug("Save from 1.2c or earlier--what the heck, have you really not played since then? Welcome back, jeez!")
 		return false
 	
 	var pre_beta_4 := false
@@ -1470,7 +1626,10 @@ func e_load(path := SAVE.MAIN) -> bool:
 	load_upgrades(save.data, keys)
 	load_loreds(save.data, keys, pre_beta_4)
 	load_tasks(save.data, keys, save.game_version)
-
+	
+	if version_older_than(save.game_version, "2.2.4"):
+		gv.menu.option["FPS"] = 2
+	
 	# X.Y.Z
 	# 2.1.0
 	# 1.2c
@@ -1486,9 +1645,15 @@ func e_load(path := SAVE.MAIN) -> bool:
 	# offline earnings
 	if true:
 		
-		var clock_dif = cur_clock - save.data["cur_clock"] - 10
-		if clock_dif > 0:
-			w_total_per_sec(clock_dif)
+		off_check()
+		
+		var time_offline = min(cur_clock - save.data["cur_clock"] - 30 + (gv.offline_time * 2 * gv.off_d), 604800)
+		
+		if time_offline >= 0:
+			#w_total_per_sec(clock_dif)
+			offline_boost(time_offline)
+		else:
+			offline_boost(0.0)
 	
 	# fin & misc
 	if true:
@@ -1501,6 +1666,10 @@ func e_load(path := SAVE.MAIN) -> bool:
 	return true
 
 func load_stats(data: Dictionary, keys: Array, pre_beta_4: bool):
+	
+	for e in emote_events:
+		if e in keys:
+			emote_events[e] = data[e]
 	
 	for x in gv.stats.run.size():
 		if "gv.stats.run[" + str(x) + "]" in keys:
@@ -1518,6 +1687,8 @@ func load_stats(data: Dictionary, keys: Array, pre_beta_4: bool):
 		
 		gv.menu.option[x] = data["option " + x]
 		if x == "on_save_menu_options" and not gv.menu.option[x]: break
+		
+	
 	
 	gv.stats.time_played = data["time_played"]
 	gv.stats.tasks_completed = data["tasks_completed"]
@@ -1552,6 +1723,10 @@ func load_stats(data: Dictionary, keys: Array, pre_beta_4: bool):
 	
 	if "most_resources_gained" in keys:
 		gv.stats.most_resources_gained = Big.new(data["most_resources_gained"])
+	
+	if "off time" in keys:
+		gv.offline_time = float(data["off time"])
+		gv.off_d = float(data["off d"])
 
 func load_upgrades(data: Dictionary, keys: Array):
 	
@@ -1560,7 +1735,7 @@ func load_upgrades(data: Dictionary, keys: Array):
 		gv.up["Limit Break"].sync_effects()
 		gv.lb_xp.t = Big.new(data["Limit Break xpt"])
 		gv.lb_xp.f = Big.new(data["Limit Break xpf"])
-		emit_signal("limit_break_leveled_up", "color")
+		gv.emit_signal("limit_break_leveled_up", "color")
 	
 	if "[I DRINK YOUR MILKSHAKE] e0" in keys:
 		gv.up["I DRINK YOUR MILKSHAKE"].effects[0].effect.a = Big.new(data["[I DRINK YOUR MILKSHAKE] e0"])
@@ -1586,20 +1761,12 @@ func load_upgrades(data: Dictionary, keys: Array):
 		if "[" + x + "] unlocked" in keys:
 			gv.up[x].unlocked = data["[" + x + "] unlocked"]
 		
-		
-		
-		
 		if not gv.up[x].refundable:
 			if gv.up[x].active():
 				gv.up[x].apply()
 			continue
 		
-		gv.up[x].refundable = false
-		
-		gv.up[x].sync_cost()
-		
-		for c in gv.up[x].cost:
-			gv.r[c].a(gv.up[x].cost[c].t)
+		gv.up[x].refund()
 	
 	for x in gv.up:
 		gv.up[x].sync()
@@ -1613,15 +1780,20 @@ func load_loreds(data: Dictionary, keys: Array, pre_beta_4: bool):
 			continue
 		if not "g" + x + " active" in keys:
 			continue
+		if "g" + x + " times purchased" in keys:
+			gv.g[x].times_purchased = data["g" + x + " times purchased"]
 		gv.g[x].active = data["g" + x + " active"]
 		gv.r[x].a(Big.new(data["g" + x + " r"]))
 		if "g" + x + " unlocked" in keys:
-			gv.g[x].unlocked = data["g" + x + " unlocked"]
+			if data["g" + x + " unlocked"]:
+				gv.g[x].unlock()
 		if "g" + x + " key" in keys:
 			gv.g[x].key_lored = data["g" + x + " key"]
 		
 		if not gv.g[x].active:
 			continue
+		
+		gv.stats.g_list["active s" + str(gv.g[x].stage)].append(x)
 		
 		gv.g[x].level = data["g" + x + " level"]
 		
@@ -1652,20 +1824,45 @@ func load_loreds(data: Dictionary, keys: Array, pre_beta_4: bool):
 func load_tasks(data: Dictionary, keys: Array, game_version: String):
 	
 	for q in gv.quest:
-		if "task " + str(q.key) + " complete" in keys:
-			q.complete = data["task " + str(q.key) + " complete"]
+		
+		if version_older_than(game_version, "2.2.4"):
+			if "task " + q.name + " complete" in keys:
+				if data["task " + q.name + " complete"]:
+					q.turn_in(false, true)
+		else:
+			if "quest " + str(q.key) + " complete" in keys:
+				if data["quest " + str(q.key) + " complete"]:
+					q.turn_in(false, true)
 	
 	if "load quest" in keys:
+		
 		if data["load quest"]:
-			if data["on quest"] in gv.Quest:
+			if version_older_than(game_version, "2.2.4"):
+				if data["on quest"] == "Horse Doodie":
+					taq.new_quest(gv.quest[gv.Quest.HORSE_DOODIE])
+					taq.progress(gv.TaskRequirement.UPGRADES_PURCHASED, "s2m", Big.new(gv.stats.upgrades_owned["s2m"]))
+			if data["on quest"] in gv.Quest.values():
 				taq.new_quest(gv.quest[data["on quest"]])
-				for x in taq.quest.step:
-					if not "quest step " + x + " f" in keys:
-						continue
-					
-					taq.quest.step[x].f = Big.new(data["quest step " + x + " f"])
+				get_node(gnquest).show()
+				var i = 0
+				for r in taq.quest.req:
+					if version_older_than(game_version, "2.2.4"):
+						if not "task step progress " + str(i) in keys:
+							continue
+						r.progress = Big.new(data["task step progress " + str(i)])
+					else:
+						if not "quest req progress " + str(i) in keys:
+							continue
+						r.progress = Big.new(data["quest req progress " + str(i)])
+					if r.progress.greater_equal(r.amount):
+						r.done = true
+						taq.quest.reqs_done += 1
+					taq.quest.points.a(r.progress)
+					i += 1
+				taq.quest.update_points()
+				taq.quest.check_for_completion(false)
 	
-	if int(game_version[2]) < 4:
+	if version_older_than(game_version, "2.2.4"):
 		return
 	
 	if "cur tasks" in keys:
@@ -1677,48 +1874,55 @@ func load_tasks(data: Dictionary, keys: Array, game_version: String):
 				continue
 			
 			var pack := {}
-			var key = str(i)
+			var key = "task " + str(i)
 			
-			pack["name"] = data["task " + str(i) + " name"]
-			pack["icon_key"] = data["task " + str(i) + " icon"]
+			pack["name"] = data[key + " name"]
+			pack["icon_key"] = data[key + " icon"]
 			pack["reqs"] = []
 			pack["reward"] = []
 			
-			for ii in data["task " + str(i) + " rewards"]:
+			for ii in int(data[key + " req count"]):
+				var deets = {}
+				if key + " amount " + str(ii) in keys:
+					deets["amount"] = data[key + " amount " + str(ii)]
+				if key + " req_key " + str(ii) in keys:
+					deets["req_key"] = data[key + " req_key " + str(ii)]
+				
+				pack["reqs"].append(
+					Task.Requirement.new(
+						data[key + " req type " + str(ii)],
+						data[key + " icon_key " + str(ii)],
+						deets
+					)
+				)
+				pack["reqs"][ii].progress = Big.new(data[key + " progress " + str(ii)])
+				
+				ii += 1
+			
+			for ii in int(data[key + " rewards"]):
 				pack["reward"].append(
 					Task.Reward.new(
-						data["task " + key + " reward type " + str(ii)],
-						data["task " + key + " reward text " + str(ii)],
-						data["task " + key + " reward icon_key " + str(ii)],
+						int(data[key + " reward type " + str(ii)]),
+						data[key + " reward text " + str(ii)],
+						data[key + " reward icon_key " + str(ii)],
 						{
-							"amount": data["task " + key + " reward amount " + str(i)],
-							"other_key": data["task " + key + " reward other_key " + str(i)]
+							"amount": data[key + " reward amount " + str(ii)],
+							"other_key": data[key + " reward other_key " + str(ii)]
 						}
 					)
 				)
 			
-			taq.task.append(Task.new(data["task " + key + " key"], pack))# name, desc, rr, r, steps, icon, gv.COLORS[data["task " + str(i) + " icon"]])
+			taq.add_task(Task.new(int(data[key + " key"]), pack))
+			taq.task[i].update_points()
+
 
 
 func _on_Button_pressed() -> void:
 	
-	#gv.r["flayed corpse"].a(3)
-	
-	#var Cawk = Big.new(100)
-	
-	#print(Big.new(Cawk).power(1.5).toString())
-	
-	
 	pass
-
-
-
-func can():
-	return true
-
-func my_func():
-	print("Hello")
 	
-	if yield():
-		return "test"
-	return "cock"
+
+
+
+
+

@@ -35,7 +35,7 @@ func setup(_key: int):
 	gn.name.self_modulate = gv.cac[key].color
 	
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	
 	level()
 	xp()

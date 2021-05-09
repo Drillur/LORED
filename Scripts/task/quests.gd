@@ -3,8 +3,6 @@ extends Panel
 onready var rt = get_node("/root/Root")
 
 const prefabs = {
-	TASK = preload("res://Prefabs/task/task.tscn"),
-	TASK_COMPLETE = preload("res://Prefabs/lored_buy.tscn"),
 	D_TEXT = preload("res://Prefabs/dtext.tscn"),
 }
 
@@ -17,31 +15,24 @@ func quest_ended() -> void:
 	
 	flying_texts(taq.quest.reward)
 	
-	taq.quest.turn_in()
-	
-	match taq.cur_quest:
-		gv.Quest.SPIKE:
-			gv.menu.option["task auto"] = true
-	
 	taq.cur_quest = -1
 	
-	for x in rt.quests:
-		if rt.quests[x].complete or rt.quests[x].selectable:
+	for q in gv.quest:
+		if q.complete or q.selectable:
 			continue
-		taq.new_quest(rt.quests[x])
+		taq.new_quest(q)
 		break
 	
 	if taq.cur_quest == -1:
 		hide()
 		set_physics_process(false)
 	
-	if "tasks" in rt.content_tasks.keys():
-		if taq.cur_tasks < taq.max_tasks:
-			rt.content_tasks["tasks"].hit_max_tasks()
-	
-	rt.save_fps = 10.0
+	taq.hit_max_tasks()
 
 func flying_texts(reward = []) -> void:
+	
+	if not gv.menu.option["flying_numbers"]:
+		return
 	
 	var poop = []
 	
@@ -49,27 +40,19 @@ func flying_texts(reward = []) -> void:
 		if r.type == gv.QuestReward.RESOURCE:
 			poop.append(r)
 	
-	for p in poop:
-		gv.r[p.other_key].a(p.amount)
-	
-	var left_x = rect_global_position.x + rect_size.x / 2
-	var ypos = rect_global_position.y - 5
+	var left_x = rect_global_position.x / rt.scale.x + (rect_size.x / rt.scale.x) / 2
+	var ypos = rect_global_position.y / rt.scale.y - 5
 	
 	var i := 0
 	for x in poop:
 		
 		var t = Timer.new()
-		t.set_wait_time(0.09)
-		t.set_one_shot(true)
-		self.add_child(t)
-		t.start()
+		add_child(t)
+		t.start(0.09)
 		yield(t, "timeout")
 		t.queue_free()
 		
 		left_x += rand_range(-20, 20)
-		
-		if x == "growth":
-			rt.get_node(rt.gnLOREDs).cont[x].w_bonus_output(x.other_key, x.amount)
 		
 		var key = "task reward dtext" + str(i)
 		

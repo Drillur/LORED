@@ -61,11 +61,11 @@ func static_vals():
 	r_update()
 
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	rect_size.y = 0
 	set_process(false)
 
-func _physics_process(delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	
 	r_update()
 	r_slow()

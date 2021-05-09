@@ -1,56 +1,126 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://Fonts/Roboto-Medium.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Fonts/Roboto-Black.ttf" type="DynamicFontData" id=2]
 [ext_resource path="res://Sprites/resources/axe.png" type="Texture" id=3]
 
 [sub_resource type="StyleBoxFlat" id=1]
-draw_center = false
+bg_color = Color( 1, 1, 1, 1 )
+expand_margin_left = 2.0
+expand_margin_right = 2.0
+expand_margin_top = 2.0
+expand_margin_bottom = 2.0
+shadow_size = 2
 
-[sub_resource type="DynamicFont" id=7]
+[sub_resource type="StyleBoxFlat" id=2]
+bg_color = Color( 0.0996094, 0.0996094, 0.0996094, 1 )
+
+[sub_resource type="StyleBoxFlat" id=3]
+bg_color = Color( 0.411765, 0.411765, 0.411765, 1 )
+
+[sub_resource type="StyleBoxFlat" id=4]
+bg_color = Color( 1, 1, 1, 1 )
+
+[sub_resource type="StyleBoxFlat" id=8]
+bg_color = Color( 0, 0, 0, 0.5 )
+
+[sub_resource type="DynamicFont" id=6]
 size = 14
 outline_size = 2
 outline_color = Color( 0, 0, 0, 1 )
 extra_spacing_bottom = -4
 font_data = ExtResource( 2 )
 
-[sub_resource type="DynamicFont" id=3]
+[sub_resource type="DynamicFont" id=7]
 size = 12
 outline_size = 2
 outline_color = Color( 0, 0, 0, 1 )
 font_data = ExtResource( 1 )
 
-[sub_resource type="StyleBoxFlat" id=4]
-bg_color = Color( 1, 1, 1, 0.1 )
-
-[sub_resource type="StyleBoxFlat" id=5]
-bg_color = Color( 1, 1, 1, 0.25 )
-
-[sub_resource type="StyleBoxFlat" id=6]
-bg_color = Color( 0.0705882, 0.0705882, 0.0705882, 0 )
-shadow_color = Color( 0.878431, 0.121569, 0.34902, 0.2 )
-shadow_size = 5
-
 [node name="QuestTipStep" type="MarginContainer"]
-margin_right = 165.0
+margin_right = 179.0
 margin_bottom = 50.0
+rect_min_size = Vector2( 0, 50 )
+custom_constants/margin_right = 2
+custom_constants/margin_top = 2
+custom_constants/margin_left = 2
+custom_constants/margin_bottom = 2
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="v" type="VBoxContainer" parent="."]
-margin_right = 165.0
-margin_bottom = 50.0
+[node name="done" type="Panel" parent="."]
+visible = false
+margin_left = 2.0
+margin_top = 2.0
+margin_right = 177.0
+margin_bottom = 48.0
+custom_styles/panel = SubResource( 1 )
+
+[node name="progress" type="Panel" parent="."]
+margin_left = 2.0
+margin_top = 2.0
+margin_right = 177.0
+margin_bottom = 48.0
+rect_min_size = Vector2( 0, 5 )
+mouse_filter = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_styles/panel = SubResource( 2 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="f" type="Panel" parent="progress"]
+modulate = Color( 0.352941, 0.352941, 0.352941, 1 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = -44.0
+rect_min_size = Vector2( 2, 0 )
+mouse_filter = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+custom_styles/panel = SubResource( 3 )
+__meta__ = {
+"_edit_group_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="flair" type="Panel" parent="progress/f"]
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -2.0
+rect_min_size = Vector2( 2, 0 )
+mouse_filter = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+custom_styles/panel = SubResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="v" type="MarginContainer" parent="."]
+margin_left = 2.0
+margin_top = 2.0
+margin_right = 177.0
+margin_bottom = 48.0
+custom_constants/margin_right = 5
+custom_constants/margin_left = 5
 
 [node name="h" type="HBoxContainer" parent="v"]
-margin_right = 165.0
-margin_bottom = 36.0
+margin_left = 5.0
+margin_right = 170.0
+margin_bottom = 46.0
 
 [node name="icon" type="Panel" parent="v/h"]
+margin_top = 5.0
 margin_right = 36.0
-margin_bottom = 36.0
+margin_bottom = 41.0
 rect_min_size = Vector2( 36, 36 )
-custom_styles/panel = SubResource( 1 )
+size_flags_horizontal = 0
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 8 )
 
 [node name="Sprite" type="Sprite" parent="v/h/icon"]
 position = Vector2( 18, 18 )
@@ -59,66 +129,21 @@ texture = ExtResource( 3 )
 [node name="step" type="VBoxContainer" parent="v/h"]
 margin_left = 40.0
 margin_right = 165.0
-margin_bottom = 36.0
+margin_bottom = 46.0
+alignment = 1
 
 [node name="val" type="Label" parent="v/h/step"]
+margin_top = 7.0
 margin_right = 125.0
-margin_bottom = 13.0
-custom_fonts/font = SubResource( 7 )
+margin_bottom = 20.0
+custom_fonts/font = SubResource( 6 )
 custom_colors/font_color = Color( 0.796875, 0.796875, 0.796875, 1 )
 text = "0 / 1"
 
 [node name="desc" type="Label" parent="v/h/step"]
-margin_top = 17.0
+margin_top = 24.0
 margin_right = 125.0
-margin_bottom = 32.0
-custom_fonts/font = SubResource( 3 )
+margin_bottom = 39.0
+custom_fonts/font = SubResource( 7 )
 custom_colors/font_color = Color( 0.796875, 0.796875, 0.796875, 1 )
 text = "Coal LORED purchased"
-
-[node name="check" type="CheckBox" parent="v/h"]
-visible = false
-margin_left = 166.0
-margin_right = 190.0
-margin_bottom = 36.0
-disabled = true
-pressed = true
-
-[node name="ct" type="Panel" parent="v"]
-margin_top = 40.0
-margin_right = 165.0
-margin_bottom = 50.0
-rect_min_size = Vector2( 0, 10 )
-size_flags_vertical = 0
-custom_styles/panel = SubResource( 4 )
-
-[node name="c" type="Panel" parent="v/ct"]
-anchor_bottom = 1.0
-margin_right = 138.0
-rect_min_size = Vector2( 2, 0 )
-custom_styles/panel = SubResource( 5 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="ci" type="Panel" parent="v/ct/c"]
-anchor_left = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = -2.0
-custom_styles/panel = SubResource( 5 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="flash0" type="Panel" parent="."]
-visible = false
-margin_right = 165.0
-margin_bottom = 50.0
-custom_styles/panel = SubResource( 6 )
-
-[node name="flash1" type="Panel" parent="."]
-visible = false
-margin_right = 165.0
-margin_bottom = 50.0
-custom_styles/panel = SubResource( 6 )

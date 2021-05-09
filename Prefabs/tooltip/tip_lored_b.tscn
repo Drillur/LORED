@@ -60,14 +60,12 @@ draw_center = false
 
 [sub_resource type="DynamicFont" id=7]
 size = 14
-outline_size = 2
 outline_color = Color( 0, 0, 0, 1 )
 extra_spacing_bottom = -4
 font_data = ExtResource( 2 )
 
 [sub_resource type="DynamicFont" id=8]
 size = 13
-outline_size = 2
 outline_color = Color( 0, 0, 0, 1 )
 extra_spacing_top = -4
 extra_spacing_bottom = -4

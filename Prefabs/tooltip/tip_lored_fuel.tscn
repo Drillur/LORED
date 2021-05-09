@@ -11,13 +11,11 @@ draw_center = false
 
 [sub_resource type="DynamicFont" id=2]
 size = 14
-outline_size = 2
 outline_color = Color( 0, 0, 0, 1 )
 font_data = ExtResource( 3 )
 
 [sub_resource type="DynamicFont" id=3]
 size = 12
-outline_size = 2
 outline_color = Color( 0, 0, 0, 1 )
 font_data = ExtResource( 4 )
 
@@ -29,13 +27,11 @@ bg_color = Color( 1, 1, 1, 0.25 )
 
 [sub_resource type="DynamicFont" id=6]
 size = 14
-outline_size = 2
 outline_color = Color( 0, 0, 0, 1 )
 font_data = ExtResource( 3 )
 
 [sub_resource type="DynamicFont" id=7]
-size = 11
-outline_size = 2
+size = 12
 outline_color = Color( 0, 0, 0, 1 )
 font_data = ExtResource( 2 )
 
@@ -47,7 +43,7 @@ extra_spacing_bottom = -4
 font_data = ExtResource( 2 )
 
 [node name="Fuel" type="MarginContainer"]
-margin_right = 134.0
+margin_right = 140.0
 margin_bottom = 86.0
 custom_constants/margin_right = 10
 custom_constants/margin_top = 10
@@ -61,11 +57,11 @@ __meta__ = {
 [node name="v" type="VBoxContainer" parent="."]
 margin_left = 10.0
 margin_top = 10.0
-margin_right = 124.0
+margin_right = 130.0
 margin_bottom = 81.0
 
 [node name="h" type="HBoxContainer" parent="v"]
-margin_right = 114.0
+margin_right = 120.0
 margin_bottom = 36.0
 
 [node name="icon" type="Panel" parent="v/h"]
@@ -82,19 +78,21 @@ texture = ExtResource( 1 )
 margin_left = 40.0
 margin_right = 110.0
 margin_bottom = 36.0
+custom_constants/separation = 0
 alignment = 1
 
 [node name="val" type="Label" parent="v/h/step"]
+margin_top = 2.0
 margin_right = 70.0
-margin_bottom = 17.0
+margin_bottom = 19.0
 custom_fonts/font = SubResource( 2 )
 custom_colors/font_color = Color( 0.796875, 0.796875, 0.796875, 1 )
 text = "0 / 1"
 
 [node name="title" type="Label" parent="v/h/step"]
-margin_top = 21.0
+margin_top = 19.0
 margin_right = 70.0
-margin_bottom = 36.0
+margin_bottom = 34.0
 custom_fonts/font = SubResource( 3 )
 custom_colors/font_color = Color( 0.796875, 0.796875, 0.796875, 1 )
 text = "Coal Storage"
@@ -102,7 +100,7 @@ text = "Coal Storage"
 [node name="ct" type="Panel" parent="v"]
 modulate = Color( 0.231373, 0.384314, 0.917647, 1 )
 margin_top = 40.0
-margin_right = 114.0
+margin_right = 120.0
 margin_bottom = 50.0
 rect_min_size = Vector2( 0, 10 )
 size_flags_vertical = 0
@@ -129,7 +127,7 @@ __meta__ = {
 
 [node name="drain" type="HBoxContainer" parent="v"]
 margin_top = 54.0
-margin_right = 114.0
+margin_right = 120.0
 margin_bottom = 71.0
 custom_constants/separation = 6
 
@@ -143,8 +141,8 @@ text = "154"
 [node name="desc" type="Label" parent="v/drain"]
 margin_left = 30.0
 margin_top = 1.0
-margin_right = 114.0
-margin_bottom = 15.0
+margin_right = 120.0
+margin_bottom = 16.0
 custom_fonts/font = SubResource( 7 )
 custom_colors/font_color = Color( 0.796875, 0.796875, 0.796875, 1 )
 text = "Drain per second"

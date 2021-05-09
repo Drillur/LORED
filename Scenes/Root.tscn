@@ -1,7 +1,9 @@
-[gd_scene load_steps=29 format=2]
+[gd_scene load_steps=33 format=2]
 
 [ext_resource path="res://Scripts/_Root.gd" type="Script" id=1]
 [ext_resource path="res://Scripts/map.gd" type="Script" id=2]
+[ext_resource path="res://Sprites/misc/hold_true.png" type="Texture" id=3]
+[ext_resource path="res://Sprites/animations/autobuyer.tres" type="SpriteFrames" id=4]
 [ext_resource path="res://Scripts/tooltip/tooltip_master.gd" type="Script" id=5]
 [ext_resource path="res://Prefabs/upgrade/upgrade_container.tscn" type="PackedScene" id=6]
 [ext_resource path="res://Prefabs/Limit Break.tscn" type="PackedScene" id=7]
@@ -17,6 +19,8 @@
 [ext_resource path="res://Sprites/tab/alert2.png" type="Texture" id=17]
 [ext_resource path="res://Sprites/resources/liq.png" type="Texture" id=18]
 [ext_resource path="res://Prefabs/Patch/PatchNotes.tscn" type="PackedScene" id=19]
+[ext_resource path="res://Scripts/task/tasks.gd" type="Script" id=20]
+[ext_resource path="res://Prefabs/Off Boost.tscn" type="PackedScene" id=21]
 [ext_resource path="res://Fonts/Roboto-Medium.ttf" type="DynamicFontData" id=29]
 
 [sub_resource type="StyleBoxFlat" id=1]
@@ -113,8 +117,8 @@ __meta__ = {
 script = ExtResource( 2 )
 
 [node name="m" type="MarginContainer" parent="."]
-margin_right = 1024.0
-margin_bottom = 768.0
+margin_right = 1280.0
+margin_bottom = 720.0
 custom_constants/margin_right = 0
 custom_constants/margin_top = 0
 custom_constants/margin_left = 0
@@ -124,12 +128,12 @@ __meta__ = {
 }
 
 [node name="v" type="VBoxContainer" parent="m"]
-margin_right = 1024.0
-margin_bottom = 768.0
+margin_right = 1280.0
+margin_bottom = 720.0
 custom_constants/separation = 0
 
 [node name="top" type="MarginContainer" parent="m/v"]
-margin_right = 1024.0
+margin_right = 1280.0
 margin_bottom = 74.0
 custom_constants/margin_right = 10
 custom_constants/margin_top = 10
@@ -139,14 +143,14 @@ custom_constants/margin_bottom = 10
 [node name="bg" type="Panel" parent="m/v/top"]
 margin_left = 10.0
 margin_top = 10.0
-margin_right = 1014.0
+margin_right = 1270.0
 margin_bottom = 64.0
 custom_styles/panel = SubResource( 1 )
 
 [node name="h" type="HBoxContainer" parent="m/v/top"]
 margin_left = 10.0
 margin_top = 10.0
-margin_right = 1014.0
+margin_right = 1270.0
 margin_bottom = 64.0
 custom_constants/separation = 10
 
@@ -219,35 +223,45 @@ margin_bottom = 54.0
 rect_min_size = Vector2( 4, 0 )
 custom_styles/panel = SubResource( 6 )
 
-[node name="Limit Break" parent="m/v/top/h" instance=ExtResource( 7 )]
-anchor_right = 0.0
-margin_left = 869.0
-margin_right = 1004.0
+[node name="r" type="HBoxContainer" parent="m/v/top/h"]
+margin_left = 1023.0
+margin_right = 1260.0
+margin_bottom = 54.0
 size_flags_horizontal = 10
+
+[node name="Off Boost" parent="m/v/top/h/r" instance=ExtResource( 21 )]
+margin_right = 98.0
+margin_bottom = 54.0
+size_flags_vertical = 9
+
+[node name="Limit Break" parent="m/v/top/h/r" instance=ExtResource( 7 )]
+anchor_right = 0.0
+margin_left = 102.0
+margin_right = 237.0
 
 [node name="LORED List" parent="m/v" instance=ExtResource( 9 )]
 margin_top = 74.0
-margin_right = 1024.0
-margin_bottom = 703.0
+margin_right = 1280.0
+margin_bottom = 650.0
 size_flags_vertical = 3
 
 [node name="Bottom" type="HBoxContainer" parent="m/v"]
-margin_top = 703.0
-margin_right = 1024.0
-margin_bottom = 703.0
+margin_top = 650.0
+margin_right = 1280.0
+margin_bottom = 650.0
 
 [node name="Left" type="Panel" parent="m/v/Bottom"]
 size_flags_horizontal = 0
 
 [node name="Right" type="Panel" parent="m/v/Bottom"]
-margin_left = 1024.0
-margin_right = 1024.0
+margin_left = 1280.0
+margin_right = 1280.0
 size_flags_horizontal = 10
 
 [node name="bot" type="MarginContainer" parent="m/v"]
-margin_top = 703.0
-margin_right = 1024.0
-margin_bottom = 768.0
+margin_top = 650.0
+margin_right = 1280.0
+margin_bottom = 720.0
 custom_constants/margin_right = 10
 custom_constants/margin_top = 10
 custom_constants/margin_left = 10
@@ -256,22 +270,22 @@ custom_constants/margin_bottom = 10
 [node name="bg" type="Panel" parent="m/v/bot"]
 margin_left = 10.0
 margin_top = 10.0
-margin_right = 1014.0
-margin_bottom = 55.0
+margin_right = 1270.0
+margin_bottom = 60.0
 custom_styles/panel = SubResource( 7 )
 
 [node name="h" type="HBoxContainer" parent="m/v/bot"]
 margin_left = 10.0
 margin_top = 10.0
-margin_right = 1014.0
-margin_bottom = 55.0
+margin_right = 1270.0
+margin_bottom = 60.0
 custom_constants/separation = 10
 alignment = 1
 
 [node name="taq" type="HBoxContainer" parent="m/v/bot/h"]
-margin_left = 834.0
-margin_right = 1004.0
-margin_bottom = 45.0
+margin_left = 1090.0
+margin_right = 1260.0
+margin_bottom = 50.0
 size_flags_horizontal = 10
 custom_constants/separation = 14
 alignment = 2
@@ -279,10 +293,40 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="tasks" type="HBoxContainer" parent="m/v/bot/h/taq"]
+visible = false
+margin_bottom = 50.0
+script = ExtResource( 20 )
+
+[node name="auto" type="Button" parent="m/v/bot/h/taq/tasks"]
+visible = false
+margin_right = 50.0
+margin_bottom = 50.0
+rect_min_size = Vector2( 50, 35 )
+focus_mode = 0
+mouse_default_cursor_shape = 2
+theme = ExtResource( 11 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="on" type="AnimatedSprite" parent="m/v/bot/h/taq/tasks/auto"]
+modulate = Color( 1, 0, 0.631373, 0.6 )
+position = Vector2( 25, 25 )
+frames = ExtResource( 4 )
+frame = 15
+playing = true
+
+[node name="off" type="Sprite" parent="m/v/bot/h/taq/tasks/auto"]
+visible = false
+modulate = Color( 1, 0, 0.63, 0.95 )
+position = Vector2( 25, 25 )
+texture = ExtResource( 3 )
+
 [node name="quest" type="Panel" parent="m/v/bot/h/taq"]
 margin_right = 170.0
-margin_bottom = 45.0
-rect_min_size = Vector2( 170, 45 )
+margin_bottom = 50.0
+rect_min_size = Vector2( 170, 50 )
 size_flags_horizontal = 8
 size_flags_vertical = 8
 custom_styles/panel = SubResource( 8 )
@@ -292,18 +336,18 @@ script = ExtResource( 8 )
 
 [node name="up_container" parent="m" instance=ExtResource( 6 )]
 visible = false
-margin_left = 329.0
-margin_top = 184.0
-margin_right = 694.0
-margin_bottom = 584.0
+margin_left = 402.0
+margin_top = 160.0
+margin_right = 877.0
+margin_bottom = 560.0
 size_flags_horizontal = 4
 size_flags_vertical = 6
 
 [node name="Patch Notes" parent="m" instance=ExtResource( 19 )]
-margin_left = 365.0
-margin_top = 234.0
-margin_right = 658.0
-margin_bottom = 534.0
+margin_left = 440.0
+margin_top = 210.0
+margin_right = 840.0
+margin_bottom = 510.0
 
 [node name="misc" type="Node2D" parent="."]
 __meta__ = {
@@ -465,6 +509,9 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="Off" type="Timer" parent="misc"]
+one_shot = true
+
 [node name="texts" type="Node2D" parent="."]
 
 [node name="global_tip" type="Node2D" parent="."]
@@ -479,6 +526,9 @@ __meta__ = {
 }
 [connection signal="button_down" from="m/v/top/h/menu_button" to="." method="_on_menu_button_button_down"]
 [connection signal="pressed" from="m/v/top/h/menu_button" to="." method="_on_menu_button_pressed"]
+[connection signal="mouse_entered" from="m/v/top/h/r/Off Boost" to="." method="_on_Off_Boost_mouse_entered"]
+[connection signal="mouse_exited" from="m/v/top/h/r/Off Boost" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="m/v/bot/h/taq/tasks/auto" to="m/v/bot/h/taq/tasks" method="_on_auto_pressed"]
 [connection signal="pressed" from="misc/tabs/v/upgrades" to="." method="_on_upgrades_pressed"]
 [connection signal="pressed" from="misc/tabs/v/s1" to="." method="_on_s1_pressed"]
 [connection signal="pressed" from="misc/tabs/v/s2" to="." method="_on_s2_pressed"]

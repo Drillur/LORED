@@ -21,9 +21,9 @@ var icon_key: String
 var color := Color(0,0,0)
 var color_key := ""
 var points := Big.new(0)
-var total_points := Big.new(0) # only used for visual things
+var total_points := Big.new(1) # only used for visual things
 
-var manager: Button
+var manager: MarginContainer
 
 var times_completed: int
 
@@ -88,6 +88,8 @@ class Requirement:
 				color = gv.COLORS[req_key]
 			else:
 				color = gv.COLORS["grey"]
+		else:
+			color = gv.COLORS["grey"]
 		
 		if "amount" in deets.keys():
 			amount = Big.new(deets["amount"])
@@ -107,8 +109,6 @@ class Requirement:
 						text = req_key.capitalize() + " produced"
 			gv.TaskRequirement.SPELL_CAST:
 				text = req_key + " cast"
-			gv.TaskRequirement.SPIKE_TASKS_COMPLETED:
-				text = "Spike tasks completed"
 			gv.TaskRequirement.RARE_OR_SPIKE_TASKS_COMPLETED:
 				text = "Rare or spike tasks completed"
 			gv.TaskRequirement.TASKS_COMPLETED:
@@ -116,26 +116,31 @@ class Requirement:
 			gv.TaskRequirement.UPGRADE_PURCHASED:
 				text = req_key + " purchased"
 			gv.TaskRequirement.LORED_UPGRADED:
-				text = gv.g[req_key].name + " upgraded"
+				text = gv.g[req_key].name + " LORED upgraded"
+			gv.TaskRequirement.UPGRADES_PURCHASED:
+				text = "%s upgrades purchased" % {"s1n": "Normal", "s1m": "Malignant", "s2n": "Extra-normal", "s2m": "Radiative", "s3n": "Runed Dial", "s3m": "Spirit"}[req_key]
 	
-	func progress(_req_key: String, val: Big) -> bool:
+	func _progress(incoming_key: String, val: Big) -> Big:
 		
 		# if should increase reqs_done by 1, returns true
 		
-		if _req_key != req_key:
-			if req_key != "any":
-				return false
-		
 		if done:
-			return false
+			return Big.new(0)
+		
+		if incoming_key != req_key:
+			if req_key != "any":
+				return Big.new(0)
 		
 		progress.a(val)
+		
 		if progress.greater(amount):
 			progress = Big.new(amount)
-			done = true
-			return true
+			val.s(Big.new(progress).s(amount))
 		
-		return false
+		if progress.equal(amount):
+			done = true
+		
+		return val
 	
 	func reset():
 		
@@ -144,30 +149,80 @@ class Requirement:
 		if "amount" in deet_keys:
 			progress = Big.new(0)
 
-func progress(req_type: int, _req_key: String, val := Big.new(1)) -> void:
+func check_already_complete() -> void:
 	
 	for r in req:
-		if req_type == r.type:
-			if r.progress(_req_key, val):
+		if r.type == gv.TaskRequirement.UPGRADE_PURCHASED:
+			if gv.up[r.req_key].have:
+				progress(r.type, r.req_key)
+	
+	check_for_completion(false)
+
+func progress(req_type: int, incoming_key: String, val := Big.new(1)) -> void:
+	
+	var at_least_one := false
+	
+	for r in req:
+		if r.done:
+			continue
+		if req_type == r.type or (r.type == gv.TaskRequirement.TASKS_COMPLETED and req_type == gv.TaskRequirement.RARE_OR_SPIKE_TASKS_COMPLETED):
+			at_least_one = true
+			points.a(r._progress(incoming_key, val))
+			if r.done:
 				reqs_done += 1
-			points.a(val)
+	
+	if not at_least_one:
+		return
 	
 	update_points()
-	check_for_completion()
+	check_for_completion(false)
+
+func set_total_points():
+	
+	total_points = Big.new(0)
+	
+	for r in req:
+		total_points.a(r.amount)
 
 func update_points():
 	
 	if points.greater(total_points):
 		points = Big.new(total_points)
+	
+	manager.r_update()
 
-func check_for_completion() -> void:
+func attempt_turn_in(manual: bool):
+	
+	check_for_completion(manual)
+	
+	if ready:
+		turn_in(manual)
+		return
+	
+	if manual:
+		if random:
+			if is_instance_valid(manager.rt.get_node("global_tip").tip):
+				manager.rt.get_node("global_tip").tip.cont["taq"].flash()
+		else:
+			if is_instance_valid(manager.rt.get_node("global_tip").tip):
+				manager.rt.get_node("global_tip").tip.cont["taq"].flash()
+
+func check_for_completion(manual: bool) -> void:
+	
+	if ready:
+		return
 	
 	if reqs_done >= req.size():
-		ready = true
-		if random:
-			turn_in()
+		ready()
+		if random and gv.menu.option["task auto"]:
+			turn_in(manual)
 
-
+func ready():
+	
+	if not random:
+		print("ready!")
+	ready = true
+	manager.ready()
 
 
 #func _generate_random_task() -> Task:
@@ -209,8 +264,8 @@ func check_for_completion() -> void:
 #
 #		for x in gv.g[key].b:
 #
-#			if "no" in gv.menu.f:
-#				if int(gv.g[x].type[1]) <= int(gv.menu.f.split("no s")[1]):
+#			if "no" in gv.menuf:
+#				if int(gv.g[x].type[1]) <= int(gv.menuf.split("no s")[1]):
 #					cont = true
 #					break
 #
@@ -317,8 +372,8 @@ func check_for_completion() -> void:
 #
 #					var cont := false
 #					for v in gv.g[_key].b:
-#						if "no" in gv.menu.f:
-#							var menu = gv.menu.f.split("no ")[1]
+#						if "no" in gv.menuf:
+#							var menu = gv.menuf.split("no ")[1]
 #							if menu in gv.g[v].type:
 #								cont = true
 #								break
@@ -381,6 +436,23 @@ func _init(_key: int, pack := {}) -> void:
 		icon_key = pack["icon_key"]
 		icon = gv.sprite[icon_key]
 		reward = pack["reward"]
+		req = pack["reqs"]
+		
+		for r in req:
+			total_points.a(r.amount)
+			points.a(r.progress)
+		
+		match key:
+			gv.Quest.RANDOM_COMMON:
+				color_key = "common"
+			gv.Quest.RANDOM_RARE:
+				color_key = "rare"
+			gv.Quest.RANDOM_SPIKE:
+				color_key = "spike"
+		
+		color = gv.COLORS[color_key]
+		
+		random = true
 		
 		return
 	
@@ -404,85 +476,75 @@ func _init(_key: int, pack := {}) -> void:
 			repeatable = true
 			can_quit = true
 		
-		gv.Quest.RANDOM_COMMON:
+		gv.Quest.RANDOM:
 			
 			random = true
 			
 			var roll: float = rand_range(0, 100)
-			var difficulty = rand_range(20,200)
-			var reward_mod := 1.0
+			var difficulty = rand_range(20,80)
+			var reward_mod = difficulty / 3
 			
-			if roll < 0.1:
+			difficulty /= gv.hax_pow
+			
+			if gv.stats.tasks_completed <= 20:
+				roll = 10
+				difficulty /= (3 - (gv.stats.tasks_completed * 0.1))
+				reward_mod /= (3 - (gv.stats.tasks_completed * 0.1))
+			if gv.quest[gv.Quest.HORSE_DOODIE].complete:
+				difficulty /= 10
+				reward_mod *= 10
+			
+			if roll < 0.1 and gv.stats.run[0] > 1:
 				key = gv.Quest.RANDOM_SPIKE
-				reward_mod *= 1000
+				difficulty *= 1000
+				color_key = "spike"
 			elif roll < 5:
 				key = gv.Quest.RANDOM_RARE
-				reward_mod *= 10
+				difficulty *= 10
+				reward_mod *= 25
+				color_key = "rare"
 			else:
 				key = gv.Quest.RANDOM_COMMON
-			
-			if true:
-				if gv.quest[gv.Quest.HORSE_DOODIE].complete:
-					difficulty /= 10
-				if gv.stats.tasks_completed < 3:
-					difficulty /= 2
-				if gv.stats.tasks_completed < 5:
-					difficulty /= 2
-				if gv.stats.tasks_completed < 30:
-					difficulty /= 2
-				if gv.stats.tasks_completed < 45:
-					difficulty /= 1.5
+				color_key = "common"
 			
 			var reward_size := 1
+			# warnings-disable
+			var active_rare_list: Array
 			if not key == gv.Quest.RANDOM_SPIKE:
 				if roll >= 0.1:
 					roll = rand_range(0, 100)
 					if roll > 95: reward_size = 4
 					elif roll > 85: reward_size = 3
 					elif roll > 50: reward_size = 2
+				
+				for x in gv.stats.g_list["rare quest whitelist"]:
+					if gv.g[x].active:
+						active_rare_list.append(x)
+				if active_rare_list.size() < reward_size:
+					reward_size = active_rare_list.size()
 			
-			roll = rand_range(0,100)
-			var req_count: int
-			
-			if roll < 5:
-				req_count = 3
-			elif roll < 30:
-				req_count = 2
-			else:
-				req_count = 1
-			difficulty /= req_count
-			
-			req_count = min(req_count, gv.stats.g_list["active"].size())
-			reward_mod *= (req_count * req_count)
-			var req_keys := []
+			difficulty *= reward_size
 			
 			# selecting a resource to collect
 			var s1s2keys = gv.stats.g_list["active s1"] + gv.stats.g_list["active s2"]
-			if true:
-				for i in req_count:
-					while true:
-						var applicant = s1s2keys[randi() % s1s2keys.size()]
-						if applicant in req_keys:
-							continue
-						req_keys.append(applicant)
-						break
+			var req_key: String = s1s2keys[randi() % s1s2keys.size()]
+			while not gv.g[req_key].can_work():
+				req_key = s1s2keys[randi() % s1s2keys.size()]
 			
-			var estimated_time_to_complete_task := Big.new(0)
+			difficulty /= gv.g[req_key].speed.t
+			reward_mod /= gv.g[req_key].speed.t
 			
-			# name / desc / step / icon
-			for r in req_keys:
-				
-				var net = Big.new(gv.g[r].net(true)[0])
-				var amount: Big = Big.new(difficulty).m(Big.new(Big.max(gv.g[r].d.b, net))).m(reward_size).d(req_count)
-				if gv.g[key].stage == 2 and gv.stats.run[1] == 1:
-					amount.d(10)
-				req.append(Requirement.new(gv.TaskRequirement.RESOURCE_PRODUCTION, r, {"amount": amount.toScientific(), "req_key": r}))
-				
-				var added_time = Big.new(amount).d(60)
-				added_time.d(Big.max(net, 0.05))
-				estimated_time_to_complete_task.a(added_time)
+			# req
+			var amount: Big = Big.new(difficulty).m(gv.g[req_key].d.t)
+			if amount.less(1):
+				amount = Big.new(1)
+			if gv.g[req_key].stage == "2" and gv.stats.run[1] == 1:
+				amount.d(10)
+			amount.mantissa = floor(amount.mantissa)
+			req.append(Requirement.new(gv.TaskRequirement.RESOURCE_PRODUCTION, req_key, {"amount": amount.toScientific(), "req_key": req_key}))
 			
-			name = taq.generate_task_name(req_keys[randi() % req_keys.size()])
+			name = taq.generate_task_name(req_key)
+			icon_key = req_key
 			
 			match key:
 				
@@ -491,11 +553,12 @@ func _init(_key: int, pack := {}) -> void:
 					match gv.stats.highest_run:
 						2:
 							gg = "tum"
-					var _reward = Big.new(Big.max(gv.stats.most_resources_gained, gv.stats.run[gv.stats.highest_run - 1] * reward_mod))
+					var _reward = Big.new(Big.max(Big.max(gv.stats.most_resources_gained, Big.new(gv.r[gg]).m(10)), gv.stats.run[gv.stats.highest_run - 1]))
 					var cawk = Big.new(gv.g[gg].net(true)[0]).m(21600)
 					if _reward.less(cawk):
 						_reward.a(cawk)
 					_reward.m(rand_range(0.9, 1.1))
+					_reward.mantissa = floor(_reward.mantissa)
 					
 					reward.append(Reward.new(gv.QuestReward.RESOURCE, gv.g[gg].name, gg, {"other_key": gg, "amount": _reward.toScientific()}))
 				
@@ -505,15 +568,20 @@ func _init(_key: int, pack := {}) -> void:
 					
 					for r in reward_size:
 						
+						var rare_list = active_rare_list
+						var common_list = gv.stats.g_list["s1"] + gv.stats.g_list["s2"]
+						
 						var applicant: String
 						
 						while true:
-							# determines a reward
-							if key == gv.Quest.RANDOM_RARE:
-								applicant = gv.stats.g_list["rare quest whitelist"][randi() % gv.stats.g_list["rare quest whitelist"].size()]
-							else:
-								applicant = s1s2keys[randi() % s1s2keys.size()]
 							
+							if key == gv.Quest.RANDOM_RARE:
+								applicant = rare_list[randi() % rare_list.size()]
+							else:
+								applicant = common_list[randi() % common_list.size()]
+							
+							if not gv.g[applicant].unlocked:
+								continue
 							if applicant in reward_keys:
 								continue
 							if applicant == "growth" and not gv.g["jo"].active:
@@ -526,11 +594,6 @@ func _init(_key: int, pack := {}) -> void:
 							
 							var cont := false
 							for v in gv.g[applicant].b:
-								if "no" in gv.menu.f:
-									var menu = gv.menu.f.split("no ")[1]
-									if menu in gv.g[v].type:
-										cont = true
-										break
 								if gv.g[v].active: continue
 								if gv.stats.run[int(gv.g[v].type[1]) - 1] == 1: continue
 								cont = true
@@ -540,36 +603,18 @@ func _init(_key: int, pack := {}) -> void:
 							
 							reward_keys.append(applicant)
 							
+							if key == gv.Quest.RANDOM_RARE:
+								rare_list.erase(applicant)
+							else:
+								common_list.erase(applicant)
+							
 							break
 					
-					var progression_mod :float= gv.stats.tasks_completed / 10
-					if progression_mod < 1: progression_mod = 1.0
-					if progression_mod > 100: progression_mod = 100.0
-					var quest_mod = 10.0 if gv.quest[gv.Quest.HORSE_DOODIE].complete else 1.0
-					
-					var average_net = Big.new(0)
-					
-					for n in reward_keys:
-						average_net.a(gv.g[n].net(true)[0])
-					average_net.d(reward_keys.size())
-					
-					var dink: Big = Big.new().m(progression_mod).m(estimated_time_to_complete_task).m(quest_mod).m(reward_mod)
-					
-					if gv.stats.tasks_completed < 10:
-						dink.m(4)
-					if gv.stats.tasks_completed < 20:
-						dink.m(2)
-					if gv.stats.tasks_completed < 30:
-						dink.m(1.5)
-					if gv.stats.tasks_completed < 40:
-						dink.m(1.25)
-					
 					for r in reward_keys:
-						var _reward = Big.new(dink).m(rand_range(0.5,2))
+						var _reward = Big.max(Big.new(reward_mod).m(rand_range(0.8,1.2)).m(Big.max(gv.g[r].net(true)[0], 1)), 1.0)
 						if _reward.less(1):
-							_reward.mantissa = 1.0
-						elif _reward.exponent < 2:
-							_reward.mantissa = round(_reward.mantissa)
+							_reward = Big.new(1)
+						_reward.mantissa = floor(_reward.mantissa)
 						reward.append(Reward.new(gv.QuestReward.RESOURCE, gv.g[r].name, r, {"other_key": r, "amount": _reward.toScientific()}))
 		
 		gv.Quest.INTRO:
@@ -619,6 +664,7 @@ func _init(_key: int, pack := {}) -> void:
 			reward.append(Reward.new(gv.QuestReward.RESOURCE, "Copper", "cop", {"other_key": "cop", "amount": "30"}))
 			reward.append(Reward.new(gv.QuestReward.RESOURCE, "Stone", "stone", {"other_key": "stone", "amount": "30"}))
 			reward.append(Reward.new(gv.QuestReward.OTHER, "Task Board", "copy"))
+			reward.append(Reward.new(gv.QuestReward.MAX_TASKS, "Max tasks +1", "copy"))
 			
 			req.append(Requirement.new(gv.TaskRequirement.UPGRADE_PURCHASED, gv.up["GRINDER"].icon, {"req_key": "GRINDER"}))
 		
@@ -655,7 +701,7 @@ func _init(_key: int, pack := {}) -> void:
 		gv.Quest.ELECTRICY:
 			
 			name = "Electricy"
-			desc = "Some LOREDs run on electricity instead of coal!"
+			desc = "Some LOREDs run on electricity instead of Coal!"
 			icon_key = "jo"
 			
 			reward.append(Reward.new(gv.QuestReward.RESOURCE, "Iron", "iron", {"other_key": "iron", "amount": "250"}))
@@ -704,7 +750,6 @@ func _init(_key: int, pack := {}) -> void:
 			name = "Consume"
 			icon_key = "malig"
 			
-			reward.append(Reward.new(gv.QuestReward.NEW_LORED, "New LORED: Tumors", "tum", {"other_key": "tum"}))
 			reward.append(Reward.new(gv.QuestReward.UPGRADE_MENU, "Malignant Upgrade Menu", "s1m", {"other_key": "s1m"}))
 			
 			req.append(Requirement.new(gv.TaskRequirement.RESOURCE_PRODUCTION, "malig", {"amount": "3000", "req_key": "malig"}))
@@ -712,7 +757,7 @@ func _init(_key: int, pack := {}) -> void:
 		gv.Quest.EVOLVE:
 			
 			name = "Evolve"
-			desc = "Purchase Malignant upgrade SOCCER DUDE by resetting your game in the Malignant menu. You are free to save up Malignancy before resetting!"
+			desc = "Select which Malignant upgrades you want, and then Metastasize to activate them!"
 			icon_key = "s1"
 			color_key = "malig"
 			
@@ -725,7 +770,7 @@ func _init(_key: int, pack := {}) -> void:
 			name = "A Million Reasons to Grind"
 			desc = "Hit SPACE, ENTER, or NUM PAD ENTER to turn in all tasks."
 			icon_key = "copy"
-			color_key = "malig"
+			color_key = "rare"
 			
 			reward.append(Reward.new(gv.QuestReward.RESOURCE, "Iron", "iron", {"other_key": "iron", "amount": "100000"}))
 			reward.append(Reward.new(gv.QuestReward.RESOURCE, "Copper", "cop", {"other_key": "cop", "amount": "100000"}))
@@ -756,8 +801,8 @@ func _init(_key: int, pack := {}) -> void:
 			reward.append(Reward.new(gv.QuestReward.NEW_LORED, "New LORED: Trees", "tree", {"other_key": "tree"}))
 			reward.append(Reward.new(gv.QuestReward.NEW_LORED, "New LORED: Water", "water", {"other_key": "water"}))
 			reward.append(Reward.new(gv.QuestReward.NEW_LORED, "New LORED: Seeds", "seed", {"other_key": "seed"}))
-			reward.append(Reward.new(gv.QuestReward.STAGE, "Stage 1", "s1"))
-			reward.append(Reward.new(gv.QuestReward.STAGE, "Stage 2", "s2"))
+			reward.append(Reward.new(gv.QuestReward.STAGE, "Stage 1", "s1", {"other_key": "1"}))
+			reward.append(Reward.new(gv.QuestReward.STAGE, "Stage 2", "s2", {"other_key": "2"}))
 			
 			req.append(Requirement.new(gv.TaskRequirement.RESOURCE_PRODUCTION, "s2", {"amount": "1e9", "req_key": "any"}))
 		
@@ -831,7 +876,7 @@ func _init(_key: int, pack := {}) -> void:
 			name = "Spike"
 			desc = "Rare and Spike tasks take longer than regular tasks, but they reward a lot more stuff!"
 			icon_key = "copy"
-			color_key = "spike"
+			color_key = "rare"
 			
 			reward.append(Reward.new(gv.QuestReward.RESOURCE, "Wood", "wood", {"other_key": "wood", "amount": "10000"}))
 			reward.append(Reward.new(gv.QuestReward.RESOURCE, "Water", "water", {"other_key": "water", "amount": "20000"}))
@@ -902,11 +947,11 @@ func _init(_key: int, pack := {}) -> void:
 			
 			name = "Horse Doodie"
 			icon_key = "copy"
-			color_key = "malig"
+			color_key = "spike"
 			
 			reward.append(Reward.new(gv.QuestReward.OTHER, "10x easier tasks!", "copy"))
 			
-			req.append(Requirement.new(gv.TaskRequirement.SPIKE_TASKS_COMPLETED, "copy", {"amount": "1"}))
+			req.append(Requirement.new(gv.TaskRequirement.UPGRADES_PURCHASED, "s2m", {"amount": "30", "req_key": "s2m"}))
 		
 		gv.Quest.A_DARK_DISCOVERY:
 			name = "A Dark Discovery"
@@ -925,23 +970,22 @@ func _init(_key: int, pack := {}) -> void:
 	if repeatable:
 		times_completed = 0
 	
+	set_total_points()
+	
 	for r in req:
 		if r.done:
 			reqs_done += 1
-	
-	check_for_completion()
 
 func update():
 	
 	reward.clear()
 	
 	if gv.g[name.to_lower()].active:
-		reward.append(Reward.new(gv.QuestReward.UPGRADE_LORED, "LORED level %s", name.to_lower()))
+		reward.append(Reward.new(gv.QuestReward.UPGRADE_LORED, "LORED level up", name.to_lower()))
 	else:
 		reward.append(Reward.new(gv.QuestReward.UPGRADE_LORED, "Unlock LORED", name.to_lower()))
 	
 	req.clear()
-	total_points = Big.new(0)
 	
 	match key:
 		gv.Quest.HUNT:
@@ -956,8 +1000,7 @@ func update():
 					req.append(Requirement.new(gv.TaskRequirement.RESOURCE_PRODUCTION, "meat", {"amount": "10", "req_key": "meat"}))
 					req.append(Requirement.new(gv.TaskRequirement.RESOURCE_PRODUCTION, "fur", {"amount": "20", "req_key": "fur"}))
 	
-	for r in req:
-		total_points.a(r.amount)
+	set_total_points()
 
 func reset():
 	
@@ -970,13 +1013,14 @@ func reset():
 #	for s in step:
 #		step[s].f = Big.new(0)
 
-func turn_in():
+func turn_in(manual: bool, _load = false):
 	
-	if complete:
-		print("Tried to turn in ", name, "--task is already complete.")
+	if not _load and complete:
+		print_debug("Tried to turn in ", name, "--task is already complete.")
 		return
 	
-	times_completed += 1
+	if not _load:
+		times_completed += 1
 	if not repeatable:
 		complete = true
 	
@@ -988,25 +1032,79 @@ func turn_in():
 			gv.QuestReward.MAX_TASKS:
 				taq.max_tasks += 1
 			gv.QuestReward.OTHER:
-				gv.emit_signal("quest_reward", r.type, key)
+				gv.emit_signal("quest_reward", r.type, str(key))
 			gv.QuestReward.NEW_LORED:
 				gv.g[r.other_key].unlock()
 			gv.QuestReward.UPGRADE_MENU:
 				gv.emit_signal("quest_reward", r.type, r.other_key)
 			gv.QuestReward.RESOURCE:
-				gv.r[r.other_key].a(r.amount)
+				if not _load:
+					gv.r[r.other_key].a(r.amount)
+					taq.progress(gv.TaskRequirement.RESOURCE_PRODUCTION, r.other_key, r.amount)
 	
+	if random:
+		gv.stats.tasks_completed += 1
 	
-	if key == gv.Quest.RANDOM_SPIKE:
-		taq.progress(gv.TaskRequirement.SPIKE_TASKS_COMPLETED)
-		return
+	if not _load:
+		manager.rt.off_check()
 	
 	if key in [gv.Quest.RANDOM_RARE, gv.Quest.RANDOM_SPIKE]:
 		taq.progress(gv.TaskRequirement.RARE_OR_SPIKE_TASKS_COMPLETED)
+	elif not _load:
+		taq.progress(gv.TaskRequirement.TASKS_COMPLETED)
+	
+	if _load and not random:
 		return
 	
-	taq.progress(gv.TaskRequirement.TASKS_COMPLETED)
+	die(manual, _load)
+
+func die(manual: bool, _load = false):
 	
+	if random:
+		taq.cur_tasks -= 1
+	
+	if not is_instance_valid(manager):
+		return
+	
+	manager.hide()
+	
+	if manual:
+		manager.rt.get_node("global_tip")._call("no")
+	
+	if random:
+		
+		if manual:
+			manager.rt.get_node("global_tip")._call("no")
+		
+		manager.hide()
+		taq.task_manager.content.erase(self) # erases this task from content too
+		
+		if not _load:
+			var gayzo = {}
+			for r in reward:
+				if not r.type == gv.QuestReward.RESOURCE:
+					continue
+				
+				gayzo[r.other_key] = Big.new(r.amount)
+			
+			if complete:
+				taq.task_manager.finished_task(gayzo)
+		
+		manager.queue_free()
+		
+		taq.task.erase(self)
+	
+	else:
+		
+		manager.get_parent().quest_ended()
+	
+	manager.queue_free()
+
+
+
+
+
+
 #func w_task_effects(which := []) -> void:
 #
 #	for x in which:
