@@ -7,16 +7,15 @@ func init(_key: String) -> void:
 	get_node("vbox/MarginContainer/VBoxContainer/HBoxContainer/icon/upgrade icon").init(_key)
 	$vbox/MarginContainer/VBoxContainer/HBoxContainer/name.text = gv.up[_key].name
 	
-	var type: String = gv.up[_key].type
-	if "s1n" in type:
+	if gv.up[_key].stage_key == gv.Tab.NORMAL:
 		$vbox/MarginContainer/VBoxContainer/type/text.text = "Normal"
 		$vbox/MarginContainer/VBoxContainer/type/bg.self_modulate = Color(.8,.8,.8)
-	elif "s2n" in type:
+	elif gv.up[_key].stage_key == gv.Tab.EXTRA_NORMAL:
 		$vbox/MarginContainer/VBoxContainer/type/text.text = "Extra-normal"
 		$vbox/MarginContainer/VBoxContainer/type/bg.self_modulate = Color(.8,.8,.8)
-	elif "s1m" in type:
+	elif gv.up[_key].stage_key == gv.Tab.MALIGNANT:
 		$vbox/MarginContainer/VBoxContainer/type/text.text = "Malignant"
 		$vbox/MarginContainer/VBoxContainer/type/bg.self_modulate = gv.g["malig"].color
-	elif "s2m" in type:
+	elif gv.up[_key].stage_key == gv.Tab.RADIATIVE:
 		$vbox/MarginContainer/VBoxContainer/type/text.text = "Radiative"
 		$vbox/MarginContainer/VBoxContainer/type/bg.self_modulate = gv.g["tum"].color

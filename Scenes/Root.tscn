@@ -1,14 +1,11 @@
-[gd_scene load_steps=33 format=2]
+[gd_scene load_steps=28 format=2]
 
 [ext_resource path="res://Scripts/_Root.gd" type="Script" id=1]
 [ext_resource path="res://Scripts/map.gd" type="Script" id=2]
-[ext_resource path="res://Sprites/misc/hold_true.png" type="Texture" id=3]
-[ext_resource path="res://Sprites/animations/autobuyer.tres" type="SpriteFrames" id=4]
 [ext_resource path="res://Scripts/tooltip/tooltip_master.gd" type="Script" id=5]
 [ext_resource path="res://Prefabs/upgrade/upgrade_container.tscn" type="PackedScene" id=6]
 [ext_resource path="res://Prefabs/Limit Break.tscn" type="PackedScene" id=7]
-[ext_resource path="res://Scripts/task/quests.gd" type="Script" id=8]
-[ext_resource path="res://Prefabs/lored/LORED List.tscn" type="PackedScene" id=9]
+[ext_resource path="res://Prefabs/lored/LORED Manager.tscn" type="PackedScene" id=9]
 [ext_resource path="res://Scripts/resources.gd" type="Script" id=10]
 [ext_resource path="res://Styles/Master Theme.tres" type="Theme" id=11]
 [ext_resource path="res://Sprites/tab/alert.png" type="Texture" id=12]
@@ -18,9 +15,7 @@
 [ext_resource path="res://Fonts/Roboto-BlackItalic.ttf" type="DynamicFontData" id=16]
 [ext_resource path="res://Sprites/tab/alert2.png" type="Texture" id=17]
 [ext_resource path="res://Sprites/resources/liq.png" type="Texture" id=18]
-[ext_resource path="res://Prefabs/Patch/PatchNotes.tscn" type="PackedScene" id=19]
-[ext_resource path="res://Scripts/task/tasks.gd" type="Script" id=20]
-[ext_resource path="res://Prefabs/Off Boost.tscn" type="PackedScene" id=21]
+[ext_resource path="res://Prefabs/Menu.tscn" type="PackedScene" id=21]
 [ext_resource path="res://Fonts/Roboto-Medium.ttf" type="DynamicFontData" id=29]
 
 [sub_resource type="StyleBoxFlat" id=1]
@@ -72,13 +67,19 @@ outline_color = Color( 0, 0, 0, 0.301961 )
 font_data = ExtResource( 29 )
 
 [sub_resource type="StyleBoxFlat" id=6]
+bg_color = Color( 1, 1, 1, 1 )
+border_color = Color( 1, 1, 1, 1 )
+shadow_color = Color( 0.0509804, 0.0509804, 0.0509804, 0.6 )
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id=7]
 bg_color = Color( 0.164706, 0.164706, 0.164706, 1 )
 border_width_left = 1
 border_width_right = 1
 border_color = Color( 0.0627451, 0.0627451, 0.0627451, 1 )
 border_blend = true
 
-[sub_resource type="StyleBoxFlat" id=7]
+[sub_resource type="StyleBoxFlat" id=8]
 bg_color = Color( 0.0588235, 0.0588235, 0.0588235, 1 )
 draw_center = false
 border_width_top = 3
@@ -89,9 +90,6 @@ expand_margin_left = 10.0
 expand_margin_right = 10.0
 expand_margin_top = 10.0
 expand_margin_bottom = 10.0
-
-[sub_resource type="StyleBoxFlat" id=8]
-draw_center = false
 
 [sub_resource type="SpriteFrames" id=9]
 animations = [ {
@@ -159,6 +157,7 @@ margin_top = 7.0
 margin_right = 40.0
 margin_bottom = 47.0
 rect_min_size = Vector2( 40, 40 )
+rect_pivot_offset = Vector2( 3, 3 )
 focus_mode = 0
 mouse_default_cursor_shape = 2
 size_flags_vertical = 4
@@ -166,7 +165,6 @@ custom_styles/hover = SubResource( 2 )
 custom_styles/pressed = SubResource( 3 )
 custom_styles/normal = SubResource( 4 )
 __meta__ = {
-"_edit_group_": true,
 "_edit_use_anchors_": false
 }
 
@@ -182,11 +180,30 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="patched_alert" type="Panel" parent="m/v/top/h/menu_button"]
+visible = false
+self_modulate = Color( 0.996078, 0.443137, 0.172549, 1 )
+margin_left = -2.0
+margin_top = -2.0
+margin_right = 4.0
+margin_bottom = 4.0
+rect_min_size = Vector2( 6, 6 )
+mouse_filter = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 6 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="resources" type="MarginContainer" parent="m/v/top/h"]
 margin_left = 50.0
 margin_right = 54.0
 margin_bottom = 54.0
 script = ExtResource( 10 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="s1" type="HBoxContainer" parent="m/v/top/h/resources"]
 margin_right = 4.0
@@ -197,7 +214,7 @@ custom_constants/separation = 10
 margin_right = 4.0
 margin_bottom = 54.0
 rect_min_size = Vector2( 4, 0 )
-custom_styles/panel = SubResource( 6 )
+custom_styles/panel = SubResource( 7 )
 
 [node name="s2" type="HBoxContainer" parent="m/v/top/h/resources"]
 visible = false
@@ -209,7 +226,7 @@ custom_constants/separation = 10
 margin_right = 4.0
 margin_bottom = 40.0
 rect_min_size = Vector2( 4, 0 )
-custom_styles/panel = SubResource( 6 )
+custom_styles/panel = SubResource( 7 )
 
 [node name="s3" type="HBoxContainer" parent="m/v/top/h/resources"]
 visible = false
@@ -221,34 +238,28 @@ custom_constants/separation = 10
 margin_right = 4.0
 margin_bottom = 54.0
 rect_min_size = Vector2( 4, 0 )
-custom_styles/panel = SubResource( 6 )
+custom_styles/panel = SubResource( 7 )
 
 [node name="r" type="HBoxContainer" parent="m/v/top/h"]
-margin_left = 1023.0
+margin_left = 1125.0
 margin_right = 1260.0
 margin_bottom = 54.0
 size_flags_horizontal = 10
 
-[node name="Off Boost" parent="m/v/top/h/r" instance=ExtResource( 21 )]
-margin_right = 98.0
-margin_bottom = 54.0
-size_flags_vertical = 9
-
 [node name="Limit Break" parent="m/v/top/h/r" instance=ExtResource( 7 )]
 anchor_right = 0.0
-margin_left = 102.0
-margin_right = 237.0
+margin_right = 135.0
 
-[node name="LORED List" parent="m/v" instance=ExtResource( 9 )]
+[node name="LORED Manager" parent="m/v" instance=ExtResource( 9 )]
 margin_top = 74.0
 margin_right = 1280.0
-margin_bottom = 650.0
+margin_bottom = 720.0
 size_flags_vertical = 3
 
 [node name="Bottom" type="HBoxContainer" parent="m/v"]
-margin_top = 650.0
+margin_top = 720.0
 margin_right = 1280.0
-margin_bottom = 650.0
+margin_bottom = 720.0
 
 [node name="Left" type="Panel" parent="m/v/Bottom"]
 size_flags_horizontal = 0
@@ -259,7 +270,8 @@ margin_right = 1280.0
 size_flags_horizontal = 10
 
 [node name="bot" type="MarginContainer" parent="m/v"]
-margin_top = 650.0
+visible = false
+margin_top = 700.0
 margin_right = 1280.0
 margin_bottom = 720.0
 custom_constants/margin_right = 10
@@ -271,66 +283,26 @@ custom_constants/margin_bottom = 10
 margin_left = 10.0
 margin_top = 10.0
 margin_right = 1270.0
-margin_bottom = 60.0
-custom_styles/panel = SubResource( 7 )
+margin_bottom = 10.0
+custom_styles/panel = SubResource( 8 )
 
 [node name="h" type="HBoxContainer" parent="m/v/bot"]
 margin_left = 10.0
 margin_top = 10.0
 margin_right = 1270.0
-margin_bottom = 60.0
+margin_bottom = 10.0
 custom_constants/separation = 10
 alignment = 1
 
 [node name="taq" type="HBoxContainer" parent="m/v/bot/h"]
-margin_left = 1090.0
+margin_left = 1260.0
 margin_right = 1260.0
-margin_bottom = 50.0
 size_flags_horizontal = 10
 custom_constants/separation = 14
 alignment = 2
 __meta__ = {
 "_edit_use_anchors_": false
 }
-
-[node name="tasks" type="HBoxContainer" parent="m/v/bot/h/taq"]
-visible = false
-margin_bottom = 50.0
-script = ExtResource( 20 )
-
-[node name="auto" type="Button" parent="m/v/bot/h/taq/tasks"]
-visible = false
-margin_right = 50.0
-margin_bottom = 50.0
-rect_min_size = Vector2( 50, 35 )
-focus_mode = 0
-mouse_default_cursor_shape = 2
-theme = ExtResource( 11 )
-__meta__ = {
-"_edit_group_": true
-}
-
-[node name="on" type="AnimatedSprite" parent="m/v/bot/h/taq/tasks/auto"]
-modulate = Color( 1, 0, 0.631373, 0.6 )
-position = Vector2( 25, 25 )
-frames = ExtResource( 4 )
-frame = 15
-playing = true
-
-[node name="off" type="Sprite" parent="m/v/bot/h/taq/tasks/auto"]
-visible = false
-modulate = Color( 1, 0, 0.63, 0.95 )
-position = Vector2( 25, 25 )
-texture = ExtResource( 3 )
-
-[node name="quest" type="Panel" parent="m/v/bot/h/taq"]
-margin_right = 170.0
-margin_bottom = 50.0
-rect_min_size = Vector2( 170, 50 )
-size_flags_horizontal = 8
-size_flags_vertical = 8
-custom_styles/panel = SubResource( 8 )
-script = ExtResource( 8 )
 
 [node name="lored texts" type="Node2D" parent="m"]
 
@@ -343,10 +315,10 @@ margin_bottom = 560.0
 size_flags_horizontal = 4
 size_flags_vertical = 6
 
-[node name="Patch Notes" parent="m" instance=ExtResource( 19 )]
-margin_left = 440.0
+[node name="Menu" parent="m" instance=ExtResource( 21 )]
+margin_left = 438.0
 margin_top = 210.0
-margin_right = 840.0
+margin_right = 842.0
 margin_bottom = 510.0
 
 [node name="misc" type="Node2D" parent="."]
@@ -355,9 +327,10 @@ __meta__ = {
 }
 
 [node name="tabs" type="MarginContainer" parent="misc"]
-margin_top = 74.0
-margin_right = 73.0
-margin_bottom = 234.0
+margin_left = -1.0
+margin_top = 75.0
+margin_right = 72.0
+margin_bottom = 235.0
 custom_constants/margin_right = 10
 custom_constants/margin_top = 10
 custom_constants/margin_left = 10
@@ -393,10 +366,9 @@ position = Vector2( 63, 23 )
 rotation = 0.693008
 scale = Vector2( 1.5, 1.5 )
 frames = SubResource( 9 )
-frame = 1
 playing = true
 
-[node name="s1" type="Button" parent="misc/tabs/v"]
+[node name="1" type="Button" parent="misc/tabs/v"]
 visible = false
 margin_right = 53.0
 margin_bottom = 40.0
@@ -408,11 +380,11 @@ __meta__ = {
 "_edit_group_": true
 }
 
-[node name="Sprite" type="Sprite" parent="misc/tabs/v/s1"]
+[node name="Sprite" type="Sprite" parent="misc/tabs/v/1"]
 position = Vector2( 26, 20 )
 texture = ExtResource( 14 )
 
-[node name="Label" type="Label" parent="misc/tabs/v/s1"]
+[node name="Label" type="Label" parent="misc/tabs/v/1"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 custom_fonts/font = SubResource( 10 )
@@ -424,7 +396,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="s2" type="Button" parent="misc/tabs/v"]
+[node name="2" type="Button" parent="misc/tabs/v"]
 visible = false
 margin_top = 50.0
 margin_right = 53.0
@@ -437,11 +409,11 @@ __meta__ = {
 "_edit_group_": true
 }
 
-[node name="Sprite" type="Sprite" parent="misc/tabs/v/s2"]
+[node name="Sprite" type="Sprite" parent="misc/tabs/v/2"]
 position = Vector2( 26, 20 )
 texture = ExtResource( 15 )
 
-[node name="Label" type="Label" parent="misc/tabs/v/s2"]
+[node name="Label" type="Label" parent="misc/tabs/v/2"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 custom_fonts/font = SubResource( 10 )
@@ -453,7 +425,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="s3" type="Button" parent="misc/tabs/v"]
+[node name="3" type="Button" parent="misc/tabs/v"]
 visible = false
 margin_top = 50.0
 margin_right = 53.0
@@ -466,11 +438,11 @@ __meta__ = {
 "_edit_group_": true
 }
 
-[node name="Sprite" type="Sprite" parent="misc/tabs/v/s3"]
+[node name="Sprite" type="Sprite" parent="misc/tabs/v/3"]
 position = Vector2( 26, 20 )
 texture = ExtResource( 18 )
 
-[node name="Label" type="Label" parent="misc/tabs/v/s3"]
+[node name="Label" type="Label" parent="misc/tabs/v/3"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 custom_fonts/font = SubResource( 10 )
@@ -482,7 +454,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="s4" type="Button" parent="misc/tabs/v"]
+[node name="4" type="Button" parent="misc/tabs/v"]
 visible = false
 margin_right = 53.0
 margin_bottom = 40.0
@@ -493,11 +465,11 @@ __meta__ = {
 "_edit_group_": true
 }
 
-[node name="Sprite" type="Sprite" parent="misc/tabs/v/s4"]
+[node name="Sprite" type="Sprite" parent="misc/tabs/v/4"]
 position = Vector2( 26, 20 )
 texture = ExtResource( 18 )
 
-[node name="Label" type="Label" parent="misc/tabs/v/s4"]
+[node name="Label" type="Label" parent="misc/tabs/v/4"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 custom_fonts/font = SubResource( 10 )
@@ -512,6 +484,54 @@ __meta__ = {
 [node name="Off" type="Timer" parent="misc"]
 one_shot = true
 
+[node name="WishAnchor" type="Node2D" parent="."]
+position = Vector2( 0, 720 )
+
+[node name="m" type="MarginContainer" parent="WishAnchor"]
+margin_top = -39.0
+margin_right = 114.0
+grow_vertical = 0
+custom_constants/margin_right = 5
+custom_constants/margin_top = 5
+custom_constants/margin_left = 5
+custom_constants/margin_bottom = 5
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="h" type="HBoxContainer" parent="WishAnchor/m"]
+visible = false
+margin_left = 5.0
+margin_top = 5.0
+margin_right = 109.0
+margin_bottom = 34.0
+
+[node name="main" type="HBoxContainer" parent="WishAnchor/m/h"]
+margin_bottom = 316.0
+
+[node name="random" type="HBoxContainer" parent="WishAnchor/m/h"]
+margin_left = 4.0
+margin_right = 4.0
+margin_bottom = 316.0
+
+[node name="v" type="VBoxContainer" parent="WishAnchor/m"]
+margin_left = 5.0
+margin_top = 5.0
+margin_right = 109.0
+margin_bottom = 34.0
+alignment = 2
+
+[node name="random" type="VBoxContainer" parent="WishAnchor/m/v"]
+margin_top = 25.0
+margin_right = 104.0
+margin_bottom = 25.0
+
+[node name="main" type="VBoxContainer" parent="WishAnchor/m/v"]
+margin_top = 29.0
+margin_right = 104.0
+margin_bottom = 29.0
+size_flags_horizontal = 3
+
 [node name="texts" type="Node2D" parent="."]
 
 [node name="global_tip" type="Node2D" parent="."]
@@ -521,17 +541,16 @@ script = ExtResource( 5 )
 visible = false
 margin_right = 25.0
 margin_bottom = 27.0
+mouse_default_cursor_shape = 16
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
 [connection signal="button_down" from="m/v/top/h/menu_button" to="." method="_on_menu_button_button_down"]
 [connection signal="pressed" from="m/v/top/h/menu_button" to="." method="_on_menu_button_pressed"]
-[connection signal="mouse_entered" from="m/v/top/h/r/Off Boost" to="." method="_on_Off_Boost_mouse_entered"]
-[connection signal="mouse_exited" from="m/v/top/h/r/Off Boost" to="." method="_on_mouse_exited"]
-[connection signal="pressed" from="m/v/bot/h/taq/tasks/auto" to="m/v/bot/h/taq/tasks" method="_on_auto_pressed"]
 [connection signal="pressed" from="misc/tabs/v/upgrades" to="." method="_on_upgrades_pressed"]
-[connection signal="pressed" from="misc/tabs/v/s1" to="." method="_on_s1_pressed"]
-[connection signal="pressed" from="misc/tabs/v/s2" to="." method="_on_s2_pressed"]
-[connection signal="pressed" from="misc/tabs/v/s3" to="." method="_on_s3_pressed"]
-[connection signal="pressed" from="misc/tabs/v/s4" to="." method="_on_s2_pressed"]
+[connection signal="pressed" from="misc/tabs/v/1" to="." method="_on_s1_pressed"]
+[connection signal="pressed" from="misc/tabs/v/2" to="." method="_on_s2_pressed"]
+[connection signal="pressed" from="misc/tabs/v/3" to="." method="_on_s3_pressed"]
+[connection signal="pressed" from="misc/tabs/v/4" to="." method="_on_s2_pressed"]
 [connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]

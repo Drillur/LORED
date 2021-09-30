@@ -1,4 +1,4 @@
-extends Panel
+extends MarginContainer
 
 onready var rt = get_node("/root/Root")
 
@@ -9,19 +9,16 @@ const prefabs = {
 var content_effects := {}
 
 
-#when i began quest to buy upgrade_name, i already had it, but it didn't count for quest progress
-
 func quest_ended() -> void:
 	
-	flying_texts(taq.quest.reward)
+	flying_texts(taq.main_quest.reward)
 	
 	taq.cur_quest = -1
 	
-	for q in gv.quest:
-		if q.complete or q.selectable:
-			continue
-		taq.new_quest(q)
-		break
+	for q in gv.Quest:
+		if not q in taq.completed_quests:
+			taq.new_quest(q)
+			break
 	
 	if taq.cur_quest == -1:
 		hide()

@@ -8,7 +8,7 @@ var upgrade_key: String
 func init(_upgrade_key: String) -> void:
 	
 	upgrade_key = _upgrade_key
-	get_node("Sprite").texture = gv.sprite[gv.up[upgrade_key].icon]
+	get_node("Sprite").texture = gv.sprite[str(gv.up[upgrade_key].icon)]
 	lock.self_modulate = gv.up[upgrade_key].color
 	
 	update()

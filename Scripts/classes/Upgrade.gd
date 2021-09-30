@@ -17,14 +17,16 @@ var required_by := []
 var requirements_met := true
 
 var refundable := false
-var icon: String # used to be mlt (main lored target)
-var stage_key: String
+var icon: String = "" # same as icon_key
+var stage_key: int
+var tab: int
 var color: Color
 var unlocked := false
 var times_purchased := 0
 
 var manager: MarginContainer
 var active_tooltip: MarginContainer
+var active_tooltip_exists := false
 
 var have := false
 var active := true
@@ -44,7 +46,7 @@ func _init(
 		_name: String,
 		_type,
 		_desc,
-		_icon := "s1"
+		_icon = str(gv.Tab.NORMAL)
 	) -> void:
 	
 	name = _name
@@ -54,10 +56,28 @@ func _init(
 	type = _type
 	
 	stage = type[1]
-	stage_key = type.split(" ")[0]
+	stage_key = int(type[1]) - 1 + gv.Tab.S1
 	normal = true if "n" == type[2] else false
 	
-	icon = _icon
+	match stage_key:
+		gv.Tab.S1:
+			if normal:
+				tab = gv.Tab.NORMAL
+			else:
+				tab = gv.Tab.MALIGNANT
+		gv.Tab.S2:
+			if normal:
+				tab = gv.Tab.EXTRA_NORMAL
+			else:
+				tab = gv.Tab.RADIATIVE
+		gv.Tab.S3:
+			if normal:
+				tab = gv.Tab.RUNED_DIAL
+			else:
+				tab = gv.Tab.SPIRIT
+	
+	icon = str(_icon)
+	color = gv.COLORS[str(icon)] if str(icon) in gv.COLORS else gv.COLORS[tab]
 
 
 func purchased():
@@ -80,7 +100,7 @@ func apply():
 		return
 	
 	if normal:
-		gv.stats.up_list["unowned s" + type[1] + "n"].erase(key)
+		gv.list.upgrade["unowned " + str(tab)].erase(key)
 	
 	for e in effects:
 		e.apply(name)
@@ -171,6 +191,22 @@ func get_witch_percent() -> String:
 	
 	return "1%"
 
+func time_to_buy():
+	
+	if cost_check():
+		return Big.new(0)
+	
+	var longest_time = Big.new(0)
+	
+	for c in cost:
+		var time_to_c = gv.time_remaining_including_INF(c, gv.r[c], cost[c].t)
+		if typeof(time_to_c) != TYPE_INT:
+			return INF
+		if time_to_c.greater(longest_time):
+			longest_time = Big.new(time_to_c)
+	
+	return longest_time
+
 func requirements() -> bool:
 	
 	for x in requires:
@@ -190,7 +226,7 @@ func reset(reset_type := 0) -> bool:
 	remove(true)
 	
 	if normal:
-		gv.stats.up_list["unowned s" + type[1] + "n"].append(key)
+		gv.list.upgrade["unowned " + str(tab)].append(key)
 	
 	refund()
 	have = false

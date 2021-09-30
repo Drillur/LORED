@@ -1,26 +1,21 @@
 [gd_scene load_steps=8 format=2]
 
-[ext_resource path="res://Fonts/Roboto-BlackItalic.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://Fonts/Roboto-Black.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Prefabs/lored/Emote.gd" type="Script" id=2]
 
 [sub_resource type="StyleBoxFlat" id=1]
-bg_color = Color( 0.35, 0.35, 0.35, 0.55 )
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color( 0.121569, 0.121569, 0.121569, 1 )
+bg_color = Color( 0.207843, 0.207843, 0.207843, 0.54902 )
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color( 1, 1, 1, 1 )
 border_blend = true
 corner_radius_top_left = 6
 corner_radius_top_right = 6
 corner_radius_bottom_right = 6
 corner_radius_bottom_left = 6
-expand_margin_left = 5.0
-expand_margin_right = 5.0
-expand_margin_top = 10.0
-expand_margin_bottom = 10.0
-shadow_size = 2
-anti_aliasing = false
+shadow_size = 5
 
 [sub_resource type="DynamicFont" id=2]
 size = 14
@@ -48,9 +43,9 @@ bg_color = Color( 0.6, 0.6, 0.6, 0 )
 draw_center = false
 
 [node name="Emote" type="MarginContainer"]
-margin_right = 510.0
-margin_bottom = 295.0
-rect_min_size = Vector2( 39, 39 )
+margin_right = 95.0
+margin_bottom = 45.0
+rect_min_size = Vector2( 95, 39 )
 rect_pivot_offset = Vector2( 55, 30 )
 custom_constants/margin_right = 0
 custom_constants/margin_top = 0
@@ -61,32 +56,28 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="m" type="MarginContainer" parent="."]
-margin_right = 510.0
-margin_bottom = 295.0
-custom_constants/margin_right = 5
-custom_constants/margin_top = 10
-custom_constants/margin_left = 5
-custom_constants/margin_bottom = 10
-
-[node name="bg" type="Panel" parent="m"]
-modulate = Color( 0.521569, 0.521569, 0.521569, 1 )
-margin_left = 5.0
-margin_top = 10.0
-margin_right = 505.0
-margin_bottom = 285.0
+[node name="bg" type="Panel" parent="."]
+margin_right = 95.0
+margin_bottom = 45.0
 custom_styles/panel = SubResource( 1 )
 
+[node name="m" type="MarginContainer" parent="."]
+margin_right = 95.0
+margin_bottom = 45.0
+custom_constants/margin_right = 10
+custom_constants/margin_top = 10
+custom_constants/margin_left = 10
+custom_constants/margin_bottom = 10
+
 [node name="Label" type="Label" parent="m"]
-margin_left = 5.0
-margin_top = 142.0
-margin_right = 505.0
-margin_bottom = 153.0
+margin_left = 10.0
+margin_top = 17.0
+margin_right = 85.0
+margin_bottom = 28.0
 rect_pivot_offset = Vector2( 240, -30 )
 custom_fonts/font = SubResource( 2 )
-custom_colors/font_color = Color( 1, 1, 1, 1 )
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-text = "please die!"
+text = "a"
 align = 1
 autowrap = true
 
@@ -99,11 +90,12 @@ wait_time = 0.05
 autostart = true
 
 [node name="Button" type="Button" parent="."]
-margin_right = 510.0
-margin_bottom = 295.0
+margin_right = 95.0
+margin_bottom = 45.0
 focus_mode = 0
 mouse_default_cursor_shape = 2
 custom_styles/hover = SubResource( 3 )
 custom_styles/pressed = SubResource( 4 )
 custom_styles/normal = SubResource( 5 )
+
 [connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]

@@ -17,7 +17,7 @@ func start(threshold: float, start_time: int):
 	
 	threshold *= 1000
 	
-	var i := get_i(start_time)
+	var i := OS.get_ticks_msec() - start_time
 	
 	while i < threshold and not stop:
 		
@@ -26,13 +26,10 @@ func start(threshold: float, start_time: int):
 		timer.start(gv.fps)
 		yield(timer, "timeout")
 		
-		i = get_i(start_time)
+		i = OS.get_ticks_msec() - start_time
 
 
 
-
-func get_i(start_time: int) -> int:
-	return OS.get_ticks_msec() - start_time
 
 
 func stop():

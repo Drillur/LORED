@@ -1,10 +1,11 @@
-[gd_scene load_steps=17 format=2]
+[gd_scene load_steps=18 format=2]
 
 [ext_resource path="res://Fonts/Roboto-BlackItalic.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Fonts/Roboto-Medium.ttf" type="DynamicFontData" id=2]
 [ext_resource path="res://Fonts/Roboto-MediumItalic.ttf" type="DynamicFontData" id=3]
 [ext_resource path="res://Fonts/Roboto-Black.ttf" type="DynamicFontData" id=4]
 [ext_resource path="res://Prefabs/upgrade/upgrade icon.tscn" type="PackedScene" id=5]
+[ext_resource path="res://Prefabs/tooltip/PriceContainer.tscn" type="PackedScene" id=6]
 [ext_resource path="res://Prefabs/tooltip/Upgrade Tooltip.gd" type="Script" id=8]
 
 [sub_resource type="StyleBoxFlat" id=1]
@@ -87,7 +88,7 @@ __meta__ = {
 margin_left = 12.0
 margin_top = 12.0
 margin_right = 228.0
-margin_bottom = 82.0
+margin_bottom = 102.0
 custom_constants/separation = 10
 
 [node name="header" type="MarginContainer" parent="v"]
@@ -113,8 +114,8 @@ alignment = 1
 
 [node name="refundable" type="MarginContainer" parent="v/header/v"]
 visible = false
-margin_left = 46.0
-margin_right = 130.0
+margin_left = 66.0
+margin_right = 150.0
 margin_bottom = 25.0
 rect_min_size = Vector2( 66, 0 )
 size_flags_horizontal = 4
@@ -177,9 +178,9 @@ fit_content_height = true
 
 [node name="req" type="MarginContainer" parent="v"]
 visible = false
-margin_top = 117.0
-margin_right = 276.0
-margin_bottom = 215.0
+margin_top = 80.0
+margin_right = 216.0
+margin_bottom = 198.0
 custom_constants/margin_right = 10
 custom_constants/margin_top = 10
 custom_constants/margin_left = 10
@@ -188,20 +189,20 @@ custom_constants/margin_bottom = 10
 [node name="bg" type="Panel" parent="v/req"]
 margin_left = 10.0
 margin_top = 10.0
-margin_right = 266.0
-margin_bottom = 88.0
+margin_right = 206.0
+margin_bottom = 108.0
 custom_styles/panel = SubResource( 8 )
 
 [node name="v" type="VBoxContainer" parent="v/req"]
 margin_left = 10.0
 margin_top = 10.0
-margin_right = 266.0
-margin_bottom = 88.0
+margin_right = 206.0
+margin_bottom = 108.0
 alignment = 1
 
 [node name="flair" type="Label" parent="v/req/v"]
 self_modulate = Color( 0.796875, 0.796875, 0.796875, 1 )
-margin_right = 256.0
+margin_right = 196.0
 margin_bottom = 17.0
 custom_fonts/font = SubResource( 9 )
 text = "	Required upgrade:"
@@ -209,27 +210,26 @@ align = 1
 
 [node name="h" type="HBoxContainer" parent="v/req/v"]
 margin_top = 21.0
-margin_right = 256.0
-margin_bottom = 78.0
+margin_right = 196.0
+margin_bottom = 98.0
 custom_constants/separation = 3
 alignment = 1
 
 [node name="icon" parent="v/req/v/h" instance=ExtResource( 5 )]
-margin_bottom = 57.0
+margin_bottom = 77.0
 
 [node name="name" type="Label" parent="v/req/v/h"]
 margin_left = 35.0
-margin_right = 256.0
-margin_bottom = 57.0
+margin_right = 196.0
+margin_bottom = 77.0
 size_flags_horizontal = 3
 custom_fonts/font = SubResource( 10 )
 text = "what in cousin-fuckin tarnation alabama betty crocker miss fuckin betty white shit is this"
 align = 1
 autowrap = true
 
-[node name="price" type="VBoxContainer" parent="v"]
+[node name="price" parent="v" instance=ExtResource( 6 )]
 visible = false
-margin_top = 225.0
-margin_right = 276.0
-margin_bottom = 225.0
-custom_constants/separation = 0
+margin_top = 80.0
+margin_right = 216.0
+margin_bottom = 90.0

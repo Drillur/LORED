@@ -75,8 +75,6 @@ func start() -> void:
 func smart_start():
 	
 	match key:
-		"hunt":
-			hunt_start()
 		"blood", "witch":
 			blood_start()
 

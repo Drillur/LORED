@@ -1,0 +1,82 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Prefabs/Scripts/LORED Manager.gd" type="Script" id=1]
+
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 0.054902, 0.054902, 0.054902, 1 )
+border_color = Color( 1, 0, 0.631373, 0.301961 )
+expand_margin_left = 10.0
+expand_margin_right = 10.0
+expand_margin_top = 10.0
+expand_margin_bottom = 10.0
+shadow_color = Color( 0.054902, 0.054902, 0.054902, 1 )
+
+[node name="LORED Manager" type="MarginContainer"]
+margin_right = 1022.0
+margin_bottom = 561.0
+custom_constants/margin_right = 10
+custom_constants/margin_top = 10
+custom_constants/margin_left = 10
+custom_constants/margin_bottom = 10
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="bg" type="Panel" parent="."]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 1012.0
+margin_bottom = 551.0
+custom_styles/panel = SubResource( 1 )
+
+[node name="sc" type="ScrollContainer" parent="."]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 1012.0
+margin_bottom = 551.0
+size_flags_horizontal = 3
+scroll_horizontal_enabled = false
+
+[node name="texts" type="Node2D" parent="sc"]
+position = Vector2( -10, -10 )
+
+[node name="v" type="VBoxContainer" parent="sc"]
+margin_right = 1002.0
+margin_bottom = 541.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/separation = 20
+alignment = 1
+
+[node name="1" type="VBoxContainer" parent="sc/v"]
+margin_top = 270.0
+margin_right = 1002.0
+margin_bottom = 270.0
+size_flags_horizontal = 3
+custom_constants/separation = 20
+alignment = 1
+
+[node name="2" type="VBoxContainer" parent="sc/v"]
+visible = false
+margin_top = 122.0
+margin_right = 1002.0
+margin_bottom = 122.0
+size_flags_horizontal = 3
+custom_constants/separation = 20
+alignment = 1
+
+[node name="3" type="VBoxContainer" parent="sc/v"]
+visible = false
+margin_top = 280.0
+margin_right = 1002.0
+margin_bottom = 280.0
+size_flags_horizontal = 3
+custom_constants/separation = 20
+alignment = 1
+
+[node name="4" type="VBoxContainer" parent="sc/v"]
+visible = false
+size_flags_horizontal = 3
+custom_constants/separation = 20
+alignment = 1

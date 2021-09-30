@@ -4,8 +4,6 @@ onready var rt = get_node("/root/Root")
 
 
 var fps := 0.0
-var price_flash := false
-var price_flash_i := 0
 
 var total_consumed := Big.new(0)
 
@@ -13,29 +11,23 @@ var type : String
 var cont := {}
 
 const src := {
-	vbox = preload("res://Prefabs/tooltip/VBoxContainer.tscn"),
-	price = preload("res://Prefabs/tooltip/price.tscn"),
+	vbox = preload("res://Prefabs/tooltip/PriceContainer.tscn"),
 	taq_tip = preload("res://Prefabs/tooltip/QuestTip.tscn"),
 	tip_lored_fuel = preload("res://Prefabs/tooltip/tip_lored_fuel.tscn"),
-	cacodemon = preload("res://Prefabs/tooltip/Cacodemon Tooltip.tscn"),
-	item_tip = preload("res://Prefabs/tooltip/Item.tscn"),
-	unholy_bodies_tip = preload("res://Prefabs/tooltip/Unholy Bodies Tip.tscn"),
 }
-
-var viewed_task : Task
 
 func _process(_delta: float) -> void:
 	r_tip(true)
 
 func _physics_process(delta):
 	
-	price_flash()
-	
 	fps += delta
 	if fps < gv.fps: return
 	fps -= gv.fps
 	
 	r_tip()
+
+var temp: Dictionary
 
 
 
@@ -54,34 +46,20 @@ func _call(source : String, other: Dictionary) -> void:
 			
 			lored_buy_lored(f)
 		
+		elif "wish tooltip" == type:
+			
+			cont[type] = gv.SRC["tooltip/wish"].instance()
+			cont[type].init(other["wish"])
+			add_child(cont[type])
+			$bg.modulate = other["wish"].color
+			temp["wish vico"] = other["wish"].vico
+		
 		elif "offline boost" == type:
 			
 			cont[type] = gv.SRC["tooltip/offline boost"].instance()
 			cont[type].init()
 			add_child(cont[type])
 			$bg.self_modulate = Color(1, 0.796078, 0)
-		
-		elif "buy smart lored" in type:
-			
-			var key := type.split("lored ")[1]
-			var quest_key: int
-			
-			match key:
-				"hunt":
-					quest_key = gv.Quest.HUNT
-				"necro":
-					quest_key = gv.Quest.NECRO
-				"witch":
-					quest_key = gv.Quest.WITCH
-				"blood":
-					quest_key = gv.Quest.BLOOD
-			
-			$bg.self_modulate = gv.g[key].color
-			
-			cont["taq"] = src.taq_tip.instance()
-			add_child(cont["taq"])
-			
-			cont["taq"].init(gv.quest[quest_key])
 		
 		elif "unholy bodies tip" in type:
 			
@@ -123,8 +101,9 @@ func _call(source : String, other: Dictionary) -> void:
 				
 				#var quest := type.split("taq quest ")[1]
 				
-				cont["taq"].init(taq.quest)
-				$bg.self_modulate = taq.quest.color
+				if " main" in type:
+					cont["taq"].init(taq.main_quest)
+					$bg.self_modulate = taq.main_quest.color
 			
 			else:
 				
@@ -209,7 +188,17 @@ func r_tip(move_tip := false) -> void:
 		
 		var y_buffer := 60
 		
-		if "lored " in type:
+		
+		if "upgrade" in type:
+			
+			rect_position = Vector2(
+				rt.get_node(rt.gnupcon).rect_position.x + rt.get_node(rt.gnupcon).rect_size.x + 10,
+				rt.get_node(rt.gnupcon).rect_position.y
+			)
+			
+			return
+		
+		elif "lored " in type:
 			
 			var f := type.split("lored ")[1]
 			
@@ -240,6 +229,18 @@ func r_tip(move_tip := false) -> void:
 			
 			return
 		
+		elif "wish tooltip" == type:
+			
+			var pos : Vector2 = temp["wish vico"].rect_global_position
+			
+			grow_horizontal = Control.GROW_DIRECTION_END
+			
+			pos.y -= rect_size.y + 8
+			
+			rect_position = pos
+			
+			return
+		
 		elif "offline boost" == type:
 			rect_position = Vector2(
 				win.x / rt.scale.x - rect_size.x - 10,
@@ -252,7 +253,7 @@ func r_tip(move_tip := false) -> void:
 				bla.rect_global_position.y
 			)
 		elif "item:" in type:
-			var bla = rt.get_node("m/v/LORED List/sc/v/s3/v/Inventory")
+			var bla = rt.get_node("m/v/LORED Manager/sc/v/s3/v/Inventory")
 			rect_position = Vector2(
 				bla.rect_global_position.x - rect_size.x - 10,
 				bla.rect_global_position.y + bla.rect_size.y - rect_size.y
@@ -285,15 +286,6 @@ func r_tip(move_tip := false) -> void:
 			)
 			return
 		
-		elif "upgrade" in type:
-			
-			rect_position = Vector2(
-				rt.get_node(rt.gnupcon).rect_position.x + rt.get_node(rt.gnupcon).rect_size.x + 10,
-				rt.get_node(rt.gnupcon).rect_position.y
-			)
-			
-			return
-		
 		# lines below this took me 90 minutes to figure out. am i retarded?
 		if rt.get_node("map").get_global_position().y + rect_position.y + rect_size.y > win.y:
 			rect_position.y -= rt.get_node("map").get_global_position().y + rect_position.y + rect_size.y - win.y
@@ -301,9 +293,6 @@ func r_tip(move_tip := false) -> void:
 			rect_position.y -= rt.get_node("map").get_global_position().y + rect_position.y - y_buffer
 
 func price_flash() -> void:
-	
-	if not price_flash:
-		return
 	
 	var cost_dict := {}
 	
@@ -315,36 +304,15 @@ func price_flash() -> void:
 		f = type.split("upgrade ")[1]
 		cost_dict = gv.up[f].cost
 	
-	if price_flash_i == 0:
-		for x in cost_dict:
-			
-			if gv.r[x].greater_equal(cost_dict[x].t):
-				continue
-			
-			if "buy lored" in type:
-				cont[x].get_node("flash0").show()
-				cont[x].get_node("flash1").show()
-			elif "buy upgrade" in type:
-				cont["tip up"].cont[x].get_node("flash0").show()
-				cont["tip up"].cont[x].get_node("flash1").show()
-	
-	price_flash_i += 1
-	
-	if price_flash_i == 4:
-		for x in cost_dict:
-			if "buy lored" in type:
-				cont[x].get_node("flash1").hide()
-			elif "buy upgrade" in type:
-				cont["tip up"].cont[x].get_node("flash1").hide()
-	
-	if price_flash_i == 8:
-		for x in cost_dict:
-			if "buy lored" in type:
-				cont[x].get_node("flash0").hide()
-			elif "buy upgrade" in type:
-				cont["tip up"].cont[x].get_node("flash0").hide()
-		price_flash = false
-		price_flash_i = 0
+	for x in cost_dict:
+		
+		if gv.r[x].greater_equal(cost_dict[x].t):
+			continue
+		
+		if "buy lored" in type:
+			cont["vbox"].cont[x].flash()
+		elif "buy upgrade" in type:
+			cont["tip up"].price.cont[x].flash()
 
 func autobuyer(_lored: String, _height: int) -> int:
 	
@@ -381,32 +349,11 @@ func lored_buy_lored(key: String) -> void:
 		return
 	
 	cont["autobuyer"] = gv.SRC["tooltip/autobuyer"].instance()
-	cont["vbox"].get_node("vbox").add_child(cont["autobuyer"])
+	cont["vbox"].get_node("v").add_child(cont["autobuyer"])
 	cont["autobuyer"].setup(key)
 
 func add_cost(key: String, cost: Dictionary):
 	
 	cont["vbox"] = src.vbox.instance()
 	add_child(cont["vbox"])
-	
-	var i := 0
-	for x in cost:
-		
-		cont[x] = src.price.instance()
-		
-		var _name = ""
-		var _color = ""
-		if key == "cac":
-			_name = x.capitalize()
-			_color = Color(1,0,0)
-		cont[x].setup(key, x, _name, _color)
-		
-		
-		# alternate backgrounds
-		if i % 2 == 1:
-			cont[x].get_node("bg").show()
-			#cont[x].get_node("bg").self_modulate = gv.COLORS[x]
-		
-		cont["vbox"].get_node("vbox").add_child(cont[x])
-		
-		i += 1
+	cont["vbox"].setup(key, cost)

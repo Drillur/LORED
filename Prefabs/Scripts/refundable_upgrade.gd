@@ -7,9 +7,9 @@ func init(type : String, price : String) -> void:
 	var label_text : String = "You may temporarily refund this upgrade, returning " + price + " %s."
 	
 	match type:
-		"s1":
+		gv.Tab.S1:
 			label_text = label_text % "Malignancy"
-		"s2":
+		gv.Tab.S2:
 			label_text = label_text % "Tumors"
 	
 	text = label_text

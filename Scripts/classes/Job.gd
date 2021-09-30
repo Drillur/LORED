@@ -204,8 +204,7 @@ func complete() -> void:
 	
 	gv.g[lored_key].manager.w_bonus_output(produced_resource_key, gv.g[lored_key].inhand)
 	gv.increase_lb_xp(gv.g[lored_key].inhand)
-	taq.progress(gv.TaskRequirement.RESOURCE_PRODUCTION, produced_resource_key, gv.g[lored_key].inhand)
-	gv.stats.r_gained[produced_resource_key].a(gv.g[lored_key].inhand)
+	taq.increaseProgress(gv.Objective.RESOURCES_PRODUCED, produced_resource_key, gv.g[lored_key].inhand)
 	gv.g[lored_key].manager.flying_texts()
 
 func crit_roll() -> float:

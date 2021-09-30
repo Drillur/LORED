@@ -1,12 +1,11 @@
-[gd_scene load_steps=23 format=2]
+[gd_scene load_steps=21 format=2]
 
-[ext_resource path="res://Styles/Master Theme.tres" type="Theme" id=1]
+[ext_resource path="res://Prefabs/template/NewButton.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Fonts/Roboto-MediumItalic.ttf" type="DynamicFontData" id=3]
 [ext_resource path="res://Styles/Containers/bg ScrollContainer.tres" type="StyleBox" id=4]
 [ext_resource path="res://Sprites/tab/expand.png" type="Texture" id=5]
 [ext_resource path="res://Scripts/up_new/up_container.gd" type="Script" id=6]
 [ext_resource path="res://Sprites/tab/s1m.png" type="Texture" id=7]
-[ext_resource path="res://Fonts/Roboto-BlackItalic.ttf" type="DynamicFontData" id=8]
 [ext_resource path="res://Styles/Panels/bg.tres" type="StyleBox" id=9]
 [ext_resource path="res://Styles/Panels/alert.tres" type="StyleBox" id=10]
 
@@ -72,12 +71,6 @@ border_color = Color( 0.804688, 0.804688, 0.804688, 1 )
 border_blend = true
 expand_margin_top = 10.0
 
-[sub_resource type="DynamicFont" id=13]
-size = 14
-outline_size = 2
-outline_color = Color( 0.00392157, 0.00392157, 0.00392157, 1 )
-font_data = ExtResource( 8 )
-
 [node name="up_container" type="MarginContainer"]
 margin_right = 475.0
 margin_bottom = 400.0
@@ -109,30 +102,30 @@ margin_right = 465.0
 margin_bottom = 390.0
 custom_constants/separation = 10
 
-[node name="s1n" type="MarginContainer" parent="top"]
+[node name="0" type="MarginContainer" parent="top"]
 margin_right = 455.0
 margin_bottom = 19.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Panel" type="Panel" parent="top/s1n"]
+[node name="Panel" type="Panel" parent="top/0"]
 margin_right = 455.0
 margin_bottom = 19.0
 custom_styles/panel = SubResource( 1 )
 
-[node name="h" type="HBoxContainer" parent="top/s1n"]
+[node name="h" type="HBoxContainer" parent="top/0"]
 margin_right = 455.0
 margin_bottom = 19.0
 
-[node name="Label" type="Label" parent="top/s1n/h"]
+[node name="Label" type="Label" parent="top/0/h"]
 margin_right = 150.0
 margin_bottom = 19.0
 custom_fonts/font = SubResource( 2 )
 custom_colors/font_color = Color( 0.796875, 0.796875, 0.796875, 1 )
 text = "(Q) Normal Upgrades"
 
-[node name="alert" type="Panel" parent="top/s1n/h"]
+[node name="alert" type="Panel" parent="top/0/h"]
 visible = false
 margin_left = 154.0
 margin_top = 5.0
@@ -143,7 +136,7 @@ size_flags_horizontal = 8
 size_flags_vertical = 4
 custom_styles/panel = ExtResource( 10 )
 
-[node name="count" type="Label" parent="top/s1n/h"]
+[node name="count" type="Label" parent="top/0/h"]
 margin_left = 375.0
 margin_right = 435.0
 margin_bottom = 19.0
@@ -153,7 +146,7 @@ custom_fonts/font = SubResource( 2 )
 custom_colors/font_color = Color( 0.796875, 0.796875, 0.796875, 1 )
 text = "103/103"
 
-[node name="Panel" type="Panel" parent="top/s1n/h"]
+[node name="Panel" type="Panel" parent="top/0/h"]
 margin_left = 439.0
 margin_top = 1.0
 margin_right = 455.0
@@ -163,13 +156,13 @@ size_flags_horizontal = 8
 size_flags_vertical = 4
 custom_styles/panel = SubResource( 3 )
 
-[node name="Sprite" type="Sprite" parent="top/s1n/h/Panel"]
+[node name="Sprite" type="Sprite" parent="top/0/h/Panel"]
 self_modulate = Color( 0.733333, 0.458824, 0.0313726, 1 )
 position = Vector2( 8, 8 )
 rotation = -1.5708
 texture = ExtResource( 5 )
 
-[node name="Button" type="Button" parent="top/s1n"]
+[node name="Button" type="Button" parent="top/0"]
 margin_right = 455.0
 margin_bottom = 19.0
 focus_mode = 0
@@ -178,7 +171,7 @@ custom_styles/hover = SubResource( 4 )
 custom_styles/pressed = SubResource( 5 )
 custom_styles/normal = SubResource( 6 )
 
-[node name="s1m" type="MarginContainer" parent="top"]
+[node name="1" type="MarginContainer" parent="top"]
 margin_top = 29.0
 margin_right = 455.0
 margin_bottom = 48.0
@@ -186,24 +179,24 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Panel" type="Panel" parent="top/s1m"]
+[node name="Panel" type="Panel" parent="top/1"]
 self_modulate = Color( 0.878431, 0.121569, 0.34902, 1 )
 margin_right = 455.0
 margin_bottom = 19.0
 custom_styles/panel = SubResource( 7 )
 
-[node name="h" type="HBoxContainer" parent="top/s1m"]
+[node name="h" type="HBoxContainer" parent="top/1"]
 margin_right = 455.0
 margin_bottom = 19.0
 
-[node name="Label" type="Label" parent="top/s1m/h"]
+[node name="Label" type="Label" parent="top/1/h"]
 margin_right = 171.0
 margin_bottom = 19.0
 custom_fonts/font = SubResource( 2 )
 custom_colors/font_color = Color( 0.796875, 0.796875, 0.796875, 1 )
 text = "(W) Malignant Upgrades"
 
-[node name="alert" type="Panel" parent="top/s1m/h"]
+[node name="alert" type="Panel" parent="top/1/h"]
 visible = false
 margin_left = 175.0
 margin_top = 5.0
@@ -214,7 +207,7 @@ size_flags_horizontal = 8
 size_flags_vertical = 4
 custom_styles/panel = ExtResource( 10 )
 
-[node name="count" type="Label" parent="top/s1m/h"]
+[node name="count" type="Label" parent="top/1/h"]
 margin_left = 375.0
 margin_right = 435.0
 margin_bottom = 19.0
@@ -224,7 +217,7 @@ custom_fonts/font = SubResource( 2 )
 custom_colors/font_color = Color( 0.796875, 0.796875, 0.796875, 1 )
 text = "103/103"
 
-[node name="Panel" type="Panel" parent="top/s1m/h"]
+[node name="Panel" type="Panel" parent="top/1/h"]
 margin_left = 439.0
 margin_top = 1.0
 margin_right = 455.0
@@ -234,13 +227,13 @@ size_flags_horizontal = 8
 size_flags_vertical = 4
 custom_styles/panel = SubResource( 3 )
 
-[node name="Sprite" type="Sprite" parent="top/s1m/h/Panel"]
+[node name="Sprite" type="Sprite" parent="top/1/h/Panel"]
 self_modulate = Color( 0.878431, 0.121569, 0.34902, 1 )
 position = Vector2( 8, 8 )
 rotation = -1.5708
 texture = ExtResource( 5 )
 
-[node name="Button" type="Button" parent="top/s1m"]
+[node name="Button" type="Button" parent="top/1"]
 margin_right = 455.0
 margin_bottom = 19.0
 focus_mode = 0
@@ -249,7 +242,7 @@ custom_styles/hover = SubResource( 4 )
 custom_styles/pressed = SubResource( 5 )
 custom_styles/normal = SubResource( 6 )
 
-[node name="s2n" type="MarginContainer" parent="top"]
+[node name="2" type="MarginContainer" parent="top"]
 margin_top = 58.0
 margin_right = 455.0
 margin_bottom = 77.0
@@ -257,23 +250,23 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Panel" type="Panel" parent="top/s2n"]
+[node name="Panel" type="Panel" parent="top/2"]
 margin_right = 455.0
 margin_bottom = 19.0
 custom_styles/panel = SubResource( 8 )
 
-[node name="h" type="HBoxContainer" parent="top/s2n"]
+[node name="h" type="HBoxContainer" parent="top/2"]
 margin_right = 455.0
 margin_bottom = 19.0
 
-[node name="Label" type="Label" parent="top/s2n/h"]
+[node name="Label" type="Label" parent="top/2/h"]
 margin_right = 189.0
 margin_bottom = 19.0
 custom_fonts/font = SubResource( 2 )
 custom_colors/font_color = Color( 0.796875, 0.796875, 0.796875, 1 )
 text = "(E) Extra-Normal Upgrades"
 
-[node name="alert" type="Panel" parent="top/s2n/h"]
+[node name="alert" type="Panel" parent="top/2/h"]
 visible = false
 margin_left = 193.0
 margin_top = 5.0
@@ -284,7 +277,7 @@ size_flags_horizontal = 8
 size_flags_vertical = 4
 custom_styles/panel = ExtResource( 10 )
 
-[node name="count" type="Label" parent="top/s2n/h"]
+[node name="count" type="Label" parent="top/2/h"]
 margin_left = 375.0
 margin_right = 435.0
 margin_bottom = 19.0
@@ -294,7 +287,7 @@ custom_fonts/font = SubResource( 2 )
 custom_colors/font_color = Color( 0.796875, 0.796875, 0.796875, 1 )
 text = "103/103"
 
-[node name="Panel" type="Panel" parent="top/s2n/h"]
+[node name="Panel" type="Panel" parent="top/2/h"]
 margin_left = 439.0
 margin_top = 1.0
 margin_right = 455.0
@@ -304,13 +297,13 @@ size_flags_horizontal = 8
 size_flags_vertical = 4
 custom_styles/panel = SubResource( 3 )
 
-[node name="Sprite" type="Sprite" parent="top/s2n/h/Panel"]
+[node name="Sprite" type="Sprite" parent="top/2/h/Panel"]
 self_modulate = Color( 0.47451, 0.870588, 0.694118, 1 )
 position = Vector2( 8, 8 )
 rotation = -1.5708
 texture = ExtResource( 5 )
 
-[node name="Button" type="Button" parent="top/s2n"]
+[node name="Button" type="Button" parent="top/2"]
 margin_right = 455.0
 margin_bottom = 19.0
 focus_mode = 0
@@ -319,7 +312,7 @@ custom_styles/hover = SubResource( 4 )
 custom_styles/pressed = SubResource( 5 )
 custom_styles/normal = SubResource( 6 )
 
-[node name="s2m" type="MarginContainer" parent="top"]
+[node name="3" type="MarginContainer" parent="top"]
 margin_top = 87.0
 margin_right = 455.0
 margin_bottom = 106.0
@@ -327,23 +320,23 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Panel" type="Panel" parent="top/s2m"]
+[node name="Panel" type="Panel" parent="top/3"]
 margin_right = 455.0
 margin_bottom = 19.0
 custom_styles/panel = SubResource( 9 )
 
-[node name="h" type="HBoxContainer" parent="top/s2m"]
+[node name="h" type="HBoxContainer" parent="top/3"]
 margin_right = 455.0
 margin_bottom = 19.0
 
-[node name="Label" type="Label" parent="top/s2m/h"]
+[node name="Label" type="Label" parent="top/3/h"]
 margin_right = 161.0
 margin_bottom = 19.0
 custom_fonts/font = SubResource( 2 )
 custom_colors/font_color = Color( 0.796875, 0.796875, 0.796875, 1 )
 text = "(R) Radiative Upgrades"
 
-[node name="alert" type="Panel" parent="top/s2m/h"]
+[node name="alert" type="Panel" parent="top/3/h"]
 visible = false
 margin_left = 165.0
 margin_top = 5.0
@@ -354,7 +347,7 @@ size_flags_horizontal = 8
 size_flags_vertical = 4
 custom_styles/panel = ExtResource( 10 )
 
-[node name="count" type="Label" parent="top/s2m/h"]
+[node name="count" type="Label" parent="top/3/h"]
 margin_left = 375.0
 margin_right = 435.0
 margin_bottom = 19.0
@@ -364,7 +357,7 @@ custom_fonts/font = SubResource( 2 )
 custom_colors/font_color = Color( 0.796875, 0.796875, 0.796875, 1 )
 text = "103/103"
 
-[node name="Panel" type="Panel" parent="top/s2m/h"]
+[node name="Panel" type="Panel" parent="top/3/h"]
 margin_left = 439.0
 margin_top = 1.0
 margin_right = 455.0
@@ -374,14 +367,14 @@ size_flags_horizontal = 8
 size_flags_vertical = 4
 custom_styles/panel = SubResource( 3 )
 
-[node name="Sprite" type="Sprite" parent="top/s2m/h/Panel"]
+[node name="Sprite" type="Sprite" parent="top/3/h/Panel"]
 self_modulate = Color( 1, 0.541176, 0.541176, 1 )
 position = Vector2( 8, 8 )
 rotation = -1.5708
 scale = Vector2( 1.014, 1 )
 texture = ExtResource( 5 )
 
-[node name="Button" type="Button" parent="top/s2m"]
+[node name="Button" type="Button" parent="top/3"]
 margin_right = 455.0
 margin_bottom = 19.0
 focus_mode = 0
@@ -390,7 +383,7 @@ custom_styles/hover = SubResource( 4 )
 custom_styles/pressed = SubResource( 5 )
 custom_styles/normal = SubResource( 6 )
 
-[node name="s3n" type="MarginContainer" parent="top"]
+[node name="4" type="MarginContainer" parent="top"]
 margin_top = 116.0
 margin_right = 455.0
 margin_bottom = 135.0
@@ -398,24 +391,24 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Panel" type="Panel" parent="top/s3n"]
+[node name="Panel" type="Panel" parent="top/4"]
 self_modulate = Color( 0.25098, 0.470588, 0.992157, 1 )
 margin_right = 455.0
 margin_bottom = 19.0
 custom_styles/panel = SubResource( 10 )
 
-[node name="h" type="HBoxContainer" parent="top/s3n"]
+[node name="h" type="HBoxContainer" parent="top/4"]
 margin_right = 455.0
 margin_bottom = 19.0
 
-[node name="Label" type="Label" parent="top/s3n/h"]
+[node name="Label" type="Label" parent="top/4/h"]
 margin_right = 132.0
 margin_bottom = 19.0
 custom_fonts/font = SubResource( 2 )
 custom_colors/font_color = Color( 0.796875, 0.796875, 0.796875, 1 )
 text = "(A) The Runed Dial"
 
-[node name="alert" type="Panel" parent="top/s3n/h"]
+[node name="alert" type="Panel" parent="top/4/h"]
 visible = false
 margin_left = 165.0
 margin_top = 5.0
@@ -426,7 +419,7 @@ size_flags_horizontal = 8
 size_flags_vertical = 4
 custom_styles/panel = ExtResource( 10 )
 
-[node name="count" type="Label" parent="top/s3n/h"]
+[node name="count" type="Label" parent="top/4/h"]
 margin_left = 375.0
 margin_right = 435.0
 margin_bottom = 19.0
@@ -436,7 +429,7 @@ custom_fonts/font = SubResource( 2 )
 custom_colors/font_color = Color( 0.796875, 0.796875, 0.796875, 1 )
 text = "103/103"
 
-[node name="Panel" type="Panel" parent="top/s3n/h"]
+[node name="Panel" type="Panel" parent="top/4/h"]
 margin_left = 439.0
 margin_top = 1.0
 margin_right = 455.0
@@ -446,14 +439,14 @@ size_flags_horizontal = 8
 size_flags_vertical = 4
 custom_styles/panel = SubResource( 3 )
 
-[node name="Sprite" type="Sprite" parent="top/s3n/h/Panel"]
+[node name="Sprite" type="Sprite" parent="top/4/h/Panel"]
 self_modulate = Color( 1, 0.541176, 0.541176, 1 )
 position = Vector2( 8, 8 )
 rotation = -1.5708
 scale = Vector2( 1.014, 1 )
 texture = ExtResource( 5 )
 
-[node name="Button" type="Button" parent="top/s3n"]
+[node name="Button" type="Button" parent="top/4"]
 margin_right = 455.0
 margin_bottom = 19.0
 focus_mode = 0
@@ -462,7 +455,7 @@ custom_styles/hover = SubResource( 4 )
 custom_styles/pressed = SubResource( 5 )
 custom_styles/normal = SubResource( 6 )
 
-[node name="s3m" type="MarginContainer" parent="top"]
+[node name="5" type="MarginContainer" parent="top"]
 margin_top = 145.0
 margin_right = 455.0
 margin_bottom = 164.0
@@ -470,24 +463,24 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Panel" type="Panel" parent="top/s3m"]
+[node name="Panel" type="Panel" parent="top/5"]
 self_modulate = Color( 0.670588, 0.34902, 0.890196, 1 )
 margin_right = 455.0
 margin_bottom = 19.0
 custom_styles/panel = SubResource( 10 )
 
-[node name="h" type="HBoxContainer" parent="top/s3m"]
+[node name="h" type="HBoxContainer" parent="top/5"]
 margin_right = 455.0
 margin_bottom = 19.0
 
-[node name="Label" type="Label" parent="top/s3m/h"]
+[node name="Label" type="Label" parent="top/5/h"]
 margin_right = 133.0
 margin_bottom = 19.0
 custom_fonts/font = SubResource( 2 )
 custom_colors/font_color = Color( 0.796875, 0.796875, 0.796875, 1 )
 text = "(S) Spirit Upgrades"
 
-[node name="alert" type="Panel" parent="top/s3m/h"]
+[node name="alert" type="Panel" parent="top/5/h"]
 visible = false
 margin_left = 165.0
 margin_top = 5.0
@@ -498,7 +491,7 @@ size_flags_horizontal = 8
 size_flags_vertical = 4
 custom_styles/panel = ExtResource( 10 )
 
-[node name="count" type="Label" parent="top/s3m/h"]
+[node name="count" type="Label" parent="top/5/h"]
 margin_left = 375.0
 margin_right = 435.0
 margin_bottom = 19.0
@@ -508,7 +501,7 @@ custom_fonts/font = SubResource( 2 )
 custom_colors/font_color = Color( 0.796875, 0.796875, 0.796875, 1 )
 text = "103/103"
 
-[node name="Panel" type="Panel" parent="top/s3m/h"]
+[node name="Panel" type="Panel" parent="top/5/h"]
 margin_left = 439.0
 margin_top = 1.0
 margin_right = 455.0
@@ -518,14 +511,14 @@ size_flags_horizontal = 8
 size_flags_vertical = 4
 custom_styles/panel = SubResource( 3 )
 
-[node name="Sprite" type="Sprite" parent="top/s3m/h/Panel"]
+[node name="Sprite" type="Sprite" parent="top/5/h/Panel"]
 self_modulate = Color( 1, 0.541176, 0.541176, 1 )
 position = Vector2( 8, 8 )
 rotation = -1.5708
 scale = Vector2( 1.014, 1 )
 texture = ExtResource( 5 )
 
-[node name="Button" type="Button" parent="top/s3m"]
+[node name="Button" type="Button" parent="top/5"]
 margin_right = 455.0
 margin_bottom = 19.0
 focus_mode = 0
@@ -634,7 +627,7 @@ custom_styles/normal = SubResource( 6 )
 [node name="upgrades" type="ScrollContainer" parent="v"]
 margin_top = 50.0
 margin_right = 455.0
-margin_bottom = 380.0
+margin_bottom = 334.0
 rect_min_size = Vector2( 265, 110 )
 size_flags_vertical = 3
 custom_styles/bg = ExtResource( 4 )
@@ -645,117 +638,114 @@ __meta__ = {
 
 [node name="v" type="VBoxContainer" parent="v/upgrades"]
 margin_right = 455.0
-margin_bottom = 330.0
+margin_bottom = 284.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="s1n" type="MarginContainer" parent="v/upgrades/v"]
+[node name="0" type="MarginContainer" parent="v/upgrades/v"]
 visible = false
 margin_right = 372.0
 margin_bottom = 293.0
 size_flags_vertical = 3
 
-[node name="v" type="VBoxContainer" parent="v/upgrades/v/s1n"]
+[node name="v" type="VBoxContainer" parent="v/upgrades/v/0"]
 margin_right = 372.0
 margin_bottom = 293.0
 custom_constants/separation = 10
 
-[node name="s1m" type="MarginContainer" parent="v/upgrades/v"]
+[node name="1" type="MarginContainer" parent="v/upgrades/v"]
 visible = false
 margin_top = 148.0
 margin_right = 372.0
 margin_bottom = 293.0
 size_flags_vertical = 3
 
-[node name="v" type="VBoxContainer" parent="v/upgrades/v/s1m"]
+[node name="v" type="VBoxContainer" parent="v/upgrades/v/1"]
 margin_right = 372.0
 margin_bottom = 145.0
 size_flags_horizontal = 3
 custom_constants/separation = 10
 
-[node name="s2n" type="MarginContainer" parent="v/upgrades/v"]
+[node name="2" type="MarginContainer" parent="v/upgrades/v"]
 visible = false
 margin_top = 198.0
 margin_right = 372.0
 margin_bottom = 293.0
 size_flags_vertical = 3
 
-[node name="v" type="VBoxContainer" parent="v/upgrades/v/s2n"]
+[node name="v" type="VBoxContainer" parent="v/upgrades/v/2"]
 margin_right = 372.0
 margin_bottom = 95.0
 size_flags_horizontal = 3
 custom_constants/separation = 10
 
-[node name="s2m" type="MarginContainer" parent="v/upgrades/v"]
+[node name="3" type="MarginContainer" parent="v/upgrades/v"]
 visible = false
 margin_top = 148.0
 margin_right = 372.0
 margin_bottom = 293.0
 size_flags_vertical = 3
 
-[node name="v" type="VBoxContainer" parent="v/upgrades/v/s2m"]
+[node name="v" type="VBoxContainer" parent="v/upgrades/v/3"]
 margin_right = 372.0
 margin_bottom = 145.0
 size_flags_horizontal = 3
 custom_constants/separation = 10
 
-[node name="s3n" type="MarginContainer" parent="v/upgrades/v"]
+[node name="4" type="MarginContainer" parent="v/upgrades/v"]
 visible = false
 margin_top = 148.0
 margin_right = 372.0
 margin_bottom = 293.0
 size_flags_vertical = 3
 
-[node name="v" type="VBoxContainer" parent="v/upgrades/v/s3n"]
+[node name="v" type="VBoxContainer" parent="v/upgrades/v/4"]
 margin_right = 372.0
 margin_bottom = 145.0
+size_flags_horizontal = 3
+custom_constants/separation = 10
+
+[node name="5" type="MarginContainer" parent="v/upgrades/v"]
+visible = false
+margin_right = 455.0
+margin_bottom = 330.0
+size_flags_vertical = 3
+
+[node name="v" type="VBoxContainer" parent="v/upgrades/v/5"]
+margin_right = 455.0
+margin_bottom = 330.0
 size_flags_horizontal = 3
 custom_constants/separation = 10
 
 [node name="reset" type="MarginContainer" parent="v"]
-visible = false
-margin_top = 353.0
-margin_right = 372.0
+margin_top = 344.0
+margin_right = 455.0
 margin_bottom = 380.0
 
 [node name="bg" type="Panel" parent="v/reset"]
-margin_right = 372.0
-margin_bottom = 27.0
+margin_right = 455.0
+margin_bottom = 36.0
 custom_styles/panel = SubResource( 12 )
 
-[node name="b_reset" type="Button" parent="v/reset"]
-margin_right = 372.0
-margin_bottom = 27.0
-focus_mode = 0
-mouse_default_cursor_shape = 2
-size_flags_horizontal = 3
-theme = ExtResource( 1 )
-__meta__ = {
-"_edit_group_": true
-}
+[node name="reset" parent="v/reset" instance=ExtResource( 1 )]
+margin_left = 182.0
+margin_right = 272.0
 
-[node name="Label" type="Label" parent="v/reset/b_reset"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-mouse_default_cursor_shape = 2
-custom_fonts/font = SubResource( 13 )
-custom_colors/font_color = Color( 0.796875, 0.796875, 0.796875, 1 )
-text = "Metastasize"
-align = 1
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
+[node name="afford" parent="v/reset/reset/m" index="0"]
+visible = false
 
 [node name="flying_texts" type="Node2D" parent="."]
-[connection signal="pressed" from="top/s1n/Button" to="." method="col_time" binds= [ "s1n" ]]
-[connection signal="pressed" from="top/s1m/Button" to="." method="col_time" binds= [ "s1m" ]]
-[connection signal="pressed" from="top/s2n/Button" to="." method="col_time" binds= [ "s2n" ]]
-[connection signal="pressed" from="top/s2m/Button" to="." method="col_time" binds= [ "s2m" ]]
-[connection signal="pressed" from="top/s3n/Button" to="." method="col_time" binds= [ "s3n" ]]
-[connection signal="pressed" from="top/s3m/Button" to="." method="col_time" binds= [ "s3m" ]]
+
+[connection signal="pressed" from="top/0/Button" to="." method="col_time" binds= [ "0" ]]
+[connection signal="pressed" from="top/1/Button" to="." method="col_time" binds= [ "1" ]]
+[connection signal="pressed" from="top/2/Button" to="." method="col_time" binds= [ "2" ]]
+[connection signal="pressed" from="top/3/Button" to="." method="col_time" binds= [ "3" ]]
+[connection signal="pressed" from="top/4/Button" to="." method="col_time" binds= [ "4" ]]
+[connection signal="pressed" from="top/5/Button" to="." method="col_time" binds= [ "5" ]]
 [connection signal="button_down" from="v/header/h/v/m/Button" to="." method="_on_button_down"]
 [connection signal="pressed" from="v/header/h/v/m/Button" to="." method="go_back"]
-[connection signal="mouse_entered" from="v/reset/b_reset" to="." method="_on_b_reset_mouse_entered"]
-[connection signal="mouse_exited" from="v/reset/b_reset" to="." method="_on_mouse_exited"]
-[connection signal="pressed" from="v/reset/b_reset" to="." method="_on_b_reset_pressed"]
+[connection signal="mouse_entered" from="v/reset/reset/button" to="." method="_on_reset_mouse_entered"]
+[connection signal="mouse_exited" from="v/reset/reset/button" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="v/reset/reset/button" to="." method="_on_reset_pressed"]
+
+[editable path="v/reset/reset"]

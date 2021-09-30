@@ -24,7 +24,6 @@ class Num:
 	var dm := Big.new() # dynamic m
 	
 	var haxm := 1.0
-	var off_m := 1.0
 	
 	#var spell_m := Big.new()
 	
@@ -72,7 +71,6 @@ class Num:
 		t.m(lbm)
 		
 		t.m(haxm)
-		t.m(off_m)
 		
 		if f.less(0):
 			f = Big.new(0)
@@ -108,14 +106,14 @@ class Float:
 	var um := 1.0
 	
 	var haxm := 1.0
-	
-	var off_m := 1
+	var off_m := 1.0
 	
 	var b: float # base
 	var t: float # total after upgrades/buffs
 	
 	func _init(base = 1.0):
 		b = base
+		haxm = gv.hax_pow
 		sync()
 	
 	func print(include_f := false) -> String:

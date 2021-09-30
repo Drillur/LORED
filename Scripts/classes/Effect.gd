@@ -5,7 +5,7 @@ extends "res://Scripts/classes/Object.gd"
 var type: String
 var other: String # other useful key words. ex: for a cost upgrade, need to know which resource is being reduced
 
-var beneficiaries: Array # will be something like ["coal"] or every single string in stats.g_list["s1"]
+var beneficiaries: Array # will be something like ["coal"] or every single string in list.lored[gv.Tab.S1]
 
 var applied: bool
 var dynamic_applied := false
@@ -64,7 +64,7 @@ func apply(upgrade_name: String):
 			for b in beneficiaries:
 				gv.g[b].cost.erase(other)
 		"buff haste":
-			for x in gv.stats.up_list[type.split(" ")[1] + " buff"]:
+			for x in gv.list.upgrade[type.split(" ")[1] + " buff"]:
 				for c in gv.up[x].effects:
 					if c.effect.b.less_equal(1.1) and c.type == type.split(" ")[1]:
 						if multiplicative:
@@ -73,7 +73,7 @@ func apply(upgrade_name: String):
 							c.effect.ua.a(effect.t)
 						gv.up[x].refresh()
 		"buff output":
-			for x in gv.stats.up_list[type.split(" ")[1] + " buff"]:
+			for x in gv.list.upgrade[type.split(" ")[1] + " buff"]:
 				for c in gv.up[x].effects:
 					if c.effect.b.equal(1) and c.type == type.split(" ")[1]:
 						if multiplicative:
@@ -82,7 +82,7 @@ func apply(upgrade_name: String):
 							c.effect.ua.a(effect.t)
 						gv.up[x].refresh()
 		"buff crit":
-			for x in gv.stats.up_list[type.split(" ")[1] + " buff"]:
+			for x in gv.list.upgrade[type.split(" ")[1] + " buff"]:
 				for c in gv.up[x].effects:
 					if c.effect.b.equal(1) and c.type == type.split(" ")[1]:
 						# crit cannot be multiplicative, that's just weird. so don't even account for it
@@ -170,7 +170,7 @@ func remove(upgrade_name: String):
 			for b in beneficiaries:
 				gv.g[b].cost[other] = Ob.Num.new(effect.t)
 		"buff haste":
-			for x in gv.stats.up_list[type.split(" ")[1] + " buff"]:
+			for x in gv.list.upgrade[type.split(" ")[1] + " buff"]:
 				for c in gv.up[x].effects:
 					if c.effect.b.less_equal(1.1) and c.type == type.split(" ")[1]:
 						if multiplicative:
@@ -179,7 +179,7 @@ func remove(upgrade_name: String):
 							c.effect.ua.s(effect.t)
 						gv.up[x].refresh()
 		"buff output":
-			for x in gv.stats.up_list[type.split(" ")[1] + " buff"]:
+			for x in gv.list.upgrade[type.split(" ")[1] + " buff"]:
 				for c in gv.up[x].effects:
 					if c.effect.b.equal(1) and c.type == type.split(" ")[1]:
 						if multiplicative:
@@ -188,7 +188,7 @@ func remove(upgrade_name: String):
 							c.effect.ua.s(effect.t)
 						gv.up[x].refresh()
 		"buff crit":
-			for x in gv.stats.up_list[type.split(" ")[1] + " buff"]:
+			for x in gv.list.upgrade[type.split(" ")[1] + " buff"]:
 				for c in gv.up[x].effects:
 					if c.effect.b.equal(1) and c.type == type.split(" ")[1]:
 						# crit cannot be multiplicative, that's just weird. so don't even account for it

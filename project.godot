@@ -20,14 +20,14 @@ _global_script_classes=[ {
 "path": "res://Scripts/classes/Buff.gd"
 }, {
 "base": "Reference",
-"class": "Cacodemon",
-"language": "GDScript",
-"path": "res://Scripts/classes/Cacodemon.gd"
-}, {
-"base": "Reference",
 "class": "Effect",
 "language": "GDScript",
 "path": "res://Scripts/classes/Effect.gd"
+}, {
+"base": "Reference",
+"class": "Emote",
+"language": "GDScript",
+"path": "res://Scripts/classes/Emote.gd"
 }, {
 "base": "Reference",
 "class": "FPS",
@@ -50,9 +50,19 @@ _global_script_classes=[ {
 "path": "res://Scripts/classes/Job.gd"
 }, {
 "base": "Reference",
+"class": "Jobnew",
+"language": "GDScript",
+"path": "res://Scripts/classes/Jobnew.gd"
+}, {
+"base": "Reference",
 "class": "LORED",
 "language": "GDScript",
 "path": "res://Scripts/classes/LORED.gd"
+}, {
+"base": "Reference",
+"class": "LOREDnew",
+"language": "GDScript",
+"path": "res://Scripts/classes/LOREDnew.gd"
 }, {
 "base": "Reference",
 "class": "Ob",
@@ -65,9 +75,9 @@ _global_script_classes=[ {
 "path": "res://Scripts/classes/Purchasable.gd"
 }, {
 "base": "Reference",
-"class": "Spell",
+"class": "Quest",
 "language": "GDScript",
-"path": "res://Scripts/classes/Spell.gd"
+"path": "res://Scripts/classes/Quest_old.gd"
 }, {
 "base": "Reference",
 "class": "Statistics",
@@ -77,12 +87,7 @@ _global_script_classes=[ {
 "base": "Reference",
 "class": "Task",
 "language": "GDScript",
-"path": "res://Scripts/classes/Task.gd"
-}, {
-"base": "Node",
-"class": "Unholy_Body",
-"language": "GDScript",
-"path": "res://Scripts/classes/Unholy Body.gd"
+"path": "res://Scripts/classes/Task_old.gd"
 }, {
 "base": "Reference",
 "class": "Upgrade",
@@ -93,6 +98,11 @@ _global_script_classes=[ {
 "class": "UpgradeChain",
 "language": "GDScript",
 "path": "res://Scripts/classes/UpgradeChain.gd"
+}, {
+"base": "Reference",
+"class": "Wish",
+"language": "GDScript",
+"path": "res://Scripts/classes/Wish.gd"
 }, {
 "base": "Node2D",
 "class": "_root",
@@ -107,21 +117,23 @@ _global_script_classes=[ {
 _global_script_class_icons={
 "Big": "",
 "Buff": "",
-"Cacodemon": "",
 "Effect": "",
+"Emote": "",
 "FPS": "",
 "FormatValue": "",
 "GlobalVariables": "",
 "Job": "",
+"Jobnew": "",
 "LORED": "",
+"LOREDnew": "",
 "Ob": "",
 "Purchasable": "",
-"Spell": "",
+"Quest": "",
 "Statistics": "",
 "Task": "",
-"Unholy_Body": "",
 "Upgrade": "",
 "UpgradeChain": "",
+"Wish": "",
 "_root": "",
 "_save": ""
 }
@@ -130,14 +142,14 @@ _global_script_class_icons={
 
 config/name="LORED"
 run/main_scene="res://Scenes/Root.tscn"
-boot_splash/image="res://Sprites/misc/splash.png"
+boot_splash/image="res://Sprites/misc/icon.png"
 config/icon="res://Sprites/misc/icon.png"
-config/Version="2.2.17"
+config/Version="3.0.0"
 
 [autoload]
 
 gv="*res://Scripts/autoload/_vars.gd"
-taq="*res://Scripts/autoload/tasks_and_quests.gd"
+taq="*res://Scripts/autoload/WishManager.gd"
 fval="*res://Scripts/autoload/format_value.gd"
 Boot="*res://Scripts/autoload/Boot.gd"
 

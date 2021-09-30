@@ -19,6 +19,7 @@ func init(_upgrade_key: String) -> void:
 	
 	up = gv.up[_upgrade_key]
 	up.active_tooltip = self
+	up.active_tooltip_exists = true
 	
 	icon.init(_upgrade_key)
 	gn_name.text = up.name
@@ -73,10 +74,10 @@ func set_desc():
 
 func price_stuff() -> void:
 	
+	price.hide()
+	
 	if price_filled:
 		return
-	
-	price.hide()
 	
 	if up.have:
 		return
@@ -89,22 +90,8 @@ func price_stuff() -> void:
 	
 	price.show()
 	
-	var i := 0
-	
-	for x in up.cost:
-		
-		#var val: Big = Big.new(f[x].t)
-		
-		cont[x] = gv.SRC["price"].instance()
-		
-		cont[x].setup(up.key, x)
-		
-		# alternate backgrounds
-		if i % 2 == 1: cont[x].get_node("bg").show()
-		
-		price.add_child(cont[x])
-		
-		i += 1
+	price.setup(up.key, up.cost)
+	price.get_node("bg").show()
 	
 	price_filled = true
 
@@ -179,7 +166,7 @@ func random_desc() -> String:
 		22:
 			return "Deletes the most regrettable decision in your life from time, but not your memory."
 		23:
-			return "Chris Metzen and Mike Morhaime return to Blizzard. Bobby Kotick loses his way in a forest and is never seen again. Activision shuts its doors indefinitely."
+			return "Developing free-to-play games with forced, skippable ads is now punishable by up to ten years in maximum-security prison."
 		24:
 			return "Causes $1 to appear on your head. Time limit: N/A."
 		25:

@@ -1,24 +1,81 @@
 class_name GlobalVariables
 extends Node
 
+
+
 # invoke with gv
 
 const hax_pow := 1.0 # 1.0 for normal
 var fps: float
-const PLATFORM = "pc" # keep lower-case # "browser", "pc"
-const dev_mode := false
-const test_s3 := false
+const PLATFORM := "pc" # keep lower-case # "browser", "pc"
+const dev_mode := true
 const DEFAULT_KEY_LOREDS := ["stone", "conc", "malig", "water", "lead", "tree", "soil", "steel", "wire", "glass", "tum", "wood"]
 
 const PATCH_NOTES := {
-	
-	# [0] is if there are more changes made than can be listed (> 5)
-	# [0] determines if the /more Label node in Patch Version.tscn is visible
-	
+
 #	 "3.0.0": [
-#		false,
 #		"LOREDs now think out-loud and may speak to each other.",
 #	],
+	
+	"2.2.28": [
+		"[Possibly] fixed a bug allowing locked LOREDs/resources to be requirements for random tasks.",
+	],
+	
+	"2.2.27": [
+		"Fixed a bug preventing quests from loading properly.",
+	],
+	
+	"2.2.26": [
+		"Fixed a bug preventing task-completement quests from receiving any progress.",
+	],
+	
+	"2.2.25": [
+		"Changed the menu, as you have already noticed!",
+		"Added an option to consolidate flying number labels.",
+		"Added an assist mode for those with hearing loss.",
+		"Fixed a bug for the quest Horse Doodie where every upgrade would count for quest progress.",
+		"Fixed a bug preventing the upgrade menus from being accessed via clicking.",
+		"Removed the option to zoom in or out.",
+	],
+	
+	"2.2.24": [
+		"Disabled save importing via File Dialog until it is fixed. You can still paste any save code into save.lored, of course.",
+		"Fixed the bug preventing Metastasize or Chemotherapy from doing anything.",
+		"Fixed the bug preventing the patch notes window from being hidden.",
+		"Fixed the bug preventing halt and hold statuses from being saved even when the option to do so was checked.",
+	],
+	
+	"2.2.23": [
+		"Upgrade menus correctly appear in the main upgrade window. Don't forget about the hotkeys to access each upgrade menu, which are Q, W, E, and R!",
+		"ROUTINE is (once again) no longer counted in the total count of Malignant upgrades, as intended (since it cannot truly be owned).",
+	],
+	
+	"2.2.22": [
+		"Fixed a bug that was blocking offline earnings when switching tabs. Feel free to switch tabs all over the place, bay-bee.",
+		"Fixed a bug for the quest A Million Reasons to Grind, where you'd actually need to complete 51 tasks instead of 50. Probably. You think I test these bug-fixes? I live in a hole in the ground, what do you want from me?",
+		"\"Fixed\" save-importing. It still crashes the game, but it definitely imports the save. Reload the game after it dies!",
+	],
+	
+	"2.2.21": [
+		"Removed the Offline Boost system.",
+		"Restored the old offline earnings system, with the usual 1.0x modifier.",
+	],
+	
+	"2.2.20": [
+		"Fixed a bug that was causing freezes after a reset.",
+	],
+	
+	"2.2.19": [
+		"Fixed a bug that wasn't properly turning in quests on load.",
+	],
+	
+	"2.2.18": [
+		"Fixed more Offline Boost bugs, woo-hoo!",
+	],
+	
+	"2.2.17": [
+		"Probably fixed some Offline Boost bugs, who knows?",
+	],
 	
 	"2.2.16": [
 		"Offline earnings have been removed; Offline Boost has been added. Check out the tooltip of the offline boost HUD for more info.",
@@ -174,11 +231,10 @@ func _ready():
 	for x in g:
 		r[x] = Big.new(0)
 	
-	for x in 10:
-		cac.append(Cacodemon.new(x))
-	
-	for x in SpellID:
-		spells.append(Spell.new(x))
+	for t in Tab:
+		list.upgrade[str(Tab[t])] = []
+		list.upgrade["unowned " + str(Tab[t])] = []
+		list.upgrade["owned " + str(Tab[t])] = []
 
 
 const loreds_required_for_s2_autoup_upgrades_to_begin_purchasing := ["seed", "tree", "water", "soil", "humus", "sand", "glass", "liq", "steel", "hard", "axe", "wood", "draw","wire"]
@@ -193,29 +249,32 @@ func check_for_the_s2_shit():
 		if not g[x].active:
 			return
 	s2_upgrades_may_be_autobought = true
-	get_node("/root/Root").unlock_tab("s2n")
+	get_node("/root/Root").unlock_tab(Tab.EXTRA_NORMAL)
 
 const SRC := {
 	"alert": preload("res://Prefabs/alert.tscn"),
 	"emote": preload("res://Prefabs/lored/Emote.tscn"),
 	"flash": preload("res://Prefabs/Flash.tscn"),
 	
-	"task": preload("res://Prefabs/task/Task.tscn"),
+	"wish vico": preload("res://Prefabs/Wish/Wish Vico.tscn"),
 	"task entry": preload("res://Prefabs/tooltip/tip_lored_task_entry.tscn"),
-	"unholy body manager": preload("res://Prefabs/lored/necro bar.tscn"),
-	"unholy body manager bar": preload("res://Prefabs/lored/Necro Unholy Body Bar.tscn"),
 	"upgrade block": preload("res://Prefabs/tooltip/upgrade_block.tscn"),
+	
+	"patch version": preload("res://Prefabs/Patch/version.tscn"),
+	"patch entry": preload("res://Prefabs/Patch/entry.tscn"),
 	
 	"price": preload("res://Prefabs/tooltip/price.tscn"),
 	
 	"tooltip/LORED": preload("res://Prefabs/tooltip/LORED.tscn"),
 	"tooltip/autobuyer": preload("res://Prefabs/tooltip/AutobuyerTooltip.tscn"),
 	"tooltip/upgrade": preload("res://Prefabs/tooltip/Upgrade Tooltip.tscn"),
-	"tooltip/offline boost": preload("res://Prefabs/tooltip/Off Tooltip.tscn"),
+	"tooltip/wish": preload("res://Prefabs/Wish/Wish Tooltip.tscn"),
 	
 	"label": preload("res://Prefabs/template/Label.tscn"),
 	"job label": preload("res://Prefabs/template/job label.tscn"),
 	"button label": preload("res://Prefabs/template/Button Label.tscn"),
+	
+	"flying text": preload("res://Prefabs/dtext.tscn"),
 }
 
 signal limit_break_leveled_up(which) # here -> Limit Break.gd
@@ -248,7 +307,7 @@ func lb_xp_check():
 	
 	up["Limit Break"].sync_effects()
 	
-	for x in stats.g_list["s1"] + stats.g_list["s2"]:
+	for x in list.lored[Tab.S1] + list.lored[Tab.S2]:
 		g[x].d.lbm = up["Limit Break"].effects[0].effect.t
 		g[x].d.sync()
 	
@@ -256,7 +315,7 @@ func lb_xp_check():
 
 func increase_lb_xp(value):
 	
-	if not gv.up["Limit Break"].active():
+	if not up["Limit Break"].active():
 		return
 	
 	lb_xp.f.a(value)
@@ -267,7 +326,7 @@ func increase_lb_xp(value):
 signal autobuyer_purchased(key) # -> LORED.gd
 signal amount_updated(key) # LORED.gd -> resources.gd
 signal net_updated(net)
-signal quest_reward(type_key, other_key) # -> Root.gd
+signal wishReward(type, key) # -> Root.gd
 
 signal upgrade_purchased(key, routine) # Upgrade Slot.gd -> up_container.gd
 
@@ -289,12 +348,18 @@ const LIMIT_BREAK_COLORS := {
 	14: Color(0, 1, 0),
 }
 
-const sprite := {
+var sprite := {
+	
+	"joy": preload("res://Sprites/resources/Joy.png"),
+	"grief": preload("res://Sprites/resources/Grief.png"),
+	
+	"angry": preload("res://Sprites/reactions/Angry.png"),
+	"test": preload("res://Sprites/reactions/Test.png"),
+	
 	
 	"mana" : preload("res://Sprites/upgrades/thewitchofloredelith.png"),
 	"embryo" : preload("res://Sprites/resources/carc.png"),
 	"nearly dead" : preload("res://Sprites/resources/carc.png"),
-	"terror" : preload("res://Sprites/resources/carc.png"),
 	"corpse" : preload("res://Sprites/resources/carc.png"),
 	"bone" : preload("res://Sprites/resources/carc.png"),
 	"spirit" : preload("res://Sprites/resources/carc.png"),
@@ -304,7 +369,6 @@ const sprite := {
 	"meat" : preload("res://Sprites/resources/carc.png"),
 	"fur" : preload("res://Sprites/resources/carc.png"),
 	
-	"hunt" : preload("res://Sprites/resources/carc.png"),
 	"blood" : preload("res://Sprites/resources/carc.png"),
 	"necro" : preload("res://Sprites/resources/carc.png"),
 	"witch" : preload("res://Sprites/upgrades/thewitchofloredelith.png"),
@@ -347,16 +411,18 @@ const sprite := {
 	"humus" : preload("res://Sprites/resources/humus.png"),
 	"draw" : preload("res://Sprites/resources/draw.png"),
 	"pulp" : preload("res://Sprites/resources/pulp.png"),
-
-	"s1" : preload("res://Sprites/tab/t0.png"),
-	"s2" : preload("res://Sprites/tab/s2.png"),
-
-	"s1n" : preload("res://Sprites/tab/s1n.png"),
-	"s1m" : preload("res://Sprites/tab/s1m.png"),
-	"s2n" : preload("res://Sprites/tab/s2n.png"),
-	"s2m" : preload("res://Sprites/tab/s2m.png"),
-	"s3n" : preload("res://Sprites/tab/s2n.png"),
-	"s3m" : preload("res://Sprites/tab/s2m.png"),
+	
+	str(Tab.S1) : preload("res://Sprites/tab/t0.png"),
+	str(Tab.S2) : preload("res://Sprites/tab/s2.png"),
+	str(Tab.S3) : preload("res://Sprites/tab/s2.png"),
+	str(Tab.S4) : preload("res://Sprites/tab/s2.png"),
+	
+	str(Tab.NORMAL) : preload("res://Sprites/tab/s1n.png"),
+	str(Tab.MALIGNANT) : preload("res://Sprites/tab/s1m.png"),
+	str(Tab.EXTRA_NORMAL) : preload("res://Sprites/tab/s2n.png"),
+	str(Tab.RADIATIVE) : preload("res://Sprites/tab/s2m.png"),
+	str(Tab.RUNED_DIAL) : preload("res://Sprites/tab/s2n.png"),
+	str(Tab.SPIRIT) : preload("res://Sprites/tab/s2m.png"),
 	"s4n" : preload("res://Sprites/tab/s2n.png"),
 	"s4m" : preload("res://Sprites/tab/s2m.png"),
 	
@@ -449,16 +515,22 @@ var g := { #DO NOT RE-ARRANGE. ui depends on them being like this
 	"pulp" : LORED,
 	"lead" : LORED,
 	"gale" : LORED,
-	
-	"hunt": LORED,
-	"blood": LORED,
-	"necro": LORED,
-	"witch": LORED,
 }
+var autobuy_speed := 0.25
 var up := {}
 var chains := {}
 
-const COLORS := {
+var color := {
+	Lored.COPPER: Color(1, 0.74, 0.05),
+	Lored.IRON: Color(0.07, 0.89, 1),
+	Lored.COPPER_ORE: Color(0.7, 0.33, 0),
+	Lored.IRON_ORE: Color(0, 0.517647, 0.905882),
+	Lored.STONE: Color(0.79, 0.79, 0.79),
+	Lored.COAL: Color(0.7, 0, 1),
+}
+var COLORS := {
+	"grief": Color(0.74902, 0.203922, 0.533333),
+	"joy": Color(1, 0.909804, 0),
 	"ciga": Color(0.929412, 0.584314, 0.298039),
 	"toba": Color(0.639216, 0.454902, 0.235294),
 	"plast": Color(0.85, 0.85, 0.85),
@@ -497,7 +569,6 @@ const COLORS := {
 	"liq": Color(0.27, 0.888, .9),
 	"humus": Color(0.458824, 0.25098, 0),
 	
-	"hunt": Color(0.88, .12, .35),
 	"necro": Color(0.88, .12, .35),
 	"witch": Color(0.937255, 0.501961, 0.776471),
 	
@@ -509,7 +580,6 @@ const COLORS := {
 	"corpse": Color(0.88, .12, .35),
 	"nearly dead": Color(0.88, .12, .35),
 	"flesh": Color(0.88, .12, .35),
-	"terror": Color(0.88, .12, .35),
 	"embryo": Color(0.88, .12, .35),
 	"blood": Color(0.88, 0, 0),
 	"bone": Color(0.88, .12, .35),
@@ -524,29 +594,85 @@ const COLORS := {
 	"spike": Color(0.76, 0, 0),
 	"rare": Color(0.93, .84, 0),
 	"common": Color(0.35, 0.35, 0.35),
-	"s1n": Color(0.733333, 0.458824, 0.031373),
-	"s1m": Color(0.878431, 0.121569, 0.34902),
-	"s2n": Color(0.47451, 0.870588, 0.694118),
-	"s2m": Color(1, 0.541176, 0.541176),
-	"s1": Color(0.878431, 0.121569, 0.34902),
-	"s2": Color(1, 0.541176, 0.541176),
-	"s3": Color(0.8, 0.8, 0.8),
-	"s4": Color(0.8, 0.8, 0.8),
+	str(Tab.NORMAL): Color(0.733333, 0.458824, 0.031373),
+	str(Tab.MALIGNANT): Color(0.878431, 0.121569, 0.34902),
+	str(Tab.EXTRA_NORMAL): Color(0.47451, 0.870588, 0.694118),
+	str(Tab.RADIATIVE): Color(1, 0.541176, 0.541176),
+	str(Tab.S1): Color(0.878431, 0.121569, 0.34902),
+	str(Tab.S2): Color(1, 0.541176, 0.541176),
+	str(Tab.S3): Color(0.8, 0.8, 0.8),
+	str(Tab.S4): Color(0.8, 0.8, 0.8),
 	"copy": Color(0.8, 0.8, 0.8),
 	"grey": Color(0.8, 0.8, 0.8),
 }
 
-var open_upgrade_folder := "no"
+var open_tab := -1
 
 
 var stats : Statistics
 
 class Menu:
-	var tab := "1"
 	var tab_vertical := [0, 0, 0, 0]
 	var option := {}
+var page: int = Tab.S1 # example gv.Tab.S1
 var menu := Menu.new()
 
+
+func time_remaining_in_seconds(
+	lored_key: String,
+	present_amount: Big,
+	total_amount: Big) -> Big:
+	
+	
+	if g[lored_key].halt:
+		return Big.new(0)
+	
+	var net = g[lored_key].net()
+	
+	if net[1].greater(net[0]):
+		return Big.new(0)
+	
+	net = net[0].s(net[1])
+	
+	if net.equal(0):
+		return Big.new(0)
+	
+	var delta: Big = Big.new(total_amount).s(present_amount)
+	var incoming_amount := Big.new(0)
+	
+	
+	if g[lored_key].working:
+		incoming_amount.a(g[lored_key].d.t)
+	
+	return Big.new(delta).s(incoming_amount).d(net)
+
+func time_remaining_including_INF(
+	lored_key: String,
+	present_amount: Big,
+	total_amount: Big):
+	
+	
+	if g[lored_key].halt:
+		return INF
+	
+	var net = g[lored_key].net()
+	
+	if net[1].greater(net[0]):
+		return INF
+	
+	net = net[0].s(net[1])
+	
+	if net.equal(0):
+		return INF
+	
+	var delta: Big = Big.new(total_amount).s(present_amount)
+	var incoming_amount := Big.new(0)
+	
+	
+	if g[lored_key].working:
+		incoming_amount.a(g[lored_key].d.t)
+	
+	return Big.new(delta).s(incoming_amount).d(net)
 
 func time_remaining(
 	lored_key: String,
@@ -554,11 +680,11 @@ func time_remaining(
 	total_amount: Big) -> String:
 	
 	
-	if gv.g[lored_key].halt:
+	if g[lored_key].halt:
 		return "Halt"
 	
 	
-	var net = gv.g[lored_key].net()
+	var net = g[lored_key].net()
 	
 	if net[1].greater(net[0]):
 		return "-"
@@ -572,17 +698,60 @@ func time_remaining(
 	var incoming_amount := Big.new(0)
 	
 	
-	if gv.g[lored_key].working:
-		incoming_amount.a(gv.g[lored_key].d.t)
+	if g[lored_key].working:
+		incoming_amount.a(g[lored_key].d.t)
 	
 	return parse_time(Big.new(delta).s(incoming_amount).d(net))
 
 func parse_time(value) -> String:
 	
-	if typeof(value) == TYPE_OBJECT:
+	if value is Big:
 		return parse_time_big(value)
 	else:
 		return parse_time_float(value)
+
+func parse_time_big_not_abbreviated(big: Big) -> String:
+	
+	if big.less(0):
+		big = Big.new(0)
+	
+	if big.less(1):
+		return "!"
+	
+	if big.less(60):
+		return big.roundDown().toString() + " seconds"
+	
+	big.d(60) # minutes
+	
+	if big.less(60):
+		return big.roundDown().toString() + " minutes"
+	
+	big.d(60) # hours
+	
+	if big.less(24):
+		return big.roundDown().toString() + " hours"
+	
+	big.d(24) # days
+	
+	if big.less(365):
+		return big.roundDown().toString() + " days"
+	
+	big.d(365) # years
+	
+	if big.less(10):
+		return big.roundDown().toString() + " years"
+	
+	big.d(10) # decades
+	
+	if big.less(100):
+		return big.roundDown().toString() + " decades"
+	
+	big.d(100) # centuries
+	
+	if big.less(1000):
+		return big.roundDown().toString() + " centuries"
+	
+	return big.roundDown().toString() + " millenia"
 
 func parse_time_big(big: Big) -> String:
 	
@@ -685,127 +854,44 @@ func parse_time_float(val: float) -> String:
 #var powers_of_10 = PowersOf10.new()
 
 var r := {
-	"spirit": Big.new(0),
-	"blood": Big.new(0),
+	"joy": Big.new(0),
+	"grief": Big.new(0),
 	"embryo": Big.new(0),
-	"bone": Big.new(0),
-	"flesh": Big.new(0),
-	"nearly dead": Big.new(0),
-	"corpse": Big.new(0),
-	"flayed corpse": Big.new(0),
-	"unholy body": Big.new(0),
-	"defiled dead": Big.new(0),
-	"terror": Big.new(0),
-	"wax": Big.new(0),
-	"fur": Big.new(0),
-	"meat": Big.new(0),
-	"bagged beast": Big.new(0),
-	"processed beast": Big.new(0),
-	"exsanguinated beast": Big.new(0),
+	"spirit": Big.new(0),
 }
+var r_name := {
+	"grief": "Grief",
+	"joy": "Joy",
+	"spirit": "Spirit",
+	#"blood": "Blood",
+	"embryo": "Embryo",
+}
+var resource := {}
 
-signal cac_leveled_up(key) # class_cacodemon.gd -> Cacodemons.gd
-signal cac_fps(fps_key, key) # class_cacodemon.gd -> Cacodemons.gd
-signal cac_slain(key) # class_cacodemon.gd -> Cacodemons.gd
+func saveResources() -> String:
+	
+	var data := {}
+	var lored_keys = g.keys()
+	
+	for x in r:
+		data[x] = var2str(gv.r[x])
+	
+	return var2str(data)
 
-signal item_produced(key) # somewhere -> Inventory.gd
+func loadResources(data: Dictionary):
+	
+	var resource_keys = r.keys()
+	
+	for x in data:
+		if not x in resource_keys:
+			continue
+		gv.r[x] = str2var(data[x])
 
-func increase_cac_cost():
-	
-	cac_cost["blood"].m(300)
-	cac_cost["bone"].m(300)
-	
-	if cac_cost["embryo"].less(10):
-		cac_cost["embryo"].a(cacodemons - 1)
-	else:
-		cac_cost["embryo"].m(1.1)
-	
-	if cac_cost["embryo"].less(100):
-		cac_cost["embryo"].roundDown()
 
-var cac := []
-var cacodemons = 0
-var cac_cost := {
-	"embryo": Big.new(1),
-	"blood": Big.new(100),
-	"bone": Big.new(25),
-}
-var cac_chance_mod := Ob.Num.new(1)
-var spells := []
-enum SpellID {
-	HEX, # gives witch boon to random lored
-	STIM, # gives random s3 resources -- upgrades allow it to give any requested resource in any Cost tooltip
-}
-enum Item {
-	MANA, 
-	BITS, PIECES, PARTS, PORTIONS, # parts, pieces, and portions cost bits.
-	CRUMBS, SLICES, SAMPLES, SHARDS, # shards, samples, and slices cost crumbs.
-}
-enum Quest {
-	
-	# DO NOT REARRANGE.
-	# !!! Add new quests at the BOTTOM !!!
-	
-	# s1
-	INTRO,
-	MORE_INTRO,
-	WELCOME_TO_LORED,
-	UPGRADES,
-	TASKS,
-	PRETTY_WET,
-	PROGRESS,
-	ELECTRICY,
-	SANDY_PROGRESS,
-	SPREAD,
-	LOTS_OF_TASKS,
-	CONSUME,
-	EVOLVE,
-	A_MILLION_REASONS_TO_GRIND,
-	THE_LOOP,
-	
-	# s2
-	A_NEW_LEAF,
-	STEEL_PATTERN, WIRE_TRAIL, HARDWOOD_CYCLE, GLASS_PASS,
-	THE_HEART_OF_THINGS,
-	SPIKE,
-	LEAD_BY_EXAMPLE,
-	PAPER_OR_PLASTIC,
-	CARCINOGENIC,
-	CRINGEY_PROGRESS,
-	CANCER_LORD,
-	HORSE_DOODIE,
-	
-	# s3
-	A_DARK_DISCOVERY,
-	HUNT, WITCH, BLOOD, NECRO,
-	
-	# add new quests here
-	
-	# auto
-	RANDOM,
-	RANDOM_COMMON,
-	RANDOM_RARE,
-	RANDOM_SPIKE
-	
-	# do not add new quests here.
-}
-enum QuestReward {
-	NEW_LORED,
-	RESOURCE,
-	UPGRADE_MENU,
-	STAGE,
-	UPGRADE_LORED,
-	MAX_TASKS,
-	OTHER,
-}
-enum TaskRequirement {
-	RESOURCE_PRODUCTION,
-	SPELL_CAST,
-	RARE_OR_SPIKE_TASKS_COMPLETED,
-	TASKS_COMPLETED,
-	UPGRADE_PURCHASED,
-	UPGRADES_PURCHASED,
-	LORED_UPGRADED,
+
+enum Lored {
+	COAL, STONE, IRON_ORE, COPPER_ORE, IRON, COPPER,
+	GROWTH, CONCRETE, JOULES, OIL, TARBALLS, MALIGNANCY,
 }
 enum Job{
 	BORER_DIG,
@@ -824,6 +910,13 @@ var spell_materials := {
 }
 signal buff_spell_cast(spell, target) # LORED.gd -> LORED List.gd
 
+enum Tab { 
+	NORMAL, MALIGNANT,
+	EXTRA_NORMAL, RADIATIVE,
+	RUNED_DIAL, SPIRIT,
+	S1, S2, S3, S4,
+}
+var unlocked_tabs := []
 var unholy_bodies := {}
 var latest_unholy_body: int # key
 var ub_count := 0
@@ -855,15 +948,46 @@ var max_frame = {
 	"tar":  29,
 	"oil":  8,
 }
+var list := {
+	upgrade = {"owned": {}},
+	lored = {
+		Tab.S1: [], Tab.S2: [], Tab.S3: [], Tab.S4: [],
+		"active": ["stone"], "active " + str(Tab.S1): ["stone"], "active " + str(Tab.S2): [], "active " + str(Tab.S3): [], "active " + str(Tab.S4): [],
+		"rare quest whitelist": [],
+		"unlocked and inactive": [],
+	},
+	"unlocked resources": ["stone"], #note stage 3 resources need to be manually added
+}
 
-var off_boost := false
-var offline_time := 0.0
-var off_boost_time: float
-var off_d := 1.0
-var off_locked := false
-var receives_off_boost := [
-	false,
-	false,
-	false,
-	false
-]
+var stored_path := ""
+enum Objective {
+	RESOURCES_PRODUCED,
+	LORED_UPGRADED,
+	UPGRADE_PURCHASED,
+	SPELL_CAST_COUNT,
+	RARE_OR_SPIKE_TASKS_COMPLETED,
+	TASKS_COMPLETED,
+	UPGRADES_PURCHASED,
+	MAXED_FUEL_STORAGE,
+	RESET,
+	BREAK,
+	HOARD,
+}
+enum WishReward {
+	# add new entries at the bottom
+	NEW_LORED,
+	RESOURCE,
+	TAB,
+	MAX_RANDOM_WISHES,
+}
+
+func highestResetKey() -> String:
+	match stats.highest_run:
+		1: return "malig"
+		2: return "tum"
+		3: return "spirit"
+	return "oops" #s4
+
+func isStage1Or2LORED(key: String) -> bool:
+	return key in gv.list.lored[gv.Tab.S1] or key in gv.list.lored[gv.Tab.S2]
+

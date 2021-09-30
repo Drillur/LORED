@@ -4,14 +4,14 @@
 [ext_resource path="res://Fonts/Roboto-Black.ttf" type="DynamicFontData" id=2]
 [ext_resource path="res://Prefabs/template/job label.gd" type="Script" id=3]
 
-[sub_resource type="StyleBoxFlat" id=3]
+[sub_resource type="StyleBoxFlat" id=1]
 bg_color = Color( 1, 1, 1, 1 )
 border_color = Color( 1, 1, 1, 0.1 )
 
-[sub_resource type="DynamicFont" id=1]
+[sub_resource type="DynamicFont" id=2]
 font_data = ExtResource( 2 )
 
-[sub_resource type="DynamicFont" id=2]
+[sub_resource type="DynamicFont" id=3]
 size = 12
 font_data = ExtResource( 1 )
 
@@ -31,7 +31,7 @@ margin_bottom = 11.0
 rect_min_size = Vector2( 6, 6 )
 size_flags_horizontal = 0
 size_flags_vertical = 4
-custom_styles/panel = SubResource( 3 )
+custom_styles/panel = SubResource( 1 )
 
 [node name="label" type="RichTextLabel" parent="."]
 margin_left = 10.0
@@ -39,8 +39,8 @@ margin_right = 250.0
 margin_bottom = 16.0
 rect_min_size = Vector2( 240, 0 )
 rect_clip_content = false
-custom_fonts/bold_font = SubResource( 1 )
-custom_fonts/normal_font = SubResource( 2 )
+custom_fonts/bold_font = SubResource( 2 )
+custom_fonts/normal_font = SubResource( 3 )
 bbcode_enabled = true
 bbcode_text = "This is some "
 text = "This is some "

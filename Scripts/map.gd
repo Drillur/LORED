@@ -22,9 +22,6 @@ func _ready() -> void:
 
 func init():
 	
-	pos["menu"] = rt.get_node("misc/menu").position
-	size["menu"] = rt.get_node("misc/menu/ScrollContainer").rect_size
-	
 	var bla = rt.get_node("m/v/top/h/menu_button")
 	pos["menu button"] = bla.rect_global_position
 	size["menu button"] = bla.rect_size
@@ -44,8 +41,8 @@ func _input(ev):
 		mpos = get_global_mouse_position()
 		
 		# menu
-		if rt.get_node("misc/menu").visible and mouse_out(pos["menu button"], size["menu button"]) and mouse_out(pos["menu"], size["menu"]):
-			rt.get_node("misc/menu").hide()
+		if rt.menu.visible and mouse_out(pos["menu button"], size["menu button"]) and mouse_out(rt.menu.rect_position, rt.menu.rect_size):
+			rt.menu.hide()
 		
 		var upcon = rt.get_node(rt.gnupcon)
 		if rt.get_node(rt.gnupcon).visible and mouse_out(pos["upgrade button"], size["upgrade button"]) and mouse_out(upcon.rect_global_position, upcon.rect_size * rt.scale):

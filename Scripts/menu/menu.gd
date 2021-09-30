@@ -73,6 +73,7 @@ func _ready():
 		
 		
 		if "browser" in gv.PLATFORM:
+			$ScrollContainer/MarginContainer/VBoxContainer/save/CenterContainer/VBoxContainer/import_instructions.hide()
 			$ScrollContainer/MarginContainer/VBoxContainer/save/CenterContainer/VBoxContainer/import_save.hide()
 			$ScrollContainer/MarginContainer/VBoxContainer/save/CenterContainer/VBoxContainer/export_save.hide()
 		elif "pc" in gv.PLATFORM:
@@ -122,9 +123,6 @@ func init(f: Dictionary) -> void:
 		
 		# hold
 		$ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/on_save/CenterContainer/VBoxContainer/hold.pressed = f["on_save_hold"]
-		
-		# menu options
-		$ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/on_save/CenterContainer/VBoxContainer/menu_options.pressed = f["on_save_menu_options"]
 	
 	# tooltip_halt
 	$ScrollContainer/MarginContainer/VBoxContainer/options/CenterContainer/VBoxContainer/tooltips/CenterContainer/VBoxContainer/halt.pressed = f["tooltip_halt"]
@@ -187,7 +185,6 @@ func r_resource_text() -> void:
 		if not rt.get_node(rt.gnLOREDs).cont[x].visible:
 			content["resource_text"][x].hide()
 			continue
-		content["resource_text"][x].text = gv.stats.r_gained[x].toString() + " " + gv.g[x].name
 		if not content["resource_text"][x].visible: content["resource_text"][x].show()
 func r_runs() -> void:
 	
@@ -323,10 +320,9 @@ func _on_b_save_now_pressed():
 
 func _on_delete_pressed():
 	
-	rt.reset(0)
+	rt.reset(-1)
 	rt.b_tabkey(KEY_ESCAPE)
 	rt.b_tabkey(KEY_1)
-	rt.save_fps = 0.0
 	
 	var save_file = File.new()
 	if save_file.file_exists(rt.SAVE.MAIN):
@@ -355,13 +351,15 @@ func _on_FileDialog_file_selected(path: String) -> void:
 	rt.e_save("export", path)
 func _on_Import_file_selected(path: String) -> void:
 	
-	rt._ready_define_loreds(0)
+	rt.reset(-1)
 	
-	rt.game_start(rt.e_load(path))
+	gv.stored_path = path
+	get_tree().reload_current_scene()
+	#rt.e_load(path)
 	
-	rt.get_tree().reload_current_scene()
 	
 	rt.e_save()
+	#rt.get_tree().reload_current_scene()
 
 
 func _on_Discord_pressed() -> void:

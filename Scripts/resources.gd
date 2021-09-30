@@ -2,7 +2,7 @@ extends MarginContainer
 
 
 
-const TOP_KEYS := ["malig", "tum", "terror"]
+const TOP_KEYS := ["malig", "tum", ]
 
 var cont := {}
 var src := {
@@ -92,10 +92,10 @@ func update_resource(key):
 	
 	cont[key].r_amount()
 
-func switch_tabs(tab: String):
+func switch_tabs(tab: int):
 	
 	for x in get_children():
-		if tab in x.name:
+		if str(tab) == x.name:
 			x.show()
 		else:
 			x.hide()

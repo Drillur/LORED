@@ -39,7 +39,7 @@ size = 12
 outline_color = Color( 0, 0, 0, 1 )
 font_data = ExtResource( 5 )
 
-[sub_resource type="StyleBoxFlat" id=10]
+[sub_resource type="StyleBoxFlat" id=5]
 bg_color = Color( 1, 1, 1, 1 )
 draw_center = false
 border_color = Color( 1, 1, 1, 1 )
@@ -55,7 +55,7 @@ shadow_color = Color( 0.328125, 0.328125, 0.328125, 0.6 )
 shadow_size = 5
 anti_aliasing = false
 
-[sub_resource type="StyleBoxFlat" id=5]
+[sub_resource type="StyleBoxFlat" id=6]
 bg_color = Color( 1, 1, 1, 1 )
 draw_center = false
 border_width_left = 1
@@ -74,7 +74,7 @@ expand_margin_bottom = 1.0
 shadow_color = Color( 0.0470588, 0.0470588, 0.0470588, 0.6 )
 anti_aliasing = false
 
-[sub_resource type="StyleBoxFlat" id=6]
+[sub_resource type="StyleBoxFlat" id=7]
 bg_color = Color( 0.227451, 0.227451, 0.227451, 1 )
 border_color = Color( 1, 1, 1, 1 )
 corner_radius_top_left = 10
@@ -89,7 +89,7 @@ shadow_color = Color( 0.227451, 0.227451, 0.227451, 1 )
 shadow_size = 7
 anti_aliasing = false
 
-[sub_resource type="StyleBoxFlat" id=7]
+[sub_resource type="StyleBoxFlat" id=8]
 bg_color = Color( 0.964706, 0.858824, 0.160784, 0.419608 )
 border_width_left = 1
 border_width_top = 1
@@ -107,7 +107,7 @@ expand_margin_top = 5.0
 expand_margin_bottom = 5.0
 anti_aliasing = false
 
-[sub_resource type="StyleBoxFlat" id=8]
+[sub_resource type="StyleBoxFlat" id=9]
 bg_color = Color( 1, 0, 0, 0.211765 )
 border_width_left = 1
 border_width_top = 1
@@ -124,7 +124,7 @@ expand_margin_top = 5.0
 expand_margin_bottom = 5.0
 anti_aliasing = false
 
-[sub_resource type="StyleBoxFlat" id=9]
+[sub_resource type="StyleBoxFlat" id=10]
 bg_color = Color( 1, 1, 1, 0.2 )
 border_width_left = 1
 border_width_top = 1
@@ -179,7 +179,7 @@ margin_top = 2.0
 margin_right = 52.0
 margin_bottom = 52.0
 mouse_filter = 2
-custom_styles/panel = SubResource( 10 )
+custom_styles/panel = SubResource( 5 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -190,7 +190,7 @@ margin_top = 2.0
 margin_right = 52.0
 margin_bottom = 52.0
 mouse_filter = 2
-custom_styles/panel = SubResource( 5 )
+custom_styles/panel = SubResource( 6 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -204,7 +204,7 @@ rect_min_size = Vector2( 21, 21 )
 mouse_filter = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
-custom_styles/panel = SubResource( 6 )
+custom_styles/panel = SubResource( 7 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -252,7 +252,7 @@ margin_top = 5.0
 margin_right = 5.0
 margin_bottom = 5.0
 mouse_filter = 2
-custom_styles/panel = SubResource( 7 )
+custom_styles/panel = SubResource( 8 )
 
 [node name="tags" type="HBoxContainer" parent="n"]
 margin_right = 54.0
@@ -284,7 +284,7 @@ margin_top = 5.0
 margin_right = 5.0
 margin_bottom = 5.0
 mouse_filter = 2
-custom_styles/panel = SubResource( 8 )
+custom_styles/panel = SubResource( 9 )
 
 [node name="pending" type="MarginContainer" parent="n/tags"]
 visible = false
@@ -308,7 +308,8 @@ margin_top = 5.0
 margin_right = 5.0
 margin_bottom = 5.0
 mouse_filter = 2
-custom_styles/panel = SubResource( 9 )
+custom_styles/panel = SubResource( 10 )
+
 [connection signal="mouse_entered" from="Button" to="." method="_on_Button_mouse_entered"]
 [connection signal="mouse_exited" from="Button" to="." method="_on_Button_mouse_exited"]
 [connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]

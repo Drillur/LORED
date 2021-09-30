@@ -24,7 +24,7 @@ func init(_job: Job):
 		var i = 0
 		for _rq in job.required_keys:
 			base_text += " [img=<16>]" + gv.sprite[_rq].get_path() + "[/img]"
-			base_text += "[b][color=#" + gv.COLORS[_rq].to_html() + "]" + Big.new(job.required_resource_amount[i].t).m(job.output.t).toString() + "[/color][/b]"
+			base_text += "[color=#" + gv.COLORS[_rq].to_html() + "]" + Big.new(job.required_resource_amount[i].t).m(job.output.t).toString() + "[/color]"
 			i += 1
 			if i == 1 and job.required_keys.size() == 3:
 				base_text += ", "
@@ -37,7 +37,7 @@ func init(_job: Job):
 	base_text += job.can_text
 	
 	base_text += "[img=<16>]" + gv.sprite[job.produced_resource_key].get_path() + "[/img]"
-	base_text += "[b][color=#" + gv.COLORS[job.produced_resource_key].to_html() + "]" + job.output.t.toString() + "[/color][/b]"
+	base_text += "[color=#" + gv.COLORS[job.produced_resource_key].to_html() + "]" + job.output.t.toString() + "[/color]"
 	
 	base_text += " (" + fval.f(job.duration) + "s)"
 	

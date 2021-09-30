@@ -13,6 +13,8 @@ func _ready() -> void:
 
 func init(_key: String, halt_color: Color) -> void:
 	
+	if _key == "":
+		return
 	key = _key
 	status_colors.append(Color(halt_color))
 

@@ -6,7 +6,7 @@ onready var rt = get_node("/root/Root")
 
 
 var key: String
-var folder: String
+var tab: int
 
 const gn := {
 	inactive = "n/tags/inactive",
@@ -27,10 +27,10 @@ var routine := []
 
 var already_displayed_alert_guy := false
 
-func setup(_key, _folder):
+func setup(_key):
 	
 	key = _key
-	folder = _folder
+	tab = gv.up[key].tab
 	
 	gv.up[key].manager = self
 	
@@ -63,8 +63,8 @@ func _on_Button_mouse_entered() -> void:
 
 func _on_Button_mouse_exited() -> void:
 	
+	gv.up[key].active_tooltip_exists = false
 	rt.get_node("global_tip")._call("no")
-
 
 
 func _on_Button_pressed() -> void:
@@ -83,6 +83,8 @@ func requirements() -> bool:
 	return true
 
 
+func availableToBuy() -> bool:
+	return not gv.up[key].have and not gv.up[key].refundable and not icon.lock.visible and gv.up[key].tab in gv.unlocked_tabs
 
 func r_update():
 	
@@ -138,7 +140,7 @@ func afford():
 		button.modulate = Color(0.2, 0.2, 0.2)
 		return
 	
-	if gv.open_upgrade_folder != folder:
+	if gv.open_tab != tab:
 		return
 	
 	if can_purchase():
@@ -158,7 +160,7 @@ func can_purchase() -> bool:
 	# returns true if GOOD
 	
 	if key == "Carcinogenesis":
-		if gv.stats.upgrades_owned["s2m"] == 80:
+		if gv.list.upgrade["owned " + str(gv.Tab.MALIGNANT)].size() == 80:
 			return true
 		return false
 	
@@ -198,7 +200,7 @@ func autobuy():
 		return
 	
 	if not gv.s2_upgrades_may_be_autobought:
-		if key in gv.stats.up_list["s2n"]:
+		if key in gv.list.upgrade[str(gv.Tab.EXTRA_NORMAL)]:
 			return
 	
 	buy_upgrade(false, true)
@@ -212,8 +214,8 @@ func upgrade_bought(manual: bool, red_necro := false):
 	
 	if gv.up[key].normal or red_necro:
 		
-		taq.progress(gv.TaskRequirement.UPGRADE_PURCHASED, key)
-		taq.progress(gv.TaskRequirement.UPGRADES_PURCHASED, gv.up[key].stage_key)
+		taq.increaseProgress(gv.Objective.UPGRADE_PURCHASED, key)
+		#taq.increaseProgress(gv.Objective.UPGRADES_PURCHASED, gv.up[key].tab) #note
 		
 		gv.up[key].purchased()
 		
@@ -227,15 +229,9 @@ func upgrade_bought(manual: bool, red_necro := false):
 		if manual:
 			
 			if key == "Carcinogenesis":
-				rt.reset(3)
+				rt.reset(gv.Tab.S3)
 				gv.r["embryo"].a(1)
 				rt.unlock_tab("3")
-				if not gv.g["hunt"].active:
-					gv.g["hunt"].unlock()
-					gv.g["hunt"].manager.buy(false)
-					gv.g["witch"].unlock()
-					gv.quest[gv.Quest.HUNT].update()
-				taq.add_multi_quests([gv.quest[gv.Quest.HUNT], gv.quest[gv.Quest.WITCH], gv.quest[gv.Quest.NECRO], gv.quest[gv.Quest.BLOOD]])
 			
 			# tooltip
 			rt.get_node("global_tip")._call("no")
@@ -250,7 +246,8 @@ func upgrade_bought(manual: bool, red_necro := false):
 			rt.get_node("misc/task")._clear_board()
 			rt.get_node("misc/task")._call_board()
 		
-		gv.stats.upgrades_owned[folder] += 1
+		if not key == "ROUTINE":
+			gv.list.upgrade["owned " + str(tab)].append(key)
 		rt.get_node(rt.gnupcon).sync()
 		
 		w_update_other_upgrades_or_something()
@@ -338,7 +335,7 @@ func required_upgrades_not_owned(manual: bool) -> bool:
 	for x in gv.up[key].requires:
 		if not gv.up[x].have and not gv.up[x].refundable:
 			_return_true = true
-			if manual and gv.open_upgrade_folder == folder:
+			if manual and gv.open_tab == tab:
 				rt.get_node(rt.gnupcon).cont[x].flash()
 			break
 	
@@ -352,14 +349,14 @@ func cannot_afford(manual: bool) -> bool:
 	# returns the opposite or whatever
 	
 	if key == "Carcinogenesis":
-		if gv.stats.upgrades_owned["s2m"] == 80:
+		if gv.list.upgrade["owned " + str(gv.Tab.MALIGNANT)].size() == 80:
 			return false
 		return true
 	
 	if not gv.up[key].cost_check():
 		if manual:
-			if is_instance_valid(rt.get_node("global_tip").tip):
-				rt.get_node("global_tip").tip.price_flash = true
+			if gv.up[key].active_tooltip_exists:
+				rt.get_node("global_tip").tip.price_flash()
 		return true
 	
 	
@@ -477,19 +474,19 @@ func upgrade_effects(active: bool):
 			
 			#r_set_shadow("not owned")
 			gv.up[key].have = false
-			gv.stats.upgrades_owned[folder] -= 1
+			gv.list.upgrade["owned " + str(tab)].erase(key)
 			
 			routine.clear()
 			routine_shit()
 			
-			rt.reset(1, false)
+			rt.reset(gv.Tab.S1, false)
 
 func routine_shit() -> void:
 	
 	routine = get_routine_info()
 	
 	gv.r["tum"].a(routine[0]) # d
-	taq.progress(gv.TaskRequirement.RESOURCE_PRODUCTION, "tum", routine[0])
+	taq.increaseProgress(gv.Objective.RESOURCES_PRODUCED, "tum", routine[0])
 	gv.r["malig"].s(routine[1]) # c
 	
 

@@ -22,7 +22,7 @@ onready var spike = get_node("v/header/h/spike")
 
 
 var fps := -0.1
-var task: Task
+var quest: Quest
 
 
 
@@ -47,10 +47,10 @@ func r_update() -> void:
 		
 		# step
 		var i = 0
-		for r in task.req:
-			cont.step[i].get_node("v/h/step/val").text = r.progress.toString() + " / " + r.amount.toString()
-			cont.step[i].get_node("progress/f").rect_size.x = min(r.progress.percent(r.amount) * cont.step[i].get_node("progress").rect_size.x, cont.step[i].get_node("progress").rect_size.x)
-			if r.done:
+		for r in quest.objectives:
+			cont.step[i].get_node("v/h/step/val").text = r.current_progress.toString() + " / " + r.required_progress.toString()
+			cont.step[i].get_node("progress/f").rect_size.x = min(r.current_progress.percent(r.required_progress) * cont.step[i].get_node("progress").rect_size.x, cont.step[i].get_node("progress").rect_size.x)
+			if r.complete:
 				cont.step[i].get_node("done").show()
 				cont.step[i].get_node("progress/f/flair").hide()
 			
@@ -86,17 +86,17 @@ func flash():
 
 
 
-func init(_task: Task) -> void:
+func init(_quest: Quest) -> void:
 	
-	task = _task
+	quest = _quest
 	
-	gn_name.text = task.name
-	gn_desc.text = desc(task.desc)
-	$v/header/bg.modulate = task.color
+	gn_name.text = quest.name
+	gn_desc.text = desc(quest.desc)
+	$v/header/bg.modulate = quest.color
 	
-	tags(task.key)
-	reward(task.reward)
-	req(task.req)
+	tags(quest.key)
+	reward(quest.rewards)
+	objectives(quest.objectives)
 	
 	#set_process(true)
 
@@ -109,45 +109,39 @@ func tags(type: int) -> void:
 
 func desc(desc: String) -> String:
 	
-	if task.random:
+	if quest.random:
 		return ""
 	
 	# quests
-	if task.desc == "":
+	if quest.desc == "":
 		return ""
 	
 	gn_desc.show()
 	
-	if task.name in ["Witch", "Necro", "Blood", "Hunt"]:
-		
-		var poop = desc
-		poop = desc.format({"key": task.name, "level": fval.f(gv.g[task.name.to_lower()].level + 1)})
-		return poop 
-	
 	return desc
 
-func req(requirements: Array) -> void:
+func objectives(objectives: Array) -> void:
 	
 	var i = 0
-	for r in requirements:
-		
+	
+	for o in objectives:
 		cont.step[i] = src.step.instance()
-		cont.step[i].get_node("v/h/icon/Sprite").texture = r.icon
+		cont.step[i].get_node("v/h/icon/Sprite").texture = o.icon
 		
-		cont.step[i].get_node("v/h/step/desc").text = r.text
+		cont.step[i].get_node("v/h/step/desc").text = o.description
 		
-		# color
-		cont.step[i].get_node("v/h/step/val").add_color_override("font_color", r.color)
-		cont.step[i].get_node("progress/f").modulate = r.color
-		cont.step[i].get_node("done").modulate = r.color
+		var color = o.color
+		cont.step[i].get_node("v/h/step/val").add_color_override("font_color", color)
+		cont.step[i].get_node("progress/f").modulate = color
+		cont.step[i].get_node("done").modulate = color
 		
 		gn_steps.add_child(cont.step[i])
 		
-		if r.type == gv.TaskRequirement.UPGRADE_PURCHASED:
+		if o.type == gv.Objective.UPGRADE_PURCHASED:
 			
 			cont.up_block[i] = gv.SRC["upgrade block"].instance()
 			gn_steps.add_child(cont.up_block[i])
-			cont.up_block[i].init(r.req_key)
+			cont.up_block[i].init(o.key)
 		
 		i += 1
 	
@@ -163,8 +157,8 @@ func reward(reward: Array) -> void:
 	for r in reward:
 		cont.rr[i] = src.resource_reward.instance()
 		cont.rr[i].get_node("HBoxContainer/icon/Sprite").texture = r.icon
-		cont.rr[i].get_node("HBoxContainer/VBoxContainer/type").text = r.text
-		if "amount" in r.other_keys:
+		cont.rr[i].get_node("HBoxContainer/VBoxContainer/type").text = r.description
+		if r.includes_amount:
 			cont.rr[i].get_node("HBoxContainer/VBoxContainer/val").text = r.amount.toString()
 		else:
 			cont.rr[i].get_node("HBoxContainer/VBoxContainer/val").hide()

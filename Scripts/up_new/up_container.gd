@@ -14,17 +14,17 @@ var src := {
 }
 
 var color := {
-	"s1n": Color(0.733333, 0.458824, 0.031373),
-	"s1m": Color(0.878431, 0.121569, 0.34902),
-	"s2n": Color(0.47451, 0.870588, 0.694118),
-	"s2m": Color(1, 0.541176, 0.541176),
-	"s3n": Color(0.25098, 0.470588, 0.992157),
-	"s3m": Color(0.670588, 0.34902, 0.890196),
+	gv.Tab.NORMAL: Color(0.733333, 0.458824, 0.031373),
+	gv.Tab.MALIGNANT: Color(0.878431, 0.121569, 0.34902),
+	gv.Tab.EXTRA_NORMAL: Color(0.47451, 0.870588, 0.694118),
+	gv.Tab.RADIATIVE: Color(1, 0.541176, 0.541176),
+	gv.Tab.RUNED_DIAL: Color(0.25098, 0.470588, 0.992157),
+	gv.Tab.SPIRIT: Color(0.670588, 0.34902, 0.890196),
 }
 
 var cont := {}
 var cont_flying_texts := {}
-var stored_verticals := {"s1n": 0, "s1m": 0, "s2n": 0, "s2m": 0, "s3n": 0, "s3m": 0, "s4n": 0, "s4m": 0}
+var stored_verticals := {gv.Tab.NORMAL: 0, gv.Tab.MALIGNANT: 0, gv.Tab.EXTRA_NORMAL: 0, gv.Tab.RADIATIVE: 0, gv.Tab.RUNED_DIAL: 0, "s3m": 0, "s4n": 0, "s4m": 0}
 
 
 const gn := {
@@ -38,7 +38,9 @@ const gnunowned := "v/header/h/v/options/unowned"
 const gnlocked := "v/header/h/v/options/locked"
 const gnIcon := "v/header/h/icon/Sprite"
 
-const gnreset := "v/reset/b_reset"
+onready var reset = get_node("v/reset/reset")
+onready var reset_b = get_node("v/reset/reset/button")
+onready var reset_t = get_node("v/reset/reset/m/text")
 
 
 
@@ -48,7 +50,7 @@ func _ready():
 	$top.show()
 	
 	for x in get_node("top").get_children():
-		if x.name == "s1n":
+		if x.name == str(gv.Tab.NORMAL):
 			continue
 		x.hide()
 	
@@ -58,15 +60,17 @@ func _ready():
 
 func procedure():
 	
-	while not confirmed and gv.up["PROCEDURE"].active() and visible and gv.open_upgrade_folder == "s1m" and gv.r["malig"].greater_equal(gv.up["ROUTINE"].cost["malig"].t):
+	while not confirmed and gv.up["PROCEDURE"].active() and visible and gv.open_tab == gv.Tab.MALIGNANT:
 		
-		var routine = rt.get_node(rt.gnupcon).cont["ROUTINE"].get_routine_info()[0].toString()
-		
-		get_node(gnreset + "/Label").text = "Metastasize (+" + routine + " Tumors)"
+		if gv.r["malig"].greater_equal(gv.up["ROUTINE"].cost["malig"].t):
+			
+			var routine = rt.get_node(rt.gnupcon).cont["ROUTINE"].get_routine_info()[0].toString()
+			
+			reset_t.text = "Metastasize (+" + routine + " Tumors)"
 		
 		var t = Timer.new()
 		add_child(t)
-		t.start(gv.fps)
+		t.start(1)
 		yield(t, "timeout")
 		t.queue_free()
 	
@@ -83,7 +87,7 @@ func init() -> void:
 	
 	var i = 0
 	var stage = "1"
-	var parent_path = gn.category % ("s" + stage + "n")
+	var parent_path = gn.category % "0"
 	
 	# s1n
 	if true:
@@ -137,7 +141,7 @@ func init() -> void:
 		
 		i = 0
 		stage = "1"
-		parent_path = gn.category % ("s" + stage + "m")
+		parent_path = gn.category % "1"
 		
 		#i += 1
 		instance_block("AUTOSHOVELER", parent_path, "h" + str(i))
@@ -209,7 +213,7 @@ func init() -> void:
 		
 		i = 0
 		stage = "2"
-		parent_path = gn.category % ("s" + stage + "n")
+		parent_path = gn.category % "2"
 		
 		#i += 1
 		instance_block("CANOPY", parent_path, "h" + str(i))
@@ -350,7 +354,7 @@ func init() -> void:
 		
 		i = 0
 		stage = "2"
-		parent_path = gn.category % ("s" + stage + "m")
+		parent_path = gn.category % "3"
 		
 		#i += 1
 		instance_block("MECHANICAL", parent_path, "h" + str(i))
@@ -486,21 +490,23 @@ func init() -> void:
 		
 		i = 0
 		stage = "3"
-		parent_path = gn.category % ("s" + stage + "n")
+		parent_path = gn.category % "4"
 		
 		#i += 1
 		instance_block("Carcinogenesis", parent_path, "h" + str(i))
-#	rint("not yet added to s2m: {")
-#	for x in gv.stats.up_list["s2m"]:
-#		if not x in cont.keys():
-#			rint(gv.up[x].cost["tum"].t.toString(), " - ", x)
-#	rint("}")
 	
 	
 	sync()
 	
 	r_update()
 	
+	
+	var t = Timer.new()
+	add_child(t)
+	t.start(2.5)
+	yield(t, "timeout")
+	t.queue_free()
+
 	procedure()
 
 func instance_block(
@@ -508,8 +514,6 @@ func instance_block(
 		parent_path: String,
 		hbox_name: String
 	):
-	
-	var folder: String = gv.up[upgrade_key].type.split(" ", true, 1)[0]
 	
 	cont[upgrade_key] = src.upgrade_block.instance()
 	
@@ -520,7 +524,7 @@ func instance_block(
 		get_node(parent_path).add_child(cont[hbox_name])
 	
 	cont[hbox_name].add_child(cont[upgrade_key])
-	cont[upgrade_key].setup(upgrade_key, folder)
+	cont[upgrade_key].setup(upgrade_key)
 	yield(cont[upgrade_key], "ready")
 
 
@@ -546,22 +550,22 @@ func get_upgrade_quality(_key) -> Big:
 
 func sync() -> void:
 	
-	get_node("top/s1n/h/count").text = sync_count("s1n")
-	get_node("top/s1m/h/count").text = sync_count("s1m")
-	get_node("top/s2n/h/count").text = sync_count("s2n")
-	get_node("top/s2m/h/count").text = sync_count("s2m")
+	for x in gv.Tab:
+		if gv.Tab[x] == gv.Tab.S1:
+			break
+		get_node("top/" + str(gv.Tab[x]) + "/h/count").text = sync_count(gv.Tab[x])
 
 
-func sync_count(_path: String) -> String:
+func sync_count(_path: int) -> String:
 	
-	var owned :int= gv.stats.upgrades_owned[_path]
-	var total = gv.stats.up_list[_path].size()
+	var owned :int= gv.list.upgrade["owned " + str(_path)].size()
+	var total = gv.list.upgrade[str(_path)].size()
 	
-	if _path == "s1m":
+	if _path == gv.Tab.MALIGNANT:
 		total -= 1
 	
 	if get_node("v").visible:
-		if get_node("v/upgrades/v/" + _path).visible:
+		if get_node("v/upgrades/v/" + str(_path)).visible:
 			get_node(gncount).text = str(owned) + "/" + str(total)
 	
 	return str(owned) + "/" + str(total)
@@ -571,9 +575,9 @@ func sync_count(_path: String) -> String:
 func _on_mouse_exited() -> void:
 	rt.get_node("global_tip")._call("no")
 
-func _on_b_reset_mouse_entered() -> void:
+func _on_reset_mouse_entered() -> void:
 	
-	if gv.open_upgrade_folder == "no":
+	if gv.open_tab == -1:
 		return
 	
 	var reset_name := get_reset_name().to_upper()
@@ -582,15 +586,23 @@ func _on_b_reset_mouse_entered() -> void:
 
 
 var confirmed := false
-func _on_b_reset_pressed() -> void:
+func _on_reset_pressed() -> void:
 	
 	if confirmed:
-		rt.reset(int(gv.open_upgrade_folder[1]))
+		var stage: int
+		match gv.open_tab:
+			gv.Tab.NORMAL, gv.Tab.MALIGNANT:
+				stage = gv.Tab.S1
+			gv.Tab.EXTRA_NORMAL, gv.Tab.RADIATIVE:
+				stage = gv.Tab.S2
+			gv.Tab.RUNED_DIAL, gv.Tab.SPIRIT:
+				stage = gv.Tab.S3
+		rt.reset(stage)
 		confirmed_false()
 		return
 	
 	confirmed = true
-	get_node(gnreset + "/Label").text = "Confirm"
+	reset_t.text = "Confirm"
 	
 	var t = Timer.new()
 	add_child(t)
@@ -607,45 +619,9 @@ func confirmed_false():
 
 
 
-#func r_reset(type: String):
-#
-#	match type:
-#
-#		"finalize":
-#
-#			get_node("v/reset/cancel").hide()
-#			get_node(gnreset).show()
-#			go_back()
-#			hide()
-#
-#		"cancel reset":
-#
-#			get_node("v/reset/cancel").hide()
-#			get_node(gnreset).show()
-#
-#			gv.menuf = "ye"
-#
-#			r_setup_setup()
-#
-#		"resetting":
-#
-#			get_node(gnreset).hide()
-#			get_node("v/reset/cancel").show()
-#
-#		"setup":
-#
-#			if ("ye" in gv.menuf) or ("no" in gv.menuf and gv.open_upgrade_folder[1] == gv.menuf[4]):
-#
-#				r_setup_setup()
-#
-#			else:
-#
-#				get_node("v/reset/cancel/h/finalize").hide()
-#				return
-
 func r_setup_setup():
 	
-	if gv.open_upgrade_folder in ["s1n", "s2n", "s3n", "s4n"]:
+	if not gv.open_tab in [gv.Tab.MALIGNANT, gv.Tab.RADIATIVE, gv.Tab.SPIRIT]:
 		
 		get_node("v/reset").hide()
 		
@@ -661,20 +637,20 @@ func set_gnreset():
 	var mod_color: Color
 	var reset_name := get_reset_name()
 	
-	if gv.open_upgrade_folder == "s1m":
+	if gv.open_tab == gv.Tab.MALIGNANT:
 		mod_color = gv.g["malig"].color
-	elif gv.open_upgrade_folder == "s2m":
+	elif gv.open_tab == gv.Tab.RADIATIVE:
 		mod_color = gv.g["tum"].color
 	
 	get_node("v/reset/bg").self_modulate = mod_color
-	get_node(gnreset + "/Label").self_modulate = mod_color
-	get_node(gnreset + "/Label").text = reset_name
+	reset_b.self_modulate = mod_color
+	reset_t.text = reset_name
 
 func get_reset_name() -> String:
 	
-	if gv.open_upgrade_folder == "s1m":
+	if gv.open_tab == gv.Tab.MALIGNANT:
 		return "Metastasize"
-	if gv.open_upgrade_folder == "s2m":
+	if gv.open_tab == gv.Tab.RADIATIVE:
 		return "Chemotherapy"
 	
 	print_debug("get_reset_name() in up_container.gd should not have been called at this point, pls fix")
@@ -688,10 +664,10 @@ func col_time(node: String) -> void:
 	get_node("top").hide()
 	get_node("v").show()
 	
-	if gv.open_upgrade_folder != "no":
-		stored_verticals[gv.open_upgrade_folder] = get_node("v/upgrades").scroll_vertical
+	if gv.open_tab != -1:
+		stored_verticals[gv.open_tab] = get_node("v/upgrades").scroll_vertical
 	
-	gv.open_upgrade_folder = node
+	gv.open_tab = int(node)
 	
 	for x in get_node("v/upgrades/v").get_children():
 		if x.name == node:
@@ -699,10 +675,11 @@ func col_time(node: String) -> void:
 		else:
 			x.hide()
 	
-	get_node(gnIcon).texture = gv.sprite[gv.open_upgrade_folder]
+	var tex = gv.sprite[str(gv.open_tab)]
+	get_node(gnIcon).texture = tex
 	
-	get_node("v/header/bg").self_modulate = color[node]
-	get_node(gnBack_arrow).self_modulate = color[node]
+	get_node("v/header/bg").self_modulate = color[int(node)]
+	get_node(gnBack_arrow).self_modulate = color[int(node)]
 	
 	get_node(gnTitle_text).text = get_proper_name(node)
 	get_node(gncount).text = get_node("top/" + node + "/h/count").text
@@ -719,16 +696,16 @@ func col_time(node: String) -> void:
 	yield(t, "timeout")
 	t.queue_free()
 	
-	get_node("v/upgrades").scroll_vertical = stored_verticals[node]
+	get_node("v/upgrades").scroll_vertical = stored_verticals[int(node)]
 
 func get_proper_name(path: String) -> String:
 	
-	match path:
-		"s2m":
+	match int(path):
+		gv.Tab.RADIATIVE:
 			return "Radiative"
-		"s2n":
+		gv.Tab.EXTRA_NORMAL:
 			return "Extra-normal"
-		"s1m":
+		gv.Tab.MALIGNANT:
 			return "Malignant"
 		_:
 			return "Normal"
@@ -736,7 +713,7 @@ func get_proper_name(path: String) -> String:
 
 func go_back():
 	
-	if gv.open_upgrade_folder == "no":
+	if gv.open_tab == -1:
 		return
 	
 	clear_tip_n_stuff()
@@ -747,9 +724,9 @@ func go_back():
 		x.hide()
 	get_node("top").show()
 	
-	stored_verticals[gv.open_upgrade_folder] = get_node("v/upgrades").scroll_vertical
+	stored_verticals[gv.open_tab] = get_node("v/upgrades").scroll_vertical
 	
-	gv.open_upgrade_folder = "no"
+	gv.open_tab = -1
 	
 	rect_size.x = 0
 
@@ -785,7 +762,7 @@ func r_update(which := []):
 func upgrade_purchased(key: String, routine := []):
 	
 	# catches
-	if cont[key].folder != gv.open_upgrade_folder:
+	if cont[key].tab != gv.open_tab:
 		return
 	if not visible:
 		return
@@ -833,7 +810,7 @@ func upgrade_purchased(key: String, routine := []):
 		if key == "ROUTINE":
 			_text = "- " + routine[1].toString()
 		
-		cont_flying_texts["(upgrade purchased flying text)" + str(i)].init(false, -50, _text, gv.sprite[x], gv.g[x].color)
+		cont_flying_texts["(upgrade purchased flying text)" + str(i)].init({"text": _text, "icon": gv.sprite[x], "color": gv.g[x].color, "life": 20})
 		
 		if i == 0:
 			cont_flying_texts["(upgrade purchased flying text)" + str(i)].rect_position = Vector2(
@@ -859,7 +836,7 @@ func upgrade_purchased(key: String, routine := []):
 
 func update_folder():
 	
-	for x in get_node("v/upgrades/v/" + gv.open_upgrade_folder + "/v").get_children():
+	for x in get_node("v/upgrades/v/" + str(gv.open_tab) + "/v").get_children():
 		if not x.name in gv.up.keys():
 			continue
 		x.r_update()
@@ -880,15 +857,13 @@ func alert(show: bool, key := ""):
 	if show and key != "":
 		cont[key].alert(show)
 	
-	var folder = gv.up[key].type.split(" ")[0]
+	var folder = str(gv.up[key].tab)
 	get_node("top/" + folder + "/h/alert").visible = show
 
 
 func flash_reset_button():
 	
 	var test = gv.SRC["flash"].instance()
-	get_node(gnreset).add_child(test)
+	reset_t.add_child(test)
 	test.flash()
-
-
 
