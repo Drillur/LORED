@@ -1,0 +1,291 @@
+[gd_scene load_steps=12 format=2]
+
+[ext_resource path="res://Fonts/Roboto-Black.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://Prefabs/Cavern/Unit.gd" type="Script" id=2]
+[ext_resource path="res://Sprites/animations/toba.tres" type="SpriteFrames" id=3]
+
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 0.14902, 0.14902, 0.14902, 1 )
+
+[sub_resource type="StyleBoxFlat" id=2]
+bg_color = Color( 0.411765, 0.411765, 0.411765, 1 )
+
+[sub_resource type="StyleBoxFlat" id=3]
+bg_color = Color( 1, 1, 1, 1 )
+
+[sub_resource type="DynamicFont" id=4]
+size = 13
+outline_size = 1
+outline_color = Color( 0, 0, 0, 1 )
+extra_spacing_top = -10
+extra_spacing_bottom = -1
+font_data = ExtResource( 1 )
+
+[sub_resource type="StyleBoxFlat" id=5]
+bg_color = Color( 0, 0, 0, 0 )
+draw_center = false
+
+[sub_resource type="StyleBoxFlat" id=6]
+bg_color = Color( 1, 1, 1, 0.0313726 )
+
+[sub_resource type="StyleBoxFlat" id=7]
+bg_color = Color( 1, 1, 1, 0.06 )
+
+[sub_resource type="StyleBoxFlat" id=8]
+draw_center = false
+
+[node name="Unit" type="MarginContainer"]
+margin_right = 68.0
+margin_bottom = 82.0
+mouse_filter = 2
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="m" type="MarginContainer" parent="."]
+margin_right = 68.0
+margin_bottom = 82.0
+mouse_filter = 2
+custom_constants/margin_top = 8
+
+[node name="v" type="VBoxContainer" parent="m"]
+margin_top = 8.0
+margin_right = 68.0
+margin_bottom = 82.0
+custom_constants/separation = 0
+
+[node name="resources" type="VBoxContainer" parent="m/v"]
+margin_right = 68.0
+margin_bottom = 10.0
+custom_constants/separation = 0
+
+[node name="m" type="MarginContainer" parent="m/v/resources"]
+margin_right = 68.0
+margin_bottom = 6.0
+
+[node name="v" type="VBoxContainer" parent="m/v/resources/m"]
+margin_right = 68.0
+margin_bottom = 6.0
+rect_min_size = Vector2( 0, 4 )
+custom_constants/separation = 0
+
+[node name="barrier" type="Panel" parent="m/v/resources/m/v"]
+modulate = Color( 1, 0.8, 0, 1 )
+margin_right = 68.0
+margin_bottom = 2.0
+rect_min_size = Vector2( 68, 2 )
+mouse_filter = 2
+size_flags_horizontal = 3
+custom_styles/panel = SubResource( 1 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="current" type="Panel" parent="m/v/resources/m/v/barrier"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+rect_min_size = Vector2( 2, 0 )
+mouse_filter = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+custom_styles/panel = SubResource( 2 )
+__meta__ = {
+"_edit_group_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="flair" type="Panel" parent="m/v/resources/m/v/barrier/current"]
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -2.0
+rect_min_size = Vector2( 2, 0 )
+mouse_filter = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+custom_styles/panel = SubResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="health" type="Panel" parent="m/v/resources/m/v"]
+modulate = Color( 1, 0, 0, 1 )
+margin_top = 2.0
+margin_right = 68.0
+margin_bottom = 6.0
+rect_min_size = Vector2( 68, 2 )
+mouse_filter = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_styles/panel = SubResource( 1 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="current" type="Panel" parent="m/v/resources/m/v/health"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = -47.0
+rect_min_size = Vector2( 2, 0 )
+mouse_filter = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+custom_styles/panel = SubResource( 2 )
+__meta__ = {
+"_edit_group_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="flair" type="Panel" parent="m/v/resources/m/v/health/current"]
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -2.0
+rect_min_size = Vector2( 2, 0 )
+mouse_filter = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+custom_styles/panel = SubResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="text" type="Label" parent="m/v/resources/m"]
+margin_left = 6.0
+margin_right = 61.0
+margin_bottom = 6.0
+rect_min_size = Vector2( 55, 0 )
+size_flags_horizontal = 6
+custom_fonts/font = SubResource( 4 )
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+text = "1,800"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="stamina" type="Panel" parent="m/v/resources"]
+modulate = Color( 0.501961, 1, 0, 1 )
+margin_top = 6.0
+margin_right = 68.0
+margin_bottom = 8.0
+rect_min_size = Vector2( 68, 2 )
+mouse_filter = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_styles/panel = SubResource( 1 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="current" type="Panel" parent="m/v/resources/stamina"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = -22.0
+rect_min_size = Vector2( 2, 0 )
+mouse_filter = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+custom_styles/panel = SubResource( 2 )
+__meta__ = {
+"_edit_group_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="flair" type="Panel" parent="m/v/resources/stamina/current"]
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -2.0
+rect_min_size = Vector2( 2, 0 )
+mouse_filter = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+custom_styles/panel = SubResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="mana" type="Panel" parent="m/v/resources"]
+modulate = Color( 0, 0.709804, 1, 1 )
+margin_top = 8.0
+margin_right = 68.0
+margin_bottom = 10.0
+rect_min_size = Vector2( 68, 2 )
+mouse_filter = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_styles/panel = SubResource( 1 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="current" type="Panel" parent="m/v/resources/mana"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+rect_min_size = Vector2( 2, 0 )
+mouse_filter = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+custom_styles/panel = SubResource( 2 )
+__meta__ = {
+"_edit_group_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="flair" type="Panel" parent="m/v/resources/mana/current"]
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -2.0
+rect_min_size = Vector2( 2, 0 )
+mouse_filter = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+custom_styles/panel = SubResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="anim" type="Panel" parent="m/v"]
+margin_left = 2.0
+margin_top = 10.0
+margin_right = 66.0
+margin_bottom = 74.0
+rect_min_size = Vector2( 64, 64 )
+mouse_filter = 2
+size_flags_horizontal = 4
+custom_styles/panel = SubResource( 5 )
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="m/v/anim"]
+position = Vector2( 32, 32 )
+scale = Vector2( 2, 2 )
+frames = ExtResource( 3 )
+animation = "ff"
+frame = 41
+playing = true
+
+[node name="select" type="Button" parent="."]
+margin_right = 68.0
+margin_bottom = 82.0
+focus_mode = 0
+custom_styles/hover = SubResource( 6 )
+custom_styles/pressed = SubResource( 7 )
+custom_styles/normal = SubResource( 8 )
+
+[node name="barrier" type="Timer" parent="."]
+one_shot = true
+
+[node name="mana" type="Timer" parent="."]
+one_shot = true
+
+[node name="stamina" type="Timer" parent="."]
+one_shot = true
+
+[node name="health" type="Timer" parent="."]
+one_shot = true
+
+[connection signal="pressed" from="select" to="." method="_on_select_pressed"]

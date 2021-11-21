@@ -152,4 +152,9 @@ class Description:
 	
 	func _init(_base: String) -> void:
 		base = _base
+		sync()
+	
+	func sync():
 		f = base
+
+

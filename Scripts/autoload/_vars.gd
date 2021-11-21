@@ -260,6 +260,8 @@ const SRC := {
 	"task entry": preload("res://Prefabs/tooltip/tip_lored_task_entry.tscn"),
 	"upgrade block": preload("res://Prefabs/tooltip/upgrade_block.tscn"),
 	
+	"unit": preload("res://Prefabs/Cavern/Unit.tscn"),
+	
 	"patch version": preload("res://Prefabs/Patch/version.tscn"),
 	"patch entry": preload("res://Prefabs/Patch/entry.tscn"),
 	
@@ -516,19 +518,31 @@ var g := { #DO NOT RE-ARRANGE. ui depends on them being like this
 	"lead" : LORED,
 	"gale" : LORED,
 }
+
+var warlock := Unit.new(Cav.UnitClass.ARCANE_LORED)
+
 var autobuy_speed := 0.25
 var up := {}
 var chains := {}
 
-var color := {
-	Lored.COPPER: Color(1, 0.74, 0.05),
-	Lored.IRON: Color(0.07, 0.89, 1),
-	Lored.COPPER_ORE: Color(0.7, 0.33, 0),
-	Lored.IRON_ORE: Color(0, 0.517647, 0.905882),
-	Lored.STONE: Color(0.79, 0.79, 0.79),
-	Lored.COAL: Color(0.7, 0, 1),
-}
+#var color := {
+#	Lored.COPPER: Color(1, 0.74, 0.05),
+#	Lored.IRON: Color(0.07, 0.89, 1),
+#	Lored.COPPER_ORE: Color(0.7, 0.33, 0),
+#	Lored.IRON_ORE: Color(0, 0.517647, 0.905882),
+#	Lored.STONE: Color(0.79, 0.79, 0.79),
+#	Lored.COAL: Color(0.7, 0, 1),
+#}
 var COLORS := {
+	"fire": Color(1, 0, 0),
+	"frost": Color(0, 0.694118, 1),
+	"air": Color(0.612122, 0.394531, 1),
+	"earth": Color(1, 0.6, 0),
+	"stamina": Color(0.501961, 1, 0),
+	"barrier": Color(1, 0.8, 0),
+	"health": Color(1, 0, 0),
+	"mana": Color(0, 0.709804, 1),
+	"overwhelming power": Color(0.721569, 0.34902, 0.901961), #note too close to air?
 	"grief": Color(0.74902, 0.203922, 0.533333),
 	"joy": Color(1, 0.909804, 0),
 	"ciga": Color(0.929412, 0.584314, 0.298039),
@@ -573,7 +587,6 @@ var COLORS := {
 	"witch": Color(0.937255, 0.501961, 0.776471),
 	
 	"spirit": Color(0.88, .12, .35),
-	"mana": Color(0.721569, 0.352941, 0.905882),
 	
 	"flayed corpse": Color(0.88, .12, .35),
 	"defiled dead": Color(0.88, .12, .35),
@@ -905,9 +918,6 @@ var active_buffs := []
 enum Buff {
 	HEX,
 }
-var spell_materials := {
-	"hex": {"mana": 1, "candle": 3, "orchid root": 1},
-}
 signal buff_spell_cast(spell, target) # LORED.gd -> LORED List.gd
 
 enum Tab { 
@@ -991,3 +1001,120 @@ func highestResetKey() -> String:
 func isStage1Or2LORED(key: String) -> bool:
 	return key in gv.list.lored[gv.Tab.S1] or key in gv.list.lored[gv.Tab.S2]
 
+func setSpellDesc(spell: Spell):
+	
+	var actions = spell.order.size()
+	var i = 0
+	for o in spell.order:
+		
+		match o:
+			
+			Cav.AbilityAction.DEAL_DAMAGE:
+				
+				spell.desc += "deals "
+				
+				var ii = 0
+				for d in spell.damage.types:
+					
+					spell.desc += "{damage" + str(ii) + "}"
+					
+					ii += 1
+					
+					if spell.damage.types == ii:
+						spell.desc += " damage"
+						if ii > 1:
+							spell.desc += " simultaneously"
+					elif spell.damage.types == ii + 1:
+						if spell.damage.types > 2:
+							spell.desc += ", "
+						spell.desc += " and "
+					elif spell.damage.types > ii + 1:
+						spell.desc += ", "
+			
+			Cav.AbilityAction.APPLY_BUFF:
+				var buff: String = Cav.Buff.keys()[spell.applied_buff]
+				spell.desc += "applies {buff:" + buff + "}"
+			
+			Cav.AbilityAction.RESTORE_HEALTH:
+				if spell.is_channeled:
+					spell.desc += "restores {restore_health per sec} health per second"
+				else:
+					spell.desc += "restores {restore_health} health"
+				continue
+			
+			Cav.AbilityAction.RESTORE_MANA:
+				if spell.is_channeled:
+					spell.desc += "restores {restore_mana per sec} mana per second"
+				else:
+					spell.desc += "restores {restore_mana per sec} mana"
+				continue
+			
+			Cav.AbilityAction.RESTORE_HEALTH, Cav.AbilityAction.RESTORE_MANA:
+				if spell.requires_target:
+					spell.desc += " to a target"
+				else:
+					spell.desc += " to the Warlock"
+			
+			Cav.AbilityAction.CONSIDER_SPECIAL_EFFECTS:
+				
+				var buff: String
+				
+				for x in spell.special_req_type.size():
+					
+					match spell.special_action_type[x]:
+						Cav.SpecialEffect.APPLY_BUFF:
+							buff = Cav.Buff.keys()[spell.special_action[x]]
+							spell.desc += "Applies " + "{buff:" + buff + "} "
+						Cav.SpecialEffect.BECOME_SPLASH:
+							buff = Cav.Buff.keys()[spell.special_action[x]]
+							spell.desc += "Becomes splash "
+					
+					match spell.special_req_type[x]:
+						Cav.SpecialEffectRequirement.STACK_LIMIT:
+							buff = Cav.Buff.keys()[spell.special_req[x]]
+							spell.desc += "if the target has 5 stacks of "
+							spell.desc += "{buff:" + buff + "}. "
+		
+		if i == 0:
+			spell.desc[0] = spell.desc[0].to_upper()
+		
+		i += 1
+		
+		if o == Cav.AbilityAction.CONSIDER_SPECIAL_EFFECTS:
+			continue
+		
+		if actions == i:
+			spell.desc += "."
+		elif actions == i + 1:
+			if actions > 2 or spell.deals_damage and spell.damage.types >= 2:
+				spell.desc += ","
+			spell.desc += " and "
+		elif actions -1 > i + 1:
+			spell.desc += ", "
+
+func xIsNearlyY(x: float, y: float) -> bool:
+	return x > y * 0.98 and x < y * 1.02
+
+func getSpellName(type: int) -> String:
+	return Cav.Spell.keys()[type].to_lower().capitalize().replace("_", " ")
+func getBuffName(type: int) -> String:
+	return Cav.Buff.keys()[type].to_lower().capitalize().replace("_", " ")
+
+func damageTypeToStr(type: int) -> String:
+	return Cav.DamageType.keys()[type].to_lower()
+
+func damageTypeToNR(type: int) -> int:
+	
+	# Natural Reaction
+	
+	match type:
+		Cav.DamageType.FIRE:
+			return Cav.Buff.BURNING
+		Cav.DamageType.FROST:
+			return Cav.Buff.CHILLED
+		Cav.DamageType.EARTH:
+			return Cav.Buff.BATTERED
+		Cav.DamageType.AIR:
+			return Cav.Buff.OXIDIZED
+	
+	return 0 # will never return this

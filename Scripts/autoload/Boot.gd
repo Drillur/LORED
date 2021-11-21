@@ -11,6 +11,7 @@ func init():
 	init_loreds()
 	init_menu_and_stats()
 	init_upgrades()
+	init_spells()
 
 func init_loreds():
 
@@ -1722,11 +1723,17 @@ func init_upgrades():
 			gv.up[f].cost["malig"] = Ob.Num.new("25e6")
 			gv.up[f].requires.append("ORE LORD")
 
+func init_spells():
+	
+	for s in Cav.Spell.values():
+		Cav.spell[s] = Spell.new(s)
+
 
 func setup():
 	
 	setup_loreds()
 	setup_upgrades()
+	setup_spells()
 
 func setup_loreds():
 	
@@ -1789,3 +1796,8 @@ func setup_upgrades():
 		if gv.up[x].requires.size() == 0:
 			gv.up[x].unlocked = true
 		gv.up[x].sync()
+
+func setup_spells():
+	
+	for s in Cav.spell:
+		gv.setSpellDesc(Cav.spell[s])

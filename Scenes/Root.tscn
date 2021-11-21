@@ -1,7 +1,8 @@
-[gd_scene load_steps=28 format=2]
+[gd_scene load_steps=29 format=2]
 
 [ext_resource path="res://Scripts/_Root.gd" type="Script" id=1]
 [ext_resource path="res://Scripts/map.gd" type="Script" id=2]
+[ext_resource path="res://Scenes/Cavern.tscn" type="PackedScene" id=4]
 [ext_resource path="res://Scripts/tooltip/tooltip_master.gd" type="Script" id=5]
 [ext_resource path="res://Prefabs/upgrade/upgrade_container.tscn" type="PackedScene" id=6]
 [ext_resource path="res://Prefabs/Limit Break.tscn" type="PackedScene" id=7]
@@ -366,6 +367,7 @@ position = Vector2( 63, 23 )
 rotation = 0.693008
 scale = Vector2( 1.5, 1.5 )
 frames = SubResource( 9 )
+frame = 1
 playing = true
 
 [node name="1" type="Button" parent="misc/tabs/v"]
@@ -546,6 +548,20 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="cavern" parent="." instance=ExtResource( 4 )]
+visible = false
+
+[node name="Button3" type="Button" parent="."]
+margin_left = 9.0
+margin_top = 630.0
+margin_right = 27.0
+margin_bottom = 699.0
+text = "Switch to Cav/Root"
+clip_text = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [connection signal="button_down" from="m/v/top/h/menu_button" to="." method="_on_menu_button_button_down"]
 [connection signal="pressed" from="m/v/top/h/menu_button" to="." method="_on_menu_button_pressed"]
 [connection signal="pressed" from="misc/tabs/v/upgrades" to="." method="_on_upgrades_pressed"]
@@ -554,3 +570,4 @@ __meta__ = {
 [connection signal="pressed" from="misc/tabs/v/3" to="." method="_on_s3_pressed"]
 [connection signal="pressed" from="misc/tabs/v/4" to="." method="_on_s2_pressed"]
 [connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]
+[connection signal="pressed" from="Button3" to="." method="_on_Button2_pressed"]

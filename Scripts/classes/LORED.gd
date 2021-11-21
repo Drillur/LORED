@@ -179,7 +179,7 @@ func populate_emote_pool() -> void:
 			emote_pool.append(Emote.new("can i get some more firewood?", "wood", "i got you, bro!"))
 			emote_pool.append(Emote.new("stay awhile and listen to the fire"))
 			emote_pool.append(Emote.new("mmmf!"))
-			emote_pool.append(Emote.new("Copper Ore, this puppies are amazing!", "copo", "gee, thanks, pal!"))
+			emote_pool.append(Emote.new("Copper Ore, these puppies are amazing!", "copo", "gee, thanks, pal!"))
 		
 		"copo":
 			

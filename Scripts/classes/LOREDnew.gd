@@ -115,7 +115,7 @@ func _init(_type: int):
 	setStageKey()
 	populateEmotePool()
 	setupResourceKeyValue()
-	color = gv.color[type]
+	#color = gv.color[type]
 	borer = input.size() == 0
 	burner = fuel_resource == gv.Lored.COAL
 	key_lored = key in gv.DEFAULT_KEY_LOREDS

@@ -353,12 +353,15 @@ func roundDown():
 		mantissa = stepify(mantissa, 0.0001)
 	return self
 
+func print() -> String:
+	return toString()
+
 func toString() -> String:
 	
 	if exponent < 6:
 		return format_val_hub(toFloat())
 	
-	return toScientific()
+	#return toScientific() #note i commented this line out because why is it here
 	match gv.menu.option["notation_type"]:
 		0:
 			return toEngineering()
@@ -366,6 +369,8 @@ func toString() -> String:
 			return toScientific()
 		2:
 			return toLog()
+	
+	return "oops"
 
 func format_val_hub(value: float) -> String:
 	

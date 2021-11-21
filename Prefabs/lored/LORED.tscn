@@ -299,7 +299,7 @@ position = Vector2( 34, 34 )
 scale = Vector2( 2, 2 )
 frames = ExtResource( 1 )
 animation = "ff"
-frame = 27
+frame = 10
 playing = true
 script = ExtResource( 16 )
 

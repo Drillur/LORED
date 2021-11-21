@@ -1,0 +1,413 @@
+[gd_scene load_steps=14 format=2]
+
+[ext_resource path="res://Prefabs/Cavern/Field.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Scenes/Cavern.gd" type="Script" id=2]
+[ext_resource path="res://Fonts/Roboto-Black.ttf" type="DynamicFontData" id=3]
+[ext_resource path="res://Fonts/Roboto-MediumItalic.ttf" type="DynamicFontData" id=4]
+[ext_resource path="res://Prefabs/Cavern/Hotbar.tscn" type="PackedScene" id=5]
+
+[sub_resource type="StyleBoxFlat" id=7]
+bg_color = Color( 0.14902, 0.14902, 0.14902, 1 )
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.309804, 0.309804, 0.309804, 1 )
+border_blend = true
+
+[sub_resource type="StyleBoxFlat" id=8]
+bg_color = Color( 0.411765, 0.411765, 0.411765, 1 )
+shadow_color = Color( 0, 0, 0, 0.74902 )
+shadow_size = 10
+
+[sub_resource type="StyleBoxFlat" id=3]
+bg_color = Color( 1, 1, 1, 1 )
+
+[sub_resource type="DynamicFont" id=4]
+size = 11
+outline_size = 1
+outline_color = Color( 0, 0, 0, 1 )
+font_data = ExtResource( 4 )
+
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 0.14902, 0.14902, 0.14902, 1 )
+
+[sub_resource type="StyleBoxFlat" id=2]
+bg_color = Color( 0.411765, 0.411765, 0.411765, 1 )
+
+[sub_resource type="DynamicFont" id=5]
+size = 13
+outline_size = 1
+outline_color = Color( 0, 0, 0, 1 )
+font_data = ExtResource( 3 )
+
+[sub_resource type="DynamicFont" id=6]
+size = 17
+outline_size = 1
+outline_color = Color( 0, 0, 0, 1 )
+font_data = ExtResource( 4 )
+
+[node name="Cavern" type="Node2D"]
+script = ExtResource( 2 )
+
+[node name="Field" parent="." instance=ExtResource( 1 )]
+margin_left = 542.0
+margin_top = 121.0
+margin_right = 776.0
+margin_bottom = 375.0
+
+[node name="m" type="MarginContainer" parent="."]
+margin_right = 1280.0
+margin_bottom = 720.0
+mouse_filter = 2
+custom_constants/margin_right = 10
+custom_constants/margin_top = 10
+custom_constants/margin_left = 10
+custom_constants/margin_bottom = 10
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="bot" type="MarginContainer" parent="m"]
+margin_left = 490.0
+margin_top = 530.0
+margin_right = 790.0
+margin_bottom = 710.0
+size_flags_horizontal = 4
+size_flags_vertical = 8
+custom_constants/margin_bottom = 0
+
+[node name="v" type="VBoxContainer" parent="m/bot"]
+margin_right = 300.0
+margin_bottom = 180.0
+custom_constants/separation = 20
+
+[node name="resources" type="VBoxContainer" parent="m/bot/v"]
+margin_right = 300.0
+margin_bottom = 50.0
+size_flags_horizontal = 4
+custom_constants/separation = 6
+
+[node name="op" type="MarginContainer" parent="m/bot/v/resources"]
+margin_right = 300.0
+margin_bottom = 14.0
+custom_constants/margin_top = 0
+custom_constants/margin_bottom = 0
+
+[node name="total" type="Panel" parent="m/bot/v/resources/op"]
+modulate = Color( 0.72, 0.35, 0.9, 1 )
+margin_top = 8.0
+margin_right = 300.0
+margin_bottom = 14.0
+rect_min_size = Vector2( 68, 6 )
+rect_clip_content = true
+mouse_filter = 2
+size_flags_horizontal = 3
+size_flags_vertical = 8
+custom_styles/panel = SubResource( 7 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="current" type="Panel" parent="m/bot/v/resources/op/total"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = -17.0
+rect_min_size = Vector2( 2, 0 )
+mouse_filter = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+custom_styles/panel = SubResource( 8 )
+__meta__ = {
+"_edit_group_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="flair" type="Panel" parent="m/bot/v/resources/op/total/current"]
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -2.0
+rect_min_size = Vector2( 2, 0 )
+mouse_filter = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+custom_styles/panel = SubResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="text" type="Label" parent="m/bot/v/resources/op"]
+margin_left = 122.0
+margin_right = 177.0
+margin_bottom = 14.0
+rect_min_size = Vector2( 55, 0 )
+size_flags_horizontal = 6
+custom_fonts/font = SubResource( 4 )
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+text = "1,800"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="h" type="HBoxContainer" parent="m/bot/v/resources"]
+margin_top = 20.0
+margin_right = 300.0
+margin_bottom = 50.0
+rect_min_size = Vector2( 300, 30 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="stamina" type="MarginContainer" parent="m/bot/v/resources/h"]
+visible = false
+margin_right = 97.0
+margin_bottom = 30.0
+size_flags_horizontal = 3
+
+[node name="total" type="Panel" parent="m/bot/v/resources/h/stamina"]
+modulate = Color( 0.501961, 1, 0, 1 )
+margin_right = 97.0
+margin_bottom = 30.0
+rect_min_size = Vector2( 68, 2 )
+mouse_filter = 2
+size_flags_vertical = 3
+custom_styles/panel = SubResource( 1 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="current" type="Panel" parent="m/bot/v/resources/h/stamina/total"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = -22.0
+rect_min_size = Vector2( 2, 0 )
+mouse_filter = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+custom_styles/panel = SubResource( 2 )
+__meta__ = {
+"_edit_group_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="flair" type="Panel" parent="m/bot/v/resources/h/stamina/total/current"]
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -2.0
+rect_min_size = Vector2( 2, 0 )
+mouse_filter = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+custom_styles/panel = SubResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="text" type="Label" parent="m/bot/v/resources/h/stamina"]
+margin_left = 21.0
+margin_top = 6.0
+margin_right = 76.0
+margin_bottom = 23.0
+rect_min_size = Vector2( 55, 0 )
+size_flags_horizontal = 6
+custom_fonts/font = SubResource( 5 )
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+text = "1,800"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="m" type="MarginContainer" parent="m/bot/v/resources/h"]
+margin_right = 100.0
+margin_bottom = 30.0
+rect_min_size = Vector2( 100, 0 )
+
+[node name="v" type="VBoxContainer" parent="m/bot/v/resources/h/m"]
+margin_right = 100.0
+margin_bottom = 30.0
+rect_min_size = Vector2( 0, 4 )
+custom_constants/separation = 0
+
+[node name="barrier" type="Panel" parent="m/bot/v/resources/h/m/v"]
+modulate = Color( 1, 0.8, 0, 1 )
+margin_right = 100.0
+margin_bottom = 6.0
+rect_min_size = Vector2( 68, 6 )
+mouse_filter = 2
+size_flags_horizontal = 3
+custom_styles/panel = SubResource( 1 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="current" type="Panel" parent="m/bot/v/resources/h/m/v/barrier"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+rect_min_size = Vector2( 2, 0 )
+mouse_filter = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+custom_styles/panel = SubResource( 2 )
+__meta__ = {
+"_edit_group_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="flair" type="Panel" parent="m/bot/v/resources/h/m/v/barrier/current"]
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -2.0
+rect_min_size = Vector2( 2, 0 )
+mouse_filter = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+custom_styles/panel = SubResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="health" type="Panel" parent="m/bot/v/resources/h/m/v"]
+modulate = Color( 1, 0, 0, 1 )
+margin_top = 6.0
+margin_right = 100.0
+margin_bottom = 30.0
+rect_min_size = Vector2( 68, 2 )
+mouse_filter = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_styles/panel = SubResource( 1 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="current" type="Panel" parent="m/bot/v/resources/h/m/v/health"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = -47.0
+rect_min_size = Vector2( 2, 0 )
+mouse_filter = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+custom_styles/panel = SubResource( 2 )
+__meta__ = {
+"_edit_group_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="flair" type="Panel" parent="m/bot/v/resources/h/m/v/health/current"]
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -2.0
+rect_min_size = Vector2( 2, 0 )
+mouse_filter = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+custom_styles/panel = SubResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="text" type="Label" parent="m/bot/v/resources/h/m"]
+margin_left = 22.0
+margin_top = 4.0
+margin_right = 77.0
+margin_bottom = 25.0
+rect_min_size = Vector2( 55, 0 )
+size_flags_horizontal = 6
+custom_fonts/font = SubResource( 6 )
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+text = "1,800"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="mana" type="MarginContainer" parent="m/bot/v/resources/h"]
+margin_left = 104.0
+margin_right = 300.0
+margin_bottom = 30.0
+size_flags_horizontal = 3
+
+[node name="total" type="Panel" parent="m/bot/v/resources/h/mana"]
+modulate = Color( 0, 0.709804, 1, 1 )
+margin_right = 196.0
+margin_bottom = 30.0
+rect_min_size = Vector2( 68, 2 )
+mouse_filter = 2
+size_flags_vertical = 3
+custom_styles/panel = SubResource( 1 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="current" type="Panel" parent="m/bot/v/resources/h/mana/total"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = -21.0
+rect_min_size = Vector2( 2, 0 )
+mouse_filter = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+custom_styles/panel = SubResource( 2 )
+__meta__ = {
+"_edit_group_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="flair" type="Panel" parent="m/bot/v/resources/h/mana/total/current"]
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -2.0
+rect_min_size = Vector2( 2, 0 )
+mouse_filter = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+custom_styles/panel = SubResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="text" type="Label" parent="m/bot/v/resources/h/mana"]
+margin_left = 70.0
+margin_top = 4.0
+margin_right = 125.0
+margin_bottom = 25.0
+rect_min_size = Vector2( 55, 0 )
+size_flags_horizontal = 6
+custom_fonts/font = SubResource( 6 )
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+text = "1,800"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="hotbar" parent="m/bot/v" instance=ExtResource( 5 )]
+margin_left = 17.0
+margin_top = 70.0
+margin_right = 283.0
+margin_bottom = 180.0
+
+[node name="Button" type="Button" parent="."]
+margin_right = 90.0
+margin_bottom = 43.0
+text = "set arcane lored"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]

@@ -37,6 +37,8 @@ const gnLB = "m/v/top/h/r/Limit Break"
 const gnupcon = "m/up_container"
 const gnalert = "misc/tabs/v/upgrades/alert"
 
+onready var cav = get_node("cavern")
+
 var task_awaiting := "no"
 
 var patched := false # true if in save.data the version is < current version
@@ -141,6 +143,8 @@ func game_start(successful_load: bool) -> void:
 		
 		# map
 		$map.init()
+		
+		cav.setup()
 	
 	# hax
 	if true:
@@ -1211,6 +1215,21 @@ func b_move_map(x, y):
 	$map.status = "no"
 	$map.set_global_position(Vector2(x, y))
 
+func hideAllButCavern():
+	$map.hide()
+	$m.hide()
+	$misc.hide()
+	$WishAnchor.hide()
+	$texts.hide()
+	cav.show()
+
+func showAllButCavern():
+	cav.hide()
+	$map.show()
+	$m.show()
+	$misc.show()
+	$WishAnchor.show()
+	$texts.show()
 
 func unlock_tab(tab: int, add := true):
 	
@@ -1318,6 +1337,9 @@ func e_save(type := "normal", path := SAVE.MAIN):
 	# loreds
 	save.data["LOREDs"] = get_node(gnLOREDs).saveLOREDs()
 	
+	# cavern
+	save.data["cavern"] = get_node("cavern").save()
+	
 	# fin & misc
 	if true:
 		
@@ -1396,6 +1418,9 @@ func e_load(path := SAVE.MAIN) -> bool:
 		gv.loadResources(str2var(save.data["resources"]))
 	load_upgrades(save.data, keys)
 	load_loreds(save.data, save.game_version, keys)
+	
+	if "cavern" in keys:
+		get_node("cavern").load(save.data["cavern"])
 	
 	if "wish data" in keys:
 		taq._load(save.data["wish data"])
@@ -1667,16 +1692,44 @@ func load_loreds(data: Dictionary, game_version: String, keys: Array):
 
 
 
+var cc = Unit.new(Cav.UnitClass.CORE_CRYSTAL)
+var wisp = Unit.new(Cav.UnitClass.WISP)
+var arc = Unit.new(Cav.UnitClass.ARCANE_LORED)
+
 func _on_Button_pressed() -> void:
+	$Unit.setUnit(arc)
+	$Unit2.setUnit(wisp)
+	var t = Timer.new()
+	add_child(t)
 	
-	print(taq.random_wishes)
-	
-	for x in taq.wish:
-		print(x.giver)
+	while true:
+		
+		t.start(0.1)
+		yield(t, "timeout")
+		
+		$Label.text = cc.damage_dealt.print() + "\n" 
+		
+		$Label2.text = "mana: " + gv.warlock.mana.print() + "\n" + "hp: " + gv.warlock.health.print()
+		
+		$targetbuffs.text = var2str(cc.buffs.keys())
 	
 	pass
 
-
-
+func _on_Button2_pressed() -> void:
+	
+#	gv.warlock.cast(Cav.Spell.SCORCH, wisp)
+#
+#	var data := {}
+#
+#	data["haste"] = gv.warlock.getHaste()
+#	data["damage multiplier"] = gv.warlock.getDamageMultiplier()
+#
+#
+#	$Label3.bbcode_text = Cav.spell[Cav.Spell.SCORCH].getDesc(gv.warlock) + "\n" + Buff.new(0,data).getDesc() + "\n" + Buff.new(Cav.Buff.BURNING,data).getDesc()
+	
+	if $cavern.visible:
+		showAllButCavern()
+	else:
+		hideAllButCavern()
 
 
