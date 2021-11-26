@@ -7,12 +7,12 @@
 
 [sub_resource type="StyleBoxFlat" id=1]
 bg_color = Color( 0.101563, 0.101563, 0.101563, 1 )
+draw_center = false
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
-border_color = Color( 0, 0, 0, 1 )
-border_blend = true
+border_color = Color( 1, 1, 1, 1 )
 
 [sub_resource type="StyleBoxFlat" id=2]
 bg_color = Color( 0.101563, 0.101563, 0.101563, 1 )
@@ -22,20 +22,20 @@ draw_center = false
 
 [sub_resource type="StyleBoxFlat" id=4]
 draw_center = false
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color( 1, 1, 1, 0.25 )
 
-[sub_resource type="StyleBoxFlat" id=10]
-draw_center = false
-
-[sub_resource type="DynamicFont" id=6]
+[sub_resource type="DynamicFont" id=5]
 size = 15
 outline_size = 1
 outline_color = Color( 0, 0, 0, 1 )
 font_data = ExtResource( 4 )
+
+[sub_resource type="StyleBoxFlat" id=6]
+draw_center = false
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color( 0, 0, 0, 1 )
 
 [sub_resource type="StyleBoxFlat" id=7]
 bg_color = Color( 1, 1, 1, 0.0313726 )
@@ -55,6 +55,7 @@ __meta__ = {
 }
 
 [node name="bg" type="Panel" parent="."]
+modulate = Color( 1, 1, 1, 0.35 )
 margin_right = 50.0
 margin_bottom = 50.0
 custom_styles/panel = SubResource( 1 )
@@ -90,6 +91,32 @@ position = Vector2( 24, 24 )
 scale = Vector2( 1.5, 1.5 )
 texture = ExtResource( 1 )
 
+[node name="hotkey" type="Panel" parent="."]
+margin_left = 49.0
+margin_top = 49.0
+margin_right = 50.0
+margin_bottom = 50.0
+rect_min_size = Vector2( 1, 1 )
+rect_pivot_offset = Vector2( -157, -61 )
+size_flags_horizontal = 8
+size_flags_vertical = 8
+custom_styles/panel = SubResource( 4 )
+
+[node name="text" type="Label" parent="hotkey"]
+margin_left = -37.0
+margin_top = -17.0
+margin_right = -3.0
+margin_bottom = 1.0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 5 )
+text = "A"
+align = 2
+valign = 2
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="cooldown" type="MarginContainer" parent="."]
 visible = false
 margin_right = 50.0
@@ -101,7 +128,7 @@ size_flags_vertical = 4
 [node name="bg" type="Panel" parent="cooldown"]
 margin_right = 50.0
 margin_bottom = 50.0
-custom_styles/panel = SubResource( 4 )
+custom_styles/panel = SubResource( 6 )
 
 [node name="bar" type="TextureProgress" parent="cooldown"]
 margin_left = 1.0
@@ -111,11 +138,13 @@ margin_bottom = 49.0
 size_flags_horizontal = 4
 size_flags_vertical = 4
 step = 0.1
-value = 20.0
+value = 98.0
 texture_under = ExtResource( 2 )
+texture_over = ExtResource( 2 )
 texture_progress = ExtResource( 2 )
 fill_mode = 5
 tint_under = Color( 1, 1, 1, 0 )
+tint_over = Color( 0, 0, 0, 0.2 )
 tint_progress = Color( 0, 0, 0, 0.7 )
 
 [node name="flair" type="TextureProgress" parent="cooldown/bar"]
@@ -125,38 +154,12 @@ margin_bottom = 32.0
 size_flags_horizontal = 4
 size_flags_vertical = 4
 step = 0.1
-value = 21.0
+value = 100.0
 texture_under = ExtResource( 2 )
 texture_progress = ExtResource( 2 )
 fill_mode = 5
 tint_under = Color( 1, 1, 1, 0 )
-tint_progress = Color( 1, 1, 1, 0.25098 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="hotkey" type="Panel" parent="."]
-margin_left = 49.0
-margin_top = 49.0
-margin_right = 50.0
-margin_bottom = 50.0
-rect_min_size = Vector2( 1, 1 )
-rect_pivot_offset = Vector2( -157, -61 )
-size_flags_horizontal = 8
-size_flags_vertical = 8
-custom_styles/panel = SubResource( 10 )
-
-[node name="text" type="Label" parent="hotkey"]
-margin_left = -37.0
-margin_top = -17.0
-margin_right = -3.0
-margin_bottom = 1.0
-custom_fonts/font = SubResource( 6 )
-custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-text = "A"
-align = 2
-valign = 2
-autowrap = true
+tint_progress = Color( 1, 1, 1, 0.25 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -173,3 +176,4 @@ custom_styles/normal = SubResource( 9 )
 [connection signal="value_changed" from="cooldown/bar" to="." method="_on_bar_value_changed"]
 [connection signal="mouse_entered" from="select" to="." method="_on_select_mouse_entered"]
 [connection signal="mouse_exited" from="select" to="." method="_on_select_mouse_exited"]
+[connection signal="pressed" from="select" to="." method="_on_select_pressed"]

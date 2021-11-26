@@ -4,12 +4,12 @@
 [ext_resource path="res://Prefabs/Cavern/Hotbar.gd" type="Script" id=2]
 
 [sub_resource type="StyleBoxFlat" id=1]
-bg_color = Color( 0.0196078, 0.133333, 0.156863, 1 )
+bg_color = Color( 1, 1, 1, 0.054902 )
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
-border_color = Color( 0.101961, 0.101961, 0.101961, 1 )
+border_color = Color( 0, 0, 0, 0.0313726 )
 border_blend = true
 
 [node name="Hotbar" type="MarginContainer"]
@@ -23,23 +23,23 @@ __meta__ = {
 }
 
 [node name="bg" type="Panel" parent="."]
-margin_right = 1070.0
-margin_bottom = 110.0
+margin_right = 270.0
+margin_bottom = 114.0
 custom_styles/panel = SubResource( 1 )
 
 [node name="m" type="MarginContainer" parent="."]
-margin_right = 1070.0
-margin_bottom = 110.0
-custom_constants/margin_right = 4
-custom_constants/margin_top = 4
-custom_constants/margin_left = 4
-custom_constants/margin_bottom = 4
+margin_right = 270.0
+margin_bottom = 114.0
+custom_constants/margin_right = 6
+custom_constants/margin_top = 6
+custom_constants/margin_left = 6
+custom_constants/margin_bottom = 6
 
 [node name="g" type="GridContainer" parent="m"]
-margin_left = 4.0
-margin_top = 4.0
-margin_right = 1066.0
-margin_bottom = 106.0
+margin_left = 6.0
+margin_top = 6.0
+margin_right = 264.0
+margin_bottom = 108.0
 custom_constants/vseparation = 10
 custom_constants/hseparation = 10
 columns = 4

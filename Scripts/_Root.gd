@@ -206,6 +206,10 @@ func _input(ev):
 	if ev.is_class("InputEventMouseMotion"):
 		return
 	
+	if cav.visible:
+		cav.input(ev)
+		return
+	
 	if ev.is_action_pressed("ui_cancel"):
 		b_tabkey(KEY_ESCAPE)
 		return
@@ -304,6 +308,9 @@ func _notification(ev):
 	
 	elif ev == MainLoop.NOTIFICATION_WM_FOCUS_OUT:
 		last_clock = OS.get_unix_time()
+
+
+
 
 func _on_menu_button_button_down():
 	$map.status = "no"

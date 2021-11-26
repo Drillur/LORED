@@ -92,6 +92,8 @@ var spells := {
 	"3/9": -1,
 }
 
+var spell_paths := {} # ex: -1: ["0/0", "2/3"]
+
 
 
 
@@ -145,6 +147,23 @@ func setSpells():
 	for x in spells:
 		setSpell(x, spells[x])
 
-func setSpell(path: String, spell_type: int):
-	get_node("m/g/" + path).setSpell(spell_type)
+func setSpell(path: String, spell: int):
 	
+	get_node("m/g/" + path).setSpell(spell)
+	
+	if spell == -1:
+		return
+	
+	if not spell in spell_paths:
+		spell_paths[spell] = []
+	
+	spell_paths[spell].append(path)
+
+func spellCast(spell: int, duration: float):
+	
+	if not spell in spell_paths:
+		return
+	
+	for x in spell_paths[spell]:
+		
+		get_node("m/g/" + x).startTimer(duration)

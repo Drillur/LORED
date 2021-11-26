@@ -35,9 +35,13 @@ class UnitResource:
 	var base: Big setget setBase # base
 	var total: Big # total after upgrades/buffs
 	
-	var vc: Panel
-	var vc_set := false
+	var bar: Panel
+	var bar_set := false
+	var text: Label
+	var text_set := false
 	
+	var has_regen := false
+	var base_regen: Big
 	var regen: Big
 	var regen_rate := 0.1
 	var regen_rest := 0 # time before regen kicks in
@@ -69,6 +73,11 @@ class UnitResource:
 		base = new_val
 		sync()
 	
+	func setBaseRegen(x):
+		base_regen = Big.new(x)
+		setRegen(x)
+		has_regen = true
+	
 	func setRegen(x):
 		regen = Big.new(x)
 	
@@ -78,23 +87,37 @@ class UnitResource:
 	func setCurrent(new_val: Big):
 		current = new_val
 		restrictCurrent()
-		updateVC()
+		update()
 	
-	func setVC(_vc: Panel):
-		vc = _vc
-		vc_set = true
+	func setBar(_bar: Panel):
+		bar = _bar
+		bar_set = true
 	
-	func updateVC():
-		if not vc_set:
+	func setText(_text: Label):
+		text = _text
+		text_set = true
+	
+	func update():
+		updateBar()
+		updateText()
+	
+	func updateBar():
+		if not bar_set:
 			return
-		vc.get_node("current").rect_size.x = current.percent(total) * vc.rect_size.x
+		bar.get_node("current").rect_size.x = min(current.percent(total) * bar.rect_size.x, bar.rect_size.x)
+	
+	func updateText():
+		if not text_set:
+			return
+		text.text = self.print()
 	
 	func sync():
 		
-		# first, set total to base first
+		# first, set total to base
+		# then adjust total
+		
 		total = Big.new(base)
 		
-		# then, begin modifying total
 		total.a(a)
 		total.a(add_from_intellect)
 		
@@ -125,6 +148,8 @@ class UnitAttribute:
 	var a := Big.new(0)
 	var m := Big.new()
 	
+	var m_from_intellect := Big.new(1)
+	
 	var base: Big setget setBase # base
 	var total: Big # total after upgrades/buffs
 	
@@ -132,8 +157,8 @@ class UnitAttribute:
 		base = Big.new(_base)
 		sync()
 	
-	func print() -> String:
-		match print_mode:
+	func print(mode = print_mode) -> String:
+		match mode:
 			Cav.PrintMode.TOTAL:
 				return total.toString()
 			Cav.PrintMode.BASE_AND_TOTAL:
@@ -154,6 +179,8 @@ class UnitAttribute:
 		total.a(a)
 		
 		total.m(m)
+		
+		total.m(m_from_intellect)
 	
 	func report():
 		
@@ -201,11 +228,10 @@ class Cooldown:
 	
 	var available := true
 	
-	var remaining: float
-	
 	var base: float setget setBase
 	
 	var s: float
+	var m_from_haste := 1.0
 	
 	var total: float
 	
@@ -219,17 +245,15 @@ class Cooldown:
 	func sync():
 		total = base
 		total -= s
+		total *= m_from_haste
 	
-	func process(delta):
-		remaining -= delta
-		if remaining <= 0:
-			setAvailable() 
+	func isAvailable() -> bool:
+		return available
 	
 	func setAvailable():
 		available = true
 	
 	func spellCast():
-		remaining = total
 		available = false
 
 class Damage:
@@ -324,6 +348,7 @@ enum UnitClass {
 
 enum Spell {
 	ARCANE_FOCUS,
+	CORE_RIFT,
 	
 	SCORCH,
 	EXPLODE,
@@ -341,6 +366,8 @@ enum Spell {
 }
 
 enum Buff {
+	RIFT,
+	
 	SCORCHING,
 	BURNING,
 	CHILLED,

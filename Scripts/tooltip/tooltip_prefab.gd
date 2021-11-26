@@ -46,6 +46,13 @@ func _call(source : String, other: Dictionary) -> void:
 			
 			lored_buy_lored(f)
 		
+		elif "spell tooltip" == type:
+			
+			cont[type] = gv.SRC["tooltip/spell"].instance()
+			cont[type].init(other["spell"], other["caster"])
+			add_child(cont[type])
+			$bg.modulate = other["color"]
+		
 		elif "wish tooltip" == type:
 			
 			cont[type] = gv.SRC["tooltip/wish"].instance()
@@ -228,6 +235,15 @@ func r_tip(move_tip := false) -> void:
 				rect_position.y = win.y - rect_size.y - rt.get_node("m/v/bot").rect_size.y - 10
 			
 			return
+		
+		elif "spell tooltip" == type:
+			
+			var resources_pos: Vector2 = rt.cav.get_node("m/bot/v/resources").rect_global_position
+			
+			rect_position = Vector2(
+				get_global_mouse_position().x - (rect_size.x / 2),
+				resources_pos.y - rect_size.y - 10
+			)
 		
 		elif "wish tooltip" == type:
 			

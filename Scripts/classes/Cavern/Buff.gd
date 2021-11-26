@@ -20,6 +20,7 @@ var target_damage_dealt_multiplier := -1.0
 var duration_is_extended_by_damage := false
 var duration_extended_by_damage_of_type := -1
 
+
 var debuffed := false
 
 
@@ -37,6 +38,8 @@ func _init(_type: int, data: Dictionary).(_type):
 	duration_is_extended_by_damage = duration_extended_by_damage_of_type >= 0
 	
 	assumeOrder()
+	
+	sync(data)
 	
 	setDesc()
 
@@ -66,6 +69,18 @@ func construct_OXIDIZED():
 	base_stack_limit = 5
 	triggers_nr = false
 
+
+
+
+func construct_RIFT():
+	
+	restore_mana = Cav.UnitAttribute.new(1)
+	base_max_ticks = 6
+	base_tick_rate = 1
+
+
+
+
 func construct_SCORCHING():
 	
 	damage = Cav.Damage.new(Cav.DamagePreset.LIGHT, Cav.DamageType.FIRE)
@@ -93,7 +108,9 @@ func construct_FANNED_FLAME():
 
 
 
-
+func sync(data: Dictionary):
+	restore_mana.m_from_intellect = data["intellect"]
+	restore_mana.sync()
 
 
 
@@ -122,6 +139,8 @@ func assumeOrder():
 	
 	if deals_damage:
 		bla.append(Cav.AbilityAction.DEAL_DAMAGE)
+	if restores_mana:
+		bla.append(Cav.AbilityAction.RESTORE_MANA)
 	
 	setOrder(bla)
 
@@ -190,7 +209,10 @@ func setDesc():
 		if max_ticks == 1:
 			desc += " after "
 		else:
-			desc += " every "
+			if tick_rate != 1:
+				desc += " every "
+			else:
+				desc += " per "
 		
 		if tick_rate != 1:
 			desc += str(tick_rate) + " "
@@ -198,6 +220,27 @@ func setDesc():
 		
 		if max_ticks > 1:
 			desc += " " + str(max_ticks) + " ticks."
+	
+	
+	if restores_mana:
+		
+		desc += "restores {restore_mana}"
+		
+		if max_ticks == 1:
+			desc += " after "
+		else:
+			if tick_rate != 1:
+				desc += " every "
+			else:
+				desc += " per "
+		
+		if tick_rate != 1:
+			desc += str(tick_rate) + " "
+		desc += "sec for "
+		
+		
+		if max_ticks > 1:
+			desc += str(max_ticks * tick_rate) + " seconds."
 	
 	
 	if stack_limit > 1:
@@ -209,11 +252,35 @@ func setDesc():
 	desc[0] = desc[0].to_upper()
 	
 	if damage != null:
-		desc = getDesc_sharedQualities(desc, damage.dmg)
+		desc = getDesc_damage(desc, damage.dmg)
+	desc = getDesc_other(desc)
 
 func getDesc() -> String:
+	
+	desc = desc.format({"restore_mana": restore_mana.total.toString() + " Mana"})
+	
 	return desc
 
+
+func getBorderColor() -> Color:
+	
+#	if restores_health:
+#		return gv.COLORS["health"]
+	if restores_mana:
+		return gv.COLORS["mana"]
+	return Color(1,1,1)
+
+func getIcon() -> Texture:
+	return gv.buff_sprite[type]
+
+func getDuration() -> float:
+	return tick_rate * max_ticks
+
+func getDumbDuration() -> float:
+	return tick_rate * max_ticks - 1
+
+func getRestoreMana() -> Big:
+	return restore_mana.total
 
 
 

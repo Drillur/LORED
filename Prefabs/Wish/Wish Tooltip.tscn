@@ -138,19 +138,19 @@ texture = ExtResource( 11 )
 
 [node name="Label" type="RichTextLabel" parent="m/v/dialogue/h"]
 margin_left = 68.0
-margin_top = 8.0
+margin_top = 24.0
 margin_right = 163.0
-margin_bottom = 56.0
+margin_bottom = 40.0
 rect_min_size = Vector2( 95, 0 )
 mouse_filter = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/italics_font = SubResource( 3 )
 custom_fonts/normal_font = SubResource( 4 )
-custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 bbcode_enabled = true
 bbcode_text = "Test!"
-text = "This seems like a decent minimum size to me, yo."
+text = "Test!"
 fit_content_height = true
 scroll_active = false
 __meta__ = {
@@ -193,8 +193,8 @@ margin_bottom = 19.0
 [node name="amount" type="Label" parent="m/v/rewards/h/v/r1/h"]
 margin_right = 14.0
 margin_bottom = 15.0
-custom_fonts/font = SubResource( 6 )
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 6 )
 text = "+1"
 
 [node name="icon" type="Panel" parent="m/v/rewards/h/v/r1/h"]
@@ -213,8 +213,8 @@ texture = ExtResource( 7 )
 margin_left = 38.0
 margin_right = 63.0
 margin_bottom = 15.0
-custom_fonts/font = SubResource( 6 )
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 6 )
 text = "Coal"
 
 [node name="r2" type="MarginContainer" parent="m/v/rewards/h/v"]
@@ -236,8 +236,8 @@ margin_bottom = 19.0
 [node name="amount" type="Label" parent="m/v/rewards/h/v/r2/h"]
 margin_right = 28.0
 margin_bottom = 15.0
-custom_fonts/font = SubResource( 6 )
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 6 )
 text = "+900"
 
 [node name="icon" type="Panel" parent="m/v/rewards/h/v/r2/h"]
@@ -256,8 +256,8 @@ texture = ExtResource( 5 )
 margin_left = 52.0
 margin_right = 116.0
 margin_bottom = 15.0
-custom_fonts/font = SubResource( 6 )
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 6 )
 text = "Malignancy"
 
 [node name="newcomer" type="MarginContainer" parent="m/v/rewards/h/v"]
@@ -279,8 +279,8 @@ margin_bottom = 19.0
 [node name="flair" type="Label" parent="m/v/rewards/h/v/newcomer/h"]
 margin_right = 66.0
 margin_bottom = 15.0
-custom_fonts/font = SubResource( 6 )
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 6 )
 text = "Newcomers!"
 
 [node name="h" type="HBoxContainer" parent="m/v/rewards/h/v/newcomer/h"]
@@ -369,8 +369,8 @@ texture = ExtResource( 9 )
 margin_left = 20.0
 margin_right = 204.0
 margin_bottom = 15.0
-custom_fonts/font = SubResource( 6 )
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 6 )
 text = "Normal Upgrade menu - Hotkey: Q"
 
 [node name="max_random_wishes" type="MarginContainer" parent="m/v/rewards/h/v"]
@@ -391,24 +391,24 @@ margin_bottom = 18.0
 [node name="amount" type="Label" parent="m/v/rewards/h/v/max_random_wishes/h"]
 margin_right = 14.0
 margin_bottom = 15.0
-custom_fonts/font = SubResource( 6 )
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 6 )
 text = "+3"
 
 [node name="flair" type="Label" parent="m/v/rewards/h/v/max_random_wishes/h"]
 margin_left = 18.0
 margin_right = 123.0
 margin_bottom = 15.0
-custom_fonts/font = SubResource( 6 )
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 6 )
 text = "Random Wish Limit"
 
 [node name="current" type="Label" parent="m/v/rewards/h/v/max_random_wishes/h"]
 margin_left = 127.0
 margin_right = 188.0
 margin_bottom = 15.0
-custom_fonts/font = SubResource( 6 )
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 6 )
 text = "(Current: 0)"
 
 [node name="stage tab" type="MarginContainer" parent="m/v/rewards/h/v"]
@@ -429,8 +429,8 @@ margin_bottom = 19.0
 [node name="flair" type="Label" parent="m/v/rewards/h/v/stage tab/h"]
 margin_right = 52.0
 margin_bottom = 15.0
-custom_fonts/font = SubResource( 6 )
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 6 )
 text = "Spread to"
 
 [node name="icon" type="Panel" parent="m/v/rewards/h/v/stage tab/h"]
@@ -449,8 +449,8 @@ texture = ExtResource( 9 )
 margin_left = 76.0
 margin_right = 116.0
 margin_bottom = 15.0
-custom_fonts/font = SubResource( 8 )
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 8 )
 text = "Stage 2"
 
 [node name="random" type="MarginContainer" parent="m/v"]
@@ -490,8 +490,8 @@ margin_bottom = 15.0
 [node name="flair" type="Label" parent="m/v/random/v/m/v"]
 margin_right = 163.0
 margin_bottom = 13.0
-custom_fonts/font = SubResource( 11 )
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 11 )
 text = "Right-click to deny Wish"
 align = 1
 
@@ -507,8 +507,8 @@ margin_left = 114.0
 margin_top = 8.0
 margin_right = 128.0
 margin_bottom = 23.0
-custom_fonts/font = SubResource( 6 )
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 6 )
 text = "+1"
 
 [node name="icon" type="Panel" parent="m/v/random/v/m/v/h"]
@@ -529,6 +529,6 @@ margin_left = 168.0
 margin_top = 8.0
 margin_right = 193.0
 margin_bottom = 23.0
-custom_fonts/font = SubResource( 6 )
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 6 )
 text = "Grief"

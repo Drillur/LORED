@@ -23,11 +23,13 @@ custom_constants/hseparation = 8
 columns = 2
 
 [node name="Unit" parent="m/GridContainer" instance=ExtResource( 1 )]
+margin_right = 64.0
 
 [node name="Unit3" parent="m/GridContainer" instance=ExtResource( 1 )]
-margin_left = 76.0
-margin_right = 144.0
+margin_left = 72.0
+margin_right = 136.0
 
 [node name="Unit2" parent="m/GridContainer" instance=ExtResource( 1 )]
-margin_top = 90.0
-margin_bottom = 172.0
+margin_top = 92.0
+margin_right = 64.0
+margin_bottom = 176.0

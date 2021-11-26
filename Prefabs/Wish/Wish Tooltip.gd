@@ -6,7 +6,7 @@ var wish: Wish
 
 onready var dialogue   = get_node("m/v/dialogue/h/Label")
 onready var rewards    = get_node("m/v/rewards")
-onready var count      = get_node("m/v/obj/v/m/h/count")
+#onready var count      = get_node("m/v/obj/v/m/h/count")
 onready var expression = get_node("m/v/dialogue/h/expression/Sprite")
 
 

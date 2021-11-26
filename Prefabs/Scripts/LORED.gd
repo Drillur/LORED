@@ -32,7 +32,6 @@ var gn_buy = 0
 var gn_task_text = 0
 var gn_item_name = 0
 var gn_autobuywheel = 0
-onready var wish = get_node("v/Wish")
 onready var autobuywheel = get_node("v/m/v/interactables/lored/h/buy/h/autobuy/as")
 onready var fuel = get_node("v/m/v/fuel")
 onready var fuel_bar = get_node("v/m/v/fuel/bar")
@@ -764,9 +763,6 @@ func r_buy_modulate():
 		t.queue_free()
 
 func set_buy_modulate():
-	
-	var BAD := Color(1, 0, 0)
-	var GOOD := Color(0.6, 1, 0)
 	
 	match lored.cost_check():
 		true:

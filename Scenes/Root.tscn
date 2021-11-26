@@ -172,8 +172,8 @@ __meta__ = {
 [node name="Label" type="Label" parent="m/v/top/h/menu_button"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-custom_fonts/font = SubResource( 5 )
 custom_colors/font_color = Color( 1, 0, 0.631373, 0.301961 )
+custom_fonts/font = SubResource( 5 )
 text = "="
 align = 1
 valign = 1
@@ -389,8 +389,8 @@ texture = ExtResource( 14 )
 [node name="Label" type="Label" parent="misc/tabs/v/1"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-custom_fonts/font = SubResource( 10 )
 custom_colors/font_color = Color( 0.804688, 0.804688, 0.804688, 1 )
+custom_fonts/font = SubResource( 10 )
 text = "1"
 align = 1
 valign = 1
@@ -418,8 +418,8 @@ texture = ExtResource( 15 )
 [node name="Label" type="Label" parent="misc/tabs/v/2"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-custom_fonts/font = SubResource( 10 )
 custom_colors/font_color = Color( 0.804688, 0.804688, 0.804688, 1 )
+custom_fonts/font = SubResource( 10 )
 text = "2"
 align = 1
 valign = 1
@@ -447,8 +447,8 @@ texture = ExtResource( 18 )
 [node name="Label" type="Label" parent="misc/tabs/v/3"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-custom_fonts/font = SubResource( 10 )
 custom_colors/font_color = Color( 0.804688, 0.804688, 0.804688, 1 )
+custom_fonts/font = SubResource( 10 )
 text = "3"
 align = 1
 valign = 1
@@ -474,8 +474,8 @@ texture = ExtResource( 18 )
 [node name="Label" type="Label" parent="misc/tabs/v/4"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-custom_fonts/font = SubResource( 10 )
 custom_colors/font_color = Color( 0.804688, 0.804688, 0.804688, 1 )
+custom_fonts/font = SubResource( 10 )
 text = "2"
 align = 1
 valign = 1
@@ -536,6 +536,9 @@ size_flags_horizontal = 3
 
 [node name="texts" type="Node2D" parent="."]
 
+[node name="cavern" parent="." instance=ExtResource( 4 )]
+visible = false
+
 [node name="global_tip" type="Node2D" parent="."]
 script = ExtResource( 5 )
 
@@ -548,14 +551,11 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="cavern" parent="." instance=ExtResource( 4 )]
-visible = false
-
 [node name="Button3" type="Button" parent="."]
 margin_left = 9.0
-margin_top = 630.0
+margin_top = 72.0
 margin_right = 27.0
-margin_bottom = 699.0
+margin_bottom = 141.0
 text = "Switch to Cav/Root"
 clip_text = true
 __meta__ = {

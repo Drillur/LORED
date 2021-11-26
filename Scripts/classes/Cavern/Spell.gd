@@ -12,6 +12,9 @@ var mana_cost: Cav.UnitAttribute
 var costs_stamina := false
 var stamina_cost: Cav.UnitAttribute
 
+var costs_health := false
+var health_cost: Cav.UnitAttribute
+
 var has_cast_time := false
 var cast_time: float
 
@@ -24,8 +27,6 @@ var applied_buff := -1
 
 var restores_health := false
 var restore_health: Cav.UnitAttribute
-var restores_mana := false
-var restore_mana: Cav.UnitAttribute
 
 var has_special_effects := false
 
@@ -51,8 +52,8 @@ func _init(_type: int).(_type):
 	has_cd = cd != null
 	costs_mana = mana_cost != null
 	costs_stamina = stamina_cost != null
+	costs_health = health_cost != null
 	restores_health = restore_health != null
-	restores_mana = restore_mana != null
 	has_cast_time = cast_time > 0
 	applies_buff = applied_buff >= 0
 	is_channeled = channel_duration > 0
@@ -63,14 +64,30 @@ func _init(_type: int).(_type):
 	
 	assumeOrder()
 
+
+
+
 func construct_ARCANE_FOCUS():
 	
 	channel_duration = 10.0
 	channel_tick_rate = 0.1
 	
-	restore_mana = Cav.UnitAttribute.new(0.1)
+	restore_mana = Cav.UnitAttribute.new(0.01)
 	
 	requires_target = false
+
+func construct_CORE_RIFT():
+	
+	mana_cost = Cav.UnitAttribute.new(0.1)
+	
+	applied_buff = Cav.Buff.RIFT
+	
+	requires_target = false
+
+
+
+
+
 
 func construct_SCORCH():
 	
@@ -202,7 +219,7 @@ func refreshDesc():
 
 func canCast(caster: Unit) -> bool:
 	if has_cd:
-		if cd.remaining > 0:
+		if not cd.isAvailable():
 			return false
 	if costs_mana:
 		if caster.mana.current.less(mana_cost.total):
@@ -236,10 +253,7 @@ func channelTick(caster: Unit, target: Unit):
 
 func cast(caster: Unit, target: Unit) -> void:
 	
-	if has_cast_time:
-		sm.cast(caster, target, self)
-	else:
-		castFin(caster, target)
+	sm.cast(caster,target,self)
 
 func castFin(caster: Unit, target: Unit):
 	
@@ -276,6 +290,9 @@ func castFin(caster: Unit, target: Unit):
 
 
 
+func getIcon() -> Texture:
+	return gv.spell_sprite[type]
+
 func getDamage(caster: Unit) -> Array:
 	
 	# an array of Bigs equal to damage.dmg * caster's dmg multiplier
@@ -295,8 +312,14 @@ func getHealthRestore(caster: Unit) -> Big:
 func getManaRestore(caster: Unit) -> Big:
 	return Big.new(restore_mana.total).m(caster.getIntellect())
 
+func getManaCost(caster: Unit) -> Big:
+	return mana_cost.total
+func getStaminaCost(caster: Unit) -> Big:
+	return stamina_cost.total
 func getCastTime(caster: Unit) -> float:
 	return cast_time / caster.getHaste()
+func getCooldown(caster: Unit) -> float:
+	return cd.total
 func getChannelDuration(caster: Unit) -> float:
 	return channel_duration / caster.getHaste()
 func getChannelTickRate(caster: Unit) -> float:
@@ -307,18 +330,21 @@ func getDesc(caster: Unit) -> String:
 	
 	var text := desc
 	
-	text = getDesc_sharedQualities(text, getDamage(caster))
+	if deals_damage:
+		text = getDesc_damage(text, getDamage(caster))
+	text = getDesc_other(text)
 	
 	if "{restore_health per sec}" in text:
 		var health_per_sec = Big.new(1 / getChannelTickRate(caster)).m(getHealthRestore(caster))
-		text.format({"restore_health per sec": health_per_sec.toString()})
+		text = text.format({"restore_health per sec":  "[color=#" + gv.COLORS["health"].to_html() + "]" + health_per_sec.toString() + " Health[/color]"})
 	if "{restore_health}" in text:
-		text.format({"restore_health": getHealthRestore(caster).toString()})
+		text = text.format({"restore_health": "[color=#" + gv.COLORS["health"].to_html() + "]" + getHealthRestore(caster).toString() + " Health[/color]"})
 	
 	if "{restore_mana per sec}" in text:
-		var mana_per_sec = Big.new(1 / getChannelTickRate(caster)).m(getManaRestore(caster))
-		text.format({"restore_mana per sec": mana_per_sec.toString()})
+		var mana_per_sec = Big.new(1 / getChannelTickRate(caster)).m(getManaRestore(caster)).toString()
+		var color = "[color=#" + gv.COLORS["mana"].to_html() + "]"
+		text = text.format({"restore_mana per sec": color + mana_per_sec + " Mana[/color]"})
 	if "{restore_mana}" in text:
-		text.format({"restore_mana": getManaRestore(caster).toString()})
+		text = text.format({"restore_mana": "[color=#" + gv.COLORS["mana"].to_html() + "]" + getManaRestore(caster).toString() + " Mana[/color]"})
 	
 	return text

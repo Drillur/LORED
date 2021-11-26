@@ -267,8 +267,11 @@ const SRC := {
 	
 	"price": preload("res://Prefabs/tooltip/price.tscn"),
 	
+	"cavern/buff": preload("res://Prefabs/Cavern/Buff.tscn"),
+	
 	"tooltip/LORED": preload("res://Prefabs/tooltip/LORED.tscn"),
 	"tooltip/autobuyer": preload("res://Prefabs/tooltip/AutobuyerTooltip.tscn"),
+	"tooltip/spell": preload("res://Prefabs/Cavern/SpellTooltip.tscn"),
 	"tooltip/upgrade": preload("res://Prefabs/tooltip/Upgrade Tooltip.tscn"),
 	"tooltip/wish": preload("res://Prefabs/Wish/Wish Tooltip.tscn"),
 	
@@ -350,6 +353,20 @@ const LIMIT_BREAK_COLORS := {
 	14: Color(0, 1, 0),
 }
 
+var spell_sprite := {
+	
+	Cav.Spell.ARCANE_FOCUS: preload("res://Sprites/resources/axe.png"),
+	Cav.Spell.CORE_RIFT: preload("res://Sprites/resources/water.png"),
+	
+}
+
+var buff_sprite := {
+	
+	Cav.Buff.RIFT: preload("res://Sprites/resources/water.png"),
+	Cav.Buff.SCORCHING: preload("res://Sprites/resources/axe.png"),
+	
+}
+
 var sprite := {
 	
 	"joy": preload("res://Sprites/resources/Joy.png"),
@@ -357,7 +374,6 @@ var sprite := {
 	
 	"angry": preload("res://Sprites/reactions/Angry.png"),
 	"test": preload("res://Sprites/reactions/Test.png"),
-	
 	
 	"mana" : preload("res://Sprites/upgrades/thewitchofloredelith.png"),
 	"embryo" : preload("res://Sprites/resources/carc.png"),
@@ -871,6 +887,7 @@ var r := {
 	"grief": Big.new(0),
 	"embryo": Big.new(0),
 	"spirit": Big.new(0),
+	"mana": Big.new(0),
 }
 var r_name := {
 	"grief": "Grief",
@@ -878,6 +895,7 @@ var r_name := {
 	"spirit": "Spirit",
 	#"blood": "Blood",
 	"embryo": "Embryo",
+	"r": "Mana",
 }
 var resource := {}
 
@@ -1044,9 +1062,9 @@ func setSpellDesc(spell: Spell):
 			
 			Cav.AbilityAction.RESTORE_MANA:
 				if spell.is_channeled:
-					spell.desc += "restores {restore_mana per sec} mana per second"
+					spell.desc += "restores {restore_mana per sec} per second"
 				else:
-					spell.desc += "restores {restore_mana per sec} mana"
+					spell.desc += "restores {restore_mana}"
 				continue
 			
 			Cav.AbilityAction.RESTORE_HEALTH, Cav.AbilityAction.RESTORE_MANA:
@@ -1118,3 +1136,24 @@ func damageTypeToNR(type: int) -> int:
 			return Cav.Buff.OXIDIZED
 	
 	return 0 # will never return this
+
+var target: Unit
+signal new_gcd(duration) # Unit.gd -> SpellButton.gd
+
+signal mana_restored(amount, surplus) # Unit.gd -> Scenes/Cavern.gd
+signal buff_applied(data) # Unit.gd -> Scenes/Cavern.gd
+signal buff_renewed(buff_type, duration) # Unit.gd -> Scenes/Cavern.gd
+
+func getSpellBorderColor(spell: int) -> Color:
+	
+	if Cav.spell[spell].costs_health:
+		return gv.COLORS["health"]
+	if Cav.spell[spell].costs_mana:
+		return gv.COLORS["mana"]
+	if Cav.spell[spell].costs_stamina:
+		return gv.COLORS["stamina"]
+	if Cav.spell[spell].restores_health:
+		return gv.COLORS["health"]
+	if Cav.spell[spell].restores_mana:
+		return gv.COLORS["mana"]
+	return Color(1,1,1)

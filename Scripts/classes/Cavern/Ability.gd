@@ -8,14 +8,15 @@ var type: int
 var name: String
 var desc := ""
 
-var icon_key: String
-
 var bbcode_name := ""
 
 var order: Array
 
 var deals_damage := false
 var damage: Cav.Damage
+
+var restores_mana := false
+var restore_mana: Cav.UnitAttribute
 
 var triggers_nr := true
 
@@ -27,6 +28,7 @@ func _init(_type: int):
 func constructFin():
 	
 	deals_damage = damage != null
+	restores_mana = restore_mana != null
 	
 	assumeBbcodeName()
 
@@ -43,7 +45,7 @@ func setBbcodeName(_bbcode_name: String):
 func setOrder(_order: Array):
 	order = _order
 
-func getDesc_sharedQualities(text: String, dmg_array: Array) -> String:
+func getDesc_damage(text: String, dmg_array: Array) -> String:
 	
 	# can be used by both Buff and Spell
 	
@@ -52,6 +54,10 @@ func getDesc_sharedQualities(text: String, dmg_array: Array) -> String:
 		var dmg_type = gv.damageTypeToStr(damage.type[x])
 		var color = "[color=#" + gv.COLORS[dmg_type].to_html() + "]"
 		text = text.format({"damage" + str(x): color + dmg + " " + dmg_type + "[/color]"})
+	
+	return text
+
+func getDesc_other(text: String) -> String:
 	
 	while "{buff:" in text:
 		var key = text.split("buff:")[1].split("}")[0]
@@ -64,7 +70,4 @@ func getDesc_sharedQualities(text: String, dmg_array: Array) -> String:
 		text = text.format({"culmination:" + key: culmination_name})
 	
 	return text
-
-func getIcon() -> Texture:
-	return gv.sprite[icon_key]
 

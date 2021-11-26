@@ -15,7 +15,10 @@ func init(data: Dictionary = {}):
 	
 	text = data["text"]
 	self_modulate = data["color"]
-	get_node("icon").texture = data["icon"]
+	if "icon" in data.keys():
+		get_node("icon").texture = data["icon"]
+	else:
+		get_node("icon").hide()
 	
 	var dkeys = data.keys()
 	
