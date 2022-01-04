@@ -8,6 +8,8 @@ const SAVE := {
 	OLD = "user://last_save.lored"
 }
 
+
+
 const prefab := {
 	"dtext": preload("res://Prefabs/dtext.tscn"),
 	"confirmation popup": preload("res://Prefabs/lored_buy.tscn"),
@@ -97,6 +99,8 @@ func game_start(successful_load: bool) -> void:
 	
 	# work
 	if true:
+		
+		Cav.cav = cav
 		
 		# upgrades
 		if true:

@@ -231,25 +231,7 @@ func canCast(caster: Unit) -> bool:
 
 func channelTick(caster: Unit, target: Unit):
 	
-	for o in order:
-		match o:
-			Cav.AbilityAction.CONSIDER_SPECIAL_EFFECTS:
-				for i in special_req_type.size():
-					match special_req_type[i]:
-						Cav.SpecialEffectRequirement.STACK_LIMIT:
-							if special_req[i] in target.buffs.keys():
-								if target.buffs[special_req[i]].isAtStackLimit():
-									match special_action_type[i]:
-										Cav.SpecialEffect.BECOME_SPLASH:
-											splash = true
-										Cav.SpecialEffect.APPLY_BUFF:
-											bm.applyBuff(special_action[i], caster, target)
-			Cav.AbilityAction.DEAL_DAMAGE:
-				target.takeDamage(getDamage(caster), damage.type, triggers_nr)
-			Cav.AbilityAction.APPLY_BUFF:
-				bm.applyBuff(applied_buff, caster, target)
-			Cav.AbilityAction.RESTORE_MANA:
-				target.takeManaRestoration(getManaRestore(caster))
+	processOrder(caster, target)
 
 func cast(caster: Unit, target: Unit) -> void:
 	
@@ -268,6 +250,10 @@ func castFin(caster: Unit, target: Unit):
 	if has_cd:
 		cd.spellCast()
 	
+	processOrder(caster, target)
+
+func processOrder(caster: Unit, target: Unit):
+	
 	for o in order:
 		match o:
 			Cav.AbilityAction.CONSIDER_SPECIAL_EFFECTS:
@@ -280,11 +266,11 @@ func castFin(caster: Unit, target: Unit):
 										Cav.SpecialEffect.BECOME_SPLASH:
 											splash = true
 										Cav.SpecialEffect.APPLY_BUFF:
-											bm.applyBuff(special_action[i], caster, target)
+											bm.spellCast(caster, target, special_action[i])
 			Cav.AbilityAction.DEAL_DAMAGE:
 				target.takeDamage(getDamage(caster), damage.type, triggers_nr)
 			Cav.AbilityAction.APPLY_BUFF:
-				bm.applyBuff(applied_buff, caster, target)
+				bm.spellCast(caster, target, applied_buff)
 			Cav.AbilityAction.RESTORE_MANA:
 				target.takeManaRestoration(getManaRestore(caster))
 

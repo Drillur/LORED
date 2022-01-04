@@ -42,7 +42,7 @@ __meta__ = {
 }
 
 [node name="bg" type="Panel" parent="."]
-modulate = Color( 1, 1, 1, 0.35 )
+modulate = Color( 1, 1, 1, 0 )
 margin_right = 34.0
 margin_bottom = 34.0
 custom_styles/panel = SubResource( 1 )
@@ -96,27 +96,26 @@ margin_bottom = 32.0
 size_flags_horizontal = 4
 size_flags_vertical = 4
 step = 0.1
-value = 10.0
+value = 90.0
 texture_under = ExtResource( 2 )
 texture_progress = ExtResource( 2 )
 fill_mode = 4
 tint_under = Color( 1, 1, 1, 0 )
-tint_over = Color( 0, 0, 0, 0.2 )
-tint_progress = Color( 0, 0, 0, 0.701961 )
+tint_over = Color( 0.683594, 0.678253, 0.678253, 1 )
+tint_progress = Color( 1, 1, 1, 0.4 )
 
 [node name="flair" type="TextureProgress" parent="cooldown/bar"]
-show_behind_parent = true
 margin_right = 32.0
 margin_bottom = 32.0
 size_flags_horizontal = 4
 size_flags_vertical = 4
 step = 0.1
-value = 9.0
+value = 80.0
 texture_under = ExtResource( 2 )
 texture_progress = ExtResource( 2 )
 fill_mode = 4
-tint_under = Color( 1, 1, 1, 0 )
-tint_progress = Color( 1, 1, 1, 0.25 )
+tint_under = Color( 0, 0, 0, 0 )
+tint_progress = Color( 0, 0, 0, 0.77 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -147,5 +146,3 @@ autowrap = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
-
-[connection signal="value_changed" from="cooldown/bar" to="." method="_on_bar_value_changed"]

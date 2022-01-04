@@ -94,6 +94,8 @@ var spells := {
 
 var spell_paths := {} # ex: -1: ["0/0", "2/3"]
 
+var spell_queue: Array
+
 
 
 
@@ -157,13 +159,33 @@ func setSpell(path: String, spell: int):
 	if not spell in spell_paths:
 		spell_paths[spell] = []
 	
+	spells[path] = spell
+	
 	spell_paths[spell].append(path)
 
-func spellCast(spell: int, duration: float):
+func spellCast(spell: int, cooldown: float):
 	
 	if not spell in spell_paths:
 		return
 	
 	for x in spell_paths[spell]:
 		
-		get_node("m/g/" + x).startTimer(duration)
+		get_node("m/g/" + x).startTimer(cooldown)
+
+
+func queueCast(spell: int, target: Unit):
+	spell_queue = [spell, target]
+
+
+func input(ev, target = gv.warlock):
+	
+	if ev.is_action_pressed("1"):
+		if spells[hotkeys["1"]] != -1:
+			gv.warlock.cast(spells[hotkeys["1"]], target)
+		return
+	
+	if ev.is_action_pressed("2"):
+		if spells[hotkeys["2"]] != -1:
+			gv.warlock.cast(spells[hotkeys["2"]], target)
+		return
+

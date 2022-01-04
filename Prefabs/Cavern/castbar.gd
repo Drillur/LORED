@@ -9,15 +9,18 @@ onready var current_bar = get_node("m/total/current")
 onready var total_bar = get_node("m/total")
 
 var cast_time: float
-var i: float
 
 var running := false
 
 var timer: Timer
+var fps_timer: Timer
 
 func _ready():
 	timer = Timer.new()
+	timer.one_shot = true
+	fps_timer = Timer.new()
 	add_child(timer)
+	add_child(fps_timer)
 
 func cast(_spell: int):
 	
@@ -30,8 +33,6 @@ func cast(_spell: int):
 	
 	total_text.text = fval.f(cast_time)
 	
-	i = 0.0
-	
 	if not running:
 		update()
 	
@@ -40,15 +41,15 @@ func cast(_spell: int):
 func update():
 	
 	running = true
+	timer.start(cast_time)
 	
-	while gv.warlock.casting or gv.warlock.channeling and i < cast_time:
+	while gv.warlock.casting or gv.warlock.channeling and timer.time_left > 0:
 		
-		current_text.text = fval.f(i)
-		current_bar.rect_size.x = min(i / cast_time * total_bar.rect_size.x, total_bar.rect_size.x)
-		timer.start(gv.fps)
-		yield(timer, "timeout")
+		current_text.text = fval.f(cast_time - timer.time_left)
+		current_bar.rect_size.x = min((cast_time - timer.time_left) / cast_time * total_bar.rect_size.x, total_bar.rect_size.x)
 		
-		i += gv.fps
+		fps_timer.start(gv.fps)
+		yield(fps_timer, "timeout")
 	
 	running = false
 	

@@ -30,7 +30,7 @@ _global_script_classes=[ {
 "path": "res://Scripts/Managers/Cavern/BuffManager.gd"
 }, {
 "base": "Node",
-"class": "CavrnEnums",
+"class": "CavernEnums",
 "language": "GDScript",
 "path": "res://Scripts/classes/Cavern/Cavern.gd"
 }, {
@@ -154,7 +154,7 @@ _global_script_class_icons={
 "Big": "",
 "Buff": "",
 "BuffManager": "",
-"CavrnEnums": "",
+"CavernEnums": "",
 "Effect": "",
 "Emote": "",
 "FPS": "",

@@ -598,7 +598,18 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="Button2" type="Button" parent="."]
+margin_left = 1157.0
+margin_top = 663.0
+margin_right = 1272.0
+margin_bottom = 706.0
+text = "reset stage 3"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="mana_text" type="Timer" parent="."]
 one_shot = true
 
 [connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]
+[connection signal="pressed" from="Button2" to="." method="_on_Button2_pressed"]

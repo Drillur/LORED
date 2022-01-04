@@ -1141,8 +1141,7 @@ var target: Unit
 signal new_gcd(duration) # Unit.gd -> SpellButton.gd
 
 signal mana_restored(amount, surplus) # Unit.gd -> Scenes/Cavern.gd
-signal buff_applied(data) # Unit.gd -> Scenes/Cavern.gd
-signal buff_renewed(buff_type, duration) # Unit.gd -> Scenes/Cavern.gd
+signal buff_applied(target, data) # Unit.gd -> Scenes/Cavern.gd
 
 func getSpellBorderColor(spell: int) -> Color:
 	

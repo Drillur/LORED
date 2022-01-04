@@ -50,6 +50,7 @@ func _call(source : String, other: Dictionary) -> void:
 			
 			cont[type] = gv.SRC["tooltip/spell"].instance()
 			cont[type].init(other["spell"], other["caster"])
+			cont[type].get_node("bg").self_modulate = other["color"]
 			add_child(cont[type])
 			$bg.modulate = other["color"]
 		

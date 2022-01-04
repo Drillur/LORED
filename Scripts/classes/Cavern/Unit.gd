@@ -13,7 +13,7 @@ var desc: String
 
 var level: Big
 
-var gcd := Cav.Cooldown.new(1.5)
+var gcd: Cav.Cooldown = Cav.Cooldown.new(1.5)
 var new_cast := false
 
 var channeling := false
@@ -38,7 +38,7 @@ var outgoing_damage_multiplier := 1.0
 var damage_dealt: Big # used by Core Crystal unit
 
 
-var buffs := {}
+var active_buffs := {}
 
 var nat_types: Array # current active natural reaction damage type
 var nat_buffs: Array
@@ -148,6 +148,8 @@ func sync():
 	if type == Cav.UnitClass.CORE_CRYSTAL:
 		return
 	
+	intellect.sync()
+	
 	mana.add_from_intellect = Big.new(intellect.total)
 	mana.sync()
 	
@@ -204,21 +206,21 @@ func stopCast():
 	channeling = false
 
 
-func takeBuff(_buff: Buff):
-	
-	buffs[_buff.type] = _buff
-	
-	if _buff.affects_target_damage_dealt:
-		outgoing_damage_multiplier *= _buff.target_damage_dealt_multiplier
-	
-	if self == gv.warlock:
-		gv.emit_signal("buff_applied", _buff)
+#func takeBuff(_buff: Buff):
+#
+#	buffs[_buff.type] = _buff
+#
+#	if _buff.affects_target_damage_dealt: #note outgoing dmg mult no longer works
+#		outgoing_damage_multiplier *= _buff.target_damage_dealt_multiplier
+#
+#	if self == gv.warlock:
+#		gv.emit_signal("buff_applied", _buff)
 
 func takeHealing(val: Big):
 	health.current = Big.new(health.current).a(val)
 
-func takeManaRestoration(val: Big):
-	
+func takeManaRestoration(_val: Big):
+	var val = Big.new(_val)
 	if self == gv.warlock:
 		if true: #note1 replace with bool that shows player has unlocked the Arcane Recall passive
 			if Big.new(val).a(mana.current).greater(mana.total):
@@ -242,8 +244,8 @@ func takeDamage(vals: Array, types: Array, triggers_nr := true):
 	if self == gv.warlock:
 		triggers_nr = false
 	
-	if triggers_nr:
-		react_naturally(types)
+#	if triggers_nr:
+#		react_naturally(types)
 	
 	interpretIncomingDamage(vals, types)
 	
@@ -282,30 +284,30 @@ func getMergedValues(vals: Array) -> Big:
 func barrierPresent() -> bool:
 	return barrier.current.greater(0)
 
-func react_naturally(types: Array):
-	
-	# apply new buffs
-	for t in types:
-		bm.applyBuff(gv.damageTypeToNR(t), gv.warlock, self)
-	
-	return
-	# remove old buffs, clear trackers
-	for b in nat_types.size():
-		nat_buffs[b].debuff()
-	nat_types.clear()
-	nat_buffs.clear()
-	
-	# set up trackers
-	for t in types:
-		nat_types.append(t)
-		nat_buffs.append(buffs[gv.damageTypeToNR(t)])
-	
-	if nat_types.size() == 0:
-		
-		return
-	return
-	var nr := []
-	var culm := []
+#func react_naturally(types: Array):
+#
+#	# apply new buffs
+#	for t in types:
+#		bm.spellCast(gv.warlock, self, gv.damageTypeToNR(t))
+#
+#	return
+#	# remove old buffs, clear trackers
+#	for b in nat_types.size():
+#		nat_buffs[b].debuff()
+#	nat_types.clear()
+#	nat_buffs.clear()
+#
+#	# set up trackers
+#	for t in types:
+#		nat_types.append(t)
+#		nat_buffs.append(buffs[gv.damageTypeToNR(t)])
+#
+#	if nat_types.size() == 0:
+#
+#		return
+#	return
+#	var nr := []
+#	var culm := []
 	
 	# first, increase stacks of active NR buffs
 	# store 
@@ -331,14 +333,19 @@ func culminate(types: Array):
 
 
 
+func saveBuffReference(buff: Buff):
+	active_buffs[buff.type] = buff
+
+func deleteBuffReference(buff_type: int):
+	active_buffs.erase(buff_type)
+
+
 func loseBuff(_buff: Buff):
 	
 	if _buff.affects_target_damage_dealt:
 		outgoing_damage_multiplier /= _buff.target_damage_dealt_multiplier
 		if gv.xIsNearlyY(outgoing_damage_multiplier, 1.0):
 			outgoing_damage_multiplier = 1.0
-	
-	buffs.erase(_buff.type)
 
 
 
@@ -374,6 +381,10 @@ func cast(_spell: int, target: Unit):
 
 
 
+
+func clearBuffs():
+	for b in active_buffs:
+		active_buffs[b].stop()
 
 func die():
 	

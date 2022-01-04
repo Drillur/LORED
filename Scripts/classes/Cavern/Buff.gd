@@ -20,8 +20,10 @@ var target_damage_dealt_multiplier := -1.0
 var duration_is_extended_by_damage := false
 var duration_extended_by_damage_of_type := -1
 
-
+var stopped := false
 var debuffed := false
+
+var vico: MarginContainer
 
 
 func _init(_type: int, data: Dictionary).(_type):
@@ -72,6 +74,8 @@ func construct_OXIDIZED():
 
 
 
+# Arcane LORED buffs
+
 func construct_RIFT():
 	
 	restore_mana = Cav.UnitAttribute.new(1)
@@ -111,6 +115,27 @@ func construct_FANNED_FLAME():
 func sync(data: Dictionary):
 	restore_mana.m_from_intellect = data["intellect"]
 	restore_mana.sync()
+
+
+
+
+
+
+
+
+
+
+
+func saveVicoReference(_vico: MarginContainer):
+	vico = _vico
+
+func clearVicoReference():
+	vico = null
+
+
+
+
+
 
 
 
@@ -273,11 +298,8 @@ func getBorderColor() -> Color:
 func getIcon() -> Texture:
 	return gv.buff_sprite[type]
 
-func getDuration() -> float:
-	return tick_rate * max_ticks
-
-func getDumbDuration() -> float:
-	return tick_rate * max_ticks - 1
+func getMaxTicks() -> int:
+	return max_ticks
 
 func getRestoreMana() -> Big:
 	return restore_mana.total
@@ -292,7 +314,12 @@ func isAtStackLimit() -> bool:
 
 
 
-func refresh():
+func refresh(data: Dictionary):
+	setViaData(data)
+	setViaData(data)
+	sync(data)
+
+func resetTicks():
 	max_ticks = base_max_ticks + 1
 	ticks = max_ticks
 
@@ -308,7 +335,7 @@ func debuff():
 
 func increaseStacks(x: int):
 	
-	if stacks == stack_limit:
+	if isAtStackLimit():
 		return
 	
 	if stacks > 1:
@@ -324,8 +351,15 @@ func increaseStacks(x: int):
 	
 	if stacks > stack_limit:
 		stacks = stack_limit
+		print_debug("this code should never have seen the light of the console you sick freakin loser")
 
 func increaseTicks(x: int):
 	ticks += x
 	max_ticks += x
+
+
+
+func stop():
+	stopped = true
+	vico.clear()
 

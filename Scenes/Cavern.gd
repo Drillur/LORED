@@ -90,6 +90,11 @@ func input(ev):
 		if gv.warlock.casting or gv.warlock.channeling:
 			castbar.cancelCast()
 			return
+	
+	if ev.is_class("InputEventMouseButton"):
+		return
+	
+	hotbar.input(ev)
 
 
 
@@ -151,13 +156,15 @@ func displayManaText(text: String):
 
 func buffRenewed(buff: int, duration: float):
 	
-	buffs[buff].updateDuration(duration)
+	buffs[buff].updateDuration(duration) #note2trying to make buffs throbBorder() when cast
 
-func buffApplied(data: Dictionary):
+func buffApplied(target: Unit, data: Dictionary):
+	#zBuffApplied
+	buffs[[target, data["type"]]] = gv.SRC["cavern/buff"].instance()
+	buffs[[target, data["type"]]].init(data)
+	gn_buffs.add_child(buffs[[target, data["type"]]])
 	
-	buffs[data["type"]] = gv.SRC["cavern/buff"].instance()
-	buffs[data["type"]].init(data)
-	gn_buffs.add_child(buffs[data["type"]])
+	bm.createBuffVicoReference(target, data["type"], buffs[[target, data["type"]]])
 
 func buffExpired(buff: int):
 	buffs.erase(buff)
@@ -167,3 +174,19 @@ func _on_Button_pressed() -> void:
 	setupUnit()
 	hotbar.setSpell("0/5", Cav.Spell.ARCANE_FOCUS)
 	hotbar.setSpell("0/6", Cav.Spell.CORE_RIFT)
+
+
+func _on_Button2_pressed() -> void:
+	Cav.reset(3)
+
+
+
+
+
+
+func reset(tier: int):
+	
+	gv.warlock.clearBuffs()
+	gv.warlock = Unit.new(Cav.UnitClass.ARCANE_LORED)
+	setupUnit()
+

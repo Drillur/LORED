@@ -1,4 +1,4 @@
-class_name CavrnEnums # aka Cav
+class_name CavernEnums # aka Cav
 extends Node
 
 
@@ -16,6 +16,8 @@ var spell := {}
 var buff := {}
 
 var warlock_unlocked := false
+
+var cav: Node2D
 
 
 
@@ -400,3 +402,9 @@ enum SpecialEffect { # see: # special effects
 enum SpecialEffectRequirement {
 	STACK_LIMIT,
 }
+
+
+
+func reset(tier := 3):
+	
+	cav.reset(tier)
