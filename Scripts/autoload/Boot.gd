@@ -102,6 +102,7 @@ func init_menu_and_stats():
 	gv.menu.option["color blind"] = false
 	gv.menu.option["deaf"] = false
 	gv.menu.option["patch alert"] = true
+	gv.menu.option["tutorial alert"] = true
 	
 	# stats
 	
@@ -113,7 +114,6 @@ func init_menu_and_stats():
 			break
 	
 	for x in gv.g:
-		print(x)
 		gv.list.lored[gv.g[x].stage_key].append(x)
 
 func init_upgrades():

@@ -165,13 +165,18 @@ shadow_color = Color( 0.0784314, 0.0784314, 0.0784314, 0.54902 )
 shadow_size = 3
 anti_aliasing = false
 
+[sub_resource type="DynamicFont" id=20]
+size = 12
+outline_color = Color( 0, 0, 0, 1 )
+font_data = ExtResource( 13 )
+
 [sub_resource type="StyleBoxFlat" id=17]
 bg_color = Color( 0.423529, 0.423529, 0.423529, 1 )
 corner_radius_top_left = 4
 corner_radius_top_right = 4
 corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
-shadow_color = Color( 0.117188, 0.117188, 0.117188, 0.54902 )
+shadow_color = Color( 0.117647, 0.117647, 0.117647, 0.54902 )
 shadow_size = 4
 anti_aliasing = false
 
@@ -194,11 +199,6 @@ corner_radius_bottom_left = 4
 shadow_color = Color( 0.078125, 0.078125, 0.078125, 0.54902 )
 shadow_size = 4
 anti_aliasing = false
-
-[sub_resource type="DynamicFont" id=20]
-size = 12
-outline_color = Color( 0, 0, 0, 1 )
-font_data = ExtResource( 13 )
 
 [sub_resource type="StyleBoxFlat" id=21]
 bg_color = Color( 0.180392, 0.180392, 0.180392, 1 )
@@ -299,7 +299,7 @@ position = Vector2( 34, 34 )
 scale = Vector2( 2, 2 )
 frames = ExtResource( 1 )
 animation = "ff"
-frame = 10
+frame = 4
 playing = true
 script = ExtResource( 16 )
 
@@ -432,8 +432,8 @@ anchor_bottom = 1.0
 margin_left = 5.0
 margin_right = -5.00002
 rect_min_size = Vector2( 68, 0 )
-custom_fonts/font = SubResource( 11 )
 custom_constants/line_spacing = -1
+custom_fonts/font = SubResource( 11 )
 text = "You're super duper freaking cute"
 valign = 1
 autowrap = true
@@ -547,10 +547,10 @@ rect_min_size = Vector2( 33, 32 )
 focus_mode = 0
 mouse_default_cursor_shape = 2
 size_flags_vertical = 4
+custom_fonts/font = ExtResource( 12 )
 custom_styles/hover = SubResource( 14 )
 custom_styles/pressed = SubResource( 15 )
 custom_styles/normal = SubResource( 16 )
-custom_fonts/font = ExtResource( 12 )
 enabled_focus_mode = 0
 text = "=/="
 __meta__ = {
@@ -576,10 +576,10 @@ margin_bottom = 34.0
 rect_min_size = Vector2( 60, 32 )
 focus_mode = 0
 mouse_default_cursor_shape = 2
+custom_fonts/font = SubResource( 20 )
 custom_styles/hover = SubResource( 17 )
 custom_styles/pressed = SubResource( 18 )
 custom_styles/normal = SubResource( 19 )
-custom_fonts/font = SubResource( 20 )
 enabled_focus_mode = 0
 __meta__ = {
 "_edit_use_anchors_": false
@@ -611,8 +611,8 @@ margin_top = 7.0
 margin_right = 132.0
 margin_bottom = 24.0
 rect_min_size = Vector2( 100, 0 )
-custom_fonts/font = SubResource( 22 )
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 22 )
 text = "Carcinogens"
 align = 1
 
@@ -634,7 +634,7 @@ __meta__ = {
 position = Vector2( 7, 7 )
 scale = Vector2( 0.6, 0.6 )
 frames = ExtResource( 15 )
-frame = 5
+frame = 6
 playing = true
 
 [node name="hold" type="Button" parent="v/m/v/interactables/lored/h"]
@@ -646,10 +646,10 @@ rect_min_size = Vector2( 33, 32 )
 focus_mode = 0
 mouse_default_cursor_shape = 2
 size_flags_vertical = 4
+custom_fonts/font = ExtResource( 12 )
 custom_styles/hover = SubResource( 14 )
 custom_styles/pressed = SubResource( 15 )
 custom_styles/normal = SubResource( 16 )
-custom_fonts/font = ExtResource( 12 )
 enabled_focus_mode = 0
 __meta__ = {
 "_edit_use_anchors_": false

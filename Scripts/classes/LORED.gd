@@ -239,6 +239,9 @@ func populate_emote_pool() -> void:
 			emote_pool.append(Emote.new("why is this stuff purple?"))
 
 
+func queueSync():
+	sync_queued = true
+
 func sync():
 	
 	sync_queued = false
@@ -255,6 +258,18 @@ func sync():
 		b[x].sync()
 	
 	gv.r[key].resetToZero_ifNegative()
+	
+	sync_Difficulty()
+
+func sync_Difficulty():
+	d.t.m(diff.getOutput())
+	for x in b:
+		b[x].t.m(diff.getInput())
+	speed.t *= diff.getHaste()
+	crit.t.m(diff.getCrit())
+	crit.t.a(diff.getCritAddition())
+	f.t.m(diff.getFuelStorage())
+	fc.t.m(diff.getFuelConsumption())
 
 func sync_dynamics() -> void:
 	

@@ -14,7 +14,8 @@ var desc: String
 var level: Big
 
 var gcd: Cav.Cooldown = Cav.Cooldown.new(1.5)
-var new_cast := false
+var cast_begun: int
+var gcd_begun: int
 
 var channeling := false
 var casting := false
@@ -91,9 +92,9 @@ func construct_ARCANE_LORED():
 	health = Cav.UnitResource.new(10)
 	barrier = Cav.UnitResource.new(0)
 	stamina = Cav.UnitResource.new(10)
-	mana = Cav.UnitResource.new(0)
+	mana = Cav.UnitResource.new(3)
 	
-	intellect = Cav.UnitAttribute.new(1)
+	intellect = Cav.UnitAttribute.new(2)
 
 func construct_WISP():
 	
@@ -200,10 +201,20 @@ func getData() -> Dictionary:
 	return data
 
 
-
-func stopCast():
+func isCasting() -> bool:
+	return casting or channeling
+func stopCast(known_to_be_casting := false):
+	if not known_to_be_casting:
+		if not isCasting():
+			return
+	cast_begun = 0
 	casting = false
 	channeling = false
+
+func castMatch(spell_cast_begun: int) -> bool:
+	return spell_cast_begun == cast_begun
+func GCDMatch(_gcd_begun: int) -> bool:
+	return _gcd_begun == gcd_begun
 
 
 #func takeBuff(_buff: Buff):
@@ -356,19 +367,20 @@ func interpretIncomingDamage(_dmg: Array, _type: Array):
 
 
 
-func cast(_spell: int, target: Unit):
+func cast(_spell: int, target: Unit, known_to_be_able_to_cast = false):
 	
 	if not gcd.isAvailable():
 		return
 	
 	var spell = Cav.spell[_spell]
 	
-	if not spell.canCast(self):
-		return
+	if not known_to_be_able_to_cast:
+		if not spell.canCast(self):
+			return
 	
-	if channeling:
-		stopCast()
-		new_cast = true
+	if isCasting():
+		print_debug("#z0z0 Probably shouldn't do this here?")
+		sm.castbar.cancelCast()
 	
 	spell.cast(self, target)
 	

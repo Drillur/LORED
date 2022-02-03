@@ -252,7 +252,8 @@ func r_tip(move_tip := false) -> void:
 			
 			grow_horizontal = Control.GROW_DIRECTION_END
 			
-			pos.y -= rect_size.y + 8
+			pos.x += temp["wish vico"].rect_size.x + 8
+			pos.y += temp["wish vico"].rect_size.y - rect_size.y
 			
 			rect_position = pos
 			

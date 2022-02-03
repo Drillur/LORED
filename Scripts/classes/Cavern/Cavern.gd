@@ -229,6 +229,7 @@ class UnitResistances:
 class Cooldown:
 	
 	var available := true
+	var stopped := false
 	
 	var base: float setget setBase
 	
@@ -257,6 +258,13 @@ class Cooldown:
 	
 	func spellCast():
 		available = false
+	
+	func stop():
+		if isAvailable():
+			return
+		gv.emit_signal("gcd_stopped")
+		stopped = true
+		setAvailable()
 
 class Damage:
 	
@@ -351,6 +359,8 @@ enum UnitClass {
 enum Spell {
 	ARCANE_FOCUS,
 	CORE_RIFT,
+	VITALIZE,
+	ARCANE_FLOW,
 	
 	SCORCH,
 	EXPLODE,
@@ -369,6 +379,7 @@ enum Spell {
 
 enum Buff {
 	RIFT,
+	ARCANE_FLOW,
 	
 	SCORCHING,
 	BURNING,

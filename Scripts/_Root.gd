@@ -3,9 +3,11 @@ extends Node2D
 
 
 const SAVE := {
-	MAIN = "user://save.lored",
-	NEW = "user://new_save.lored",
-	OLD = "user://last_save.lored"
+	"SLOT0": "user://save.lored",
+	"SLOT1": "user://save1.lored",
+	"SLOT2": "user://save2.lored",
+	"SLOT3": "user://save3.lored",
+	"SLOT4": "user://save4.lored",
 }
 
 
@@ -13,7 +15,6 @@ const SAVE := {
 const prefab := {
 	"dtext": preload("res://Prefabs/dtext.tscn"),
 	"confirmation popup": preload("res://Prefabs/lored_buy.tscn"),
-	"menu": preload("res://Prefabs/menu/menu.tscn"),
 }
 
 onready var menu = get_node("m/Menu")
@@ -30,8 +31,6 @@ var loredalert = ""
 var cur_clock = OS.get_unix_time()
 var last_clock = OS.get_unix_time()
 var cur_session := 0
-
-var menu_window = 0
 
 const gnLOREDs = "m/v/LORED Manager"
 const gntaq = "m/v/bot/h/taq"
@@ -118,6 +117,8 @@ func game_start(successful_load: bool) -> void:
 		fix_shit()
 		
 		update_clock()
+		
+		gv.storeSaveSlotInfo()
 	
 	# ref
 	if true:
@@ -127,10 +128,6 @@ func game_start(successful_load: bool) -> void:
 		
 		# menu and tab shit
 		if true:
-			
-			menu_window = prefab["menu"].instance()
-			$misc.add_child(menu_window)
-			menu_window.init(gv.menu.option)
 			
 			menu.setup()
 
@@ -202,6 +199,7 @@ func update_clock():
 		t.queue_free()
 		
 		cur_session += 1
+		gv.stats.time_played += 1
 		
 		menu.update_cur_session(cur_session)
 
@@ -779,14 +777,6 @@ func r_window_size_changed() -> void:
 	get_node("m").rect_size = Vector2(win.x / scale.x, win.y / scale.y)
 	
 	get_node(gnupcon).get_node("v/upgrades").scroll_vertical = 0
-	
-	
-	# menu
-	if true:
-		node = menu_window.get_node("ScrollContainer")
-		menu_window.position = Vector2(int((win.x / 2 - node.rect_size.x / 2) / scale.x), int((win.y / 2 - node.rect_size.y / 2) / scale.y))
-		$map.pos["menu"] = menu_window.position * scale
-		$map.size["menu"] = node.rect_size * scale
 
 
 
@@ -1283,7 +1273,7 @@ func version_older_than(_save_version: String, _version: String) -> bool:
 	
 	return false
 
-func e_save(type := "normal", path := SAVE.MAIN):
+func e_save(type := "normal", path := SAVE.SLOT0):
 	
 	var save := _save.new()
 	
@@ -1362,7 +1352,7 @@ func e_save(type := "normal", path := SAVE.MAIN):
 			"normal":
 				
 				# create SAVE
-				save_file.open(SAVE.MAIN, File.WRITE)
+				save_file.open(SAVE[gv.active_slot], File.WRITE)
 				save_file.store_line(Marshalls.variant_to_base64(save.data))
 				save_file.close()
 			
@@ -1379,7 +1369,7 @@ func e_save(type := "normal", path := SAVE.MAIN):
 		
 		w_aa()
 
-func e_load(path := SAVE.MAIN) -> bool:
+func e_load(path := SAVE[gv.active_slot]) -> bool:
 	
 	if gv.stored_path != "":
 		path = gv.stored_path
@@ -1457,7 +1447,7 @@ func e_load(path := SAVE.MAIN) -> bool:
 	
 	#offline_earnings(min(cur_clock - save.data["cur_clock"] - 30, 604800))
 	
-	w_total_per_sec(min(cur_clock - save.data["cur_clock"] - 30, 604800))
+	w_total_per_sec(cur_clock - save.data["cur_clock"] - 30)
 	
 	return true
 

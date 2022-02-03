@@ -97,3 +97,17 @@ func step(coefficient: float) -> float:
 		return 0.1
 	
 	return 1.0
+
+
+func time(val: float) -> String:
+	
+	if val > 3600:
+		return str(int(val / 60 / 60)) + "h"
+	
+	if val > 60:
+		return str(int(val / 60)) + "m"
+	
+	if val > 10:
+		return str(round(val))
+	
+	return "%1.1f" % val

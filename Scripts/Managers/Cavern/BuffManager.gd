@@ -155,7 +155,8 @@ func deleteBuffReferences(target: Unit, buff_type: int):
 func cleanUpBuffVico(target: Unit, type: int):
 	if not [target, type] in buff_vicos.keys():
 		return
-	buff_vicos[[target, type]].clear()
+	if is_instance_valid(buff_vicos[[target, type]]):
+		buff_vicos[[target, type]].clear()
 	buff_vicos.erase([target, type])
 
 

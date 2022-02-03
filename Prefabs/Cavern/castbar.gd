@@ -33,29 +33,39 @@ func cast(_spell: int):
 	
 	total_text.text = fval.f(cast_time)
 	
-	if not running:
-		update()
-	
 	show()
+	
+	if not running:
+		startRunning()
 
-func update():
+func startRunning():
 	
 	running = true
+	timer.stop()
 	timer.start(cast_time)
+
+func _physics_process(delta: float) -> void:
 	
-	while gv.warlock.casting or gv.warlock.channeling and timer.time_left > 0:
-		
-		current_text.text = fval.f(cast_time - timer.time_left)
-		current_bar.rect_size.x = min((cast_time - timer.time_left) / cast_time * total_bar.rect_size.x, total_bar.rect_size.x)
-		
-		fps_timer.start(gv.fps)
-		yield(fps_timer, "timeout")
+	if not running:
+		return
 	
+	if not gv.warlock.isCasting() or timer.time_left <= 0:
+		stopRunning()
+		return
+	
+	current_text.text = fval.f(cast_time - timer.time_left)
+	current_bar.rect_size.x = min((cast_time - timer.time_left) / cast_time * total_bar.rect_size.x, total_bar.rect_size.x)
+	
+
+func stopRunning():
 	running = false
-	
 	hide()
 
 func cancelCast():
-	gv.warlock.stopCast()
-	hide()
+	stopRunning()
+	timer.stop()
+	if gv.warlock.casting:
+		gv.warlock.gcd.stop()
+	gv.warlock.stopCast(true)
+
 

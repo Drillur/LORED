@@ -78,9 +78,27 @@ func construct_ARCANE_FOCUS():
 
 func construct_CORE_RIFT():
 	
-	mana_cost = Cav.UnitAttribute.new(0.1)
+	mana_cost = Cav.UnitAttribute.new(1)
 	
 	applied_buff = Cav.Buff.RIFT
+	
+	requires_target = false
+
+func construct_VITALIZE():
+	
+	cast_time = 3.0
+	
+	cd = Cav.Cooldown.new(3)
+	
+	restore_mana = Cav.UnitAttribute.new(5)
+
+func construct_ARCANE_FLOW():
+	
+	mana_cost = Cav.UnitAttribute.new(5)
+	
+	cd = Cav.Cooldown.new(6)
+	
+	applied_buff = Cav.Buff.ARCANE_FLOW
 	
 	requires_target = false
 
@@ -218,9 +236,8 @@ func refreshDesc():
 
 
 func canCast(caster: Unit) -> bool:
-	if has_cd:
-		if not cd.isAvailable():
-			return false
+	if not isAvailable():
+		return false
 	if costs_mana:
 		if caster.mana.current.less(mana_cost.total):
 			return false
@@ -305,7 +322,13 @@ func getStaminaCost(caster: Unit) -> Big:
 func getCastTime(caster: Unit) -> float:
 	return cast_time / caster.getHaste()
 func getCooldown(caster: Unit) -> float:
+	if not has_cd:
+		return 0.0
 	return cd.total
+func isAvailable() -> bool:
+	if not has_cd:
+		return true
+	return cd.isAvailable()
 func getChannelDuration(caster: Unit) -> float:
 	return channel_duration / caster.getHaste()
 func getChannelTickRate(caster: Unit) -> float:

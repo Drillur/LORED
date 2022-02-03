@@ -1,7 +1,8 @@
-[gd_scene load_steps=29 format=2]
+[gd_scene load_steps=30 format=2]
 
 [ext_resource path="res://Scripts/_Root.gd" type="Script" id=1]
 [ext_resource path="res://Scripts/map.gd" type="Script" id=2]
+[ext_resource path="res://Scenes/Main Menu.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Scenes/Cavern.tscn" type="PackedScene" id=4]
 [ext_resource path="res://Scripts/tooltip/tooltip_master.gd" type="Script" id=5]
 [ext_resource path="res://Prefabs/upgrade/upgrade_container.tscn" type="PackedScene" id=6]
@@ -317,9 +318,9 @@ size_flags_horizontal = 4
 size_flags_vertical = 6
 
 [node name="Menu" parent="m" instance=ExtResource( 21 )]
-margin_left = 438.0
+margin_left = 401.0
 margin_top = 210.0
-margin_right = 842.0
+margin_right = 879.0
 margin_bottom = 510.0
 
 [node name="misc" type="Node2D" parent="."]
@@ -561,6 +562,13 @@ clip_text = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="Main Menu" parent="." instance=ExtResource( 3 )]
+margin_left = 2.0
+margin_top = -4.0
+margin_right = 1282.0
+margin_bottom = 716.0
+rect_pivot_offset = Vector2( -334, -17 )
 
 [connection signal="button_down" from="m/v/top/h/menu_button" to="." method="_on_menu_button_button_down"]
 [connection signal="pressed" from="m/v/top/h/menu_button" to="." method="_on_menu_button_pressed"]

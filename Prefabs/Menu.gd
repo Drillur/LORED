@@ -7,6 +7,7 @@ const page_colors = {
 	"options": Color(0.137255, 0.698039, 0.552941),
 	"stats": Color(0.74902, 0.639216, 0.035294),
 	"patch": Color(0.996078, 0.443137, 0.172549),
+	"tutorial": Color(0.960784, 0.521569, 1),
 	"hard reset": Color(1, 0, 0),
 }
 
@@ -35,6 +36,7 @@ onready var cur_session = get_node("sc/m/v/stats/v/cur_session/Label")
 onready var stats_run = get_node("sc/m/v/stats/v/run/cont")
 onready var patched_alert = get_node("sc/m/v/top/v/h/patch/n/alert")
 onready var patch_alert_option = get_node("sc/m/v/patch/v/patch_alert")
+onready var tutorial_alert_option = get_node("sc/m/v/tutorial/v/tutorial_alert")
 onready var stats_run_1_reset = get_node("sc/m/v/stats/v/run/cont/s1/reset/Label")
 onready var stats_run_1_clock = get_node("sc/m/v/stats/v/run/cont/s1/clock/Label")
 onready var stats_run_2_reset = get_node("sc/m/v/stats/v/run/cont/s2/reset/Label")
@@ -133,6 +135,7 @@ func setup():
 	#quest_max_tasks.text = "Max tasks +" + str(taq.max_tasks)
 	
 	patch_alert_option.pressed = gv.menu.option["patch alert"]
+	tutorial_alert_option.pressed = gv.menu.option["tutorial alert"]
 	
 	update()
 
@@ -242,6 +245,8 @@ func _on_patch_pressed() -> void:
 	if patched_alert.visible:
 		patched_alert.hide()
 		rt.get_node("m/v/top/h/menu_button/patched_alert").hide()
+func _on_tutorial_pressed() -> void:
+	switch_page("tutorial")
 func _on_hard_reset_back_pressed() -> void:
 	switch_page("save")
 	hard_reset_confirm.pressed = false
@@ -282,6 +287,9 @@ func _on_tip_autobuyer_pressed() -> void:
 	gv.menu.option["tooltip_autobuyer"] = tip_autobuyer.pressed
 func _on_patch_alert_pressed() -> void:
 	gv.menu.option["patch alert"] = patch_alert_option.pressed
+func _on_tutorial_alert_pressed() -> void:
+	gv.menu.option["tutorial alert"] = tutorial_alert_option.pressed
+	
 
 func _on_save_halt_pressed() -> void:
 	gv.menu.option["on_save_halt"] = save_halt.pressed
@@ -299,9 +307,9 @@ func _on_delete_save_pressed() -> void:
 	rt.b_tabkey(KEY_1)
 	
 	var save_file = File.new()
-	if save_file.file_exists(rt.SAVE.MAIN):
+	if save_file.file_exists(rt.SAVE[gv.active_slot]):
 		var dir = Directory.new()
-		dir.remove(rt.SAVE.MAIN)
+		dir.remove(rt.SAVE[gv.active_slot])
 func _on_stats_run_pressed() -> void:
 	
 	if stats_run.visible:
@@ -310,6 +318,34 @@ func _on_stats_run_pressed() -> void:
 		stats_run.show()
 	
 	get_node("sc/m/v/stats/v/run/top/h/Panel/Sprite").rotation_degrees = 180 if stats_run.visible else 0
+func _on_tutorial_loreds_pressed() -> void:
+	var node = get_node("sc/m/v/tutorial/v/loreds/cont")
+	if node.visible:
+		node.hide()
+	else:
+		node.show()
+	get_node("sc/m/v/tutorial/v/loreds/top/h/Panel/Sprite").rotation_degrees = 180 * int(node.visible)
+func _on_tutorial_loreds_fuel_pressed() -> void:
+	var node = get_node("sc/m/v/tutorial/v/loreds/cont/fuel/loreds/cont")
+	if node.visible:
+		node.hide()
+	else:
+		node.show()
+	get_node("sc/m/v/tutorial/v/loreds/cont/fuel/loreds/top/h/Panel/Sprite").rotation_degrees = 180 * int(node.visible)
+func _on_tutorial_loreds_upgrading_pressed() -> void:
+	var node = get_node("sc/m/v/tutorial/v/loreds/cont/upgrading/loreds/cont")
+	if node.visible:
+		node.hide()
+	else:
+		node.show()
+	get_node("sc/m/v/tutorial/v/loreds/cont/upgrading/loreds/top/h/Panel/Sprite").rotation_degrees = 180 * int(node.visible)
+func _on_tutorial_loreds_input_pressed() -> void:
+	var node = get_node("sc/m/v/tutorial/v/loreds/cont/input/loreds/cont")
+	if node.visible:
+		node.hide()
+	else:
+		node.show()
+	get_node("sc/m/v/tutorial/v/loreds/cont/input/loreds/top/h/Panel/Sprite").rotation_degrees = 180 * int(node.visible)
 
 func _on_fps_item_selected(index: int) -> void:
 	select_fps(index)
@@ -332,6 +368,18 @@ func _on_save_now_pressed() -> void:
 	rt.e_save()
 	save.start(1)
 	save_bar.rect_size.x = 0
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

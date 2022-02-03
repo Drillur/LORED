@@ -33,7 +33,6 @@ func _ready() -> void:
 	mana_bar_width = get_node("m/bot/v/resources/h/mana/total").rect_size.x
 
 
-
 func save() -> String:
 	
 	var data := {}
@@ -87,7 +86,7 @@ func input(ev):
 	# called from _Root.gd
 	
 	if ev.is_action_pressed("ui_cancel"):
-		if gv.warlock.casting or gv.warlock.channeling:
+		if gv.warlock.isCasting():
 			castbar.cancelCast()
 			return
 	
@@ -139,6 +138,9 @@ func prepManaText():
 
 func displayManaText(text: String):
 	
+	if text == "":
+		return
+	
 	var data := {
 		"text": text,
 		"color": gv.COLORS["mana"],
@@ -169,16 +171,6 @@ func buffApplied(target: Unit, data: Dictionary):
 func buffExpired(buff: int):
 	buffs.erase(buff)
 
-func _on_Button_pressed() -> void:
-	# for testing
-	setupUnit()
-	hotbar.setSpell("0/5", Cav.Spell.ARCANE_FOCUS)
-	hotbar.setSpell("0/6", Cav.Spell.CORE_RIFT)
-
-
-func _on_Button2_pressed() -> void:
-	Cav.reset(3)
-
 
 
 
@@ -187,6 +179,23 @@ func _on_Button2_pressed() -> void:
 func reset(tier: int):
 	
 	gv.warlock.clearBuffs()
+	castbar.cancelCast()
+	mana_restored = Big.new(0)
 	gv.warlock = Unit.new(Cav.UnitClass.ARCANE_LORED)
 	setupUnit()
+	
+	hotbar.reset(tier)
 
+
+
+func _on_Button_pressed() -> void:
+	# for testing 
+	setupUnit()
+	hotbar.setSpell("0/5", Cav.Spell.CORE_RIFT)
+	hotbar.setSpell("0/6", Cav.Spell.ARCANE_FOCUS) #z02
+	hotbar.setSpell("0/7", Cav.Spell.VITALIZE)
+	hotbar.setSpell("0/8", Cav.Spell.ARCANE_FLOW)
+
+
+func _on_Button2_pressed() -> void:
+	Cav.reset(3)

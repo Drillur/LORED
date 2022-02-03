@@ -301,10 +301,17 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="resources" type="VBoxContainer" parent="m/bot/v"]
+[node name="buffs" type="HBoxContainer" parent="m/bot/v"]
 margin_top = 64.0
 margin_right = 300.0
-margin_bottom = 120.0
+margin_bottom = 98.0
+rect_min_size = Vector2( 0, 34 )
+alignment = 1
+
+[node name="resources" type="VBoxContainer" parent="m/bot/v"]
+margin_top = 118.0
+margin_right = 300.0
+margin_bottom = 174.0
 size_flags_horizontal = 4
 custom_constants/separation = 6
 
@@ -576,13 +583,6 @@ __meta__ = {
 }
 
 [node name="texts" type="Node2D" parent="m/bot/v/resources/h/mana"]
-
-[node name="buffs" type="HBoxContainer" parent="m/bot/v"]
-margin_top = 140.0
-margin_right = 300.0
-margin_bottom = 174.0
-rect_min_size = Vector2( 0, 34 )
-alignment = 1
 
 [node name="hotbar" parent="m/bot/v" instance=ExtResource( 5 )]
 margin_left = 15.0

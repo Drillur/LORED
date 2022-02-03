@@ -342,7 +342,7 @@ func autobuy():
 	autobuy()
 
 func start():
-	
+	#zbefore start is called, Difficulty should be set.
 	while lored.unlocked and lored.active and not lored.halt:
 		
 		if lored.sync_queued:

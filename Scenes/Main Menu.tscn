@@ -1,0 +1,835 @@
+[gd_scene load_steps=20 format=2]
+
+[ext_resource path="res://Fonts/Roboto-Black.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://Prefabs/menu/Save Slot Block.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Fonts/Roboto-MediumItalic.ttf" type="DynamicFontData" id=3]
+[ext_resource path="res://Sprites/Menu/Arrow.png" type="Texture" id=4]
+[ext_resource path="res://Sprites/Menu/View.png" type="Texture" id=5]
+[ext_resource path="res://Sprites/Menu/Import.png" type="Texture" id=6]
+[ext_resource path="res://Scenes/Main Menu.gd" type="Script" id=7]
+
+[sub_resource type="StyleBoxFlat" id=7]
+draw_center = false
+
+[sub_resource type="StyleBoxFlat" id=8]
+bg_color = Color( 1, 1, 1, 0.301961 )
+border_color = Color( 0.568627, 1, 0, 0.6 )
+
+[sub_resource type="DynamicFont" id=11]
+size = 14
+font_data = ExtResource( 1 )
+
+[sub_resource type="StyleBoxFlat" id=9]
+draw_center = false
+
+[sub_resource type="DynamicFont" id=10]
+size = 12
+font_data = ExtResource( 3 )
+
+[sub_resource type="DynamicFont" id=4]
+size = 12
+outline_color = Color( 0, 0, 0, 1 )
+font_data = ExtResource( 1 )
+
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 0.423529, 0.423529, 0.423529, 1 )
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+shadow_color = Color( 0.117188, 0.117188, 0.117188, 0.54902 )
+shadow_size = 4
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id=2]
+bg_color = Color( 0.25098, 0.25098, 0.25098, 1 )
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+shadow_color = Color( 0.0390625, 0.0390625, 0.0390625, 0.54902 )
+shadow_size = 4
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id=3]
+bg_color = Color( 0.352941, 0.352941, 0.352941, 1 )
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+shadow_color = Color( 0.078125, 0.078125, 0.078125, 0.54902 )
+shadow_size = 4
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id=5]
+bg_color = Color( 0.180392, 0.180392, 0.180392, 1 )
+draw_center = false
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color( 1, 1, 1, 1 )
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+expand_margin_left = 15.0
+expand_margin_right = 15.0
+expand_margin_top = 2.0
+expand_margin_bottom = 2.0
+shadow_color = Color( 0.0509804, 0.0509804, 0.0509804, 0.6 )
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id=12]
+draw_center = false
+
+[sub_resource type="DynamicFont" id=6]
+size = 14
+font_data = ExtResource( 1 )
+
+[node name="Main Menu" type="MarginContainer"]
+margin_right = 1280.0
+margin_bottom = 720.0
+script = ExtResource( 7 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="h" type="HBoxContainer" parent="."]
+margin_top = 42.0
+margin_right = 1280.0
+margin_bottom = 678.0
+size_flags_vertical = 4
+custom_constants/separation = 20
+
+[node name="indent" type="Panel" parent="h"]
+margin_right = 100.0
+margin_bottom = 636.0
+rect_min_size = Vector2( 100, 0 )
+custom_styles/panel = SubResource( 7 )
+
+[node name="continue" type="MarginContainer" parent="h"]
+margin_left = 120.0
+margin_top = 151.0
+margin_right = 310.0
+margin_bottom = 485.0
+size_flags_vertical = 4
+
+[node name="bg" type="Panel" parent="h/continue"]
+self_modulate = Color( 0.219608, 0.219608, 0.219608, 1 )
+margin_right = 190.0
+margin_bottom = 334.0
+custom_styles/panel = SubResource( 8 )
+
+[node name="m" type="MarginContainer" parent="h/continue"]
+margin_right = 190.0
+margin_bottom = 334.0
+custom_constants/margin_right = 10
+custom_constants/margin_top = 10
+custom_constants/margin_left = 10
+custom_constants/margin_bottom = 10
+
+[node name="v" type="VBoxContainer" parent="h/continue/m"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 180.0
+margin_bottom = 324.0
+
+[node name="v" type="VBoxContainer" parent="h/continue/m/v"]
+margin_right = 170.0
+margin_bottom = 314.0
+custom_constants/separation = 20
+
+[node name="text" type="Label" parent="h/continue/m/v/v"]
+margin_right = 170.0
+margin_bottom = 17.0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 11 )
+text = "Continue"
+align = 1
+
+[node name="last played" type="VBoxContainer" parent="h/continue/m/v/v"]
+margin_top = 37.0
+margin_right = 170.0
+margin_bottom = 194.0
+
+[node name="h" type="HBoxContainer" parent="h/continue/m/v/v/last played"]
+margin_right = 170.0
+margin_bottom = 24.0
+
+[node name="icon" type="Panel" parent="h/continue/m/v/v/last played/h"]
+margin_right = 24.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 24, 24 )
+custom_styles/panel = SubResource( 9 )
+
+[node name="shadow" type="Sprite" parent="h/continue/m/v/v/last played/h/icon"]
+self_modulate = Color( 0, 0, 0, 0.501961 )
+position = Vector2( 13, 13 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 4 )
+
+[node name="Sprite" type="Sprite" parent="h/continue/m/v/v/last played/h/icon"]
+position = Vector2( 12, 12 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 4 )
+
+[node name="flair" type="Label" parent="h/continue/m/v/v/last played/h"]
+margin_left = 28.0
+margin_top = 4.0
+margin_right = 117.0
+margin_bottom = 19.0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 10 )
+text = "Last-played Save"
+
+[node name="Save Slot Block" parent="h/continue/m/v/v/last played" instance=ExtResource( 2 )]
+margin_top = 28.0
+margin_right = 170.0
+margin_bottom = 157.0
+
+[node name="v" type="VBoxContainer" parent="h/continue/m/v/v"]
+margin_top = 214.0
+margin_right = 170.0
+margin_bottom = 314.0
+
+[node name="h" type="HBoxContainer" parent="h/continue/m/v/v/v"]
+margin_right = 170.0
+margin_bottom = 24.0
+
+[node name="icon" type="Panel" parent="h/continue/m/v/v/v/h"]
+margin_right = 24.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 24, 24 )
+custom_styles/panel = SubResource( 9 )
+
+[node name="shadow" type="Sprite" parent="h/continue/m/v/v/v/h/icon"]
+self_modulate = Color( 0, 0, 0, 0.501961 )
+position = Vector2( 13, 13 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 4 )
+
+[node name="Sprite" type="Sprite" parent="h/continue/m/v/v/v/h/icon"]
+position = Vector2( 12, 12 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 4 )
+
+[node name="flair" type="Label" parent="h/continue/m/v/v/v/h"]
+margin_left = 28.0
+margin_top = 4.0
+margin_right = 128.0
+margin_bottom = 19.0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 10 )
+text = "Load Another Save"
+
+[node name="v" type="VBoxContainer" parent="h/continue/m/v/v/v"]
+margin_top = 28.0
+margin_right = 170.0
+margin_bottom = 100.0
+custom_constants/separation = 8
+
+[node name="load slot" type="MarginContainer" parent="h/continue/m/v/v/v/v"]
+margin_right = 170.0
+margin_bottom = 32.0
+mouse_filter = 2
+custom_constants/margin_right = 0
+custom_constants/margin_top = 0
+custom_constants/margin_left = 0
+custom_constants/margin_bottom = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="button" type="Button" parent="h/continue/m/v/v/v/v/load slot"]
+self_modulate = Color( 0.384314, 0.603922, 0.270588, 1 )
+margin_right = 170.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 60, 32 )
+focus_mode = 0
+mouse_default_cursor_shape = 2
+custom_fonts/font = SubResource( 4 )
+custom_styles/hover = SubResource( 1 )
+custom_styles/pressed = SubResource( 2 )
+custom_styles/normal = SubResource( 3 )
+enabled_focus_mode = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="m" type="MarginContainer" parent="h/continue/m/v/v/v/v/load slot"]
+margin_right = 170.0
+margin_bottom = 32.0
+mouse_filter = 2
+custom_constants/margin_right = 15
+custom_constants/margin_top = 2
+custom_constants/margin_left = 15
+custom_constants/margin_bottom = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="afford" type="Panel" parent="h/continue/m/v/v/v/v/load slot/m"]
+visible = false
+self_modulate = Color( 1, 0.682353, 0.137255, 1 )
+margin_left = 15.0
+margin_top = 2.0
+margin_right = 155.0
+margin_bottom = 30.0
+mouse_filter = 2
+custom_styles/panel = SubResource( 5 )
+
+[node name="h" type="HBoxContainer" parent="h/continue/m/v/v/v/v/load slot/m"]
+margin_left = 15.0
+margin_top = 2.0
+margin_right = 155.0
+margin_bottom = 30.0
+mouse_filter = 2
+custom_constants/separation = 8
+alignment = 1
+
+[node name="icon" type="Panel" parent="h/continue/m/v/v/v/v/load slot/m/h"]
+margin_left = 24.0
+margin_top = 2.0
+margin_right = 48.0
+margin_bottom = 26.0
+rect_min_size = Vector2( 24, 24 )
+mouse_filter = 2
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 12 )
+
+[node name="shadow" type="Sprite" parent="h/continue/m/v/v/v/v/load slot/m/h/icon"]
+self_modulate = Color( 0, 0, 0, 0.501961 )
+position = Vector2( 13, 13 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 5 )
+
+[node name="Sprite" type="Sprite" parent="h/continue/m/v/v/v/v/load slot/m/h/icon"]
+position = Vector2( 12, 12 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 5 )
+
+[node name="text" type="Label" parent="h/continue/m/v/v/v/v/load slot/m/h"]
+margin_left = 56.0
+margin_top = 5.0
+margin_right = 115.0
+margin_bottom = 22.0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 6 )
+text = "All Saves"
+align = 1
+
+[node name="import" type="MarginContainer" parent="h/continue/m/v/v/v/v"]
+margin_top = 40.0
+margin_right = 170.0
+margin_bottom = 72.0
+mouse_filter = 2
+custom_constants/margin_right = 0
+custom_constants/margin_top = 0
+custom_constants/margin_left = 0
+custom_constants/margin_bottom = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="button" type="Button" parent="h/continue/m/v/v/v/v/import"]
+self_modulate = Color( 0.384314, 0.603922, 0.270588, 1 )
+margin_right = 170.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 60, 32 )
+focus_mode = 0
+mouse_default_cursor_shape = 2
+custom_fonts/font = SubResource( 4 )
+custom_styles/hover = SubResource( 1 )
+custom_styles/pressed = SubResource( 2 )
+custom_styles/normal = SubResource( 3 )
+enabled_focus_mode = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="m" type="MarginContainer" parent="h/continue/m/v/v/v/v/import"]
+margin_right = 170.0
+margin_bottom = 32.0
+mouse_filter = 2
+custom_constants/margin_right = 15
+custom_constants/margin_top = 2
+custom_constants/margin_left = 15
+custom_constants/margin_bottom = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="afford" type="Panel" parent="h/continue/m/v/v/v/v/import/m"]
+visible = false
+self_modulate = Color( 1, 0.682353, 0.137255, 1 )
+margin_left = 15.0
+margin_top = 2.0
+margin_right = 155.0
+margin_bottom = 30.0
+mouse_filter = 2
+custom_styles/panel = SubResource( 5 )
+
+[node name="h" type="HBoxContainer" parent="h/continue/m/v/v/v/v/import/m"]
+margin_left = 15.0
+margin_top = 2.0
+margin_right = 155.0
+margin_bottom = 30.0
+mouse_filter = 2
+custom_constants/separation = 8
+alignment = 1
+
+[node name="icon" type="Panel" parent="h/continue/m/v/v/v/v/import/m/h"]
+margin_left = 33.0
+margin_top = 2.0
+margin_right = 57.0
+margin_bottom = 26.0
+rect_min_size = Vector2( 24, 24 )
+mouse_filter = 2
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 12 )
+
+[node name="shadow" type="Sprite" parent="h/continue/m/v/v/v/v/import/m/h/icon"]
+self_modulate = Color( 0, 0, 0, 0.501961 )
+position = Vector2( 13, 13 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 6 )
+
+[node name="Sprite" type="Sprite" parent="h/continue/m/v/v/v/v/import/m/h/icon"]
+position = Vector2( 12, 12 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 6 )
+
+[node name="text" type="Label" parent="h/continue/m/v/v/v/v/import/m/h"]
+margin_left = 65.0
+margin_top = 5.0
+margin_right = 107.0
+margin_bottom = 22.0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 6 )
+text = "Import"
+align = 1
+
+[node name="all saves" type="MarginContainer" parent="h"]
+margin_left = 330.0
+margin_right = 750.0
+margin_bottom = 636.0
+size_flags_vertical = 4
+
+[node name="bg" type="Panel" parent="h/all saves"]
+self_modulate = Color( 0.219608, 0.219608, 0.219608, 1 )
+margin_right = 420.0
+margin_bottom = 636.0
+custom_styles/panel = SubResource( 8 )
+
+[node name="m" type="MarginContainer" parent="h/all saves"]
+margin_right = 420.0
+margin_bottom = 636.0
+custom_constants/margin_right = 10
+custom_constants/margin_top = 10
+custom_constants/margin_left = 10
+custom_constants/margin_bottom = 10
+
+[node name="v" type="VBoxContainer" parent="h/all saves/m"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 410.0
+margin_bottom = 626.0
+custom_constants/separation = 20
+
+[node name="top" type="VBoxContainer" parent="h/all saves/m/v"]
+margin_right = 400.0
+margin_bottom = 36.0
+
+[node name="text" type="Label" parent="h/all saves/m/v/top"]
+margin_right = 400.0
+margin_bottom = 17.0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 11 )
+text = "All Saves"
+align = 1
+
+[node name="flair" type="Label" parent="h/all saves/m/v/top"]
+margin_top = 21.0
+margin_right = 400.0
+margin_bottom = 36.0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 10 )
+text = "%AppData%\\Godot\\app_userdata\\LORED"
+align = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="h/all saves/m/v"]
+margin_top = 56.0
+margin_right = 400.0
+margin_bottom = 616.0
+rect_min_size = Vector2( 400, 560 )
+scroll_vertical_enabled = false
+
+[node name="h" type="HBoxContainer" parent="h/all saves/m/v/ScrollContainer"]
+margin_right = 704.0
+margin_bottom = 540.0
+custom_constants/separation = 8
+
+[node name="v" type="VBoxContainer" parent="h/all saves/m/v/ScrollContainer/h"]
+margin_right = 170.0
+margin_bottom = 540.0
+custom_constants/separation = 8
+
+[node name="Save Slot Block" parent="h/all saves/m/v/ScrollContainer/h/v" instance=ExtResource( 2 )]
+margin_right = 170.0
+rect_pivot_offset = Vector2( -510, 140 )
+
+[node name="Save Slot Block2" parent="h/all saves/m/v/ScrollContainer/h/v" instance=ExtResource( 2 )]
+margin_top = 137.0
+margin_right = 170.0
+margin_bottom = 266.0
+rect_pivot_offset = Vector2( -342, -242 )
+
+[node name="Save Slot Block3" parent="h/all saves/m/v/ScrollContainer/h/v" instance=ExtResource( 2 )]
+margin_top = 274.0
+margin_right = 170.0
+margin_bottom = 403.0
+rect_pivot_offset = Vector2( -342, -242 )
+
+[node name="Save Slot Block4" parent="h/all saves/m/v/ScrollContainer/h/v" instance=ExtResource( 2 )]
+margin_top = 411.0
+margin_right = 170.0
+margin_bottom = 540.0
+rect_pivot_offset = Vector2( -342, -242 )
+
+[node name="v2" type="VBoxContainer" parent="h/all saves/m/v/ScrollContainer/h"]
+margin_left = 178.0
+margin_right = 348.0
+margin_bottom = 540.0
+custom_constants/separation = 8
+
+[node name="Save Slot Block" parent="h/all saves/m/v/ScrollContainer/h/v2" instance=ExtResource( 2 )]
+margin_right = 170.0
+rect_pivot_offset = Vector2( -510, 140 )
+
+[node name="Save Slot Block2" parent="h/all saves/m/v/ScrollContainer/h/v2" instance=ExtResource( 2 )]
+margin_top = 137.0
+margin_right = 170.0
+margin_bottom = 266.0
+rect_pivot_offset = Vector2( -342, -242 )
+
+[node name="Save Slot Block3" parent="h/all saves/m/v/ScrollContainer/h/v2" instance=ExtResource( 2 )]
+margin_top = 274.0
+margin_right = 170.0
+margin_bottom = 403.0
+rect_pivot_offset = Vector2( -342, -242 )
+
+[node name="Save Slot Block4" parent="h/all saves/m/v/ScrollContainer/h/v2" instance=ExtResource( 2 )]
+margin_top = 411.0
+margin_right = 170.0
+margin_bottom = 540.0
+rect_pivot_offset = Vector2( -342, -242 )
+
+[node name="v3" type="VBoxContainer" parent="h/all saves/m/v/ScrollContainer/h"]
+margin_left = 356.0
+margin_right = 526.0
+margin_bottom = 540.0
+custom_constants/separation = 8
+
+[node name="Save Slot Block" parent="h/all saves/m/v/ScrollContainer/h/v3" instance=ExtResource( 2 )]
+margin_right = 170.0
+rect_pivot_offset = Vector2( -510, 140 )
+
+[node name="Save Slot Block2" parent="h/all saves/m/v/ScrollContainer/h/v3" instance=ExtResource( 2 )]
+margin_top = 137.0
+margin_right = 170.0
+margin_bottom = 266.0
+rect_pivot_offset = Vector2( -342, -242 )
+
+[node name="Save Slot Block3" parent="h/all saves/m/v/ScrollContainer/h/v3" instance=ExtResource( 2 )]
+margin_top = 274.0
+margin_right = 170.0
+margin_bottom = 403.0
+rect_pivot_offset = Vector2( -342, -242 )
+
+[node name="Save Slot Block4" parent="h/all saves/m/v/ScrollContainer/h/v3" instance=ExtResource( 2 )]
+margin_top = 411.0
+margin_right = 170.0
+margin_bottom = 540.0
+rect_pivot_offset = Vector2( -342, -242 )
+
+[node name="v4" type="VBoxContainer" parent="h/all saves/m/v/ScrollContainer/h"]
+margin_left = 534.0
+margin_right = 704.0
+margin_bottom = 540.0
+custom_constants/separation = 8
+
+[node name="Save Slot Block" parent="h/all saves/m/v/ScrollContainer/h/v4" instance=ExtResource( 2 )]
+margin_right = 170.0
+rect_pivot_offset = Vector2( -510, 140 )
+
+[node name="Save Slot Block2" parent="h/all saves/m/v/ScrollContainer/h/v4" instance=ExtResource( 2 )]
+margin_top = 137.0
+margin_right = 170.0
+margin_bottom = 266.0
+rect_pivot_offset = Vector2( -342, -242 )
+
+[node name="Save Slot Block3" parent="h/all saves/m/v/ScrollContainer/h/v4" instance=ExtResource( 2 )]
+margin_top = 274.0
+margin_right = 170.0
+margin_bottom = 403.0
+rect_pivot_offset = Vector2( -342, -242 )
+
+[node name="Save Slot Block4" parent="h/all saves/m/v/ScrollContainer/h/v4" instance=ExtResource( 2 )]
+margin_top = 411.0
+margin_right = 170.0
+margin_bottom = 540.0
+rect_pivot_offset = Vector2( -342, -242 )
+
+[node name="v" type="VBoxContainer" parent="h"]
+margin_left = 770.0
+margin_top = 242.0
+margin_right = 877.0
+margin_bottom = 394.0
+size_flags_vertical = 4
+custom_constants/separation = 8
+
+[node name="new" type="MarginContainer" parent="h/v"]
+margin_right = 107.0
+margin_bottom = 32.0
+mouse_filter = 2
+custom_constants/margin_right = 0
+custom_constants/margin_top = 0
+custom_constants/margin_left = 0
+custom_constants/margin_bottom = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="button" type="Button" parent="h/v/new"]
+self_modulate = Color( 1, 0, 0.678431, 1 )
+margin_right = 107.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 60, 32 )
+focus_mode = 0
+mouse_default_cursor_shape = 2
+custom_fonts/font = SubResource( 4 )
+custom_styles/hover = SubResource( 1 )
+custom_styles/pressed = SubResource( 2 )
+custom_styles/normal = SubResource( 3 )
+enabled_focus_mode = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="m" type="MarginContainer" parent="h/v/new"]
+margin_right = 107.0
+margin_bottom = 32.0
+mouse_filter = 2
+custom_constants/margin_right = 15
+custom_constants/margin_top = 2
+custom_constants/margin_left = 15
+custom_constants/margin_bottom = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="afford" type="Panel" parent="h/v/new/m"]
+visible = false
+self_modulate = Color( 0.2, 0.945098, 1, 1 )
+margin_left = 15.0
+margin_top = 2.0
+margin_right = 92.0
+margin_bottom = 30.0
+mouse_filter = 2
+custom_styles/panel = SubResource( 5 )
+
+[node name="text" type="Label" parent="h/v/new/m"]
+margin_left = 15.0
+margin_top = 7.0
+margin_right = 92.0
+margin_bottom = 24.0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 6 )
+text = "New Game"
+align = 1
+
+[node name="options" type="MarginContainer" parent="h/v"]
+margin_top = 40.0
+margin_right = 107.0
+margin_bottom = 72.0
+mouse_filter = 2
+custom_constants/margin_right = 0
+custom_constants/margin_top = 0
+custom_constants/margin_left = 0
+custom_constants/margin_bottom = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="button" type="Button" parent="h/v/options"]
+self_modulate = Color( 0.137255, 0.698039, 0.552941, 1 )
+margin_right = 107.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 60, 32 )
+focus_mode = 0
+mouse_default_cursor_shape = 2
+custom_fonts/font = SubResource( 4 )
+custom_styles/hover = SubResource( 1 )
+custom_styles/pressed = SubResource( 2 )
+custom_styles/normal = SubResource( 3 )
+enabled_focus_mode = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="m" type="MarginContainer" parent="h/v/options"]
+margin_right = 107.0
+margin_bottom = 32.0
+mouse_filter = 2
+custom_constants/margin_right = 15
+custom_constants/margin_top = 2
+custom_constants/margin_left = 15
+custom_constants/margin_bottom = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="afford" type="Panel" parent="h/v/options/m"]
+visible = false
+self_modulate = Color( 0.2, 0.945098, 1, 1 )
+margin_left = 15.0
+margin_top = 2.0
+margin_right = 92.0
+margin_bottom = 30.0
+mouse_filter = 2
+custom_styles/panel = SubResource( 5 )
+
+[node name="text" type="Label" parent="h/v/options/m"]
+margin_left = 15.0
+margin_top = 7.0
+margin_right = 92.0
+margin_bottom = 24.0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 6 )
+text = "Options"
+align = 1
+
+[node name="patch notes" type="MarginContainer" parent="h/v"]
+margin_top = 80.0
+margin_right = 107.0
+margin_bottom = 112.0
+mouse_filter = 2
+custom_constants/margin_right = 0
+custom_constants/margin_top = 0
+custom_constants/margin_left = 0
+custom_constants/margin_bottom = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="button" type="Button" parent="h/v/patch notes"]
+self_modulate = Color( 0.996078, 0.443137, 0.172549, 1 )
+margin_right = 107.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 60, 32 )
+focus_mode = 0
+mouse_default_cursor_shape = 2
+custom_fonts/font = SubResource( 4 )
+custom_styles/hover = SubResource( 1 )
+custom_styles/pressed = SubResource( 2 )
+custom_styles/normal = SubResource( 3 )
+enabled_focus_mode = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="m" type="MarginContainer" parent="h/v/patch notes"]
+margin_right = 107.0
+margin_bottom = 32.0
+mouse_filter = 2
+custom_constants/margin_right = 15
+custom_constants/margin_top = 2
+custom_constants/margin_left = 15
+custom_constants/margin_bottom = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="afford" type="Panel" parent="h/v/patch notes/m"]
+visible = false
+self_modulate = Color( 0.2, 0.945098, 1, 1 )
+margin_left = 15.0
+margin_top = 2.0
+margin_right = 92.0
+margin_bottom = 30.0
+mouse_filter = 2
+custom_styles/panel = SubResource( 5 )
+
+[node name="text" type="Label" parent="h/v/patch notes/m"]
+margin_left = 15.0
+margin_top = 7.0
+margin_right = 92.0
+margin_bottom = 24.0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 6 )
+text = "Patch Notes"
+align = 1
+
+[node name="credits" type="MarginContainer" parent="h/v"]
+margin_top = 120.0
+margin_right = 107.0
+margin_bottom = 152.0
+mouse_filter = 2
+custom_constants/margin_right = 0
+custom_constants/margin_top = 0
+custom_constants/margin_left = 0
+custom_constants/margin_bottom = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="button" type="Button" parent="h/v/credits"]
+self_modulate = Color( 1, 0.427451, 0.588235, 1 )
+margin_right = 107.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 60, 32 )
+focus_mode = 0
+mouse_default_cursor_shape = 2
+custom_fonts/font = SubResource( 4 )
+custom_styles/hover = SubResource( 1 )
+custom_styles/pressed = SubResource( 2 )
+custom_styles/normal = SubResource( 3 )
+enabled_focus_mode = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="m" type="MarginContainer" parent="h/v/credits"]
+margin_right = 107.0
+margin_bottom = 32.0
+mouse_filter = 2
+custom_constants/margin_right = 15
+custom_constants/margin_top = 2
+custom_constants/margin_left = 15
+custom_constants/margin_bottom = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="afford" type="Panel" parent="h/v/credits/m"]
+visible = false
+self_modulate = Color( 0.2, 0.945098, 1, 1 )
+margin_left = 15.0
+margin_top = 2.0
+margin_right = 92.0
+margin_bottom = 30.0
+mouse_filter = 2
+custom_styles/panel = SubResource( 5 )
+
+[node name="text" type="Label" parent="h/v/credits/m"]
+margin_left = 15.0
+margin_top = 7.0
+margin_right = 92.0
+margin_bottom = 24.0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 6 )
+text = "Credits"
+align = 1
+
+[connection signal="pressed" from="h/continue/m/v/v/v/v/load slot/button" to="." method="_on_all_saves_pressed"]

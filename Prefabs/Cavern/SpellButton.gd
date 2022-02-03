@@ -6,6 +6,7 @@ onready var rt = get_node("/root/Root")
 onready var bg = get_node("bg")
 onready var cooldown = get_node("cooldown")
 onready var bar = get_node("cooldown/bar")
+onready var cd_text = get_node("cooldown/text")
 onready var bar_flair = get_node("cooldown/bar/flair")
 onready var hotkey_text = get_node("hotkey/text")
 onready var icon = get_node("m/icon/Sprite")
@@ -28,6 +29,7 @@ var gcd_timer: Timer
 func _ready() -> void:
 	
 	gv.connect("new_gcd", self, "newGCD")
+	gv.connect("gcd_stopped", self, "GCDstopped")
 	
 	timer = Timer.new()
 	timer.one_shot = true
@@ -41,30 +43,6 @@ func _ready() -> void:
 
 func spellAssigned() -> bool:
 	return spell >= 0
-
-
-func cast():
-	
-	if not spellAssigned():
-		return
-	
-	if gv.warlock.casting:
-		return
-	
-	if not Cav.spell[spell].requires_target:
-		
-		gv.warlock.cast(spell, gv.warlock)
-		
-		return
-	
-	var target = yield(Cav, "spell_target_confirmed")
-	
-	if typeof(target) == TYPE_BOOL:
-		# canceling the cast will return FALSE
-		# successfully selecting a target 
-		return
-	
-	caster.cast(spell, target)
 
 func setHotkeyText(_text: String):
 	hotkey_text.text = _text
@@ -82,12 +60,14 @@ func setSpell(type: int):
 	setIcon()
 	setBorderColor()
 
-func setIcon(type: int = spell):
-	if type == -1:
+func setIcon():
+	
+	if not spellAssigned():
 		icon.hide()
 		hotkey_text.hide()
 		return
-	icon.set_texture(Cav.spell[type].getIcon())
+	
+	icon.set_texture(Cav.spell[spell].getIcon())
 	icon.show()
 	hotkey_text.show()
 
@@ -102,7 +82,20 @@ func setBorderColor():
 func spellCast(duration: float):
 	
 	cd = duration
-	startTimer(timer, duration)
+	startTimer(duration)
+
+func GCDstopped():
+	
+	if not spellAssigned():
+		return
+	
+	gcd_timer.stop()
+	
+	if timer.is_stopped():
+		pass
+	else:
+		using_cd = true
+		#startTimer(timer.time_left, timer)
 
 func newGCD(duration: float):
 	
@@ -110,7 +103,7 @@ func newGCD(duration: float):
 		return
 	
 	if timer.is_stopped():
-		startTimer(gcd_timer, duration)
+		startTimer(duration, gcd_timer)
 		return
 	
 	var timer_time_left = timer.time_left
@@ -119,9 +112,9 @@ func newGCD(duration: float):
 		return
 	
 	if timer_time_left > 0 and timer_time_left < duration:
-		startTimer(gcd_timer, duration)
+		startTimer(duration, gcd_timer)
 
-func startTimer(_timer: Timer, duration: float):
+func startTimer(duration: float, _timer: Timer = timer):
 	
 	if _timer == timer:
 		using_cd = true
@@ -136,23 +129,29 @@ func startTimer(_timer: Timer, duration: float):
 	bar_flair.value = 100
 	
 	cooldown.show()
+	setCDTextColor(1)
 	
 	var _max = cd if using_cd else gcd_cd
 	
 	var t = Timer.new()
 	add_child(t)
 	
-	while _timer.time_left > 0:
+	while _timer.time_left > 0 and not _timer.is_stopped():
 		
 		t.start(gv.fps)
 		yield(t, "timeout")
 		
 		if (_timer == timer and using_cd) or (_timer == gcd_timer and not using_cd):
+			cd_text.text = fval.time(_timer.time_left)
+			setCDTextColor(_timer.time_left)
 			bar.value = _timer.time_left / _max * 100
 	
-	#_timer.stop() # un-comment if timer isn't automatically stopped at the end of its timer
 	t.queue_free()
 
+
+
+func getTimerTimeRemaining() -> float:
+	return timer.time_left
 
 
 func _on_select_mouse_entered() -> void:
@@ -169,4 +168,22 @@ func _on_select_mouse_exited() -> void:
 
 
 func _on_select_pressed() -> void:
-	cast()
+	if spellAssigned():
+		sm.hotbar.queueCast(spell)
+
+
+func setCDTextColor(time_left: float):
+	if time_left < 0.5:
+		cd_text.self_modulate = Color(1, 1, 0)
+	else:
+		cd_text.self_modulate = Color(1, 0, 0)
+
+
+func reset(tier: int):
+	
+	timer.stop()
+	bar.value = 0
+	
+	if tier == 0:
+		setSpell(-1)
+		# note: see #z02 to assign the original arcane lored spells

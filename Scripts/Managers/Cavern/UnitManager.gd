@@ -2,8 +2,6 @@ class_name UnitManager
 extends Node
 
 
-
-
 var resting_resources := []
 func spentResource(resource: Cav.UnitResource):
 	
@@ -47,6 +45,7 @@ func gcd(unit: Unit, duration: float):
 		gv.emit_signal("new_gcd", duration)
 	
 	unit.gcd.spellCast()
+	var gcd_begun = setGCDBegun()
 	
 	var t = Timer.new()
 	add_child(t)
@@ -54,10 +53,25 @@ func gcd(unit: Unit, duration: float):
 	yield(t, "timeout")
 	t.queue_free()
 	
+	if unit.gcd.stopped:
+		unit.gcd.stopped = false
+		return
+	
+	if not gv.warlock.GCDMatch(gcd_begun):
+		print_debug("gcd_begun mis-match: ", gv.warlock.gcd_begun, "; expected ", gcd_begun)
+		return
+	
 	unit.gcd.setAvailable()
+	gv.emit_signal("gcd_stopped")
 
+func getGCDRemaining() -> float:
+	var in_msec := OS.get_ticks_msec() - gv.warlock.gcd_begun
+	var in_sec := float(in_msec) / 1000
+	return max(1.5 - in_sec, 0)
 
-
+func setGCDBegun() -> int:
+	gv.warlock.gcd_begun = OS.get_ticks_msec()
+	return gv.warlock.gcd_begun
 
 
 

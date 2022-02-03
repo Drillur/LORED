@@ -82,6 +82,12 @@ func construct_RIFT():
 	base_max_ticks = 6
 	base_tick_rate = 1
 
+func construct_ARCANE_FLOW():
+	
+	restore_mana = Cav.UnitAttribute.new(0.1)
+	base_max_ticks = 300
+	base_tick_rate = 0.1
+	base_stack_limit = 3
 
 
 

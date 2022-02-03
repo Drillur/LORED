@@ -1,0 +1,468 @@
+[gd_scene load_steps=26 format=2]
+
+[ext_resource path="res://Fonts/Roboto-Black.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://Fonts/Roboto-MediumItalic.ttf" type="DynamicFontData" id=2]
+[ext_resource path="res://Sprites/Menu/Time.png" type="Texture" id=3]
+[ext_resource path="res://Sprites/Menu/Calendar.png" type="Texture" id=4]
+[ext_resource path="res://Sprites/Menu/Difficulty.png" type="Texture" id=5]
+[ext_resource path="res://Sprites/Menu/Delete.png" type="Texture" id=6]
+[ext_resource path="res://Sprites/Menu/Color.png" type="Texture" id=7]
+[ext_resource path="res://Sprites/Menu/Play.png" type="Texture" id=8]
+[ext_resource path="res://Sprites/Menu/Edit.png" type="Texture" id=9]
+[ext_resource path="res://Prefabs/menu/Save Slot Block.gd" type="Script" id=10]
+[ext_resource path="res://Fonts/Roboto-Medium.ttf" type="DynamicFontData" id=11]
+
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 1, 1, 1, 0.301961 )
+border_color = Color( 0.568627, 1, 0, 0.6 )
+
+[sub_resource type="StyleBoxFlat" id=7]
+bg_color = Color( 0, 0, 0, 0.25 )
+border_color = Color( 1, 1, 1, 0.65 )
+expand_margin_left = 10.0
+expand_margin_right = 10.0
+expand_margin_top = 10.0
+expand_margin_bottom = 10.0
+
+[sub_resource type="DynamicFont" id=2]
+size = 14
+font_data = ExtResource( 1 )
+
+[sub_resource type="DynamicFont" id=13]
+size = 10
+font_data = ExtResource( 2 )
+
+[sub_resource type="StyleBoxFlat" id=8]
+draw_center = false
+
+[sub_resource type="StyleBoxFlat" id=4]
+bg_color = Color( 1, 1, 1, 0.0313726 )
+
+[sub_resource type="StyleBoxFlat" id=5]
+bg_color = Color( 1, 1, 1, 0.06 )
+
+[sub_resource type="StyleBoxFlat" id=6]
+draw_center = false
+
+[sub_resource type="StyleBoxFlat" id=12]
+bg_color = Color( 1, 1, 1, 0.301961 )
+border_color = Color( 0.568627, 1, 0, 0.6 )
+
+[sub_resource type="DynamicFont" id=9]
+size = 12
+outline_color = Color( 0, 0, 0, 1 )
+font_data = ExtResource( 1 )
+
+[sub_resource type="StyleBoxFlat" id=10]
+bg_color = Color( 0.423529, 0.423529, 0.423529, 1 )
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+shadow_color = Color( 0.117188, 0.117188, 0.117188, 0.54902 )
+shadow_size = 4
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id=11]
+bg_color = Color( 0.25098, 0.25098, 0.25098, 1 )
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+shadow_color = Color( 0.0390625, 0.0390625, 0.0390625, 0.54902 )
+shadow_size = 4
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id=3]
+bg_color = Color( 0.352941, 0.352941, 0.352941, 1 )
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+shadow_color = Color( 0.078125, 0.078125, 0.078125, 0.54902 )
+shadow_size = 4
+anti_aliasing = false
+
+[sub_resource type="DynamicFont" id=14]
+size = 14
+font_data = ExtResource( 11 )
+
+[node name="Save Slot Block" type="MarginContainer"]
+margin_right = 160.0
+margin_bottom = 129.0
+rect_min_size = Vector2( 170, 0 )
+script = ExtResource( 10 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="v" type="VBoxContainer" parent="."]
+margin_right = 170.0
+margin_bottom = 129.0
+custom_constants/separation = 0
+
+[node name="m" type="MarginContainer" parent="v"]
+margin_right = 170.0
+margin_bottom = 129.0
+
+[node name="bg" type="Panel" parent="v/m"]
+self_modulate = Color( 0.0470588, 0.941176, 0.941176, 1 )
+margin_right = 170.0
+margin_bottom = 129.0
+custom_styles/panel = SubResource( 1 )
+
+[node name="m" type="MarginContainer" parent="v/m"]
+margin_right = 170.0
+margin_bottom = 129.0
+custom_constants/margin_right = 10
+custom_constants/margin_top = 10
+custom_constants/margin_left = 10
+custom_constants/margin_bottom = 10
+
+[node name="v" type="VBoxContainer" parent="v/m/m"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 160.0
+margin_bottom = 119.0
+custom_constants/separation = 20
+
+[node name="name" type="MarginContainer" parent="v/m/m/v"]
+margin_right = 150.0
+margin_bottom = 17.0
+
+[node name="bg" type="Panel" parent="v/m/m/v/name"]
+margin_right = 150.0
+margin_bottom = 17.0
+custom_styles/panel = SubResource( 7 )
+
+[node name="v" type="VBoxContainer" parent="v/m/m/v/name"]
+margin_right = 150.0
+margin_bottom = 17.0
+custom_constants/separation = -1
+alignment = 1
+
+[node name="text" type="Label" parent="v/m/m/v/name/v"]
+margin_right = 150.0
+margin_bottom = 17.0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 2 )
+text = "save.lored"
+align = 1
+
+[node name="flair" type="Label" parent="v/m/m/v/name/v"]
+visible = false
+margin_top = 16.0
+margin_right = 311.0
+margin_bottom = 29.0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 13 )
+text = "DELETE THIS LABEL and make another way to display \"last-played save\""
+align = 1
+
+[node name="v" type="VBoxContainer" parent="v/m/m/v"]
+margin_top = 37.0
+margin_right = 150.0
+margin_bottom = 109.0
+custom_constants/separation = 0
+
+[node name="date" type="HBoxContainer" parent="v/m/m/v/v"]
+margin_right = 150.0
+margin_bottom = 24.0
+custom_constants/separation = 8
+
+[node name="icon" type="Panel" parent="v/m/m/v/v/date"]
+margin_right = 24.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 24, 24 )
+custom_styles/panel = SubResource( 8 )
+
+[node name="shadow" type="Sprite" parent="v/m/m/v/v/date/icon"]
+self_modulate = Color( 0, 0, 0, 0.501961 )
+position = Vector2( 13, 13 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 4 )
+
+[node name="Sprite" type="Sprite" parent="v/m/m/v/v/date/icon"]
+position = Vector2( 12, 12 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 4 )
+
+[node name="text" type="Label" parent="v/m/m/v/v/date"]
+margin_left = 32.0
+margin_top = 3.0
+margin_right = 90.0
+margin_bottom = 20.0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 2 )
+text = "2/2/2022"
+align = 1
+
+[node name="time played" type="HBoxContainer" parent="v/m/m/v/v"]
+margin_top = 24.0
+margin_right = 150.0
+margin_bottom = 48.0
+custom_constants/separation = 8
+
+[node name="icon" type="Panel" parent="v/m/m/v/v/time played"]
+margin_right = 24.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 24, 24 )
+custom_styles/panel = SubResource( 8 )
+
+[node name="shadow" type="Sprite" parent="v/m/m/v/v/time played/icon"]
+self_modulate = Color( 0, 0, 0, 0.501961 )
+position = Vector2( 13, 13 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 3 )
+
+[node name="Sprite" type="Sprite" parent="v/m/m/v/v/time played/icon"]
+position = Vector2( 12, 12 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 3 )
+
+[node name="text" type="Label" parent="v/m/m/v/v/time played"]
+margin_left = 32.0
+margin_top = 3.0
+margin_right = 48.0
+margin_bottom = 20.0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 2 )
+text = "6h"
+align = 1
+
+[node name="difficulty" type="HBoxContainer" parent="v/m/m/v/v"]
+margin_top = 48.0
+margin_right = 150.0
+margin_bottom = 72.0
+custom_constants/separation = 8
+
+[node name="icon" type="Panel" parent="v/m/m/v/v/difficulty"]
+margin_right = 24.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 24, 24 )
+custom_styles/panel = SubResource( 8 )
+
+[node name="shadow" type="Sprite" parent="v/m/m/v/v/difficulty/icon"]
+self_modulate = Color( 0, 0, 0, 0.501961 )
+position = Vector2( 13, 13 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 5 )
+
+[node name="Sprite" type="Sprite" parent="v/m/m/v/v/difficulty/icon"]
+position = Vector2( 12, 12 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 5 )
+
+[node name="text" type="Label" parent="v/m/m/v/v/difficulty"]
+margin_left = 32.0
+margin_top = 3.0
+margin_right = 86.0
+margin_bottom = 20.0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 2 )
+text = "Tortoise"
+align = 1
+
+[node name="select" type="Button" parent="v/m"]
+visible = false
+margin_right = 170.0
+margin_bottom = 129.0
+rect_pivot_offset = Vector2( 71, 48 )
+focus_mode = 0
+mouse_default_cursor_shape = 2
+custom_styles/hover = SubResource( 4 )
+custom_styles/pressed = SubResource( 5 )
+custom_styles/normal = SubResource( 6 )
+
+[node name="actions" type="MarginContainer" parent="v"]
+visible = false
+margin_top = 129.0
+margin_right = 170.0
+margin_bottom = 173.0
+
+[node name="bg" type="Panel" parent="v/actions"]
+self_modulate = Color( 0.34902, 0.34902, 0.34902, 1 )
+margin_right = 170.0
+margin_bottom = 44.0
+custom_styles/panel = SubResource( 12 )
+
+[node name="m" type="MarginContainer" parent="v/actions"]
+margin_right = 170.0
+margin_bottom = 44.0
+custom_constants/margin_right = 10
+custom_constants/margin_top = 10
+custom_constants/margin_left = 10
+custom_constants/margin_bottom = 10
+
+[node name="h" type="HBoxContainer" parent="v/actions/m"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 160.0
+margin_bottom = 34.0
+custom_constants/separation = 10
+alignment = 1
+
+[node name="play" type="MarginContainer" parent="v/actions/m/h"]
+margin_right = 48.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 48, 0 )
+
+[node name="button" type="Button" parent="v/actions/m/h/play"]
+self_modulate = Color( 0.384314, 0.603922, 0.270588, 1 )
+margin_right = 48.0
+margin_bottom = 24.0
+focus_mode = 0
+mouse_default_cursor_shape = 2
+custom_fonts/font = SubResource( 9 )
+custom_styles/hover = SubResource( 10 )
+custom_styles/pressed = SubResource( 11 )
+custom_styles/normal = SubResource( 3 )
+enabled_focus_mode = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="icon" type="Panel" parent="v/actions/m/h/play"]
+margin_right = 48.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 24, 24 )
+mouse_filter = 2
+custom_styles/panel = SubResource( 8 )
+
+[node name="Sprite2" type="Sprite" parent="v/actions/m/h/play/icon"]
+self_modulate = Color( 0, 0, 0, 0.501961 )
+position = Vector2( 25, 13 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 8 )
+
+[node name="Sprite" type="Sprite" parent="v/actions/m/h/play/icon"]
+position = Vector2( 24, 12 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 8 )
+
+[node name="edit name" type="MarginContainer" parent="v/actions/m/h"]
+margin_left = 58.0
+margin_right = 82.0
+margin_bottom = 24.0
+
+[node name="button" type="Button" parent="v/actions/m/h/edit name"]
+margin_right = 24.0
+margin_bottom = 24.0
+focus_mode = 0
+mouse_default_cursor_shape = 2
+custom_fonts/font = SubResource( 9 )
+custom_styles/hover = SubResource( 10 )
+custom_styles/pressed = SubResource( 11 )
+custom_styles/normal = SubResource( 3 )
+enabled_focus_mode = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="icon" type="Panel" parent="v/actions/m/h/edit name"]
+margin_right = 24.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 24, 24 )
+mouse_filter = 2
+custom_styles/panel = SubResource( 8 )
+
+[node name="Sprite2" type="Sprite" parent="v/actions/m/h/edit name/icon"]
+self_modulate = Color( 0, 0, 0, 0.501961 )
+position = Vector2( 13, 13 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 9 )
+
+[node name="Sprite" type="Sprite" parent="v/actions/m/h/edit name/icon"]
+position = Vector2( 12, 12 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 9 )
+
+[node name="edit color" type="MarginContainer" parent="v/actions/m/h"]
+margin_left = 92.0
+margin_right = 116.0
+margin_bottom = 24.0
+
+[node name="button" type="Button" parent="v/actions/m/h/edit color"]
+margin_right = 24.0
+margin_bottom = 24.0
+focus_mode = 0
+mouse_default_cursor_shape = 2
+custom_fonts/font = SubResource( 9 )
+custom_styles/hover = SubResource( 10 )
+custom_styles/pressed = SubResource( 11 )
+custom_styles/normal = SubResource( 3 )
+enabled_focus_mode = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="icon" type="Panel" parent="v/actions/m/h/edit color"]
+margin_right = 24.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 24, 24 )
+mouse_filter = 2
+custom_styles/panel = SubResource( 8 )
+
+[node name="Sprite2" type="Sprite" parent="v/actions/m/h/edit color/icon"]
+self_modulate = Color( 0, 0, 0, 0.501961 )
+position = Vector2( 13, 13 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 7 )
+
+[node name="Sprite" type="Sprite" parent="v/actions/m/h/edit color/icon"]
+position = Vector2( 12, 12 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 7 )
+
+[node name="delete" type="MarginContainer" parent="v/actions/m/h"]
+margin_left = 126.0
+margin_right = 150.0
+margin_bottom = 24.0
+
+[node name="button" type="Button" parent="v/actions/m/h/delete"]
+modulate = Color( 1, 0, 0, 1 )
+margin_right = 24.0
+margin_bottom = 24.0
+focus_mode = 0
+mouse_default_cursor_shape = 2
+custom_fonts/font = SubResource( 9 )
+custom_styles/hover = SubResource( 10 )
+custom_styles/pressed = SubResource( 11 )
+custom_styles/normal = SubResource( 3 )
+enabled_focus_mode = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="icon" type="Panel" parent="v/actions/m/h/delete"]
+margin_right = 24.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 24, 24 )
+mouse_filter = 2
+custom_styles/panel = SubResource( 8 )
+
+[node name="Sprite2" type="Sprite" parent="v/actions/m/h/delete/icon"]
+self_modulate = Color( 0, 0, 0, 0.501961 )
+position = Vector2( 13, 13 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 6 )
+
+[node name="Sprite" type="Sprite" parent="v/actions/m/h/delete/icon"]
+position = Vector2( 12, 12 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 6 )
+
+[node name="Node2D" type="Node2D" parent="."]
+
+[node name="TextEdit" type="TextEdit" parent="Node2D"]
+margin_left = 8.0
+margin_top = 6.0
+margin_right = 162.0
+margin_bottom = 29.0
+custom_fonts/font = SubResource( 14 )
+text = "Rename Save"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[connection signal="pressed" from="v/m/select" to="." method="_on_select_pressed"]

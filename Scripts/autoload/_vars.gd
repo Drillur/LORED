@@ -357,12 +357,16 @@ var spell_sprite := {
 	
 	Cav.Spell.ARCANE_FOCUS: preload("res://Sprites/resources/axe.png"),
 	Cav.Spell.CORE_RIFT: preload("res://Sprites/resources/water.png"),
+	Cav.Spell.VITALIZE: preload("res://Sprites/resources/seed.png"),
+	Cav.Spell.ARCANE_FLOW: preload("res://Sprites/resources/iron.png"),
 	
 }
 
 var buff_sprite := {
 	
 	Cav.Buff.RIFT: preload("res://Sprites/resources/water.png"),
+	Cav.Buff.ARCANE_FLOW: preload("res://Sprites/resources/iron.png"),
+	
 	Cav.Buff.SCORCHING: preload("res://Sprites/resources/axe.png"),
 	
 }
@@ -1139,6 +1143,9 @@ func damageTypeToNR(type: int) -> int:
 
 var target: Unit
 signal new_gcd(duration) # Unit.gd -> SpellButton.gd
+signal gcd_stopped # Cavern/Cavern.gd -> SpellButton.gd
+signal casting_completed # SpellManager.gd -> ?
+signal cooldown_completed(spell_type) # should be an int || SpellManager.gd -> ?
 
 signal mana_restored(amount, surplus) # Unit.gd -> Scenes/Cavern.gd
 signal buff_applied(target, data) # Unit.gd -> Scenes/Cavern.gd
@@ -1156,3 +1163,60 @@ func getSpellBorderColor(spell: int) -> Color:
 	if Cav.spell[spell].restores_mana:
 		return gv.COLORS["mana"]
 	return Color(1,1,1)
+
+
+
+var active_slot := "SLOT0"
+var save_slot_info := {
+	"SLOT0": [],
+	"SLOT1": [],
+	"SLOT2": [],
+	"SLOT3": [],
+	"SLOT4": [],
+}
+func storeSaveSlotInfo():
+	# called on boot
+	print("time played ", stats.time_played)
+	save_slot_info["SLOT0"].append(stats.time_played)
+	save_slot_info["SLOT0"].append(OS.get_unix_time())
+	
+	var save_file = File.new()
+	
+	for x in 4:
+		
+		var path := "user://save" + str(x + 1) + ".lored"
+		var save := _save.new()
+		
+		if not save_file.file_exists(path):
+			continue
+		
+		save_file.open(path, File.READ)
+		var data = Marshalls.base64_to_variant(save_file.get_line())
+		
+		save_slot_info["SLOT" + str(x + 1)].append(data["time_played"])
+		save_slot_info["SLOT" + str(x + 1)].append(data["cur_clock"])
+		
+		save_file.close()
+
+func getSaveSlotInfo(slot: int) -> String:
+	
+	if save_slot_info["SLOT" + str(slot)].size() == 0:
+		return "Slot empty."
+	
+	var time_played = "Time played: " + fval.time(save_slot_info["SLOT" + str(slot)][0])
+	
+	var full_date_played = OS.get_datetime_from_unix_time(save_slot_info["SLOT" + str(slot)][1])
+	var date_played = "Last date played: " + str(full_date_played["day"]) + "/" + str(full_date_played["month"]) + "/" + str(full_date_played["year"])
+	
+	return time_played + "\n" + date_played
+
+
+func syncLOREDs(immediately := false):
+	
+	if immediately:
+		for x in g:
+			g[x].sync()
+		return
+	
+	for x in g:
+		g[x].queueSync()

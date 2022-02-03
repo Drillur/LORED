@@ -198,6 +198,7 @@ fval="*res://Scripts/autoload/format_value.gd"
 sm="*res://Scripts/Managers/Cavern/SpellManager.gd"
 bm="*res://Scripts/Managers/Cavern/BuffManager.gd"
 um="*res://Scripts/Managers/Cavern/UnitManager.gd"
+diff="*res://Scripts/Managers/Difficulty.gd"
 Boot="*res://Scripts/autoload/Boot.gd"
 
 [debug]
