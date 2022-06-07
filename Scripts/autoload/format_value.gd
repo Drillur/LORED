@@ -24,7 +24,7 @@ func f(value: float) -> String:
 	value = abs(value)
 	
 	if value >= 1000000.0:
-		match gv.menu.option["notation_type"]:
+		match gv.option["notation_type"]:
 			NotationType.ENGINEERING:
 				return format_val_eng(_sign, value) # 20e6
 			_: #NotationType.SCIENTIFIC:
@@ -111,3 +111,24 @@ func time(val: float) -> String:
 		return str(round(val))
 	
 	return "%1.1f" % val
+
+func time_accurate(val: float) -> String:
+	
+	if val < 10:
+		return "%1.1f" % val + "s"
+	
+	if val < 60:
+		return str(round(val)) + "s"
+	
+	var minutes := 0
+	
+	if val < 3600:
+		
+		minutes = int(val) / 60
+		return "%00.f" % minutes + "m"
+	
+	var hours := 0
+	
+	hours = int(val) / 3600
+	minutes = (int(val) % 3600) / 60
+	return "%0.f" % hours + "h " + "%00.f" % minutes + "m"

@@ -23,6 +23,13 @@ onready var gn_buffs = get_node("m/bot/v/buffs")
 
 
 func _ready() -> void:
+	
+	#gv.active_scene = "Cavern"
+	
+	Boot.bootCav()
+	
+	Cav.cav = self
+	
 	castbar.hide()
 	sm.castbar = castbar
 	sm.hotbar = hotbar
@@ -31,7 +38,10 @@ func _ready() -> void:
 	gv.connect("buff_renewed", self, "buffRenewed")
 	setManaText()
 	mana_bar_width = get_node("m/bot/v/resources/h/mana/total").rect_size.x
-
+	
+	_load()
+	
+	setup()
 
 func save() -> String:
 	
@@ -41,13 +51,17 @@ func save() -> String:
 	
 	return var2str(data)
 
-func load(raw_data: String):
+func _load():
 	
-	var data = str2var(raw_data)
+	var data = SaveManager.getCavernData()
 	
-	if "hotbar" in data.keys():
-		hotbar.load(data["hotbar"])
-
+	if data == {}:
+		return
+	
+	var data_keys = data.keys()
+	
+	if "hotbar" in data_keys:
+		hotbar.load(str2var(data["hotbar"]))
 
 
 func setup():
@@ -81,7 +95,7 @@ func setResourceVisibility():
 
 
 
-func input(ev):
+func _input(ev):
 	
 	# called from _Root.gd
 	
@@ -191,10 +205,10 @@ func reset(tier: int):
 func _on_Button_pressed() -> void:
 	# for testing 
 	setupUnit()
-	hotbar.setSpell("0/5", Cav.Spell.CORE_RIFT)
-	hotbar.setSpell("0/6", Cav.Spell.ARCANE_FOCUS) #z02
-	hotbar.setSpell("0/7", Cav.Spell.VITALIZE)
-	hotbar.setSpell("0/8", Cav.Spell.ARCANE_FLOW)
+	hotbar.setSpell("0/5", Cav.eSpell.CORE_RIFT)
+	hotbar.setSpell("0/6", Cav.eSpell.ARCANE_FOCUS) #z02
+	hotbar.setSpell("0/7", Cav.eSpell.VITALIZE)
+	hotbar.setSpell("0/8", Cav.eSpell.ARCANE_FLOW)
 
 
 func _on_Button2_pressed() -> void:

@@ -28,7 +28,7 @@ func quest_ended() -> void:
 
 func flying_texts(reward = []) -> void:
 	
-	if not gv.menu.option["flying_numbers"]:
+	if not gv.option["flying_numbers"]:
 		return
 	
 	var poop = []

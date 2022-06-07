@@ -340,6 +340,18 @@ static func max(m, n):
 	
 	return n
 
+func cap(_min, _max):
+	capMin(_min)
+	capMax(_max)
+func capMax(n):
+	if greater(n):
+		mantissa = n.mantissa
+		exponent = n.exponent
+func capMin(n):
+	if less(n):
+		mantissa = n.mantissa
+		exponent = n.exponent
+
 func roundDown():
 	if exponent <= 0:
 		mantissa = floor(mantissa)
@@ -361,8 +373,7 @@ func toString() -> String:
 	if exponent < 6:
 		return format_val_hub(toFloat())
 	
-	#return toScientific() #note i commented this line out because why is it here
-	match gv.menu.option["notation_type"]:
+	match gv.option["notation_type"]:
 		0:
 			return toEngineering()
 		1:
@@ -445,3 +456,8 @@ func toFloat():
 	return mantissa * pow(10, exponent)
 
 
+func save() -> String:
+	return toScientific()
+
+func load(in_scientific: String):
+	parse(in_scientific)

@@ -1,6 +1,6 @@
 [gd_scene load_steps=41 format=2]
 
-[ext_resource path="res://Sprites/animations/wood.tres" type="SpriteFrames" id=1]
+[ext_resource path="res://Sprites/animations/malig.tres" type="SpriteFrames" id=1]
 [ext_resource path="res://Fonts/Roboto-BlackItalic.ttf" type="DynamicFontData" id=2]
 [ext_resource path="res://Sprites/resources/coal.png" type="Texture" id=3]
 [ext_resource path="res://Sprites/resources/axe.png" type="Texture" id=4]
@@ -236,9 +236,6 @@ custom_constants/margin_top = 10
 custom_constants/margin_left = 10
 custom_constants/margin_bottom = 10
 script = ExtResource( 6 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="v" type="VBoxContainer" parent="."]
 margin_left = 10.0
@@ -299,7 +296,7 @@ position = Vector2( 34, 34 )
 scale = Vector2( 2, 2 )
 frames = ExtResource( 1 )
 animation = "ff"
-frame = 4
+frame = 23
 playing = true
 script = ExtResource( 16 )
 
@@ -634,7 +631,7 @@ __meta__ = {
 position = Vector2( 7, 7 )
 scale = Vector2( 0.6, 0.6 )
 frames = ExtResource( 15 )
-frame = 6
+frame = 11
 playing = true
 
 [node name="hold" type="Button" parent="v/m/v/interactables/lored/h"]

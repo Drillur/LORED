@@ -4,12 +4,14 @@ extends Node
 var modifier_lored_output := 1.0 setget setOutput, getOutput
 var modifier_lored_input := 1.0 setget setInput, getInput
 var modifier_lored_haste := 1.0 setget setHaste, getHaste
-var modifier_lored_crit_addition := 0.0 setget setCritAddition, getCritAddition
+var modifier_lored_crit_add := 0.0 setget setCritAdd, getCritAdd
 var modifier_lored_crit := 1.0 setget setCrit, getCrit
 var modifier_lored_fuel_consumption := 1.0 setget setFuelConsumption, getFuelConsumption
 var modifier_lored_fuel_storage := 1.0 setget setFuelStorage, getFuelStorage
 
 enum Difficulty {
+	# new difficulties must be added at the bottom
+	CUSTOM,
 	MARATHON,
 	HARD,
 	NORMAL,
@@ -17,6 +19,16 @@ enum Difficulty {
 	EASY,
 	SPEEDRUN,
 	HACKS,
+}
+const DifficultyDescription := {
+	Difficulty.CUSTOM: "Go wild!",
+	Difficulty.MARATHON: "For freaks or excessive idling.",
+	Difficulty.HARD: "For the patient.",
+	Difficulty.NORMAL: "Intended values. First-time or returning players should begin here.",
+	Difficulty.TORTOISE: "Slow and steady wins the race.",
+	Difficulty.EASY: "For the impatient.",
+	Difficulty.SPEEDRUN: "Warp 1. Engage.",
+	Difficulty.HACKS: "~dev_mode = true~",
 }
 var active_difficulty = Difficulty.NORMAL
 
@@ -36,10 +48,10 @@ func setHaste(val: float):
 func getHaste() -> float:
 	return modifier_lored_haste
 
-func setCritAddition(val: float):
-	modifier_lored_crit_addition = val
-func getCritAddition() -> float:
-	return modifier_lored_crit_addition
+func setCritAdd(val: float):
+	modifier_lored_crit_add = val
+func getCritAdd() -> float:
+	return modifier_lored_crit_add
 
 func setCrit(val: float):
 	modifier_lored_crit = val
@@ -61,7 +73,7 @@ func resetAll():
 	setOutput(1)
 	setInput(1)
 	setHaste(1)
-	setCritAddition(0)
+	setCritAdd(0)
 	setCrit(1)
 	setFuelConsumption(1)
 	setFuelStorage(1)
@@ -91,7 +103,7 @@ func changeDifficulty(new_diff: int):
 		
 		Difficulty.TORTOISE:
 			setHaste(0.1)
-			setCritAddition(35)
+			setCritAdd(35)
 		
 		Difficulty.EASY:
 			setHaste(2)
@@ -106,6 +118,11 @@ func changeDifficulty(new_diff: int):
 		Difficulty.HACKS:
 			setHaste(5)
 			setInput(0)
-			setCritAddition(100)
+			setCritAdd(100)
 	
 	gv.syncLOREDs()
+
+
+
+func getDifficultyText() -> String:
+	return Difficulty.keys()[active_difficulty].capitalize()

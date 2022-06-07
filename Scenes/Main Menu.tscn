@@ -1,12 +1,17 @@
-[gd_scene load_steps=20 format=2]
+[gd_scene load_steps=46 format=2]
 
 [ext_resource path="res://Fonts/Roboto-Black.ttf" type="DynamicFontData" id=1]
-[ext_resource path="res://Prefabs/menu/Save Slot Block.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Sprites/Menu/Hint.png" type="Texture" id=2]
 [ext_resource path="res://Fonts/Roboto-MediumItalic.ttf" type="DynamicFontData" id=3]
 [ext_resource path="res://Sprites/Menu/Arrow.png" type="Texture" id=4]
 [ext_resource path="res://Sprites/Menu/View.png" type="Texture" id=5]
 [ext_resource path="res://Sprites/Menu/Import.png" type="Texture" id=6]
 [ext_resource path="res://Scenes/Main Menu.gd" type="Script" id=7]
+[ext_resource path="res://Sprites/Menu/Cancel.png" type="Texture" id=8]
+[ext_resource path="res://Sprites/Menu/Check.png" type="Texture" id=9]
+[ext_resource path="res://Sprites/Menu/Refresh.png" type="Texture" id=10]
+[ext_resource path="res://Sprites/Menu/Back.png" type="Texture" id=11]
+[ext_resource path="res://Prefabs/menu/New Game.tscn" type="PackedScene" id=12]
 
 [sub_resource type="StyleBoxFlat" id=7]
 draw_center = false
@@ -87,94 +92,246 @@ draw_center = false
 size = 14
 font_data = ExtResource( 1 )
 
+[sub_resource type="StyleBoxFlat" id=32]
+bg_color = Color( 0, 0, 0, 0.25 )
+border_color = Color( 1, 1, 1, 0.65 )
+expand_margin_left = 10.0
+expand_margin_right = 10.0
+expand_margin_top = 10.0
+expand_margin_bottom = 10.0
+
+[sub_resource type="DynamicFont" id=24]
+size = 12
+outline_color = Color( 0, 0, 0, 1 )
+font_data = ExtResource( 1 )
+
+[sub_resource type="StyleBoxFlat" id=25]
+bg_color = Color( 0.423529, 0.423529, 0.423529, 1 )
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+shadow_color = Color( 0.117188, 0.117188, 0.117188, 0.54902 )
+shadow_size = 4
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id=26]
+bg_color = Color( 0.25098, 0.25098, 0.25098, 1 )
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+shadow_color = Color( 0.0390625, 0.0390625, 0.0390625, 0.54902 )
+shadow_size = 4
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id=27]
+bg_color = Color( 0.352941, 0.352941, 0.352941, 1 )
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+shadow_color = Color( 0.078125, 0.078125, 0.078125, 0.54902 )
+shadow_size = 4
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id=28]
+draw_center = false
+
+[sub_resource type="DynamicFont" id=19]
+size = 12
+outline_color = Color( 0, 0, 0, 1 )
+font_data = ExtResource( 1 )
+
+[sub_resource type="StyleBoxFlat" id=20]
+bg_color = Color( 0.423529, 0.423529, 0.423529, 1 )
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+shadow_color = Color( 0.117188, 0.117188, 0.117188, 0.54902 )
+shadow_size = 4
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id=21]
+bg_color = Color( 0.25098, 0.25098, 0.25098, 1 )
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+shadow_color = Color( 0.0390625, 0.0390625, 0.0390625, 0.54902 )
+shadow_size = 4
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id=22]
+bg_color = Color( 0.352941, 0.352941, 0.352941, 1 )
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+shadow_color = Color( 0.078125, 0.078125, 0.078125, 0.54902 )
+shadow_size = 4
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id=23]
+draw_center = false
+
+[sub_resource type="StyleBoxFlat" id=29]
+bg_color = Color( 1, 1, 1, 1 )
+border_color = Color( 0.568627, 1, 0, 0.6 )
+shadow_size = 5
+
+[sub_resource type="DynamicFont" id=33]
+size = 14
+font_data = ExtResource( 1 )
+
+[sub_resource type="DynamicFont" id=30]
+size = 12
+font_data = ExtResource( 1 )
+
+[sub_resource type="DynamicFont" id=31]
+size = 12
+font_data = ExtResource( 1 )
+
+[sub_resource type="StyleBoxFlat" id=13]
+bg_color = Color( 0.152344, 0.152344, 0.152344, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.304688, 0.304688, 0.304688, 1 )
+shadow_size = 10
+
+[sub_resource type="DynamicFont" id=14]
+size = 12
+outline_color = Color( 0, 0, 0, 1 )
+font_data = ExtResource( 1 )
+
+[sub_resource type="StyleBoxFlat" id=15]
+bg_color = Color( 0.423529, 0.423529, 0.423529, 1 )
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+shadow_color = Color( 0.117188, 0.117188, 0.117188, 0.54902 )
+shadow_size = 4
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id=16]
+bg_color = Color( 0.25098, 0.25098, 0.25098, 1 )
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+shadow_color = Color( 0.0390625, 0.0390625, 0.0390625, 0.54902 )
+shadow_size = 4
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id=17]
+bg_color = Color( 0.352941, 0.352941, 0.352941, 1 )
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+shadow_color = Color( 0.078125, 0.078125, 0.078125, 0.54902 )
+shadow_size = 4
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id=18]
+draw_center = false
+
 [node name="Main Menu" type="MarginContainer"]
 margin_right = 1280.0
 margin_bottom = 720.0
 script = ExtResource( 7 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="h" type="HBoxContainer" parent="."]
-margin_top = 42.0
+[node name="sc" type="ScrollContainer" parent="."]
 margin_right = 1280.0
-margin_bottom = 678.0
-size_flags_vertical = 4
+margin_bottom = 720.0
+scroll_vertical_enabled = false
+
+[node name="h" type="HBoxContainer" parent="sc"]
+margin_top = 26.0
+margin_right = 1426.0
+margin_bottom = 682.0
+rect_pivot_offset = Vector2( 1, 1 )
+size_flags_vertical = 6
 custom_constants/separation = 20
 
-[node name="indent" type="Panel" parent="h"]
+[node name="indent" type="Panel" parent="sc/h"]
 margin_right = 100.0
-margin_bottom = 636.0
+margin_bottom = 656.0
 rect_min_size = Vector2( 100, 0 )
+rect_pivot_offset = Vector2( -2, -5 )
 custom_styles/panel = SubResource( 7 )
 
-[node name="continue" type="MarginContainer" parent="h"]
+[node name="continue" type="MarginContainer" parent="sc/h"]
 margin_left = 120.0
-margin_top = 151.0
-margin_right = 310.0
-margin_bottom = 485.0
+margin_top = 227.0
+margin_right = 268.0
+margin_bottom = 428.0
 size_flags_vertical = 4
 
-[node name="bg" type="Panel" parent="h/continue"]
+[node name="bg" type="Panel" parent="sc/h/continue"]
 self_modulate = Color( 0.219608, 0.219608, 0.219608, 1 )
-margin_right = 190.0
-margin_bottom = 334.0
+margin_right = 148.0
+margin_bottom = 201.0
 custom_styles/panel = SubResource( 8 )
 
-[node name="m" type="MarginContainer" parent="h/continue"]
-margin_right = 190.0
-margin_bottom = 334.0
+[node name="m" type="MarginContainer" parent="sc/h/continue"]
+margin_right = 148.0
+margin_bottom = 201.0
 custom_constants/margin_right = 10
 custom_constants/margin_top = 10
 custom_constants/margin_left = 10
 custom_constants/margin_bottom = 10
 
-[node name="v" type="VBoxContainer" parent="h/continue/m"]
+[node name="v" type="VBoxContainer" parent="sc/h/continue/m"]
 margin_left = 10.0
 margin_top = 10.0
-margin_right = 180.0
-margin_bottom = 324.0
+margin_right = 138.0
+margin_bottom = 191.0
 
-[node name="v" type="VBoxContainer" parent="h/continue/m/v"]
-margin_right = 170.0
-margin_bottom = 314.0
+[node name="v" type="VBoxContainer" parent="sc/h/continue/m/v"]
+margin_right = 128.0
+margin_bottom = 181.0
 custom_constants/separation = 20
 
-[node name="text" type="Label" parent="h/continue/m/v/v"]
-margin_right = 170.0
+[node name="text" type="Label" parent="sc/h/continue/m/v/v"]
+margin_right = 128.0
 margin_bottom = 17.0
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 11 )
 text = "Continue"
 align = 1
 
-[node name="last played" type="VBoxContainer" parent="h/continue/m/v/v"]
+[node name="last played" type="VBoxContainer" parent="sc/h/continue/m/v/v"]
 margin_top = 37.0
-margin_right = 170.0
-margin_bottom = 194.0
+margin_right = 128.0
+margin_bottom = 61.0
 
-[node name="h" type="HBoxContainer" parent="h/continue/m/v/v/last played"]
-margin_right = 170.0
+[node name="h" type="HBoxContainer" parent="sc/h/continue/m/v/v/last played"]
+margin_right = 128.0
 margin_bottom = 24.0
 
-[node name="icon" type="Panel" parent="h/continue/m/v/v/last played/h"]
+[node name="icon" type="Panel" parent="sc/h/continue/m/v/v/last played/h"]
 margin_right = 24.0
 margin_bottom = 24.0
 rect_min_size = Vector2( 24, 24 )
 custom_styles/panel = SubResource( 9 )
 
-[node name="shadow" type="Sprite" parent="h/continue/m/v/v/last played/h/icon"]
+[node name="shadow" type="Sprite" parent="sc/h/continue/m/v/v/last played/h/icon"]
 self_modulate = Color( 0, 0, 0, 0.501961 )
 position = Vector2( 13, 13 )
 scale = Vector2( 0.5, 0.5 )
 texture = ExtResource( 4 )
 
-[node name="Sprite" type="Sprite" parent="h/continue/m/v/v/last played/h/icon"]
+[node name="Sprite" type="Sprite" parent="sc/h/continue/m/v/v/last played/h/icon"]
 position = Vector2( 12, 12 )
 scale = Vector2( 0.5, 0.5 )
 texture = ExtResource( 4 )
 
-[node name="flair" type="Label" parent="h/continue/m/v/v/last played/h"]
+[node name="flair" type="Label" parent="sc/h/continue/m/v/v/last played/h"]
 margin_left = 28.0
 margin_top = 4.0
 margin_right = 117.0
@@ -183,38 +340,33 @@ custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 10 )
 text = "Last-played Save"
 
-[node name="Save Slot Block" parent="h/continue/m/v/v/last played" instance=ExtResource( 2 )]
-margin_top = 28.0
-margin_right = 170.0
-margin_bottom = 157.0
+[node name="v" type="VBoxContainer" parent="sc/h/continue/m/v/v"]
+margin_top = 81.0
+margin_right = 128.0
+margin_bottom = 181.0
 
-[node name="v" type="VBoxContainer" parent="h/continue/m/v/v"]
-margin_top = 214.0
-margin_right = 170.0
-margin_bottom = 314.0
-
-[node name="h" type="HBoxContainer" parent="h/continue/m/v/v/v"]
-margin_right = 170.0
+[node name="h" type="HBoxContainer" parent="sc/h/continue/m/v/v/v"]
+margin_right = 128.0
 margin_bottom = 24.0
 
-[node name="icon" type="Panel" parent="h/continue/m/v/v/v/h"]
+[node name="icon" type="Panel" parent="sc/h/continue/m/v/v/v/h"]
 margin_right = 24.0
 margin_bottom = 24.0
 rect_min_size = Vector2( 24, 24 )
 custom_styles/panel = SubResource( 9 )
 
-[node name="shadow" type="Sprite" parent="h/continue/m/v/v/v/h/icon"]
+[node name="shadow" type="Sprite" parent="sc/h/continue/m/v/v/v/h/icon"]
 self_modulate = Color( 0, 0, 0, 0.501961 )
 position = Vector2( 13, 13 )
 scale = Vector2( 0.5, 0.5 )
 texture = ExtResource( 4 )
 
-[node name="Sprite" type="Sprite" parent="h/continue/m/v/v/v/h/icon"]
+[node name="Sprite" type="Sprite" parent="sc/h/continue/m/v/v/v/h/icon"]
 position = Vector2( 12, 12 )
 scale = Vector2( 0.5, 0.5 )
 texture = ExtResource( 4 )
 
-[node name="flair" type="Label" parent="h/continue/m/v/v/v/h"]
+[node name="flair" type="Label" parent="sc/h/continue/m/v/v/v/h"]
 margin_left = 28.0
 margin_top = 4.0
 margin_right = 128.0
@@ -223,14 +375,14 @@ custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 10 )
 text = "Load Another Save"
 
-[node name="v" type="VBoxContainer" parent="h/continue/m/v/v/v"]
+[node name="v" type="VBoxContainer" parent="sc/h/continue/m/v/v/v"]
 margin_top = 28.0
-margin_right = 170.0
+margin_right = 128.0
 margin_bottom = 100.0
 custom_constants/separation = 8
 
-[node name="load slot" type="MarginContainer" parent="h/continue/m/v/v/v/v"]
-margin_right = 170.0
+[node name="load slot" type="MarginContainer" parent="sc/h/continue/m/v/v/v/v"]
+margin_right = 128.0
 margin_bottom = 32.0
 mouse_filter = 2
 custom_constants/margin_right = 0
@@ -241,9 +393,9 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="button" type="Button" parent="h/continue/m/v/v/v/v/load slot"]
+[node name="button" type="Button" parent="sc/h/continue/m/v/v/v/v/load slot"]
 self_modulate = Color( 0.384314, 0.603922, 0.270588, 1 )
-margin_right = 170.0
+margin_right = 128.0
 margin_bottom = 32.0
 rect_min_size = Vector2( 60, 32 )
 focus_mode = 0
@@ -257,8 +409,8 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="m" type="MarginContainer" parent="h/continue/m/v/v/v/v/load slot"]
-margin_right = 170.0
+[node name="m" type="MarginContainer" parent="sc/h/continue/m/v/v/v/v/load slot"]
+margin_right = 128.0
 margin_bottom = 32.0
 mouse_filter = 2
 custom_constants/margin_right = 15
@@ -269,59 +421,59 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="afford" type="Panel" parent="h/continue/m/v/v/v/v/load slot/m"]
+[node name="afford" type="Panel" parent="sc/h/continue/m/v/v/v/v/load slot/m"]
 visible = false
 self_modulate = Color( 1, 0.682353, 0.137255, 1 )
 margin_left = 15.0
 margin_top = 2.0
-margin_right = 155.0
+margin_right = 113.0
 margin_bottom = 30.0
 mouse_filter = 2
 custom_styles/panel = SubResource( 5 )
 
-[node name="h" type="HBoxContainer" parent="h/continue/m/v/v/v/v/load slot/m"]
+[node name="h" type="HBoxContainer" parent="sc/h/continue/m/v/v/v/v/load slot/m"]
 margin_left = 15.0
 margin_top = 2.0
-margin_right = 155.0
+margin_right = 113.0
 margin_bottom = 30.0
 mouse_filter = 2
 custom_constants/separation = 8
 alignment = 1
 
-[node name="icon" type="Panel" parent="h/continue/m/v/v/v/v/load slot/m/h"]
-margin_left = 24.0
+[node name="icon" type="Panel" parent="sc/h/continue/m/v/v/v/v/load slot/m/h"]
+margin_left = 3.0
 margin_top = 2.0
-margin_right = 48.0
+margin_right = 27.0
 margin_bottom = 26.0
 rect_min_size = Vector2( 24, 24 )
 mouse_filter = 2
 size_flags_vertical = 4
 custom_styles/panel = SubResource( 12 )
 
-[node name="shadow" type="Sprite" parent="h/continue/m/v/v/v/v/load slot/m/h/icon"]
+[node name="shadow" type="Sprite" parent="sc/h/continue/m/v/v/v/v/load slot/m/h/icon"]
 self_modulate = Color( 0, 0, 0, 0.501961 )
 position = Vector2( 13, 13 )
 scale = Vector2( 0.5, 0.5 )
 texture = ExtResource( 5 )
 
-[node name="Sprite" type="Sprite" parent="h/continue/m/v/v/v/v/load slot/m/h/icon"]
+[node name="Sprite" type="Sprite" parent="sc/h/continue/m/v/v/v/v/load slot/m/h/icon"]
 position = Vector2( 12, 12 )
 scale = Vector2( 0.5, 0.5 )
 texture = ExtResource( 5 )
 
-[node name="text" type="Label" parent="h/continue/m/v/v/v/v/load slot/m/h"]
-margin_left = 56.0
+[node name="text" type="Label" parent="sc/h/continue/m/v/v/v/v/load slot/m/h"]
+margin_left = 35.0
 margin_top = 5.0
-margin_right = 115.0
+margin_right = 94.0
 margin_bottom = 22.0
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 6 )
 text = "All Saves"
 align = 1
 
-[node name="import" type="MarginContainer" parent="h/continue/m/v/v/v/v"]
+[node name="import" type="MarginContainer" parent="sc/h/continue/m/v/v/v/v"]
 margin_top = 40.0
-margin_right = 170.0
+margin_right = 128.0
 margin_bottom = 72.0
 mouse_filter = 2
 custom_constants/margin_right = 0
@@ -332,11 +484,12 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="button" type="Button" parent="h/continue/m/v/v/v/v/import"]
+[node name="button" type="Button" parent="sc/h/continue/m/v/v/v/v/import"]
 self_modulate = Color( 0.384314, 0.603922, 0.270588, 1 )
-margin_right = 170.0
+margin_right = 128.0
 margin_bottom = 32.0
 rect_min_size = Vector2( 60, 32 )
+hint_tooltip = "Creates a new save with the save data of the selected text file."
 focus_mode = 0
 mouse_default_cursor_shape = 2
 custom_fonts/font = SubResource( 4 )
@@ -348,8 +501,8 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="m" type="MarginContainer" parent="h/continue/m/v/v/v/v/import"]
-margin_right = 170.0
+[node name="m" type="MarginContainer" parent="sc/h/continue/m/v/v/v/v/import"]
+margin_right = 128.0
 margin_bottom = 32.0
 mouse_filter = 2
 custom_constants/margin_right = 15
@@ -360,236 +513,363 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="afford" type="Panel" parent="h/continue/m/v/v/v/v/import/m"]
+[node name="afford" type="Panel" parent="sc/h/continue/m/v/v/v/v/import/m"]
 visible = false
 self_modulate = Color( 1, 0.682353, 0.137255, 1 )
 margin_left = 15.0
 margin_top = 2.0
-margin_right = 155.0
+margin_right = 113.0
 margin_bottom = 30.0
 mouse_filter = 2
 custom_styles/panel = SubResource( 5 )
 
-[node name="h" type="HBoxContainer" parent="h/continue/m/v/v/v/v/import/m"]
+[node name="h" type="HBoxContainer" parent="sc/h/continue/m/v/v/v/v/import/m"]
 margin_left = 15.0
 margin_top = 2.0
-margin_right = 155.0
+margin_right = 113.0
 margin_bottom = 30.0
 mouse_filter = 2
 custom_constants/separation = 8
 alignment = 1
 
-[node name="icon" type="Panel" parent="h/continue/m/v/v/v/v/import/m/h"]
-margin_left = 33.0
+[node name="icon" type="Panel" parent="sc/h/continue/m/v/v/v/v/import/m/h"]
+margin_left = 12.0
 margin_top = 2.0
-margin_right = 57.0
+margin_right = 36.0
 margin_bottom = 26.0
 rect_min_size = Vector2( 24, 24 )
 mouse_filter = 2
 size_flags_vertical = 4
 custom_styles/panel = SubResource( 12 )
 
-[node name="shadow" type="Sprite" parent="h/continue/m/v/v/v/v/import/m/h/icon"]
+[node name="shadow" type="Sprite" parent="sc/h/continue/m/v/v/v/v/import/m/h/icon"]
 self_modulate = Color( 0, 0, 0, 0.501961 )
 position = Vector2( 13, 13 )
 scale = Vector2( 0.5, 0.5 )
 texture = ExtResource( 6 )
 
-[node name="Sprite" type="Sprite" parent="h/continue/m/v/v/v/v/import/m/h/icon"]
+[node name="Sprite" type="Sprite" parent="sc/h/continue/m/v/v/v/v/import/m/h/icon"]
 position = Vector2( 12, 12 )
 scale = Vector2( 0.5, 0.5 )
 texture = ExtResource( 6 )
 
-[node name="text" type="Label" parent="h/continue/m/v/v/v/v/import/m/h"]
-margin_left = 65.0
+[node name="text" type="Label" parent="sc/h/continue/m/v/v/v/v/import/m/h"]
+margin_left = 44.0
 margin_top = 5.0
-margin_right = 107.0
+margin_right = 86.0
 margin_bottom = 22.0
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 6 )
 text = "Import"
 align = 1
 
-[node name="all saves" type="MarginContainer" parent="h"]
-margin_left = 330.0
-margin_right = 750.0
-margin_bottom = 636.0
+[node name="all saves" type="MarginContainer" parent="sc/h"]
+margin_left = 288.0
+margin_top = 16.0
+margin_right = 854.0
+margin_bottom = 640.0
 size_flags_vertical = 4
 
-[node name="bg" type="Panel" parent="h/all saves"]
+[node name="bg" type="Panel" parent="sc/h/all saves"]
 self_modulate = Color( 0.219608, 0.219608, 0.219608, 1 )
-margin_right = 420.0
-margin_bottom = 636.0
+margin_right = 566.0
+margin_bottom = 624.0
 custom_styles/panel = SubResource( 8 )
 
-[node name="m" type="MarginContainer" parent="h/all saves"]
-margin_right = 420.0
-margin_bottom = 636.0
+[node name="m" type="MarginContainer" parent="sc/h/all saves"]
+margin_right = 566.0
+margin_bottom = 624.0
 custom_constants/margin_right = 10
 custom_constants/margin_top = 10
 custom_constants/margin_left = 10
 custom_constants/margin_bottom = 10
 
-[node name="v" type="VBoxContainer" parent="h/all saves/m"]
+[node name="v" type="VBoxContainer" parent="sc/h/all saves/m"]
 margin_left = 10.0
 margin_top = 10.0
-margin_right = 410.0
-margin_bottom = 626.0
+margin_right = 556.0
+margin_bottom = 614.0
 custom_constants/separation = 20
 
-[node name="top" type="VBoxContainer" parent="h/all saves/m/v"]
-margin_right = 400.0
-margin_bottom = 36.0
+[node name="top" type="MarginContainer" parent="sc/h/all saves/m/v"]
+margin_right = 546.0
+margin_bottom = 24.0
 
-[node name="text" type="Label" parent="h/all saves/m/v/top"]
-margin_right = 400.0
+[node name="bg" type="Panel" parent="sc/h/all saves/m/v/top"]
+margin_right = 546.0
+margin_bottom = 24.0
+custom_styles/panel = SubResource( 32 )
+
+[node name="h" type="HBoxContainer" parent="sc/h/all saves/m/v/top"]
+margin_right = 546.0
+margin_bottom = 24.0
+custom_constants/separation = 8
+alignment = 1
+
+[node name="close" type="MarginContainer" parent="sc/h/all saves/m/v/top/h"]
+margin_right = 24.0
+margin_bottom = 24.0
+size_flags_vertical = 4
+
+[node name="button" type="Button" parent="sc/h/all saves/m/v/top/h/close"]
+margin_right = 24.0
+margin_bottom = 24.0
+hint_tooltip = "Close"
+focus_mode = 0
+mouse_default_cursor_shape = 2
+custom_fonts/font = SubResource( 24 )
+custom_styles/hover = SubResource( 25 )
+custom_styles/pressed = SubResource( 26 )
+custom_styles/normal = SubResource( 27 )
+enabled_focus_mode = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="icon" type="Panel" parent="sc/h/all saves/m/v/top/h/close"]
+margin_right = 24.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 24, 24 )
+mouse_filter = 2
+custom_styles/panel = SubResource( 28 )
+
+[node name="Sprite" type="Sprite" parent="sc/h/all saves/m/v/top/h/close/icon"]
+position = Vector2( 12, 12 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 11 )
+
+[node name="shadow" type="Sprite" parent="sc/h/all saves/m/v/top/h/close/icon/Sprite"]
+self_modulate = Color( 0, 0, 0, 0.501961 )
+show_behind_parent = true
+position = Vector2( 2, 2 )
+texture = ExtResource( 11 )
+
+[node name="v" type="VBoxContainer" parent="sc/h/all saves/m/v/top/h"]
+margin_left = 227.0
+margin_right = 286.0
+margin_bottom = 24.0
+size_flags_horizontal = 6
+
+[node name="text" type="Label" parent="sc/h/all saves/m/v/top/h/v"]
+margin_right = 59.0
 margin_bottom = 17.0
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 11 )
 text = "All Saves"
 align = 1
 
-[node name="flair" type="Label" parent="h/all saves/m/v/top"]
+[node name="flair" type="Label" parent="sc/h/all saves/m/v/top/h/v"]
+visible = false
 margin_top = 21.0
-margin_right = 400.0
+margin_right = 219.0
 margin_bottom = 36.0
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 10 )
 text = "%AppData%\\Godot\\app_userdata\\LORED"
 align = 1
 
-[node name="ScrollContainer" type="ScrollContainer" parent="h/all saves/m/v"]
-margin_top = 56.0
-margin_right = 400.0
-margin_bottom = 616.0
-rect_min_size = Vector2( 400, 560 )
-scroll_vertical_enabled = false
+[node name="hint" type="MarginContainer" parent="sc/h/all saves/m/v/top/h"]
+margin_left = 490.0
+margin_right = 514.0
+margin_bottom = 24.0
+size_flags_horizontal = 8
+size_flags_vertical = 4
 
-[node name="h" type="HBoxContainer" parent="h/all saves/m/v/ScrollContainer"]
-margin_right = 704.0
-margin_bottom = 540.0
-custom_constants/separation = 8
+[node name="button" type="Button" parent="sc/h/all saves/m/v/top/h/hint"]
+margin_right = 24.0
+margin_bottom = 24.0
+focus_mode = 0
+mouse_default_cursor_shape = 2
+custom_fonts/font = SubResource( 19 )
+custom_styles/hover = SubResource( 20 )
+custom_styles/pressed = SubResource( 21 )
+custom_styles/normal = SubResource( 22 )
+enabled_focus_mode = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[node name="v" type="VBoxContainer" parent="h/all saves/m/v/ScrollContainer/h"]
-margin_right = 170.0
-margin_bottom = 540.0
-custom_constants/separation = 8
+[node name="icon" type="Panel" parent="sc/h/all saves/m/v/top/h/hint"]
+margin_right = 24.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 24, 24 )
+mouse_filter = 2
+custom_styles/panel = SubResource( 23 )
 
-[node name="Save Slot Block" parent="h/all saves/m/v/ScrollContainer/h/v" instance=ExtResource( 2 )]
-margin_right = 170.0
-rect_pivot_offset = Vector2( -510, 140 )
+[node name="Sprite" type="Sprite" parent="sc/h/all saves/m/v/top/h/hint/icon"]
+position = Vector2( 12, 12 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 2 )
 
-[node name="Save Slot Block2" parent="h/all saves/m/v/ScrollContainer/h/v" instance=ExtResource( 2 )]
-margin_top = 137.0
-margin_right = 170.0
-margin_bottom = 266.0
-rect_pivot_offset = Vector2( -342, -242 )
+[node name="shadow" type="Sprite" parent="sc/h/all saves/m/v/top/h/hint/icon/Sprite"]
+self_modulate = Color( 0, 0, 0, 0.501961 )
+show_behind_parent = true
+position = Vector2( 2, 2 )
+texture = ExtResource( 2 )
 
-[node name="Save Slot Block3" parent="h/all saves/m/v/ScrollContainer/h/v" instance=ExtResource( 2 )]
-margin_top = 274.0
-margin_right = 170.0
-margin_bottom = 403.0
-rect_pivot_offset = Vector2( -342, -242 )
+[node name="refresh" type="MarginContainer" parent="sc/h/all saves/m/v/top/h"]
+margin_left = 522.0
+margin_right = 546.0
+margin_bottom = 24.0
+size_flags_horizontal = 8
+size_flags_vertical = 4
 
-[node name="Save Slot Block4" parent="h/all saves/m/v/ScrollContainer/h/v" instance=ExtResource( 2 )]
-margin_top = 411.0
-margin_right = 170.0
-margin_bottom = 540.0
-rect_pivot_offset = Vector2( -342, -242 )
+[node name="button" type="Button" parent="sc/h/all saves/m/v/top/h/refresh"]
+margin_right = 24.0
+margin_bottom = 24.0
+hint_tooltip = "Refresh"
+focus_mode = 0
+mouse_default_cursor_shape = 2
+custom_fonts/font = SubResource( 19 )
+custom_styles/hover = SubResource( 20 )
+custom_styles/pressed = SubResource( 21 )
+custom_styles/normal = SubResource( 22 )
+enabled_focus_mode = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[node name="v2" type="VBoxContainer" parent="h/all saves/m/v/ScrollContainer/h"]
-margin_left = 178.0
-margin_right = 348.0
-margin_bottom = 540.0
-custom_constants/separation = 8
+[node name="icon" type="Panel" parent="sc/h/all saves/m/v/top/h/refresh"]
+margin_right = 24.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 24, 24 )
+mouse_filter = 2
+custom_styles/panel = SubResource( 23 )
 
-[node name="Save Slot Block" parent="h/all saves/m/v/ScrollContainer/h/v2" instance=ExtResource( 2 )]
-margin_right = 170.0
-rect_pivot_offset = Vector2( -510, 140 )
+[node name="Sprite" type="Sprite" parent="sc/h/all saves/m/v/top/h/refresh/icon"]
+position = Vector2( 12, 12 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 10 )
 
-[node name="Save Slot Block2" parent="h/all saves/m/v/ScrollContainer/h/v2" instance=ExtResource( 2 )]
-margin_top = 137.0
-margin_right = 170.0
-margin_bottom = 266.0
-rect_pivot_offset = Vector2( -342, -242 )
+[node name="shadow" type="Sprite" parent="sc/h/all saves/m/v/top/h/refresh/icon/Sprite"]
+self_modulate = Color( 0, 0, 0, 0.501961 )
+show_behind_parent = true
+position = Vector2( 2, 2 )
+texture = ExtResource( 10 )
 
-[node name="Save Slot Block3" parent="h/all saves/m/v/ScrollContainer/h/v2" instance=ExtResource( 2 )]
-margin_top = 274.0
-margin_right = 170.0
-margin_bottom = 403.0
-rect_pivot_offset = Vector2( -342, -242 )
+[node name="ScrollContainer" type="ScrollContainer" parent="sc/h/all saves/m/v"]
+margin_top = 44.0
+margin_right = 546.0
+margin_bottom = 604.0
+rect_min_size = Vector2( 546, 560 )
+scroll_horizontal_enabled = false
 
-[node name="Save Slot Block4" parent="h/all saves/m/v/ScrollContainer/h/v2" instance=ExtResource( 2 )]
-margin_top = 411.0
-margin_right = 170.0
-margin_bottom = 540.0
-rect_pivot_offset = Vector2( -342, -242 )
+[node name="GridContainer" type="GridContainer" parent="sc/h/all saves/m/v/ScrollContainer"]
+size_flags_horizontal = 4
+size_flags_vertical = 0
+custom_constants/vseparation = 8
+custom_constants/hseparation = 8
+columns = 3
 
-[node name="v3" type="VBoxContainer" parent="h/all saves/m/v/ScrollContainer/h"]
-margin_left = 356.0
-margin_right = 526.0
-margin_bottom = 540.0
-custom_constants/separation = 8
+[node name="Node2D" type="Node2D" parent="sc/h/all saves"]
+position = Vector2( -288, -48 )
 
-[node name="Save Slot Block" parent="h/all saves/m/v/ScrollContainer/h/v3" instance=ExtResource( 2 )]
-margin_right = 170.0
-rect_pivot_offset = Vector2( -510, 140 )
+[node name="hint" type="MarginContainer" parent="sc/h/all saves/Node2D"]
+visible = false
+margin_left = 639.0
+margin_top = 92.0
+margin_right = 961.0
+margin_bottom = 183.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[node name="Save Slot Block2" parent="h/all saves/m/v/ScrollContainer/h/v3" instance=ExtResource( 2 )]
-margin_top = 137.0
-margin_right = 170.0
-margin_bottom = 266.0
-rect_pivot_offset = Vector2( -342, -242 )
+[node name="bg" type="Panel" parent="sc/h/all saves/Node2D/hint"]
+self_modulate = Color( 0.219608, 0.219608, 0.219608, 1 )
+margin_right = 322.0
+margin_bottom = 91.0
+custom_styles/panel = SubResource( 29 )
 
-[node name="Save Slot Block3" parent="h/all saves/m/v/ScrollContainer/h/v3" instance=ExtResource( 2 )]
-margin_top = 274.0
-margin_right = 170.0
-margin_bottom = 403.0
-rect_pivot_offset = Vector2( -342, -242 )
+[node name="m" type="MarginContainer" parent="sc/h/all saves/Node2D/hint"]
+margin_right = 322.0
+margin_bottom = 91.0
+custom_constants/margin_right = 10
+custom_constants/margin_top = 10
+custom_constants/margin_left = 10
+custom_constants/margin_bottom = 10
 
-[node name="Save Slot Block4" parent="h/all saves/m/v/ScrollContainer/h/v3" instance=ExtResource( 2 )]
-margin_top = 411.0
-margin_right = 170.0
-margin_bottom = 540.0
-rect_pivot_offset = Vector2( -342, -242 )
+[node name="v" type="VBoxContainer" parent="sc/h/all saves/Node2D/hint/m"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 312.0
+margin_bottom = 81.0
+rect_pivot_offset = Vector2( -358, 34 )
+custom_constants/separation = 20
 
-[node name="v4" type="VBoxContainer" parent="h/all saves/m/v/ScrollContainer/h"]
-margin_left = 534.0
-margin_right = 704.0
-margin_bottom = 540.0
-custom_constants/separation = 8
+[node name="name" type="MarginContainer" parent="sc/h/all saves/Node2D/hint/m/v"]
+margin_right = 302.0
+margin_bottom = 17.0
 
-[node name="Save Slot Block" parent="h/all saves/m/v/ScrollContainer/h/v4" instance=ExtResource( 2 )]
-margin_right = 170.0
-rect_pivot_offset = Vector2( -510, 140 )
+[node name="bg" type="Panel" parent="sc/h/all saves/Node2D/hint/m/v/name"]
+margin_right = 302.0
+margin_bottom = 17.0
+custom_styles/panel = SubResource( 32 )
 
-[node name="Save Slot Block2" parent="h/all saves/m/v/ScrollContainer/h/v4" instance=ExtResource( 2 )]
-margin_top = 137.0
-margin_right = 170.0
-margin_bottom = 266.0
-rect_pivot_offset = Vector2( -342, -242 )
+[node name="text" type="Label" parent="sc/h/all saves/Node2D/hint/m/v/name"]
+margin_right = 302.0
+margin_bottom = 17.0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 33 )
+text = "Save Info"
+align = 1
 
-[node name="Save Slot Block3" parent="h/all saves/m/v/ScrollContainer/h/v4" instance=ExtResource( 2 )]
-margin_top = 274.0
-margin_right = 170.0
-margin_bottom = 403.0
-rect_pivot_offset = Vector2( -342, -242 )
+[node name="v" type="VBoxContainer" parent="sc/h/all saves/Node2D/hint/m/v"]
+margin_top = 37.0
+margin_right = 302.0
+margin_bottom = 71.0
 
-[node name="Save Slot Block4" parent="h/all saves/m/v/ScrollContainer/h/v4" instance=ExtResource( 2 )]
-margin_top = 411.0
-margin_right = 170.0
-margin_bottom = 540.0
-rect_pivot_offset = Vector2( -342, -242 )
+[node name="h2" type="HBoxContainer" parent="sc/h/all saves/Node2D/hint/m/v/v"]
+margin_right = 302.0
+margin_bottom = 15.0
 
-[node name="v" type="VBoxContainer" parent="h"]
-margin_left = 770.0
-margin_top = 242.0
-margin_right = 877.0
-margin_bottom = 394.0
+[node name="flair" type="Label" parent="sc/h/all saves/Node2D/hint/m/v/v/h2"]
+margin_right = 145.0
+margin_bottom = 15.0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 10 )
+text = "Save filenames must end in"
+align = 1
+
+[node name="flair2" type="Label" parent="sc/h/all saves/Node2D/hint/m/v/v/h2"]
+margin_left = 149.0
+margin_right = 182.0
+margin_bottom = 15.0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 30 )
+text = ".lored"
+align = 1
+
+[node name="h" type="HBoxContainer" parent="sc/h/all saves/Node2D/hint/m/v/v"]
+margin_top = 19.0
+margin_right = 302.0
+margin_bottom = 34.0
+
+[node name="flair" type="Label" parent="sc/h/all saves/Node2D/hint/m/v/v/h"]
+margin_right = 62.0
+margin_bottom = 15.0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 10 )
+text = "Save folder:"
+align = 1
+
+[node name="flair2" type="Label" parent="sc/h/all saves/Node2D/hint/m/v/v/h"]
+margin_left = 66.0
+margin_right = 289.0
+margin_bottom = 15.0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 31 )
+text = "%AppData%\\Godot\\app_userdata\\LORED"
+align = 1
+
+[node name="v" type="VBoxContainer" parent="sc/h"]
+margin_left = 874.0
+margin_top = 252.0
+margin_right = 981.0
+margin_bottom = 404.0
 size_flags_vertical = 4
 custom_constants/separation = 8
 
-[node name="new" type="MarginContainer" parent="h/v"]
+[node name="new" type="MarginContainer" parent="sc/h/v"]
 margin_right = 107.0
 margin_bottom = 32.0
 mouse_filter = 2
@@ -601,7 +881,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="button" type="Button" parent="h/v/new"]
+[node name="button" type="Button" parent="sc/h/v/new"]
 self_modulate = Color( 1, 0, 0.678431, 1 )
 margin_right = 107.0
 margin_bottom = 32.0
@@ -617,7 +897,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="m" type="MarginContainer" parent="h/v/new"]
+[node name="m" type="MarginContainer" parent="sc/h/v/new"]
 margin_right = 107.0
 margin_bottom = 32.0
 mouse_filter = 2
@@ -629,7 +909,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="afford" type="Panel" parent="h/v/new/m"]
+[node name="afford" type="Panel" parent="sc/h/v/new/m"]
 visible = false
 self_modulate = Color( 0.2, 0.945098, 1, 1 )
 margin_left = 15.0
@@ -639,7 +919,7 @@ margin_bottom = 30.0
 mouse_filter = 2
 custom_styles/panel = SubResource( 5 )
 
-[node name="text" type="Label" parent="h/v/new/m"]
+[node name="text" type="Label" parent="sc/h/v/new/m"]
 margin_left = 15.0
 margin_top = 7.0
 margin_right = 92.0
@@ -649,7 +929,7 @@ custom_fonts/font = SubResource( 6 )
 text = "New Game"
 align = 1
 
-[node name="options" type="MarginContainer" parent="h/v"]
+[node name="options" type="MarginContainer" parent="sc/h/v"]
 margin_top = 40.0
 margin_right = 107.0
 margin_bottom = 72.0
@@ -662,7 +942,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="button" type="Button" parent="h/v/options"]
+[node name="button" type="Button" parent="sc/h/v/options"]
 self_modulate = Color( 0.137255, 0.698039, 0.552941, 1 )
 margin_right = 107.0
 margin_bottom = 32.0
@@ -678,7 +958,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="m" type="MarginContainer" parent="h/v/options"]
+[node name="m" type="MarginContainer" parent="sc/h/v/options"]
 margin_right = 107.0
 margin_bottom = 32.0
 mouse_filter = 2
@@ -690,7 +970,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="afford" type="Panel" parent="h/v/options/m"]
+[node name="afford" type="Panel" parent="sc/h/v/options/m"]
 visible = false
 self_modulate = Color( 0.2, 0.945098, 1, 1 )
 margin_left = 15.0
@@ -700,7 +980,7 @@ margin_bottom = 30.0
 mouse_filter = 2
 custom_styles/panel = SubResource( 5 )
 
-[node name="text" type="Label" parent="h/v/options/m"]
+[node name="text" type="Label" parent="sc/h/v/options/m"]
 margin_left = 15.0
 margin_top = 7.0
 margin_right = 92.0
@@ -710,7 +990,7 @@ custom_fonts/font = SubResource( 6 )
 text = "Options"
 align = 1
 
-[node name="patch notes" type="MarginContainer" parent="h/v"]
+[node name="patch notes" type="MarginContainer" parent="sc/h/v"]
 margin_top = 80.0
 margin_right = 107.0
 margin_bottom = 112.0
@@ -723,7 +1003,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="button" type="Button" parent="h/v/patch notes"]
+[node name="button" type="Button" parent="sc/h/v/patch notes"]
 self_modulate = Color( 0.996078, 0.443137, 0.172549, 1 )
 margin_right = 107.0
 margin_bottom = 32.0
@@ -739,7 +1019,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="m" type="MarginContainer" parent="h/v/patch notes"]
+[node name="m" type="MarginContainer" parent="sc/h/v/patch notes"]
 margin_right = 107.0
 margin_bottom = 32.0
 mouse_filter = 2
@@ -751,7 +1031,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="afford" type="Panel" parent="h/v/patch notes/m"]
+[node name="afford" type="Panel" parent="sc/h/v/patch notes/m"]
 visible = false
 self_modulate = Color( 0.2, 0.945098, 1, 1 )
 margin_left = 15.0
@@ -761,7 +1041,7 @@ margin_bottom = 30.0
 mouse_filter = 2
 custom_styles/panel = SubResource( 5 )
 
-[node name="text" type="Label" parent="h/v/patch notes/m"]
+[node name="text" type="Label" parent="sc/h/v/patch notes/m"]
 margin_left = 15.0
 margin_top = 7.0
 margin_right = 92.0
@@ -771,7 +1051,7 @@ custom_fonts/font = SubResource( 6 )
 text = "Patch Notes"
 align = 1
 
-[node name="credits" type="MarginContainer" parent="h/v"]
+[node name="credits" type="MarginContainer" parent="sc/h/v"]
 margin_top = 120.0
 margin_right = 107.0
 margin_bottom = 152.0
@@ -784,7 +1064,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="button" type="Button" parent="h/v/credits"]
+[node name="button" type="Button" parent="sc/h/v/credits"]
 self_modulate = Color( 1, 0.427451, 0.588235, 1 )
 margin_right = 107.0
 margin_bottom = 32.0
@@ -800,7 +1080,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="m" type="MarginContainer" parent="h/v/credits"]
+[node name="m" type="MarginContainer" parent="sc/h/v/credits"]
 margin_right = 107.0
 margin_bottom = 32.0
 mouse_filter = 2
@@ -812,7 +1092,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="afford" type="Panel" parent="h/v/credits/m"]
+[node name="afford" type="Panel" parent="sc/h/v/credits/m"]
 visible = false
 self_modulate = Color( 0.2, 0.945098, 1, 1 )
 margin_left = 15.0
@@ -822,7 +1102,7 @@ margin_bottom = 30.0
 mouse_filter = 2
 custom_styles/panel = SubResource( 5 )
 
-[node name="text" type="Label" parent="h/v/credits/m"]
+[node name="text" type="Label" parent="sc/h/v/credits/m"]
 margin_left = 15.0
 margin_top = 7.0
 margin_right = 92.0
@@ -832,4 +1112,193 @@ custom_fonts/font = SubResource( 6 )
 text = "Credits"
 align = 1
 
-[connection signal="pressed" from="h/continue/m/v/v/v/v/load slot/button" to="." method="_on_all_saves_pressed"]
+[node name="New Game" parent="sc/h" instance=ExtResource( 12 )]
+margin_left = 1001.0
+margin_right = 1306.0
+size_flags_vertical = 4
+
+[node name="indent2" type="Panel" parent="sc/h"]
+margin_left = 1326.0
+margin_right = 1426.0
+margin_bottom = 656.0
+rect_min_size = Vector2( 100, 0 )
+rect_pivot_offset = Vector2( -2, -5 )
+custom_styles/panel = SubResource( 7 )
+
+[node name="color" type="MarginContainer" parent="."]
+margin_left = 952.0
+margin_top = 89.0
+margin_right = 1280.0
+margin_bottom = 631.0
+rect_pivot_offset = Vector2( -1132, 438 )
+size_flags_horizontal = 8
+size_flags_vertical = 4
+custom_constants/margin_right = 0
+custom_constants/margin_top = 0
+custom_constants/margin_left = 0
+custom_constants/margin_bottom = 0
+__meta__ = {
+"_edit_group_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="bg" type="Panel" parent="color"]
+margin_right = 328.0
+margin_bottom = 542.0
+custom_styles/panel = SubResource( 13 )
+
+[node name="m" type="MarginContainer" parent="color"]
+margin_right = 328.0
+margin_bottom = 542.0
+custom_constants/margin_right = 10
+custom_constants/margin_top = 10
+custom_constants/margin_left = 10
+custom_constants/margin_bottom = 10
+
+[node name="v" type="VBoxContainer" parent="color/m"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 318.0
+margin_bottom = 532.0
+
+[node name="ColorPicker" type="ColorPicker" parent="color/m/v"]
+margin_left = 4.0
+margin_top = 4.0
+margin_right = 312.0
+margin_bottom = 466.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="h" type="HBoxContainer" parent="color/m/v"]
+margin_top = 466.0
+margin_right = 308.0
+margin_bottom = 522.0
+custom_constants/separation = 10
+alignment = 1
+
+[node name="accept" type="MarginContainer" parent="color/m/v/h"]
+margin_left = 81.0
+margin_right = 161.0
+margin_bottom = 56.0
+rect_min_size = Vector2( 80, 0 )
+size_flags_horizontal = 4
+custom_constants/margin_right = 0
+custom_constants/margin_top = 0
+custom_constants/margin_left = 0
+custom_constants/margin_bottom = 0
+
+[node name="button" type="Button" parent="color/m/v/h/accept"]
+self_modulate = Color( 0.384314, 0.603922, 0.270588, 1 )
+margin_right = 80.0
+margin_bottom = 56.0
+hint_tooltip = "Accept new save color"
+focus_mode = 0
+mouse_default_cursor_shape = 2
+custom_fonts/font = SubResource( 14 )
+custom_styles/hover = SubResource( 15 )
+custom_styles/pressed = SubResource( 16 )
+custom_styles/normal = SubResource( 17 )
+enabled_focus_mode = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="m" type="MarginContainer" parent="color/m/v/h/accept"]
+margin_left = 12.0
+margin_right = 68.0
+margin_bottom = 56.0
+mouse_filter = 2
+size_flags_horizontal = 4
+custom_constants/margin_right = 4
+custom_constants/margin_top = 4
+custom_constants/margin_left = 4
+custom_constants/margin_bottom = 4
+
+[node name="icon" type="Panel" parent="color/m/v/h/accept/m"]
+margin_left = 4.0
+margin_top = 4.0
+margin_right = 52.0
+margin_bottom = 52.0
+rect_min_size = Vector2( 48, 48 )
+mouse_filter = 2
+custom_styles/panel = SubResource( 18 )
+
+[node name="Sprite" type="Sprite" parent="color/m/v/h/accept/m/icon"]
+texture = ExtResource( 9 )
+centered = false
+
+[node name="shadow" type="Sprite" parent="color/m/v/h/accept/m/icon/Sprite"]
+self_modulate = Color( 0, 0, 0, 0.501961 )
+show_behind_parent = true
+position = Vector2( 2, 2 )
+texture = ExtResource( 9 )
+centered = false
+
+[node name="cancel" type="MarginContainer" parent="color/m/v/h"]
+margin_left = 171.0
+margin_right = 227.0
+margin_bottom = 56.0
+size_flags_horizontal = 4
+custom_constants/margin_right = 0
+custom_constants/margin_top = 0
+custom_constants/margin_left = 0
+custom_constants/margin_bottom = 0
+
+[node name="button" type="Button" parent="color/m/v/h/cancel"]
+self_modulate = Color( 1, 0, 0, 1 )
+margin_right = 56.0
+margin_bottom = 56.0
+hint_tooltip = "Cancel"
+focus_mode = 0
+mouse_default_cursor_shape = 2
+custom_fonts/font = SubResource( 14 )
+custom_styles/hover = SubResource( 15 )
+custom_styles/pressed = SubResource( 16 )
+custom_styles/normal = SubResource( 17 )
+enabled_focus_mode = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="m" type="MarginContainer" parent="color/m/v/h/cancel"]
+margin_right = 56.0
+margin_bottom = 56.0
+mouse_filter = 2
+size_flags_horizontal = 4
+custom_constants/margin_right = 4
+custom_constants/margin_top = 4
+custom_constants/margin_left = 4
+custom_constants/margin_bottom = 4
+
+[node name="icon" type="Panel" parent="color/m/v/h/cancel/m"]
+margin_left = 4.0
+margin_top = 4.0
+margin_right = 52.0
+margin_bottom = 52.0
+rect_min_size = Vector2( 48, 48 )
+mouse_filter = 2
+custom_styles/panel = SubResource( 18 )
+
+[node name="Sprite" type="Sprite" parent="color/m/v/h/cancel/m/icon"]
+texture = ExtResource( 8 )
+centered = false
+
+[node name="shadow" type="Sprite" parent="color/m/v/h/cancel/m/icon/Sprite"]
+self_modulate = Color( 0, 0, 0, 0.501961 )
+show_behind_parent = true
+position = Vector2( 2, 2 )
+texture = ExtResource( 8 )
+centered = false
+
+[connection signal="pressed" from="sc/h/continue/m/v/v/v/v/load slot/button" to="." method="_on_all_saves_pressed"]
+[connection signal="pressed" from="sc/h/all saves/m/v/top/h/close/button" to="." method="_on_all_saves_pressed"]
+[connection signal="mouse_entered" from="sc/h/all saves/m/v/top/h/hint/button" to="." method="_on_save_hint_mouse_entered"]
+[connection signal="mouse_exited" from="sc/h/all saves/m/v/top/h/hint/button" to="." method="_on_save_hint_mouse_exited"]
+[connection signal="pressed" from="sc/h/all saves/m/v/top/h/refresh/button" to="." method="_on_refresh_pressed"]
+[connection signal="pressed" from="sc/h/v/new/button" to="." method="_on_new_game_pressed"]
+[connection signal="color_changed" from="color/m/v/ColorPicker" to="." method="_on_ColorPicker_color_changed"]
+[connection signal="pressed" from="color/m/v/h/accept/button" to="." method="_on_accept_color_edit_pressed"]
+[connection signal="pressed" from="color/m/v/h/cancel/button" to="." method="_on_color_cancel_pressed"]

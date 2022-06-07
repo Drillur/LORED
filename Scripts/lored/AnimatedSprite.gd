@@ -33,7 +33,7 @@ func start(threshold: float, start_time: int):
 	
 	stop()
 	
-	if animationless or (not gv.menu.option["animations"]):
+	if animationless or (not gv.option["animations"]):
 		if not animation == "ww":
 			animation = "ww"
 		return

@@ -122,7 +122,7 @@ func receive_buff(spell: String, target := "") -> void:
 	pass
 
 
-func saveLOREDs() -> String:
+func save() -> String:
 	
 	var data := {}
 	
@@ -131,6 +131,6 @@ func saveLOREDs() -> String:
 	
 	return var2str(data)
 
-func loadLOREDs(data: Dictionary) -> void:
+func load(data: Dictionary) -> void:
 	for x in data:
-		gv.g[x]._load(str2var(data[x]))
+		gv.g[x].load(str2var(data[x]))

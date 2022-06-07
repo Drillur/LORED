@@ -1,7 +1,10 @@
 class_name Wish
 extends Reference
 
-
+var saved_vars := [
+	"key", "name", "giver", "help_text", "thank_text",
+	"color_key", "random", "ready",
+]
 
 var key: String
 
@@ -29,6 +32,8 @@ var rew: Array # rewards
 var key_rew: Array
 
 var vico: MarginContainer
+var vico_set := false
+signal vico_just_set
 var tooltip: MarginContainer
 var tooltip_active := false
 
@@ -39,11 +44,13 @@ var tooltip_active := false
 
 class Objective:
 	
+	var saved_vars := ["type", "key", "current_count", "required_count", "complete"]
+	
 	var type: int
 	var key: String
 	
 	var current_count: Big = Big.new(0)
-	var required_count: Big
+	var required_count: Big = Big.new(1)
 	
 	var complete := false
 	
@@ -70,32 +77,29 @@ class Objective:
 			complete()
 	
 	
-	func save() -> Dictionary:
+	func save() -> String:
 		
 		var data := {}
 		
-		data["type"] = var2str(type)
-		data["key"] = var2str(key)
+		for x in saved_vars:
+			if get(x) is Big:
+				data[x] = get(x).save()
+			else:
+				data[x] = var2str(get(x))
 		
-		data["current_count"] = var2str(current_count)
-		data["required_count"] = var2str(required_count)
-		
-		data["complete"] = var2str(complete)
-		
-		return data
-	
+		return var2str(data)
+
 	func _load(data: Dictionary):
 		
-		type = str2var(data["type"])
-		key = str2var(data["key"])
-		
-		current_count = str2var(data["current_count"])
-		required_count = str2var(data["required_count"])
-		
-		complete = str2var(data["complete"])
-		
-		if icon_key == "":
-			assumeIconKey()
+		for x in saved_vars:
+			
+			if not x in data.keys():
+				continue
+			
+			if get(x) is Big:
+				get(x).load(data[x])
+			else:
+				set(x, str2var(data[x]))
 	
 	
 	func alreadyComplete() -> bool:
@@ -178,16 +182,17 @@ class Objective:
 	func checkIfComplete():
 		if current_count.greater_equal(required_count):
 			complete()
-		if current_count.greater(required_count):
-			current_count = Big.new(required_count)
+		current_count.capMax(required_count)
 
 class Reward:
+	
+	var saved_vars = ["type", "key", "amount"]
 	
 	var type: int
 	
 	var key: String
 	
-	var amount: Big
+	var amount: Big = Big.new(0)
 	
 #	var icon_key: String
 	
@@ -203,23 +208,30 @@ class Reward:
 		amount = Big.new(_amount)
 	
 	
-	func save() -> Dictionary:
+	func save() -> String:
 		
 		var data := {}
 		
-		data["type"] = var2str(type)
-		data["key"] = var2str(key)
+		for x in saved_vars:
+			if get(x) is Big:
+				data[x] = get(x).save()
+			else:
+				data[x] = var2str(get(x))
 		
-		data["amount"] = var2str(amount)
-		
-		return data
-	
+		return var2str(data)
+
 	func _load(data: Dictionary):
 		
-		type = str2var(data["type"])
-		key = str2var(data["key"])
-		
-		amount = str2var(data["amount"])
+		for x in saved_vars:
+			
+			if not x in data.keys():
+				continue
+			
+			if get(x) is Big:
+				get(x).load(data[x])
+			else:
+				set(x, str2var(data[x]))
+	
 	
 	func turnIn():
 		match type:
@@ -239,6 +251,45 @@ class Reward:
 
 
 
+
+func save() -> String:
+	
+	var data := {}
+	
+	for x in saved_vars:
+		data[x] = var2str(get(x))
+	
+	data["obj"] = obj.save()
+	
+	data["rewards"] = {}
+	for r in rew:
+		data["rewards"][r] = r.save()
+	
+	return var2str(data)
+
+func _load(data: Dictionary):
+	
+	for x in saved_vars:
+		
+		if not x in data.keys():
+			continue
+		
+		if get(x) is Big:
+			get(x).load(data[x])
+		else:
+			set(x, str2var(data[x]))
+	
+	obj = Objective.new(-1, data["obj"])
+	
+	var reward_data = data["rewards"]
+	
+	for r in reward_data:
+		rew.append(Reward.new(-1, reward_data[r]))
+	
+	rewards = rew.size()
+	
+	
+	setColor(color_key)
 
 
 
@@ -295,47 +346,10 @@ func clearTooltip():
 func setVico(_vico: MarginContainer):
 	vico = _vico
 	vico.wish = self
+	vico_set = true
+	emit_signal("vico_just_set")
 
 
-
-func save() -> Dictionary:
-	
-	var data := {}
-	
-	data["key"] = key
-	data["name"] = name
-	data["giver"] = giver
-	data["help_text"] = help_text
-	data["thank_text"] = thank_text
-	data["color_key"] = color_key
-	data["random"] = var2str(random)
-	data["ready"] = var2str(ready)
-	
-	data["obj"] = var2str(obj.save())
-	
-	data["rewards"] = var2str(rewards)
-	for r in rewards:
-		var _key = "reward" + str(r)
-		data[_key] = var2str(rew[r].save())
-	
-	return data
-
-func _load(data: Dictionary):
-	key = data["key"]
-	name = data["name"]
-	giver = data["giver"]
-	help_text = data["help_text"]
-	thank_text = data["thank_text"]
-	setColor(data["color_key"])
-	random = str2var(data["random"])
-	ready = str2var(data["ready"])
-	
-	obj = Objective.new(-1, data["obj"])
-	
-	rewards = str2var(data["rewards"])
-	for r in rewards:
-		var _key = "reward" + str(r)
-		rew.append(Reward.new(-1, data[_key]))
 
 func die(inform_taq := true):
 	vico.hide()
@@ -367,10 +381,16 @@ func checkIfReady():
 	if obj.complete:
 		ready()
 	else:
-		vico.update()
+		if is_instance_valid(vico):
+			vico.update()
 	
 
 func ready():
+	
+	#print("---------------ready called")
+#	if not vico_set or not is_instance_valid(vico):
+#		yield(self, "vico_just_set")
+	
 	ready = true
 	vico.ready()
 	if tooltip_active:
@@ -445,9 +465,9 @@ func construct_soccer_dude():
 	rew.append(Reward.new(gv.WishReward.RESOURCE, "malig", "1000"))
 
 func construct_malignancy():
-	giver = "malig"
-	help_text = "Yo, goo-goo ga-ga, I'm a fucken baby, what's good? I just materialized from the malignancy in the surrounding environment, you got a problem with it? Yeah, shut up.\n\nSo anyways, like I was sayin, sometimes--sometimes, in order to go forward, you gotta go back, know what I'm sayin? So, like, you've got these crazy-style Upgrades over here that--ahem--[i]only I[/i] can afford, all right? So, it's all thanks to me is what I'm sayin.\n\nYou don't know what I'm talkin about? Man, get the fuck outta here."
-	thank_text = "Yeah, whatever. Just go do some resettin, see if I care."
+	giver = "malig" #notez1 rewrite this dialogue, it's stupid
+	help_text = "Hey!! We just got here. This is a crazy situation we're in! There's a whole bunch of us spawning out of nothing!!! And we noticed that we can throw ourselves overboard to get these wacky Malignant upgrades. But before [i]you[/i] can get the upgrades, you also have to jump off?/n/nI don't know, I was born 20 seconds ago. Just keep clicking buttons."
+	thank_text = "Okay, you definitely have to reset to get the Malignant upgrades. You'll see! Good luck."
 	obj = Objective.new(gv.Objective.RESOURCES_PRODUCED, "malig", "3e3")
 	rew.append(Reward.new(gv.WishReward.TAB, str(gv.Tab.MALIGNANT)))
 	key_rew.append(Reward.new(gv.WishReward.TAB, str(gv.Tab.MALIGNANT)))
@@ -637,7 +657,7 @@ func get_possible_types() -> Dictionary:
 		
 		var reset_key: String = gv.highestResetKey()
 		
-		if gv.r[reset_key].greater(Big.new(gv.stats.most_resources_gained).m(0.25)):
+		if gv.r[reset_key].greater(Big.new(gv.most_resources_gained).m(0.25)):
 			possible_types["random_reset"] = 5
 	
 	# max_fuel 100
@@ -690,7 +710,7 @@ func construct_random_collect():
 	
 	# stage 1 or 2
 	if s1_or_s2:
-		if gv.g[resource].stage == "2" and gv.stats.run[1] == 1:
+		if gv.g[resource].stage == "2" and gv.run2 == 1:
 			amount.d(10)
 	
 	amount.mantissa = floor(amount.mantissa)
@@ -963,9 +983,30 @@ func generateHelpAndThankText():
 						2: help_text = "Let's... uprade our passports?"
 					thank_text = "Yay."
 		"random_collect":
-			match giver:#copo respects coal
+			match giver:
+				# need: growth, jo, conc, oil, tar, malig
+				# oil ipad joke?
+				# spirit bomb joke. lend me your energy
 				"cop":
 					match obj.key:
+						"malig":
+							help_text = "Oh, shit!! They on X-games mode, bruh!!! What the hell even is that?!"
+							thank_text = "I still can't believe my eyes, bro! Bruh!! Brooooo! BRuhhhhh brobrobrobro bruhhhhhhhhhhhhh!!!!!"
+						"tar":
+							help_text = "That dude probably likes Magic the Gathering and anime.\n\nI do, too!!! We gotta get together!!"
+							thank_text = "We have a playdate scheduled. We're gonna compare the English and Japanese dubs for the final episode of Death Note. Siiiick!"
+						"oil":
+							help_text = "Look at that baby! That's got to be the funniest thing I've ever seen!"
+							thank_text = "I literally can't stop laughing at that baby, yo!!"
+						"conc":
+							help_text = "My amigo, yo! I'm just a gringo, ahaha!"
+							thank_text = "He's sick!"
+						"jo":
+							help_text = "That dude gives me discounts, yooo!! Let's goo!!"
+							thank_text = "Yuss! Cut up!"
+						"growth":
+							help_text = "That junt smells hella fire, yo."
+							thank_text = "What? Why would I sniff that? Mane, don't come at me like that."
 						"cop":
 							help_text = "IT'S ALL ABOUT ME, BABY, THAT'S WHAT I'M SAYIN, HELL YEAH, BOY! LET ME STRUT MY STUFF, HOMIE."
 							thank_text = "Yo I killed it. Hell yeah."
@@ -982,10 +1023,28 @@ func generateHelpAndThankText():
 							help_text = "Did someone say Coal?"
 							thank_text = "Huh?"
 						"stone":
-							help_text = "Stone--you'd be perfect for finding firewood. Would you, could you?"
+							help_text = "Stone, you'd be perfect for finding firewood. Would you, could you?"
 							thank_text = "Oh. Well, then! Fine."
 				"iron":
 					match obj.key:
+						"malig":
+							help_text = "Malignancy has probably the most important role out of all of us. We need them more than anything to get stronger!"
+							thank_text = "Nice."
+						"tar":
+							help_text = "That guy isn't the best with people, but he's here specifically to help us all out! We need him for Malignancy!! So let's help!!!"
+							thank_text = "He wrote a script for my toaster that improves toastiness by 11%. I don't know what that means, but I'm glad he's around!"
+						"oil":
+							help_text = "I don't know if you'll remember this, Oil, since you're just a baby, but I think you're cool!"
+							thank_text = "He burped and laughed at me. What a funny guy!"
+						"conc":
+							help_text = "We need to succeed, right? Well, if Concrete succeeds, so do we!! Let's help him out!!!"
+							thank_text = "Woooo!!"
+						"jo":
+							help_text = "This strapping young guy's in charge of supplying [i]every single electric LORED[/i] with energy! Isn't that impressive?!"
+							thank_text = "Well, I'm glad y'all agree! And I know he appreciated y'all, too. Thanks!"
+						"growth":
+							help_text = "That moist guy takes my stuff sometimes. Yeah, you could say we're pals."
+							thank_text = "I hope he grows out of that phase."
 						"cop":
 							help_text = "My best friend! Send him some love, y'all."
 							thank_text = ":) Yeah!"
@@ -997,15 +1056,33 @@ func generateHelpAndThankText():
 							thank_text = "Oh, it didn't matter? He's going to work there until he dies, leaving his family in debt? I see. Rough time, early 1900s, real rough, see, boss?\nOops, what was that? Did I catch something?"
 						"irono":
 							help_text = "Ugh. The [i]Boromir when you were 10 years old seeing the movie for the first time and just thinking Boromir was Walmart-Aragorn[/i] of this game. What a creep."
-							thank_text = "Hold on. You're telling me Iron Ore sees me as Aragorn?\n\nGoddamn, that's awkward."
+							thank_text = "Hold on. You're telling me Iron Ore sees me as Aragorn?\n\nWow, that's awkward."
 						"coal":
 							help_text = "Let's help out Coal!"
 							thank_text = "Hooray!"
 						"stone":
 							help_text = "Ah, that's the stuff. Stone works hard!"
 							thank_text = "I'm happy for him!"
-				"copo":
+				"copo":# respects coal and conc
 					match obj.key:
+						"malig":
+							help_text = "I just ain't got nothing to say to that, boss, no sir."
+							thank_text = "I simply cannot comprehend what my eyes are feeding into my brain, boss, I simply cannot."
+						"tar":
+							help_text = "Sitting in your cushy office chairs all day and still finding something to complain about, is that it? *Scoff*"
+							thank_text = "No, boss, see, my mama told me that if I didn't have anything kind to say, I ought to simply not say it! There may come a day when he asks for my opinion, and on that day I will give it to him, boss, I really will. But until then, I have nothing to say, and that's that, boss, that's just that."
+						"oil":
+							help_text = "Good God, look at how young those corporate fat heads have lowered the minimum working age to! It's downright horrific, see! I won't stand for it, boss, I just won't, y'see?!"
+							thank_text = "Well, it'll toughen him up. I was in the mine even before I was his age, and look at me--I turned out okay, boss, don't you think so?"
+						"conc":
+							help_text = "No doubt he's been through his fair share of hardships, boss."
+							thank_text = "He'll be all right."
+						"jo":
+							help_text = "SEND A TEAM DOWN THAT SHAFT RIGHT AWAY, SEE!"
+							thank_text = "I get a little intense on ocasion, boss. Don't pay me no mind, boss!"
+						"growth":
+							help_text = "I ain't none to sure on that, boss, no sir. Boy looks like he could use some life insurance, if he could even get approved for it."
+							thank_text = "God be with him, boss, God be with him."
 						"cop":
 							help_text = "Nononono-not more Copper, lads, we're good."
 							thank_text = "I SAID WE DIDN'T NEED MORE COPPER, LADS. Now a fire's started. See, that's now fixing to consume what little oxygen we have left down here, boss. Yep, takes a real man to brave these absolute bullshit work conditions, boss. Complete and total, unspeakably-bullshit work conditions. Just have Iron Ore shoot me now, boss, just have him shoot me now."
@@ -1026,6 +1103,24 @@ func generateHelpAndThankText():
 							thank_text = "That's sweet, Stone, real sweet."
 				"irono":
 					match obj.key:
+						"malig":
+							help_text = "They're getting what they deserve, no doubt. We all go out like that in the end, anyway."
+							thank_text = "Whatever."
+						"tar":
+							help_text = "That moron thinks he's smart, but all he does is create matter out of oil and cancer juice.\n\nWait, what? He does that? Holy crap."
+							thank_text = "Well, I still don't like him."
+						"oil":
+							help_text = "That baby is absolutely, positively [i]disgusting.[/i]"
+							thank_text = "Yep. I'm the villain of LORED. I called Oil [b]disgusting[/b] and I'm going to get away with it, too."
+						"conc":
+							help_text = "Actually, it's pretty impressive that he is here right now. He's left a lot behind. It's all a sacrifice for his family."
+							thank_text = "He's aight."
+						"jo":
+							help_text = "This guy upsells you when you only go in for an oil change, and I bet he is [i]proud[/i] of it."
+							thank_text = "Despicable scum."
+						"growth":
+							help_text = "Look at this idiot! Ever heard of chemotherapy, you ding dong?!"
+							thank_text = "Good gawd."
 						"cop":
 							help_text = "Fuck that guy. He's a stupid fuck, those aren't s'mores."
 							thank_text = "All right. Moving on."
@@ -1037,7 +1132,7 @@ func generateHelpAndThankText():
 							thank_text = "Oof! Well, he's still going. Good on him! [i]I[/i] choose to work [i]smarter[/i]."
 						"irono":
 							help_text = "I'm... already.. what? I [i]obviously[/i] want more Iron Ore. How come I can even Wish for this? I'm a psychopath, and even I think something is up here. What would happen if you discarded this Wish? Why would you even do that? I'm not going to stop. I'm [i]never[/i] going to stop. You know what? I don't care. Discard it. See what happens. Go on. Do it. I double-homicide-dare you."
-							thank_text = "Okay. Whatever. You'll get free random resources out of thin air for not lifting a fucking finger, as if that makes any goddamn sense. Take it to the bank, you three-dimensional fuck. If I could aim out of the screen and at you, I would."
+							thank_text = "Okay. Whatever. You'll get free random resources out of thin air for not lifting a fucking finger, as if that makes any sense. Take it to the bank, you three-dimensional freak. If I could aim out of the screen and at you, I would."
 						"coal":
 							help_text = "Yes. [i]JAB[/i] that shovel in, real deep."
 							thank_text = "EXCELLENT."
@@ -1046,6 +1141,24 @@ func generateHelpAndThankText():
 							thank_text = "I'm coming for you, Stone. Just... after this Iron Ore deposit actually deteriorates."
 				"coal":
 					match obj.key:
+						"malig":
+							help_text = "Some families just have as many dang kids as they want, apparently."
+							thank_text = "They've had 100 more since the last time I blinked!!!"
+						"tar":
+							help_text = "Wow!!! Can that guy hack into my ex's Facebook account?"
+							thank_text = "He said that \"with great power comes great responsibility\" and then told me to get lost. :("
+						"oil":
+							help_text = "That baby is sucking oil. Now, I have truly seen it all."
+							thank_text = "I want a taste."
+						"conc":
+							help_text = "Ah, donde esta mi amor?"
+							thank_text = "I don't think I said it right."
+						"jo":
+							help_text = "Oh, oh!! -- Ahem... I saw this guy redirecting lightning, and I thought it was quite... [b]SHOCKING!!!![/b] :)"
+							thank_text = "Why didn't you laugh?"
+						"growth":
+							help_text = "What in tarnation is that guy doing?"
+							thank_text = "Somebody help him."
 						"cop":
 							help_text = "Copper."
 							thank_text = "Thank."
@@ -1066,6 +1179,24 @@ func generateHelpAndThankText():
 							thank_text = "Good job, team! I mean, Stone."
 				"stone":
 					match obj.key:
+						"malig":
+							help_text = "Wow, there are a lot of them. They need help."
+							thank_text = "Now there's even more."
+						"tar":
+							help_text = "That guy seems pretty smart. Let's help him out!!"
+							thank_text = "He called me an idiot."
+						"oil":
+							help_text = "Is it alright that that baby is slurping up oil? Uh... well, I'm sure his parents know what they're doing!"
+							thank_text = "Can I pet the baby? Wait, is that what adults do to babies? Maybe I should just smile and nod. Okay, then! :) *nod*"
+						"conc":
+							help_text = "My buddy!! He likes stones more than anybody. Oh! Except for me, of course. Let's help him out!!"
+							thank_text = "Buenos nachos, my amigo!!!"
+						"jo":
+							help_text = "That guy helped me with my car, once."
+							thank_text = "Yay."
+						"growth":
+							help_text = "I'm thirsty. Let's get some more juice!!!"
+							thank_text = "Delicio--[i]oh god, what have i done[/i]"
 						"cop":
 							help_text = "That stuff looks delicious!!! And part-rock!!!"
 							thank_text = "Mmmm! :)"
@@ -1088,6 +1219,44 @@ func generateHelpAndThankText():
 			match obj.type:
 				gv.Objective.BREAK:
 					match giver:
+						"malig":
+							match roll:
+								0: help_text = "I refuse to be born and for [b]this[/b] to be my purpose."
+								1: help_text = "I was born only 5 seconds ago, but I already need a break. This sucks."
+								2: help_text = "Everyone else has gotten a break but me! That's no fair!"
+							thank_text = "I know, I know. [i]Back to the edge of the boat with you lot.[/i] Ugh."
+						"jo":
+							thank_text = "Nooo! Was that it?!"
+							match roll:
+								0: help_text = "Here's a thought: Let's take a quick joy ride!"
+								1: help_text = "What if I were to, for example, stop working and do absolutely nothing? Hypothetically, of course. What would you, or anyone else, say in a situation such as what I just pretended to suggest?"
+								2:
+									help_text = "I'M SICK OF THIS JOB. I QUIT."
+									thank_text = "Remember that time I said I quit? Yeah, sorry about that."
+						"conc":
+							match roll:
+								0: help_text = "No tuve mi descanso de quince minutos."
+								1: help_text = "Jefe, necesito ir al baño."
+								2: help_text = "Primo, let me go!"
+							thank_text = "¡Gracias! Volvamos al trabajo."
+						"tar":
+							match roll:
+								0: help_text = "I'm concerned that this will turn into an addiction."
+								1: help_text = "My elbow aches. There is a possibility that I have obtained repetitive strain injury."
+								2: help_text = "I'm approaching the burn-out phase. If I do not rest, I may lose my marbles."
+							thank_text = "Anyway! No rest for the wicked, as they say!"
+						"oil":
+							match roll:
+								0: help_text = "Waahh!!"
+								1: help_text = "I go boopy."
+								2: help_text = ">:("
+							thank_text = "Scallom. Wa-googie!"
+						"growth":
+							match roll:
+								0: help_text = "FOR THE LOVE OF ALL THAT IS GOOD. LET ME TAKE A BREAK."
+								1: help_text = "If I don't get a reprieve from this madness, I will go insane."
+								2: help_text = "My skin is raw and wriggling."
+							thank_text = "Please don't make me go back to work. [i]Please.[/i]"
 						"cop":
 							match roll:
 								0: help_text = "I'll be behind that tree over there."
@@ -1124,8 +1293,47 @@ func generateHelpAndThankText():
 								1: help_text = "Yeah, rocks, but, you know--my legs are about to give out!"
 								2: help_text = "Can I get a break so I can think about the best way to pick up rocks?"
 							thank_text = "Whew!"
+				
 				gv.Objective.HOARD:
 					match giver:
+						"malig":
+							match roll:
+								0: help_text = "No! You can't make us jump off this boat!!"
+								1: help_text = "Spare us!! We were just born yesterday!!"
+								2: help_text = "Let us go potty, first."
+							thank_text = "If it's our purpose, then so be it."
+						"tar":
+							match roll:
+								0: help_text = "This is required for my upcoming test."
+								1: help_text = "If you take one more tarball, I will initiate Covid 2."
+								2: help_text = "If you'll excuse me, I want to briefly take one of these to the bathroom. Don't worry, I won't even need one minute."
+							thank_text = "I'd be willing to part with these once more... for a price. Just kiddin."
+						"oil":
+							match roll:
+								0: help_text = "MINE MINE MINE MINE MINE MIIIIIIIIIIIIIIINE!"
+								1: help_text = "*is now screaming and farting*"
+								2: help_text = "*very angry slurps*"
+							thank_text = "Bapa poopa. Blabble-abble. Hee-hee!"
+						"jo":
+							thank_text = "Okie dokie! Let's get back to business!"
+							match roll:
+								0:
+									help_text = "Don't. Touch. The jewels."
+									thank_text = "What's that? You meant you wanted my [i]joules[/i]? Ohh..."
+								1: help_text = "I've got to keep some of these. I have to overclock my Playstation 5. I'm gonna blast it with energy."
+								2: help_text = "Sorry, my Tesla is almost out of charge. I'll be stranded if I don't keep some of these to fill up."
+						"conc":
+							match roll:
+								0: help_text = "No, es mio!"
+								1: help_text = "Pero mi mami dijo que no tengo que darte mi concreto si no quiero."
+								2: help_text = "Si quieres este concreto, simplemente tendrás que esperar. Cara de trasero."
+							thank_text = "Okay. Lo siento. You take some."
+						"growth":
+							match roll:
+								0: help_text = "What use would you have for MY JUICE, ANYWAY?"
+								1: help_text = "It's [b]my[/b] juice! Go pinch off your own juice!"
+								2: help_text = "Wait. I might have dropped my keys in one of those juice sacks back there. Let me look."
+							thank_text = "Well, I guess I make enough juice for all of us. Okay. You can have some again."
 						"cop":
 							match roll:
 								0: help_text = "There's plenty to come, wait your turn. This batch looks especially good!"

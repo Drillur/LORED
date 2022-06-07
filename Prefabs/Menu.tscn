@@ -207,35 +207,33 @@ font_data = ExtResource( 11 )
 
 [node name="Menu" type="MarginContainer"]
 margin_right = 490.0
-margin_bottom = 300.0
+margin_bottom = 828.0
 size_flags_horizontal = 4
 size_flags_vertical = 4
 script = ExtResource( 20 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="bg" type="Panel" parent="."]
 visible = false
 margin_right = 490.0
-margin_bottom = 300.0
+margin_bottom = 828.0
 custom_styles/panel = SubResource( 1 )
 
 [node name="sc" type="ScrollContainer" parent="."]
+margin_top = 264.0
 margin_right = 490.0
-margin_bottom = 300.0
+margin_bottom = 564.0
 rect_min_size = Vector2( 404, 300 )
 size_flags_horizontal = 0
 size_flags_vertical = 4
 custom_styles/bg = ExtResource( 14 )
 scroll_horizontal_enabled = false
-scroll_vertical = 64
+scroll_vertical = 100
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="m" type="MarginContainer" parent="sc"]
-margin_top = -64.0
+margin_top = -268.0
 margin_right = 478.0
 margin_bottom = 300.0
 size_flags_horizontal = 0
@@ -252,14 +250,14 @@ self_modulate = Color( 1, 0, 0.380392, 1 )
 margin_left = 2.0
 margin_top = 2.0
 margin_right = 476.0
-margin_bottom = 362.0
+margin_bottom = 566.0
 custom_styles/panel = SubResource( 2 )
 
 [node name="v" type="VBoxContainer" parent="sc/m"]
 margin_left = 2.0
 margin_top = 2.0
 margin_right = 476.0
-margin_bottom = 362.0
+margin_bottom = 566.0
 custom_constants/separation = 0
 
 [node name="top" type="MarginContainer" parent="sc/m/v"]
@@ -941,7 +939,7 @@ centered = false
 visible = false
 margin_top = 56.0
 margin_right = 474.0
-margin_bottom = 556.0
+margin_bottom = 588.0
 custom_constants/margin_right = 10
 custom_constants/margin_top = 10
 custom_constants/margin_left = 10
@@ -952,14 +950,14 @@ self_modulate = Color( 0.141176, 0.701961, 0.54902, 0.239216 )
 margin_left = 10.0
 margin_top = 10.0
 margin_right = 464.0
-margin_bottom = 490.0
+margin_bottom = 522.0
 custom_styles/panel = SubResource( 12 )
 
 [node name="v" type="VBoxContainer" parent="sc/m/v/options"]
 margin_left = 10.0
 margin_top = 10.0
 margin_right = 464.0
-margin_bottom = 490.0
+margin_bottom = 522.0
 custom_constants/separation = 0
 
 [node name="fps" type="HBoxContainer" parent="sc/m/v/options/v"]
@@ -1237,10 +1235,35 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="tooltip" type="HBoxContainer" parent="sc/m/v/options/v"]
+[node name="lored chit-chat" type="CheckButton" parent="sc/m/v/options/v"]
 margin_top = 256.0
 margin_right = 454.0
 margin_bottom = 288.0
+mouse_default_cursor_shape = 2
+size_flags_horizontal = 3
+theme = ExtResource( 18 )
+pressed = true
+text = "Display LORED chit-chat"
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="highlight" type="Button" parent="sc/m/v/options/v/lored chit-chat"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 1
+custom_styles/hover = SubResource( 18 )
+custom_styles/pressed = SubResource( 19 )
+custom_styles/focus = SubResource( 19 )
+custom_styles/normal = SubResource( 19 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="tooltip" type="HBoxContainer" parent="sc/m/v/options/v"]
+margin_top = 288.0
+margin_right = 454.0
+margin_bottom = 320.0
 custom_constants/separation = 0
 
 [node name="indent" type="Panel" parent="sc/m/v/options/v/tooltip"]
@@ -1262,9 +1285,9 @@ text = "Tooltip display options"
 valign = 1
 
 [node name="halt" type="HBoxContainer" parent="sc/m/v/options/v"]
-margin_top = 288.0
+margin_top = 320.0
 margin_right = 454.0
-margin_bottom = 320.0
+margin_bottom = 352.0
 custom_constants/separation = 0
 
 [node name="indent" type="Panel" parent="sc/m/v/options/v/halt"]
@@ -1313,9 +1336,9 @@ __meta__ = {
 }
 
 [node name="hold" type="HBoxContainer" parent="sc/m/v/options/v"]
-margin_top = 320.0
+margin_top = 352.0
 margin_right = 454.0
-margin_bottom = 352.0
+margin_bottom = 384.0
 custom_constants/separation = 0
 
 [node name="indent" type="Panel" parent="sc/m/v/options/v/hold"]
@@ -1364,9 +1387,9 @@ __meta__ = {
 }
 
 [node name="fuel" type="HBoxContainer" parent="sc/m/v/options/v"]
-margin_top = 352.0
+margin_top = 384.0
 margin_right = 454.0
-margin_bottom = 384.0
+margin_bottom = 416.0
 custom_constants/separation = 0
 
 [node name="indent" type="Panel" parent="sc/m/v/options/v/fuel"]
@@ -1415,9 +1438,9 @@ __meta__ = {
 }
 
 [node name="autobuyer" type="HBoxContainer" parent="sc/m/v/options/v"]
-margin_top = 384.0
+margin_top = 416.0
 margin_right = 454.0
-margin_bottom = 416.0
+margin_bottom = 448.0
 custom_constants/separation = 0
 
 [node name="indent" type="Panel" parent="sc/m/v/options/v/autobuyer"]
@@ -1466,9 +1489,9 @@ __meta__ = {
 }
 
 [node name="color blind" type="CheckButton" parent="sc/m/v/options/v"]
-margin_top = 416.0
+margin_top = 448.0
 margin_right = 454.0
-margin_bottom = 448.0
+margin_bottom = 480.0
 focus_mode = 0
 mouse_default_cursor_shape = 2
 size_flags_horizontal = 3
@@ -1491,9 +1514,9 @@ __meta__ = {
 }
 
 [node name="deaf" type="CheckButton" parent="sc/m/v/options/v"]
-margin_top = 448.0
+margin_top = 480.0
 margin_right = 454.0
-margin_bottom = 480.0
+margin_bottom = 512.0
 mouse_default_cursor_shape = 2
 size_flags_horizontal = 3
 theme = ExtResource( 18 )
@@ -1518,7 +1541,7 @@ __meta__ = {
 visible = false
 margin_top = 56.0
 margin_right = 474.0
-margin_bottom = 236.0
+margin_bottom = 492.0
 custom_constants/margin_right = 10
 custom_constants/margin_top = 10
 custom_constants/margin_left = 10
@@ -1529,14 +1552,14 @@ self_modulate = Color( 0.75, 0.64, 0.04, 0.25 )
 margin_left = 10.0
 margin_top = 10.0
 margin_right = 464.0
-margin_bottom = 170.0
+margin_bottom = 426.0
 custom_styles/panel = SubResource( 12 )
 
 [node name="v" type="VBoxContainer" parent="sc/m/v/stats"]
 margin_left = 10.0
 margin_top = 10.0
 margin_right = 464.0
-margin_bottom = 170.0
+margin_bottom = 426.0
 custom_constants/separation = 0
 
 [node name="cur_session" type="HBoxContainer" parent="sc/m/v/stats/v"]
@@ -1565,7 +1588,7 @@ valign = 1
 [node name="run" type="VBoxContainer" parent="sc/m/v/stats/v"]
 margin_top = 32.0
 margin_right = 454.0
-margin_bottom = 64.0
+margin_bottom = 320.0
 custom_constants/separation = 0
 
 [node name="top" type="MarginContainer" parent="sc/m/v/stats/v/run"]
@@ -1630,15 +1653,14 @@ custom_styles/pressed = SubResource( 24 )
 custom_styles/normal = SubResource( 25 )
 
 [node name="cont" type="VBoxContainer" parent="sc/m/v/stats/v/run"]
-visible = false
 margin_top = 32.0
 margin_right = 454.0
-margin_bottom = 416.0
+margin_bottom = 288.0
 custom_constants/separation = 0
 
 [node name="s4" type="VBoxContainer" parent="sc/m/v/stats/v/run/cont"]
 margin_right = 454.0
-margin_bottom = 96.0
+margin_bottom = 64.0
 custom_constants/separation = 0
 
 [node name="h" type="HBoxContainer" parent="sc/m/v/stats/v/run/cont/s4"]
@@ -1685,75 +1707,10 @@ custom_fonts/font = SubResource( 21 )
 text = "Stage 4"
 valign = 1
 
-[node name="clock" type="HBoxContainer" parent="sc/m/v/stats/v/run/cont/s4"]
+[node name="reset" type="HBoxContainer" parent="sc/m/v/stats/v/run/cont/s4"]
 margin_top = 32.0
 margin_right = 454.0
 margin_bottom = 64.0
-custom_constants/separation = 0
-
-[node name="indent" type="Panel" parent="sc/m/v/stats/v/run/cont/s4/clock"]
-margin_top = 13.0
-margin_right = 12.0
-margin_bottom = 19.0
-rect_min_size = Vector2( 12, 6 )
-size_flags_horizontal = 4
-size_flags_vertical = 4
-custom_styles/panel = SubResource( 13 )
-
-[node name="indent3" type="Panel" parent="sc/m/v/stats/v/run/cont/s4/clock"]
-margin_left = 12.0
-margin_top = 13.0
-margin_right = 24.0
-margin_bottom = 19.0
-rect_min_size = Vector2( 12, 6 )
-size_flags_horizontal = 4
-size_flags_vertical = 4
-custom_styles/panel = SubResource( 13 )
-
-[node name="indent4" type="Panel" parent="sc/m/v/stats/v/run/cont/s4/clock"]
-margin_left = 24.0
-margin_top = 13.0
-margin_right = 36.0
-margin_bottom = 19.0
-rect_min_size = Vector2( 12, 6 )
-size_flags_horizontal = 4
-size_flags_vertical = 4
-custom_styles/panel = SubResource( 13 )
-
-[node name="dot" type="Panel" parent="sc/m/v/stats/v/run/cont/s4/clock"]
-self_modulate = Color( 0.74902, 0.639216, 0.0352941, 1 )
-margin_left = 36.0
-margin_top = 13.0
-margin_right = 42.0
-margin_bottom = 19.0
-rect_min_size = Vector2( 6, 6 )
-size_flags_horizontal = 4
-size_flags_vertical = 4
-custom_styles/panel = SubResource( 16 )
-
-[node name="indent2" type="Panel" parent="sc/m/v/stats/v/run/cont/s4/clock"]
-margin_left = 42.0
-margin_top = 13.0
-margin_right = 54.0
-margin_bottom = 19.0
-rect_min_size = Vector2( 12, 6 )
-size_flags_horizontal = 4
-size_flags_vertical = 4
-custom_styles/panel = SubResource( 13 )
-
-[node name="Label" type="Label" parent="sc/m/v/stats/v/run/cont/s4/clock"]
-margin_left = 54.0
-margin_right = 167.0
-margin_bottom = 32.0
-rect_min_size = Vector2( 0, 32 )
-custom_fonts/font = SubResource( 21 )
-text = "Current run duration:"
-valign = 1
-
-[node name="reset" type="HBoxContainer" parent="sc/m/v/stats/v/run/cont/s4"]
-margin_top = 64.0
-margin_right = 454.0
-margin_bottom = 96.0
 custom_constants/separation = 0
 
 [node name="indent" type="Panel" parent="sc/m/v/stats/v/run/cont/s4/reset"]
@@ -1816,9 +1773,9 @@ text = "Reset 4 times"
 valign = 1
 
 [node name="s3" type="VBoxContainer" parent="sc/m/v/stats/v/run/cont"]
-margin_top = 96.0
+margin_top = 64.0
 margin_right = 454.0
-margin_bottom = 192.0
+margin_bottom = 128.0
 custom_constants/separation = 0
 
 [node name="h" type="HBoxContainer" parent="sc/m/v/stats/v/run/cont/s3"]
@@ -1865,75 +1822,10 @@ custom_fonts/font = SubResource( 21 )
 text = "Stage 3"
 valign = 1
 
-[node name="clock" type="HBoxContainer" parent="sc/m/v/stats/v/run/cont/s3"]
+[node name="reset" type="HBoxContainer" parent="sc/m/v/stats/v/run/cont/s3"]
 margin_top = 32.0
 margin_right = 454.0
 margin_bottom = 64.0
-custom_constants/separation = 0
-
-[node name="indent" type="Panel" parent="sc/m/v/stats/v/run/cont/s3/clock"]
-margin_top = 13.0
-margin_right = 12.0
-margin_bottom = 19.0
-rect_min_size = Vector2( 12, 6 )
-size_flags_horizontal = 4
-size_flags_vertical = 4
-custom_styles/panel = SubResource( 13 )
-
-[node name="indent3" type="Panel" parent="sc/m/v/stats/v/run/cont/s3/clock"]
-margin_left = 12.0
-margin_top = 13.0
-margin_right = 24.0
-margin_bottom = 19.0
-rect_min_size = Vector2( 12, 6 )
-size_flags_horizontal = 4
-size_flags_vertical = 4
-custom_styles/panel = SubResource( 13 )
-
-[node name="indent4" type="Panel" parent="sc/m/v/stats/v/run/cont/s3/clock"]
-margin_left = 24.0
-margin_top = 13.0
-margin_right = 36.0
-margin_bottom = 19.0
-rect_min_size = Vector2( 12, 6 )
-size_flags_horizontal = 4
-size_flags_vertical = 4
-custom_styles/panel = SubResource( 13 )
-
-[node name="dot" type="Panel" parent="sc/m/v/stats/v/run/cont/s3/clock"]
-self_modulate = Color( 0.74902, 0.639216, 0.0352941, 1 )
-margin_left = 36.0
-margin_top = 13.0
-margin_right = 42.0
-margin_bottom = 19.0
-rect_min_size = Vector2( 6, 6 )
-size_flags_horizontal = 4
-size_flags_vertical = 4
-custom_styles/panel = SubResource( 16 )
-
-[node name="indent2" type="Panel" parent="sc/m/v/stats/v/run/cont/s3/clock"]
-margin_left = 42.0
-margin_top = 13.0
-margin_right = 54.0
-margin_bottom = 19.0
-rect_min_size = Vector2( 12, 6 )
-size_flags_horizontal = 4
-size_flags_vertical = 4
-custom_styles/panel = SubResource( 13 )
-
-[node name="Label" type="Label" parent="sc/m/v/stats/v/run/cont/s3/clock"]
-margin_left = 54.0
-margin_right = 167.0
-margin_bottom = 32.0
-rect_min_size = Vector2( 0, 32 )
-custom_fonts/font = SubResource( 21 )
-text = "Current run duration:"
-valign = 1
-
-[node name="reset" type="HBoxContainer" parent="sc/m/v/stats/v/run/cont/s3"]
-margin_top = 64.0
-margin_right = 454.0
-margin_bottom = 96.0
 custom_constants/separation = 0
 
 [node name="indent" type="Panel" parent="sc/m/v/stats/v/run/cont/s3/reset"]
@@ -1996,9 +1888,9 @@ text = "Reset 4 times"
 valign = 1
 
 [node name="s2" type="VBoxContainer" parent="sc/m/v/stats/v/run/cont"]
-margin_top = 192.0
+margin_top = 128.0
 margin_right = 454.0
-margin_bottom = 288.0
+margin_bottom = 192.0
 custom_constants/separation = 0
 
 [node name="h" type="HBoxContainer" parent="sc/m/v/stats/v/run/cont/s2"]
@@ -2045,75 +1937,10 @@ custom_fonts/font = SubResource( 21 )
 text = "Stage 2"
 valign = 1
 
-[node name="clock" type="HBoxContainer" parent="sc/m/v/stats/v/run/cont/s2"]
+[node name="reset" type="HBoxContainer" parent="sc/m/v/stats/v/run/cont/s2"]
 margin_top = 32.0
 margin_right = 454.0
 margin_bottom = 64.0
-custom_constants/separation = 0
-
-[node name="indent" type="Panel" parent="sc/m/v/stats/v/run/cont/s2/clock"]
-margin_top = 13.0
-margin_right = 12.0
-margin_bottom = 19.0
-rect_min_size = Vector2( 12, 6 )
-size_flags_horizontal = 4
-size_flags_vertical = 4
-custom_styles/panel = SubResource( 13 )
-
-[node name="indent3" type="Panel" parent="sc/m/v/stats/v/run/cont/s2/clock"]
-margin_left = 12.0
-margin_top = 13.0
-margin_right = 24.0
-margin_bottom = 19.0
-rect_min_size = Vector2( 12, 6 )
-size_flags_horizontal = 4
-size_flags_vertical = 4
-custom_styles/panel = SubResource( 13 )
-
-[node name="indent4" type="Panel" parent="sc/m/v/stats/v/run/cont/s2/clock"]
-margin_left = 24.0
-margin_top = 13.0
-margin_right = 36.0
-margin_bottom = 19.0
-rect_min_size = Vector2( 12, 6 )
-size_flags_horizontal = 4
-size_flags_vertical = 4
-custom_styles/panel = SubResource( 13 )
-
-[node name="dot" type="Panel" parent="sc/m/v/stats/v/run/cont/s2/clock"]
-self_modulate = Color( 0.74902, 0.639216, 0.0352941, 1 )
-margin_left = 36.0
-margin_top = 13.0
-margin_right = 42.0
-margin_bottom = 19.0
-rect_min_size = Vector2( 6, 6 )
-size_flags_horizontal = 4
-size_flags_vertical = 4
-custom_styles/panel = SubResource( 16 )
-
-[node name="indent2" type="Panel" parent="sc/m/v/stats/v/run/cont/s2/clock"]
-margin_left = 42.0
-margin_top = 13.0
-margin_right = 54.0
-margin_bottom = 19.0
-rect_min_size = Vector2( 12, 6 )
-size_flags_horizontal = 4
-size_flags_vertical = 4
-custom_styles/panel = SubResource( 13 )
-
-[node name="Label" type="Label" parent="sc/m/v/stats/v/run/cont/s2/clock"]
-margin_left = 54.0
-margin_right = 167.0
-margin_bottom = 32.0
-rect_min_size = Vector2( 0, 32 )
-custom_fonts/font = SubResource( 21 )
-text = "Current run duration:"
-valign = 1
-
-[node name="reset" type="HBoxContainer" parent="sc/m/v/stats/v/run/cont/s2"]
-margin_top = 64.0
-margin_right = 454.0
-margin_bottom = 96.0
 custom_constants/separation = 0
 
 [node name="indent" type="Panel" parent="sc/m/v/stats/v/run/cont/s2/reset"]
@@ -2176,9 +2003,9 @@ text = "Reset 4 times"
 valign = 1
 
 [node name="s1" type="VBoxContainer" parent="sc/m/v/stats/v/run/cont"]
-margin_top = 288.0
+margin_top = 192.0
 margin_right = 454.0
-margin_bottom = 384.0
+margin_bottom = 256.0
 custom_constants/separation = 0
 
 [node name="h" type="HBoxContainer" parent="sc/m/v/stats/v/run/cont/s1"]
@@ -2225,75 +2052,10 @@ custom_fonts/font = SubResource( 21 )
 text = "Stage 1"
 valign = 1
 
-[node name="clock" type="HBoxContainer" parent="sc/m/v/stats/v/run/cont/s1"]
+[node name="reset" type="HBoxContainer" parent="sc/m/v/stats/v/run/cont/s1"]
 margin_top = 32.0
 margin_right = 454.0
 margin_bottom = 64.0
-custom_constants/separation = 0
-
-[node name="indent" type="Panel" parent="sc/m/v/stats/v/run/cont/s1/clock"]
-margin_top = 13.0
-margin_right = 12.0
-margin_bottom = 19.0
-rect_min_size = Vector2( 12, 6 )
-size_flags_horizontal = 4
-size_flags_vertical = 4
-custom_styles/panel = SubResource( 13 )
-
-[node name="indent3" type="Panel" parent="sc/m/v/stats/v/run/cont/s1/clock"]
-margin_left = 12.0
-margin_top = 13.0
-margin_right = 24.0
-margin_bottom = 19.0
-rect_min_size = Vector2( 12, 6 )
-size_flags_horizontal = 4
-size_flags_vertical = 4
-custom_styles/panel = SubResource( 13 )
-
-[node name="indent4" type="Panel" parent="sc/m/v/stats/v/run/cont/s1/clock"]
-margin_left = 24.0
-margin_top = 13.0
-margin_right = 36.0
-margin_bottom = 19.0
-rect_min_size = Vector2( 12, 6 )
-size_flags_horizontal = 4
-size_flags_vertical = 4
-custom_styles/panel = SubResource( 13 )
-
-[node name="dot" type="Panel" parent="sc/m/v/stats/v/run/cont/s1/clock"]
-self_modulate = Color( 0.74902, 0.639216, 0.0352941, 1 )
-margin_left = 36.0
-margin_top = 13.0
-margin_right = 42.0
-margin_bottom = 19.0
-rect_min_size = Vector2( 6, 6 )
-size_flags_horizontal = 4
-size_flags_vertical = 4
-custom_styles/panel = SubResource( 16 )
-
-[node name="indent2" type="Panel" parent="sc/m/v/stats/v/run/cont/s1/clock"]
-margin_left = 42.0
-margin_top = 13.0
-margin_right = 54.0
-margin_bottom = 19.0
-rect_min_size = Vector2( 12, 6 )
-size_flags_horizontal = 4
-size_flags_vertical = 4
-custom_styles/panel = SubResource( 13 )
-
-[node name="Label" type="Label" parent="sc/m/v/stats/v/run/cont/s1/clock"]
-margin_left = 54.0
-margin_right = 167.0
-margin_bottom = 32.0
-rect_min_size = Vector2( 0, 32 )
-custom_fonts/font = SubResource( 21 )
-text = "Current run duration:"
-valign = 1
-
-[node name="reset" type="HBoxContainer" parent="sc/m/v/stats/v/run/cont/s1"]
-margin_top = 64.0
-margin_right = 454.0
-margin_bottom = 96.0
 custom_constants/separation = 0
 
 [node name="indent" type="Panel" parent="sc/m/v/stats/v/run/cont/s1/reset"]
@@ -2356,9 +2118,9 @@ text = "Reset 4 times"
 valign = 1
 
 [node name="quest" type="VBoxContainer" parent="sc/m/v/stats/v"]
-margin_top = 64.0
+margin_top = 320.0
 margin_right = 454.0
-margin_bottom = 128.0
+margin_bottom = 384.0
 custom_constants/separation = 0
 
 [node name="top" type="MarginContainer" parent="sc/m/v/stats/v/quest"]
@@ -2473,9 +2235,9 @@ text = "Random Wish Limit: 0"
 valign = 1
 
 [node name="cur_session2" type="HBoxContainer" parent="sc/m/v/stats/v"]
-margin_top = 128.0
+margin_top = 384.0
 margin_right = 454.0
-margin_bottom = 160.0
+margin_bottom = 416.0
 custom_constants/separation = 0
 
 [node name="indent" type="Panel" parent="sc/m/v/stats/v/cur_session2"]
@@ -2497,6 +2259,7 @@ text = "(There's gonna be more stuff here at some point.)"
 valign = 1
 
 [node name="save" type="MarginContainer" parent="sc/m/v"]
+visible = false
 margin_top = 56.0
 margin_right = 474.0
 margin_bottom = 360.0
@@ -3338,10 +3101,9 @@ __meta__ = {
 }
 
 [node name="tutorial" type="MarginContainer" parent="sc/m/v"]
-visible = false
 margin_top = 56.0
 margin_right = 474.0
-margin_bottom = 140.0
+margin_bottom = 564.0
 custom_constants/margin_right = 10
 custom_constants/margin_top = 10
 custom_constants/margin_left = 10
@@ -3352,14 +3114,14 @@ self_modulate = Color( 0.960784, 0.521569, 1, 0.239216 )
 margin_left = 10.0
 margin_top = 10.0
 margin_right = 464.0
-margin_bottom = 74.0
+margin_bottom = 498.0
 custom_styles/panel = SubResource( 12 )
 
 [node name="v" type="VBoxContainer" parent="sc/m/v/tutorial"]
 margin_left = 10.0
 margin_top = 10.0
 margin_right = 464.0
-margin_bottom = 74.0
+margin_bottom = 498.0
 custom_constants/separation = 0
 
 [node name="tutorial_alert" type="CheckButton" parent="sc/m/v/tutorial/v"]
@@ -3389,7 +3151,7 @@ __meta__ = {
 [node name="loreds" type="VBoxContainer" parent="sc/m/v/tutorial/v"]
 margin_top = 32.0
 margin_right = 454.0
-margin_bottom = 64.0
+margin_bottom = 488.0
 custom_constants/separation = 0
 
 [node name="top" type="MarginContainer" parent="sc/m/v/tutorial/v/loreds"]
@@ -3474,10 +3236,9 @@ custom_styles/pressed = SubResource( 24 )
 custom_styles/normal = SubResource( 25 )
 
 [node name="cont" type="VBoxContainer" parent="sc/m/v/tutorial/v/loreds"]
-visible = false
 margin_top = 32.0
 margin_right = 454.0
-margin_bottom = 128.0
+margin_bottom = 456.0
 custom_constants/separation = 0
 
 [node name="fuel" type="VBoxContainer" parent="sc/m/v/tutorial/v/loreds/cont"]
@@ -3911,12 +3672,12 @@ autowrap = true
 [node name="upgrading" type="VBoxContainer" parent="sc/m/v/tutorial/v/loreds/cont"]
 margin_top = 32.0
 margin_right = 454.0
-margin_bottom = 64.0
+margin_bottom = 392.0
 custom_constants/separation = 0
 
 [node name="loreds" type="VBoxContainer" parent="sc/m/v/tutorial/v/loreds/cont/upgrading"]
 margin_right = 454.0
-margin_bottom = 32.0
+margin_bottom = 360.0
 custom_constants/separation = 0
 
 [node name="top" type="MarginContainer" parent="sc/m/v/tutorial/v/loreds/cont/upgrading/loreds"]
@@ -4025,19 +3786,18 @@ custom_styles/pressed = SubResource( 24 )
 custom_styles/normal = SubResource( 25 )
 
 [node name="cont" type="VBoxContainer" parent="sc/m/v/tutorial/v/loreds/cont/upgrading/loreds"]
-visible = false
 margin_top = 32.0
-margin_right = 455.0
+margin_right = 454.0
 margin_bottom = 360.0
 custom_constants/separation = 8
 
 [node name="0" type="VBoxContainer" parent="sc/m/v/tutorial/v/loreds/cont/upgrading/loreds/cont"]
-margin_right = 455.0
+margin_right = 454.0
 margin_bottom = 32.0
 custom_constants/separation = 0
 
 [node name="h" type="HBoxContainer" parent="sc/m/v/tutorial/v/loreds/cont/upgrading/loreds/cont/0"]
-margin_right = 455.0
+margin_right = 454.0
 margin_bottom = 32.0
 custom_constants/separation = 0
 
@@ -4093,7 +3853,7 @@ custom_styles/panel = SubResource( 13 )
 
 [node name="TEXT" type="Label" parent="sc/m/v/tutorial/v/loreds/cont/upgrading/loreds/cont/0/h"]
 margin_left = 54.0
-margin_right = 455.0
+margin_right = 454.0
 margin_bottom = 32.0
 rect_min_size = Vector2( 0, 32 )
 size_flags_horizontal = 3
@@ -4104,12 +3864,12 @@ autowrap = true
 
 [node name="2" type="VBoxContainer" parent="sc/m/v/tutorial/v/loreds/cont/upgrading/loreds/cont"]
 margin_top = 40.0
-margin_right = 455.0
+margin_right = 454.0
 margin_bottom = 210.0
 custom_constants/separation = 0
 
 [node name="h" type="HBoxContainer" parent="sc/m/v/tutorial/v/loreds/cont/upgrading/loreds/cont/2"]
-margin_right = 455.0
+margin_right = 454.0
 margin_bottom = 170.0
 custom_constants/separation = 0
 
@@ -4195,12 +3955,12 @@ centered = false
 
 [node name="s4" type="VBoxContainer" parent="sc/m/v/tutorial/v/loreds/cont/upgrading/loreds/cont"]
 margin_top = 218.0
-margin_right = 455.0
+margin_right = 454.0
 margin_bottom = 251.0
 custom_constants/separation = 0
 
 [node name="h" type="HBoxContainer" parent="sc/m/v/tutorial/v/loreds/cont/upgrading/loreds/cont/s4"]
-margin_right = 455.0
+margin_right = 454.0
 margin_bottom = 33.0
 custom_constants/separation = 0
 
@@ -4256,23 +4016,23 @@ custom_styles/panel = SubResource( 13 )
 
 [node name="Label" type="Label" parent="sc/m/v/tutorial/v/loreds/cont/upgrading/loreds/cont/s4/h"]
 margin_left = 54.0
-margin_right = 455.0
+margin_right = 454.0
 margin_bottom = 33.0
 rect_min_size = Vector2( 0, 32 )
 size_flags_horizontal = 3
 custom_fonts/font = SubResource( 21 )
-text = "Purchasing the upgrade to level up a LORED has multiple effects: 2x output, 2x resource requirement (input), 2x fuel storage, and 2x fuel drain."
+text = "Leveling up a LORED has multiple effects: 2x output, 2x resource requirement (input), 2x fuel storage, and 2x fuel drain."
 valign = 1
 autowrap = true
 
 [node name="s5" type="VBoxContainer" parent="sc/m/v/tutorial/v/loreds/cont/upgrading/loreds/cont"]
 margin_top = 259.0
-margin_right = 455.0
+margin_right = 454.0
 margin_bottom = 328.0
 custom_constants/separation = 0
 
 [node name="h" type="HBoxContainer" parent="sc/m/v/tutorial/v/loreds/cont/upgrading/loreds/cont/s5"]
-margin_right = 455.0
+margin_right = 454.0
 margin_bottom = 69.0
 custom_constants/separation = 0
 
@@ -4328,7 +4088,7 @@ custom_styles/panel = SubResource( 13 )
 
 [node name="Label" type="Label" parent="sc/m/v/tutorial/v/loreds/cont/upgrading/loreds/cont/s5/h"]
 margin_left = 54.0
-margin_right = 455.0
+margin_right = 454.0
 margin_bottom = 69.0
 rect_min_size = Vector2( 0, 32 )
 size_flags_horizontal = 3
@@ -4338,9 +4098,9 @@ valign = 1
 autowrap = true
 
 [node name="input" type="VBoxContainer" parent="sc/m/v/tutorial/v/loreds/cont"]
-margin_top = 64.0
+margin_top = 392.0
 margin_right = 454.0
-margin_bottom = 96.0
+margin_bottom = 424.0
 custom_constants/separation = 0
 
 [node name="loreds" type="VBoxContainer" parent="sc/m/v/tutorial/v/loreds/cont/input"]
@@ -4772,7 +4532,7 @@ autostart = true
 
 [node name="export" type="FileDialog" parent="."]
 margin_right = 490.0
-margin_bottom = 300.0
+margin_bottom = 828.0
 rect_min_size = Vector2( 400, 200 )
 resizable = true
 access = 2
@@ -4795,6 +4555,7 @@ current_path = "/Program Files (x86)/Steam/steamapps/common/Godot Engine/project
 [connection signal="pressed" from="sc/m/v/options/v/flying_numbers" to="." method="_on_flying_numbers_pressed"]
 [connection signal="pressed" from="sc/m/v/options/v/consolidate_numbers/button" to="." method="_on_consolidate_pressed"]
 [connection signal="pressed" from="sc/m/v/options/v/crits_only/button" to="sc" method="_on_crit_pressed"]
+[connection signal="pressed" from="sc/m/v/options/v/lored chit-chat" to="." method="_on_lored_chitchat_pressed"]
 [connection signal="pressed" from="sc/m/v/options/v/halt/button" to="." method="_on_tip_halt_pressed"]
 [connection signal="pressed" from="sc/m/v/options/v/hold/button" to="." method="_on_tip_hold_pressed"]
 [connection signal="pressed" from="sc/m/v/options/v/fuel/button" to="." method="_on_tip_fuel_pressed"]

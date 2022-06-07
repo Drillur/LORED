@@ -39,7 +39,7 @@ func setup(_key):
 	color_blind.self_modulate = gv.up[key].color
 	afford.self_modulate = gv.up[key].color
 	button.self_modulate = gv.up[key].color
-	shadow.self_modulate = gv.up[key].color
+	#shadow.self_modulate = gv.up[key].color
 	get_node("icon shadow").self_modulate = gv.up[key].color
 	
 	if gv.up[key].have:
@@ -54,8 +54,6 @@ func setup(_key):
 
 
 func _on_Button_mouse_entered() -> void:
-	
-	alert(false)
 	
 	rt.get_node("global_tip")._call("buy upgrade " + key)
 	
@@ -94,13 +92,21 @@ func r_update():
 	icon.update()
 	afford()
 	
-	color_blind.visible = gv.menu.option["color blind"] and not gv.up[key].have and not gv.up[key].refundable and not icon.lock.visible
+	color_blind.visible = gv.option["color blind"] and not gv.up[key].have and not gv.up[key].refundable and not icon.lock.visible
 	
 	if gv.up[key].refundable:
 		shadow.hide()
 		return
 	
-	shadow.visible = not gv.up[key].have
+	if icon.lock.visible or gv.up[key].have:
+		shadow.hide()
+	else:
+		shadow.show()
+	
+	if icon.lock.visible:
+		button.self_modulate = Color(button.self_modulate.r, button.self_modulate.g, button.self_modulate.b, 0.25)
+	else:
+		button.self_modulate = Color(button.self_modulate.r, button.self_modulate.g, button.self_modulate.b, 1.0)
 
 func flash():
 	
@@ -150,7 +156,7 @@ func afford():
 		color_blind.pressed = true
 	else:
 		afford.hide()
-		button.modulate = Color(0.6,0.6,0.6)
+		button.modulate = Color(1,1,1)
 		color_blind.pressed = false
 
 
@@ -251,7 +257,6 @@ func upgrade_bought(manual: bool, red_necro := false):
 		rt.get_node(rt.gnupcon).sync()
 		
 		w_update_other_upgrades_or_something()
-		rt.afford()
 		
 		gv.emit_signal("upgrade_purchased", key, routine)
 		
@@ -385,71 +390,73 @@ func cannot_afford(manual: bool) -> bool:
 #
 #	return true
 
-func get_no_message() -> String:
-	
-	var roll : int = randi() % 29
-	
-	match roll:
-		0:
-			return "Nah."
-		1:
-			return "No."
-		2:
-			return "Nope."
-		3:
-			return "Don't think so."
-		4:
-			return "Stop."
-		5:
-			return "Yeah, right."
-		6:
-			return "Get out of here."
-		7:
-			return "Nice try."
-		8:
-			return "You think I wouldn't have thought of that?"
-		9:
-			return "I see right through your tricks, punk."
-		10:
-			return "What are you trying to pull?"
-		11:
-			return "Oh, trying to be CLEVER, I see."
-		12:
-			return "Yeah, real smart. Look at the brain on this guy."
-		13:
-			return "Frick outta here."
-		14:
-			return "You little whippersnapper, I oughta beat your mother for this."
-		15:
-			return "I thought I raised you better."
-		16:
-			return "You frickin fricks!!!"
-		17:
-			return "When will you learn that your actions have consequences?"
-		18:
-			return "Shiver me freakin timbers, get out of here."
-		19:
-			return "Talk to the ALT-F4."
-		20:
-			return "You want I should smack ye right in the gob?"
-		21:
-			return "Profane, let alone abhorrent."
-		22:
-			return "*Chuckles.* I knew you'd try this. *Smirks.* So predictable."
-		23:
-			return "Turn around."
-		24:
-			return "You fucking piece of shit."
-		25:
-			return "Nah, bro, scedaddle on out of here."
-		26:
-			return "Why don't you just stop right there?"
-		27:
-			return "STOP. YOU'VE VIOLATED THE LAW."
-		28:
-			return "I will turn this car around."
-		_:
-			return "You better not."
+#func get_no_message() -> String:
+#
+#	var roll : int = randi() % 30
+#
+#	match roll:
+#		0:
+#			return "Nah."
+#		1:
+#			return "No."
+#		2:
+#			return "Nope."
+#		3:
+#			return "Don't think so."
+#		4:
+#			return "Stop."
+#		5:
+#			return "Yeah, right."
+#		6:
+#			return "Get out of here."
+#		7:
+#			return "Nice try."
+#		8:
+#			return "You think I wouldn't have thought of that?"
+#		9:
+#			return "I see right through your tricks, punk."
+#		10:
+#			return "What are you trying to pull?"
+#		11:
+#			return "Oh, trying to be CLEVER, I see."
+#		12:
+#			return "Yeah, real smart. Look at the brain on this guy."
+#		13:
+#			return "Frick outta here."
+#		14:
+#			return "You little whippersnapper, I oughta beat your mother for this."
+#		15:
+#			return "I thought I raised you better."
+#		16:
+#			return "You frickin fricks!!!"
+#		17:
+#			return "When will you learn that your actions have consequences?"
+#		18:
+#			return "Shiver me freakin timbers, get out of here."
+#		19:
+#			return "Talk to the ALT-F4."
+#		20:
+#			return "You want I should smack ye right in the gob?"
+#		21:
+#			return "Profane, let alone abhorrent."
+#		22:
+#			return "*Chuckles.* I knew you'd try this. *Smirks.* So predictable."
+#		23:
+#			return "Turn around."
+#		24:
+#			return "You fucking piece of shit."
+#		25:
+#			return "Nah, bro, scedaddle on out of here."
+#		26:
+#			return "Why don't you just stop right there?"
+#		27:
+#			return "STOP. YOU'VE VIOLATED THE LAW."
+#		28:
+#			return "I will turn this car around."
+#		29:
+#			return "I thought your mother raised you better than this."
+#		_:
+#			return "You better not."
 
 func upgrade_effects(active: bool):
 	
@@ -494,7 +501,7 @@ func get_routine_info() -> Array:
 	
 	var base = Big.new(gv.g["tum"].d.t).m(1000)
 	if gv.up["CAPITAL PUNISHMENT"].active():
-		base.m(gv.stats.run[0])
+		base.m(gv.run1)
 	var routine_d: Big = Big.new(base)
 	var routine_c: Big = Big.new(gv.up["ROUTINE"].cost["malig"].t)
 	
@@ -550,13 +557,6 @@ func _kill_all_children(up : String) -> void:
 				if gv.up[v].refundable:
 					_kill_all_children(x)
 
-
-func alert(show := true):
-	
-	get_node("n/alert").hide()
-	
-	if not show:
-		rt.get_node(rt.gnupcon).alert(false, key)
 
 
 

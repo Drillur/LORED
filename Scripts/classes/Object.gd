@@ -12,6 +12,8 @@ extends Reference
 
 class Num:
 	
+	var saved_vars = ["f", "t"]
+	
 	var f := Big.new(0) # current value
 	
 	var a := Big.new(0)
@@ -77,6 +79,25 @@ class Num:
 		if cap_f_to_t:
 			if f.greater(t):
 				f = Big.new(t)
+	
+	func save() -> String:
+		var data := {}
+		for x in saved_vars:
+			if get(x) is Big:
+				data[x] = get(x).save()
+			else:
+				data[x] = var2str(get(x).toString())
+		return var2str(data)
+	
+	func load(_data: String):
+		var data = str2var(_data)
+		for x in saved_vars:
+			if not x in data.keys():
+				continue
+			if get(x) is Big:
+				get(x).load(data[x])
+			else:
+				set(x, str2var(data[x]))
 	
 	func report():
 		

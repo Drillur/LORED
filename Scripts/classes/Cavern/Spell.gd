@@ -47,7 +47,7 @@ func _init(_type: int).(_type):
 	
 	name = gv.getSpellName(type)
 	
-	call("construct_" + Cav.Spell.keys()[type])
+	call("construct_" + Cav.eSpell.keys()[type])
 	
 	has_cd = cd != null
 	costs_mana = mana_cost != null
@@ -204,7 +204,7 @@ func addSpecialEffect(req_type: int, req: int, action_type: int, action := -1):
 
 func unlockBuff():
 	match type:
-		Cav.Spell.SCORCH:
+		Cav.eSpell.SCORCH:
 			order.append(Cav.AbilityAction.APPLY_BUFF)
 			applied_buff = Cav.Buff.SCORCHING
 	orderAdjusted()

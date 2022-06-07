@@ -2,7 +2,7 @@ extends MarginContainer
 
 
 
-onready var rt = get_node("/root/Root")
+onready var rt = get_node("/root/Cavern")
 onready var bg = get_node("bg")
 onready var cooldown = get_node("cooldown")
 onready var bar = get_node("cooldown/bar")

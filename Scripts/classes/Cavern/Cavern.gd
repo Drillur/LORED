@@ -13,11 +13,14 @@ var unlocked_buff_effects := []
 
 
 var spell := {}
-var buff := {}
 
 var warlock_unlocked := false
 
 var cav: Node2D
+
+
+
+
 
 
 
@@ -356,7 +359,7 @@ enum UnitClass {
 	WYRM,
 }
 
-enum Spell {
+enum eSpell {
 	ARCANE_FOCUS,
 	CORE_RIFT,
 	VITALIZE,
@@ -413,6 +416,13 @@ enum SpecialEffect { # see: # special effects
 enum SpecialEffectRequirement {
 	STACK_LIMIT,
 }
+
+
+
+func close():
+#	call when exiting Cavern.
+#	also, SpellButton should appear to be CLICKED when using hotkey. Make the Hotkey Label move slightly, like it is being pressed in. good luck with that, idiot.
+	spell.clear()
 
 
 

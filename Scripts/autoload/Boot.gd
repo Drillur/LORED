@@ -1,20 +1,26 @@
 extends Node
 
 
-func _ready() -> void:
-	
+
+func go():
 	init()
 	setup()
+
 
 func init():
 	
 	init_loreds()
-	init_menu_and_stats()
+	init_list()
 	init_upgrades()
-	init_spells()
+	
+	#initSaveShit here?
+
+func init_list():
+	for x in gv.g:
+		gv.list.lored[gv.g[x].stage_key].append(x)
 
 func init_loreds():
-
+	
 	# stage 3
 	
 	# stage 2
@@ -78,43 +84,6 @@ func init_loreds():
 	gv.g["coal"] = LORED.new("coal", "Coal", "s1 bur bore ", {}, { "stone" : Ob.Num.new(5.0) }, 1.3)
 	gv.g["stone"] = LORED.new("stone", "Stone", "s1 bur bore key ", {}, { "iron" : Ob.Num.new(25.0), "cop" : Ob.Num.new(15.0) }, 1.0)
 
-func init_menu_and_stats():
-	
-	# menu
-	
-	gv.menu.option["FPS"] = 0
-	gv.menu.option["notation_type"] = 0
-	gv.menu.option["status_color"] = false
-	gv.menu.option["flying_numbers"] = true
-	gv.menu.option["crits_only"] = false
-	gv.menu.option["consolidate_numbers"] = false
-	gv.menu.option["animations"] = true
-	gv.menu.option["tooltip_halt"] = true
-	gv.menu.option["tooltip_hold"] = true
-	gv.menu.option["tooltip_fuel"] = true
-	gv.menu.option["tooltip_autobuyer"] = true
-	gv.menu.option["tooltip_cost_only"] = false
-	gv.menu.option["on_save_halt"] = false
-	gv.menu.option["on_save_hold"] = false
-	gv.menu.option["im_ss_show_hint"] = true
-	gv.menu.option["task auto"] = false
-	gv.menu.option["performance"] = true
-	gv.menu.option["color blind"] = false
-	gv.menu.option["deaf"] = false
-	gv.menu.option["patch alert"] = true
-	gv.menu.option["tutorial alert"] = true
-	
-	# stats
-	
-	gv.stats = Statistics.new(gv.g.keys())
-	
-	for x in gv.Tab:
-		
-		if gv.Tab[x] == gv.Tab.S1:
-			break
-	
-	for x in gv.g:
-		gv.list.lored[gv.g[x].stage_key].append(x)
 
 func init_upgrades():
 	
@@ -159,8 +128,6 @@ func init_upgrades():
 #			#gv.up[f].requires.append("AUTOSENSU")
 #
 #			f = "blood 0"
-#			gv.chains[f] = UpgradeChain.new("", ["Incision"])
-			#gv.chains[f].effects.append(Effect.new("drain", ["blood"], 1.1))
 	
 	# upauto
 	if true:
@@ -1104,6 +1071,7 @@ func init_upgrades():
 			gv.up[f].effects[0].dynamic = true
 			gv.up[f].cost["malig"] = Ob.Num.new(800000.0)
 			gv.up[f].requires.append("STAY QUENCHED")
+			gv.up[f].saveEffects()
 			
 			f = "SLUGGER"
 			gv.up[f] = Upgrade.new(f, "s1m output","Stage 1 output x{e0}.")
@@ -1617,6 +1585,7 @@ func init_upgrades():
 				gv.up[f].effects.append(Effect.new("output", gv.list.lored[gv.Tab.S1] + gv.list.lored[gv.Tab.S2]))
 				gv.up[f].cost["tum"] = Ob.Num.new("1e3")
 				gv.up[f].effects[0].dynamic = true
+				gv.up[f].saveEffects()
 			
 			f = "dust"
 			gv.up[f] = Upgrade.new(f, "s2m misc","Metastasizing no longer resets Stage 1 LORED levels.", gv.Tab.S1)
@@ -1648,6 +1617,7 @@ func init_upgrades():
 			gv.up[f].effects[1].dynamic = true
 			gv.up[f].cost["tum"] = Ob.Num.new("8e13") # mil
 			gv.up[f].requires.append("AUTO-PERSIST")
+			gv.up[f].saveEffects()
 			
 			f = "the athore coments al totol lies!"
 			gv.up[f] = Upgrade.new(f, "s2m misc","Stage 1 crits gain a 1% chance to crit.", gv.Tab.S1)
@@ -1716,6 +1686,7 @@ func init_upgrades():
 			gv.up[f].effects.append(Effect.new("output", ["cop"]))
 			gv.up[f].effects[1].dynamic = true
 			gv.up[f].cost["malig"] = Ob.Num.new(2000.0)
+			gv.up[f].saveEffects()
 			
 			f = "upgrade_name"
 			gv.up[f] = Upgrade.new(f, "s1m misc","Reduces the cost increase of every Stage 1 LORED from x3.0 to x2.75; Coal drain for fuel by Stage 1 LOREDs x{e0}.", gv.Tab.S1)
@@ -1723,17 +1694,12 @@ func init_upgrades():
 			gv.up[f].cost["malig"] = Ob.Num.new("25e6")
 			gv.up[f].requires.append("ORE LORD")
 
-func init_spells():
-	
-	for s in Cav.Spell.values():
-		Cav.spell[s] = Spell.new(s)
 
 
 func setup():
 	
 	setup_loreds()
 	setup_upgrades()
-	setup_spells()
 
 func setup_loreds():
 	
@@ -1782,22 +1748,29 @@ func setup_upgrades():
 			if x in gv.up[v].requires:
 				gv.up[x].required_by.append(v)
 	
-	for c in gv.chains:
-		for x in gv.chains[c].chain_keys:
-			gv.up[x].chain_length = gv.chains[c].chain_keys.size()
-			gv.up[x].chain_key = c
-	
 	gv.up["RED NECROMANCY"].effects.append(Effect.new("autoup", gv.list.upgrade[str(gv.Tab.MALIGNANT)]))
 	gv.up["Now That's What I'm Talkin About, YeeeeeeaaaaaaaAAAAAAGGGGGHHH"].effects.append(Effect.new("autoup", gv.list.upgrade[str(gv.Tab.EXTRA_NORMAL)]))
 	gv.up["we were so close, now you don't even think about me"].effects.append(Effect.new("autoup", gv.list.upgrade[str(gv.Tab.NORMAL)]))
 	gv.up["ROUTINE"].effects.append(Effect.new("saveup", gv.list.upgrade[str(gv.Tab.NORMAL)], 2))
-	
-	for x in gv.up:
-		if gv.up[x].requires.size() == 0:
-			gv.up[x].unlocked = true
-		gv.up[x].sync()
 
+func init_spells():
+	
+	for s in Cav.eSpell.values():
+		Cav.spell[s] = Spell.new(s)
 func setup_spells():
 	
+	for s in Cav.spell:
+		gv.setSpellDesc(Cav.spell[s])
+
+
+
+
+func bootCav():
+	initSpells()
+	setupSpells()
+func initSpells():
+	for s in Cav.eSpell.values():
+		Cav.spell[s] = Spell.new(s)
+func setupSpells():
 	for s in Cav.spell:
 		gv.setSpellDesc(Cav.spell[s])

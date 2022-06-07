@@ -38,7 +38,7 @@ func _update(_ticks: int):
 	bar_flair.value = max(0, ticks - 1) / float(max_ticks) * 100
 
 func clear():
-	get_node("/root/Root").cav.buffExpired(type)
+	get_node("/root/Cavern").buffExpired(type)
 	#hide()
 	queue_free()
 

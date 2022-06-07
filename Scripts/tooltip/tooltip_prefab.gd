@@ -1,6 +1,7 @@
 extends MarginContainer
 
 onready var rt = get_node("/root/Root")
+onready var cav_rt = get_node("/root/Cavern")
 
 
 var fps := 0.0
@@ -12,7 +13,6 @@ var cont := {}
 
 const src := {
 	vbox = preload("res://Prefabs/tooltip/PriceContainer.tscn"),
-	taq_tip = preload("res://Prefabs/tooltip/QuestTip.tscn"),
 	tip_lored_fuel = preload("res://Prefabs/tooltip/tip_lored_fuel.tscn"),
 }
 
@@ -239,7 +239,7 @@ func r_tip(move_tip := false) -> void:
 		
 		elif "spell tooltip" == type:
 			
-			var resources_pos: Vector2 = rt.cav.get_node("m/bot/v/resources").rect_global_position
+			var resources_pos: Vector2 = cav_rt.get_node("m/bot/v/resources").rect_global_position
 			
 			rect_position = Vector2(
 				get_global_mouse_position().x - (rect_size.x / 2),
@@ -304,11 +304,15 @@ func r_tip(move_tip := false) -> void:
 			)
 			return
 		
-		# lines below this took me 90 minutes to figure out. am i retarded?
-		if rt.get_node("map").get_global_position().y + rect_position.y + rect_size.y > win.y:
-			rect_position.y -= rt.get_node("map").get_global_position().y + rect_position.y + rect_size.y - win.y
-		if rt.get_node("map").get_global_position().y + rect_position.y < y_buffer:
-			rect_position.y -= rt.get_node("map").get_global_position().y + rect_position.y - y_buffer
+		if rect_position.y + rect_size.y > win.y:
+			rect_position.y -= rect_position.y + rect_size.y - win.y
+		if rect_position.y < y_buffer:
+			rect_position.y -= rect_position.y - y_buffer
+#
+#		if rt.get_node("map").get_global_position().y + rect_position.y + rect_size.y > win.y:
+#			rect_position.y -= rt.get_node("map").get_global_position().y + rect_position.y + rect_size.y - win.y
+#		if rt.get_node("map").get_global_position().y + rect_position.y < y_buffer:
+#			rect_position.y -= rt.get_node("map").get_global_position().y + rect_position.y - y_buffer
 
 func price_flash() -> void:
 	
@@ -363,7 +367,7 @@ func lored_buy_lored(key: String) -> void:
 	if not gv.g[key].autobuy:
 		return
 	
-	if not gv.menu.option["tooltip_autobuyer"] and gv.menu.option["tooltip_cost_only"]:
+	if not gv.option["tooltip_autobuyer"] and gv.option["tooltip_cost_only"]:
 		return
 	
 	cont["autobuyer"] = gv.SRC["tooltip/autobuyer"].instance()

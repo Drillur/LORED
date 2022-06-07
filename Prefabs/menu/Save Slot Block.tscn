@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=2]
+[gd_scene load_steps=30 format=2]
 
 [ext_resource path="res://Fonts/Roboto-Black.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Fonts/Roboto-MediumItalic.ttf" type="DynamicFontData" id=2]
@@ -11,6 +11,8 @@
 [ext_resource path="res://Sprites/Menu/Edit.png" type="Texture" id=9]
 [ext_resource path="res://Prefabs/menu/Save Slot Block.gd" type="Script" id=10]
 [ext_resource path="res://Fonts/Roboto-Medium.ttf" type="DynamicFontData" id=11]
+[ext_resource path="res://Sprites/Menu/Dupe.png" type="Texture" id=12]
+[ext_resource path="res://Sprites/Menu/Main Save.png" type="Texture" id=13]
 
 [sub_resource type="StyleBoxFlat" id=1]
 bg_color = Color( 1, 1, 1, 0.301961 )
@@ -24,6 +26,9 @@ expand_margin_right = 10.0
 expand_margin_top = 10.0
 expand_margin_bottom = 10.0
 
+[sub_resource type="StyleBoxFlat" id=8]
+draw_center = false
+
 [sub_resource type="DynamicFont" id=2]
 size = 14
 font_data = ExtResource( 1 )
@@ -31,9 +36,6 @@ font_data = ExtResource( 1 )
 [sub_resource type="DynamicFont" id=13]
 size = 10
 font_data = ExtResource( 2 )
-
-[sub_resource type="StyleBoxFlat" id=8]
-draw_center = false
 
 [sub_resource type="StyleBoxFlat" id=4]
 bg_color = Color( 1, 1, 1, 0.0313726 )
@@ -43,6 +45,17 @@ bg_color = Color( 1, 1, 1, 0.06 )
 
 [sub_resource type="StyleBoxFlat" id=6]
 draw_center = false
+
+[sub_resource type="StyleBoxFlat" id=15]
+bg_color = Color( 0.36, 0, 0, 0.9 )
+expand_margin_left = 2.0
+expand_margin_right = 2.0
+expand_margin_top = 2.0
+expand_margin_bottom = 2.0
+
+[sub_resource type="DynamicFont" id=16]
+size = 14
+font_data = ExtResource( 2 )
 
 [sub_resource type="StyleBoxFlat" id=12]
 bg_color = Color( 1, 1, 1, 0.301961 )
@@ -92,28 +105,25 @@ margin_right = 160.0
 margin_bottom = 129.0
 rect_min_size = Vector2( 170, 0 )
 script = ExtResource( 10 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="v" type="VBoxContainer" parent="."]
 margin_right = 170.0
-margin_bottom = 129.0
+margin_bottom = 212.0
 custom_constants/separation = 0
 
 [node name="m" type="MarginContainer" parent="v"]
 margin_right = 170.0
-margin_bottom = 129.0
+margin_bottom = 168.0
 
 [node name="bg" type="Panel" parent="v/m"]
-self_modulate = Color( 0.0470588, 0.941176, 0.941176, 1 )
+self_modulate = Color( 1, 0.192157, 0.192157, 1 )
 margin_right = 170.0
-margin_bottom = 129.0
+margin_bottom = 168.0
 custom_styles/panel = SubResource( 1 )
 
 [node name="m" type="MarginContainer" parent="v/m"]
 margin_right = 170.0
-margin_bottom = 129.0
+margin_bottom = 168.0
 custom_constants/margin_right = 10
 custom_constants/margin_top = 10
 custom_constants/margin_left = 10
@@ -123,46 +133,69 @@ custom_constants/margin_bottom = 10
 margin_left = 10.0
 margin_top = 10.0
 margin_right = 160.0
-margin_bottom = 119.0
+margin_bottom = 158.0
 custom_constants/separation = 20
 
 [node name="name" type="MarginContainer" parent="v/m/m/v"]
 margin_right = 150.0
-margin_bottom = 17.0
+margin_bottom = 56.0
 
 [node name="bg" type="Panel" parent="v/m/m/v/name"]
 margin_right = 150.0
-margin_bottom = 17.0
+margin_bottom = 56.0
 custom_styles/panel = SubResource( 7 )
 
 [node name="v" type="VBoxContainer" parent="v/m/m/v/name"]
 margin_right = 150.0
-margin_bottom = 17.0
-custom_constants/separation = -1
+margin_bottom = 56.0
+custom_constants/separation = 1
 alignment = 1
 
+[node name="main" type="Panel" parent="v/m/m/v/name/v"]
+margin_left = 63.0
+margin_right = 87.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 24, 24 )
+mouse_filter = 2
+size_flags_horizontal = 4
+custom_styles/panel = SubResource( 8 )
+
+[node name="Sprite" type="Sprite" parent="v/m/m/v/name/v/main"]
+position = Vector2( 12, 12 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 13 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="shadow" type="Sprite" parent="v/m/m/v/name/v/main/Sprite"]
+self_modulate = Color( 0, 0, 0, 0.501961 )
+show_behind_parent = true
+position = Vector2( 2, 2 )
+texture = ExtResource( 13 )
+
 [node name="text" type="Label" parent="v/m/m/v/name/v"]
+margin_top = 25.0
 margin_right = 150.0
-margin_bottom = 17.0
+margin_bottom = 42.0
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 2 )
-text = "save.lored"
+text = "save1.lored"
 align = 1
 
 [node name="flair" type="Label" parent="v/m/m/v/name/v"]
-visible = false
-margin_top = 16.0
-margin_right = 311.0
-margin_bottom = 29.0
+margin_top = 43.0
+margin_right = 150.0
+margin_bottom = 56.0
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 13 )
-text = "DELETE THIS LABEL and make another way to display \"last-played save\""
+text = "Main Save"
 align = 1
 
 [node name="v" type="VBoxContainer" parent="v/m/m/v"]
-margin_top = 37.0
+margin_top = 76.0
 margin_right = 150.0
-margin_bottom = 109.0
+margin_bottom = 148.0
 custom_constants/separation = 0
 
 [node name="date" type="HBoxContainer" parent="v/m/m/v/v"]
@@ -190,11 +223,11 @@ texture = ExtResource( 4 )
 [node name="text" type="Label" parent="v/m/m/v/v/date"]
 margin_left = 32.0
 margin_top = 3.0
-margin_right = 90.0
+margin_right = 125.0
 margin_bottom = 20.0
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 2 )
-text = "2/2/2022"
+text = "1/18/22, 18:30"
 align = 1
 
 [node name="time played" type="HBoxContainer" parent="v/m/m/v/v"]
@@ -223,11 +256,11 @@ texture = ExtResource( 3 )
 [node name="text" type="Label" parent="v/m/m/v/v/time played"]
 margin_left = 32.0
 margin_top = 3.0
-margin_right = 48.0
+margin_right = 56.0
 margin_bottom = 20.0
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 2 )
-text = "6h"
+text = "35h"
 align = 1
 
 [node name="difficulty" type="HBoxContainer" parent="v/m/m/v/v"]
@@ -256,17 +289,17 @@ texture = ExtResource( 5 )
 [node name="text" type="Label" parent="v/m/m/v/v/difficulty"]
 margin_left = 32.0
 margin_top = 3.0
-margin_right = 86.0
+margin_right = 92.0
 margin_bottom = 20.0
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 2 )
-text = "Tortoise"
+text = "Marathon"
 align = 1
 
 [node name="select" type="Button" parent="v/m"]
 visible = false
 margin_right = 170.0
-margin_bottom = 129.0
+margin_bottom = 168.0
 rect_pivot_offset = Vector2( 71, 48 )
 focus_mode = 0
 mouse_default_cursor_shape = 2
@@ -274,11 +307,29 @@ custom_styles/hover = SubResource( 4 )
 custom_styles/pressed = SubResource( 5 )
 custom_styles/normal = SubResource( 6 )
 
-[node name="actions" type="MarginContainer" parent="v"]
+[node name="confirm deny" type="MarginContainer" parent="v/m"]
 visible = false
-margin_top = 129.0
 margin_right = 170.0
-margin_bottom = 173.0
+margin_bottom = 168.0
+
+[node name="bg" type="Panel" parent="v/m/confirm deny"]
+margin_right = 170.0
+margin_bottom = 168.0
+custom_styles/panel = SubResource( 15 )
+
+[node name="objective2" type="Label" parent="v/m/confirm deny"]
+margin_top = 75.0
+margin_right = 170.0
+margin_bottom = 92.0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 16 )
+text = "Confirm deletion"
+align = 1
+
+[node name="actions" type="MarginContainer" parent="v"]
+margin_top = 168.0
+margin_right = 170.0
+margin_bottom = 212.0
 
 [node name="bg" type="Panel" parent="v/actions"]
 self_modulate = Color( 0.34902, 0.34902, 0.34902, 1 )
@@ -294,23 +345,29 @@ custom_constants/margin_top = 10
 custom_constants/margin_left = 10
 custom_constants/margin_bottom = 10
 
-[node name="h" type="HBoxContainer" parent="v/actions/m"]
+[node name="v" type="VBoxContainer" parent="v/actions/m"]
 margin_left = 10.0
 margin_top = 10.0
 margin_right = 160.0
 margin_bottom = 34.0
-custom_constants/separation = 10
+custom_constants/separation = 8
+
+[node name="h" type="HBoxContainer" parent="v/actions/m/v"]
+margin_right = 150.0
+margin_bottom = 24.0
+custom_constants/separation = 4
 alignment = 1
 
-[node name="play" type="MarginContainer" parent="v/actions/m/h"]
-margin_right = 48.0
+[node name="play" type="MarginContainer" parent="v/actions/m/v/h"]
+margin_right = 38.0
 margin_bottom = 24.0
-rect_min_size = Vector2( 48, 0 )
+rect_min_size = Vector2( 38, 0 )
 
-[node name="button" type="Button" parent="v/actions/m/h/play"]
+[node name="button" type="Button" parent="v/actions/m/v/h/play"]
 self_modulate = Color( 0.384314, 0.603922, 0.270588, 1 )
-margin_right = 48.0
+margin_right = 38.0
 margin_bottom = 24.0
+hint_tooltip = "Play"
 focus_mode = 0
 mouse_default_cursor_shape = 2
 custom_fonts/font = SubResource( 9 )
@@ -322,32 +379,35 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="icon" type="Panel" parent="v/actions/m/h/play"]
-margin_right = 48.0
+[node name="icon" type="Panel" parent="v/actions/m/v/h/play"]
+margin_left = 7.0
+margin_right = 31.0
 margin_bottom = 24.0
 rect_min_size = Vector2( 24, 24 )
 mouse_filter = 2
+size_flags_horizontal = 4
 custom_styles/panel = SubResource( 8 )
 
-[node name="Sprite2" type="Sprite" parent="v/actions/m/h/play/icon"]
+[node name="Sprite2" type="Sprite" parent="v/actions/m/v/h/play/icon"]
 self_modulate = Color( 0, 0, 0, 0.501961 )
-position = Vector2( 25, 13 )
+position = Vector2( 13, 13 )
 scale = Vector2( 0.5, 0.5 )
 texture = ExtResource( 8 )
 
-[node name="Sprite" type="Sprite" parent="v/actions/m/h/play/icon"]
-position = Vector2( 24, 12 )
+[node name="Sprite" type="Sprite" parent="v/actions/m/v/h/play/icon"]
+position = Vector2( 12, 12 )
 scale = Vector2( 0.5, 0.5 )
 texture = ExtResource( 8 )
 
-[node name="edit name" type="MarginContainer" parent="v/actions/m/h"]
-margin_left = 58.0
-margin_right = 82.0
+[node name="edit name" type="MarginContainer" parent="v/actions/m/v/h"]
+margin_left = 42.0
+margin_right = 66.0
 margin_bottom = 24.0
 
-[node name="button" type="Button" parent="v/actions/m/h/edit name"]
+[node name="button" type="Button" parent="v/actions/m/v/h/edit name"]
 margin_right = 24.0
 margin_bottom = 24.0
+hint_tooltip = "Rename"
 focus_mode = 0
 mouse_default_cursor_shape = 2
 custom_fonts/font = SubResource( 9 )
@@ -359,32 +419,33 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="icon" type="Panel" parent="v/actions/m/h/edit name"]
+[node name="icon" type="Panel" parent="v/actions/m/v/h/edit name"]
 margin_right = 24.0
 margin_bottom = 24.0
 rect_min_size = Vector2( 24, 24 )
 mouse_filter = 2
 custom_styles/panel = SubResource( 8 )
 
-[node name="Sprite2" type="Sprite" parent="v/actions/m/h/edit name/icon"]
+[node name="Sprite2" type="Sprite" parent="v/actions/m/v/h/edit name/icon"]
 self_modulate = Color( 0, 0, 0, 0.501961 )
 position = Vector2( 13, 13 )
 scale = Vector2( 0.5, 0.5 )
 texture = ExtResource( 9 )
 
-[node name="Sprite" type="Sprite" parent="v/actions/m/h/edit name/icon"]
+[node name="Sprite" type="Sprite" parent="v/actions/m/v/h/edit name/icon"]
 position = Vector2( 12, 12 )
 scale = Vector2( 0.5, 0.5 )
 texture = ExtResource( 9 )
 
-[node name="edit color" type="MarginContainer" parent="v/actions/m/h"]
-margin_left = 92.0
-margin_right = 116.0
+[node name="edit color" type="MarginContainer" parent="v/actions/m/v/h"]
+margin_left = 70.0
+margin_right = 94.0
 margin_bottom = 24.0
 
-[node name="button" type="Button" parent="v/actions/m/h/edit color"]
+[node name="button" type="Button" parent="v/actions/m/v/h/edit color"]
 margin_right = 24.0
 margin_bottom = 24.0
+hint_tooltip = "Select color"
 focus_mode = 0
 mouse_default_cursor_shape = 2
 custom_fonts/font = SubResource( 9 )
@@ -396,33 +457,72 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="icon" type="Panel" parent="v/actions/m/h/edit color"]
+[node name="icon" type="Panel" parent="v/actions/m/v/h/edit color"]
 margin_right = 24.0
 margin_bottom = 24.0
 rect_min_size = Vector2( 24, 24 )
 mouse_filter = 2
 custom_styles/panel = SubResource( 8 )
 
-[node name="Sprite2" type="Sprite" parent="v/actions/m/h/edit color/icon"]
+[node name="Sprite2" type="Sprite" parent="v/actions/m/v/h/edit color/icon"]
 self_modulate = Color( 0, 0, 0, 0.501961 )
 position = Vector2( 13, 13 )
 scale = Vector2( 0.5, 0.5 )
 texture = ExtResource( 7 )
 
-[node name="Sprite" type="Sprite" parent="v/actions/m/h/edit color/icon"]
+[node name="Sprite" type="Sprite" parent="v/actions/m/v/h/edit color/icon"]
 position = Vector2( 12, 12 )
 scale = Vector2( 0.5, 0.5 )
 texture = ExtResource( 7 )
 
-[node name="delete" type="MarginContainer" parent="v/actions/m/h"]
+[node name="dupe" type="MarginContainer" parent="v/actions/m/v/h"]
+margin_left = 98.0
+margin_right = 122.0
+margin_bottom = 24.0
+
+[node name="button" type="Button" parent="v/actions/m/v/h/dupe"]
+margin_right = 24.0
+margin_bottom = 24.0
+hint_tooltip = "Duplicate"
+focus_mode = 0
+mouse_default_cursor_shape = 2
+custom_fonts/font = SubResource( 9 )
+custom_styles/hover = SubResource( 10 )
+custom_styles/pressed = SubResource( 11 )
+custom_styles/normal = SubResource( 3 )
+enabled_focus_mode = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="icon" type="Panel" parent="v/actions/m/v/h/dupe"]
+margin_right = 24.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 24, 24 )
+mouse_filter = 2
+custom_styles/panel = SubResource( 8 )
+
+[node name="shadow" type="Sprite" parent="v/actions/m/v/h/dupe/icon"]
+self_modulate = Color( 0, 0, 0, 0.501961 )
+position = Vector2( 13, 13 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 12 )
+
+[node name="Sprite" type="Sprite" parent="v/actions/m/v/h/dupe/icon"]
+position = Vector2( 12, 12 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 12 )
+
+[node name="delete" type="MarginContainer" parent="v/actions/m/v/h"]
 margin_left = 126.0
 margin_right = 150.0
 margin_bottom = 24.0
 
-[node name="button" type="Button" parent="v/actions/m/h/delete"]
+[node name="button" type="Button" parent="v/actions/m/v/h/delete"]
 modulate = Color( 1, 0, 0, 1 )
 margin_right = 24.0
 margin_bottom = 24.0
+hint_tooltip = "Delete"
 focus_mode = 0
 mouse_default_cursor_shape = 2
 custom_fonts/font = SubResource( 9 )
@@ -434,35 +534,42 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="icon" type="Panel" parent="v/actions/m/h/delete"]
+[node name="icon" type="Panel" parent="v/actions/m/v/h/delete"]
 margin_right = 24.0
 margin_bottom = 24.0
 rect_min_size = Vector2( 24, 24 )
 mouse_filter = 2
 custom_styles/panel = SubResource( 8 )
 
-[node name="Sprite2" type="Sprite" parent="v/actions/m/h/delete/icon"]
+[node name="Sprite2" type="Sprite" parent="v/actions/m/v/h/delete/icon"]
 self_modulate = Color( 0, 0, 0, 0.501961 )
 position = Vector2( 13, 13 )
 scale = Vector2( 0.5, 0.5 )
 texture = ExtResource( 6 )
 
-[node name="Sprite" type="Sprite" parent="v/actions/m/h/delete/icon"]
+[node name="Sprite" type="Sprite" parent="v/actions/m/v/h/delete/icon"]
 position = Vector2( 12, 12 )
 scale = Vector2( 0.5, 0.5 )
 texture = ExtResource( 6 )
 
-[node name="Node2D" type="Node2D" parent="."]
-
-[node name="TextEdit" type="TextEdit" parent="Node2D"]
-margin_left = 8.0
-margin_top = 6.0
-margin_right = 162.0
-margin_bottom = 29.0
+[node name="TextEdit" type="TextEdit" parent="v/actions/m/v"]
+visible = false
+margin_top = 32.0
+margin_right = 150.0
+margin_bottom = 66.0
+rect_min_size = Vector2( 0, 34 )
 custom_fonts/font = SubResource( 14 )
-text = "Rename Save"
+text = "Save.lored"
+breakpoint_gutter = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [connection signal="pressed" from="v/m/select" to="." method="_on_select_pressed"]
+[connection signal="pressed" from="v/actions/m/v/h/play/button" to="." method="_on_play_pressed"]
+[connection signal="pressed" from="v/actions/m/v/h/edit name/button" to="." method="_on_edit_name_pressed"]
+[connection signal="pressed" from="v/actions/m/v/h/edit color/button" to="." method="_on_edit_color_pressed"]
+[connection signal="pressed" from="v/actions/m/v/h/dupe/button" to="." method="_on_duplicate_pressed"]
+[connection signal="pressed" from="v/actions/m/v/h/delete/button" to="." method="_on_delete_pressed"]
+[connection signal="text_changed" from="v/actions/m/v/TextEdit" to="." method="_on_TextEdit_text_changed"]
+[connection signal="visibility_changed" from="v/actions/m/v/TextEdit" to="." method="_on_TextEdit_visibility_changed"]

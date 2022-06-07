@@ -22,7 +22,7 @@ func _ready() -> void:
 
 func init():
 	
-	var bla = rt.get_node("m/v/top/h/menu_button")
+	var bla = rt.get_node("m/v/top/h/menu/button")
 	pos["menu button"] = bla.rect_global_position
 	size["menu button"] = bla.rect_size
 	

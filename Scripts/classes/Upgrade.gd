@@ -3,11 +3,11 @@ extends "res://Scripts/classes/Purchasable.gd"
 
 
 
+var saved_vars = ["refundable", "unlocked", "times_purchased", "have", "active", "effects"]
+
 var desc := Description.new("description")
 
 var effects := []
-var chain_key := ""
-var chain_length := 0
 
 var other = 0
 
@@ -107,6 +107,7 @@ func apply():
 	applied = true
 
 func refund():
+	
 	if not refundable:
 		return
 	refundable = false
@@ -187,7 +188,7 @@ func get_effect_text(index: int):
 func get_witch_percent() -> String:
 	
 	if gv.up["GRIMOIRE"].active():
-		return fval.f(log(gv.stats.run[0])) + "%"
+		return fval.f(log(gv.run1)) + "%"
 	
 	return "1%"
 
@@ -239,3 +240,44 @@ func partial_reset():
 	# for upgrades like IT'S GROWIN ON ME which needs to have its effect values reset
 	for e in effects:
 		e.effect.reset()
+
+func saveEffects() -> void:
+	if not "effects" in saved_vars:
+		saved_vars.append("effects")
+
+
+
+func save() -> String:
+	
+	var data := {}
+	
+	for x in saved_vars:
+		if get(x) is Big:
+			data[x] = get(x).save()
+		elif x == "effects":
+			data[x] = {}
+			for c in get(x).size():
+				data[x][c] = get(x)[c].save()
+		else:
+			data[x] = var2str(get(x))
+	
+	return var2str(data)
+
+func load(data: Dictionary):
+	
+	for x in saved_vars:
+		
+		if not x in data.keys():
+			continue
+		
+		if get(x) is Big:
+			get(x).load(data[x])
+		elif x == "effects":
+			for c in get(x).size():
+				if not c in data[x].keys():
+					continue
+				get(x)[c].load(str2var(data[x][c]))
+		else:
+			set(x, str2var(data[x]))
+
+

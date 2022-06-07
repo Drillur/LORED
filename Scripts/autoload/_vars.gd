@@ -14,6 +14,9 @@ const DEFAULT_KEY_LOREDS := ["stone", "conc", "malig", "water", "lead", "tree", 
 const PATCH_NOTES := {
 
 #	 "3.0.0": [
+#		"Added a main menu with save management.",
+#		"Added difficulty options.",
+#		"Merged quests and tasks into Wishes."
 #		"LOREDs now think out-loud and may speak to each other.",
 #	],
 	
@@ -231,10 +234,45 @@ func _ready():
 	for x in g:
 		r[x] = Big.new(0)
 	
-	for t in Tab:
-		list.upgrade[str(Tab[t])] = []
-		list.upgrade["unowned " + str(Tab[t])] = []
-		list.upgrade["owned " + str(Tab[t])] = []
+	resetList()
+	
+	init_menu_and_stats()
+	update_clock()
+
+func init_menu_and_stats():
+	
+	# menu
+	
+	option["FPS"] = 0
+	option["notation_type"] = 0
+	option["status_color"] = false
+	option["flying_numbers"] = true
+	option["crits_only"] = false
+	option["chit chat"] = true
+	option["consolidate_numbers"] = false
+	option["animations"] = true
+	option["tooltip_halt"] = true
+	option["tooltip_hold"] = true
+	option["tooltip_fuel"] = true
+	option["tooltip_autobuyer"] = true
+	option["tooltip_cost_only"] = false
+	option["on_save_halt"] = false
+	option["on_save_hold"] = false
+	option["im_ss_show_hint"] = true
+	option["task auto"] = false
+	option["performance"] = true
+	option["color blind"] = false
+	option["deaf"] = false
+	option["patch alert"] = true
+	option["tutorial alert"] = true
+	
+	# stats
+	
+	for x in Tab:
+		
+		if Tab[x] == Tab.S1:
+			break
+
 
 
 const loreds_required_for_s2_autoup_upgrades_to_begin_purchasing := ["seed", "tree", "water", "soil", "humus", "sand", "glass", "liq", "steel", "hard", "axe", "wood", "draw","wire"]
@@ -280,6 +318,8 @@ const SRC := {
 	"button label": preload("res://Prefabs/template/Button Label.tscn"),
 	
 	"flying text": preload("res://Prefabs/dtext.tscn"),
+	
+	"save slot block": preload("res://Prefabs/menu/Save Slot Block.tscn"),
 }
 
 signal limit_break_leveled_up(which) # here -> Limit Break.gd
@@ -355,10 +395,10 @@ const LIMIT_BREAK_COLORS := {
 
 var spell_sprite := {
 	
-	Cav.Spell.ARCANE_FOCUS: preload("res://Sprites/resources/axe.png"),
-	Cav.Spell.CORE_RIFT: preload("res://Sprites/resources/water.png"),
-	Cav.Spell.VITALIZE: preload("res://Sprites/resources/seed.png"),
-	Cav.Spell.ARCANE_FLOW: preload("res://Sprites/resources/iron.png"),
+	Cav.eSpell.ARCANE_FOCUS: preload("res://Sprites/resources/axe.png"),
+	Cav.eSpell.CORE_RIFT: preload("res://Sprites/resources/water.png"),
+	Cav.eSpell.VITALIZE: preload("res://Sprites/resources/seed.png"),
+	Cav.eSpell.ARCANE_FLOW: preload("res://Sprites/resources/iron.png"),
 	
 }
 
@@ -543,7 +583,6 @@ var warlock := Unit.new(Cav.UnitClass.ARCANE_LORED)
 
 var autobuy_speed := 0.25
 var up := {}
-var chains := {}
 
 #var color := {
 #	Lored.COPPER: Color(1, 0.74, 0.05),
@@ -642,13 +681,9 @@ var COLORS := {
 var open_tab := -1
 
 
-var stats : Statistics
 
-class Menu:
-	var tab_vertical := [0, 0, 0, 0]
-	var option := {}
-var page: int = Tab.S1 # example gv.Tab.S1
-var menu := Menu.new()
+
+
 
 
 func time_remaining_in_seconds(
@@ -903,27 +938,19 @@ var r_name := {
 }
 var resource := {}
 
-func saveResources() -> String:
-	
-	var data := {}
-	var lored_keys = g.keys()
-	
-	for x in r:
-		data[x] = var2str(gv.r[x])
-	
-	return var2str(data)
-
-func loadResources(data: Dictionary):
-	
-	var resource_keys = r.keys()
-	
-	for x in data:
-		if not x in resource_keys:
-			continue
-		gv.r[x] = str2var(data[x])
 
 
 
+enum NumType {
+	TOTAL,
+	BASE,
+	ADD,
+	MULTIPLY,
+	FROM_LEVELS,
+	FROM_UPGRADES,
+	LIMIT_BREAK,
+	I_DRINK_YOUR_MILKSHAKE,
+}
 enum Lored {
 	COAL, STONE, IRON_ORE, COPPER_ORE, IRON, COPPER,
 	GROWTH, CONCRETE, JOULES, OIL, TARBALLS, MALIGNANCY,
@@ -931,6 +958,18 @@ enum Lored {
 enum Job{
 	BORER_DIG,
 	FURNACE_COOK,
+}
+enum Upgrade {
+	GRINDER,
+	UPGRADE_NAME,
+}
+enum Effect {
+	VALUE,
+	TYPE,
+	APPLY_TO,
+	
+	HASTE,
+	FUEL_DRAIN,
 }
 
 var item_names := [
@@ -980,25 +1019,33 @@ var max_frame = {
 	"tar":  29,
 	"oil":  8,
 }
-var list := {
-	upgrade = {"owned": {}},
-	lored = {
-		Tab.S1: [], Tab.S2: [], Tab.S3: [], Tab.S4: [],
-		"active": ["stone"], "active " + str(Tab.S1): ["stone"], "active " + str(Tab.S2): [], "active " + str(Tab.S3): [], "active " + str(Tab.S4): [],
-		"rare quest whitelist": [],
-		"unlocked and inactive": [],
-	},
-	"unlocked resources": ["stone"], #note stage 3 resources need to be manually added
-}
+var list := {}
+func resetList():
+	list = {
+		upgrade = {"owned": {}},
+		lored = {
+			Tab.S1: [], Tab.S2: [], Tab.S3: [], Tab.S4: [],
+			"active": ["stone"], "active " + str(Tab.S1): ["stone"], "active " + str(Tab.S2): [], "active " + str(Tab.S3): [], "active " + str(Tab.S4): [],
+			"rare quest whitelist": [],
+			"unlocked and inactive": [],
+		},
+		"unlocked resources": ["stone"], #note stage 3 resources need to be manually added
+	}
+	
+	for t in Tab:
+		list.upgrade[str(Tab[t])] = []
+		list.upgrade["unowned " + str(Tab[t])] = []
+		list.upgrade["owned " + str(Tab[t])] = []
+	for t in Tab:
+		list.upgrade[str(Tab[t])] = []
+		list.upgrade["unowned " + str(Tab[t])] = []
+		list.upgrade["owned " + str(Tab[t])] = []
 
-var stored_path := ""
 enum Objective {
 	RESOURCES_PRODUCED,
 	LORED_UPGRADED,
 	UPGRADE_PURCHASED,
 	SPELL_CAST_COUNT,
-	RARE_OR_SPIKE_TASKS_COMPLETED,
-	TASKS_COMPLETED,
 	UPGRADES_PURCHASED,
 	MAXED_FUEL_STORAGE,
 	RESET,
@@ -1014,7 +1061,7 @@ enum WishReward {
 }
 
 func highestResetKey() -> String:
-	match stats.highest_run:
+	match highest_run:
 		1: return "malig"
 		2: return "tum"
 		3: return "spirit"
@@ -1117,8 +1164,32 @@ func setSpellDesc(spell: Spell):
 func xIsNearlyY(x: float, y: float) -> bool:
 	return x > y * 0.98 and x < y * 1.02
 
+
+func version_older_than(_save_version: String, _version: String) -> bool:
+	
+	# _version == the version at hand, to be compared with _save version
+	
+	var _save_version_split = _save_version.split(".")
+	var _version_split = _version.split(".")
+	
+	var save = {x = int(_save_version_split[0]), y = int(_save_version_split[1]), z = int(_save_version_split[2])}
+	var version = {x = int(_version_split[0]), y = int(_version_split[1]), z = int(_version_split[2])}
+	
+	# save version is either OLDER than version, or EQUAL to version.
+	# returns TRUE if OLDER, FALSE if EQUAL
+	
+	if save.x < version.x:
+		return true
+	if save.y < version.y:
+		return true
+	if save.z < version.z:
+		return true
+	
+	return false
+
+
 func getSpellName(type: int) -> String:
-	return Cav.Spell.keys()[type].to_lower().capitalize().replace("_", " ")
+	return Cav.eSpell.keys()[type].to_lower().capitalize().replace("_", " ")
 func getBuffName(type: int) -> String:
 	return Cav.Buff.keys()[type].to_lower().capitalize().replace("_", " ")
 
@@ -1166,49 +1237,32 @@ func getSpellBorderColor(spell: int) -> Color:
 
 
 
-var active_slot := "SLOT0"
-var save_slot_info := {
-	"SLOT0": [],
-	"SLOT1": [],
-	"SLOT2": [],
-	"SLOT3": [],
-	"SLOT4": [],
-}
-func storeSaveSlotInfo():
-	# called on boot
-	print("time played ", stats.time_played)
-	save_slot_info["SLOT0"].append(stats.time_played)
-	save_slot_info["SLOT0"].append(OS.get_unix_time())
+func commaifyAnArrayOfStrings(list: Array) -> String:
 	
-	var save_file = File.new()
+	if list.size() == 1:
+		return str(list[0])
 	
-	for x in 4:
+	if list.size() == 2:
+		return str(list[0]) + " and " + str(list[1])
+	
+	if list.size() > 2:
+		var i = 0
+		var text: String
+		for f in list:
+			
+			if i < list.size() - 2:
+				text += f + ","
+			elif i == list.size() - 2:
+				text += f + ", and "
+			elif i == list.size() - 1:
+				text += f
+			
+			i += 1
 		
-		var path := "user://save" + str(x + 1) + ".lored"
-		var save := _save.new()
-		
-		if not save_file.file_exists(path):
-			continue
-		
-		save_file.open(path, File.READ)
-		var data = Marshalls.base64_to_variant(save_file.get_line())
-		
-		save_slot_info["SLOT" + str(x + 1)].append(data["time_played"])
-		save_slot_info["SLOT" + str(x + 1)].append(data["cur_clock"])
-		
-		save_file.close()
+		return text
+	
+	return "Oops!"
 
-func getSaveSlotInfo(slot: int) -> String:
-	
-	if save_slot_info["SLOT" + str(slot)].size() == 0:
-		return "Slot empty."
-	
-	var time_played = "Time played: " + fval.time(save_slot_info["SLOT" + str(slot)][0])
-	
-	var full_date_played = OS.get_datetime_from_unix_time(save_slot_info["SLOT" + str(slot)][1])
-	var date_played = "Last date played: " + str(full_date_played["day"]) + "/" + str(full_date_played["month"]) + "/" + str(full_date_played["year"])
-	
-	return time_played + "\n" + date_played
 
 
 func syncLOREDs(immediately := false):
@@ -1220,3 +1274,134 @@ func syncLOREDs(immediately := false):
 	
 	for x in g:
 		g[x].queueSync()
+
+
+
+
+# stats
+var cur_clock = OS.get_unix_time()
+var last_clock = OS.get_unix_time()
+var save_slot_clock: int
+var cur_session := 0
+
+var page: int = Tab.S1 # example gv.Tab.S1
+
+var run1 := 1
+var run2 := 1
+var run3 := 1
+var run4 := 1
+var time_played := 0
+var wishes_completed := 0
+var highest_run := 1
+var most_resources_gained := Big.new(0)
+var times_game_loaded := 0
+
+var tab_vertical := [0, 0, 0, 0]
+var option := {}
+
+func update_clock():
+	
+	var t = Timer.new()
+	add_child(t)
+	
+	while true:
+		
+		cur_clock = OS.get_unix_time()
+		
+		t.start(1)
+		yield(t, "timeout")
+		
+		if active_scene == Scene.ROOT:
+			cur_session += 1
+			time_played += 1
+		else:
+			cur_session = 0
+	
+	t.queue_free()
+
+# scene stuff
+enum Scene {
+	MAIN_MENU,
+	ROOT,
+	}
+var active_scene: int
+func close():
+	# Root closed
+	resetList()
+	
+	g.clear()
+	up.clear()
+
+
+# main menu
+signal edit_save_color(node)
+signal save_block_opened
+
+
+
+
+
+
+var saved_vars := [
+	"run1", "run2", "run3", "run4",
+	"cur_clock", "time_played", "wishes_completed", "times_game_loaded", "highest_run",
+	"most_resources_gained", "option",
+	"lb_xp",
+]
+
+func save() -> String:
+	
+	var data := {}
+	
+	for x in saved_vars:
+		if get(x) is Big or get(x) is Ob.Num:
+			data[x] = get(x).save()
+		else:
+			data[x] = var2str(get(x))
+	
+	data["resources"] = {}
+	for x in r:
+		data["resources"][x] = r[x].save()
+	
+	return var2str(data)
+
+func load(data: Dictionary):
+	
+	#*
+	var saved_vars_dict := {}
+	
+	for x in saved_vars:
+		saved_vars_dict[x] = get(x)
+	
+	var loadedVars = SaveManager.loadSavedVars(saved_vars_dict, data)
+	
+	for x in saved_vars:
+		set(x, loadedVars[x])
+	#*
+	
+	for x in r:
+		if not x in data["resources"]:
+			continue
+		r[x].load(data["resources"][x])
+	
+	save_slot_clock = cur_clock
+	cur_clock = OS.get_unix_time() # set to the same time as cur_clock in the save data (8 lines up)
+
+var poop := Big.new(10) setget setPoop
+func setPoop(val):
+	print("val: ", val)
+	poop = val
+
+
+
+
+
+
+
+
+
+
+
+
+
+

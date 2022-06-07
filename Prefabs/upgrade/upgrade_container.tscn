@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=2]
+[gd_scene load_steps=20 format=2]
 
 [ext_resource path="res://Prefabs/template/NewButton.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Fonts/Roboto-MediumItalic.ttf" type="DynamicFontData" id=3]
@@ -7,7 +7,6 @@
 [ext_resource path="res://Scripts/up_new/up_container.gd" type="Script" id=6]
 [ext_resource path="res://Sprites/tab/s1m.png" type="Texture" id=7]
 [ext_resource path="res://Styles/Panels/bg.tres" type="StyleBox" id=9]
-[ext_resource path="res://Styles/Panels/alert.tres" type="StyleBox" id=10]
 
 [sub_resource type="StyleBoxFlat" id=1]
 draw_center = false
@@ -81,9 +80,6 @@ custom_constants/margin_top = 10
 custom_constants/margin_left = 10
 custom_constants/margin_bottom = 10
 script = ExtResource( 6 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="bg" type="Panel" parent="."]
 margin_left = 10.0
@@ -95,7 +91,6 @@ size_flags_vertical = 3
 custom_styles/panel = ExtResource( 9 )
 
 [node name="top" type="VBoxContainer" parent="."]
-visible = false
 margin_left = 10.0
 margin_top = 10.0
 margin_right = 465.0
@@ -121,20 +116,9 @@ margin_bottom = 19.0
 [node name="Label" type="Label" parent="top/0/h"]
 margin_right = 150.0
 margin_bottom = 19.0
-custom_fonts/font = SubResource( 2 )
 custom_colors/font_color = Color( 0.796875, 0.796875, 0.796875, 1 )
+custom_fonts/font = SubResource( 2 )
 text = "(Q) Normal Upgrades"
-
-[node name="alert" type="Panel" parent="top/0/h"]
-visible = false
-margin_left = 154.0
-margin_top = 5.0
-margin_right = 162.0
-margin_bottom = 13.0
-rect_min_size = Vector2( 8, 8 )
-size_flags_horizontal = 8
-size_flags_vertical = 4
-custom_styles/panel = ExtResource( 10 )
 
 [node name="count" type="Label" parent="top/0/h"]
 margin_left = 375.0
@@ -142,8 +126,8 @@ margin_right = 435.0
 margin_bottom = 19.0
 size_flags_horizontal = 10
 size_flags_vertical = 2
-custom_fonts/font = SubResource( 2 )
 custom_colors/font_color = Color( 0.796875, 0.796875, 0.796875, 1 )
+custom_fonts/font = SubResource( 2 )
 text = "103/103"
 
 [node name="Panel" type="Panel" parent="top/0/h"]
@@ -192,20 +176,9 @@ margin_bottom = 19.0
 [node name="Label" type="Label" parent="top/1/h"]
 margin_right = 171.0
 margin_bottom = 19.0
-custom_fonts/font = SubResource( 2 )
 custom_colors/font_color = Color( 0.796875, 0.796875, 0.796875, 1 )
+custom_fonts/font = SubResource( 2 )
 text = "(W) Malignant Upgrades"
-
-[node name="alert" type="Panel" parent="top/1/h"]
-visible = false
-margin_left = 175.0
-margin_top = 5.0
-margin_right = 183.0
-margin_bottom = 13.0
-rect_min_size = Vector2( 8, 8 )
-size_flags_horizontal = 8
-size_flags_vertical = 4
-custom_styles/panel = ExtResource( 10 )
 
 [node name="count" type="Label" parent="top/1/h"]
 margin_left = 375.0
@@ -213,8 +186,8 @@ margin_right = 435.0
 margin_bottom = 19.0
 size_flags_horizontal = 10
 size_flags_vertical = 2
-custom_fonts/font = SubResource( 2 )
 custom_colors/font_color = Color( 0.796875, 0.796875, 0.796875, 1 )
+custom_fonts/font = SubResource( 2 )
 text = "103/103"
 
 [node name="Panel" type="Panel" parent="top/1/h"]
@@ -262,20 +235,9 @@ margin_bottom = 19.0
 [node name="Label" type="Label" parent="top/2/h"]
 margin_right = 189.0
 margin_bottom = 19.0
-custom_fonts/font = SubResource( 2 )
 custom_colors/font_color = Color( 0.796875, 0.796875, 0.796875, 1 )
+custom_fonts/font = SubResource( 2 )
 text = "(E) Extra-Normal Upgrades"
-
-[node name="alert" type="Panel" parent="top/2/h"]
-visible = false
-margin_left = 193.0
-margin_top = 5.0
-margin_right = 201.0
-margin_bottom = 13.0
-rect_min_size = Vector2( 8, 8 )
-size_flags_horizontal = 8
-size_flags_vertical = 4
-custom_styles/panel = ExtResource( 10 )
 
 [node name="count" type="Label" parent="top/2/h"]
 margin_left = 375.0
@@ -283,8 +245,8 @@ margin_right = 435.0
 margin_bottom = 19.0
 size_flags_horizontal = 10
 size_flags_vertical = 2
-custom_fonts/font = SubResource( 2 )
 custom_colors/font_color = Color( 0.796875, 0.796875, 0.796875, 1 )
+custom_fonts/font = SubResource( 2 )
 text = "103/103"
 
 [node name="Panel" type="Panel" parent="top/2/h"]
@@ -332,20 +294,9 @@ margin_bottom = 19.0
 [node name="Label" type="Label" parent="top/3/h"]
 margin_right = 161.0
 margin_bottom = 19.0
-custom_fonts/font = SubResource( 2 )
 custom_colors/font_color = Color( 0.796875, 0.796875, 0.796875, 1 )
+custom_fonts/font = SubResource( 2 )
 text = "(R) Radiative Upgrades"
-
-[node name="alert" type="Panel" parent="top/3/h"]
-visible = false
-margin_left = 165.0
-margin_top = 5.0
-margin_right = 173.0
-margin_bottom = 13.0
-rect_min_size = Vector2( 8, 8 )
-size_flags_horizontal = 8
-size_flags_vertical = 4
-custom_styles/panel = ExtResource( 10 )
 
 [node name="count" type="Label" parent="top/3/h"]
 margin_left = 375.0
@@ -353,8 +304,8 @@ margin_right = 435.0
 margin_bottom = 19.0
 size_flags_horizontal = 10
 size_flags_vertical = 2
-custom_fonts/font = SubResource( 2 )
 custom_colors/font_color = Color( 0.796875, 0.796875, 0.796875, 1 )
+custom_fonts/font = SubResource( 2 )
 text = "103/103"
 
 [node name="Panel" type="Panel" parent="top/3/h"]
@@ -404,20 +355,9 @@ margin_bottom = 19.0
 [node name="Label" type="Label" parent="top/4/h"]
 margin_right = 132.0
 margin_bottom = 19.0
-custom_fonts/font = SubResource( 2 )
 custom_colors/font_color = Color( 0.796875, 0.796875, 0.796875, 1 )
+custom_fonts/font = SubResource( 2 )
 text = "(A) The Runed Dial"
-
-[node name="alert" type="Panel" parent="top/4/h"]
-visible = false
-margin_left = 165.0
-margin_top = 5.0
-margin_right = 173.0
-margin_bottom = 13.0
-rect_min_size = Vector2( 8, 8 )
-size_flags_horizontal = 8
-size_flags_vertical = 4
-custom_styles/panel = ExtResource( 10 )
 
 [node name="count" type="Label" parent="top/4/h"]
 margin_left = 375.0
@@ -425,8 +365,8 @@ margin_right = 435.0
 margin_bottom = 19.0
 size_flags_horizontal = 10
 size_flags_vertical = 2
-custom_fonts/font = SubResource( 2 )
 custom_colors/font_color = Color( 0.796875, 0.796875, 0.796875, 1 )
+custom_fonts/font = SubResource( 2 )
 text = "103/103"
 
 [node name="Panel" type="Panel" parent="top/4/h"]
@@ -476,20 +416,9 @@ margin_bottom = 19.0
 [node name="Label" type="Label" parent="top/5/h"]
 margin_right = 133.0
 margin_bottom = 19.0
-custom_fonts/font = SubResource( 2 )
 custom_colors/font_color = Color( 0.796875, 0.796875, 0.796875, 1 )
+custom_fonts/font = SubResource( 2 )
 text = "(S) Spirit Upgrades"
-
-[node name="alert" type="Panel" parent="top/5/h"]
-visible = false
-margin_left = 165.0
-margin_top = 5.0
-margin_right = 173.0
-margin_bottom = 13.0
-rect_min_size = Vector2( 8, 8 )
-size_flags_horizontal = 8
-size_flags_vertical = 4
-custom_styles/panel = ExtResource( 10 )
 
 [node name="count" type="Label" parent="top/5/h"]
 margin_left = 375.0
@@ -497,8 +426,8 @@ margin_right = 435.0
 margin_bottom = 19.0
 size_flags_horizontal = 10
 size_flags_vertical = 2
-custom_fonts/font = SubResource( 2 )
 custom_colors/font_color = Color( 0.796875, 0.796875, 0.796875, 1 )
+custom_fonts/font = SubResource( 2 )
 text = "103/103"
 
 [node name="Panel" type="Panel" parent="top/5/h"]
@@ -528,6 +457,7 @@ custom_styles/pressed = SubResource( 5 )
 custom_styles/normal = SubResource( 6 )
 
 [node name="v" type="VBoxContainer" parent="."]
+visible = false
 margin_left = 10.0
 margin_top = 10.0
 margin_right = 465.0
@@ -599,8 +529,8 @@ texture = ExtResource( 5 )
 margin_left = 20.0
 margin_right = 161.0
 margin_bottom = 19.0
-custom_fonts/font = SubResource( 2 )
 custom_colors/font_color = Color( 0.796875, 0.796875, 0.796875, 1 )
+custom_fonts/font = SubResource( 2 )
 text = "Malignant Upgrades"
 
 [node name="count" type="Label" parent="v/header/h/v/m/h"]
@@ -609,8 +539,8 @@ margin_right = 419.0
 margin_bottom = 19.0
 size_flags_horizontal = 10
 size_flags_vertical = 2
-custom_fonts/font = SubResource( 2 )
 custom_colors/font_color = Color( 0.796875, 0.796875, 0.796875, 1 )
+custom_fonts/font = SubResource( 2 )
 text = "103/103"
 
 [node name="Button" type="Button" parent="v/header/h/v/m"]

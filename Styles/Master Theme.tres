@@ -88,17 +88,21 @@ corner_radius_bottom_left = 3
 size = 12
 font_data = ExtResource( 4 )
 
-[sub_resource type="StyleBoxFlat" id=10]
-content_margin_left = 10.0
-bg_color = Color( 0.6, 0.6, 0.6, 0.0509804 )
-corner_radius_top_left = 3
-corner_radius_top_right = 3
-corner_radius_bottom_right = 3
-corner_radius_bottom_left = 3
-
 [sub_resource type="StyleBoxFlat" id=11]
 content_margin_left = 10.0
-draw_center = false
+bg_color = Color( 1, 1, 1, 0.03 )
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id=10]
+content_margin_left = 10.0
+bg_color = Color( 1, 1, 1, 0.0588235 )
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
 
 [sub_resource type="DynamicFont" id=12]
 size = 14
@@ -197,10 +201,11 @@ OptionButton/constants/hseparation = 2
 OptionButton/fonts/font = SubResource( 9 )
 OptionButton/icons/arrow = null
 OptionButton/styles/disabled = null
-OptionButton/styles/focus = null
+OptionButton/styles/focus = SubResource( 11 )
 OptionButton/styles/hover = SubResource( 10 )
 OptionButton/styles/normal = SubResource( 11 )
 OptionButton/styles/pressed = null
+OptionButton/styles/test = null
 PopupMenu/colors/font_color = Color( 0.88, 0.88, 0.88, 1 )
 PopupMenu/colors/font_color_accel = Color( 0.7, 0.7, 0.7, 0.8 )
 PopupMenu/colors/font_color_disabled = Color( 0.4, 0.4, 0.4, 0.8 )

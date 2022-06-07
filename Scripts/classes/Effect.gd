@@ -2,6 +2,8 @@ class_name Effect
 extends "res://Scripts/classes/Object.gd"
 
 
+var saved_vars := ["effect", ]
+
 var type: String
 var other: String # other useful key words. ex: for a cost upgrade, need to know which resource is being reduced
 
@@ -265,3 +267,28 @@ func reset_dynamic():
 
 func sync():
 	effect.sync()
+
+
+func save() -> String:
+	
+	var data := {}
+	
+	for x in saved_vars:
+		if get(x) is Ob.Num:
+			data[x] = get(x).save()
+		else:
+			data[x] = var2str(get(x))
+	
+	return var2str(data)
+
+func load(data: Dictionary):
+	
+	for x in saved_vars:
+		
+		if not x in data.keys():
+			continue
+		
+		if get(x) is Ob.Num:
+			get(x).load(data[x])
+		else:
+			set(x, str2var(data[x]))

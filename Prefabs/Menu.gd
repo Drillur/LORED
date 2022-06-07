@@ -12,6 +12,7 @@ const page_colors = {
 }
 
 onready var rt = get_node("/root/Root")
+onready var cav_rt = get_node("/root/Cavern")
 
 onready var sc = get_node("sc")
 
@@ -23,6 +24,7 @@ onready var notation = get_node("sc/m/v/options/v/notation2/button")
 onready var flying_numbers = get_node("sc/m/v/options/v/flying_numbers")
 onready var consolidate = get_node("sc/m/v/options/v/consolidate_numbers/button")
 onready var crits_only = get_node("sc/m/v/options/v/crits_only/button")
+onready var lored_chit_chat = get_node("sc/m/v/options/v/lored chit-chat")
 onready var animations = get_node("sc/m/v/options/v/animations")
 onready var color_blind = get_node("sc/m/v/options/v/color blind")
 onready var deaf = get_node("sc/m/v/options/v/deaf")
@@ -38,13 +40,9 @@ onready var patched_alert = get_node("sc/m/v/top/v/h/patch/n/alert")
 onready var patch_alert_option = get_node("sc/m/v/patch/v/patch_alert")
 onready var tutorial_alert_option = get_node("sc/m/v/tutorial/v/tutorial_alert")
 onready var stats_run_1_reset = get_node("sc/m/v/stats/v/run/cont/s1/reset/Label")
-onready var stats_run_1_clock = get_node("sc/m/v/stats/v/run/cont/s1/clock/Label")
 onready var stats_run_2_reset = get_node("sc/m/v/stats/v/run/cont/s2/reset/Label")
-onready var stats_run_2_clock = get_node("sc/m/v/stats/v/run/cont/s2/clock/Label")
 onready var stats_run_3_reset = get_node("sc/m/v/stats/v/run/cont/s3/reset/Label")
-onready var stats_run_3_clock = get_node("sc/m/v/stats/v/run/cont/s3/clock/Label")
 onready var stats_run_4_reset = get_node("sc/m/v/stats/v/run/cont/s4/reset/Label")
-onready var stats_run_4_clock = get_node("sc/m/v/stats/v/run/cont/s4/clock/Label")
 
 onready var max_random_wishes = get_node("sc/m/v/stats/v/quest/cont/max_random_wishes/Label")
 
@@ -104,38 +102,40 @@ func _ready():
 
 func setup():
 	
-	select_fps(gv.menu.option["FPS"])
-	select_notation(gv.menu.option["notation_type"])
-	flying_numbers.pressed = gv.menu.option["flying_numbers"]
+	select_fps(gv.option["FPS"])
+	select_notation(gv.option["notation_type"])
+	flying_numbers.pressed = gv.option["flying_numbers"]
 	_on_flying_numbers_pressed()
-	consolidate.pressed = gv.menu.option["consolidate_numbers"]
+	consolidate.pressed = gv.option["consolidate_numbers"]
 	_on_consolidate_pressed()
-	crits_only.pressed = gv.menu.option["crits_only"]
+	crits_only.pressed = gv.option["crits_only"]
 	_on_crit_pressed()
-	animations.pressed = gv.menu.option["animations"]
+	lored_chit_chat.pressed = gv.option["chit chat"]
+	_on_lored_chitchat_pressed()
+	animations.pressed = gv.option["animations"]
 	_on_animations_pressed()
-	color_blind.pressed = gv.menu.option["color blind"]
+	color_blind.pressed = gv.option["color blind"]
 	_on_color_blind_pressed()
-	deaf.pressed = gv.menu.option["deaf"]
+	deaf.pressed = gv.option["deaf"]
 	_on_deaf_pressed()
-	tip_halt.pressed = gv.menu.option["tooltip_halt"]
+	tip_halt.pressed = gv.option["tooltip_halt"]
 	_on_tip_halt_pressed()
-	tip_hold.pressed = gv.menu.option["tooltip_hold"]
+	tip_hold.pressed = gv.option["tooltip_hold"]
 	_on_tip_hold_pressed()
-	tip_fuel.pressed = gv.menu.option["tooltip_fuel"]
+	tip_fuel.pressed = gv.option["tooltip_fuel"]
 	_on_tip_fuel_pressed()
-	tip_autobuyer.pressed = gv.menu.option["tooltip_autobuyer"]
+	tip_autobuyer.pressed = gv.option["tooltip_autobuyer"]
 	_on_tip_autobuyer_pressed()
 	
-	save_halt.pressed = gv.menu.option["on_save_halt"]
+	save_halt.pressed = gv.option["on_save_halt"]
 	_on_save_halt_pressed()
-	save_hold.pressed = gv.menu.option["on_save_hold"]
+	save_hold.pressed = gv.option["on_save_hold"]
 	_on_save_hold_pressed()
 	
 	#quest_max_tasks.text = "Max tasks +" + str(taq.max_tasks)
 	
-	patch_alert_option.pressed = gv.menu.option["patch alert"]
-	tutorial_alert_option.pressed = gv.menu.option["tutorial alert"]
+	patch_alert_option.pressed = gv.option["patch alert"]
+	tutorial_alert_option.pressed = gv.option["tutorial alert"]
 	
 	update()
 
@@ -145,14 +145,10 @@ func update():
 	
 	while true:
 		
-		stats_run_1_reset.text = "Reset " + str(gv.stats.run[0] - 1) + " times"
-		stats_run_1_clock.text = "Current run duration: " + gv.parse_time(rt.cur_clock - gv.stats.last_reset_clock[0])
-		stats_run_2_reset.text = "Reset " + str(gv.stats.run[1] - 1) + " times"
-		stats_run_2_clock.text = "Current run duration: " + gv.parse_time(rt.cur_clock - gv.stats.last_reset_clock[1])
-		stats_run_3_reset.text = "Reset " + str(gv.stats.run[2] - 1) + " times"
-		stats_run_3_clock.text = "Current run duration: " + gv.parse_time(rt.cur_clock - gv.stats.last_reset_clock[2])
-		stats_run_4_reset.text = "Reset " + str(gv.stats.run[3] - 1) + " times"
-		stats_run_4_clock.text = "Current run duration: " + gv.parse_time(rt.cur_clock - gv.stats.last_reset_clock[3])
+		stats_run_1_reset.text = "Reset " + str(gv.run1 - 1) + " times"
+		stats_run_2_reset.text = "Reset " + str(gv.run2 - 1) + " times"
+		stats_run_3_reset.text = "Reset " + str(gv.run3 - 1) + " times"
+		stats_run_4_reset.text = "Reset " + str(gv.run4 - 1) + " times"
 		
 		max_random_wishes.text = "Random Wish Limit: " + str(taq.max_random_wishes)
 		
@@ -212,14 +208,14 @@ func switch_page(which: String) -> void:
 func select_fps(id: int) -> void:
 	
 	fps.select(id)
-	gv.menu.option["FPS"] = id
+	gv.option["FPS"] = id
 	gv.fps = [0.0666, 0.0333, 0.0166][id] # 15, 30, 60
 	fps_display.text = "Current target FPS: " + str(round(1 / gv.fps))
 
 func select_notation(id: int) -> void:
 	
 	notation.select(id)
-	gv.menu.option["notation_type"] = id
+	gv.option["notation_type"] = id
 	notation_display.text = "Current number notation: " + ["Engineering", "Scientific", "Logarithmic"][id]
 
 
@@ -229,6 +225,8 @@ func _on_Menu_visibility_changed() -> void:
 		switch_page("main")
 
 func _on_m_resized() -> void:
+	if sc == null:
+		yield(self, "ready")
 	sc.rect_min_size.y = m.rect_size.y if m.rect_size.y <= 500 else 500
 	rect_min_size.y = sc.rect_min_size.y
 
@@ -260,41 +258,45 @@ func _on_github_pressed() -> void:
 	OS.shell_open("https://github.com/Drillur/LORED")
 
 func _on_flying_numbers_pressed() -> void:
-	gv.menu.option["flying_numbers"] = flying_numbers.pressed
+	gv.option["flying_numbers"] = flying_numbers.pressed
 	disable_children("flying_numbers")
 func _on_hard_reset_confirm_pressed() -> void:
 	disable_children("hard reset")
 func _on_consolidate_pressed() -> void:
-	gv.menu.option["consolidate_numbers"] = consolidate.pressed
+	gv.option["consolidate_numbers"] = consolidate.pressed
 func _on_crit_pressed() -> void:
-	gv.menu.option["crits_only"] = crits_only.pressed
+	gv.option["crits_only"] = crits_only.pressed
+	
+
+func _on_lored_chitchat_pressed() -> void:
+	gv.option["chit chat"] = lored_chit_chat.pressed
 func _on_animations_pressed() -> void:
-	gv.menu.option["animations"] = animations.pressed
+	gv.option["animations"] = animations.pressed
 func _on_color_blind_pressed() -> void:
-	gv.menu.option["color blind"] = color_blind.pressed
+	gv.option["color blind"] = color_blind.pressed
 	for x in gv.g:
 		gv.g[x].manager.color_blind.visible = color_blind.pressed
 	rt.get_node(rt.gnupcon).r_update()
 func _on_deaf_pressed() -> void:
-	gv.menu.option["deaf"] = deaf.pressed
+	gv.option["deaf"] = deaf.pressed
 func _on_tip_halt_pressed() -> void:
-	gv.menu.option["tooltip_halt"] = tip_halt.pressed
+	gv.option["tooltip_halt"] = tip_halt.pressed
 func _on_tip_hold_pressed() -> void:
-	gv.menu.option["tooltip_hold"] = tip_hold.pressed
+	gv.option["tooltip_hold"] = tip_hold.pressed
 func _on_tip_fuel_pressed() -> void:
-	gv.menu.option["tooltip_fuel"] = tip_fuel.pressed
+	gv.option["tooltip_fuel"] = tip_fuel.pressed
 func _on_tip_autobuyer_pressed() -> void:
-	gv.menu.option["tooltip_autobuyer"] = tip_autobuyer.pressed
+	gv.option["tooltip_autobuyer"] = tip_autobuyer.pressed
 func _on_patch_alert_pressed() -> void:
-	gv.menu.option["patch alert"] = patch_alert_option.pressed
+	gv.option["patch alert"] = patch_alert_option.pressed
 func _on_tutorial_alert_pressed() -> void:
-	gv.menu.option["tutorial alert"] = tutorial_alert_option.pressed
+	gv.option["tutorial alert"] = tutorial_alert_option.pressed
 	
 
 func _on_save_halt_pressed() -> void:
-	gv.menu.option["on_save_halt"] = save_halt.pressed
+	gv.option["on_save_halt"] = save_halt.pressed
 func _on_save_hold_pressed() -> void:
-	gv.menu.option["on_save_hold"] = save_hold.pressed
+	gv.option["on_save_hold"] = save_hold.pressed
 func _on_export_pressed() -> void:
 	if gv.PLATFORM == "pc":
 		$export.popup()
@@ -361,13 +363,16 @@ func _on_save_timeout() -> void:
 	
 	if i == 30:
 		i = -1
-		rt.e_save()
+		match gv.active_scene:
+			gv.Scene.ROOT:
+				SaveManager.save()
 func _on_save_now_pressed() -> void:
 	save.stop()
 	i = 0
-	rt.e_save()
+	SaveManager.save()
 	save.start(1)
 	save_bar.rect_size.x = 0
+
 
 
 

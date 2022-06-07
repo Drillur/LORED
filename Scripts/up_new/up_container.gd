@@ -528,25 +528,6 @@ func instance_block(
 	yield(cont[upgrade_key], "ready")
 
 
-const LOW_QUALITY = ["coal", "irono", "copo", "jo", "oil", "tar", "draw", "sand", "seed", "soil", "humus", "pet", "plast", "ciga", "toba", "paper", "pulp", "gale", "soil"]
-const MED_QUALITY = ["conc", "growth", "iron", "cop", "stone", "liq", "steel", "glass", "wire", "hard", "wood", "axe", "tree", "lead", "water"]
-#const HI_QUALITY = ["malig", "tum", "carc"] # not necessary to define
-
-func get_upgrade_quality(_key) -> Big:
-	
-	var quality = Big.new(0)
-	
-	for x in gv.up[_key].cost:
-		
-		if x in LOW_QUALITY:
-			quality.a(gv.up[_key].cost[x].t)
-		elif x in MED_QUALITY:
-			quality.a(Big.new(gv.up[_key].cost[x].t).m(10))
-		else:
-			quality.a(Big.new(gv.up[_key].cost[x].t).m(100))
-	
-	return quality
-
 
 func sync() -> void:
 	
@@ -773,7 +754,7 @@ func upgrade_purchased(key: String, routine := []):
 	
 	# flying texts below
 	
-	if not gv.menu.option["flying_numbers"]:
+	if not gv.option["flying_numbers"]:
 		return
 	
 	var rollx :int= randi() % 20 - 10 + get_global_mouse_position().x - rect_position.x
@@ -841,24 +822,6 @@ func update_folder():
 			continue
 		x.r_update()
 
-func clear_alerts():
-	
-	for x in gv.up:
-		
-		if not x in cont.keys():
-			continue
-		
-		cont[x].alert(false)
-		cont[x].already_displayed_alert_guy = false
-
-func alert(show: bool, key := ""):
-	
-	
-	if show and key != "":
-		cont[key].alert(show)
-	
-	var folder = str(gv.up[key].tab)
-	get_node("top/" + folder + "/h/alert").visible = show
 
 
 func flash_reset_button():

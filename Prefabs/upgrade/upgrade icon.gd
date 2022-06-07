@@ -19,6 +19,8 @@ func update():
 		return
 	
 	if gv.up[upgrade_key].have or gv.up[upgrade_key].requirements():
+		get_node("Sprite").show()
 		lock.hide()
 	else:
+		get_node("Sprite").hide()
 		lock.show()

@@ -35,7 +35,7 @@ func display() -> void:
 	
 	hide_all()
 	
-	if not gv.menu.option["tooltip_cost_only"] and not gv.menu.option["tooltip_autobuyer"]:
+	if not gv.option["tooltip_cost_only"] and not gv.option["tooltip_autobuyer"]:
 		return
 	else:
 		logic.show()
@@ -105,7 +105,7 @@ func _update():
 	dot.self_modulate = Color(0, 1, 0) if autobuy else Color(1, 0, 0)
 	intent.text = "Upgrade ASAP" if autobuy else "Wait"
 	
-	if not gv.menu.option["tooltip_autobuyer"]:
+	if not gv.option["tooltip_autobuyer"]:
 		return
 	
 	if ingredient_net.visible:
@@ -178,7 +178,7 @@ func _input(_event: InputEvent) -> void:
 
 func define_key() -> void:
 	
-	if not gv.menu.option["tooltip_autobuyer"]:
+	if not gv.option["tooltip_autobuyer"]:
 		return
 	
 	if lored.key_lored:

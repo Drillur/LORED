@@ -77,7 +77,12 @@ _global_script_classes=[ {
 "base": "Reference",
 "class": "LOREDnew",
 "language": "GDScript",
-"path": "res://Scripts/classes/LOREDnew.gd"
+"path": "res://Scripts/classes/NewLORED.gd"
+}, {
+"base": "Reference",
+"class": "NewUpgrade",
+"language": "GDScript",
+"path": "res://Scripts/classes/NewUpgrade.gd"
 }, {
 "base": "Reference",
 "class": "Ob",
@@ -89,11 +94,6 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://Scripts/classes/Purchasable.gd"
 }, {
-"base": "Reference",
-"class": "Quest",
-"language": "GDScript",
-"path": "res://Scripts/classes/Quest_old.gd"
-}, {
 "base": "Ability",
 "class": "Spell",
 "language": "GDScript",
@@ -103,16 +103,6 @@ _global_script_classes=[ {
 "class": "SpellManager",
 "language": "GDScript",
 "path": "res://Scripts/Managers/Cavern/SpellManager.gd"
-}, {
-"base": "Reference",
-"class": "Statistics",
-"language": "GDScript",
-"path": "res://Scripts/classes/Stats.gd"
-}, {
-"base": "Reference",
-"class": "Task",
-"language": "GDScript",
-"path": "res://Scripts/classes/Task_old.gd"
 }, {
 "base": "Reference",
 "class": "Unit",
@@ -130,14 +120,14 @@ _global_script_classes=[ {
 "path": "res://Scripts/classes/Upgrade.gd"
 }, {
 "base": "Reference",
-"class": "UpgradeChain",
-"language": "GDScript",
-"path": "res://Scripts/classes/UpgradeChain.gd"
-}, {
-"base": "Reference",
 "class": "Wish",
 "language": "GDScript",
 "path": "res://Scripts/classes/Wish.gd"
+}, {
+"base": "Node",
+"class": "WishManager",
+"language": "GDScript",
+"path": "res://Scripts/autoload/WishManager.gd"
 }, {
 "base": "Node2D",
 "class": "_root",
@@ -164,18 +154,16 @@ _global_script_class_icons={
 "Jobnew": "",
 "LORED": "",
 "LOREDnew": "",
+"NewUpgrade": "",
 "Ob": "",
 "Purchasable": "",
-"Quest": "",
 "Spell": "",
 "SpellManager": "",
-"Statistics": "",
-"Task": "",
 "Unit": "",
 "UnitManager": "",
 "Upgrade": "",
-"UpgradeChain": "",
 "Wish": "",
+"WishManager": "",
 "_root": "",
 "_save": ""
 }
@@ -183,7 +171,7 @@ _global_script_class_icons={
 [application]
 
 config/name="LORED"
-run/main_scene="res://Scenes/Root.tscn"
+run/main_scene="res://Scenes/Main Menu.tscn"
 boot_splash/image="res://Sprites/misc/icon.png"
 boot_splash/bg_color=Color( 0.12549, 0.145098, 0.192157, 1 )
 config/icon="res://Sprites/misc/icon.png"
@@ -199,6 +187,7 @@ sm="*res://Scripts/Managers/Cavern/SpellManager.gd"
 bm="*res://Scripts/Managers/Cavern/BuffManager.gd"
 um="*res://Scripts/Managers/Cavern/UnitManager.gd"
 diff="*res://Scripts/Managers/Difficulty.gd"
+SaveManager="*res://Scripts/Managers/SaveManager.gd"
 Boot="*res://Scripts/autoload/Boot.gd"
 
 [debug]

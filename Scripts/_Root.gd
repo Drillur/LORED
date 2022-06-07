@@ -2,15 +2,6 @@ class_name _root
 extends Node2D
 
 
-const SAVE := {
-	"SLOT0": "user://save.lored",
-	"SLOT1": "user://save1.lored",
-	"SLOT2": "user://save2.lored",
-	"SLOT3": "user://save3.lored",
-	"SLOT4": "user://save4.lored",
-}
-
-
 
 const prefab := {
 	"dtext": preload("res://Prefabs/dtext.tscn"),
@@ -19,26 +10,19 @@ const prefab := {
 
 onready var menu = get_node("m/Menu")
 
+onready var main_menu_container = get_node("m/v/top/h/main menu")
 
+var saved_vars := ["emote_events"]
 
 var content := {}
 var instances := {}
 var upgrade_dtexts := {}
 
-var times_game_loaded = 0
-var loredalert = ""
-
-var cur_clock = OS.get_unix_time()
-var last_clock = OS.get_unix_time()
-var cur_session := 0
 
 const gnLOREDs = "m/v/LORED Manager"
 const gntaq = "m/v/bot/h/taq"
 const gnLB = "m/v/top/h/r/Limit Break"
 const gnupcon = "m/up_container"
-const gnalert = "misc/tabs/v/upgrades/alert"
-
-onready var cav = get_node("cavern")
 
 var task_awaiting := "no"
 
@@ -51,6 +35,9 @@ var hax = 1 # 1 for normal
 
 func _ready():
 	
+	gv.active_scene = gv.Scene.ROOT
+	SaveManager.setRT()
+	
 	OS.set_low_processor_usage_mode(true)
 	set_physics_process(false)
 	
@@ -60,9 +47,9 @@ func _ready():
 	if true:
 		
 		if "pc" in gv.PLATFORM:
-			gv.menu.option["FPS"] = 2
+			gv.option["FPS"] = 2
 		else:
-			gv.menu.option["FPS"] = 1
+			gv.option["FPS"] = 1
 	
 	get_node(gnLOREDs).setup()
 	get_node("m/v/top/h/resources").setup()
@@ -73,16 +60,17 @@ func _ready():
 	
 	get_tree().get_root().connect("size_changed", self, "r_window_size_changed")
 	
-	game_start(e_load())
+	# ref
+	if true:
+		taq.setupGNNodes() #001
+		main_menu_container.hide()
+	
+	game_start(SaveManager.load())
 
 func game_start(successful_load: bool) -> void:
 	
-	#gv.menu.option["task auto"] = false
-	
 	if not successful_load:
-		for x in gv.g:
-			gv.g[x].manager.start_all()
-		gv.r["stone"] = Big.new(5)
+		newGame()
 	
 	else:
 		for x in gv.g:
@@ -93,13 +81,11 @@ func game_start(successful_load: bool) -> void:
 	
 	taq.seekNewWish()
 	
-	print_debug("highest run: ", gv.stats.highest_run)
-	print_debug("most_resources_gained: ", gv.stats.most_resources_gained.toString())
+	print_debug("highest run: ", gv.highest_run)
+	print_debug("most_resources_gained: ", gv.most_resources_gained.toString())
 	
 	# work
 	if true:
-		
-		Cav.cav = cav
 		
 		# upgrades
 		if true:
@@ -112,13 +98,13 @@ func game_start(successful_load: bool) -> void:
 			
 			gv.up["ROUTINE"].have = false
 		
-		w_aa()
+		gv.syncLOREDs(true)
 		
 		fix_shit()
 		
-		update_clock()
+		updateCurSession()
 		
-		gv.storeSaveSlotInfo()
+		routineLOREDsync()
 	
 	# ref
 	if true:
@@ -140,12 +126,9 @@ func game_start(successful_load: bool) -> void:
 		if true:
 			
 			get_node(gnupcon).init()
-			afford()
 		
 		# map
 		$map.init()
-		
-		cav.setup()
 	
 	# hax
 	if true:
@@ -185,31 +168,38 @@ func game_start(successful_load: bool) -> void:
 	
 	r_window_size_changed()
 
+func newGame():
+	
+	for x in gv.up:
+		if gv.up[x].requires.size() == 0:
+			gv.up[x].unlocked = true
+		gv.up[x].sync()
+	
+	for x in gv.g:
+		gv.g[x].manager.start_all()
+	
+	gv.r["stone"] = Big.new(5)
 
-func update_clock():
+
+
+
+func updateCurSession():
+	
+	var t = Timer.new()
+	add_child(t)
 	
 	while true:
 		
-		cur_clock = OS.get_unix_time()
-		
-		var t = Timer.new()
-		add_child(t)
 		t.start(1)
 		yield(t, "timeout")
-		t.queue_free()
 		
-		cur_session += 1
-		gv.stats.time_played += 1
-		
-		menu.update_cur_session(cur_session)
+		menu.update_cur_session(gv.cur_session)
+	
+	t.queue_free()
 
 func _input(ev):
 	
 	if ev.is_class("InputEventMouseMotion"):
-		return
-	
-	if cav.visible:
-		cav.input(ev)
 		return
 	
 	if ev.is_action_pressed("ui_cancel"):
@@ -248,7 +238,6 @@ func _input(ev):
 		
 		else:
 			menu.hide()
-			show_alert_guy(false)
 			get_node(gnupcon).show()
 			return
 	
@@ -302,22 +291,27 @@ func _notification(ev):
 		
 		get_node("global_tip")._call("no")
 		
-		if OS.get_unix_time() - cur_clock <= 1: return
-		var clock_dif = OS.get_unix_time() - last_clock
+		if OS.get_unix_time() - gv.cur_clock <= 1: return
+		var clock_dif = OS.get_unix_time() - gv.last_clock
 		if clock_dif <= 1: return
 		
 		w_total_per_sec(clock_dif)
 	
 	elif ev == MainLoop.NOTIFICATION_WM_FOCUS_OUT:
-		last_clock = OS.get_unix_time()
+		gv.last_clock = OS.get_unix_time()
 
 
 
 
-func _on_menu_button_button_down():
-	$map.status = "no"
-func _on_menu_button_pressed():
+func _on_menu_pressed() -> void:
 	b_tabkey(KEY_ESCAPE)
+func _on_main_menu_pressed() -> void:
+	close()
+	get_tree().change_scene("res://Scenes/Main Menu.tscn")
+
+func close():
+	taq.close() #002
+	gv.close()
 
 func _on_upgrades_pressed() -> void:
 	
@@ -331,7 +325,6 @@ func _on_upgrades_pressed() -> void:
 		return
 	
 	get_node(gnupcon).show()
-	get_node(gnalert).hide()
 
 func _on_mouse_exited() -> void:
 	get_node("global_tip")._call("no")
@@ -350,12 +343,22 @@ func _on_s3_pressed() -> void:
 
 func fix_shit():
 	
-	if gv.stats.run[0] == 1 and gv.r["growth"].less(10) and gv.g["growth"].f.f.less(3):
+	if gv.run1 == 1 and gv.r["growth"].less(10) and gv.g["growth"].f.f.less(3):
 		gv.g["growth"].f.f = Big.new(3)
 
-func w_aa():
-	for x in gv.g:
-		gv.g[x].sync()
+func routineLOREDsync():
+	
+	var t = Timer.new()
+	add_child(t)
+	
+	while true:
+		
+		t.start(10)
+		yield(t, "timeout")
+		
+		gv.syncLOREDs()
+	
+	t.queue_free()
 
 func offline_earnings(time_offline: float) -> void:
 	
@@ -587,7 +590,6 @@ func w_total_per_sec(clock_dif : float) -> void:
 			
 			if gain_reduction[x].equal(1): continue
 			
-			#prrint(":( alert! - ", x, " gains x", gain_reduction[x].toString(), " :: ", gained[x].toString(), " -> ", Big.new(gained[x]).m(gain_reduction[x]).toString())
 			gained[x].m(gain_reduction[x])
 		
 		for x in consumed_reduction:
@@ -673,57 +675,6 @@ func emote_ville():
 						gv.g["coal"].manager.reply("thank you :)")
 						emote_events[x] = true
 
-func afford():
-	
-	while true:
-		
-		var t = Timer.new()
-		add_child(t)
-		t.start(5)
-		yield(t, "timeout")
-		t.queue_free()
-		
-		if not gv.up["we were so close, now you don't even think about me"].active():
-			for x in gv.list.upgrade["unowned " + str(gv.Tab.NORMAL)]:
-				afford_check(x)
-		
-		if gv.Tab.S2 in gv.unlocked_tabs and gv.Tab.EXTRA_NORMAL in gv.unlocked_tabs:
-			if not gv.up["Now That's What I'm Talkin About, YeeeeeeaaaaaaaAAAAAAGGGGGHHH"].active():
-				for x in gv.list.upgrade["unowned " + str(gv.Tab.EXTRA_NORMAL)]:
-					afford_check(x)
-
-
-
-func afford_check(x: String):
-	
-	if gv.up[x].have:
-		get_node(gnupcon).alert(false, x)
-		return
-	
-	for u in gv.up[x].requires:
-		if not gv.up[u].have:
-			return
-	
-	if not gv.up[x].cost_check():
-		get_node(gnupcon).alert(false, x)
-		return
-	
-	if get_node(gnupcon).cont[x].already_displayed_alert_guy:
-		return
-	
-	# pass!
-	
-	show_alert_guy()
-	#get_node(gnupcon).cont[x].already_displayed_alert_guy = true
-	get_node(gnupcon).alert(true, x)
-
-func show_alert_guy(show := true):
-	
-	if show:
-		if get_node(gnupcon).visible:
-			return
-	
-	get_node(gnalert).visible = show
 
 
 func wishReward(type: int, key: String) -> void:
@@ -802,7 +753,6 @@ func reset(reset_type: int, manual := true) -> void:
 		if reset_type == -1:
 			for t in gv.Tab:
 				unlock_tab(gv.Tab[t], false)
-			get_node(gnupcon).clear_alerts()
 		
 		if reset_type >= 2:
 			unlock_tab(gv.Tab.EXTRA_NORMAL, false)
@@ -821,38 +771,28 @@ func reset(reset_type: int, manual := true) -> void:
 
 func reset_stats(reset_type: int):
 	
-	if reset_type == -1:
+	if reset_type > gv.highest_run:
+		gv.highest_run = reset_type
+		gv.most_resources_gained = Big.new(0)
 		
-		# full reset!
-		
-		for x in gv.stats.run.size():
-			gv.stats.run[x] = 1
-			gv.stats.last_run_dur[x] = 0
-			gv.stats.last_reset_clock[x] = OS.get_unix_time()
-		
-		gv.stats.most_resources_gained = Big.new(0)
-		gv.stats.highest_run = 1
-		gv.stats.tasks_completed = 0
-		
-		return
 	
-	
-	if reset_type > gv.stats.highest_run:
-		gv.stats.highest_run = reset_type
-		gv.stats.most_resources_gained = Big.new(0)
-	
-	if reset_type == gv.stats.highest_run:
+	if reset_type == gv.highest_run:
 		
 		var reset_key = gv.highestResetKey()
 		
-		if gv.stats.most_resources_gained.less(gv.r[reset_key]):
-			gv.stats.most_resources_gained = Big.new(gv.r[reset_key])
+		if gv.most_resources_gained.less(gv.r[reset_key]):
+			gv.most_resources_gained = Big.new(gv.r[reset_key])
+	
+	gv.run1 = gv.run1 + 1
+	if reset_type >= 2:
+		gv.run2 = gv.run2 + 1
+	if reset_type >= 3:
+		gv.run3 = gv.run3 + 1
+	if reset_type >= 4:
+		gv.run4 = gv.run4 + 1
 	
 	for x in reset_type:
 		gv.list.lored["active " + str(x + gv.Tab.S1)].clear()
-		gv.stats.run[x] += 1
-		gv.stats.last_run_dur[x] = OS.get_unix_time() - gv.stats.last_reset_clock[x]
-		gv.stats.last_reset_clock[x] = OS.get_unix_time()
 	
 	gv.list.lored["active " + str(gv.Tab.S1)].append("coal")
 	gv.list.lored["active " + str(gv.Tab.S1)].append("stone")
@@ -1137,10 +1077,12 @@ func b_tabkey(key):
 			
 			# open the menu
 			if not menu.visible:
+				main_menu_container.show()
 				menu.show()
 				return
 			
 			# close the menu (should probably stay at the bottom. if must move above something, make this func return a bool. if return g.visible = true, then RETURN below the func)
+			main_menu_container.hide()
 			menu.hide()
 		
 		KEY_1:
@@ -1208,7 +1150,6 @@ func open_up_tab(tab: int):
 	get_node(gnupcon).col_time(str(tab))
 	
 	menu.hide()
-	show_alert_guy(false)
 	get_node("global_tip")._call("no")
 
 func b_move_map(x, y):
@@ -1216,21 +1157,6 @@ func b_move_map(x, y):
 	$map.status = "no"
 	$map.set_global_position(Vector2(x, y))
 
-func hideAllButCavern():
-	$map.hide()
-	$m.hide()
-	$misc.hide()
-	$WishAnchor.hide()
-	$texts.hide()
-	cav.show()
-
-func showAllButCavern():
-	cav.hide()
-	$map.show()
-	$m.show()
-	$misc.show()
-	$WishAnchor.show()
-	$texts.show()
 
 func unlock_tab(tab: int, add := true):
 	
@@ -1251,486 +1177,294 @@ func unlock_tab(tab: int, add := true):
 			get_node(gnupcon + "/top/" + str(tab)).visible = add
 
 
-func version_older_than(_save_version: String, _version: String) -> bool:
-	
-	# _version == the version at hand, to be compared with _save version
-	
-	var _save_version_split = _save_version.split(".")
-	var _version_split = _version.split(".")
-	
-	var save = {x = int(_save_version_split[0]), y = int(_save_version_split[1]), z = int(_save_version_split[2])}
-	var version = {x = int(_version_split[0]), y = int(_version_split[1]), z = int(_version_split[2])}
-	
-	# save version is either OLDER than version, or EQUAL to version.
-	# returns TRUE if OLDER, FALSE if EQUAL
-	
-	if save.x < version.x:
-		return true
-	if save.y < version.y:
-		return true
-	if save.z < version.z:
-		return true
-	
-	return false
 
-func e_save(type := "normal", path := SAVE.SLOT0):
-	
-	var save := _save.new()
-	
-	# menu and stats
-	if true:
-		
-		for e in emote_events:
-			save.data[e] = emote_events[e]
-		
-		save.game_version = ProjectSettings.get_setting("application/config/Version")
-		
-		for x in gv.stats.run.size():
-			save.data["gv.stats.run[" + str(x) + "]"] = gv.stats.run[x]
-			save.data["stats.last_run_dur[" + str(x) + "]"] = gv.stats.last_run_dur[x]
-			save.data["stats.last_reset_clock[" + str(x) + "]"] = gv.stats.last_reset_clock[x]
-		save.data["cur_clock"] = cur_clock
-		save.data["times game loaded"] = times_game_loaded
-		
-		for x in gv.menu.option:
-			save.data["option " + x] = gv.menu.option[x]
-			if x == "on_save_menu_options" and not gv.menu.option[x]: break
-		
-		save.data["time_played"] = gv.stats.time_played
-		save.data["tasks_completed"] = gv.stats.tasks_completed
-		
-		save.data["most_resources_gained"] = gv.stats.most_resources_gained.toScientific()
-		save.data["stats.highest_run"] = gv.stats.highest_run
-		
-		for x in gv.stats.last_reset_clock.size():
-			save.data["save last reset clock " + String(x)] = gv.stats.last_reset_clock[x]
-	
-	save.data["wish data"] = taq.save()
-	
-	# upgrades
-	if true:
-		
-		if gv.up["Limit Break"].active():
-			save.data["Limit Break d"] = gv.up["Limit Break"].effects[0].effect.a.toScientific()
-			save.data["Limit Break xpf"] = gv.lb_xp.f.toScientific()
-			save.data["Limit Break xpt"] = gv.lb_xp.t.toScientific()
-		
-		if gv.up["I DRINK YOUR MILKSHAKE"].active():
-			save.data["[I DRINK YOUR MILKSHAKE] e0"] = gv.up["I DRINK YOUR MILKSHAKE"].effects[0].effect.a.toScientific()
-		
-		if gv.up["IT'S GROWIN ON ME"].active():
-			save.data["[IT'S GROWIN ON ME] e0"] = gv.up["IT'S GROWIN ON ME"].effects[0].effect.a.toScientific()
-			save.data["[IT'S GROWIN ON ME] e1"] = gv.up["IT'S GROWIN ON ME"].effects[1].effect.a.toScientific()
-		
-		if gv.up["IT'S SPREADIN ON ME"].active():
-			save.data["[IT'S SPREADIN ON ME] e0"] = gv.up["IT'S SPREADIN ON ME"].effects[0].effect.a.toScientific()
-			save.data["[IT'S SPREADIN ON ME] e1"] = gv.up["IT'S SPREADIN ON ME"].effects[1].effect.a.toScientific()
-		
-		for x in gv.up:
-			save.data["[" + x + "] have"] = gv.up[x].have
-			save.data["[" + x + "] refundable"] = gv.up[x].refundable
-			save.data["[" + x + "] unlocked"] = gv.up[x].unlocked
-			save.data["[" + x + "] times_purchased"] = gv.up[x].times_purchased
-	
-	# resources
-	save.data["resources"] = gv.saveResources()
-	
-	# loreds
-	save.data["LOREDs"] = get_node(gnLOREDs).saveLOREDs()
-	
-	# cavern
-	save.data["cavern"] = get_node("cavern").save()
-	
-	# fin & misc
-	if true:
-		
-		save.data["game version"] = save.game_version
-		
-		var save_file = File.new()
-		
-		match type:
-			"normal":
-				
-				# create SAVE
-				save_file.open(SAVE[gv.active_slot], File.WRITE)
-				save_file.store_line(Marshalls.variant_to_base64(save.data))
-				save_file.close()
-			
-			"export":
-				
-				# create SAVE
-				save_file.open(path, File.WRITE)
-				save_file.store_line(Marshalls.variant_to_base64(save.data))
-				save_file.close()
-			
-			"print to console":
-				print("Your LORED save data is below! Click Expand, if necessary, for your save may be very large, and then save it in any text document!")
-				print(Marshalls.variant_to_base64(save.data))
-		
-		w_aa()
 
-func e_load(path := SAVE[gv.active_slot]) -> bool:
-	
-	if gv.stored_path != "":
-		path = gv.stored_path
-		gv.stored_path = ""
-		print("Loading from \"", path, "\".")
-	
-	var save_file = File.new()
-	var save := _save.new()
-	
-	# file shit
-	if true:
-		
-		if not save_file.file_exists(path):
-			return false
-		
-		# load from base64
-		save_file.open(path, File.READ)
-		
-		var save_lines := []
-		
-		save_lines.append(save_file.get_line())
-		save_lines.append(save_file.get_line())
-		
-		if len(save_lines[0]) < 20:
-			save.game_version = save_lines[0]
-			save.data =  Marshalls.base64_to_variant(save_lines[1])
-		else:
-			save.data =  Marshalls.base64_to_variant(save_lines[0])
-			save.game_version = save.data["game version"]
-		
-		save_file.close()
 
-	if "1" == save.game_version[0]:
-		print("Save incompatible; from 1.2c or earlier.\nWhat the heck, have you really not played since then? Welcome back, jeez!")
-		return false
-	
-	var pre_beta_4 := false
-	if "(" in save.game_version:
-		var beta_version = save.game_version.split("(")[1].split(")")[0]
-		if int(beta_version) <= 3:
-			pre_beta_4 = true
-	
-	var keys = save.data.keys()
-	
-	load_stats(save.data, keys, pre_beta_4)
-	if "resources" in keys:
-		gv.loadResources(str2var(save.data["resources"]))
-	load_upgrades(save.data, keys)
-	load_loreds(save.data, save.game_version, keys)
-	
-	if "cavern" in keys:
-		get_node("cavern").load(save.data["cavern"])
-	
-	if "wish data" in keys:
-		taq._load(save.data["wish data"])
-	
-	patched = version_older_than(save.game_version, ProjectSettings.get_setting("application/config/Version")) if gv.menu.option["patch alert"] else false
-	# this, to the computer, could look like this:
-	# patched = false if false else false
-
-	if version_older_than(save.game_version, "2.2.4"):
-		gv.menu.option["FPS"] = 2
-	
-	# X.Y.Z
-	# 2.1.0
-	# 1.2c
-	
-	# shit that needs to be done before offline earnings
-	if true:
-		
-		# limit break
-		if true:
-			
-			activate_lb_effects()
-	
-	#offline_earnings(min(cur_clock - save.data["cur_clock"] - 30, 604800))
-	
-	w_total_per_sec(cur_clock - save.data["cur_clock"] - 30)
-	
-	return true
-
-func load_stats(data: Dictionary, keys: Array, pre_beta_4: bool):
-	
-	for e in emote_events:
-		if e in keys:
-			emote_events[e] = data[e]
-	
-	for x in gv.stats.run.size():
-		if "gv.stats.run[" + str(x) + "]" in keys:
-			gv.stats.run[x] = data["gv.stats.run[" + str(x) + "]"]
-		if "stats.last_run_dur[" + str(x) + "]" in keys:
-			gv.stats.last_run_dur[x] = data["stats.last_run_dur[" + str(x) + "]"]
-		if "stats.last_reset_clock[" + str(x) + "]" in keys:
-			gv.stats.last_reset_clock[x] = data["stats.last_reset_clock[" + str(x) + "]"]
-	times_game_loaded = data["times game loaded"] + 1
-	
-	for x in gv.menu.option:
-		
-		if not "option " + x in keys: continue
-		if gv.PLATFORM == "browser" and x == "performance": continue
-		
-		gv.menu.option[x] = data["option " + x]
-		if x == "on_save_menu_options" and not gv.menu.option[x]: break
-		
-	
-	
-	gv.stats.time_played = data["time_played"]
-	gv.stats.tasks_completed = data["tasks_completed"]
-	
-	if "stats.highest_run" in keys:
-		gv.stats.highest_run = data["stats.highest_run"]
-	
-	for x in gv.stats.last_reset_clock.size():
-		if not ("save last reset clock " + str(x)) in keys: continue
-		gv.stats.last_reset_clock[x] = data["save last reset clock " + str(x)]
-	
-	
-	
-	if pre_beta_4:
-		
-		if "most_resources_gained" in keys:
-			gv.stats.most_resources_gained = Big.new(fval.f(data["most_resources_gained"]))
-		
-		return
-	
-	if "most_resources_gained" in keys:
-		gv.stats.most_resources_gained = Big.new(data["most_resources_gained"])
-
-func load_upgrades(data: Dictionary, keys: Array):
-	
-	if "Limit Break d" in keys:
-		gv.up["Limit Break"].effects[0].effect.a = Big.new(data["Limit Break d"])
-		gv.up["Limit Break"].sync_effects()
-		gv.lb_xp.t = Big.new(data["Limit Break xpt"])
-		gv.lb_xp.f = Big.new(data["Limit Break xpf"])
-		gv.emit_signal("limit_break_leveled_up", "color")
-	
-	if "[I DRINK YOUR MILKSHAKE] e0" in keys:
-		gv.up["I DRINK YOUR MILKSHAKE"].effects[0].effect.a = Big.new(data["[I DRINK YOUR MILKSHAKE] e0"])
-	
-	if "[IT'S GROWIN ON ME] e0" in keys:
-		gv.up["IT'S GROWIN ON ME"].effects[0].effect.a = Big.new(data["[IT'S GROWIN ON ME] e0"])
-		gv.up["IT'S GROWIN ON ME"].effects[1].effect.a = Big.new(data["[IT'S GROWIN ON ME] e1"])
-		
-	if "[IT'S SPREADIN ON ME] e0" in keys:
-		gv.up["IT'S SPREADIN ON ME"].effects[0].effect.a = Big.new(data["[IT'S SPREADIN ON ME] e0"])
-		gv.up["IT'S SPREADIN ON ME"].effects[1].effect.a = Big.new(data["[IT'S SPREADIN ON ME] e1"])
-	
-	for x in gv.up:
-		
-		if not "[" + x + "] have" in keys: continue
-		
-		gv.up[x].have = data["[" + x + "] have"]
-		if gv.up[x].have and gv.up[x].normal:
-			gv.list.upgrade["unowned " + str(gv.up[x].tab)].erase(x)
-		gv.up[x].refundable = data["[" + x + "] refundable"]
-		if "[" + x + "] times_purchased" in keys:
-			gv.up[x].times_purchased = data["[" + x + "] times_purchased"]
-		if "[" + x + "] unlocked" in keys:
-			gv.up[x].unlocked = data["[" + x + "] unlocked"]
-		
-		if not gv.up[x].refundable:
-			if gv.up[x].active():
-				gv.up[x].apply()
-			continue
-		
-		gv.up[x].refund()
-	
-	for x in gv.up:
-		gv.up[x].sync()
-		if not gv.up[x].have:
-			continue
-		gv.list.upgrade["owned " + str(gv.up[x].tab)].append(gv.up[x].key)
-
-func load_loreds(data: Dictionary, game_version: String, keys: Array):
-	
-	if version_older_than(game_version, "3.0.0"):
-		
-		print("Save version: ", game_version, "; converting save.")
-		
-		var LORED_data := {}
-		
-		for x in gv.g:
-			
-			if not "g" + x + " active" in keys:
-				continue
-			
-			var pack := {}
-			
-			if "g" + x + " times purchased" in keys:
-				pack["times purchased"] = data["g" + x + " times purchased"]
-			
-			pack["active"] = data["g" + x + " active"]
-			
-			if "g" + x + " key" in keys:
-				pack["key_lored"] = data["g" + x + " key"]
-			
-			if not pack["active"]:
-				continue
-			
-			pack["level"] = data["g" + x + " level"]
-			
-			if "g" + x + " halt" in keys:
-				pack["halt"] = data["g" + x + " halt"]
-			if "g" + x + " hold" in keys:
-				pack["hold"] = data["g" + x + " hold"]
-			
-			pack["fuel"] = var2str(Big.new(data["g" + x + " fuel"]))
-			
-			LORED_data[x] = var2str(pack)
-		
-		data["LOREDs"] = var2str(LORED_data)
-	
-	get_node(gnLOREDs).loadLOREDs(str2var(data["LOREDs"]))
-
-#task
-#func load_tasks(data: Dictionary, keys: Array, game_version: String):
+#func e_load(path := gv.save_path) -> bool:
 #
-#	if version_older_than(game_version, "2.2.28"):
-#		for q in gv.quest:
-#			var cock = Quest.new(q)
-#			if data["quest " + str(cock.key) + " complete"]:
-#				cock.turnIn()
-#	else:
-#		taq.completed_quests = data["completed_quests"]
-#		for x in taq.completed_quests:
-#			var cock = Quest.new(x)
-#			cock.turnIn()
+#	var save_file = File.new()
+#	var save := _save.new()
 #
-#	while true:
+#	# file shit
+#	if true:
 #
-#		if not data["load quest"]:
-#			break
+#		if not save_file.file_exists(path):
+#			return false
 #
-#		var quest_key = "main quest key"
-#		if version_older_than(game_version, "2.2.28"):
-#			quest_key = "on quest"
+#		# load from base64
+#		save_file.open(path, File.READ)
 #
-#		data[quest_key] = int(data[quest_key])
+#		var save_lines := []
 #
-#		if version_older_than(game_version, "2.2.4"):
-#			if data[quest_key] == "Horse Doodie":
-#				taq.new_quest(gv.quest[gv.Quest.HORSE_DOODIE])
-#				taq.increaseProgress(gv.Objective.UPGRADES_PURCHASED, gv.Tab.RADIATIVE, Big.new(gv.list.upgrade["owned " + str(gv.Tab.RADIATIVE)]))
+#		save_lines.append(save_file.get_line())
+#		save_lines.append(save_file.get_line())
 #
-#		if not data[quest_key] in gv.Quest.values():
-#			break
-#		if data[quest_key] in taq.completed_quests:
-#			break
+#		if len(save_lines[0]) < 20:
+#			save.game_version = save_lines[0]
+#			save.data =  Marshalls.base64_to_variant(save_lines[1])
+#		else:
+#			save.data =  Marshalls.base64_to_variant(save_lines[0])
+#			save.game_version = save.data["game version"]
 #
-#		var pack := {}
-#		for i in int(data["main quest objective count"]):
+#		save_file.close()
 #
-#			var key = "main quest objective " + str(i) + " current progress"
-#			if version_older_than(game_version, "2.2.28"):
-#				if version_older_than(game_version, "2.2.4"):
-#					key = "task step progress " + str(i)
-#				else:
-#					key = "quest req progress " + str(i)
+#	if "1" == save.game_version[0]:
+#		print("Save incompatible; from 1.2c or earlier.\nWhat the heck, have you really not played since then? Welcome back, jeez!")
+#		return false
 #
-#			pack["main quest objective " + str(i) + " current progress"] = data[key]
+#	var pre_beta_4 := false
+#	if "(" in save.game_version:
+#		var beta_version = save.game_version.split("(")[1].split(")")[0]
+#		if int(beta_version) <= 3:
+#			pre_beta_4 = true
 #
-#		taq.new_quest(data[quest_key], pack)
-#		get_node(gnquest).show()
+#	var keys = save.data.keys()
 #
-#		break
+#	load_stats(save.data, keys, pre_beta_4)
+#	if "resources" in keys:
+#		gv.loadResources(str2var(save.data["resources"]))
+#	load_upgrades(save.data, keys)
+#	load_loreds(save.data, save.game_version, keys)
 #
-#	if version_older_than(game_version, "2.2.4"):
+#	if "wish data" in keys:
+#		taq._load(save.data["wish data"])
+#
+#	# backup saves
+#	var backup_saves = [
+#		"cavern",
+#	]
+#	for b in backup_saves:
+#		if b in keys:
+#			gv.backup_save[b] = save.data[b]
+#
+#	patched = version_older_than(save.game_version, ProjectSettings.get_setting("application/config/Version")) if gv.option["patch alert"] else false
+#	# this, to the computer, could look like this:
+#	# patched = false if false else false
+#
+#	if version_older_than(save.game_version, "2.2.4"):
+#		gv.option["FPS"] = 2
+#
+#	# X.Y.Z
+#	# 2.1.0
+#	# 1.2c
+#
+#	# shit that needs to be done before offline earnings
+#	if true:
+#
+#		# limit break
+#		if true:
+#
+#			activate_lb_effects()
+#
+#	#offline_earnings(min(cur_clock - save.data["cur_clock"] - 30, 604800))
+#
+#	w_total_per_sec(gv.cur_clock - save.data["cur_clock"] - 30)
+#
+#	return true
+#
+#func load_stats(data: Dictionary, keys: Array, pre_beta_4: bool):
+#
+#	for e in emote_events:
+#		if e in keys:
+#			emote_events[e] = data[e]
+#
+#	for x in gv.run.size():
+#		if "gv.run" + str(x) + "]" in keys:
+#			gv.runx] = data["gv.run" + str(x) + "]"]
+#		if "stats.last_run_dur[" + str(x) + "]" in keys:
+#			gv.last_run_dur[x] = data["stats.last_run_dur[" + str(x) + "]"]
+#		if "stats.last_reset_clock[" + str(x) + "]" in keys:
+#			gv.last_reset_clock[x] = data["stats.last_reset_clock[" + str(x) + "]"]
+#	gv.times_game_loaded = data["times game loaded"] + 1
+#
+#	for x in gv.option:
+#
+#		if not "option " + x in keys: continue
+#		if gv.PLATFORM == "browser" and x == "performance": continue
+#
+#		gv.option[x] = data["option " + x]
+#
+#
+#
+#	gv.time_played = data["time_played"]
+#	gv.task_completed = data["taskf_completed"]
+#
+#	if "highest_run" in keys:
+#		gv.highest_run = data["highest_run"]
+#
+#	for x in gv.last_reset_clock.size():
+#		if not ("save last reset clock " + str(x)) in keys: continue
+#		gv.last_reset_clock[x] = data["save last reset clock " + str(x)]
+#
+#
+#
+#	if pre_beta_4:
+#
+#		if "most_resources_gained" in keys:
+#			gv.most_resources_gained = Big.new(fval.f(data["most_resources_gained"]))
+#
 #		return
-#	return #zzzz
-#	if "cur tasks" in keys:
-#		for i in data["cur tasks"]:
 #
-#			if taq.cur_tasks >= taq.max_tasks:
-#				break
-#			if not "task " + str(i) + " name" in keys:
+#	if "most_resources_gained" in keys:
+#		gv.most_resources_gained = Big.new(data["most_resources_gained"])
+#
+#func load_upgrades(data: Dictionary, keys: Array):
+#
+#	if "Limit Break d" in keys:
+#		gv.up["Limit Break"].effects[0].effect.a = Big.new(data["Limit Break d"])
+#		gv.up["Limit Break"].sync_effects()
+#		gv.lb_xp.t = Big.new(data["Limit Break xpt"])
+#		gv.lb_xp.f = Big.new(data["Limit Break xpf"])
+#		gv.emit_signal("limit_break_leveled_up", "color")
+#
+#	if "[I DRINK YOUR MILKSHAKE] e0" in keys:
+#		gv.up["I DRINK YOUR MILKSHAKE"].effects[0].effect.a = Big.new(data["[I DRINK YOUR MILKSHAKE] e0"])
+#
+#	if "[IT'S GROWIN ON ME] e0" in keys:
+#		gv.up["IT'S GROWIN ON ME"].effects[0].effect.a = Big.new(data["[IT'S GROWIN ON ME] e0"])
+#		gv.up["IT'S GROWIN ON ME"].effects[1].effect.a = Big.new(data["[IT'S GROWIN ON ME] e1"])
+#
+#	if "[IT'S SPREADIN ON ME] e0" in keys:
+#		gv.up["IT'S SPREADIN ON ME"].effects[0].effect.a = Big.new(data["[IT'S SPREADIN ON ME] e0"])
+#		gv.up["IT'S SPREADIN ON ME"].effects[1].effect.a = Big.new(data["[IT'S SPREADIN ON ME] e1"])
+#
+#	for x in gv.up:
+#
+#		if not "[" + x + "] have" in keys: continue
+#
+#		gv.up[x].have = data["[" + x + "] have"]
+#		if gv.up[x].have and gv.up[x].normal:
+#			gv.list.upgrade["unowned " + str(gv.up[x].tab)].erase(x)
+#		gv.up[x].refundable = data["[" + x + "] refundable"]
+#		if "[" + x + "] times_purchased" in keys:
+#			gv.up[x].times_purchased = data["[" + x + "] times_purchased"]
+#		if "[" + x + "] unlocked" in keys:
+#			gv.up[x].unlocked = data["[" + x + "] unlocked"]
+#
+#		if not gv.up[x].refundable:
+#			if gv.up[x].active():
+#				gv.up[x].apply()
+#			continue
+#
+#		gv.up[x].refund()
+#
+#	for x in gv.up:
+#		gv.up[x].sync()
+#		if not gv.up[x].have:
+#			continue
+#		gv.list.upgrade["owned " + str(gv.up[x].tab)].append(gv.up[x].key)
+#
+#func load_loreds(data: Dictionary, game_version: String, keys: Array):
+#
+#	if version_older_than(game_version, "3.0.0"):
+#
+#		print("Save version: ", game_version, "; converting save.")
+#
+#		var LORED_data := {}
+#
+#		for x in gv.g:
+#
+#			if not "g" + x + " active" in keys:
 #				continue
 #
 #			var pack := {}
-#			var key = "task " + str(i)
 #
-#			pack["name"] = data[key + " name"]
-#			pack["icon_key"] = data[key + " icon"]
-#			pack["reqs"] = []
-#			pack["reward"] = []
+#			if "g" + x + " times_purchased" in keys:
+#				pack["times_purchased"] = data["g" + x + " times_purchased"]
 #
-#			for ii in int(data[key + " req count"]):
-#				var deets = {}
-#				if key + " amount " + str(ii) in keys:
-#					deets["amount"] = data[key + " amount " + str(ii)]
-#				if key + " req_key " + str(ii) in keys:
-#					deets["req_key"] = data[key + " req_key " + str(ii)]
+#			pack["active"] = data["g" + x + " active"]
 #
-#				pack["reqs"].append(
-#					Task.Requirement.new(
-#						data[key + " req type " + str(ii)],
-#						data[key + " icon_key " + str(ii)],
-#						deets
-#					)
-#				)
-#				taq.primary_task_req_keys.append(data[key + " icon_key " + str(ii)])
-#				pack["reqs"][ii].progress = Big.new(data[key + " progress " + str(ii)])
+#			if "g" + x + " key" in keys:
+#				pack["key_lored"] = data["g" + x + " key"]
 #
-#				ii += 1
+#			if not pack["active"]:
+#				continue
 #
-#			for ii in int(data[key + " rewards"]):
-#				pack["reward"].append(
-#					Task.Reward.new(
-#						int(data[key + " reward type " + str(ii)]),
-#						data[key + " reward text " + str(ii)],
-#						data[key + " reward icon_key " + str(ii)],
-#						{
-#							"amount": data[key + " reward amount " + str(ii)],
-#							"other_key": data[key + " reward other_key " + str(ii)]
-#						}
-#					)
-#				)
+#			pack["level"] = data["g" + x + " level"]
 #
-#			taq.add_task(pack)
-#			taq.task[i].update_points()
+#			if "g" + x + " halt" in keys:
+#				pack["halt"] = data["g" + x + " halt"]
+#			if "g" + x + " hold" in keys:
+#				pack["hold"] = data["g" + x + " hold"]
+#
+#			pack["fuel"] = var2str(Big.new(data["g" + x + " fuel"]))
+#
+#			LORED_data[x] = var2str(pack)
+#
+#		data["LOREDs"] = var2str(LORED_data)
+#
+#	get_node(gnLOREDs).loadLOREDs(str2var(data["LOREDs"]))
 
 
 
-var cc = Unit.new(Cav.UnitClass.CORE_CRYSTAL)
-var wisp = Unit.new(Cav.UnitClass.WISP)
-var arc = Unit.new(Cav.UnitClass.ARCANE_LORED)
+func save() -> String:
+	
+	var data := {}
+	
+	for x in saved_vars:
+		if get(x) is Big:
+			data[x] = get(x).save()
+		else:
+			data[x] = var2str(get(x))
+	
+	
+	data["loreds"] = get_node(gnLOREDs).save()
+	
+	
+	data["upgrades"] = {}
+	for x in gv.up:
+		
+		data["upgrades"][x] = gv.up[x].save()
+	
+	
+	data["wish"] = taq.save()
+	
+	return var2str(data)
+
+func _load(data: Dictionary):
+	
+	#*
+	var saved_vars_dict := {}
+	
+	for x in saved_vars:
+		saved_vars_dict[x] = get(x)
+	
+	var loadedVars = SaveManager.loadSavedVars(saved_vars_dict, data)
+	
+	for x in saved_vars:
+		set(x, loadedVars[x])
+	#*
+	
+	get_node(gnLOREDs).load(str2var(data["loreds"]))
+	
+	for x in gv.up:
+		if not x in data["upgrades"].keys():
+			continue
+		gv.up[x].load(str2var(data["upgrades"][x]))
+		
+		if gv.up[x].refundable:
+			gv.up[x].refund()
+		else:
+			if gv.up[x].active():
+				gv.up[x].apply()
+		
+		if not x in gv.list.upgrade["owned " + str(gv.up[x].tab)]:
+			gv.list.upgrade["owned " + str(gv.up[x].tab)].append(x)
+		
+		gv.up[x].sync()
+	
+	
+	taq.load(str2var(data["wish"]))
+	
+	
+	activate_lb_effects()
+	
+	w_total_per_sec(gv.cur_clock - gv.save_slot_clock - 30)
 
 func _on_Button_pressed() -> void:
-	$Unit.setUnit(arc)
-	$Unit2.setUnit(wisp)
-	var t = Timer.new()
-	add_child(t)
 	
-	while true:
-		
-		t.start(0.1)
-		yield(t, "timeout")
-		
-		$Label.text = cc.damage_dealt.print() + "\n" 
-		
-		$Label2.text = "mana: " + gv.warlock.mana.print() + "\n" + "hp: " + gv.warlock.health.print()
-		
-		$targetbuffs.text = var2str(cc.buffs.keys())
+	var name = gv.Lored.keys()[3].replace("_", " ").capitalize()
 	
 	pass
-
-func _on_Button2_pressed() -> void:
-	
-#	gv.warlock.cast(Cav.Spell.SCORCH, wisp)
-#
-#	var data := {}
-#
-#	data["haste"] = gv.warlock.getHaste()
-#	data["damage multiplier"] = gv.warlock.getDamageMultiplier()
-#
-#
-#	$Label3.bbcode_text = Cav.spell[Cav.Spell.SCORCH].getDesc(gv.warlock) + "\n" + Buff.new(0,data).getDesc() + "\n" + Buff.new(Cav.Buff.BURNING,data).getDesc()
-	
-	if $cavern.visible:
-		showAllButCavern()
-	else:
-		hideAllButCavern()
 
 

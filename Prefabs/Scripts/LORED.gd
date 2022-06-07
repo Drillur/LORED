@@ -523,10 +523,10 @@ func flying_texts():
 	if not rt.get_node(rt.gnLOREDs + "/sc/v/" + lored.type[1]).visible:
 		return
 	
-	if not gv.menu.option["flying_numbers"]:
+	if not gv.option["flying_numbers"]:
 		return
 	
-	if gv.menu.option["crits_only"]:
+	if gv.option["crits_only"]:
 		if not crit:
 			return
 	
@@ -535,7 +535,7 @@ func flying_texts():
 	elif get_node("v/m/v/h/lored/h/v/amount").rect_global_position.y > rt.get_node("m/v/bot").rect_global_position.y:
 		return
 
-	if not gv.menu.option["consolidate_numbers"]:
+	if not gv.option["consolidate_numbers"]:
 		release_flying_text(lored.inhand)
 		return
 
@@ -915,14 +915,10 @@ func buy(manual := false):
 
 func emote():
 	
-	if not gv.dev_mode:
-		return
-	
-	#note delete this if
 	if lored.emote_pool.size() == 0:
 		return
 	
-	while not lored.unlocked:
+	while not lored.unlocked or not gv.option["chit chat"]:
 		
 		var t = Timer.new()
 		add_child(t)
@@ -943,8 +939,6 @@ func emote():
 	while lored.active:
 		
 		var time = randi() % 90 + 30 # 30-120 sec
-		if false:
-			time = randi() % 10 + 10 # 10-20
 		
 		var t = Timer.new()
 		add_child(t)
@@ -1068,16 +1062,16 @@ func _on_buy_mouse_entered() -> void:
 	rt.get_node("global_tip")._call("buy lored " + key)
 
 func _on_fuel_mouse_entered() -> void:
-	if not gv.menu.option["tooltip_fuel"]: return
+	if not gv.option["tooltip_fuel"]: return
 	rt.get_node("global_tip")._call("fuel lored " + key)
 
 func _on_halt_mouse_entered():
 	if not lored.active: return
-	if not gv.menu.option["tooltip_halt"]: return
+	if not gv.option["tooltip_halt"]: return
 	rt.get_node("global_tip")._call("tip halt lored " + key)
 
 func _on_hold_mouse_entered():
 	if not lored.active: return
-	if not gv.menu.option["tooltip_hold"]: return
+	if not gv.option["tooltip_hold"]: return
 	rt.get_node("global_tip")._call("tip hold lored " + key)
 

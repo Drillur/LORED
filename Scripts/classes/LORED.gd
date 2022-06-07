@@ -4,8 +4,9 @@ extends "res://Scripts/classes/Purchasable.gd"
 
 
 var manager: MarginContainer
-var upgrade_quest: Task
 var current_job: Job
+
+const saved_vars := ["active", "key_lored", "halt", "hold", "times_purchased", "level", "f"]
 
 var unlocked := false
 var active := false
@@ -14,7 +15,7 @@ var borer := true
 var smart := false
 var working := false
 var halt := false
-var hold := false
+var hold := false 
 var sync_queued := true
 var off_sim := false
 
@@ -160,6 +161,72 @@ func setStartingCurrentFuel() -> void:
 func populate_emote_pool() -> void:
 
 	match key:
+		"malig":
+			emote_pool.append(Emote.new("Hiya. I just coalesced out of sticky, oily stuff and cancer juice. How's your day going?"))
+			emote_pool.append(Emote.new("Hi. Oh, wow, there are a lot of me."))
+			emote_pool.append(Emote.new("Whoa, hello! I'm Malignancy... Oh, so are all of you?"))
+			emote_pool.append(Emote.new("OH GOd--oh, hello."))
+			emote_pool.append(Emote.new("Oh, hi! Nice to meet y'all!"))
+			emote_pool.append(Emote.new("Wow! So THAT's what being born is like!"))
+			emote_pool.append(Emote.new("Literally 1 second ago I did not exist. Isn't that weird to think about?"))
+			emote_pool.append(Emote.new("Oop--hi! I'm Malignancy. Nice to meet you."))
+			emote_pool.append(Emote.new("Hello!"))
+			emote_pool.append(Emote.new("Hi!"))
+			emote_pool.append(Emote.new("Hey!"))
+			emote_pool.append(Emote.new("What's up?"))
+			emote_pool.append(Emote.new("Hi, guys!"))
+			emote_pool.append(Emote.new("Hey, I guess."))
+		"tar":
+			emote_pool.append(Emote.new("I'm still working on the perfect mixture."))
+			emote_pool.append(Emote.new("That was good, but I can do better."))
+			emote_pool.append(Emote.new("I lost some important notes. I need to be more careful."))
+			emote_pool.append(Emote.new("I'm glad I'm able to work right now. I'm easily distracted."))
+			emote_pool.append(Emote.new("I only live so long. I need to get this right!"))
+			emote_pool.append(Emote.new("Thank you for your un-ending donations, Growth.", "growth", "I'm not donating it! How are you getting it??"))
+			emote_pool.append(Emote.new("I can't wait for the next chapter of One-Punch Man!"))
+			emote_pool.append(Emote.new("I'd like to see you wiggle, wiggle, for sure."))
+			emote_pool.append(Emote.new("This makes me want to dribble, dribble."))
+			
+		"oil":
+			emote_pool.append(Emote.new("but i'm just a baby"))
+			emote_pool.append(Emote.new("plbdffffffffshh"))
+			emote_pool.append(Emote.new("pow pow pow pow"))
+			emote_pool.append(Emote.new("AHHHHHHHHHHH"))
+			emote_pool.append(Emote.new("*crying*"))
+			emote_pool.append(Emote.new("*pooped a little*"))
+			emote_pool.append(Emote.new("*laughing*"))
+			emote_pool.append(Emote.new("Slurp!!!"))
+			emote_pool.append(Emote.new("Blahshshsjhbloff!"))
+			emote_pool.append(Emote.new("Dada?"))
+			emote_pool.append(Emote.new("Mama?"))
+			emote_pool.append(Emote.new("Succ succ"))
+		"conc":
+			emote_pool.append(Emote.new("Que?"))
+			emote_pool.append(Emote.new("Thank you, Primo!"))
+			emote_pool.append(Emote.new("Quítate, chingada!"))
+			emote_pool.append(Emote.new("Mi casa es su casa, hombre!"))
+			emote_pool.append(Emote.new("Que pasa, jefe?"))
+			emote_pool.append(Emote.new("No hablo Ingles. Can you translate?"))
+			emote_pool.append(Emote.new("What channel is the soccer game on?"))
+			emote_pool.append(Emote.new("Buenas noches, mi amor!"))
+		"jo":
+			emote_pool.append(Emote.new("It took me 12 years to be able to redirect lightning!"))
+			emote_pool.append(Emote.new("My batteries are shock-full!"))
+			emote_pool.append(Emote.new("Anyone's car need a jump-start?"))
+			emote_pool.append(Emote.new("I can offer you parts at a reduced price!"))
+			emote_pool.append(Emote.new("Thanks for the parts again, Coal. Same time, same place?", "coal", "See you next week!"))
+			emote_pool.append(Emote.new("Cars cars cars cars cars cars cars!!!!!!"))
+			emote_pool.append(Emote.new("Anyone need an oil change?", "oil", "Blblblfsh!!"))
+		"growth":
+			emote_pool.append(Emote.new("I think Oil just made a boom-boom.", "oil", "Hahahahaha!!"))
+			emote_pool.append(Emote.new("Oh, your grandma got cancer three times? Must be nice."))
+			emote_pool.append(Emote.new("Does such a thing as a chemotherapy water bed exist?", "tar", "Nope."))
+			emote_pool.append(Emote.new("Call 9-1-1."))
+			emote_pool.append(Emote.new("Send help."))
+			emote_pool.append(Emote.new("The amount of water I need daily would shock anyone.", "jo", "Someone say shock?"))
+			emote_pool.append(Emote.new("I had to go bald, I couldn't take the constant re-grooming."))
+			emote_pool.append(Emote.new("In a way, this is satisfying!"))
+		
 		"iron":
 			emote_pool.append(Emote.new("bread is good,\nbut toast is better!"))
 			emote_pool.append(Emote.new("thanks for working so hard, Stone!", "stone", "i couldn't do it without you, buddy!"))
@@ -216,6 +283,7 @@ func populate_emote_pool() -> void:
 			emote_pool.append(Emote.new("MMUHRRaahhHRcK"))
 			emote_pool.append(Emote.new("please die!"))
 			emote_pool.append(Emote.new("can someone pass me some more shells?", "stone", "no, you creep!"))
+			emote_pool.append(Emote.new("so i literally want everyone to die.", "jo", "How shocking!"))
 		
 		"stone":
 			emote_pool.append(Emote.new("this one has a sweet edge!"))
@@ -267,7 +335,7 @@ func sync_Difficulty():
 		b[x].t.m(diff.getInput())
 	speed.t *= diff.getHaste()
 	crit.t.m(diff.getCrit())
-	crit.t.a(diff.getCritAddition())
+	crit.t.a(diff.getCritAdd())
 	f.t.m(diff.getFuelStorage())
 	fc.t.m(diff.getFuelConsumption())
 
@@ -591,9 +659,11 @@ func fuel_lored_net_loss(gx: LORED) -> Big:
 
 
 func active() -> bool:
-	# return true if the lored is either halted or inactive
-	if not active: return false
-	if halt: return false
+	# return false if the lored is either halted or inactive
+	if not active:
+		return false
+	if halt:
+		return false
 	return true
 
 func witch() -> void:
@@ -606,7 +676,7 @@ func witch() -> void:
 	witch = Big.new(d.t).m(0.01).m(speed.b / speed.t).m(60).d(jobs[0].base_duration)
 	
 	if gv.up["GRIMOIRE"].active():
-		witch.m(log(gv.stats.run[0]))
+		witch.m(log(gv.run1))
 
 
 func w_get_losing() -> float:
@@ -856,31 +926,30 @@ func update_goal(goal: String):
 	manager.gn_item_name.text = goal
 
 
+
 func save() -> String:
 	
 	var data := {}
 	
-	data["active"] = var2str(active)
-	data["times purchased"] = var2str(times_purchased)
-	data["key_lored"] = var2str(key_lored)
-	
-	if not active:
-		return var2str(data)
-	
-	data["level"] = var2str(level)
-	data["fuel"] = var2str(f.f)
-	
-	data["halt"] = var2str(halt)
-	data["hold"] = var2str(hold)
+	for x in saved_vars:
+		if get(x) is Ob.Num:
+			data[x] = get(x).save()
+		else:
+			data[x] = var2str(get(x))
 	
 	return var2str(data)
 
-
-func _load(data: Dictionary) -> void:
+func load(data: Dictionary) -> void:
 	
-	active = str2var(data["active"])
-	times_purchased = str2var(data["times purchased"])
-	key_lored = str2var(data["key_lored"])
+	for x in saved_vars:
+		
+		if not x in data.keys():
+			continue
+		
+		if get(x) is Ob.Num:
+			get(x).load(data[x])
+		else:
+			set(x, str2var(data[x]))
 	
 	if not active:
 		return
@@ -889,8 +958,10 @@ func _load(data: Dictionary) -> void:
 	
 	level = str2var(data["level"])
 	
-	halt = str2var(data["halt"]) if gv.menu.option["on_save_halt"] else false
-	hold = str2var(data["hold"]) if gv.menu.option["on_save_hold"] else false
+	if not gv.option["on_save_halt"]:
+		halt = false
+	if not gv.option["on_save_hold"]:
+		hold = false
 	
 	gv.list.lored["active " + str(stage_key)].append(key)
 	
@@ -903,6 +974,9 @@ func _load(data: Dictionary) -> void:
 		f.m.m(2)
 		increase_cost()
 	
-	f.f = str2var(data["fuel"])
+	f.f = f.t
 	
 	sync()
+
+
+

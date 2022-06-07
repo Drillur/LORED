@@ -4,10 +4,11 @@ extends MarginContainer
 
 var wish: Wish
 
-onready var dialogue   = get_node("m/v/dialogue/h/Label")
+onready var dialogue   = get_node("m/v/dialogue/h/m/Label")
+onready var speaker_name = get_node("m/v/dialogue/h/expression/v/name/m/text")
 onready var rewards    = get_node("m/v/rewards")
 #onready var count      = get_node("m/v/obj/v/m/h/count")
-onready var expression = get_node("m/v/dialogue/h/expression/Sprite")
+onready var expression = get_node("m/v/dialogue/h/expression/v/Panel/Sprite")
 
 
 
@@ -27,6 +28,9 @@ func initiateVisualShit():
 	get_node("m/v/rewards/bg").self_modulate = wish.color
 	get_node("m/v/random/v/line").self_modulate = wish.color
 	expression.modulate = gv.g[wish.giver].color
+	speaker_name.self_modulate = gv.g[wish.giver].color
+	speaker_name.text = gv.g[wish.giver].name
+	#get_node("m/v/dialogue/h/expression/v/name/bg").self_modulate = gv.g[wish.giver].color
 	#current.modulate = wish.color
 	get_node("m/v/random").visible = wish.random and not wish.ready
 	
@@ -94,6 +98,7 @@ func initiateVisualShit():
 						get_node("m/v/rewards/h/v/newcomer/h/h/s4").show()
 				
 				gv.WishReward.RESOURCE:
+					
 					if not r1_used:
 						r1_used = true
 						get_node("m/v/rewards/h/v/r1").show()

@@ -1,12 +1,15 @@
+class_name WishManager
 extends Node
 
 # access with taq
 
-const path1 := "/root/Root/WishAnchor/m/v/"
-onready var gn_random_wishes = get_node(path1 + "random")
-onready var gn_main_wishes = get_node(path1 + "main")
+var saved_vars := ["checkpoint", "wishes", "completed_wishes"]
+
+var gn_random_wishes: VBoxContainer
+var gn_main_wishes: VBoxContainer
 
 var wish: Array
+var wishes := 0
 
 var active_wish_keys := []
 var completed_wishes := []
@@ -27,32 +30,42 @@ var max_random_wishes := 0
 
 var recently_reset := false
 
+var seeking := false
+
+
+
 
 func save() -> String:
 	
 	var data := {}
 	
-	data["wishes"] = var2str(wish.size())
+	for x in saved_vars:
+		if get(x) is Big:
+			data[x] = get(x).save()
+		else:
+			data[x] = var2str(get(x))
 	
-	data["completed_wishes"] = var2str(completed_wishes)
-	data["checkpoint"] = var2str(checkpoint)
-	
-	for w in wish.size():
-		var _key = "wish" + str(w)
-		data[_key] = var2str(wish[w].save())
+	data["wish data"] = {}
+	for x in wishes:
+		data["wish data"][x] = wish[x].save()
 	
 	return var2str(data)
 
-func _load(data_string: String):
+func load(data: Dictionary):
 	
-	var data = str2var(data_string)
+	for x in saved_vars:
+		
+		if not x in data.keys():
+			continue
+		
+		if get(x) is Big:
+			get(x).load(data[x])
+		else:
+			set(x, str2var(data[x]))
 	
-	completed_wishes = str2var(data["completed_wishes"])
-	checkpoint = str2var(data["checkpoint"])
-	
-	for w in str2var(data["wishes"]):
-		var _key = "wish" + str(w)
-		newWish("load", str2var(data[_key]))
+	var wish_count = wishes
+	for x in wish_count:
+		newWish("load", str2var(data["wish data"][x]))
 	
 	# give rewards for completed key wishes
 	for w in key_wish_keys:
@@ -61,6 +74,7 @@ func _load(data_string: String):
 		for r in Wish.new(w).key_rew:
 			r.turnIn()
 
+
 func reset(reset_type: int):
 	
 	if reset_type == -1:
@@ -68,6 +82,7 @@ func reset(reset_type: int):
 		for w in wish:
 			w.die(false)
 		wish.clear()
+		updateWishCount()
 		
 		active_wish_keys.clear()
 		completed_wishes.clear()
@@ -84,6 +99,19 @@ func reset(reset_type: int):
 		seekNewWish()
 
 
+func close():
+	# scene changed. #002
+	wish.clear()
+	active_wish_keys.clear()
+	completed_wishes.clear()
+
+
+func setupGNNodes():
+	# called from Root #001
+	gn_main_wishes = get_node("/root/Root/WishAnchor/m/v/main")
+	gn_random_wishes = get_node("/root/Root/WishAnchor/m/v/random")
+
+
 func increaseProgress(type: int, key: String, amount = 1):
 	for w in wish:
 		w.increaseCount(type, key, amount)
@@ -94,6 +122,7 @@ func newWish(key: String, data: Dictionary = {}):
 	
 	var i = wish.size()
 	wish.append(Wish.new(key, data))
+	updateWishCount()
 	
 	instanceWishVico(wish[i])
 	
@@ -117,7 +146,7 @@ func instanceWishVico(_wish: Wish):
 		gn_random_wishes.add_child(manager)
 		gn_random_wishes.move_child(manager, 0)
 	else:
-		gn_main_wishes.add_child(manager) #note fix
+		gn_main_wishes.add_child(manager)
 		gn_main_wishes.move_child(manager, 0)
 	hideOrDisplayMainWishes()
 
@@ -128,6 +157,7 @@ func wishCompleted(_wish: Wish):
 func wishDied(_wish: Wish):
 	_wish.vico.queue_free()
 	wish.erase(_wish)
+	updateWishCount()
 	active_wish_keys.erase(_wish.key)
 	hideOrDisplayMainWishes()
 	
@@ -168,6 +198,11 @@ func adjustCheckpointBasedOnCompletedQuest(key: String):
 
 func seekNewWish():
 	
+	if seeking:
+		return
+	
+	seeking = true
+	
 	while not recently_reset:
 		
 		var t = Timer.new()
@@ -175,6 +210,10 @@ func seekNewWish():
 		t.start(rand_range(5, 10))
 		yield(t, "timeout")
 		t.queue_free()
+		
+		if gv.active_scene != gv.Scene.ROOT:
+			seeking = false
+			return
 		
 		var selected_wish: String = getSelectedWish()
 		
@@ -186,6 +225,8 @@ func seekNewWish():
 		newWish(selected_wish)
 	
 	recently_reset = false
+	
+	seeking = false
 
 func getSelectedWish() -> String:
 	
@@ -293,9 +334,15 @@ func hoardManager(wish: Wish):
 		if wish.ready:
 			if gv.g[wish.obj.key].hold and not was_already_holding:
 				gv.g[wish.obj.key].manager.hold()
-		
+			
 		var t = Timer.new()
 		add_child(t)
 		t.start(1)
 		yield(t, "timeout")
 		t.queue_free()
+
+
+
+func updateWishCount():
+	wishes = wish.size()
+	
