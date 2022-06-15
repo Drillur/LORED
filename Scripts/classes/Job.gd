@@ -34,7 +34,7 @@ func _init(_index: int, _lored_key: String) -> void:
 	key = _index
 	lored_key = _lored_key
 	
-	if gv.g[lored_key].stage == "2":
+	if gv.g[lored_key].stage in ["2", "3", "4"]:
 		consider_babyhood = true
 	
 	match key:
@@ -100,7 +100,7 @@ func _init(_index: int, _lored_key: String) -> void:
 		"hard":
 			can_text = " can seduce "
 		"liq":
-			can_text = " can melt "
+			can_text = " can stew "
 		"steel":
 			can_text = " can smelt "
 		"sand":
@@ -185,7 +185,6 @@ func start() -> void:
 	gv.g[lored_key].current_job = self
 	
 	if requires_resource:
-		
 		var i = 0
 		for r in required_resource:
 			gv.r[r].s(Big.new(required_resource_amount[i].t).m(output.t))

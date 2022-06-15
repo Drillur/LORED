@@ -456,6 +456,126 @@ custom_styles/hover = SubResource( 4 )
 custom_styles/pressed = SubResource( 5 )
 custom_styles/normal = SubResource( 6 )
 
+[node name="6" type="MarginContainer" parent="top"]
+margin_top = 174.0
+margin_right = 455.0
+margin_bottom = 193.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Panel" type="Panel" parent="top/6"]
+self_modulate = Color( 0.670588, 0.34902, 0.890196, 1 )
+margin_right = 455.0
+margin_bottom = 19.0
+custom_styles/panel = SubResource( 10 )
+
+[node name="h" type="HBoxContainer" parent="top/6"]
+margin_right = 455.0
+margin_bottom = 19.0
+
+[node name="Label" type="Label" parent="top/6/h"]
+margin_right = 53.0
+margin_bottom = 19.0
+custom_colors/font_color = Color( 0.796875, 0.796875, 0.796875, 1 )
+custom_fonts/font = SubResource( 2 )
+text = "(D) S4n"
+
+[node name="count" type="Label" parent="top/6/h"]
+margin_left = 375.0
+margin_right = 435.0
+margin_bottom = 19.0
+size_flags_horizontal = 10
+size_flags_vertical = 2
+custom_colors/font_color = Color( 0.796875, 0.796875, 0.796875, 1 )
+custom_fonts/font = SubResource( 2 )
+text = "103/103"
+
+[node name="Panel" type="Panel" parent="top/6/h"]
+margin_left = 439.0
+margin_top = 1.0
+margin_right = 455.0
+margin_bottom = 17.0
+rect_min_size = Vector2( 16, 16 )
+size_flags_horizontal = 8
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 3 )
+
+[node name="Sprite" type="Sprite" parent="top/6/h/Panel"]
+self_modulate = Color( 1, 0.541176, 0.541176, 1 )
+position = Vector2( 8, 8 )
+rotation = -1.5708
+scale = Vector2( 1.014, 1 )
+texture = ExtResource( 5 )
+
+[node name="Button" type="Button" parent="top/6"]
+margin_right = 455.0
+margin_bottom = 19.0
+mouse_default_cursor_shape = 2
+custom_styles/hover = SubResource( 4 )
+custom_styles/pressed = SubResource( 5 )
+custom_styles/normal = SubResource( 6 )
+
+[node name="7" type="MarginContainer" parent="top"]
+margin_top = 203.0
+margin_right = 455.0
+margin_bottom = 222.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Panel" type="Panel" parent="top/7"]
+self_modulate = Color( 0.670588, 0.34902, 0.890196, 1 )
+margin_right = 455.0
+margin_bottom = 19.0
+custom_styles/panel = SubResource( 10 )
+
+[node name="h" type="HBoxContainer" parent="top/7"]
+margin_right = 455.0
+margin_bottom = 19.0
+
+[node name="Label" type="Label" parent="top/7/h"]
+margin_right = 57.0
+margin_bottom = 19.0
+custom_colors/font_color = Color( 0.796875, 0.796875, 0.796875, 1 )
+custom_fonts/font = SubResource( 2 )
+text = "(F) S4m"
+
+[node name="count" type="Label" parent="top/7/h"]
+margin_left = 375.0
+margin_right = 435.0
+margin_bottom = 19.0
+size_flags_horizontal = 10
+size_flags_vertical = 2
+custom_colors/font_color = Color( 0.796875, 0.796875, 0.796875, 1 )
+custom_fonts/font = SubResource( 2 )
+text = "103/103"
+
+[node name="Panel" type="Panel" parent="top/7/h"]
+margin_left = 439.0
+margin_top = 1.0
+margin_right = 455.0
+margin_bottom = 17.0
+rect_min_size = Vector2( 16, 16 )
+size_flags_horizontal = 8
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 3 )
+
+[node name="Sprite" type="Sprite" parent="top/7/h/Panel"]
+self_modulate = Color( 1, 0.541176, 0.541176, 1 )
+position = Vector2( 8, 8 )
+rotation = -1.5708
+scale = Vector2( 1.014, 1 )
+texture = ExtResource( 5 )
+
+[node name="Button" type="Button" parent="top/7"]
+margin_right = 455.0
+margin_bottom = 19.0
+mouse_default_cursor_shape = 2
+custom_styles/hover = SubResource( 4 )
+custom_styles/pressed = SubResource( 5 )
+custom_styles/normal = SubResource( 6 )
+
 [node name="v" type="VBoxContainer" parent="."]
 visible = false
 margin_left = 10.0
@@ -647,6 +767,30 @@ margin_bottom = 330.0
 size_flags_horizontal = 3
 custom_constants/separation = 10
 
+[node name="6" type="MarginContainer" parent="v/upgrades/v"]
+visible = false
+margin_right = 455.0
+margin_bottom = 330.0
+size_flags_vertical = 3
+
+[node name="v" type="VBoxContainer" parent="v/upgrades/v/6"]
+margin_right = 455.0
+margin_bottom = 330.0
+size_flags_horizontal = 3
+custom_constants/separation = 10
+
+[node name="7" type="MarginContainer" parent="v/upgrades/v"]
+visible = false
+margin_right = 455.0
+margin_bottom = 330.0
+size_flags_vertical = 3
+
+[node name="v" type="VBoxContainer" parent="v/upgrades/v/7"]
+margin_right = 455.0
+margin_bottom = 330.0
+size_flags_horizontal = 3
+custom_constants/separation = 10
+
 [node name="reset" type="MarginContainer" parent="v"]
 margin_top = 344.0
 margin_right = 455.0
@@ -672,6 +816,8 @@ visible = false
 [connection signal="pressed" from="top/3/Button" to="." method="col_time" binds= [ "3" ]]
 [connection signal="pressed" from="top/4/Button" to="." method="col_time" binds= [ "4" ]]
 [connection signal="pressed" from="top/5/Button" to="." method="col_time" binds= [ "5" ]]
+[connection signal="pressed" from="top/6/Button" to="." method="col_time" binds= [ "5" ]]
+[connection signal="pressed" from="top/7/Button" to="." method="col_time" binds= [ "5" ]]
 [connection signal="button_down" from="v/header/h/v/m/Button" to="." method="_on_button_down"]
 [connection signal="pressed" from="v/header/h/v/m/Button" to="." method="go_back"]
 [connection signal="mouse_entered" from="v/reset/reset/button" to="." method="_on_reset_mouse_entered"]

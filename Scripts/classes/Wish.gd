@@ -44,7 +44,7 @@ var tooltip_active := false
 
 class Objective:
 	
-	var saved_vars := ["type", "key", "current_count", "required_count", "complete"]
+	var saved_vars := ["type", "key", "current_count", "required_count", "complete", "icon_key"]
 	
 	var type: int
 	var key: String
@@ -244,6 +244,9 @@ class Reward:
 				gv.emit_signal("wishReward", type, key)
 			gv.WishReward.MAX_RANDOM_WISHES:
 				taq.max_random_wishes += amount.toFloat()
+			gv.WishReward.AUTOMATED:
+				if key == str(gv.WishReward.HALT_AND_HOLD):
+					taq.automatedHaltAndHold = true
 
 
 
@@ -440,14 +443,130 @@ func turnIn():
 
 
 
+func construct_horsey():
+	giver = "humus"
+	help_text = "Neigh!"
+	thank_text = "Whinny."
+	obj = Objective.new(gv.Objective.LORED_UPGRADED, "humus")
+	rew.append(Reward.new(gv.WishReward.RESOURCE, "water", "500"))
+	rew.append(Reward.new(gv.WishReward.RESOURCE, "wood", "500"))
+	rew.append(Reward.new(gv.WishReward.RESOURCE, "liq", "500"))
+func construct_steely():
+	giver = "steel"
+	help_text = "No doubt you'll need lots of [i]me[/i] to progress! Hahaheyyy!"
+	thank_text = "Sick!"
+	obj = Objective.new(gv.Objective.LORED_UPGRADED, "steel")
+	rew.append(Reward.new(gv.WishReward.RESOURCE, "water", "500"))
+	rew.append(Reward.new(gv.WishReward.RESOURCE, "wood", "500"))
+	rew.append(Reward.new(gv.WishReward.RESOURCE, "liq", "500"))
+func construct_joy3():
+	giver = "iron"
+	help_text = "Our new friends are so cool! I'm glad we can all come together and have fun. Let's get some more joy!\n\nWhat's automated halt and hold? I don't know. Is there a time where you have to manually click on halt or hold?"
+	thank_text = "Yay! Automatic halty hold! Whatever that is!"
+	obj = Objective.new(gv.Objective.RESOURCES_PRODUCED, "joy", "10")
+	rew.append(Reward.new(gv.WishReward.RESOURCE, "water", "500"))
+	rew.append(Reward.new(gv.WishReward.RESOURCE, "wood", "500"))
+	rew.append(Reward.new(gv.WishReward.RESOURCE, "liq", "500"))
+	rew.append(Reward.new(gv.WishReward.AUTOMATED, str(gv.WishReward.HALT_AND_HOLD)))
+	key_rew.append(Reward.new(gv.WishReward.AUTOMATED, str(gv.WishReward.HALT_AND_HOLD)))
 
-func construct_upgrade_name():
-	giver = "malig"
-	help_text = "Hey, listen, I got a joke for ya. Come here, it's funny. You'll laugh. No, I promise. Alright. What do you get when you don't stop spending all my hard-earned Malignancy on bullshit-ass Upgrades?\n\nTwo broken legs!\n\nWhat, don't you get it? Hey, don't worry. It's a slow-burn type of punchline. You'll get it later."
-	thank_text = "[i]Upgrade_name[/i], huh? There's a solid Upgrade. I'm proud of you. Hey, what--are you still trying to figure out that joke? Forget about it."
+func construct_treey():
+	giver = "tree"
+	help_text = "Woohoo! There's a ton of friends here, now!! That's CrAzy!!!\n\nSoil's here, too!! My favorite thing in the [i]whole void!![/i] I need Soil's soil to get [i]stronger!!!![/i]\n\nAlso, listen to this. It's crazy. Those four are in a loop. They all require each other to work. I'm talking about Steel, Hardwood, Wire, and Glass. Each of the four have their own branch. Hardwood is the worst. She has a loop of her own, and I'm not talking about her earrings. More like she's loopy! Ha!! She's got a loop in her own loop. It's super confusing!!! [i]It's crazy!!!"
+	thank_text = "[i]YEAH, LET'S GOOOOOO! SOIL!!!"
+	obj = Objective.new(gv.Objective.LORED_UPGRADED, "tree")
+	rew.append(Reward.new(gv.WishReward.RESOURCE, "steel", "50"))
+	rew.append(Reward.new(gv.WishReward.RESOURCE, "hard", "50"))
+	rew.append(Reward.new(gv.WishReward.RESOURCE, "wire", "50"))
+	rew.append(Reward.new(gv.WishReward.RESOURCE, "glass", "50"))
+	rew.append(Reward.new(gv.WishReward.NEW_LORED, "tum"))
+	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, "tum"))
+	rew.append(Reward.new(gv.WishReward.TAB, str(gv.Tab.EXTRA_NORMAL)))
+	key_rew.append(Reward.new(gv.WishReward.TAB, str(gv.Tab.EXTRA_NORMAL)))
+
+func construct_axy():
+	giver = "axe"
+	help_text = "I require 0.8 Hardwood and 0.25 Steel per cycle. Satisy these requirements and I will assemble 1.0 axes. If you require further assistance, you can find help in the Help section of your Alaxa app."
+	thank_text = "Job complete."
+	obj = Objective.new(gv.Objective.RESOURCES_PRODUCED, "hard", "20")
+	rew.append(Reward.new(gv.WishReward.RESOURCE, "wood", "150"))
+	rew.append(Reward.new(gv.WishReward.NEW_LORED, "humus"))
+	rew.append(Reward.new(gv.WishReward.NEW_LORED, "soil"))
+	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, "humus"))
+	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, "soil"))
+func construct_hardy():
+	giver = "hard"
+	help_text = "Hiya, stud. Care to help a girl out with some wood? I'll make it hard for you."
+	thank_text = "Call me later."
+	obj = Objective.new(gv.Objective.RESOURCES_PRODUCED, "wood", "300")
+	rew.append(Reward.new(gv.WishReward.RESOURCE, "axe", "10"))
+	rew.append(Reward.new(gv.WishReward.RESOURCE, "steel", "50"))
+	rew.append(Reward.new(gv.WishReward.NEW_LORED, "glass"))
+	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, "glass"))
+func construct_woody():
+	giver = "wood"
+	help_text = "Hey! I heard you were strong! Let's fight!\n\nJust kiddin. Hey, can you help me get some axes? I need them to make wood."
+	thank_text = "Wow, that was fast! Not as fast as me, but pretty good!"
+	obj = Objective.new(gv.Objective.RESOURCES_PRODUCED, "axe", "20")
+	rew.append(Reward.new(gv.WishReward.RESOURCE, "hard", "10"))
+	rew.append(Reward.new(gv.WishReward.RESOURCE, "sand", "250"))
+	rew.append(Reward.new(gv.WishReward.NEW_LORED, "sand"))
+	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, "sand"))
+
+func construct_gramma():
+	giver = "wire"
+	help_text = "Oooh! Goodness gracious! Look at you!\n\nNow stop causing a ruckus you little heathen and come help me get some wire."
+	thank_text = "Children are so kind."
+	obj = Objective.new(gv.Objective.RESOURCES_PRODUCED, "wire", "25")
+	rew.append(Reward.new(gv.WishReward.RESOURCE, "liq", "100"))
+	rew.append(Reward.new(gv.WishReward.RESOURCE, "axe", "5"))
+	rew.append(Reward.new(gv.WishReward.NEW_LORED, "axe"))
+	rew.append(Reward.new(gv.WishReward.NEW_LORED, "wood"))
+	rew.append(Reward.new(gv.WishReward.NEW_LORED, "hard"))
+	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, "axe"))
+	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, "wood"))
+	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, "hard"))
+
+func construct_liqy():
+	giver = "liq"
+	help_text = "Some freaking little freaker keeps throwing iron on my [i]head!!![/i]\n\nSo anyways, I'm making soup."
+	thank_text = "Soup."
+	obj = Objective.new(gv.Objective.RESOURCES_PRODUCED, "steel", "3")
+	rew.append(Reward.new(gv.WishReward.RESOURCE, "wire", "20"))
+	rew.append(Reward.new(gv.WishReward.RESOURCE, "glass", "30"))
+	rew.append(Reward.new(gv.WishReward.NEW_LORED, "wire"))
+	rew.append(Reward.new(gv.WishReward.NEW_LORED, "draw"))
+	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, "wire"))
+	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, "draw"))
+
+func construct_waterbuddy():
+	giver = "water"
+	help_text = "Okay, lemme show you around my pool. Check it out!\n\nAlso, in case you were curious, I can help you figure out the relationship Seeds and Trees and I have. It's pretty simple: Trees grows seeds to trees using seeds. I mean trees. Or--oh, wait, did I say it right the first time?\n\nHuh? Anyway, I don't know. I'm still just so stoked to have you here!!"
+	thank_text = "You did it! Man, I can tell that we are gonna be friends."
+	obj = Objective.new(gv.Objective.LORED_UPGRADED, "seed")
+	rew.append(Reward.new(gv.WishReward.RESOURCE, "hard", "95"))
+	rew.append(Reward.new(gv.WishReward.RESOURCE, "steel", "25"))
+	rew.append(Reward.new(gv.WishReward.NEW_LORED, "steel"))
+	rew.append(Reward.new(gv.WishReward.NEW_LORED, "liq"))
+	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, "steel"))
+	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, "liq"))
+
+func construct_a_new_leaf():
+	giver = "water"
+	help_text = "Whoa!\n\nSeeds, Trees, look! There's others out there! :0 There are so many of them! Whoooooooooooa! Whaaaaat?! !!!!"
+	thank_text = "It's really great to meet you!! I'm Water.\n\nHey, come here! Let me show you my pool!"
 	obj = Objective.new(gv.Objective.UPGRADE_PURCHASED, "upgrade_name")
-	rew.append(Reward.new(gv.WishReward.RESOURCE, "iron", "1e6"))
-	rew.append(Reward.new(gv.WishReward.RESOURCE, "cop", "1e6"))
+	rew.append(Reward.new(gv.WishReward.RESOURCE, "seed", "2"))
+	rew.append(Reward.new(gv.WishReward.RESOURCE, "soil", "25"))
+	rew.append(Reward.new(gv.WishReward.RESOURCE, "wood", "80"))
+	rew.append(Reward.new(gv.WishReward.TAB, str(gv.Tab.S2)))
+	rew.append(Reward.new(gv.WishReward.NEW_LORED, "water"))
+	rew.append(Reward.new(gv.WishReward.NEW_LORED, "seed"))
+	rew.append(Reward.new(gv.WishReward.NEW_LORED, "tree"))
+	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, "water"))
+	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, "seed"))
+	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, "tree"))
+	key_rew.append(Reward.new(gv.WishReward.TAB, str(gv.Tab.S2)))
 
 func construct_joy2():
 	giver = "iron"
@@ -803,6 +922,9 @@ func generateRandomRewards(reward_mod := 0.0):
 	for i in reward_size:
 		
 		var resource = randomResource()
+		if not gv.everyStage2LOREDunlocked():
+			while resource in gv.list.lored[gv.Tab.S2]:
+				resource = randomResource()
 		var amount: Big
 		
 		if gv.isStage1Or2LORED(resource):

@@ -317,6 +317,92 @@ custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 6 )
 text = "Malignancy"
 
+[node name="r3" type="MarginContainer" parent="m/v/rewards/h/v"]
+visible = false
+margin_top = 44.0
+margin_right = 126.0
+margin_bottom = 66.0
+custom_constants/margin_right = 5
+custom_constants/margin_top = 3
+custom_constants/margin_left = 5
+custom_constants/margin_bottom = 3
+
+[node name="h" type="HBoxContainer" parent="m/v/rewards/h/v/r3"]
+margin_left = 5.0
+margin_top = 3.0
+margin_right = 121.0
+margin_bottom = 19.0
+
+[node name="amount" type="Label" parent="m/v/rewards/h/v/r3/h"]
+margin_right = 28.0
+margin_bottom = 15.0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 6 )
+text = "+900"
+
+[node name="icon" type="Panel" parent="m/v/rewards/h/v/r3/h"]
+margin_left = 32.0
+margin_right = 48.0
+margin_bottom = 16.0
+rect_min_size = Vector2( 16, 16 )
+custom_styles/panel = SubResource( 7 )
+
+[node name="Sprite" type="Sprite" parent="m/v/rewards/h/v/r3/h/icon"]
+position = Vector2( 8, 8 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 5 )
+
+[node name="resource" type="Label" parent="m/v/rewards/h/v/r3/h"]
+margin_left = 52.0
+margin_right = 116.0
+margin_bottom = 15.0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 6 )
+text = "Malignancy"
+
+[node name="r4" type="MarginContainer" parent="m/v/rewards/h/v"]
+visible = false
+margin_top = 44.0
+margin_right = 126.0
+margin_bottom = 66.0
+custom_constants/margin_right = 5
+custom_constants/margin_top = 3
+custom_constants/margin_left = 5
+custom_constants/margin_bottom = 3
+
+[node name="h" type="HBoxContainer" parent="m/v/rewards/h/v/r4"]
+margin_left = 5.0
+margin_top = 3.0
+margin_right = 121.0
+margin_bottom = 19.0
+
+[node name="amount" type="Label" parent="m/v/rewards/h/v/r4/h"]
+margin_right = 28.0
+margin_bottom = 15.0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 6 )
+text = "+900"
+
+[node name="icon" type="Panel" parent="m/v/rewards/h/v/r4/h"]
+margin_left = 32.0
+margin_right = 48.0
+margin_bottom = 16.0
+rect_min_size = Vector2( 16, 16 )
+custom_styles/panel = SubResource( 7 )
+
+[node name="Sprite" type="Sprite" parent="m/v/rewards/h/v/r4/h/icon"]
+position = Vector2( 8, 8 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 5 )
+
+[node name="resource" type="Label" parent="m/v/rewards/h/v/r4/h"]
+margin_left = 52.0
+margin_right = 116.0
+margin_bottom = 15.0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 6 )
+text = "Malignancy"
+
 [node name="newcomer" type="MarginContainer" parent="m/v/rewards/h/v"]
 visible = false
 margin_right = 96.0
@@ -467,6 +553,42 @@ custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 6 )
 text = "(Current: 0)"
 
+[node name="automated halt&hold" type="MarginContainer" parent="m/v/rewards/h/v"]
+visible = false
+margin_right = 205.0
+margin_bottom = 21.0
+custom_constants/margin_right = 5
+custom_constants/margin_top = 3
+custom_constants/margin_left = 5
+custom_constants/margin_bottom = 3
+
+[node name="flair" type="Label" parent="m/v/rewards/h/v/automated halt&hold"]
+margin_left = 5.0
+margin_top = 3.0
+margin_right = 200.0
+margin_bottom = 18.0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 6 )
+text = "Automated halt and hold for Wishes"
+
+[node name="automated turnin" type="MarginContainer" parent="m/v/rewards/h/v"]
+visible = false
+margin_right = 139.0
+margin_bottom = 21.0
+custom_constants/margin_right = 5
+custom_constants/margin_top = 3
+custom_constants/margin_left = 5
+custom_constants/margin_bottom = 3
+
+[node name="flair" type="Label" parent="m/v/rewards/h/v/automated turnin"]
+margin_left = 5.0
+margin_top = 3.0
+margin_right = 134.0
+margin_bottom = 18.0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 6 )
+text = "Automated Wish turn-in"
+
 [node name="stage tab" type="MarginContainer" parent="m/v/rewards/h/v"]
 visible = false
 margin_right = 126.0
@@ -554,22 +676,22 @@ align = 1
 [node name="h" type="HBoxContainer" parent="m/v/random/v/m/v"]
 visible = false
 margin_top = 17.0
-margin_right = 307.0
+margin_right = 168.0
 margin_bottom = 49.0
 alignment = 1
 
 [node name="amount" type="Label" parent="m/v/random/v/m/v/h"]
-margin_left = 114.0
+margin_left = 44.0
 margin_top = 8.0
-margin_right = 128.0
+margin_right = 58.0
 margin_bottom = 23.0
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 6 )
 text = "+1"
 
 [node name="icon" type="Panel" parent="m/v/random/v/m/v/h"]
-margin_left = 132.0
-margin_right = 164.0
+margin_left = 62.0
+margin_right = 94.0
 margin_bottom = 32.0
 rect_min_size = Vector2( 32, 32 )
 size_flags_horizontal = 4
@@ -581,9 +703,9 @@ texture = ExtResource( 1 )
 centered = false
 
 [node name="resource" type="Label" parent="m/v/random/v/m/v/h"]
-margin_left = 168.0
+margin_left = 98.0
 margin_top = 8.0
-margin_right = 193.0
+margin_right = 123.0
 margin_bottom = 23.0
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 6 )

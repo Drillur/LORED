@@ -220,22 +220,20 @@ custom_styles/panel = SubResource( 1 )
 
 [node name="sc" type="ScrollContainer" parent="."]
 margin_top = 264.0
-margin_right = 490.0
+margin_right = 478.0
 margin_bottom = 564.0
 rect_min_size = Vector2( 404, 300 )
 size_flags_horizontal = 0
 size_flags_vertical = 4
 custom_styles/bg = ExtResource( 14 )
 scroll_horizontal_enabled = false
-scroll_vertical = 100
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="m" type="MarginContainer" parent="sc"]
-margin_top = -268.0
 margin_right = 478.0
-margin_bottom = 300.0
+margin_bottom = 286.0
 size_flags_horizontal = 0
 custom_constants/margin_right = 2
 custom_constants/margin_top = 2
@@ -250,14 +248,14 @@ self_modulate = Color( 1, 0, 0.380392, 1 )
 margin_left = 2.0
 margin_top = 2.0
 margin_right = 476.0
-margin_bottom = 566.0
+margin_bottom = 284.0
 custom_styles/panel = SubResource( 2 )
 
 [node name="v" type="VBoxContainer" parent="sc/m"]
 margin_left = 2.0
 margin_top = 2.0
 margin_right = 476.0
-margin_bottom = 566.0
+margin_bottom = 284.0
 custom_constants/separation = 0
 
 [node name="top" type="MarginContainer" parent="sc/m/v"]
@@ -2262,7 +2260,7 @@ valign = 1
 visible = false
 margin_top = 56.0
 margin_right = 474.0
-margin_bottom = 360.0
+margin_bottom = 267.0
 custom_constants/margin_right = 10
 custom_constants/margin_top = 10
 custom_constants/margin_left = 10
@@ -2273,14 +2271,14 @@ self_modulate = Color( 0.380392, 0.6, 0.270588, 0.25098 )
 margin_left = 10.0
 margin_top = 10.0
 margin_right = 464.0
-margin_bottom = 294.0
+margin_bottom = 201.0
 custom_styles/panel = SubResource( 12 )
 
 [node name="v" type="VBoxContainer" parent="sc/m/v/save"]
 margin_left = 10.0
 margin_top = 10.0
 margin_right = 464.0
-margin_bottom = 294.0
+margin_bottom = 201.0
 custom_constants/separation = 10
 
 [node name="autosave" type="MarginContainer" parent="sc/m/v/save/v"]
@@ -2571,7 +2569,7 @@ __meta__ = {
 visible = false
 margin_top = 155.0
 margin_right = 454.0
-margin_bottom = 238.0
+margin_bottom = 256.0
 custom_constants/separation = 0
 
 [node name="h" type="HBoxContainer" parent="sc/m/v/save/v/hint html"]
@@ -2602,13 +2600,13 @@ autowrap = true
 [node name="h2" type="HBoxContainer" parent="sc/m/v/save/v/hint html"]
 margin_top = 32.0
 margin_right = 454.0
-margin_bottom = 83.0
+margin_bottom = 101.0
 custom_constants/separation = 0
 
 [node name="indent" type="Panel" parent="sc/m/v/save/v/hint html/h2"]
-margin_top = 22.0
+margin_top = 31.0
 margin_right = 12.0
-margin_bottom = 28.0
+margin_bottom = 37.0
 rect_min_size = Vector2( 12, 6 )
 size_flags_horizontal = 4
 size_flags_vertical = 4
@@ -2617,9 +2615,9 @@ custom_styles/panel = SubResource( 13 )
 [node name="dot" type="Panel" parent="sc/m/v/save/v/hint html/h2"]
 self_modulate = Color( 0.384314, 0.603922, 0.270588, 1 )
 margin_left = 12.0
-margin_top = 22.0
+margin_top = 31.0
 margin_right = 18.0
-margin_bottom = 28.0
+margin_bottom = 37.0
 rect_min_size = Vector2( 6, 6 )
 size_flags_horizontal = 4
 size_flags_vertical = 4
@@ -2627,9 +2625,9 @@ custom_styles/panel = SubResource( 16 )
 
 [node name="indent2" type="Panel" parent="sc/m/v/save/v/hint html/h2"]
 margin_left = 18.0
-margin_top = 22.0
+margin_top = 31.0
 margin_right = 30.0
-margin_bottom = 28.0
+margin_bottom = 37.0
 rect_min_size = Vector2( 12, 6 )
 size_flags_horizontal = 4
 size_flags_vertical = 4
@@ -2638,99 +2636,19 @@ custom_styles/panel = SubResource( 13 )
 [node name="label" type="Label" parent="sc/m/v/save/v/hint html/h2"]
 margin_left = 30.0
 margin_right = 454.0
-margin_bottom = 51.0
+margin_bottom = 69.0
 rect_min_size = Vector2( 0, 32 )
 size_flags_horizontal = 3
 custom_fonts/font = SubResource( 20 )
-text = "After clicking Export, open the browser's console (press F12 and switch to the Console tab, or press Ctrl-Shift-J or Ctrl-Shift-I). Your save code is there, but not all of it; click Expand to view the entire string (it's really big)."
-valign = 1
-autowrap = true
-
-[node name="hint import" type="VBoxContainer" parent="sc/m/v/save/v"]
-margin_top = 155.0
-margin_right = 454.0
-margin_bottom = 238.0
-custom_constants/separation = 0
-
-[node name="h" type="HBoxContainer" parent="sc/m/v/save/v/hint import"]
-margin_right = 454.0
-margin_bottom = 32.0
-custom_constants/separation = 0
-
-[node name="indent" type="Panel" parent="sc/m/v/save/v/hint import/h"]
-margin_top = 13.0
-margin_right = 10.0
-margin_bottom = 19.0
-rect_min_size = Vector2( 10, 6 )
-size_flags_horizontal = 4
-size_flags_vertical = 4
-custom_styles/panel = SubResource( 13 )
-
-[node name="label" type="Label" parent="sc/m/v/save/v/hint import/h"]
-margin_left = 10.0
-margin_right = 454.0
-margin_bottom = 32.0
-rect_min_size = Vector2( 0, 32 )
-size_flags_horizontal = 3
-custom_fonts/font = SubResource( 29 )
-text = "How to import your save"
-valign = 1
-autowrap = true
-
-[node name="h2" type="HBoxContainer" parent="sc/m/v/save/v/hint import"]
-margin_top = 32.0
-margin_right = 454.0
-margin_bottom = 83.0
-custom_constants/separation = 0
-
-[node name="indent" type="Panel" parent="sc/m/v/save/v/hint import/h2"]
-margin_top = 22.0
-margin_right = 12.0
-margin_bottom = 28.0
-rect_min_size = Vector2( 12, 6 )
-size_flags_horizontal = 4
-size_flags_vertical = 4
-custom_styles/panel = SubResource( 13 )
-
-[node name="dot" type="Panel" parent="sc/m/v/save/v/hint import/h2"]
-self_modulate = Color( 0.384314, 0.603922, 0.270588, 1 )
-margin_left = 12.0
-margin_top = 22.0
-margin_right = 18.0
-margin_bottom = 28.0
-rect_min_size = Vector2( 6, 6 )
-size_flags_horizontal = 4
-size_flags_vertical = 4
-custom_styles/panel = SubResource( 16 )
-
-[node name="indent2" type="Panel" parent="sc/m/v/save/v/hint import/h2"]
-margin_left = 18.0
-margin_top = 22.0
-margin_right = 30.0
-margin_bottom = 28.0
-rect_min_size = Vector2( 12, 6 )
-size_flags_horizontal = 4
-size_flags_vertical = 4
-custom_styles/panel = SubResource( 13 )
-
-[node name="label" type="Label" parent="sc/m/v/save/v/hint import/h2"]
-margin_left = 30.0
-margin_right = 454.0
-margin_bottom = 51.0
-rect_min_size = Vector2( 0, 32 )
-size_flags_horizontal = 3
-custom_fonts/font = SubResource( 20 )
-text = "Paste save text into a text document called \"save.lored\".
-save.lored must be located in the correct folder:
-%AppData%\\Godot\\app_userdata\\LORED"
+text = "After clicking Export, open the browser's console to find your save. To open the console, you can either press Ctrl-Shift-J or Ctrl-Shift-I, or press F12 and navigate to the console tab. Your save code is there, but not all of it; click Expand to view the entire string (it's really big)."
 valign = 1
 autowrap = true
 
 [node name="hard reset" type="MarginContainer" parent="sc/m/v/save/v"]
-margin_left = 175.0
-margin_top = 248.0
-margin_right = 279.0
-margin_bottom = 284.0
+margin_left = 172.0
+margin_top = 155.0
+margin_right = 282.0
+margin_bottom = 191.0
 mouse_filter = 2
 size_flags_horizontal = 4
 custom_constants/margin_right = 2
@@ -2745,7 +2663,7 @@ __meta__ = {
 self_modulate = Color( 1, 0, 0, 1 )
 margin_left = 2.0
 margin_top = 2.0
-margin_right = 102.0
+margin_right = 108.0
 margin_bottom = 34.0
 rect_min_size = Vector2( 60, 32 )
 focus_mode = 0
@@ -2762,7 +2680,7 @@ __meta__ = {
 [node name="m" type="MarginContainer" parent="sc/m/v/save/v/hard reset"]
 margin_left = 2.0
 margin_top = 2.0
-margin_right = 102.0
+margin_right = 108.0
 margin_bottom = 34.0
 mouse_filter = 2
 custom_constants/margin_right = 15
@@ -2776,18 +2694,17 @@ __meta__ = {
 [node name="text" type="Label" parent="sc/m/v/save/v/hard reset/m"]
 margin_left = 15.0
 margin_top = 7.0
-margin_right = 85.0
+margin_right = 91.0
 margin_bottom = 24.0
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 10 )
-text = "Hard Reset"
+text = "Delete Save"
 align = 1
 
 [node name="hard reset" type="MarginContainer" parent="sc/m/v"]
-visible = false
-margin_top = 378.0
+margin_top = 56.0
 margin_right = 474.0
-margin_bottom = 604.0
+margin_bottom = 282.0
 custom_constants/margin_right = 10
 custom_constants/margin_top = 10
 custom_constants/margin_left = 10
@@ -2881,7 +2798,7 @@ margin_bottom = 32.0
 rect_min_size = Vector2( 0, 32 )
 size_flags_horizontal = 3
 custom_fonts/font = SubResource( 20 )
-text = "This will delete all save slots, including slot 0 (the main slot)!"
+text = "This will delete this save file and return you to the main menu."
 valign = 1
 autowrap = true
 
@@ -3101,6 +3018,7 @@ __meta__ = {
 }
 
 [node name="tutorial" type="MarginContainer" parent="sc/m/v"]
+visible = false
 margin_top = 56.0
 margin_right = 474.0
 margin_bottom = 564.0

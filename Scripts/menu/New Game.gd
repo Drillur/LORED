@@ -98,7 +98,7 @@ func resetShit():
 	
 	_on_confirm_difficulty_pressed()
 	
-	_filename.text = getRandomSaveFileName()
+	_filename.text = SaveManager.getRandomSaveFileName()
 	
 	var randomSaveFileColor = Color(rand_range(0, 1), rand_range(0, 1), rand_range(0, 1))
 	
@@ -274,47 +274,17 @@ func _on_edit_difficulty_pressed() -> void:
 
 
 
-func getRandomSaveFileName() -> String:
-	
-	var filenamePool = [
-		"PaperPilot",
-		"Ohtil",
-		"Stangmouse",
-		"CrimsonFrost",
-		"CryptoGrounds",
-		"Dimelsondr",
-		"Raptors",
-		"Merp",
-		"SteelDusk",
-		"Water",
-		"Flamemaster",
-		"VoidCloud",
-		"Cullect",
-		"Peekabluu",
-	]
-	
-	var roll : int = randi() % filenamePool.size()
-	var baseFilename = filenamePool[roll]
-	
-	baseFilename = SaveManager.getUniqueFilename(baseFilename)
-	
-	return baseFilename + ".lored"
 
 
 
 
 func _on_begin_game_pressed() -> void:
 	
-	var filename = _filename.text
-	filename = SaveManager.getUniqueFilename(filename)
-	if SaveManager.fileExists(filename):
-		return
-		
-	SaveManager.save(filename)
+	SaveManager.createSaveFile(_filename.text)
 	
 	var saveFileColor = get_node("sc/m/v/v/save info/m/v/color/m/ColorRect").self_modulate
 	
-	SaveManager.loadGame(filename, saveFileColor)
+	SaveManager.loadGame(_filename.text, saveFileColor)
 
 
 

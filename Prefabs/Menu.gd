@@ -61,7 +61,6 @@ onready var save = get_node("save")
 onready var save_bar = get_node("sc/m/v/save/v/autosave/bar/f")
 onready var save_bar_t = get_node("sc/m/v/save/v/autosave/bar")
 
-onready var hint_import = get_node("sc/m/v/save/v/hint import")
 onready var hint_html = get_node("sc/m/v/save/v/hint html")
 
 onready var patch = get_node("sc/m/v/patch/v")
@@ -96,7 +95,6 @@ func _ready():
 	save_bar.rect_size.x = 0
 	
 	hint_html.visible = true if gv.PLATFORM == "browser" else false
-	hint_import.visible = true if gv.PLATFORM == "pc" else false
 	
 	hide()
 
@@ -303,15 +301,9 @@ func _on_export_pressed() -> void:
 	else:
 		rt.e_save("print to console")
 func _on_delete_save_pressed() -> void:
-	
-	rt.reset(-1)
-	rt.b_tabkey(KEY_ESCAPE)
-	rt.b_tabkey(KEY_1)
-	
-	var save_file = File.new()
-	if save_file.file_exists(rt.SAVE[gv.active_slot]):
-		var dir = Directory.new()
-		dir.remove(rt.SAVE[gv.active_slot])
+	SaveManager.deleteSave(SaveManager.save_path)
+	rt.exitToMainMenu()
+
 func _on_stats_run_pressed() -> void:
 	
 	if stats_run.visible:

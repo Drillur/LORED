@@ -109,6 +109,15 @@ func _on_TextEdit_text_changed() -> void:
 			mainMenu.get_node("sc/h/continue/m/v/v/last played").get_child(1).setFilename(file_name)
 		mainMenu.refreshAllSaves()
 
+func _on_edit_color_pressed() -> void:
+	gv.emit_signal("edit_save_color", self)
+
+func _on_dupe_pressed() -> void:
+	
+	SaveManager.duplicateSave(getSa)
+	mainMenu.refreshAllSaves()
+	mainMenu.setupMostRecentSave()
+
 func hideAndCleanTextEdit():
 	text_edit.text = text_edit.text.replace("\n", "")
 	text_edit.hide()
@@ -142,8 +151,6 @@ func saveColor():
 	file.close()
 
 
-func _on_edit_color_pressed() -> void:
-	gv.emit_signal("edit_save_color", self)
 
 
 func setMostRecent():
@@ -191,3 +198,5 @@ func _on_delete_pressed() -> void:
 func setFilename(_filename: String):
 	file_name = _filename
 	gn_file_name.text = file_name
+
+

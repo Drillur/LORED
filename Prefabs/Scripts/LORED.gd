@@ -622,7 +622,7 @@ func softlock_check():
 	while true:
 		
 		softlock_wood_cycle()
-		softlock_no_seeds()
+		#softlock_no_seeds()
 		softlock_no_steel_for_liq()
 		softlock_not_enough_wire()
 		
@@ -668,21 +668,23 @@ func softlock_wood_cycle():
 	for x in axe_wood_hard:
 		gv.r[x].a(gv.g[x].d.t)
 
-func softlock_no_seeds():
-	
-	if key != "tree":
-		return
-	
-	if gv.g["seed"].active:
-		return
-	if gv.r["tree"].greater_equal(2):
-		return
-	if gv.r["seed"].greater_equal(Big.new(gv.g["tree"].d.t).m(gv.g["tree"].b["seed"].t)):
-		return
-	
-	print_debug("You didn't have enough Seeds to produce any Trees to be able to afford the Seed LORED, so you've been given free Trees.")
-	
-	gv.r["tree"].a(2)
+#func softlock_no_seeds():
+#
+#	if key != "tree":
+#		return
+#
+#	if gv.g["seed"].active:
+#		return
+#	if gv.r["tree"].greater_equal(2):
+#		return
+#	if lored.working:
+#		return
+#	if gv.r["seed"].greater_equal(Big.new(gv.g["tree"].d.t).m(gv.g["tree"].b["seed"].t)):
+#		return
+#
+#	print_debug("You didn't have enough seeds to produce any trees to be able to afford Seeds, so you've been given free trees.")
+#
+#	gv.r["tree"].a(2)
 
 func softlock_no_steel_for_liq():
 	
@@ -1040,6 +1042,7 @@ func kill_emote():
 	
 
 #rewrite
+# - it seems that this used to ensure that The Heart of Things quest was working correctly. it may be safe to delete this, who knows
 #func b_ubu_s2n_check() -> bool:
 #
 #	if not gv.Quest.THE_HEART_OF_THINGS in taq.completed_quests:

@@ -1,11 +1,12 @@
 extends ColorRect
 
 
+
 func getSaveColor() -> Color:
-	return self_modulate
-func setSaveColor(color: Color):
-	self_modulate = color
+	return color
+func setSaveColor(_color: Color):
+	color = _color
 
 
 func saveColor():
-	SaveManager.save_file_color = self_modulate
+	SaveManager.save_file_color = color

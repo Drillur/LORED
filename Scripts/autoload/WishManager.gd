@@ -22,15 +22,24 @@ var key_wish_keys := [
 	"sand",
 	"malignancy",
 	"joy2",
+	"a_new_leaf",
+	"waterbuddy",
+	"liqy",
+	"gramma",
+	"woody",
+	"hardy",
+	"axy",
+	"treey",
+	"joy3",
 ]
 
 var checkpoint := 0 # used for quicker code in getSelectedWish()
 var random_wishes := 0
 var max_random_wishes := 0
 
-var recently_reset := false
-
 var seeking := false
+var recently_reset := false
+var automatedHaltAndHold := false # set in Wish.reward
 
 
 
@@ -170,8 +179,22 @@ func hideOrDisplayMainWishes():
 
 func adjustCheckpointBasedOnCompletedQuest(key: String):
 	match key:
-		"joy2", "upgrade_name":
-			if "joy2" in completed_wishes and "upgrade_name" in completed_wishes:
+		"joy3", "steely", "horsey":
+			if "joy3" in completed_wishes and "steely" in completed_wishes and "horsey" in completed_wishes:
+				checkpoint = 17
+		"treey":
+			checkpoint = 16
+		"woody", "hardy", "axy":
+			if "woody" in completed_wishes and "hardy" in completed_wishes and "axy" in completed_wishes:
+				checkpoint = 15
+		"gramma":
+			checkpoint = 14
+		"liqy":
+			checkpoint = 13
+		"waterbuddy":
+			checkpoint = 12
+		"joy2", "a_new_leaf":
+			if "joy2" in completed_wishes and "a_new_leaf" in completed_wishes:
 				checkpoint = 11
 		"soccer_dude":
 			checkpoint = 10
@@ -236,9 +259,25 @@ func getSelectedWish() -> String:
 	var try := []
 	
 	match checkpoint:
+		16:
+			try.append("joy3")
+			try.append("steely")
+			try.append("horsey")
+		15:
+			try.append("treey")
+		14:
+			try.append("woody")
+			try.append("hardy")
+			try.append("axy")
+		13:
+			try.append("gramma")
+		12:
+			try.append("liqy")
+		11:
+			try.append("waterbuddy")
 		10:
 			try.append("joy2")
-			try.append("upgrade_name")
+			try.append("a_new_leaf")
 		9:
 			try.append("soccer_dude")
 		8:
@@ -267,6 +306,7 @@ func getSelectedWish() -> String:
 			checkpoint = 1
 			return "r"
 	
+	#note THIS CANNOT BE COMMENTED OUT. if it's not, erase this comment i guess
 	if gv.list.lored["unlocked and inactive"].size() > 0:
 		return "r"
 	
@@ -303,7 +343,13 @@ func breakManager(wish: Wish):
 	
 	var was_already_halted: bool = gv.g[wish.obj.key].halt
 	
+	if automatedHaltAndHold:
+		gv.g[wish.obj.key].manager.halt(true)
+	
 	while not wish.ready:
+		
+		if gv.active_scene == gv.Scene.MAIN_MENU:
+			return
 		
 		var lored_key = wish.obj.key
 		
@@ -324,7 +370,13 @@ func hoardManager(wish: Wish):
 	
 	var was_already_holding: bool = gv.g[wish.obj.key].hold
 	
+	if automatedHaltAndHold:
+		gv.g[wish.obj.key].manager.hold(true)
+	
 	while not wish.ready:
+		
+		if gv.active_scene == gv.Scene.MAIN_MENU:
+			return
 		
 		var lored_key = wish.obj.key
 		

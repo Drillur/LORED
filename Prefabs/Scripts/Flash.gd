@@ -1,6 +1,17 @@
 extends Panel
 
+func _ready() -> void:
+	hide()
+
+var rate = 0.05
+
+func slowFlash(color := Color(1, 0, 0)):
+	rate = 0.08
+	flash(color)
+
 func flash(color := Color(1, 0, 0)) -> void:
+	
+	show()
 	
 	var alpha = 0.25
 	
@@ -9,7 +20,7 @@ func flash(color := Color(1, 0, 0)) -> void:
 		self_modulate = Color(color.r, color.g, color.b, alpha)
 		
 		var t = Timer.new()
-		t.set_wait_time(0.05)
+		t.set_wait_time(rate)
 		add_child(t)
 		t.start()
 		yield(t, "timeout")

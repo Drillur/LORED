@@ -65,11 +65,6 @@ _global_script_classes=[ {
 "path": "res://Scripts/classes/Job.gd"
 }, {
 "base": "Reference",
-"class": "Jobnew",
-"language": "GDScript",
-"path": "res://Scripts/classes/Jobnew.gd"
-}, {
-"base": "Reference",
 "class": "LORED",
 "language": "GDScript",
 "path": "res://Scripts/classes/LORED.gd"
@@ -79,10 +74,10 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://Scripts/classes/NewLORED.gd"
 }, {
-"base": "Reference",
-"class": "NewUpgrade",
+"base": "Node",
+"class": "LOREDnewest",
 "language": "GDScript",
-"path": "res://Scripts/classes/NewUpgrade.gd"
+"path": "res://Scripts/classes/LOREDnewest.gd"
 }, {
 "base": "Reference",
 "class": "Ob",
@@ -151,10 +146,9 @@ _global_script_class_icons={
 "FormatValue": "",
 "GlobalVariables": "",
 "Job": "",
-"Jobnew": "",
 "LORED": "",
 "LOREDnew": "",
-"NewUpgrade": "",
+"LOREDnewest": "",
 "Ob": "",
 "Purchasable": "",
 "Spell": "",
@@ -187,6 +181,7 @@ sm="*res://Scripts/Managers/Cavern/SpellManager.gd"
 bm="*res://Scripts/Managers/Cavern/BuffManager.gd"
 um="*res://Scripts/Managers/Cavern/UnitManager.gd"
 diff="*res://Scripts/Managers/Difficulty.gd"
+lv="*res://Scripts/Vars/LORED.gd"
 SaveManager="*res://Scripts/Managers/SaveManager.gd"
 Boot="*res://Scripts/autoload/Boot.gd"
 

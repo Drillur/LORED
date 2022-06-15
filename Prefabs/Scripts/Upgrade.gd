@@ -141,6 +141,11 @@ func afford():
 		button.modulate = Color(0.6,0.6,0.6)
 		return
 	
+	if gv.up[key].have:
+		afford.hide()
+	else:
+		afford.hide()
+	
 	if gv.up[key].have or gv.up[key].refundable:
 		afford.modulate = Color(0.2, 0.2, 0.2)
 		button.modulate = Color(0.2, 0.2, 0.2)

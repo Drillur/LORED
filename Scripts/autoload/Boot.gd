@@ -96,7 +96,7 @@ func init_upgrades():
 		gv.up[f] = Upgrade.new(f, "s2m reset", "Resets Normal, Malignant, and Extra-normal upgrades, and Stage 1 and Stage 2 resources (except Tumors).\n\nBegin your recovery period. Apply your Radiative upgrades to your new life.", "tum")
 		
 		f = "METASTASIZE"
-		gv.up["METASTASIZE"] = Upgrade.new(f, "s1m reset","Resets Normal upgrades and Stage 1 resources (except Malignancy).\n\nSpread to and apply your Malignant upgrades to a new host.", "malig")
+		gv.up["METASTASIZE"] = Upgrade.new(f, "s1m reset","Resets Normal upgrades and Stage 1 resources (except Malignancy).", "malig")
 	
 #	# upunlock
 #	if true:

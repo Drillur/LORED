@@ -1,4 +1,4 @@
-[gd_scene load_steps=46 format=2]
+[gd_scene load_steps=78 format=2]
 
 [ext_resource path="res://Fonts/Roboto-Black.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Sprites/Menu/Hint.png" type="Texture" id=2]
@@ -12,8 +12,144 @@
 [ext_resource path="res://Sprites/Menu/Refresh.png" type="Texture" id=10]
 [ext_resource path="res://Sprites/Menu/Back.png" type="Texture" id=11]
 [ext_resource path="res://Prefabs/menu/New Game.tscn" type="PackedScene" id=12]
+[ext_resource path="res://Prefabs/menu/wallpapersden.com_purple-sunrise-4k-vaporwave_1920x1080.jpg" type="Texture" id=13]
+[ext_resource path="res://Fonts/Roboto-Medium.ttf" type="DynamicFontData" id=14]
+[ext_resource path="res://Fonts/Roboto-Light.ttf" type="DynamicFontData" id=15]
+[ext_resource path="res://Sprites/Menu/Expand_right.png" type="Texture" id=16]
+[ext_resource path="res://Styles/Master Theme.tres" type="Theme" id=17]
+[ext_resource path="res://Prefabs/menu/NewGameColorRect.gd" type="Script" id=18]
+[ext_resource path="res://Sprites/resources/Grief.png" type="Texture" id=19]
+[ext_resource path="res://Sprites/Menu/Clipboard.png" type="Texture" id=20]
+[ext_resource path="res://Sprites/Menu/File.png" type="Texture" id=21]
+[ext_resource path="res://Sprites/Menu/Delete.png" type="Texture" id=22]
 
 [sub_resource type="StyleBoxFlat" id=7]
+draw_center = false
+
+[sub_resource type="StyleBoxFlat" id=39]
+draw_center = false
+
+[sub_resource type="DynamicFont" id=34]
+size = 20
+outline_color = Color( 0, 0, 0, 1 )
+font_data = ExtResource( 14 )
+
+[sub_resource type="StyleBoxFlat" id=36]
+bg_color = Color( 0.423529, 0.423529, 0.423529, 1 )
+draw_center = false
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+shadow_color = Color( 0.117188, 0.117188, 0.117188, 0.54902 )
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id=37]
+bg_color = Color( 0.25098, 0.25098, 0.25098, 1 )
+draw_center = false
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+shadow_color = Color( 0.0390625, 0.0390625, 0.0390625, 0.54902 )
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id=35]
+bg_color = Color( 0.352941, 0.352941, 0.352941, 1 )
+draw_center = false
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+shadow_color = Color( 0.078125, 0.078125, 0.078125, 0.54902 )
+anti_aliasing = false
+
+[sub_resource type="DynamicFont" id=38]
+outline_color = Color( 0.215686, 0.215686, 0.215686, 1 )
+font_data = ExtResource( 15 )
+
+[sub_resource type="StyleBoxFlat" id=40]
+bg_color = Color( 0, 0, 0, 0.35 )
+border_color = Color( 0.568627, 1, 0, 0.6 )
+
+[sub_resource type="StyleBoxFlat" id=42]
+bg_color = Color( 1, 1, 1, 0.04 )
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color( 1, 1, 1, 0.08 )
+border_blend = true
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="DynamicFont" id=41]
+size = 12
+font_data = ExtResource( 3 )
+
+[sub_resource type="DynamicFont" id=49]
+size = 14
+font_data = ExtResource( 1 )
+
+[sub_resource type="DynamicFont" id=43]
+size = 14
+font_data = ExtResource( 14 )
+
+[sub_resource type="DynamicFont" id=50]
+size = 12
+font_data = ExtResource( 14 )
+
+[sub_resource type="DynamicFont" id=51]
+size = 14
+font_data = ExtResource( 14 )
+
+[sub_resource type="StyleBoxFlat" id=52]
+bg_color = Color( 1, 1, 1, 0.0313726 )
+
+[sub_resource type="StyleBoxFlat" id=53]
+bg_color = Color( 1, 1, 1, 0.06 )
+
+[sub_resource type="StyleBoxFlat" id=54]
+draw_center = false
+
+[sub_resource type="DynamicFont" id=44]
+size = 12
+outline_color = Color( 0, 0, 0, 1 )
+font_data = ExtResource( 1 )
+
+[sub_resource type="StyleBoxFlat" id=45]
+bg_color = Color( 0.423529, 0.423529, 0.423529, 1 )
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+shadow_color = Color( 0.117188, 0.117188, 0.117188, 0.54902 )
+shadow_size = 4
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id=46]
+bg_color = Color( 0.25098, 0.25098, 0.25098, 1 )
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+shadow_color = Color( 0.0390625, 0.0390625, 0.0390625, 0.54902 )
+shadow_size = 4
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id=47]
+bg_color = Color( 0.352941, 0.352941, 0.352941, 1 )
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+shadow_color = Color( 0.078125, 0.078125, 0.078125, 0.54902 )
+shadow_size = 4
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id=48]
 draw_center = false
 
 [sub_resource type="StyleBoxFlat" id=8]
@@ -240,20 +376,1349 @@ anti_aliasing = false
 [sub_resource type="StyleBoxFlat" id=18]
 draw_center = false
 
+[sub_resource type="StyleBoxFlat" id=55]
+bg_color = Color( 0.171875, 0.171875, 0.171875, 1 )
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color( 0.411765, 0.411765, 0.411765, 0.74902 )
+border_blend = true
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
 [node name="Main Menu" type="MarginContainer"]
 margin_right = 1280.0
 margin_bottom = 720.0
+size_flags_horizontal = 3
 script = ExtResource( 7 )
 
+[node name="bg" type="Node2D" parent="."]
+
+[node name="WallpapersdencomPurple-sunrise-4k-vaporwave1920X1080" type="Sprite" parent="bg"]
+texture = ExtResource( 13 )
+centered = false
+
+[node name="h" type="HBoxContainer" parent="."]
+margin_right = 1280.0
+margin_bottom = 720.0
+
+[node name="indent" type="Panel" parent="h"]
+margin_right = 76.0
+margin_bottom = 720.0
+rect_min_size = Vector2( 76, 0 )
+rect_pivot_offset = Vector2( -2, -5 )
+custom_styles/panel = SubResource( 7 )
+
+[node name="v" type="VBoxContainer" parent="h"]
+margin_left = 80.0
+margin_right = 185.0
+margin_bottom = 720.0
+custom_constants/separation = 8
+
+[node name="indent" type="Panel" parent="h/v"]
+margin_right = 105.0
+margin_bottom = 100.0
+rect_min_size = Vector2( 0, 100 )
+rect_pivot_offset = Vector2( -2, -5 )
+custom_styles/panel = SubResource( 7 )
+
+[node name="continue" type="HBoxContainer" parent="h/v"]
+margin_top = 108.0
+margin_right = 105.0
+margin_bottom = 145.0
+rect_min_size = Vector2( 0, 37 )
+
+[node name="flair" type="Panel" parent="h/v/continue"]
+margin_top = 6.0
+margin_right = 24.0
+margin_bottom = 30.0
+rect_min_size = Vector2( 24, 24 )
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 39 )
+
+[node name="Sprite" type="Sprite" parent="h/v/continue/flair"]
+texture = ExtResource( 16 )
+centered = false
+
+[node name="m" type="MarginContainer" parent="h/v/continue"]
+margin_left = 28.0
+margin_right = 91.0
+margin_bottom = 37.0
+mouse_filter = 2
+size_flags_horizontal = 8
+custom_constants/margin_right = 0
+custom_constants/margin_top = 0
+custom_constants/margin_left = 0
+custom_constants/margin_bottom = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="button" type="Button" parent="h/v/continue/m"]
+margin_right = 63.0
+margin_bottom = 37.0
+rect_min_size = Vector2( 0, 32 )
+focus_mode = 0
+mouse_default_cursor_shape = 2
+custom_fonts/font = SubResource( 34 )
+custom_styles/hover = SubResource( 36 )
+custom_styles/pressed = SubResource( 37 )
+custom_styles/disabled = SubResource( 35 )
+custom_styles/normal = SubResource( 35 )
+enabled_focus_mode = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="text" type="Label" parent="h/v/continue/m"]
+margin_top = 9.0
+margin_right = 63.0
+margin_bottom = 28.0
+size_flags_horizontal = 0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 38 )
+text = "Continue"
+
+[node name="new" type="HBoxContainer" parent="h/v"]
+margin_top = 153.0
+margin_right = 105.0
+margin_bottom = 190.0
+rect_min_size = Vector2( 0, 37 )
+
+[node name="flair" type="Panel" parent="h/v/new"]
+margin_top = 6.0
+margin_right = 24.0
+margin_bottom = 30.0
+rect_min_size = Vector2( 24, 24 )
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 39 )
+
+[node name="Sprite" type="Sprite" parent="h/v/new/flair"]
+texture = ExtResource( 16 )
+centered = false
+
+[node name="m" type="MarginContainer" parent="h/v/new"]
+margin_left = 28.0
+margin_right = 105.0
+margin_bottom = 37.0
+mouse_filter = 2
+custom_constants/margin_right = 0
+custom_constants/margin_top = 0
+custom_constants/margin_left = 0
+custom_constants/margin_bottom = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="button" type="Button" parent="h/v/new/m"]
+margin_right = 77.0
+margin_bottom = 37.0
+rect_min_size = Vector2( 0, 32 )
+focus_mode = 0
+mouse_default_cursor_shape = 2
+custom_fonts/font = SubResource( 34 )
+custom_styles/hover = SubResource( 36 )
+custom_styles/pressed = SubResource( 37 )
+custom_styles/normal = SubResource( 35 )
+enabled_focus_mode = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="text" type="Label" parent="h/v/new/m"]
+margin_top = 9.0
+margin_right = 77.0
+margin_bottom = 28.0
+size_flags_horizontal = 0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 38 )
+text = "New Game"
+
+[node name="load" type="HBoxContainer" parent="h/v"]
+margin_top = 198.0
+margin_right = 105.0
+margin_bottom = 235.0
+rect_min_size = Vector2( 0, 37 )
+
+[node name="flair" type="Panel" parent="h/v/load"]
+margin_top = 6.0
+margin_right = 24.0
+margin_bottom = 30.0
+rect_min_size = Vector2( 24, 24 )
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 39 )
+
+[node name="Sprite" type="Sprite" parent="h/v/load/flair"]
+texture = ExtResource( 16 )
+centered = false
+
+[node name="m" type="MarginContainer" parent="h/v/load"]
+margin_left = 28.0
+margin_right = 105.0
+margin_bottom = 37.0
+mouse_filter = 2
+size_flags_horizontal = 3
+custom_constants/margin_right = 0
+custom_constants/margin_top = 0
+custom_constants/margin_left = 0
+custom_constants/margin_bottom = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="button" type="Button" parent="h/v/load/m"]
+margin_right = 77.0
+margin_bottom = 37.0
+rect_min_size = Vector2( 0, 32 )
+focus_mode = 0
+mouse_default_cursor_shape = 2
+custom_fonts/font = SubResource( 34 )
+custom_styles/hover = SubResource( 36 )
+custom_styles/pressed = SubResource( 37 )
+custom_styles/normal = SubResource( 35 )
+enabled_focus_mode = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="text" type="Label" parent="h/v/load/m"]
+margin_top = 9.0
+margin_right = 73.0
+margin_bottom = 28.0
+size_flags_horizontal = 0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 38 )
+text = "Load Save"
+
+[node name="all saves" type="MarginContainer" parent="."]
+visible = false
+margin_right = 1280.0
+margin_bottom = 720.0
+size_flags_horizontal = 3
+
+[node name="bg" type="Panel" parent="all saves"]
+self_modulate = Color( 0.219608, 0.219608, 0.219608, 1 )
+margin_right = 1280.0
+margin_bottom = 720.0
+custom_styles/panel = SubResource( 40 )
+
+[node name="sc" type="ScrollContainer" parent="all saves"]
+margin_right = 1280.0
+margin_bottom = 720.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+scroll_horizontal_enabled = false
+scroll_deadzone = 100
+
+[node name="v" type="VBoxContainer" parent="all saves/sc"]
+margin_top = 252.0
+margin_right = 1280.0
+margin_bottom = 468.0
+mouse_filter = 2
+size_flags_horizontal = 3
+size_flags_vertical = 6
+custom_constants/separation = 8
+alignment = 1
+
+[node name="indent2" type="Panel" parent="all saves/sc/v"]
+margin_right = 1280.0
+margin_bottom = 100.0
+rect_min_size = Vector2( 0, 100 )
+rect_pivot_offset = Vector2( -2, -5 )
+mouse_filter = 2
+custom_styles/panel = SubResource( 7 )
+
+[node name="v" type="VBoxContainer" parent="all saves/sc/v"]
+margin_top = 108.0
+margin_right = 1280.0
+margin_bottom = 108.0
+mouse_filter = 2
+custom_constants/separation = 8
+
+[node name="indent" type="Panel" parent="all saves/sc/v"]
+margin_top = 116.0
+margin_right = 1280.0
+margin_bottom = 216.0
+rect_min_size = Vector2( 0, 100 )
+rect_pivot_offset = Vector2( -2, -5 )
+mouse_filter = 2
+custom_styles/panel = SubResource( 7 )
+
+[node name="top" type="MarginContainer" parent="all saves"]
+margin_right = 186.0
+margin_bottom = 235.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+custom_constants/margin_right = 0
+custom_constants/margin_top = 0
+custom_constants/margin_left = 0
+custom_constants/margin_bottom = 0
+
+[node name="h" type="HBoxContainer" parent="all saves/top"]
+margin_right = 186.0
+margin_bottom = 235.0
+size_flags_horizontal = 0
+
+[node name="indent" type="Panel" parent="all saves/top/h"]
+margin_right = 76.0
+margin_bottom = 235.0
+rect_min_size = Vector2( 76, 0 )
+rect_pivot_offset = Vector2( -2, -5 )
+custom_styles/panel = SubResource( 7 )
+
+[node name="v" type="VBoxContainer" parent="all saves/top/h"]
+margin_left = 80.0
+margin_right = 186.0
+margin_bottom = 235.0
+custom_constants/separation = 8
+
+[node name="indent" type="Panel" parent="all saves/top/h/v"]
+margin_right = 106.0
+margin_bottom = 100.0
+rect_min_size = Vector2( 0, 100 )
+rect_pivot_offset = Vector2( -2, -5 )
+custom_styles/panel = SubResource( 7 )
+
+[node name="v" type="VBoxContainer" parent="all saves/top/h/v"]
+margin_top = 108.0
+margin_right = 106.0
+margin_bottom = 235.0
+custom_constants/separation = 8
+
+[node name="back" type="HBoxContainer" parent="all saves/top/h/v/v"]
+margin_right = 106.0
+margin_bottom = 37.0
+rect_min_size = Vector2( 0, 37 )
+
+[node name="flair" type="Panel" parent="all saves/top/h/v/v/back"]
+margin_top = 6.0
+margin_right = 24.0
+margin_bottom = 30.0
+rect_min_size = Vector2( 24, 24 )
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 39 )
+
+[node name="Sprite" type="Sprite" parent="all saves/top/h/v/v/back/flair"]
+position = Vector2( 12, 12 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 11 )
+
+[node name="m" type="MarginContainer" parent="all saves/top/h/v/v/back"]
+margin_left = 28.0
+margin_right = 63.0
+margin_bottom = 37.0
+mouse_filter = 2
+size_flags_horizontal = 8
+custom_constants/margin_right = 0
+custom_constants/margin_top = 0
+custom_constants/margin_left = 0
+custom_constants/margin_bottom = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="button" type="Button" parent="all saves/top/h/v/v/back/m"]
+margin_right = 35.0
+margin_bottom = 37.0
+rect_min_size = Vector2( 0, 32 )
+focus_mode = 0
+mouse_default_cursor_shape = 2
+custom_fonts/font = SubResource( 34 )
+custom_styles/hover = SubResource( 36 )
+custom_styles/pressed = SubResource( 37 )
+custom_styles/normal = SubResource( 35 )
+enabled_focus_mode = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="text" type="Label" parent="all saves/top/h/v/v/back/m"]
+margin_top = 9.0
+margin_right = 35.0
+margin_bottom = 28.0
+size_flags_horizontal = 0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 38 )
+text = "Back"
+
+[node name="refresh" type="HBoxContainer" parent="all saves/top/h/v/v"]
+margin_top = 45.0
+margin_right = 106.0
+margin_bottom = 82.0
+rect_min_size = Vector2( 0, 37 )
+
+[node name="flair" type="Panel" parent="all saves/top/h/v/v/refresh"]
+margin_top = 6.0
+margin_right = 24.0
+margin_bottom = 30.0
+rect_min_size = Vector2( 24, 24 )
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 39 )
+
+[node name="Sprite" type="Sprite" parent="all saves/top/h/v/v/refresh/flair"]
+position = Vector2( 12, 12 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 10 )
+
+[node name="m" type="MarginContainer" parent="all saves/top/h/v/v/refresh"]
+margin_left = 28.0
+margin_right = 106.0
+margin_bottom = 37.0
+mouse_filter = 2
+size_flags_horizontal = 8
+custom_constants/margin_right = 0
+custom_constants/margin_top = 0
+custom_constants/margin_left = 0
+custom_constants/margin_bottom = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="button" type="Button" parent="all saves/top/h/v/v/refresh/m"]
+margin_right = 78.0
+margin_bottom = 37.0
+rect_min_size = Vector2( 0, 32 )
+focus_mode = 0
+mouse_default_cursor_shape = 2
+custom_fonts/font = SubResource( 34 )
+custom_styles/hover = SubResource( 36 )
+custom_styles/pressed = SubResource( 37 )
+custom_styles/normal = SubResource( 35 )
+enabled_focus_mode = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="text" type="Label" parent="all saves/top/h/v/v/refresh/m"]
+margin_top = 9.0
+margin_right = 78.0
+margin_bottom = 28.0
+size_flags_horizontal = 0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 38 )
+text = "Refresh list"
+
+[node name="import" type="HBoxContainer" parent="all saves/top/h/v/v"]
+margin_top = 90.0
+margin_right = 106.0
+margin_bottom = 127.0
+rect_min_size = Vector2( 0, 37 )
+
+[node name="flair" type="Panel" parent="all saves/top/h/v/v/import"]
+margin_top = 6.0
+margin_right = 24.0
+margin_bottom = 30.0
+rect_min_size = Vector2( 24, 24 )
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 39 )
+
+[node name="Sprite" type="Sprite" parent="all saves/top/h/v/v/import/flair"]
+position = Vector2( 12, 12 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 6 )
+
+[node name="m" type="MarginContainer" parent="all saves/top/h/v/v/import"]
+margin_left = 28.0
+margin_right = 74.0
+margin_bottom = 37.0
+mouse_filter = 2
+size_flags_horizontal = 8
+custom_constants/margin_right = 0
+custom_constants/margin_top = 0
+custom_constants/margin_left = 0
+custom_constants/margin_bottom = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="button" type="Button" parent="all saves/top/h/v/v/import/m"]
+margin_right = 46.0
+margin_bottom = 37.0
+rect_min_size = Vector2( 0, 32 )
+focus_mode = 0
+mouse_default_cursor_shape = 2
+custom_fonts/font = SubResource( 34 )
+custom_styles/hover = SubResource( 36 )
+custom_styles/pressed = SubResource( 37 )
+custom_styles/normal = SubResource( 35 )
+enabled_focus_mode = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="text" type="Label" parent="all saves/top/h/v/v/import/m"]
+margin_top = 9.0
+margin_right = 46.0
+margin_bottom = 28.0
+size_flags_horizontal = 0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 38 )
+text = "Import"
+
+[node name="import" type="MarginContainer" parent="."]
+visible = false
+margin_right = 1280.0
+margin_bottom = 720.0
+size_flags_horizontal = 3
+
+[node name="bg" type="Panel" parent="import"]
+self_modulate = Color( 0.219608, 0.219608, 0.219608, 1 )
+margin_right = 1280.0
+margin_bottom = 720.0
+custom_styles/panel = SubResource( 40 )
+
+[node name="bg2" type="Panel" parent="import"]
+self_modulate = Color( 0.219608, 0.219608, 0.219608, 1 )
+margin_right = 1280.0
+margin_bottom = 720.0
+custom_styles/panel = SubResource( 40 )
+
+[node name="m" type="MarginContainer" parent="import"]
+margin_right = 1280.0
+margin_bottom = 720.0
+
+[node name="h" type="HBoxContainer" parent="import/m"]
+margin_right = 1280.0
+margin_bottom = 720.0
+custom_constants/separation = 20
+alignment = 1
+
+[node name="byString" type="MarginContainer" parent="import/m/h"]
+margin_left = 450.0
+margin_top = 330.0
+margin_right = 630.0
+margin_bottom = 390.0
+rect_min_size = Vector2( 180, 60 )
+mouse_filter = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+custom_constants/margin_right = 0
+custom_constants/margin_top = 0
+custom_constants/margin_left = 0
+custom_constants/margin_bottom = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="bg" type="Panel" parent="import/m/h/byString"]
+margin_right = 180.0
+margin_bottom = 60.0
+mouse_filter = 2
+custom_styles/panel = SubResource( 42 )
+
+[node name="v" type="VBoxContainer" parent="import/m/h/byString"]
+margin_right = 180.0
+margin_bottom = 60.0
+alignment = 1
+
+[node name="h" type="HBoxContainer" parent="import/m/h/byString/v"]
+margin_top = 8.0
+margin_right = 180.0
+margin_bottom = 32.0
+alignment = 1
+
+[node name="flair" type="Panel" parent="import/m/h/byString/v/h"]
+margin_left = 20.0
+margin_right = 44.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 24, 24 )
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 39 )
+
+[node name="Sprite" type="Sprite" parent="import/m/h/byString/v/h/flair"]
+position = Vector2( 12, 12 )
+texture = ExtResource( 20 )
+
+[node name="Sprite2" type="Sprite" parent="import/m/h/byString/v/h/flair/Sprite"]
+self_modulate = Color( 0, 0, 0, 0.501961 )
+show_behind_parent = true
+position = Vector2( 2, 2 )
+texture = ExtResource( 20 )
+
+[node name="text" type="Label" parent="import/m/h/byString/v/h"]
+margin_left = 48.0
+margin_top = 2.0
+margin_right = 160.0
+margin_bottom = 21.0
+size_flags_horizontal = 4
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 38 )
+text = "Import by String"
+align = 1
+
+[node name="desc" type="Label" parent="import/m/h/byString/v"]
+margin_top = 36.0
+margin_right = 180.0
+margin_bottom = 51.0
+hint_tooltip = "Step: 0.1"
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 41 )
+text = "Allows you to paste save text."
+align = 1
+autowrap = true
+
+[node name="button" type="Button" parent="import/m/h/byString"]
+margin_right = 180.0
+margin_bottom = 60.0
+rect_min_size = Vector2( 0, 32 )
+focus_mode = 0
+mouse_default_cursor_shape = 2
+custom_fonts/font = SubResource( 34 )
+custom_styles/hover = SubResource( 36 )
+custom_styles/pressed = SubResource( 37 )
+custom_styles/normal = SubResource( 35 )
+enabled_focus_mode = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="byFile" type="MarginContainer" parent="import/m/h"]
+margin_left = 650.0
+margin_top = 330.0
+margin_right = 830.0
+margin_bottom = 390.0
+rect_min_size = Vector2( 180, 60 )
+mouse_filter = 2
+size_flags_horizontal = 0
+size_flags_vertical = 4
+custom_constants/margin_right = 0
+custom_constants/margin_top = 0
+custom_constants/margin_left = 0
+custom_constants/margin_bottom = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="bg" type="Panel" parent="import/m/h/byFile"]
+margin_right = 180.0
+margin_bottom = 60.0
+mouse_filter = 2
+custom_styles/panel = SubResource( 42 )
+
+[node name="v" type="VBoxContainer" parent="import/m/h/byFile"]
+margin_right = 180.0
+margin_bottom = 60.0
+alignment = 1
+
+[node name="h" type="HBoxContainer" parent="import/m/h/byFile/v"]
+margin_top = 8.0
+margin_right = 180.0
+margin_bottom = 32.0
+alignment = 1
+
+[node name="flair" type="Panel" parent="import/m/h/byFile/v/h"]
+margin_left = 28.0
+margin_right = 52.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 24, 24 )
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 39 )
+
+[node name="Sprite" type="Sprite" parent="import/m/h/byFile/v/h/flair"]
+position = Vector2( 12, 12 )
+texture = ExtResource( 21 )
+
+[node name="Sprite" type="Sprite" parent="import/m/h/byFile/v/h/flair/Sprite"]
+self_modulate = Color( 0, 0, 0, 0.501961 )
+show_behind_parent = true
+position = Vector2( 2, 2 )
+texture = ExtResource( 21 )
+
+[node name="text" type="Label" parent="import/m/h/byFile/v/h"]
+margin_left = 56.0
+margin_top = 2.0
+margin_right = 152.0
+margin_bottom = 21.0
+size_flags_horizontal = 4
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 38 )
+text = "Import by File"
+
+[node name="desc" type="Label" parent="import/m/h/byFile/v"]
+margin_top = 36.0
+margin_right = 180.0
+margin_bottom = 51.0
+hint_tooltip = "Step: 0.1"
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 41 )
+text = "Copies text from a selected file."
+align = 1
+autowrap = true
+
+[node name="button" type="Button" parent="import/m/h/byFile"]
+margin_right = 180.0
+margin_bottom = 60.0
+rect_min_size = Vector2( 0, 32 )
+focus_mode = 0
+mouse_default_cursor_shape = 2
+custom_fonts/font = SubResource( 34 )
+custom_styles/hover = SubResource( 36 )
+custom_styles/pressed = SubResource( 37 )
+custom_styles/normal = SubResource( 35 )
+enabled_focus_mode = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="top" type="MarginContainer" parent="import"]
+margin_right = 143.0
+margin_bottom = 145.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+custom_constants/margin_right = 0
+custom_constants/margin_top = 0
+custom_constants/margin_left = 0
+custom_constants/margin_bottom = 0
+
+[node name="h" type="HBoxContainer" parent="import/top"]
+margin_right = 143.0
+margin_bottom = 145.0
+size_flags_horizontal = 0
+
+[node name="indent" type="Panel" parent="import/top/h"]
+margin_right = 76.0
+margin_bottom = 145.0
+rect_min_size = Vector2( 76, 0 )
+rect_pivot_offset = Vector2( -2, -5 )
+custom_styles/panel = SubResource( 7 )
+
+[node name="v" type="VBoxContainer" parent="import/top/h"]
+margin_left = 80.0
+margin_right = 143.0
+margin_bottom = 145.0
+custom_constants/separation = 8
+
+[node name="indent" type="Panel" parent="import/top/h/v"]
+margin_right = 63.0
+margin_bottom = 100.0
+rect_min_size = Vector2( 0, 100 )
+rect_pivot_offset = Vector2( -2, -5 )
+custom_styles/panel = SubResource( 7 )
+
+[node name="v" type="VBoxContainer" parent="import/top/h/v"]
+margin_top = 108.0
+margin_right = 63.0
+margin_bottom = 145.0
+custom_constants/separation = 8
+
+[node name="back" type="HBoxContainer" parent="import/top/h/v/v"]
+margin_right = 63.0
+margin_bottom = 37.0
+rect_min_size = Vector2( 0, 37 )
+
+[node name="flair" type="Panel" parent="import/top/h/v/v/back"]
+margin_top = 6.0
+margin_right = 24.0
+margin_bottom = 30.0
+rect_min_size = Vector2( 24, 24 )
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 39 )
+
+[node name="Sprite" type="Sprite" parent="import/top/h/v/v/back/flair"]
+position = Vector2( 12, 12 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 11 )
+
+[node name="m" type="MarginContainer" parent="import/top/h/v/v/back"]
+margin_left = 28.0
+margin_right = 63.0
+margin_bottom = 37.0
+mouse_filter = 2
+size_flags_horizontal = 8
+custom_constants/margin_right = 0
+custom_constants/margin_top = 0
+custom_constants/margin_left = 0
+custom_constants/margin_bottom = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="button" type="Button" parent="import/top/h/v/v/back/m"]
+margin_right = 35.0
+margin_bottom = 37.0
+rect_min_size = Vector2( 0, 32 )
+focus_mode = 0
+mouse_default_cursor_shape = 2
+custom_fonts/font = SubResource( 34 )
+custom_styles/hover = SubResource( 36 )
+custom_styles/pressed = SubResource( 37 )
+custom_styles/normal = SubResource( 35 )
+enabled_focus_mode = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="text" type="Label" parent="import/top/h/v/v/back/m"]
+margin_top = 9.0
+margin_right = 35.0
+margin_bottom = 28.0
+size_flags_horizontal = 0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 38 )
+text = "Back"
+
+[node name="byString" type="MarginContainer" parent="import"]
+visible = false
+margin_left = 430.0
+margin_top = 190.0
+margin_right = 850.0
+margin_bottom = 529.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="bg" type="Panel" parent="import/byString"]
+self_modulate = Color( 0.219608, 0.219608, 0.219608, 1 )
+margin_right = 420.0
+margin_bottom = 339.0
+custom_styles/panel = SubResource( 40 )
+
+[node name="m" type="MarginContainer" parent="import/byString"]
+margin_right = 420.0
+margin_bottom = 339.0
+custom_constants/margin_right = 10
+custom_constants/margin_top = 10
+custom_constants/margin_left = 10
+custom_constants/margin_bottom = 10
+
+[node name="v" type="VBoxContainer" parent="import/byString/m"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 410.0
+margin_bottom = 329.0
+custom_constants/separation = 20
+alignment = 1
+
+[node name="text" type="Label" parent="import/byString/m/v"]
+margin_right = 400.0
+margin_bottom = 17.0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 49 )
+text = "Paste save text here!"
+align = 1
+
+[node name="TextEdit" type="TextEdit" parent="import/byString/m/v"]
+margin_top = 37.0
+margin_right = 400.0
+margin_bottom = 187.0
+rect_min_size = Vector2( 400, 150 )
+rect_pivot_offset = Vector2( -770, -170 )
+size_flags_horizontal = 4
+size_flags_vertical = 4
+custom_fonts/font = SubResource( 43 )
+text = "wow much save text very bigly"
+breakpoint_gutter = true
+wrap_enabled = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="manual save name" type="VBoxContainer" parent="import/byString/m/v"]
+margin_top = 207.0
+margin_right = 400.0
+margin_bottom = 267.0
+rect_pivot_offset = Vector2( -297, -73 )
+mouse_filter = 2
+
+[node name="h" type="HBoxContainer" parent="import/byString/m/v/manual save name"]
+margin_right = 400.0
+margin_bottom = 32.0
+mouse_filter = 2
+alignment = 1
+
+[node name="check" type="CheckBox" parent="import/byString/m/v/manual save name/h"]
+margin_left = 80.0
+margin_top = 4.0
+margin_right = 104.0
+margin_bottom = 28.0
+focus_mode = 0
+size_flags_horizontal = 0
+size_flags_vertical = 4
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="label" type="Label" parent="import/byString/m/v/manual save name/h"]
+margin_left = 108.0
+margin_right = 319.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 0, 32 )
+size_flags_horizontal = 0
+custom_fonts/font = SubResource( 50 )
+text = "Manually set the save name and color?"
+valign = 1
+
+[node name="h2" type="HBoxContainer" parent="import/byString/m/v/manual save name"]
+margin_top = 36.0
+margin_right = 400.0
+margin_bottom = 60.0
+alignment = 1
+
+[node name="TextEdit" type="TextEdit" parent="import/byString/m/v/manual save name/h2"]
+margin_left = 103.0
+margin_right = 253.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 150, 24 )
+rect_pivot_offset = Vector2( -564, -517 )
+size_flags_horizontal = 4
+size_flags_vertical = 4
+custom_fonts/font = SubResource( 51 )
+text = "Save.lored"
+breakpoint_gutter = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="m" type="MarginContainer" parent="import/byString/m/v/manual save name/h2"]
+margin_left = 257.0
+margin_right = 297.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 40, 0 )
+
+[node name="ColorRect" type="ColorRect" parent="import/byString/m/v/manual save name/h2/m"]
+margin_right = 40.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 0, 20 )
+rect_pivot_offset = Vector2( -309, 10 )
+color = Color( 0, 1, 0.623529, 1 )
+script = ExtResource( 18 )
+
+[node name="select" type="Button" parent="import/byString/m/v/manual save name/h2/m"]
+margin_right = 40.0
+margin_bottom = 24.0
+rect_pivot_offset = Vector2( 71, 48 )
+focus_mode = 0
+mouse_default_cursor_shape = 2
+custom_styles/hover = SubResource( 52 )
+custom_styles/pressed = SubResource( 53 )
+custom_styles/normal = SubResource( 54 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="h" type="HBoxContainer" parent="import/byString/m/v"]
+margin_top = 287.0
+margin_right = 400.0
+margin_bottom = 319.0
+custom_constants/separation = 10
+alignment = 1
+
+[node name="accept" type="MarginContainer" parent="import/byString/m/v/h"]
+margin_left = 157.0
+margin_right = 195.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 38, 24 )
+size_flags_horizontal = 4
+size_flags_vertical = 0
+custom_constants/margin_right = 0
+custom_constants/margin_top = 0
+custom_constants/margin_left = 0
+custom_constants/margin_bottom = 0
+
+[node name="button" type="Button" parent="import/byString/m/v/h/accept"]
+self_modulate = Color( 0.384314, 0.603922, 0.270588, 1 )
+margin_right = 38.0
+margin_bottom = 32.0
+hint_tooltip = "Import save by string"
+focus_mode = 0
+mouse_default_cursor_shape = 2
+theme = ExtResource( 17 )
+custom_fonts/font = SubResource( 44 )
+custom_styles/hover = SubResource( 45 )
+custom_styles/pressed = SubResource( 46 )
+custom_styles/normal = SubResource( 47 )
+enabled_focus_mode = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="m" type="MarginContainer" parent="import/byString/m/v/h/accept"]
+margin_left = 3.0
+margin_right = 35.0
+margin_bottom = 32.0
+mouse_filter = 2
+size_flags_horizontal = 4
+custom_constants/margin_right = 4
+custom_constants/margin_top = 4
+custom_constants/margin_left = 4
+custom_constants/margin_bottom = 4
+
+[node name="icon" type="Panel" parent="import/byString/m/v/h/accept/m"]
+margin_left = 4.0
+margin_top = 4.0
+margin_right = 28.0
+margin_bottom = 28.0
+rect_min_size = Vector2( 24, 24 )
+mouse_filter = 2
+custom_styles/panel = SubResource( 48 )
+
+[node name="Sprite" type="Sprite" parent="import/byString/m/v/h/accept/m/icon"]
+texture = ExtResource( 9 )
+centered = false
+
+[node name="shadow" type="Sprite" parent="import/byString/m/v/h/accept/m/icon/Sprite"]
+self_modulate = Color( 0, 0, 0, 0.501961 )
+show_behind_parent = true
+position = Vector2( 2, 2 )
+texture = ExtResource( 9 )
+centered = false
+
+[node name="cancel" type="MarginContainer" parent="import/byString/m/v/h"]
+margin_left = 205.0
+margin_right = 243.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 38, 0 )
+size_flags_horizontal = 4
+custom_constants/margin_right = 0
+custom_constants/margin_top = 0
+custom_constants/margin_left = 0
+custom_constants/margin_bottom = 0
+
+[node name="button" type="Button" parent="import/byString/m/v/h/cancel"]
+self_modulate = Color( 1, 0, 0, 1 )
+margin_right = 38.0
+margin_bottom = 32.0
+hint_tooltip = "Cancel"
+focus_mode = 0
+mouse_default_cursor_shape = 2
+theme = ExtResource( 17 )
+custom_fonts/font = SubResource( 44 )
+custom_styles/hover = SubResource( 45 )
+custom_styles/pressed = SubResource( 46 )
+custom_styles/normal = SubResource( 47 )
+enabled_focus_mode = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="m" type="MarginContainer" parent="import/byString/m/v/h/cancel"]
+margin_left = 3.0
+margin_right = 35.0
+margin_bottom = 32.0
+mouse_filter = 2
+size_flags_horizontal = 4
+custom_constants/margin_right = 4
+custom_constants/margin_top = 4
+custom_constants/margin_left = 4
+custom_constants/margin_bottom = 4
+
+[node name="icon" type="Panel" parent="import/byString/m/v/h/cancel/m"]
+margin_left = 4.0
+margin_top = 4.0
+margin_right = 28.0
+margin_bottom = 28.0
+rect_min_size = Vector2( 24, 24 )
+mouse_filter = 2
+custom_styles/panel = SubResource( 48 )
+
+[node name="Sprite" type="Sprite" parent="import/byString/m/v/h/cancel/m/icon"]
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 8 )
+centered = false
+
+[node name="shadow" type="Sprite" parent="import/byString/m/v/h/cancel/m/icon/Sprite"]
+self_modulate = Color( 0, 0, 0, 0.501961 )
+show_behind_parent = true
+position = Vector2( 2, 2 )
+texture = ExtResource( 8 )
+centered = false
+
+[node name="byString failure" type="MarginContainer" parent="import"]
+visible = false
+margin_left = 430.0
+margin_top = 205.0
+margin_right = 850.0
+margin_bottom = 514.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="bg" type="Panel" parent="import/byString failure"]
+self_modulate = Color( 0.219608, 0.219608, 0.219608, 1 )
+margin_right = 420.0
+margin_bottom = 309.0
+custom_styles/panel = SubResource( 40 )
+
+[node name="m" type="MarginContainer" parent="import/byString failure"]
+margin_right = 420.0
+margin_bottom = 309.0
+custom_constants/margin_right = 10
+custom_constants/margin_top = 10
+custom_constants/margin_left = 10
+custom_constants/margin_bottom = 10
+
+[node name="v" type="VBoxContainer" parent="import/byString failure/m"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 410.0
+margin_bottom = 299.0
+custom_constants/separation = 20
+alignment = 1
+
+[node name="icon" type="Panel" parent="import/byString failure/m/v"]
+margin_left = 184.0
+margin_right = 216.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 32, 32 )
+mouse_filter = 2
+size_flags_horizontal = 4
+custom_styles/panel = SubResource( 48 )
+
+[node name="Sprite" type="Sprite" parent="import/byString failure/m/v/icon"]
+texture = ExtResource( 19 )
+centered = false
+
+[node name="shadow" type="Sprite" parent="import/byString failure/m/v/icon/Sprite"]
+self_modulate = Color( 0, 0, 0, 0.501961 )
+show_behind_parent = true
+position = Vector2( 2, 2 )
+texture = ExtResource( 19 )
+centered = false
+
+[node name="TextEdit" type="TextEdit" parent="import/byString failure/m/v"]
+margin_top = 52.0
+margin_right = 400.0
+margin_bottom = 202.0
+rect_min_size = Vector2( 400, 150 )
+rect_pivot_offset = Vector2( -770, -170 )
+size_flags_horizontal = 4
+size_flags_vertical = 4
+custom_fonts/font = SubResource( 43 )
+text = "wow much save text very bigly"
+readonly = true
+breakpoint_gutter = true
+wrap_enabled = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="label" type="Label" parent="import/byString failure/m/v"]
+margin_left = 96.0
+margin_top = 222.0
+margin_right = 303.0
+margin_bottom = 237.0
+size_flags_horizontal = 4
+custom_fonts/font = SubResource( 50 )
+text = "This save text is not compatible. Sorry!"
+align = 1
+valign = 1
+
+[node name="accept" type="MarginContainer" parent="import/byString failure/m/v"]
+margin_left = 181.0
+margin_top = 257.0
+margin_right = 219.0
+margin_bottom = 289.0
+rect_min_size = Vector2( 38, 24 )
+size_flags_horizontal = 4
+size_flags_vertical = 0
+custom_constants/margin_right = 0
+custom_constants/margin_top = 0
+custom_constants/margin_left = 0
+custom_constants/margin_bottom = 0
+
+[node name="button" type="Button" parent="import/byString failure/m/v/accept"]
+self_modulate = Color( 0.384314, 0.603922, 0.270588, 1 )
+margin_right = 38.0
+margin_bottom = 32.0
+hint_tooltip = "What balogney! This game sucks!"
+focus_mode = 0
+mouse_default_cursor_shape = 2
+theme = ExtResource( 17 )
+custom_fonts/font = SubResource( 44 )
+custom_styles/hover = SubResource( 45 )
+custom_styles/pressed = SubResource( 46 )
+custom_styles/normal = SubResource( 47 )
+enabled_focus_mode = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="m" type="MarginContainer" parent="import/byString failure/m/v/accept"]
+margin_left = 3.0
+margin_right = 35.0
+margin_bottom = 32.0
+mouse_filter = 2
+size_flags_horizontal = 4
+custom_constants/margin_right = 4
+custom_constants/margin_top = 4
+custom_constants/margin_left = 4
+custom_constants/margin_bottom = 4
+
+[node name="icon" type="Panel" parent="import/byString failure/m/v/accept/m"]
+margin_left = 4.0
+margin_top = 4.0
+margin_right = 28.0
+margin_bottom = 28.0
+rect_min_size = Vector2( 24, 24 )
+mouse_filter = 2
+custom_styles/panel = SubResource( 48 )
+
+[node name="Sprite" type="Sprite" parent="import/byString failure/m/v/accept/m/icon"]
+texture = ExtResource( 9 )
+centered = false
+
+[node name="shadow" type="Sprite" parent="import/byString failure/m/v/accept/m/icon/Sprite"]
+self_modulate = Color( 0, 0, 0, 0.501961 )
+show_behind_parent = true
+position = Vector2( 2, 2 )
+texture = ExtResource( 9 )
+centered = false
+
+[node name="byFile failure" type="MarginContainer" parent="import"]
+visible = false
+margin_left = 430.0
+margin_top = 205.0
+margin_right = 850.0
+margin_bottom = 514.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="bg" type="Panel" parent="import/byFile failure"]
+self_modulate = Color( 0.219608, 0.219608, 0.219608, 1 )
+margin_right = 420.0
+margin_bottom = 309.0
+custom_styles/panel = SubResource( 40 )
+
+[node name="m" type="MarginContainer" parent="import/byFile failure"]
+margin_right = 420.0
+margin_bottom = 309.0
+custom_constants/margin_right = 10
+custom_constants/margin_top = 10
+custom_constants/margin_left = 10
+custom_constants/margin_bottom = 10
+
+[node name="v" type="VBoxContainer" parent="import/byFile failure/m"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 410.0
+margin_bottom = 299.0
+custom_constants/separation = 20
+alignment = 1
+
+[node name="icon" type="Panel" parent="import/byFile failure/m/v"]
+margin_left = 184.0
+margin_right = 216.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 32, 32 )
+mouse_filter = 2
+size_flags_horizontal = 4
+custom_styles/panel = SubResource( 48 )
+
+[node name="Sprite" type="Sprite" parent="import/byFile failure/m/v/icon"]
+texture = ExtResource( 19 )
+centered = false
+
+[node name="shadow" type="Sprite" parent="import/byFile failure/m/v/icon/Sprite"]
+self_modulate = Color( 0, 0, 0, 0.501961 )
+show_behind_parent = true
+position = Vector2( 2, 2 )
+texture = ExtResource( 19 )
+centered = false
+
+[node name="TextEdit" type="TextEdit" parent="import/byFile failure/m/v"]
+margin_top = 52.0
+margin_right = 400.0
+margin_bottom = 202.0
+rect_min_size = Vector2( 400, 150 )
+rect_pivot_offset = Vector2( -770, -170 )
+size_flags_horizontal = 4
+size_flags_vertical = 4
+custom_fonts/font = SubResource( 43 )
+text = "wow much save text very bigly"
+readonly = true
+breakpoint_gutter = true
+wrap_enabled = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="label" type="Label" parent="import/byFile failure/m/v"]
+margin_left = 96.0
+margin_top = 222.0
+margin_right = 303.0
+margin_bottom = 237.0
+size_flags_horizontal = 4
+custom_fonts/font = SubResource( 50 )
+text = "This save text is not compatible. Sorry!"
+align = 1
+valign = 1
+
+[node name="accept" type="MarginContainer" parent="import/byFile failure/m/v"]
+margin_left = 181.0
+margin_top = 257.0
+margin_right = 219.0
+margin_bottom = 289.0
+rect_min_size = Vector2( 38, 24 )
+size_flags_horizontal = 4
+size_flags_vertical = 0
+custom_constants/margin_right = 0
+custom_constants/margin_top = 0
+custom_constants/margin_left = 0
+custom_constants/margin_bottom = 0
+
+[node name="button" type="Button" parent="import/byFile failure/m/v/accept"]
+self_modulate = Color( 0.384314, 0.603922, 0.270588, 1 )
+margin_right = 38.0
+margin_bottom = 32.0
+hint_tooltip = "Who made this crap anyway?"
+focus_mode = 0
+mouse_default_cursor_shape = 2
+theme = ExtResource( 17 )
+custom_fonts/font = SubResource( 44 )
+custom_styles/hover = SubResource( 45 )
+custom_styles/pressed = SubResource( 46 )
+custom_styles/normal = SubResource( 47 )
+enabled_focus_mode = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="m" type="MarginContainer" parent="import/byFile failure/m/v/accept"]
+margin_left = 3.0
+margin_right = 35.0
+margin_bottom = 32.0
+mouse_filter = 2
+size_flags_horizontal = 4
+custom_constants/margin_right = 4
+custom_constants/margin_top = 4
+custom_constants/margin_left = 4
+custom_constants/margin_bottom = 4
+
+[node name="icon" type="Panel" parent="import/byFile failure/m/v/accept/m"]
+margin_left = 4.0
+margin_top = 4.0
+margin_right = 28.0
+margin_bottom = 28.0
+rect_min_size = Vector2( 24, 24 )
+mouse_filter = 2
+custom_styles/panel = SubResource( 48 )
+
+[node name="Sprite" type="Sprite" parent="import/byFile failure/m/v/accept/m/icon"]
+texture = ExtResource( 9 )
+centered = false
+
+[node name="shadow" type="Sprite" parent="import/byFile failure/m/v/accept/m/icon/Sprite"]
+self_modulate = Color( 0, 0, 0, 0.501961 )
+show_behind_parent = true
+position = Vector2( 2, 2 )
+texture = ExtResource( 9 )
+centered = false
+
+[node name="tip" type="Node2D" parent="."]
+
 [node name="sc" type="ScrollContainer" parent="."]
+visible = false
 margin_right = 1280.0
 margin_bottom = 720.0
 scroll_vertical_enabled = false
 
 [node name="h" type="HBoxContainer" parent="sc"]
-margin_top = 26.0
+margin_top = 32.0
 margin_right = 1426.0
-margin_bottom = 682.0
+margin_bottom = 688.0
 rect_pivot_offset = Vector2( 1, 1 )
 size_flags_vertical = 6
 custom_constants/separation = 20
@@ -770,9 +2235,6 @@ margin_left = 639.0
 margin_top = 92.0
 margin_right = 961.0
 margin_bottom = 183.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="bg" type="Panel" parent="sc/h/all saves/Node2D/hint"]
 self_modulate = Color( 0.219608, 0.219608, 0.219608, 1 )
@@ -1125,11 +2587,17 @@ rect_min_size = Vector2( 100, 0 )
 rect_pivot_offset = Vector2( -2, -5 )
 custom_styles/panel = SubResource( 7 )
 
-[node name="color" type="MarginContainer" parent="."]
-margin_left = 952.0
-margin_top = 89.0
+[node name="color" type="HBoxContainer" parent="."]
+margin_left = 1204.0
 margin_right = 1280.0
-margin_bottom = 631.0
+margin_bottom = 720.0
+size_flags_horizontal = 8
+
+[node name="m" type="MarginContainer" parent="color"]
+visible = false
+margin_top = 101.0
+margin_right = 328.0
+margin_bottom = 619.0
 rect_pivot_offset = Vector2( -1132, 438 )
 size_flags_horizontal = 8
 size_flags_vertical = 4
@@ -1142,26 +2610,26 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="bg" type="Panel" parent="color"]
+[node name="bg" type="Panel" parent="color/m"]
 margin_right = 328.0
-margin_bottom = 542.0
+margin_bottom = 518.0
 custom_styles/panel = SubResource( 13 )
 
-[node name="m" type="MarginContainer" parent="color"]
+[node name="m" type="MarginContainer" parent="color/m"]
 margin_right = 328.0
-margin_bottom = 542.0
+margin_bottom = 518.0
 custom_constants/margin_right = 10
 custom_constants/margin_top = 10
 custom_constants/margin_left = 10
 custom_constants/margin_bottom = 10
 
-[node name="v" type="VBoxContainer" parent="color/m"]
+[node name="v" type="VBoxContainer" parent="color/m/m"]
 margin_left = 10.0
 margin_top = 10.0
 margin_right = 318.0
-margin_bottom = 532.0
+margin_bottom = 508.0
 
-[node name="ColorPicker" type="ColorPicker" parent="color/m/v"]
+[node name="ColorPicker" type="ColorPicker" parent="color/m/m/v"]
 margin_left = 4.0
 margin_top = 4.0
 margin_right = 312.0
@@ -1172,31 +2640,32 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="h" type="HBoxContainer" parent="color/m/v"]
+[node name="h" type="HBoxContainer" parent="color/m/m/v"]
 margin_top = 466.0
 margin_right = 308.0
-margin_bottom = 522.0
+margin_bottom = 498.0
 custom_constants/separation = 10
 alignment = 1
 
-[node name="accept" type="MarginContainer" parent="color/m/v/h"]
-margin_left = 81.0
-margin_right = 161.0
-margin_bottom = 56.0
-rect_min_size = Vector2( 80, 0 )
+[node name="accept" type="MarginContainer" parent="color/m/m/v/h"]
+margin_left = 111.0
+margin_right = 149.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 38, 0 )
 size_flags_horizontal = 4
 custom_constants/margin_right = 0
 custom_constants/margin_top = 0
 custom_constants/margin_left = 0
 custom_constants/margin_bottom = 0
 
-[node name="button" type="Button" parent="color/m/v/h/accept"]
+[node name="button" type="Button" parent="color/m/m/v/h/accept"]
 self_modulate = Color( 0.384314, 0.603922, 0.270588, 1 )
-margin_right = 80.0
-margin_bottom = 56.0
+margin_right = 38.0
+margin_bottom = 32.0
 hint_tooltip = "Accept new save color"
 focus_mode = 0
 mouse_default_cursor_shape = 2
+theme = ExtResource( 17 )
 custom_fonts/font = SubResource( 14 )
 custom_styles/hover = SubResource( 15 )
 custom_styles/pressed = SubResource( 16 )
@@ -1206,10 +2675,10 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="m" type="MarginContainer" parent="color/m/v/h/accept"]
-margin_left = 12.0
-margin_right = 68.0
-margin_bottom = 56.0
+[node name="m" type="MarginContainer" parent="color/m/m/v/h/accept"]
+margin_left = 3.0
+margin_right = 35.0
+margin_bottom = 32.0
 mouse_filter = 2
 size_flags_horizontal = 4
 custom_constants/margin_right = 4
@@ -1217,43 +2686,45 @@ custom_constants/margin_top = 4
 custom_constants/margin_left = 4
 custom_constants/margin_bottom = 4
 
-[node name="icon" type="Panel" parent="color/m/v/h/accept/m"]
+[node name="icon" type="Panel" parent="color/m/m/v/h/accept/m"]
 margin_left = 4.0
 margin_top = 4.0
-margin_right = 52.0
-margin_bottom = 52.0
-rect_min_size = Vector2( 48, 48 )
+margin_right = 28.0
+margin_bottom = 28.0
+rect_min_size = Vector2( 24, 24 )
 mouse_filter = 2
 custom_styles/panel = SubResource( 18 )
 
-[node name="Sprite" type="Sprite" parent="color/m/v/h/accept/m/icon"]
+[node name="Sprite" type="Sprite" parent="color/m/m/v/h/accept/m/icon"]
 texture = ExtResource( 9 )
 centered = false
 
-[node name="shadow" type="Sprite" parent="color/m/v/h/accept/m/icon/Sprite"]
+[node name="shadow" type="Sprite" parent="color/m/m/v/h/accept/m/icon/Sprite"]
 self_modulate = Color( 0, 0, 0, 0.501961 )
 show_behind_parent = true
 position = Vector2( 2, 2 )
 texture = ExtResource( 9 )
 centered = false
 
-[node name="cancel" type="MarginContainer" parent="color/m/v/h"]
-margin_left = 171.0
-margin_right = 227.0
-margin_bottom = 56.0
+[node name="cancel" type="MarginContainer" parent="color/m/m/v/h"]
+margin_left = 159.0
+margin_right = 197.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 38, 0 )
 size_flags_horizontal = 4
 custom_constants/margin_right = 0
 custom_constants/margin_top = 0
 custom_constants/margin_left = 0
 custom_constants/margin_bottom = 0
 
-[node name="button" type="Button" parent="color/m/v/h/cancel"]
+[node name="button" type="Button" parent="color/m/m/v/h/cancel"]
 self_modulate = Color( 1, 0, 0, 1 )
-margin_right = 56.0
-margin_bottom = 56.0
+margin_right = 38.0
+margin_bottom = 32.0
 hint_tooltip = "Cancel"
 focus_mode = 0
 mouse_default_cursor_shape = 2
+theme = ExtResource( 17 )
 custom_fonts/font = SubResource( 14 )
 custom_styles/hover = SubResource( 15 )
 custom_styles/pressed = SubResource( 16 )
@@ -1263,9 +2734,10 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="m" type="MarginContainer" parent="color/m/v/h/cancel"]
-margin_right = 56.0
-margin_bottom = 56.0
+[node name="m" type="MarginContainer" parent="color/m/m/v/h/cancel"]
+margin_left = 3.0
+margin_right = 35.0
+margin_bottom = 32.0
 mouse_filter = 2
 size_flags_horizontal = 4
 custom_constants/margin_right = 4
@@ -1273,32 +2745,359 @@ custom_constants/margin_top = 4
 custom_constants/margin_left = 4
 custom_constants/margin_bottom = 4
 
-[node name="icon" type="Panel" parent="color/m/v/h/cancel/m"]
+[node name="icon" type="Panel" parent="color/m/m/v/h/cancel/m"]
 margin_left = 4.0
 margin_top = 4.0
-margin_right = 52.0
-margin_bottom = 52.0
-rect_min_size = Vector2( 48, 48 )
+margin_right = 28.0
+margin_bottom = 28.0
+rect_min_size = Vector2( 24, 24 )
 mouse_filter = 2
 custom_styles/panel = SubResource( 18 )
 
-[node name="Sprite" type="Sprite" parent="color/m/v/h/cancel/m/icon"]
+[node name="Sprite" type="Sprite" parent="color/m/m/v/h/cancel/m/icon"]
+scale = Vector2( 0.5, 0.5 )
 texture = ExtResource( 8 )
 centered = false
 
-[node name="shadow" type="Sprite" parent="color/m/v/h/cancel/m/icon/Sprite"]
+[node name="shadow" type="Sprite" parent="color/m/m/v/h/cancel/m/icon/Sprite"]
 self_modulate = Color( 0, 0, 0, 0.501961 )
 show_behind_parent = true
 position = Vector2( 2, 2 )
 texture = ExtResource( 8 )
 centered = false
 
+[node name="indent" type="Panel" parent="color"]
+margin_right = 76.0
+margin_bottom = 720.0
+rect_min_size = Vector2( 76, 0 )
+rect_pivot_offset = Vector2( -2, -5 )
+mouse_filter = 2
+custom_styles/panel = SubResource( 7 )
+
+[node name="FileDialog" type="FileDialog" parent="."]
+margin_left = 482.0
+margin_top = 295.0
+margin_right = 797.0
+margin_bottom = 425.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+window_title = "Import a Save"
+dialog_hide_on_ok = true
+
+[node name="exitConfirm" type="MarginContainer" parent="."]
+visible = false
+margin_left = 565.0
+margin_top = 315.0
+margin_right = 715.0
+margin_bottom = 404.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="bg" type="Panel" parent="exitConfirm"]
+self_modulate = Color( 0.219608, 0.219608, 0.219608, 1 )
+margin_right = 150.0
+margin_bottom = 89.0
+custom_styles/panel = SubResource( 40 )
+
+[node name="m" type="MarginContainer" parent="exitConfirm"]
+margin_right = 150.0
+margin_bottom = 89.0
+rect_min_size = Vector2( 150, 0 )
+custom_constants/margin_right = 10
+custom_constants/margin_top = 10
+custom_constants/margin_left = 10
+custom_constants/margin_bottom = 10
+
+[node name="v" type="VBoxContainer" parent="exitConfirm/m"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 140.0
+margin_bottom = 79.0
+custom_constants/separation = 20
+alignment = 1
+
+[node name="text" type="Label" parent="exitConfirm/m/v"]
+margin_right = 130.0
+margin_bottom = 17.0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 49 )
+text = "Exit game?"
+align = 1
+
+[node name="h" type="HBoxContainer" parent="exitConfirm/m/v"]
+margin_top = 37.0
+margin_right = 130.0
+margin_bottom = 69.0
+custom_constants/separation = 10
+alignment = 1
+
+[node name="accept" type="MarginContainer" parent="exitConfirm/m/v/h"]
+margin_left = 22.0
+margin_right = 60.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 38, 24 )
+size_flags_horizontal = 4
+size_flags_vertical = 0
+custom_constants/margin_right = 0
+custom_constants/margin_top = 0
+custom_constants/margin_left = 0
+custom_constants/margin_bottom = 0
+
+[node name="button" type="Button" parent="exitConfirm/m/v/h/accept"]
+self_modulate = Color( 0.384314, 0.603922, 0.270588, 1 )
+margin_right = 38.0
+margin_bottom = 32.0
+hint_tooltip = "Bye-bye!"
+focus_mode = 0
+mouse_default_cursor_shape = 2
+theme = ExtResource( 17 )
+custom_fonts/font = SubResource( 44 )
+custom_styles/hover = SubResource( 45 )
+custom_styles/pressed = SubResource( 46 )
+custom_styles/normal = SubResource( 47 )
+enabled_focus_mode = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="m" type="MarginContainer" parent="exitConfirm/m/v/h/accept"]
+margin_left = 3.0
+margin_right = 35.0
+margin_bottom = 32.0
+mouse_filter = 2
+size_flags_horizontal = 4
+custom_constants/margin_right = 4
+custom_constants/margin_top = 4
+custom_constants/margin_left = 4
+custom_constants/margin_bottom = 4
+
+[node name="icon" type="Panel" parent="exitConfirm/m/v/h/accept/m"]
+margin_left = 4.0
+margin_top = 4.0
+margin_right = 28.0
+margin_bottom = 28.0
+rect_min_size = Vector2( 24, 24 )
+mouse_filter = 2
+custom_styles/panel = SubResource( 48 )
+
+[node name="Sprite" type="Sprite" parent="exitConfirm/m/v/h/accept/m/icon"]
+texture = ExtResource( 9 )
+centered = false
+
+[node name="shadow" type="Sprite" parent="exitConfirm/m/v/h/accept/m/icon/Sprite"]
+self_modulate = Color( 0, 0, 0, 0.501961 )
+show_behind_parent = true
+position = Vector2( 2, 2 )
+texture = ExtResource( 9 )
+centered = false
+
+[node name="cancel" type="MarginContainer" parent="exitConfirm/m/v/h"]
+margin_left = 70.0
+margin_right = 108.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 38, 0 )
+size_flags_horizontal = 4
+custom_constants/margin_right = 0
+custom_constants/margin_top = 0
+custom_constants/margin_left = 0
+custom_constants/margin_bottom = 0
+
+[node name="button" type="Button" parent="exitConfirm/m/v/h/cancel"]
+self_modulate = Color( 1, 0, 0, 1 )
+margin_right = 38.0
+margin_bottom = 32.0
+hint_tooltip = "Stay :)"
+focus_mode = 0
+mouse_default_cursor_shape = 2
+theme = ExtResource( 17 )
+custom_fonts/font = SubResource( 44 )
+custom_styles/hover = SubResource( 45 )
+custom_styles/pressed = SubResource( 46 )
+custom_styles/normal = SubResource( 47 )
+enabled_focus_mode = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="m" type="MarginContainer" parent="exitConfirm/m/v/h/cancel"]
+margin_left = 3.0
+margin_right = 35.0
+margin_bottom = 32.0
+mouse_filter = 2
+size_flags_horizontal = 4
+custom_constants/margin_right = 4
+custom_constants/margin_top = 4
+custom_constants/margin_left = 4
+custom_constants/margin_bottom = 4
+
+[node name="icon" type="Panel" parent="exitConfirm/m/v/h/cancel/m"]
+margin_left = 4.0
+margin_top = 4.0
+margin_right = 28.0
+margin_bottom = 28.0
+rect_min_size = Vector2( 24, 24 )
+mouse_filter = 2
+custom_styles/panel = SubResource( 48 )
+
+[node name="Sprite" type="Sprite" parent="exitConfirm/m/v/h/cancel/m/icon"]
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 8 )
+centered = false
+
+[node name="shadow" type="Sprite" parent="exitConfirm/m/v/h/cancel/m/icon/Sprite"]
+self_modulate = Color( 0, 0, 0, 0.501961 )
+show_behind_parent = true
+position = Vector2( 2, 2 )
+texture = ExtResource( 8 )
+centered = false
+
+[node name="filename error" type="MarginContainer" parent="."]
+visible = false
+margin_left = 530.0
+margin_top = 310.0
+margin_right = 750.0
+margin_bottom = 409.0
+rect_min_size = Vector2( 220, 60 )
+mouse_filter = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+custom_constants/margin_right = 0
+custom_constants/margin_top = 0
+custom_constants/margin_left = 0
+custom_constants/margin_bottom = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="bg" type="Panel" parent="filename error"]
+margin_right = 220.0
+margin_bottom = 99.0
+mouse_filter = 2
+custom_styles/panel = SubResource( 55 )
+
+[node name="m" type="MarginContainer" parent="filename error"]
+margin_right = 220.0
+margin_bottom = 99.0
+custom_constants/margin_right = 10
+custom_constants/margin_top = 10
+custom_constants/margin_left = 10
+custom_constants/margin_bottom = 10
+
+[node name="v" type="VBoxContainer" parent="filename error/m"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 210.0
+margin_bottom = 89.0
+alignment = 1
+
+[node name="h" type="HBoxContainer" parent="filename error/m/v"]
+margin_right = 200.0
+margin_bottom = 24.0
+alignment = 1
+
+[node name="flair" type="Panel" parent="filename error/m/v/h"]
+margin_left = 29.0
+margin_right = 53.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 24, 24 )
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 39 )
+
+[node name="Sprite" type="Sprite" parent="filename error/m/v/h/flair"]
+self_modulate = Color( 1, 0.654902, 0, 1 )
+position = Vector2( 12, 12 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 22 )
+
+[node name="Sprite2" type="Sprite" parent="filename error/m/v/h/flair/Sprite"]
+self_modulate = Color( 0, 0, 0, 0.501961 )
+show_behind_parent = true
+position = Vector2( 2, 2 )
+texture = ExtResource( 22 )
+
+[node name="text" type="Label" parent="filename error/m/v/h"]
+margin_left = 57.0
+margin_top = 2.0
+margin_right = 170.0
+margin_bottom = 21.0
+size_flags_horizontal = 4
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 38 )
+text = "Oopsie poopsie!"
+align = 1
+
+[node name="desc" type="Label" parent="filename error/m/v"]
+margin_top = 28.0
+margin_right = 200.0
+margin_bottom = 79.0
+hint_tooltip = "Step: 0.1"
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 41 )
+text = "Please don't use any of the following characters in your save name:
+: / \\ ? * \" | % < >"
+align = 1
+autowrap = true
+
+[node name="button" type="Button" parent="filename error"]
+margin_right = 220.0
+margin_bottom = 99.0
+rect_min_size = Vector2( 0, 32 )
+focus_mode = 0
+mouse_default_cursor_shape = 2
+custom_fonts/font = SubResource( 34 )
+custom_styles/hover = SubResource( 36 )
+custom_styles/pressed = SubResource( 37 )
+custom_styles/normal = SubResource( 35 )
+enabled_focus_mode = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[connection signal="mouse_entered" from="h/v/continue/m/button" to="." method="_on_continue_mouse_entered"]
+[connection signal="mouse_exited" from="h/v/continue/m/button" to="." method="_on_continue_mouse_exited"]
+[connection signal="pressed" from="h/v/continue/m/button" to="." method="_on_continue_pressed"]
+[connection signal="mouse_entered" from="h/v/new/m/button" to="." method="_on_new_mouse_entered"]
+[connection signal="mouse_exited" from="h/v/new/m/button" to="." method="_on_new_mouse_exited"]
+[connection signal="mouse_entered" from="h/v/load/m/button" to="." method="_on_load_mouse_entered"]
+[connection signal="mouse_exited" from="h/v/load/m/button" to="." method="_on_load_mouse_exited"]
+[connection signal="pressed" from="h/v/load/m/button" to="." method="_on_load_pressed"]
+[connection signal="mouse_entered" from="all saves/top/h/v/v/back/m/button" to="." method="_on_all_saves_back_mouse_entered"]
+[connection signal="mouse_exited" from="all saves/top/h/v/v/back/m/button" to="." method="_on_all_saves_back_mouse_exited"]
+[connection signal="pressed" from="all saves/top/h/v/v/back/m/button" to="." method="_on_all_saves_back_pressed"]
+[connection signal="mouse_entered" from="all saves/top/h/v/v/refresh/m/button" to="." method="_on_all_saves_refresh_mouse_entered"]
+[connection signal="mouse_exited" from="all saves/top/h/v/v/refresh/m/button" to="." method="_on_all_saves_refresh_mouse_exited"]
+[connection signal="pressed" from="all saves/top/h/v/v/refresh/m/button" to="." method="_on_refresh_pressed"]
+[connection signal="mouse_entered" from="all saves/top/h/v/v/import/m/button" to="." method="_on_all_saves_import_mouse_entered"]
+[connection signal="mouse_exited" from="all saves/top/h/v/v/import/m/button" to="." method="_on_all_saves_import_mouse_exited"]
+[connection signal="pressed" from="all saves/top/h/v/v/import/m/button" to="." method="_on_import_pressed"]
+[connection signal="mouse_entered" from="import/m/h/byString/button" to="." method="_on_import_byString_mouse_entered"]
+[connection signal="mouse_exited" from="import/m/h/byString/button" to="." method="_on_import_byString_mouse_exited"]
+[connection signal="pressed" from="import/m/h/byString/button" to="." method="_on_import_byString_pressed"]
+[connection signal="mouse_entered" from="import/m/h/byFile/button" to="." method="_on_import_byFile_mouse_entered"]
+[connection signal="mouse_exited" from="import/m/h/byFile/button" to="." method="_on_import_byFile_mouse_exited"]
+[connection signal="pressed" from="import/m/h/byFile/button" to="." method="_on_import_byFile_pressed"]
+[connection signal="mouse_entered" from="import/top/h/v/v/back/m/button" to="." method="_on_import_back_mouse_entered"]
+[connection signal="mouse_exited" from="import/top/h/v/v/back/m/button" to="." method="_on_import_back_mouse_exited"]
+[connection signal="pressed" from="import/top/h/v/v/back/m/button" to="." method="_on_import_back_pressed"]
+[connection signal="pressed" from="import/byString/m/v/manual save name/h/check" to="." method="_on_byString_manual_save_name_pressed"]
+[connection signal="text_changed" from="import/byString/m/v/manual save name/h2/TextEdit" to="." method="_on_import_byString_savename_text_changed"]
+[connection signal="pressed" from="import/byString/m/v/manual save name/h2/m/select" to="." method="_on_importByString_color_pressed"]
+[connection signal="pressed" from="import/byString/m/v/h/accept/button" to="." method="_on_import_byString_go_pressed"]
+[connection signal="pressed" from="import/byString/m/v/h/cancel/button" to="." method="_on_import_byString_cancel_pressed"]
+[connection signal="pressed" from="import/byString failure/m/v/accept/button" to="." method="_on_import_byString_failure_pressed"]
+[connection signal="pressed" from="import/byFile failure/m/v/accept/button" to="." method="_on_import_byFile_failure_pressed"]
 [connection signal="pressed" from="sc/h/continue/m/v/v/v/v/load slot/button" to="." method="_on_all_saves_pressed"]
 [connection signal="pressed" from="sc/h/all saves/m/v/top/h/close/button" to="." method="_on_all_saves_pressed"]
 [connection signal="mouse_entered" from="sc/h/all saves/m/v/top/h/hint/button" to="." method="_on_save_hint_mouse_entered"]
 [connection signal="mouse_exited" from="sc/h/all saves/m/v/top/h/hint/button" to="." method="_on_save_hint_mouse_exited"]
 [connection signal="pressed" from="sc/h/all saves/m/v/top/h/refresh/button" to="." method="_on_refresh_pressed"]
 [connection signal="pressed" from="sc/h/v/new/button" to="." method="_on_new_game_pressed"]
-[connection signal="color_changed" from="color/m/v/ColorPicker" to="." method="_on_ColorPicker_color_changed"]
-[connection signal="pressed" from="color/m/v/h/accept/button" to="." method="_on_accept_color_edit_pressed"]
-[connection signal="pressed" from="color/m/v/h/cancel/button" to="." method="_on_color_cancel_pressed"]
+[connection signal="color_changed" from="color/m/m/v/ColorPicker" to="." method="_on_ColorPicker_color_changed"]
+[connection signal="pressed" from="color/m/m/v/h/accept/button" to="." method="_on_accept_color_edit_pressed"]
+[connection signal="pressed" from="color/m/m/v/h/cancel/button" to="." method="_on_color_cancel_pressed"]
+[connection signal="confirmed" from="FileDialog" to="." method="_on_FileDialog_confirmed"]
+[connection signal="file_selected" from="FileDialog" to="." method="_on_FileDialog_file_selected"]
+[connection signal="pressed" from="exitConfirm/m/v/h/accept/button" to="." method="_on_exit_pressed"]
+[connection signal="pressed" from="exitConfirm/m/v/h/cancel/button" to="." method="_on_dontExit_pressed"]
+[connection signal="pressed" from="filename error/button" to="." method="_on_oopsie_pressed"]

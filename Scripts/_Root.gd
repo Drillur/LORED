@@ -55,7 +55,6 @@ func _ready():
 	get_node("m/v/top/h/resources").setup()
 	
 	for x in gv.g:
-		
 		get_node(gnLOREDs).cont[x].start_some()
 	
 	get_tree().get_root().connect("size_changed", self, "r_window_size_changed")
@@ -306,9 +305,11 @@ func _notification(ev):
 func _on_menu_pressed() -> void:
 	b_tabkey(KEY_ESCAPE)
 func _on_main_menu_pressed() -> void:
+	exitToMainMenu()
+
+func exitToMainMenu():
 	close()
 	get_tree().change_scene("res://Scenes/Main Menu.tscn")
-
 func close():
 	taq.close() #002
 	gv.close()
@@ -557,7 +558,7 @@ func w_total_per_sec(clock_dif : float) -> void:
 			jo_efficiency = Big.new()
 		
 		print("Time offline: ", gv.parse_time(clock_dif))
-		print("coal/joule efficiency: ", coal_efficiency.toString(), "/", jo_efficiency.toString(), "\n")
+		#print("coal/joule efficiency: ", coal_efficiency.toString(), "/", jo_efficiency.toString(), "\n")
 		
 		for x in gv.g:
 			
@@ -612,7 +613,7 @@ func w_total_per_sec(clock_dif : float) -> void:
 		
 		if consumed[x].greater(gained[x]):
 			var net = Big.new(consumed[x]).s(gained[x])
-			print(x, ": -", net.toString(), " (", gained[x].toString(), " gained, ", consumed[x].toString(), " drained)")
+			#print(x, ": -", net.toString(), " (", gained[x].toString(), " gained, ", consumed[x].toString(), " drained)")
 			consumed[x].s(gained[x])
 			if consumed[x].greater(gv.r[x]):
 				gv.r[x] = Big.new(0)
@@ -620,7 +621,7 @@ func w_total_per_sec(clock_dif : float) -> void:
 				gv.r[x].s(consumed[x])
 		else:
 			var net = Big.new(gained[x]).s(consumed[x])
-			print(x, ": +", net.toString(), " (", gained[x].toString(), " gained, ", consumed[x].toString(), " drained)")
+			#print(x, ": +", net.toString(), " (", gained[x].toString(), " gained, ", consumed[x].toString(), " drained)")
 			gained[x].s(consumed[x])
 			gv.r[x].a(gained[x])
 		
@@ -1120,7 +1121,7 @@ func switch_tabs(target: int):
 	menu.hide()
 	
 	# stored page vertical
-	gv.menu.tab_vertical[gv.page - gv.Tab.S1] = get_node(gnLOREDs + "/sc").scroll_vertical
+	gv.tab_vertical[gv.page - gv.Tab.S1] = get_node(gnLOREDs + "/sc").scroll_vertical
 	
 	gv.page = target # gv.Tab.S2
 	get_node("m/v/top/h/resources").switch_tabs(target)
@@ -1140,7 +1141,7 @@ func switch_tabs(target: int):
 	yield(t, "timeout")
 	t.queue_free()
 	
-	get_node(gnLOREDs + "/sc").scroll_vertical = gv.menu.tab_vertical[gv.page - gv.Tab.S1]
+	get_node(gnLOREDs + "/sc").scroll_vertical = gv.tab_vertical[gv.page - gv.Tab.S1]
 
 func open_up_tab(tab: int):
 	
@@ -1160,8 +1161,6 @@ func b_move_map(x, y):
 
 func unlock_tab(tab: int, add := true):
 	
-	# which may be gv.Tab.EXTRA_NORMAL, "3"
-	
 	if add:
 		gv.unlocked_tabs.append(tab)
 	else:
@@ -1171,8 +1170,15 @@ func unlock_tab(tab: int, add := true):
 		gv.Tab.NORMAL:
 			get_node("misc/tabs/v/upgrades").visible = add
 			continue
-		gv.Tab.S1, gv.Tab.S2, gv.Tab.S3, gv.Tab.S4:
-			get_node("misc/tabs/v/" + str(tab - gv.Tab.S1 + 1)).show()
+		gv.Tab.S2:
+			get_node("misc/tabs/v/" + str(tab - gv.Tab.S1)).visible = add
+			if add:
+				gv.unlocked_tabs.append(gv.Tab.S1)
+			else:
+				gv.unlocked_tabs.erase(gv.Tab.S1)
+			continue
+		gv.Tab.S2, gv.Tab.S3, gv.Tab.S4:
+			get_node("misc/tabs/v/" + str(tab - gv.Tab.S1 + 1)).visible = add
 		_:
 			get_node(gnupcon + "/top/" + str(tab)).visible = add
 
@@ -1448,6 +1454,12 @@ func _load(data: Dictionary):
 			if gv.up[x].active():
 				gv.up[x].apply()
 		
+		if not gv.up[x].have:
+			continue
+		
+		if x == "ROUTINE":
+			continue
+		
 		if not x in gv.list.upgrade["owned " + str(gv.up[x].tab)]:
 			gv.list.upgrade["owned " + str(gv.up[x].tab)].append(x)
 		
@@ -1462,8 +1474,6 @@ func _load(data: Dictionary):
 	w_total_per_sec(gv.cur_clock - gv.save_slot_clock - 30)
 
 func _on_Button_pressed() -> void:
-	
-	var name = gv.Lored.keys()[3].replace("_", " ").capitalize()
 	
 	pass
 

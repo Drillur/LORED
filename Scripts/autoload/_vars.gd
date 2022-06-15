@@ -3,7 +3,6 @@ extends Node
 
 
 
-# invoke with gv
 
 const hax_pow := 1.0 # 1.0 for normal
 var fps: float
@@ -238,6 +237,20 @@ func _ready():
 	
 	init_menu_and_stats()
 	update_clock()
+	
+	setupFonts()
+
+func setupFonts():
+	font.buttonNormal.font_data = load("res://Fonts/Roboto-Light.ttf")
+	
+	font.buttonHover.font_data = load("res://Fonts/Roboto-Light.ttf")
+	font.buttonHover.outline_size = 1
+	font.buttonHover.outline_color = Color(1, 1, 1, 0.25)
+	
+#var dynamic_font = DynamicFont.new()
+#    dynamic_font.font_data = load("res://Fonts/Cairo-Bold.ttf")
+#    dynamic_font.size = 120
+#    dynamic_font.use_filter = true
 
 func init_menu_and_stats():
 	
@@ -287,7 +300,8 @@ func check_for_the_s2_shit():
 		if not g[x].active:
 			return
 	s2_upgrades_may_be_autobought = true
-	get_node("/root/Root").unlock_tab(Tab.EXTRA_NORMAL)
+	#note i commented this line out because it was unlocking s2n before the quest unlocked it
+	#get_node("/root/Root").unlock_tab(Tab.EXTRA_NORMAL)
 
 const SRC := {
 	"alert": preload("res://Prefabs/alert.tscn"),
@@ -319,7 +333,7 @@ const SRC := {
 	
 	"flying text": preload("res://Prefabs/dtext.tscn"),
 	
-	"save slot block": preload("res://Prefabs/menu/Save Slot Block.tscn"),
+	"save block": preload("res://Prefabs/menu/Save Block.tscn"),
 }
 
 signal limit_break_leveled_up(which) # here -> Limit Break.gd
@@ -985,6 +999,7 @@ enum Tab {
 	NORMAL, MALIGNANT,
 	EXTRA_NORMAL, RADIATIVE,
 	RUNED_DIAL, SPIRIT,
+	s4n, s4m,
 	S1, S2, S3, S4,
 }
 var unlocked_tabs := []
@@ -1041,6 +1056,9 @@ func resetList():
 		list.upgrade["unowned " + str(Tab[t])] = []
 		list.upgrade["owned " + str(Tab[t])] = []
 
+func everyStage2LOREDunlocked() -> bool:
+	return list.lored["active " + str(Tab.S2)] == list.lored[Tab.S2]
+
 enum Objective {
 	RESOURCES_PRODUCED,
 	LORED_UPGRADED,
@@ -1058,6 +1076,9 @@ enum WishReward {
 	RESOURCE,
 	TAB,
 	MAX_RANDOM_WISHES,
+	AUTOMATED,
+	HALT_AND_HOLD,
+	WISH_TURNIN,
 }
 
 func highestResetKey() -> String:
@@ -1334,10 +1355,16 @@ func close():
 
 
 # main menu
+var font := {
+	buttonNormal = DynamicFont.new(),
+	buttonHover = DynamicFont.new(),
+}
 signal edit_save_color(node)
-signal save_block_opened
+signal hideAllActions
 
 
+func getRandomColor() -> Color:
+	return Color(rand_range(0, 1), rand_range(0, 1), rand_range(0, 1), 1)
 
 
 
@@ -1386,19 +1413,6 @@ func load(data: Dictionary):
 	
 	save_slot_clock = cur_clock
 	cur_clock = OS.get_unix_time() # set to the same time as cur_clock in the save data (8 lines up)
-
-var poop := Big.new(10) setget setPoop
-func setPoop(val):
-	print("val: ", val)
-	poop = val
-
-
-
-
-
-
-
-
 
 
 

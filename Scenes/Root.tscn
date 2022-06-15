@@ -109,9 +109,6 @@ custom_constants/margin_right = 0
 custom_constants/margin_top = 0
 custom_constants/margin_left = 0
 custom_constants/margin_bottom = 0
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="v" type="VBoxContainer" parent="m"]
 margin_right = 1280.0
@@ -379,9 +376,9 @@ size_flags_horizontal = 4
 size_flags_vertical = 6
 
 [node name="Menu" parent="m" instance=ExtResource( 21 )]
-margin_left = 395.0
+margin_left = 401.0
 margin_top = 210.0
-margin_right = 885.0
+margin_right = 879.0
 margin_bottom = 510.0
 
 [node name="misc" type="Node2D" parent="."]
@@ -422,6 +419,7 @@ position = Vector2( 26, 20 )
 texture = ExtResource( 13 )
 
 [node name="1" type="Button" parent="misc/tabs/v"]
+visible = false
 margin_top = 50.0
 margin_right = 53.0
 margin_bottom = 90.0

@@ -43,6 +43,8 @@ func initiateVisualShit():
 		var s2_used := false
 		var s3_used := false
 		var r1_used := false
+		var r2_used := false
+		var r3_used := false
 		
 		if wish.rewards == 0:
 			rewards.hide()
@@ -50,6 +52,13 @@ func initiateVisualShit():
 		for r in wish.rew:
 			
 			match r.type:
+				
+				gv.WishReward.AUTOMATED:
+					
+					if r.key == str(gv.WishReward.HALT_AND_HOLD):
+						get_node("m/v/rewards/h/v/automated halt&hold").show()
+					elif r.key == str(gv.WishReward.WISH_TURNIN):
+						get_node("m/v/rewards/h/v/automated turnin").show()
 				
 				gv.WishReward.MAX_RANDOM_WISHES:
 					
@@ -78,7 +87,9 @@ func initiateVisualShit():
 					else:
 						get_node("m/v/rewards/h/v/stage tab").show()
 						get_node("m/v/rewards/h/v/stage tab/h/icon/Sprite").texture = gv.sprite[r.key]
-						get_node("m/v/rewards/h/v/stage tab/h/stage").text = "Stage " + str(gv.Tab.S1 - int(r.key))
+						# r.key example: 7. 7 == gv.Tab.S2.
+						# gv.Tab.S1 == 6. (at least as far as stage 2
+						get_node("m/v/rewards/h/v/stage tab/h/stage").text = "Stage " + str(int(r.key) - gv.Tab.s4m)
 				
 				gv.WishReward.NEW_LORED:
 					get_node("m/v/rewards/h/v/newcomer").show()
@@ -107,11 +118,26 @@ func initiateVisualShit():
 						get_node("m/v/rewards/h/v/r1/h/resource").text = gv.g[r.key].name
 						get_node("m/v/rewards/h/v/r1/h/amount").self_modulate = gv.COLORS[r.key]
 					else:
-						get_node("m/v/rewards/h/v/r2").show()
-						get_node("m/v/rewards/h/v/r2/h/amount").text = "+" + r.amount.toString()
-						get_node("m/v/rewards/h/v/r2/h/icon/Sprite").texture = gv.sprite[r.key]
-						get_node("m/v/rewards/h/v/r2/h/resource").text = gv.g[r.key].name
-						get_node("m/v/rewards/h/v/r2/h/amount").self_modulate = gv.COLORS[r.key]
+						if not r2_used:
+							r2_used = true
+							get_node("m/v/rewards/h/v/r2").show()
+							get_node("m/v/rewards/h/v/r2/h/amount").text = "+" + r.amount.toString()
+							get_node("m/v/rewards/h/v/r2/h/icon/Sprite").texture = gv.sprite[r.key]
+							get_node("m/v/rewards/h/v/r2/h/resource").text = gv.g[r.key].name
+							get_node("m/v/rewards/h/v/r2/h/amount").self_modulate = gv.COLORS[r.key]
+						else:
+							if not r3_used:
+								get_node("m/v/rewards/h/v/r3").show()
+								get_node("m/v/rewards/h/v/r3/h/amount").text = "+" + r.amount.toString()
+								get_node("m/v/rewards/h/v/r3/h/icon/Sprite").texture = gv.sprite[r.key]
+								get_node("m/v/rewards/h/v/r3/h/resource").text = gv.g[r.key].name
+								get_node("m/v/rewards/h/v/r3/h/amount").self_modulate = gv.COLORS[r.key]
+							else:
+								get_node("m/v/rewards/h/v/r4").show()
+								get_node("m/v/rewards/h/v/r4/h/amount").text = "+" + r.amount.toString()
+								get_node("m/v/rewards/h/v/r4/h/icon/Sprite").texture = gv.sprite[r.key]
+								get_node("m/v/rewards/h/v/r4/h/resource").text = gv.g[r.key].name
+								get_node("m/v/rewards/h/v/r4/h/amount").self_modulate = gv.COLORS[r.key]
 		
 		if get_node("m/v/rewards/h/v/newcomer").visible:
 			if not get_node("m/v/rewards/h/v/newcomer/h/h/s2").visible:
