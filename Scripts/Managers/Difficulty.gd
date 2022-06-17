@@ -4,8 +4,7 @@ extends Node
 var modifier_lored_output := 1.0 setget setOutput, getOutput
 var modifier_lored_input := 1.0 setget setInput, getInput
 var modifier_lored_haste := 1.0 setget setHaste, getHaste
-var modifier_lored_crit_add := 0.0 setget setCritAdd, getCritAdd
-var modifier_lored_crit := 1.0 setget setCrit, getCrit
+var modifier_lored_crit := 0.0 setget setCrit, getCrit
 var modifier_lored_fuel_consumption := 1.0 setget setFuelConsumption, getFuelConsumption
 var modifier_lored_fuel_storage := 1.0 setget setFuelStorage, getFuelStorage
 
@@ -48,11 +47,6 @@ func setHaste(val: float):
 func getHaste() -> float:
 	return modifier_lored_haste
 
-func setCritAdd(val: float):
-	modifier_lored_crit_add = val
-func getCritAdd() -> float:
-	return modifier_lored_crit_add
-
 func setCrit(val: float):
 	modifier_lored_crit = val
 func getCrit() -> float:
@@ -73,8 +67,7 @@ func resetAll():
 	setOutput(1)
 	setInput(1)
 	setHaste(1)
-	setCritAdd(0)
-	setCrit(1)
+	setCrit(0)
 	setFuelConsumption(1)
 	setFuelStorage(1)
 
@@ -93,17 +86,17 @@ func changeDifficulty(new_diff: int):
 			setInput(2)
 			setFuelStorage(2)
 			setFuelConsumption(2)
-			setCrit(0)
+			setCrit(-100)
 		
 		Difficulty.HARD:
 			setHaste(0.5)
 			setOutput(0.5)
 			setFuelConsumption(2)
-			setCrit(0.5)
+			setCrit(-5)
 		
 		Difficulty.TORTOISE:
 			setHaste(0.1)
-			setCritAdd(35)
+			setCrit(35)
 		
 		Difficulty.EASY:
 			setHaste(2)
@@ -113,12 +106,12 @@ func changeDifficulty(new_diff: int):
 			setHaste(2)
 			setOutput(2)
 			setInput(0.5)
-			setCrit(2)
+			setCrit(10)
 		
 		Difficulty.HACKS:
 			setHaste(5)
 			setInput(0)
-			setCritAdd(100)
+			setCrit(100)
 	
 	gv.syncLOREDs()
 

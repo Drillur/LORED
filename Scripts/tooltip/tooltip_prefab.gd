@@ -158,6 +158,8 @@ func _call(source : String, other: Dictionary) -> void:
 			cont["fuel"] = src.tip_lored_fuel.instance()
 			add_child(cont["fuel"])
 			cont["fuel"].setup(f)
+			
+			$bg.self_modulate = gv.g[f].color
 		
 		elif "mainstuff lored" in type:
 			

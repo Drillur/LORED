@@ -1,107 +1,75 @@
 extends MarginContainer
 
 
-onready var rt = get_node("/root/Root")
-
 var lored_key: String
-
-var fps := 0.0
-var slow_fps := 0.0
-
-var gn_drain = 0
-
-func _ready():
-	
-	set_process(false)
 
 
 func setup(key: String):
 	
 	lored_key = key
 	
-	gn_drain = get_node("v/drain/val")
-	
 	static_vals()
+	
+	updateStorage()
+	if not gv.g[lored_key].smart:
+		basicLOREDupdateConsumption()
 
 func static_vals():
 	
 	var icon: Texture
-	var title: String
 	var color: Color
 	var fuel_source = gv.g[lored_key].fuel_source
 	
 	icon = gv.sprite[fuel_source]
 	color = gv.COLORS[fuel_source]
 	
-	match fuel_source:
-		"coal":
-			title = "Coal Storage"
-		"jo":
-			title = "Battery"
-		"water":
-			title = "Thirst"
-		"blood":
-			title = "Blood"
-			get_node("v/drain/desc").text = "Gain per second"
-		"mana":
-			title = "Mana"
-			get_node("v/drain/desc").text = "Gain per second"
-	
-	
-	$v/h/icon/Sprite.texture = icon
-	$v/h/step/title.text = title
-	
-	$v/h/step/val.add_color_override("font_color", color)
-	gn_drain.add_color_override("font_color", color)
-	$v/ct.modulate = color
-	get_parent().get_node("bg").self_modulate = color
-	
-	r_slow()
-	
-	r_update()
+	if not gv.g[lored_key].smart:
+		get_node("basicLORED").show()
+		#get_node("basicLORED/fuel resource/h/icon/Sprite").texture = icon
+		#get_node("basicLORED/fuel resource/h/text").text = gv.g[fuel_source].name
+		get_node("basicLORED/consumption/h/icon/Sprite").self_modulate = color
+		get_node("basicLORED/storage/h/Fuel Progress").setup(lored_key)
+		get_node("basicLORED/storage/ct").modulate = color
 
+func updateStorage():
+	
+	var t = Timer.new()
+	add_child(t)
+	
+	while not is_queued_for_deletion():
+		
+		var maxSize = get_node("basicLORED/storage/ct").rect_size.x
+		var fuelPercent = gv.g[lored_key].f.f.percent(gv.g[lored_key].f.t)
+		get_node("basicLORED/storage/ct/c").rect_size.x = min(fuelPercent * maxSize, maxSize)
+		
+		var currentFuel = gv.g[lored_key].f.f.toString()
+		var maxFuel = gv.g[lored_key].f.t.toString()
+		get_node("basicLORED/storage/text").text = currentFuel + " / " + maxFuel
+		
+		t.start(gv.fps)
+		yield(t, "timeout")
+	
+	t.queue_free()
 
-func _process(_delta: float) -> void:
-	rect_size.y = 0
-	set_process(false)
-
-func _physics_process(_delta: float) -> void:
+func basicLOREDupdateConsumption():
 	
-	r_update()
-	r_slow()
-
-
-func r_update():
+	var t = Timer.new()
+	add_child(t)
 	
-	if fps > 0:
-		fps -= gv.fps
-		return
-	fps += 0.01
+	var fuel_source = gv.g[lored_key].fuel_source
+	var fuelResource = "[img=<16>]" + gv.sprite[fuel_source].get_path() + "[/img] " + gv.g[fuel_source].name
 	
-	$v/ct/c.rect_size.x = min(gv.g[lored_key].f.f.percent(gv.g[lored_key].f.t) * $v/ct.rect_size.x, $v/ct.rect_size.x)
-	$v/h/step/val.text = gv.g[lored_key].f.f.toString() + " / " + gv.g[lored_key].f.t.toString()
-
-func r_slow():
+	while not is_queued_for_deletion():
+		
+		var drain = Big.new(gv.g[lored_key].fc.t)
+		var consumptionText: String = drain.toString() + " " + fuelResource + " /s"
+		
+		if gv.g[lored_key].f.f.less(gv.g[lored_key].f.t):
+			consumptionText += " (x2)"
+		
+		get_node("basicLORED/consumption/text").bbcode_text = "[center]" + consumptionText
+		
+		t.start(1)
+		yield(t, "timeout")
 	
-	if slow_fps > 0:
-		slow_fps -= gv.fps
-		return
-	slow_fps += 0.15
-	
-	var drain = Big.new(gv.g[lored_key].fc.t)
-	if gv.g[lored_key].f.f.less(gv.g[lored_key].f.t) and not gv.g[lored_key].smart:
-		drain.m(2)
-	if drain.less(gv.g[lored_key].fc.t):
-		drain = Big.new(gv.g[lored_key].fc.t)
-	
-	# change to string
-	if gv.g[lored_key].f.f.less(gv.g[lored_key].f.t) and not gv.g[lored_key].smart:
-		drain = drain.toString() + "*"
-		get_node("v/less").show()
-	else:
-		drain = drain.toString()
-		get_node("v/less").hide()
-		set_process(true)
-	
-	gn_drain.text = drain
-	
+	t.queue_free()

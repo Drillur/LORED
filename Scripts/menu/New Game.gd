@@ -6,8 +6,7 @@ const DEFAULT_VALUES := {
 	"Output": 1.0,
 	"Input": 1.0,
 	"Haste": 1.0,
-	"CritAdd": 0.0,
-	"Crit": 1.0,
+	"Crit": 0.0,
 	"FuelStorage": 1.0,
 	"FuelConsumption": 1.0,
 }
@@ -15,8 +14,7 @@ const MAX_VALUES := {
 	"Output": 10.0,
 	"Input": 10.0,
 	"Haste": 10.0,
-	"CritAdd": 100.0,
-	"Crit": 10.0,
+	"Crit": 100.0,
 	"FuelStorage": 10.0,
 	"FuelConsumption": 10.0,
 }
@@ -24,8 +22,7 @@ const MIN_VALUES := {
 	"Output": 0.1,
 	"Input": 0.1,
 	"Haste": 0.1,
-	"CritAdd": 0.0,
-	"Crit": 0.0,
+	"Crit": -100.0,
 	"FuelStorage": 0.1,
 	"FuelConsumption": 0.1,
 }

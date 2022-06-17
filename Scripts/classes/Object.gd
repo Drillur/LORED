@@ -12,7 +12,7 @@ extends Reference
 
 class Num:
 	
-	var saved_vars = ["f", "t"]
+	var saved_vars = ["f", "t", "a"]
 	
 	var f := Big.new(0) # current value
 	

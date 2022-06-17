@@ -104,6 +104,8 @@ func game_start(successful_load: bool) -> void:
 		updateCurSession()
 		
 		routineLOREDsync()
+		
+		watch_stage1and2resourcesAreUnlocked()
 	
 	# ref
 	if true:
@@ -346,6 +348,23 @@ func fix_shit():
 	
 	if gv.run1 == 1 and gv.r["growth"].less(10) and gv.g["growth"].f.f.less(3):
 		gv.g["growth"].f.f = Big.new(3)
+
+func watch_stage1and2resourcesAreUnlocked():
+	
+	var t = Timer.new()
+	add_child(t)
+	
+	var properSize = gv.list.lored[gv.Tab.S1].size() + gv.list.lored[gv.Tab.S2].size()
+	
+	while not gv.list["unlocked resources"].size() == properSize:
+		
+		t.start(10)
+		yield(t, "timeout")
+		
+		for x in gv.g:
+			gv.g[x].unlockResource()
+	
+	t.queue_free()
 
 func routineLOREDsync():
 	

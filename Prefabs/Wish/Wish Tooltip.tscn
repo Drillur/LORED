@@ -571,9 +571,27 @@ custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 6 )
 text = "Automated halt and hold for Wishes"
 
+[node name="easier" type="MarginContainer" parent="m/v/rewards/h/v"]
+visible = false
+margin_right = 163.0
+margin_bottom = 21.0
+custom_constants/margin_right = 5
+custom_constants/margin_top = 3
+custom_constants/margin_left = 5
+custom_constants/margin_bottom = 3
+
+[node name="flair" type="Label" parent="m/v/rewards/h/v/easier"]
+margin_left = 5.0
+margin_top = 3.0
+margin_right = 158.0
+margin_bottom = 18.0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 6 )
+text = "10x easier Wish objectives"
+
 [node name="automated turnin" type="MarginContainer" parent="m/v/rewards/h/v"]
 visible = false
-margin_right = 139.0
+margin_right = 163.0
 margin_bottom = 21.0
 custom_constants/margin_right = 5
 custom_constants/margin_top = 3
@@ -583,11 +601,11 @@ custom_constants/margin_bottom = 3
 [node name="flair" type="Label" parent="m/v/rewards/h/v/automated turnin"]
 margin_left = 5.0
 margin_top = 3.0
-margin_right = 134.0
+margin_right = 158.0
 margin_bottom = 18.0
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 6 )
-text = "Automated Wish turn-in"
+text = "Automated Wish completion"
 
 [node name="stage tab" type="MarginContainer" parent="m/v/rewards/h/v"]
 visible = false

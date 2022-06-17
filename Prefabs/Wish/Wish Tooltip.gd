@@ -53,6 +53,10 @@ func initiateVisualShit():
 			
 			match r.type:
 				
+				gv.WishReward.EASIER:
+					
+					get_node("m/v/rewards/h/v/easier").show()
+				
 				gv.WishReward.AUTOMATED:
 					
 					if r.key == str(gv.WishReward.HALT_AND_HOLD):
@@ -127,6 +131,7 @@ func initiateVisualShit():
 							get_node("m/v/rewards/h/v/r2/h/amount").self_modulate = gv.COLORS[r.key]
 						else:
 							if not r3_used:
+								r3_used = true
 								get_node("m/v/rewards/h/v/r3").show()
 								get_node("m/v/rewards/h/v/r3/h/amount").text = "+" + r.amount.toString()
 								get_node("m/v/rewards/h/v/r3/h/icon/Sprite").texture = gv.sprite[r.key]

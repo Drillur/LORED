@@ -8,9 +8,9 @@ onready var lored_level = get_node("v/header/v/h/v/level")
 onready var tag_halt = get_node("v/header/v/h/tags/halt")
 onready var tag_hold = get_node("v/header/v/h/tags/hold")
 onready var gn_jobs = get_node("v/jobs")
-onready var gross = get_node("v/stats/h/gross/h/val")
-onready var haste = get_node("v/stats/h/haste/val")
-onready var crit = get_node("v/stats/h/crit/h/val")
+onready var gross = get_node("v/stats/h/out/text")
+onready var haste = get_node("v/stats/h/haste/text")
+onready var crit = get_node("v/stats/h/crit/text")
 onready var stats = get_node("v/stats")
 
 var lored: LORED
@@ -81,9 +81,9 @@ func update():
 		lored_level.text = "Level " + str(lored.level)
 		
 		if stats.visible:
-			gross.text = lored.net(true, true)[0].toString()
-			haste.text = fval.f(lored.speed.b / lored.speed.t)
-			crit.text = lored.crit.t.toString()
+			gross.text = lored.net(true, true)[0].toString() + "/s"
+			haste.text = fval.f(lored.speed.b / lored.speed.t * 100) + "%"
+			crit.text = lored.crit.t.toString() + "%"
 		
 		
 		$Timer.start(1)

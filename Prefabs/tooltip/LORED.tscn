@@ -1,12 +1,15 @@
-[gd_scene load_steps=18 format=2]
+[gd_scene load_steps=23 format=2]
 
 [ext_resource path="res://Fonts/Roboto-BlackItalic.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Fonts/Roboto-Medium.ttf" type="DynamicFontData" id=2]
 [ext_resource path="res://Fonts/Roboto-MediumItalic.ttf" type="DynamicFontData" id=3]
 [ext_resource path="res://Fonts/Roboto-Black.ttf" type="DynamicFontData" id=4]
 [ext_resource path="res://Sprites/resources/coal.png" type="Texture" id=5]
+[ext_resource path="res://Sprites/Menu/Time.png" type="Texture" id=6]
+[ext_resource path="res://Sprites/Menu/Crit.png" type="Texture" id=7]
 [ext_resource path="res://Styles/Panels/tag_bg.tres" type="StyleBox" id=8]
 [ext_resource path="res://Prefabs/tooltip/TooltipLORED.gd" type="Script" id=9]
+[ext_resource path="res://Sprites/Menu/output.png" type="Texture" id=10]
 
 [sub_resource type="StyleBoxFlat" id=1]
 bg_color = Color( 1, 1, 1, 0.0509804 )
@@ -48,13 +51,15 @@ expand_margin_top = 5.0
 expand_margin_bottom = 5.0
 anti_aliasing = false
 
-[sub_resource type="DynamicFont" id=7]
-size = 13
-outline_color = Color( 0, 0, 0, 1 )
-font_data = ExtResource( 1 )
+[sub_resource type="StyleBoxFlat" id=12]
+draw_center = false
 
-[sub_resource type="DynamicFont" id=8]
-outline_color = Color( 0, 0, 0, 1 )
+[sub_resource type="DynamicFont" id=11]
+size = 12
+font_data = ExtResource( 3 )
+
+[sub_resource type="DynamicFont" id=13]
+size = 14
 font_data = ExtResource( 4 )
 
 [sub_resource type="StyleBoxFlat" id=9]
@@ -69,6 +74,11 @@ expand_margin_right = 10.0
 expand_margin_top = 10.0
 expand_margin_bottom = 10.0
 
+[sub_resource type="DynamicFont" id=7]
+size = 13
+outline_color = Color( 0, 0, 0, 1 )
+font_data = ExtResource( 1 )
+
 [sub_resource type="DynamicFont" id=10]
 size = 13
 font_data = ExtResource( 2 )
@@ -81,15 +91,12 @@ custom_constants/margin_top = 12
 custom_constants/margin_left = 12
 custom_constants/margin_bottom = 12
 script = ExtResource( 9 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="v" type="VBoxContainer" parent="."]
 margin_left = 12.0
 margin_top = 12.0
 margin_right = 209.0
-margin_bottom = 114.0
+margin_bottom = 123.0
 custom_constants/separation = 10
 
 [node name="header" type="MarginContainer" parent="v"]
@@ -141,8 +148,8 @@ margin_top = 7.0
 margin_right = 34.0
 margin_bottom = 28.0
 size_flags_horizontal = 4
-custom_fonts/font = SubResource( 3 )
 custom_colors/font_color = Color( 0.8, 0.8, 0.8, 1 )
+custom_fonts/font = SubResource( 3 )
 text = "Coal"
 valign = 1
 
@@ -152,8 +159,8 @@ margin_top = 25.0
 margin_right = 38.0
 margin_bottom = 38.0
 size_flags_horizontal = 4
-custom_fonts/font = SubResource( 4 )
 custom_colors/font_color = Color( 0.804688, 0.804688, 0.804688, 1 )
+custom_fonts/font = SubResource( 4 )
 text = "Level 0"
 
 [node name="tags" type="HBoxContainer" parent="v/header/v/h"]
@@ -188,8 +195,8 @@ margin_left = 5.0
 margin_top = 5.0
 margin_right = 26.0
 margin_bottom = 20.0
-custom_fonts/font = SubResource( 5 )
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 5 )
 text = "Halt"
 
 [node name="hold" type="MarginContainer" parent="v/header/v/h/tags"]
@@ -217,8 +224,8 @@ margin_left = 5.0
 margin_top = 5.0
 margin_right = 30.0
 margin_bottom = 20.0
-custom_fonts/font = SubResource( 5 )
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 5 )
 text = "Hold"
 
 [node name="jobs" type="VBoxContainer" parent="v"]
@@ -230,124 +237,168 @@ alignment = 1
 [node name="stats" type="MarginContainer" parent="v"]
 margin_top = 61.0
 margin_right = 197.0
-margin_bottom = 102.0
+margin_bottom = 111.0
 custom_constants/margin_top = 5
 
 [node name="bg" type="Panel" parent="v/stats"]
 margin_top = 5.0
 margin_right = 197.0
-margin_bottom = 41.0
+margin_bottom = 50.0
 custom_styles/panel = SubResource( 1 )
 
 [node name="h" type="HBoxContainer" parent="v/stats"]
 margin_top = 5.0
 margin_right = 197.0
-margin_bottom = 41.0
-custom_constants/separation = 10
-alignment = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
+margin_bottom = 50.0
+custom_constants/separation = 8
 
-[node name="gross" type="VBoxContainer" parent="v/stats/h"]
-margin_right = 76.0
-margin_bottom = 36.0
-custom_constants/separation = 0
+[node name="out" type="VBoxContainer" parent="v/stats/h"]
+margin_right = 65.0
+margin_bottom = 45.0
+size_flags_horizontal = 3
 alignment = 1
 
-[node name="flair" type="Label" parent="v/stats/h/gross"]
-self_modulate = Color( 0.796875, 0.796875, 0.796875, 1 )
-margin_right = 76.0
-margin_bottom = 17.0
-custom_fonts/font = SubResource( 7 )
-text = "Gross Output"
-align = 1
-
-[node name="h" type="HBoxContainer" parent="v/stats/h/gross"]
-margin_top = 17.0
-margin_right = 76.0
-margin_bottom = 36.0
-custom_constants/separation = 2
+[node name="h" type="HBoxContainer" parent="v/stats/h/out"]
+margin_right = 65.0
+margin_bottom = 24.0
 alignment = 1
 
-[node name="val" type="Label" parent="v/stats/h/gross/h"]
-margin_left = 27.0
-margin_right = 36.0
+[node name="icon" type="Panel" parent="v/stats/h/out/h"]
+margin_right = 24.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 24, 24 )
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 12 )
+
+[node name="Sprite" type="Sprite" parent="v/stats/h/out/h/icon"]
+position = Vector2( 12, 12 )
+texture = ExtResource( 10 )
+
+[node name="Sprite" type="Sprite" parent="v/stats/h/out/h/icon/Sprite"]
+self_modulate = Color( 0, 0, 0, 0.501961 )
+show_behind_parent = true
+position = Vector2( 2, 2 )
+texture = ExtResource( 10 )
+
+[node name="flair" type="Label" parent="v/stats/h/out/h"]
+margin_left = 28.0
+margin_top = 4.0
+margin_right = 65.0
 margin_bottom = 19.0
-custom_fonts/font = SubResource( 8 )
-text = "9"
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 11 )
+text = "Output"
 align = 1
 
-[node name="flair" type="Label" parent="v/stats/h/gross/h"]
-margin_left = 38.0
-margin_top = 1.0
-margin_right = 49.0
-margin_bottom = 18.0
-custom_fonts/font = SubResource( 7 )
-text = "/s"
-valign = 1
+[node name="text" type="Label" parent="v/stats/h/out"]
+margin_top = 28.0
+margin_right = 65.0
+margin_bottom = 45.0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 13 )
+text = "142/s"
+align = 1
 
 [node name="haste" type="VBoxContainer" parent="v/stats/h"]
-margin_left = 86.0
-margin_right = 120.0
-margin_bottom = 36.0
-custom_constants/separation = 0
+margin_left = 73.0
+margin_right = 131.0
+margin_bottom = 45.0
+size_flags_horizontal = 3
 alignment = 1
 
-[node name="flair" type="Label" parent="v/stats/h/haste"]
-self_modulate = Color( 0.796875, 0.796875, 0.796875, 1 )
-margin_right = 34.0
-margin_bottom = 17.0
-custom_fonts/font = SubResource( 7 )
+[node name="h" type="HBoxContainer" parent="v/stats/h/haste"]
+margin_right = 58.0
+margin_bottom = 24.0
+alignment = 1
+
+[node name="icon" type="Panel" parent="v/stats/h/haste/h"]
+margin_right = 24.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 24, 24 )
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 12 )
+
+[node name="Sprite" type="Sprite" parent="v/stats/h/haste/h/icon"]
+position = Vector2( 12, 12 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 6 )
+
+[node name="Sprite" type="Sprite" parent="v/stats/h/haste/h/icon/Sprite"]
+self_modulate = Color( 0, 0, 0, 0.501961 )
+show_behind_parent = true
+position = Vector2( 2, 2 )
+texture = ExtResource( 6 )
+
+[node name="flair" type="Label" parent="v/stats/h/haste/h"]
+margin_left = 28.0
+margin_top = 4.0
+margin_right = 58.0
+margin_bottom = 19.0
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 11 )
 text = "Haste"
 align = 1
 
-[node name="val" type="Label" parent="v/stats/h/haste"]
-margin_top = 17.0
-margin_right = 34.0
-margin_bottom = 36.0
-custom_fonts/font = SubResource( 8 )
-text = "0.02"
+[node name="text" type="Label" parent="v/stats/h/haste"]
+margin_top = 28.0
+margin_right = 58.0
+margin_bottom = 45.0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 13 )
+text = "2.0"
 align = 1
 
 [node name="crit" type="VBoxContainer" parent="v/stats/h"]
-margin_left = 130.0
+margin_left = 139.0
 margin_right = 197.0
-margin_bottom = 36.0
-custom_constants/separation = 0
+margin_bottom = 45.0
+size_flags_horizontal = 3
 alignment = 1
-
-[node name="flair" type="Label" parent="v/stats/h/crit"]
-self_modulate = Color( 0.796875, 0.796875, 0.796875, 1 )
-margin_right = 67.0
-margin_bottom = 17.0
-custom_fonts/font = SubResource( 7 )
-text = "Crit Chance"
-align = 1
 
 [node name="h" type="HBoxContainer" parent="v/stats/h/crit"]
-margin_top = 17.0
-margin_right = 67.0
-margin_bottom = 36.0
-custom_constants/separation = 2
+margin_right = 58.0
+margin_bottom = 24.0
 alignment = 1
 
-[node name="val" type="Label" parent="v/stats/h/crit/h"]
-margin_left = 23.0
-margin_right = 32.0
-margin_bottom = 19.0
-custom_fonts/font = SubResource( 8 )
-text = "9"
-align = 1
+[node name="icon" type="Panel" parent="v/stats/h/crit/h"]
+margin_left = 5.0
+margin_right = 29.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 24, 24 )
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 12 )
+
+[node name="Sprite" type="Sprite" parent="v/stats/h/crit/h/icon"]
+position = Vector2( 12, 12 )
+texture = ExtResource( 7 )
+
+[node name="Sprite" type="Sprite" parent="v/stats/h/crit/h/icon/Sprite"]
+self_modulate = Color( 0, 0, 0, 0.501961 )
+show_behind_parent = true
+position = Vector2( 2, 2 )
+texture = ExtResource( 7 )
 
 [node name="flair" type="Label" parent="v/stats/h/crit/h"]
-margin_left = 34.0
-margin_top = 1.0
-margin_right = 43.0
-margin_bottom = 18.0
-custom_fonts/font = SubResource( 7 )
-text = "%"
-valign = 1
+margin_left = 33.0
+margin_top = 4.0
+margin_right = 52.0
+margin_bottom = 19.0
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 11 )
+text = "Crit"
+align = 1
+
+[node name="text" type="Label" parent="v/stats/h/crit"]
+margin_top = 28.0
+margin_right = 58.0
+margin_bottom = 45.0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 13 )
+text = "9%"
+align = 1
 
 [node name="warning" type="MarginContainer" parent="v"]
 visible = false

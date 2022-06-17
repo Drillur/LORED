@@ -449,6 +449,10 @@ var sprite := {
 	"necro" : preload("res://Sprites/resources/carc.png"),
 	"witch" : preload("res://Sprites/upgrades/thewitchofloredelith.png"),
 	
+	# menu
+	"fuel": preload("res://Sprites/Menu/fuel.png"),
+	"fuel full": preload("res://Sprites/Menu/Fuel Full.png"),
+	
 	"coal" : preload("res://Sprites/resources/coal.png"),
 	"stone" : preload("res://Sprites/resources/stone.png"),
 	"irono" : preload("res://Sprites/resources/irono.png"),
@@ -694,7 +698,11 @@ var COLORS := {
 
 var open_tab := -1
 
-
+func haveLoredsRequiredForExtraNormalUpgradeMenu() -> bool:
+	for x in ["soil", "seed", "water", "tree", "sand", "draw", "axe", "liq", "steel", "wire", "glass", "hard", "wood", "humus"]:
+		if not g[x].active:
+			return false
+	return true
 
 
 
@@ -1057,7 +1065,7 @@ func resetList():
 		list.upgrade["owned " + str(Tab[t])] = []
 
 func everyStage2LOREDunlocked() -> bool:
-	return list.lored["active " + str(Tab.S2)] == list.lored[Tab.S2]
+	return list.lored["active " + str(Tab.S2)].size() == list.lored[Tab.S2].size()
 
 enum Objective {
 	RESOURCES_PRODUCED,
@@ -1066,7 +1074,6 @@ enum Objective {
 	SPELL_CAST_COUNT,
 	UPGRADES_PURCHASED,
 	MAXED_FUEL_STORAGE,
-	RESET,
 	BREAK,
 	HOARD,
 }
@@ -1079,6 +1086,7 @@ enum WishReward {
 	AUTOMATED,
 	HALT_AND_HOLD,
 	WISH_TURNIN,
+	EASIER,
 }
 
 func highestResetKey() -> String:
@@ -1403,7 +1411,10 @@ func load(data: Dictionary):
 	var loadedVars = SaveManager.loadSavedVars(saved_vars_dict, data)
 	
 	for x in saved_vars:
-		set(x, loadedVars[x])
+		if get(x) is Ob.Num:
+			get(x).load(data[x])
+		else:
+			set(x, loadedVars[x])
 	#*
 	
 	for x in r:

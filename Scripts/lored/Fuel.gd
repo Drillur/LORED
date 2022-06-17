@@ -16,10 +16,7 @@ func init(_key: String) -> void:
 	if "ele" in gv.g[key].type:
 		fuel_source = "jo"
 	
-	if gv.g[key].smart:
-		smart_start()
-	else:
-		start()
+	start()
 
 func start() -> void:
 	
@@ -71,62 +68,6 @@ func start() -> void:
 	t.queue_free()
 	
 	start()
-
-func smart_start():
-	
-	match key:
-		"blood", "witch":
-			blood_start()
-
-func blood_start():
-	
-	while gv.g[key].unlocked and gv.g[key].active and gv.g[key].f.f.less(gv.g[key].f.t):
-		
-		gv.g[key].f.f.a(Big.new(gv.g[key].fc.t).m(gv.fps))
-		
-		gn_f.rect_size.x =  min(gv.g[key].f.f.percent(gv.g[key].f.t) * gn_t.rect_size.x, gn_t.rect_size.x)
-		
-		var t = Timer.new()
-		add_child(t)
-		t.start(gv.fps)
-		yield(t, "timeout")
-		t.queue_free()
-	
-	# after 1 second, will restart the func
-	
-	var t = Timer.new()
-	add_child(t)
-	t.start(1)
-	yield(t, "timeout")
-	t.queue_free()
-	
-	gn_f.rect_size.x =  min(gv.g[key].f.f.percent(gv.g[key].f.t) * gn_t.rect_size.x, gn_t.rect_size.x)
-	
-	blood_start()
-
-func hunt_start():
-	
-	while gv.g[key].unlocked and gv.g[key].active and gv.g[key].working:
-		
-		gv.g[key].f.f.s(Big.new(gv.g[key].fc.t).m(gv.fps))
-		
-		gn_f.rect_size.x = min(gv.g[key].f.f.percent(gv.g[key].f.t) * gn_t.rect_size.x, gn_t.rect_size.x)
-		
-		var t = Timer.new()
-		add_child(t)
-		t.start(gv.fps)
-		yield(t, "timeout")
-		t.queue_free()
-	
-	# after 1 second, will restart the func
-	
-	var t = Timer.new()
-	add_child(t)
-	t.start(1)
-	yield(t, "timeout")
-	t.queue_free()
-	
-	hunt_start()
 
 func sufficient_fuel() -> bool:
 	

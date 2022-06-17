@@ -31,6 +31,14 @@ var key_wish_keys := [
 	"axy",
 	"treey",
 	"joy3",
+	"horsey",
+	"steely",
+	"galey",
+	"papey",
+	"plasty",
+	"tumory",
+	"easier",
+	"autocomplete",
 ]
 
 var checkpoint := 0 # used for quicker code in getSelectedWish()
@@ -39,7 +47,10 @@ var max_random_wishes := 0
 
 var seeking := false
 var recently_reset := false
+
+var easier := false # set in Wish.reward
 var automatedHaltAndHold := false # set in Wish.reward
+var automatedCompletion := false # set in Wish.reward
 
 
 
@@ -179,6 +190,19 @@ func hideOrDisplayMainWishes():
 
 func adjustCheckpointBasedOnCompletedQuest(key: String):
 	match key:
+		"easier", "autocomplete":
+			if "easier" in completed_wishes and "autocomplete" in completed_wishes:
+				checkpoint = 22
+		"tumory", "maliggy", "ciorany":
+			if "tumory" in completed_wishes and "maliggy" in completed_wishes and "ciorany" in completed_wishes:
+				checkpoint = 21
+		"carcy":
+			checkpoint = 20
+		"papey", "plasty":
+			if "papey" in completed_wishes and "plasty" in completed_wishes:
+				checkpoint = 19
+		"galey":
+			checkpoint = 18
 		"joy3", "steely", "horsey":
 			if "joy3" in completed_wishes and "steely" in completed_wishes and "horsey" in completed_wishes:
 				checkpoint = 17
@@ -257,8 +281,21 @@ func getSelectedWish() -> String:
 	# return "n": none appropriate
 	
 	var try := []
-	
 	match checkpoint:
+		21:
+			try.append("easier")
+			try.append("autocomplete")
+		20:
+			try.append("tumory")
+			try.append("maliggy")
+			try.append("ciorany")
+		19:
+			try.append("carcy")
+		18:
+			try.append("papey")
+			try.append("plasty")
+		17:
+			try.append("galey")
 		16:
 			try.append("joy3")
 			try.append("steely")
@@ -356,9 +393,10 @@ func breakManager(wish: Wish):
 		if not gv.g[lored_key].working:
 			wish.setCount(Big.new(wish.obj.current_count).a(1))
 		
-		if wish.ready:
+		if wish.ready or not wish.exists:
 			if gv.g[wish.obj.key].halt and not was_already_halted:
 				gv.g[wish.obj.key].manager.halt()
+				return
 		
 		var t = Timer.new()
 		add_child(t)
@@ -383,9 +421,10 @@ func hoardManager(wish: Wish):
 		if gv.g[lored_key].hold:
 			wish.setCount(Big.new(wish.obj.current_count).a(1))
 		
-		if wish.ready:
+		if wish.ready or not wish.exists:
 			if gv.g[wish.obj.key].hold and not was_already_holding:
 				gv.g[wish.obj.key].manager.hold()
+				return
 			
 		var t = Timer.new()
 		add_child(t)

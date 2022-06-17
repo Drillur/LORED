@@ -3,7 +3,6 @@ extends MarginContainer
 
 onready var color_picker := get_node("color/m")
 onready var all_saves_container := get_node("all saves/sc/v/v")
-onready var save_hint = get_node("sc/h/all saves/Node2D/hint")
 onready var importDialog = get_node("FileDialog")
 
 onready var all_saves := get_node("all saves")
@@ -13,6 +12,33 @@ onready var importByStringWindow = get_node("import/byString")
 onready var importByStringFailureWindow = get_node("import/byString failure")
 onready var importByFileWindow = get_node("import/byFile failure")
 onready var exitConfirm = get_node("exitConfirm")
+onready var newGameWindow = get_node("new game")
+
+onready var diffDropdown = get_node("new game/m/v/diff/m/v/v/presets/m/v/select")
+onready var diffDesc = get_node("new game/m/v/diff/m/v/v/presets/m/v/desc")
+onready var diffValues = get_node("new game/m/v/diff/m/v/v/values")
+onready var diffCustom = get_node("new game/m/v/diff/m/v/v/custom")
+
+onready var customize_Output_text = get_node("new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/Output/TextEdit")
+onready var customize_Output_slider = get_node("new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/Output/h/HSlider")
+onready var customize_Input_text = get_node("new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/Input/TextEdit")
+onready var customize_Input_slider = get_node("new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/Input/h/HSlider")
+onready var customize_Haste_text = get_node("new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/Haste/TextEdit")
+onready var customize_Haste_slider = get_node("new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/Haste/h/HSlider")
+onready var customize_Crit_text = get_node("new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/Crit/TextEdit")
+onready var customize_Crit_slider = get_node("new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/Crit/h/HSlider")
+onready var customize_FuelStorage_text = get_node("new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelStorage/TextEdit")
+onready var customize_FuelStorage_slider = get_node("new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelStorage/h/HSlider")
+onready var customize_FuelConsumption_text = get_node("new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelConsumption2/TextEdit")
+onready var customize_FuelConsumption_slider = get_node("new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelConsumption2/h/HSlider")
+
+
+onready var _Output = get_node("new game/m/v/diff/m/v/v/values/m/v/lored/m/v/Output/text")
+onready var _Input = get_node("new game/m/v/diff/m/v/v/values/m/v/lored/m/v/Input/text")
+onready var _Haste = get_node("new game/m/v/diff/m/v/v/values/m/v/lored/m/v/Haste/text")
+onready var _Crit = get_node("new game/m/v/diff/m/v/v/values/m/v/lored/m/v/Crit/text")
+onready var _FuelStorage = get_node("new game/m/v/diff/m/v/v/values/m/v/lored/m/v/FuelStorage/text")
+onready var _FuelConsumption = get_node("new game/m/v/diff/m/v/v/values/m/v/lored/m/v/FuelConsumption/text")
 
 var no_saves_found := false
 
@@ -20,6 +46,37 @@ var coloring_node = 0
 
 var save_blocks := {}
 var mostRecentSave: String
+
+const DEFAULT_VALUES := {
+	"Output": 1.0,
+	"Input": 1.0,
+	"Haste": 1.0,
+	"Crit": 0.0,
+	"FuelStorage": 1.0,
+	"FuelConsumption": 1.0,
+}
+const MAX_VALUES := {
+	"Output": 10.0,
+	"Input": 10.0,
+	"Haste": 10.0,
+	"Crit": 100.0,
+	"FuelStorage": 10.0,
+	"FuelConsumption": 10.0,
+}
+const MIN_VALUES := {
+	"Output": 0.1,
+	"Input": 0.1,
+	"Haste": 0.1,
+	"Crit": -100.0,
+	"FuelStorage": 0.1,
+	"FuelConsumption": 0.1,
+}
+const COLORS := {
+	"hardest": Color(1, 0, 0),
+	"hard": Color(1, 1, 0),
+	"normal": Color(0, 1, 0),
+	"easy": Color(0, 0.756863, 1),
+}
 
 
 func _ready():
@@ -33,25 +90,34 @@ func _ready():
 	gv.connect("edit_save_color", self, "setColoringNode")
 	
 	all_saves.hide()
-	save_hint.hide()
 	color_picker.hide()
 	new_game_window.hide()
 	all_saves.hide()
 	importWindow.hide()
 	importByStringWindow.hide()
 	get_node("import/byString/m/v/manual save name/h2").hide()
+	get_node("new game/m/v/save info").hide()
 	importByStringFailureWindow.hide()
 	importByFileWindow.hide()
 	importDialog.set_access(2)
 	importDialog.set_mode(0)
 	exitConfirm.hide()
+	newGameWindow.hide()
 	get_node("h").show()
+	
+	for difficulty in diff.Difficulty:
+		diffDropdown.add_item(str(difficulty).capitalize())
+	
+	diffDropdown.select(3)
+	_on_difficulty_selected(3)
 	
 	setupAllSaves()
 	
 	hideMouseoverFlairs()
 	
 	windowSizeChanged()
+	
+	_on_randomize_pressed()
 
 func hideMouseoverFlairs():
 	
@@ -62,6 +128,7 @@ func hideMouseoverFlairs():
 	get_node("all saves/top/h/v/v/import/flair/Sprite").hide()
 	get_node("all saves/top/h/v/v/refresh/flair/Sprite").hide()
 	get_node("import/top/h/v/v/back/flair/Sprite").hide()
+	get_node("new game/top/h/v/v/back/flair/Sprite").hide()
 
 
 
@@ -94,6 +161,11 @@ func _input(ev: InputEvent) -> void:
 			get_node("h").show()
 			return
 		
+		if newGameWindow.visible:
+			clearMouseoverEffects()
+			_on_newgame_back_pressed()
+			return
+		
 		exitConfirm.visible = not exitConfirm.visible
 
 func clearMouseoverEffects():
@@ -104,6 +176,7 @@ func clearMouseoverEffects():
 	get_node("import/top/h/v/v/back/m/text").add_font_override("font", gv.font.buttonNormal)
 	get_node("import/m/h/byString/v/h/text").add_font_override("font", gv.font.buttonNormal)
 	get_node("import/m/h/byFile/v/h/text").add_font_override("font", gv.font.buttonNormal)
+	get_node("new game/top/h/v/v/back/m/text").add_font_override("font", gv.font.buttonNormal)
 	
 
 func windowSizeChanged() -> void:
@@ -117,14 +190,82 @@ func windowSizeChanged() -> void:
 	rect_size = Vector2(win.x, win.y)
 
 
-func _on_all_saves_pressed() -> void:
+func setDifficultyDescriptionText():
+	diffDesc.text = diff.DifficultyDescription[diff.active_difficulty]
+
+func resetDiff():
 	
-	if all_saves.visible:
-		all_saves.hide()
-		save_hint.hide()
-		return
+	for x in DEFAULT_VALUES:
+		resetDiffOption(x)
 	
-	all_saves.show()
+	diffValues.show()
+	diffCustom.hide()
+	
+	diffDropdown.select(3)
+	_on_difficulty_selected(3)
+	
+	for x in DEFAULT_VALUES:
+		setOptionValue(x, diff.call("get" + x))
+	
+	setDifficultyDescriptionText()
+	
+	
+	var randomSaveFileColor = Color(rand_range(0, 1), rand_range(0, 1), rand_range(0, 1))
+	
+	get_node("sc/m/v/v/save info/m/v/color/m/ColorRect").self_modulate = randomSaveFileColor
+
+func resetDiffOption(attribute: String):
+	
+	if attribute == "CritAdd":
+		get("customize_" + attribute + "_text").text = str(DEFAULT_VALUES[attribute])
+	else:
+		get("customize_" + attribute + "_text").text = addDecimalToAttributeValueIfNeeded(DEFAULT_VALUES[attribute])
+	get("customize_" + attribute + "_slider").value = DEFAULT_VALUES[attribute]
+	get("customize_" + attribute + "_text").cursor_set_column(100)
+
+func setOptionValue(option: String, val: float):
+	
+	var node_var = "_" + option
+	
+	if option == "Crit":
+		if val >= 0:
+			get(node_var).text = "+" + str(val)
+		else:
+			get(node_var).text = str(val)
+	else:
+		get(node_var).text = str(val) + "x"
+	
+	get(node_var).self_modulate = getOptionColor(option, val)
+
+func getOptionColor(option: String, val: float) -> Color:
+	match option:
+		"Output", "Haste":
+			if val >= 2.0:
+				return COLORS["easy"]
+			if val <= 0.25:
+				return COLORS["hardest"]
+			if val <= 0.5:
+				return COLORS["hard"]
+		"Input", "FuelStorage", "FuelConsumption":
+			if val <= 0.5:
+				return COLORS["easy"]
+			if val >= 4:
+				return COLORS["hardest"]
+			if val >= 2:
+				return COLORS["hard"]
+		"Crit":
+			if val > 0:
+				return COLORS["easy"]
+			elif val < -10:
+				return COLORS["hardest"]
+			elif val < 0:
+				return COLORS["hard"]
+	
+	
+	return COLORS["normal"]
+
+func addDecimalToAttributeValueIfNeeded(val: float) -> String:
+	return str(val) if "." in str(val) else str(val) + ".0"
 
 
 var old_color: Color
@@ -184,7 +325,6 @@ func getSavesInDirectory(path: String) -> Array:
 			continue
 		
 		if SaveManager.textIsConvertibleToSave(fileText):
-			print("file appended ", file)
 			files.append(file)
 	
 	dir.list_dir_end()
@@ -254,10 +394,6 @@ func wipePreviousMostRecentSave():
 	save_blocks["mostRecentSave"].queue_free()
 
 
-func _on_save_hint_mouse_entered() -> void:
-	save_hint.show()
-func _on_save_hint_mouse_exited() -> void:
-	save_hint.hide()
 
 
 func _on_continue_pressed() -> void:
@@ -274,6 +410,7 @@ func _on_load_pressed() -> void:
 	all_saves.show()
 	get_node("h").visible = not all_saves.visible
 	_on_load_mouse_exited()
+	exitConfirm.hide()
 func _on_all_saves_back_pressed() -> void:
 	all_saves.hide()
 	get_node("h").visible = not all_saves.visible
@@ -288,6 +425,7 @@ func _on_import_pressed() -> void:
 	all_saves.hide()
 	importWindow.show()
 	_on_all_saves_import_mouse_exited()
+	exitConfirm.hide()
 func _on_import_back_pressed() -> void:
 	importWindow.hide()
 	all_saves.show()
@@ -306,8 +444,7 @@ func _on_import_byString_cancel_pressed() -> void:
 		get_node("import/byString/m/v/manual save name/h/check").pressed = false
 		_on_byString_manual_save_name_pressed()
 func _on_byString_manual_save_name_pressed() -> void:
-	get_node("import/byString/m/v/manual save name/h2/m/ColorRect").setSaveColor(gv.getRandomColor())
-	get_node("import/byString/m/v/manual save name/h2/TextEdit").text = SaveManager.getRandomSaveFileName()
+	randomizeSaveNameAndColor(get_node("import/byString/m/v/manual save name/h2/TextEdit"), get_node("import/byString/m/v/manual save name/h2/m/ColorRect"))
 	get_node("import/byString/m/v/manual save name/h2").visible = get_node("import/byString/m/v/manual save name/h/check").pressed
 	get_node("import/byString/m/v/manual save name/h2/TextEdit").grab_focus()
 	get_node("import/byString/m/v/manual save name/h2/TextEdit").select_all()
@@ -387,7 +524,6 @@ func _on_FileDialog_file_selected(path: String) -> void:
 	SaveManager.importSave(rawText, saveName)
 	saveImported(saveName)
 
-
 func saveImported(saveName: String):
 	
 	_on_import_back_pressed()
@@ -405,6 +541,86 @@ func saveImported(saveName: String):
 	
 	flash.slowFlash(Color(1,1,1))
 
+func _on_oopsie_pressed() -> void:
+	get_node("filename error").hide()
+
+
+
+func _on_newgame_pressed() -> void:
+	get_node("h").hide()
+	newGameWindow.show()
+	_on_new_mouse_exited()
+	exitConfirm.hide()
+func _on_newgame_back_pressed() -> void:
+	get_node("new game/m/v/save info").hide()
+	get_node("new game/m/v/diff").hide()
+	get_node("new game/m/v/prefs").hide()
+	newGameWindow.hide()
+	get_node("h").show()
+	_on_newgame_back_mouse_exited()
+	_on_color_cancel_pressed()
+
+
+func _on_new_safeinfo_pressed() -> void:
+	get_node("new game/m/v/save info").visible = not get_node("new game/m/v/save info").visible
+	get_node("new game/m/v/diff").hide()
+	get_node("new game/m/v/prefs").hide()
+	get_node("new game/m/v/save info/m/v/filename/TextEdit").scroll_horizontal = 0
+	get_node("new game/m/v/save info/m/v/filename/TextEdit").grab_focus()
+	get_node("new game/m/v/save info/m/v/filename/TextEdit").select_all()
+func _on_new_diff_pressed() -> void:
+	get_node("new game/m/v/diff").visible = not get_node("new game/m/v/diff").visible
+	get_node("new game/m/v/save info").hide()
+	get_node("new game/m/v/prefs").hide()
+func _on_new_prefs_pressed() -> void:
+	get_node("new game/m/v/prefs").visible = not get_node("new game/m/v/prefs").visible
+	get_node("new game/m/v/save info").hide()
+	get_node("new game/m/v/diff").hide()
+
+func _on_HSlider_value_changed(value: float, attribute: String) -> void:
+	
+	if get("customize_" + attribute + "_text").has_focus():
+		return
+	
+	if attribute == "CritAdd":
+		get("customize_" + attribute + "_text").text = str(value)
+	else:
+		get("customize_" + attribute + "_text").text = addDecimalToAttributeValueIfNeeded(value)
+	get("customize_" + attribute + "_text").cursor_set_column(100)
+
+func updateOptionValues():
+	for x in DEFAULT_VALUES:
+		setOptionValue(x, diff.call("get" + x))
+
+func _on_difficulty_selected(index: int) -> void:
+	
+	diff.changeDifficulty(index)
+	
+	setDifficultyDescriptionText()
+	
+	if index == diff.Difficulty.CUSTOM:
+		diffValues.hide()
+		diffCustom.show()
+		return
+	else:
+		diffCustom.hide()
+		diffValues.show()
+	
+	updateOptionValues()
+
+
+
+func randomizeSaveNameAndColor(saveNameNode, colorNode):
+	saveNameNode.text = SaveManager.getRandomSaveFileName()
+	colorNode.setSaveColor(gv.getRandomColor())
+
+func _on_randomize_pressed() -> void:
+	randomizeSaveNameAndColor(get_node("new game/m/v/save info/m/v/filename/TextEdit"), get_node("new game/m/v/save info/m/v/v2/color/m/ColorRect"))
+	color_picker.hide()
+
+
+func _on_new_color_pressed() -> void:
+	gv.emit_signal("edit_save_color", get_node("new game/m/v/save info/m/v/v2/color/m/ColorRect"))
 
 # if adding new main menu buttons, add signals for mouse_entered
 # then call buttonEntered and buttonExited with their path (see funcs directly below) to make it all work
@@ -429,9 +645,16 @@ func _on_import_byString_mouse_entered() -> void:
 	get_node("import/m/h/byString/v/h/text").add_font_override("font", gv.font.buttonHover)
 func _on_import_byFile_mouse_entered() -> void:
 	get_node("import/m/h/byFile/v/h/text").add_font_override("font", gv.font.buttonHover)
-
-
-
+func _on_newgame_back_mouse_entered() -> void:
+	buttonEntered("new game/top/h/v/v/back")
+func _on_new_saveinfo_mouse_entered() -> void:
+	get_node("new game/m/v/v/h/save info/v/h/text").add_font_override("font", gv.font.buttonHover)
+func _on_new_diff_entered() -> void:
+	get_node("new game/m/v/v/h/diff/v/h/text").add_font_override("font", gv.font.buttonHover)
+func _on_new_prefs_mouse_entered() -> void:
+	get_node("new game/m/v/v/h/prefs/v/h/text").add_font_override("font", gv.font.buttonHover)
+func _on_randomize_mouse_entered() -> void:
+	get_node("new game/m/v/save info/m/v/save info/v/h/text").add_font_override("font", gv.font.buttonHover)
 
 
 func _on_continue_mouse_exited() -> void:
@@ -454,6 +677,16 @@ func _on_import_byString_mouse_exited() -> void:
 	get_node("import/m/h/byString/v/h/text").add_font_override("font", gv.font.buttonNormal)
 func _on_import_byFile_mouse_exited() -> void:
 	get_node("import/m/h/byFile/v/h/text").add_font_override("font", gv.font.buttonNormal)
+func _on_newgame_back_mouse_exited() -> void:
+	buttonExited("new game/top/h/v/v/back")
+func _on_new_saveinfo_mouse_exited() -> void:
+	get_node("new game/m/v/v/h/save info/v/h/text").add_font_override("font", gv.font.buttonNormal)
+func _on_new_diff_mouse_exited() -> void:
+	get_node("new game/m/v/v/h/diff/v/h/text").add_font_override("font", gv.font.buttonNormal)
+func _on_new_prefs_mouse_exited() -> void:
+	get_node("new game/m/v/v/h/prefs/v/h/text").add_font_override("font", gv.font.buttonNormal)
+func _on_randomize_mouse_exited() -> void:
+	get_node("new game/m/v/save info/m/v/save info/v/h/text").add_font_override("font", gv.font.buttonNormal)
 
 
 func buttonEntered(path: String):
@@ -471,5 +704,22 @@ func _on_dontExit_pressed() -> void:
 	exitConfirm.hide()
 
 
-func _on_oopsie_pressed() -> void:
-	get_node("filename error").hide()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -158,10 +158,12 @@ custom_styles/panel = SubResource( 1 )
 margin_right = 305.0
 margin_bottom = 656.0
 scroll_horizontal_enabled = false
+scroll_vertical = 294
 
 [node name="m" type="MarginContainer" parent="sc"]
+margin_top = -294.0
 margin_right = 293.0
-margin_bottom = 928.0
+margin_bottom = 760.0
 size_flags_horizontal = 3
 custom_constants/margin_right = 10
 custom_constants/margin_top = 10
@@ -172,7 +174,7 @@ custom_constants/margin_bottom = 10
 margin_left = 10.0
 margin_top = 10.0
 margin_right = 283.0
-margin_bottom = 918.0
+margin_bottom = 1044.0
 custom_constants/separation = 20
 
 [node name="top" type="MarginContainer" parent="sc/m/v"]
@@ -240,7 +242,7 @@ align = 1
 [node name="v" type="VBoxContainer" parent="sc/m/v"]
 margin_top = 44.0
 margin_right = 273.0
-margin_bottom = 908.0
+margin_bottom = 1034.0
 custom_constants/separation = 20
 
 [node name="save info" type="MarginContainer" parent="sc/m/v/v"]
@@ -342,17 +344,17 @@ __meta__ = {
 [node name="difficulty" type="MarginContainer" parent="sc/m/v/v"]
 margin_top = 169.0
 margin_right = 273.0
-margin_bottom = 730.0
+margin_bottom = 856.0
 
 [node name="bg" type="Panel" parent="sc/m/v/v/difficulty"]
 self_modulate = Color( 0.219608, 0.219608, 0.219608, 1 )
 margin_right = 273.0
-margin_bottom = 561.0
+margin_bottom = 687.0
 custom_styles/panel = SubResource( 15 )
 
 [node name="m" type="MarginContainer" parent="sc/m/v/v/difficulty"]
 margin_right = 273.0
-margin_bottom = 561.0
+margin_bottom = 687.0
 custom_constants/margin_right = 10
 custom_constants/margin_top = 10
 custom_constants/margin_left = 10
@@ -362,7 +364,7 @@ custom_constants/margin_bottom = 10
 margin_left = 10.0
 margin_top = 10.0
 margin_right = 263.0
-margin_bottom = 551.0
+margin_bottom = 677.0
 custom_constants/separation = 10
 
 [node name="text" type="Label" parent="sc/m/v/v/difficulty/m/v"]
@@ -376,7 +378,7 @@ text = "Difficulty: Normal"
 [node name="v" type="VBoxContainer" parent="sc/m/v/v/difficulty/m/v"]
 margin_top = 27.0
 margin_right = 253.0
-margin_bottom = 420.0
+margin_bottom = 546.0
 custom_constants/separation = 10
 
 [node name="presets" type="MarginContainer" parent="sc/m/v/v/difficulty/m/v/v"]
@@ -431,6 +433,7 @@ text = "desc aslkjedf ;lkajs df;klja sd;lk fjas;kldf j;lkasjd f;klasj df;lkajs f
 autowrap = true
 
 [node name="values" type="MarginContainer" parent="sc/m/v/v/difficulty/m/v/v"]
+visible = false
 margin_top = 120.0
 margin_right = 253.0
 margin_bottom = 393.0
@@ -660,7 +663,6 @@ custom_fonts/font = SubResource( 3 )
 text = "10.0x"
 
 [node name="custom" type="MarginContainer" parent="sc/m/v/v/difficulty/m/v/v"]
-visible = false
 margin_top = 120.0
 margin_right = 253.0
 margin_bottom = 519.0
@@ -1008,9 +1010,9 @@ __meta__ = {
 }
 
 [node name="flair" type="Label" parent="sc/m/v/v/difficulty/m/v"]
-margin_top = 430.0
+margin_top = 556.0
 margin_right = 253.0
-margin_bottom = 499.0
+margin_bottom = 625.0
 hint_tooltip = "Calculated before Crit Chance (Additive)."
 mouse_filter = 0
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
@@ -1020,9 +1022,9 @@ Once you begin the game, the difficulty may not be changed."
 autowrap = true
 
 [node name="confirm difficulty" type="MarginContainer" parent="sc/m/v/v/difficulty/m/v"]
-margin_top = 509.0
+margin_top = 635.0
 margin_right = 253.0
-margin_bottom = 541.0
+margin_bottom = 667.0
 mouse_filter = 2
 custom_constants/margin_right = 0
 custom_constants/margin_top = 0
@@ -1143,9 +1145,9 @@ text = "Edit Difficulty"
 align = 1
 
 [node name="prefs" type="MarginContainer" parent="sc/m/v/v"]
-margin_top = 750.0
+margin_top = 876.0
 margin_right = 273.0
-margin_bottom = 812.0
+margin_bottom = 938.0
 
 [node name="bg" type="Panel" parent="sc/m/v/v/prefs"]
 self_modulate = Color( 0.219608, 0.219608, 0.219608, 1 )
@@ -1187,9 +1189,9 @@ text = "put some shit in here like color blind option"
 autowrap = true
 
 [node name="begin" type="MarginContainer" parent="sc/m/v/v"]
-margin_top = 832.0
+margin_top = 958.0
 margin_right = 273.0
-margin_bottom = 864.0
+margin_bottom = 990.0
 mouse_filter = 2
 custom_constants/margin_right = 0
 custom_constants/margin_top = 0

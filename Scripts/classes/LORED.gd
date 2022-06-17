@@ -334,8 +334,7 @@ func sync_Difficulty():
 	for x in b:
 		b[x].t.m(diff.getInput())
 	speed.t *= diff.getHaste()
-	crit.t.m(diff.getCrit())
-	crit.t.a(diff.getCritAdd())
+	crit.t.a(diff.getCrit())
 	f.t.m(diff.getFuelStorage())
 	fc.t.m(diff.getFuelConsumption())
 
@@ -543,6 +542,7 @@ func unlock():
 	manager.show()
 	if not active:
 		gv.list.lored["unlocked and inactive"].append(key)
+		return
 	if key != "stone":
 		gv.list.lored["active"].append(key)
 
@@ -589,12 +589,11 @@ func bought():
 			gv.list.lored["unlocked and inactive"].erase(key)
 		
 		active = true
+		gv.list.lored["active"].append(key)
 		
 		if not gv.s2_upgrades_may_be_autobought:
 			if key in gv.loreds_required_for_s2_autoup_upgrades_to_begin_purchasing:
 				gv.check_for_the_s2_shit()
-		
-		unlockResource()
 
 func unlockResource():
 	
@@ -604,6 +603,9 @@ func unlockResource():
 	for x in b:
 		if not gv.g[x].unlocked:
 			return
+	
+	if key in gv.list["unlocked resources"]:
+		return
 	
 	gv.list["unlocked resources"].append(key)
 

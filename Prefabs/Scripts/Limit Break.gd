@@ -24,6 +24,10 @@ func _ready():
 
 func set_fps(which: String):
 	fps[which].set = true
+	
+	var gay = gv.SRC["flash"].instance()
+	add_child(gay)
+	gay.flash(Color(1,1,1))
 
 
 func _physics_process(delta: float) -> void:
@@ -47,6 +51,9 @@ func _physics_process(delta: float) -> void:
 
 
 func r_limit_break():
+	
+	if gv.active_scene != gv.Scene.ROOT:
+		return
 	
 	var percent = clamp(gv.lb_xp.f.percent(gv.lb_xp.t), 0, 1)
 	

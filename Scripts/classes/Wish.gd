@@ -155,8 +155,6 @@ class Objective:
 				return "Relax"
 			gv.Objective.HOARD:
 				return "Hoard!"
-			gv.Objective.RESET:
-				return "Reset!"
 		
 		print_debug("Wish parseObjective fail. Type: ", type)
 		return "Oops!"
@@ -241,12 +239,19 @@ class Reward:
 			gv.WishReward.NEW_LORED:
 				gv.g[key].unlock()
 			gv.WishReward.TAB:
+				if key == str(gv.Tab.EXTRA_NORMAL):
+					if not gv.haveLoredsRequiredForExtraNormalUpgradeMenu():
+						return
 				gv.emit_signal("wishReward", type, key)
 			gv.WishReward.MAX_RANDOM_WISHES:
 				taq.max_random_wishes += amount.toFloat()
 			gv.WishReward.AUTOMATED:
 				if key == str(gv.WishReward.HALT_AND_HOLD):
 					taq.automatedHaltAndHold = true
+				elif key == str(gv.WishReward.WISH_TURNIN):
+					taq.automatedCompletion = true
+			gv.WishReward.EASIER:
+				taq.easier = true
 
 
 
@@ -391,11 +396,16 @@ func checkIfReady():
 func ready():
 	
 	#print("---------------ready called")
-#	if not vico_set or not is_instance_valid(vico):
-#		yield(self, "vico_just_set")
+	if not is_instance_valid(vico):
+		return
 	
 	ready = true
 	vico.ready()
+	
+	if taq.automatedCompletion:
+		# don't care about the tooltip. it's gonna go away anyway
+		return
+	
 	if tooltip_active:
 		if not is_instance_valid(tooltip):
 			clearTooltip()
@@ -442,6 +452,84 @@ func turnIn():
 
 
 
+func construct_autocomplete():
+	giver = "oil"
+	help_text = "Gahoogie!!! Snaffle. Hehehe~"
+	thank_text = "*farts and poops*"
+	obj = Objective.new(gv.Objective.UPGRADE_PURCHASED, "THE WITCH OF LOREDELITH")
+	rew.append(Reward.new(gv.WishReward.AUTOMATED, str(gv.WishReward.WISH_TURNIN)))
+	key_rew.append(Reward.new(gv.WishReward.AUTOMATED, str(gv.WishReward.WISH_TURNIN)))
+func construct_easier():
+	giver = "paper"
+	help_text = "Well, hey, there! It's me again! Paper Boy! Haha. Just kiddin. I mean, that is my name, but I know you wouldn't forget my name, so I was just kiddin about that part. You have better conduct than that! Haha. Just kiddin. Uh, well, I guess I'm actually not kiddin.\n\nHey, anyway, talkin about conduct, I think it might be a good idea to get that! The upgrade! The Conduct upgrade! Yeah. So, you probably should, but don't let me boss you around! Haha. Just kiddin. Er, I mean, uh.. Wait, what was I kiddin about?\n\nAnyway, hey, if you haven't done one of those Chemotherapy things yet, uh, I think it might be a good idea to wait a bit! Yeah. You should definitely get some Radiative upgrades that boost Stage 2 because, jeez la weez, Stage 2 is pretty hard, huh?! I sure couldn't walk ten billion miles in your shoes! Haha. Hahaha!!! Just kiddin!!! Hahahah..\n\nI mean, I really couldn't, though."
+	thank_text = "I am a sucker for proper conduct! Haha. Just kiddin."
+	obj = Objective.new(gv.Objective.UPGRADE_PURCHASED, "CONDUCT")
+	rew.append(Reward.new(gv.WishReward.EASIER, "10"))
+	key_rew.append(Reward.new(gv.WishReward.EASIER, "10"))
+
+func construct_ciorany():
+	giver = "water"
+	help_text = "I'm actually in [i]shock[/i] at how many you were able to gather!!! And it didn't take you [i]UNDEFINED[/i] years, like it took Seeds and Trees and I!!!"
+	thank_text = "I'm so happy :')"
+	obj = Objective.new(gv.Objective.UPGRADE_PURCHASED, "Cioran")
+	rew.append(Reward.new(gv.WishReward.RESOURCE, "tum", "1000"))
+func construct_maliggy():
+	giver = "malig"
+	help_text = "Hey, don't forget about us!! We're still relevant!!! D':"
+	thank_text = "Whew. :)"
+	obj = Objective.new(gv.Objective.RESOURCES_PRODUCED, "malig", "1e9")
+	rew.append(Reward.new(gv.WishReward.RESOURCE, "tum", "1000"))
+func construct_tumory():
+	giver = "tum"
+	help_text = "You read that right, buddy. Five grand. Cough em up. Chop chop. We've got people to infect."
+	thank_text = "Delicious."
+	obj = Objective.new(gv.Objective.RESOURCES_PRODUCED, "tum", "5000")
+	rew.append(Reward.new(gv.WishReward.TAB, str(gv.Tab.RADIATIVE)))
+	key_rew.append(Reward.new(gv.WishReward.TAB, str(gv.Tab.RADIATIVE)))
+
+func construct_carcy():
+	giver = "carc"
+	help_text = "Excuse my appearance, I'm actually pretty likeable once you get to know me. Just give me one puff. C'mon. You won't regret it."
+	thank_text = "Sucker."
+	obj = Objective.new(gv.Objective.UPGRADE_PURCHASED, "Sagan")
+	rew.append(Reward.new(gv.WishReward.RESOURCE, "steel", "1000"))
+	rew.append(Reward.new(gv.WishReward.RESOURCE, "glass", "1000"))
+	rew.append(Reward.new(gv.WishReward.RESOURCE, "hard", "1000"))
+	rew.append(Reward.new(gv.WishReward.RESOURCE, "wire", "1000"))
+
+func construct_plasty():
+	giver = "plast"
+	help_text = "I'm a plastic bag."
+	thank_text = "[i]*crinkle*"
+	obj = Objective.new(gv.Objective.RESOURCES_PRODUCED, "plast", "100")
+	rew.append(Reward.new(gv.WishReward.RESOURCE, "humus", "1000"))
+	rew.append(Reward.new(gv.WishReward.NEW_LORED, "carc"))
+	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, "carc"))
+func construct_papey():
+	giver = "paper"
+	help_text = "Well, hey, there! I'm Paper Boy. Your local neighborhood Paper Boy! Hahah! Just kiddin. Who am I, Spider-man? Haha! Just kiddin. If anything, I'd be Spider-boy. Haha! Just kiddin. But, anyway, yeah, so, like I was sayin, hi there!\n\nIf you need any help figuring out how we work together up here, ask me anytime! Also, try checkin the hold button, on account that it shows who else is using their stuff. Like, look at Pulp! It'll say I use his stuff. That's on account of the fact that I do use his stuff! Haha! Just kiddin. I mean, I do actually, but the way I said it was weird, so I was just kiddin about that part. Haha. Just kiddin. I mean, not really. Okay, yeah, so, anyway. Cya around!"
+	thank_text = "Thanks bunches, pal! Haha."
+	obj = Objective.new(gv.Objective.RESOURCES_PRODUCED, "paper", "100")
+	rew.append(Reward.new(gv.WishReward.RESOURCE, "axe", "1000"))
+	rew.append(Reward.new(gv.WishReward.NEW_LORED, "toba"))
+	rew.append(Reward.new(gv.WishReward.NEW_LORED, "ciga"))
+	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, "toba"))
+	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, "ciga"))
+
+func construct_galey():
+	giver = "gale"
+	help_text = "W-w-w-w-wo-o-u-u-u-l-l-d-d-d y-y-y-o-o-o-u-u-u-u g-g-g-g-g-g-get s-s-s-o-o-m-m-m-e L-L-L-E-E-E-A-A-A-D?"
+	thank_text = "A-h-o-o-o-o-o-o-o-o-o-oh-oh-oh-oh-oh-oh-h-h-h-e-e-e-e-e-e"
+	obj = Objective.new(gv.Objective.RESOURCES_PRODUCED, "lead", "100")
+	rew.append(Reward.new(gv.WishReward.RESOURCE, "axe", "100"))
+	rew.append(Reward.new(gv.WishReward.NEW_LORED, "paper"))
+	rew.append(Reward.new(gv.WishReward.NEW_LORED, "pulp"))
+	rew.append(Reward.new(gv.WishReward.NEW_LORED, "pet"))
+	rew.append(Reward.new(gv.WishReward.NEW_LORED, "plast"))
+	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, "paper"))
+	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, "pulp"))
+	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, "pet"))
+	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, "plast"))
 
 func construct_horsey():
 	giver = "humus"
@@ -451,6 +539,8 @@ func construct_horsey():
 	rew.append(Reward.new(gv.WishReward.RESOURCE, "water", "500"))
 	rew.append(Reward.new(gv.WishReward.RESOURCE, "wood", "500"))
 	rew.append(Reward.new(gv.WishReward.RESOURCE, "liq", "500"))
+	rew.append(Reward.new(gv.WishReward.NEW_LORED, "lead"))
+	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, "lead"))
 func construct_steely():
 	giver = "steel"
 	help_text = "No doubt you'll need lots of [i]me[/i] to progress! Hahaheyyy!"
@@ -459,6 +549,8 @@ func construct_steely():
 	rew.append(Reward.new(gv.WishReward.RESOURCE, "water", "500"))
 	rew.append(Reward.new(gv.WishReward.RESOURCE, "wood", "500"))
 	rew.append(Reward.new(gv.WishReward.RESOURCE, "liq", "500"))
+	rew.append(Reward.new(gv.WishReward.NEW_LORED, "gale"))
+	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, "gale"))
 func construct_joy3():
 	giver = "iron"
 	help_text = "Our new friends are so cool! I'm glad we can all come together and have fun. Let's get some more joy!\n\nWhat's automated halt and hold? I don't know. Is there a time where you have to manually click on halt or hold?"
@@ -771,14 +863,6 @@ func get_possible_types() -> Dictionary:
 			if exit:
 				break
 	
-	# reset 5
-	if notAnotherOngoingWishOfThisType("random_reset"):
-		
-		var reset_key: String = gv.highestResetKey()
-		
-		if gv.r[reset_key].greater(Big.new(gv.most_resources_gained).m(0.25)):
-			possible_types["random_reset"] = 5
-	
 	# max_fuel 100
 	if notAnotherOngoingWishOfThisType("random_max_fuel"):
 		for x in gv.list.lored["active"]:
@@ -819,6 +903,9 @@ func construct_random_collect():
 	
 	var difficulty = rand_range(20,80)
 	
+	if taq.easier:
+		difficulty /= 10
+	
 	var s1_or_s2 = gv.isStage1Or2LORED(resource)
 	
 	# stage 1 or 2
@@ -846,7 +933,14 @@ func construct_random_break_or_hoard():
 	
 	var _type = gv.Objective.BREAK if roll == 0 else gv.Objective.HOARD
 	
+	if _type == gv.Objective.HOARD:
+		while gv.g[giver].used_by.size() == 0:
+			setRandomGiver()
+	
 	var duration = randi() % 20 + 10 # 10-30
+	
+	if taq.easier:
+		duration /= 10
 	
 	obj = Objective.new(_type, giver, str(duration))
 	
@@ -860,14 +954,6 @@ func construct_random_buy_upgrade():
 	obj = Objective.new(gv.Objective.UPGRADE_PURCHASED, selected_upgrade)
 	
 	generateRandomRewards(30)
-
-func construct_random_reset():
-	#note untested
-	setRandomGiver()
-	
-	obj = Objective.new(gv.Objective.RESET, "")
-	
-	generateRandomRewards(100)
 
 func construct_random_max_fuel():
 	
@@ -1233,7 +1319,7 @@ func generateHelpAndThankText():
 							thank_text = "Well, I still don't like him."
 						"oil":
 							help_text = "That baby is absolutely, positively [i]disgusting.[/i]"
-							thank_text = "Yep. I'm the villain of LORED. I called Oil [b]disgusting[/b] and I'm going to get away with it, too."
+							thank_text = "Yep. I'm the villain of LORED. I called Oil [i]disgusting[/i] and I'm going to get away with it, too."
 						"conc":
 							help_text = "Actually, it's pretty impressive that he is here right now. He's left a lot behind. It's all a sacrifice for his family."
 							thank_text = "He's aight."
@@ -1276,7 +1362,7 @@ func generateHelpAndThankText():
 							help_text = "Ah, donde esta mi amor?"
 							thank_text = "I don't think I said it right."
 						"jo":
-							help_text = "Oh, oh!! -- Ahem... I saw this guy redirecting lightning, and I thought it was quite... [b]SHOCKING!!!![/b] :)"
+							help_text = "Oh, oh!! -- Ahem... I saw this guy redirecting lightning, and I thought it was quite... [i]SHOCKING!!!![/i] :)"
 							thank_text = "Why didn't you laugh?"
 						"growth":
 							help_text = "What in tarnation is that guy doing?"
@@ -1343,7 +1429,7 @@ func generateHelpAndThankText():
 					match giver:
 						"malig":
 							match roll:
-								0: help_text = "I refuse to be born and for [b]this[/b] to be my purpose."
+								0: help_text = "I refuse to be born and for [i]this[/i] to be my purpose."
 								1: help_text = "I was born only 5 seconds ago, but I already need a break. This sucks."
 								2: help_text = "Everyone else has gotten a break but me! That's no fair!"
 							thank_text = "I know, I know. [i]Back to the edge of the boat with you lot.[/i] Ugh."
@@ -1453,7 +1539,7 @@ func generateHelpAndThankText():
 						"growth":
 							match roll:
 								0: help_text = "What use would you have for MY JUICE, ANYWAY?"
-								1: help_text = "It's [b]my[/b] juice! Go pinch off your own juice!"
+								1: help_text = "It's [i]my[/i] juice! Go pinch off your own juice!"
 								2: help_text = "Wait. I might have dropped my keys in one of those juice sacks back there. Let me look."
 							thank_text = "Well, I guess I make enough juice for all of us. Okay. You can have some again."
 						"cop":

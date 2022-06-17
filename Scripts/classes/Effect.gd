@@ -289,6 +289,8 @@ func load(data: Dictionary):
 			continue
 		
 		if get(x) is Ob.Num:
+			if data[x] == "2":
+				print("hi")
 			get(x).load(data[x])
 		else:
 			set(x, str2var(data[x]))

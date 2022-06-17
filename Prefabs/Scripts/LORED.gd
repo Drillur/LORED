@@ -73,14 +73,14 @@ func setup(_key: String) -> void:
 
 func allocate_gn():
 	
-	gn_progress_bar = get_node("v/m/v/h/lored/task")
+	gn_progress_bar = get_node("v/m/v/h/lored/h2/task")
 	gn_frames = get_node("v/m/v/h/animation/AnimatedSprite")
 	gn_status = get_node("v/m/bg/status")
 	gn_net = get_node("v/m/v/h/lored/h/v/net")
 	gn_amount = get_node("v/m/v/h/lored/h/v/amount")
-	gn_d = get_node("v/m/v/h/lored/task/d")
+	gn_d = get_node("v/m/v/h/lored/h2/task/d")
 	gn_buy = get_node("v/m/v/interactables/lored/h/buy/button")
-	gn_task_text = get_node("v/m/v/h/lored/task/task text")
+	gn_task_text = get_node("v/m/v/h/lored/h2/task/task text")
 	gn_item_name = get_node("v/m/v/h/lored/h/v/item name")
 	gn_autobuywheel = get_node("v/m/v/interactables/lored/h/buy/h/autobuy")
 
@@ -110,6 +110,7 @@ func start_some():
 	r_buy_modulate()
 	gn_frames.init(key)
 	fuel.init(key)
+	get_node("v/m/v/h/lored/h2/Fuel Progress").setup(key)
 	r_buy_button_only()
 	
 	r_autobuywheel()
@@ -179,8 +180,8 @@ func r_setup():
 	gn_autobuywheel.modulate = lored.color
 	get_node("v/m/v/h/animation").self_modulate = lored.color
 	gn_amount.self_modulate = lored.color
-	get_node("v/m/v/h/lored/task/d").self_modulate = lored.color
-	get_node("v/m/v/h/lored/task/f").modulate = lored.color
+	gn_d.self_modulate = lored.color
+	get_node("v/m/v/h/lored/h2/task/f").modulate = lored.color
 	
 	get_node(gnhalt).text = "=="
 	
@@ -830,12 +831,10 @@ func r_buy_button_only() -> void:
 
 func random_shit():
 	
-	# s2n upgrade menu button
-	pass
-	#rewrite
-#	if not gv.Tab.EXTRA_NORMAL in gv.unlocked_tabs:
-#		if b_ubu_s2n_check():
-#			rt.unlock_tab(gv.Tab.EXTRA_NORMAL)
+	
+	if not gv.Tab.EXTRA_NORMAL in gv.unlocked_tabs:
+		if b_ubu_s2n_check():
+			rt.unlock_tab(gv.Tab.EXTRA_NORMAL)
 
 
 func manage_buff(buff) -> void:
@@ -1039,20 +1038,14 @@ func kill_emote():
 	
 	if is_instance_valid(emote):
 		emote.die()
-	
 
-#rewrite
-# - it seems that this used to ensure that The Heart of Things quest was working correctly. it may be safe to delete this, who knows
-#func b_ubu_s2n_check() -> bool:
-#
-#	if not gv.Quest.THE_HEART_OF_THINGS in taq.completed_quests:
-#		return false
-#
-#	for x in ["soil", "seed", "water", "tree", "sand", "draw", "axe", "liq", "steel", "wire", "glass", "hard", "wood", "humus"]:
-#		if not gv.g[x].active:
-#			return false
-#
-#	return true
+
+func b_ubu_s2n_check() -> bool:
+
+	if not "treey" in taq.completed_wishes:
+		return false
+	
+	return gv.haveLoredsRequiredForExtraNormalUpgradeMenu()
 
 
 func _on_mouse_exited() -> void:
@@ -1064,6 +1057,9 @@ func _on_animation_mouse_entered() -> void:
 func _on_buy_mouse_entered() -> void:
 	rt.get_node("global_tip")._call("buy lored " + key)
 
+func _on_Fuel_Progress_mouse_entered() -> void:
+	if gv.option["tooltip_fuel"]:
+		rt.get_node("global_tip")._call("fuel lored " + key)
 func _on_fuel_mouse_entered() -> void:
 	if not gv.option["tooltip_fuel"]: return
 	rt.get_node("global_tip")._call("fuel lored " + key)
@@ -1077,4 +1073,6 @@ func _on_hold_mouse_entered():
 	if not lored.active: return
 	if not gv.option["tooltip_hold"]: return
 	rt.get_node("global_tip")._call("tip hold lored " + key)
+
+
 

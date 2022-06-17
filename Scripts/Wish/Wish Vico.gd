@@ -171,6 +171,10 @@ func ready():
 	if ready:
 		return
 	
+	if taq.automatedCompletion:
+		turnIn()
+		return
+	
 	ready = true
 	show_behind_parent = false
 	
