@@ -1,0 +1,53 @@
+class_name BitsFloat
+extends Reference
+
+
+
+var bits := {}
+
+var base: float
+var total: float setget , getTotal
+
+var totalText: String setget , getTotalText
+
+var totalUpdated := false
+
+
+
+func _init(_bits: Dictionary):
+	base = _bits[lv.Num.BASE]
+	_bits.erase(lv.Num.BASE)
+	bits = _bits
+
+
+
+func getTotal() -> float:
+	total = base
+	for f in bits:
+		if f == lv.Num.ADD:
+			for g in bits[f]:
+				total += bits[f][g]
+		elif f == lv.Num.DIVIDE:
+			for g in bits[f]:
+				total /= bits[f][g]
+		elif f == lv.Num.MULTIPLY:
+			for g in bits[f]:
+				total *= bits[f][g]
+	totalUpdated = true
+	return total
+
+
+func getTotalText() -> String:
+	if totalUpdated:
+		totalUpdated = false
+		totalText = fval.f(total)
+	return totalText
+
+
+func multiplyValue(folder: int, item: int, amount):
+	# folder example: MULTIPLIER
+	# item example: FROM_LEVELS
+	bits[folder][item].m(amount)
+
+func setValue(folder: int, item: int, amount):
+	bits[folder][item] = amount

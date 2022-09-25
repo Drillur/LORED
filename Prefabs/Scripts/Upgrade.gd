@@ -241,7 +241,7 @@ func upgrade_bought(manual: bool, red_necro := false):
 			
 			if key == "Carcinogenesis":
 				rt.reset(gv.Tab.S3)
-				gv.r["embryo"].a(1)
+				gv.resource[gv.Resource.EMBRYO].a(1)
 				rt.unlock_tab("3")
 			
 			# tooltip
@@ -325,7 +325,7 @@ func refundable(red_necro: bool) -> bool:
 	gv.up[key].refundable = false
 	
 	for c in gv.up[key].cost:
-		gv.r[c].a(gv.up[key].cost[c].t)
+		gv.resource[c].a(gv.up[key].cost[c].t)
 	
 	rt.get_node("global_tip")._call("no")
 	rt.get_node("global_tip")._call("buy upgrade " + key)
@@ -471,8 +471,8 @@ func upgrade_effects(active: bool):
 			
 			if active:
 				
-				rt.get_node(rt.gnLB).r_limit_break()
-				rt.get_node(rt.gnLB).r_set_colors()
+				rt.get_node(rt.gnLB).setColors()
+				rt.get_node(rt.gnLB).update()
 				rt.get_node(rt.gnLB).show()
 			
 			else:
@@ -497,22 +497,22 @@ func routine_shit() -> void:
 	
 	routine = get_routine_info()
 	
-	gv.r["tum"].a(routine[0]) # d
+	gv.resource[gv.Resource.TUMORS].a(routine[0]) # d
 	taq.increaseProgress(gv.Objective.RESOURCES_PRODUCED, "tum", routine[0])
-	gv.r["malig"].s(routine[1]) # c
+	gv.resource[gv.Resource.MALIGNANCY].s(routine[1]) # c
 	
 
 func get_routine_info() -> Array:
 	
-	var base = Big.new(gv.g["tum"].d.t).m(1000)
+	var base = Big.new(lv.lored[lv.Type.TUMORS].output).m(1000)
 	if gv.up["CAPITAL PUNISHMENT"].active():
 		base.m(gv.run1)
 	var routine_d: Big = Big.new(base)
 	var routine_c: Big = Big.new(gv.up["ROUTINE"].cost["malig"].t)
 	
-	if gv.r["malig"].greater(Big.new(routine_c).m(2)):
+	if gv.resource[gv.Resource.MALIGNANCY].greater(Big.new(routine_c).m(2)):
 		
-		var _c: Big = Big.new(gv.r["malig"]).d(gv.up["ROUTINE"].cost["malig"].t).roundDown().s(1)
+		var _c: Big = Big.new(gv.resource[gv.Resource.MALIGNANCY]).d(gv.up["ROUTINE"].cost["malig"].t).roundDown().s(1)
 		_c.m(routine_c)
 		routine_c.a(_c)
 		
@@ -554,7 +554,7 @@ func _kill_all_children(up : String) -> void:
 			
 			
 			for c in gv.up[x].cost:
-				gv.r[c].a(gv.up[x].cost[c].t)
+				gv.resource[c].a(gv.up[x].cost[c].t)
 			
 			#var poop = gv.up[key].type.split(" ")[0] + gv.up[key].type.split(" ")[1].split(" ")[0]
 			

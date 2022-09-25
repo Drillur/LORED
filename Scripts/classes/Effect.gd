@@ -64,7 +64,7 @@ func apply(upgrade_name: String):
 				gv.g[b].task_list.append(other)
 		"cremover":
 			for b in beneficiaries:
-				gv.g[b].cost.erase(other)
+				lv.lored[b].lored.removeCost(other)
 		"buff haste":
 			for x in gv.list.upgrade[type.split(" ")[1] + " buff"]:
 				for c in gv.up[x].effects:
@@ -93,7 +93,7 @@ func apply(upgrade_name: String):
 		"crit":
 			# crit cannot be multiplicative, that's just weird. so don't even account for it
 			for b in beneficiaries:
-				gv.g[b].crit.ua.a(effect.t)
+				gv.g[b].crit.ua += effect.t.toFloat()
 				gv.g[b].crit.sync()
 		"input":
 			for b in beneficiaries:
@@ -170,7 +170,7 @@ func remove(upgrade_name: String):
 		
 		"cremover":
 			for b in beneficiaries:
-				gv.g[b].cost[other] = Ob.Num.new(effect.t)
+				lv.lored[b].lored.addCost(other, effect.t)
 		"buff haste":
 			for x in gv.list.upgrade[type.split(" ")[1] + " buff"]:
 				for c in gv.up[x].effects:
@@ -199,7 +199,7 @@ func remove(upgrade_name: String):
 		"crit":
 			# crit cannot be multiplicative, that's just weird. so don't even account for it
 			for b in beneficiaries:
-				gv.g[b].crit.ua.s(effect.t)
+				gv.g[b].crit.ua -= effect.t.toFloat()
 				gv.g[b].crit.sync()
 		"input":
 			for b in beneficiaries:
@@ -289,8 +289,6 @@ func load(data: Dictionary):
 			continue
 		
 		if get(x) is Ob.Num:
-			if data[x] == "2":
-				print("hi")
 			get(x).load(data[x])
 		else:
 			set(x, str2var(data[x]))

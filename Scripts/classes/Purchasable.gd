@@ -14,7 +14,7 @@ var autobuy := false
 func cost_check() -> bool:
 	# returns true if can be afforded
 	for x in cost:
-		if gv.r[x].less(cost[x].t):
+		if gv.resource[x].less(cost[x].t):
 			return false
 	return true
 

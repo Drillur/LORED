@@ -1,7 +1,6 @@
 extends MarginContainer
 
 onready var rt = get_node("/root/Root")
-onready var cav_rt = get_node("/root/Cavern")
 
 
 var fps := 0.0
@@ -38,13 +37,32 @@ func _call(source : String, other: Dictionary) -> void:
 	
 	if true:
 		
-		if "buy lored" in type:
+		if "lored level up" == type:
 			
-			var f := type.split("lored ")[1]
+			cont[type] = gv.SRC["tooltip/level up"].instance()
+			cont[type].setup(other["lored"])
+			add_child(cont[type])
 			
-			$bg.self_modulate = gv.g[f].color
+			temp["lored"] = other["lored"]
+			$bg.self_modulate = other["color"]
+		
+		elif "lored info" == type:
 			
-			lored_buy_lored(f)
+			cont[type] = gv.SRC["tooltip/lored info"].instance()
+			cont[type].setup(other["type"])
+			add_child(cont[type])
+			
+			temp["lored"] = other["type"]
+			$bg.self_modulate = lv.lored[other["type"]].color
+		
+		elif "lored alert" == type:
+			
+			cont[type] = gv.SRC["tooltip/lored alert"].instance()
+			cont[type].setup(other["type"], other["alert"])
+			add_child(cont[type])
+			
+			temp["lored"] = other["type"]
+			$bg.self_modulate = lv.lored[other["type"]].color
 		
 		elif "spell tooltip" == type:
 			
@@ -91,14 +109,6 @@ func _call(source : String, other: Dictionary) -> void:
 			add_child(cont["cac"])
 			
 			$bg.self_modulate = gv.cac[f].color
-		
-		elif "summon cac" in type:
-			
-			grow_horizontal = Control.GROW_DIRECTION_END
-			
-			add_cost("cac", gv.cac_cost)
-			
-			$bg.self_modulate = Color(1,0,0)
 		
 		elif "taq " in type:
 			
@@ -208,9 +218,9 @@ func r_tip(move_tip := false) -> void:
 			
 			return
 		
-		elif "lored " in type:
+		elif type in ["lored level up", "lored info", "lored alert"]:
 			
-			var f := type.split("lored ")[1]
+			var f = temp["lored"]
 			
 			var pos : Vector2 = rt.get_node(rt.gnLOREDs).cont[f].rect_global_position
 			var size : Vector2 = rt.get_node(rt.gnLOREDs).cont[f].rect_size * rt.scale
@@ -238,15 +248,6 @@ func r_tip(move_tip := false) -> void:
 				rect_position.y = win.y - rect_size.y - rt.get_node("m/v/bot").rect_size.y - 10
 			
 			return
-		
-		elif "spell tooltip" == type:
-			
-			var resources_pos: Vector2 = cav_rt.get_node("m/bot/v/resources").rect_global_position
-			
-			rect_position = Vector2(
-				get_global_mouse_position().x - (rect_size.x / 2),
-				resources_pos.y - rect_size.y - 10
-			)
 		
 		elif "wish tooltip" == type:
 			
@@ -320,23 +321,8 @@ func price_flash() -> void:
 	
 	var cost_dict := {}
 	
-	var f := ""
-	if "buy lored" in type:
-		f = type.split("lored ")[1]
-		cost_dict = gv.g[f].cost
-	elif "buy upgrade" in type:
-		f = type.split("upgrade ")[1]
-		cost_dict = gv.up[f].cost
-	
-	for x in cost_dict:
-		
-		if gv.r[x].greater_equal(cost_dict[x].t):
-			continue
-		
-		if "buy lored" in type:
-			cont["vbox"].cont[x].flash()
-		elif "buy upgrade" in type:
-			cont["tip up"].price.cont[x].flash()
+	if "lored level up" == type:
+		cont[type].flash()
 
 func autobuyer(_lored: String, _height: int) -> int:
 	
@@ -362,22 +348,4 @@ func item_tip(key: String):
 func _on_tip_mouse_entered():
 	get_parent()._call("no")
 
-func lored_buy_lored(key: String) -> void:
-	
-	add_cost(key, gv.g[key].cost)
-	
-	if not gv.g[key].autobuy:
-		return
-	
-	if not gv.option["tooltip_autobuyer"] and gv.option["tooltip_cost_only"]:
-		return
-	
-	cont["autobuyer"] = gv.SRC["tooltip/autobuyer"].instance()
-	cont["vbox"].get_node("v").add_child(cont["autobuyer"])
-	cont["autobuyer"].setup(key)
 
-func add_cost(key: String, cost: Dictionary):
-	
-	cont["vbox"] = src.vbox.instance()
-	add_child(cont["vbox"])
-	cont["vbox"].setup(key, cost)

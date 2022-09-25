@@ -19,11 +19,11 @@ var looping := false
 var lored: LORED
 
 
-func setup(_lored: String) -> void:
+func setup(_lored: int) -> void:
 	
-	lored = gv.g[_lored]
+	lored = lv.lored[_lored]
 	
-	if lored.key in gv.DEFAULT_KEY_LOREDS:
+	if lored.key_lored:
 		get_node("v/logic/key status/v/default").text = "By default, I am a key LORED."
 	else:
 		get_node("v/logic/key status/v/default").text = "By default, I am not a key LORED."
@@ -46,7 +46,7 @@ func display() -> void:
 		inactive.show()
 		return
 	
-	if lored.stage == "1" and lored.level < 5 and gv.up["don't take candy from babies"].active():
+	if lored.stage == 1 and lored.level < 5 and gv.up["don't take candy from babies"].active():
 		level.show()
 	else:
 		if lored.key_lored:

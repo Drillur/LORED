@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=2]
 
-[ext_resource path="res://Scripts/lored/progress_texture_limit_break.gd" type="Script" id=3]
+[ext_resource path="res://Scripts/oldLORED/progress_texture_limit_break.gd" type="Script" id=3]
 
 [sub_resource type="StreamTexture" id=11]
 flags = 4

@@ -10,6 +10,8 @@ var key: String
 
 var name := ""
 var giver: String
+var giverName: String
+var giverColor: Color
 
 var help_text: String
 var thank_text: String
@@ -48,6 +50,7 @@ class Objective:
 	
 	var type: int
 	var key: String
+	var shorthandKey: String
 	
 	var current_count: Big = Big.new(0)
 	var required_count: Big = Big.new(1)
@@ -111,10 +114,20 @@ class Objective:
 		return false
 	
 	func assumeIconKey():
-		if key in gv.sprite:
-			setIconKey(key)
+		if icon_key != "":
 			return
-		if type == gv.Objective.UPGRADE_PURCHASED:
+		if type == gv.Objective.LORED_UPGRADED:
+			shorthandKey = lv.lored[int(key)].shorthandKey
+			setIconKey(shorthandKey)
+		elif type == gv.Objective.MAXED_FUEL_STORAGE:
+			shorthandKey = gv.shorthandByResource[lv.lored[int(key)].fuelResource]
+			setIconKey(shorthandKey)
+		elif type == gv.Objective.RESOURCES_PRODUCED:
+			shorthandKey = gv.shorthandByResource[int(key)]
+			setIconKey(shorthandKey)
+		elif key in gv.sprite:
+			setIconKey(key)
+		elif type == gv.Objective.UPGRADE_PURCHASED:
 			setIconKey(gv.up[key].icon)
 	
 	func setIconKey(_icon_key: String):
@@ -123,7 +136,7 @@ class Objective:
 	func assumeCount():
 		match type:
 			gv.Objective.MAXED_FUEL_STORAGE:
-				required_count = Big.new(99)
+				required_count = Big.new(75)
 			_:
 				required_count = Big.new(1)
 	
@@ -133,7 +146,7 @@ class Objective:
 				return "1/1"
 			return "Complete!"
 		if type == gv.Objective.MAXED_FUEL_STORAGE:
-			return fval.f(current_count.percent(100) * 100) + "%"
+			return fval.f(current_count.percent(75) * 100) + "%"
 		
 		return current_count.toString() + "/" + required_count.toString()
 	
@@ -141,22 +154,19 @@ class Objective:
 		
 		match type:
 			gv.Objective.RESOURCES_PRODUCED:
-				if gv.isStage1Or2LORED(key):
-					return "Collect " + gv.g[key].name
-				else:
-					return "Collect " + gv.r_name[key]
+				return "Collect " + gv.resourceName[int(key)]
 			gv.Objective.LORED_UPGRADED:
-				return "Upgrade " + gv.g[key].name
+				return "Upgrade " + lv.lored[int(key)].name
 			gv.Objective.UPGRADE_PURCHASED:
 				return "Purchase " + gv.up[key].name
 			gv.Objective.MAXED_FUEL_STORAGE:
-				return gv.g[key].name + " max fuel"
+				return lv.lored[int(key)].name + " at 75% fuel"
 			gv.Objective.BREAK:
 				return "Relax"
 			gv.Objective.HOARD:
 				return "Hoard!"
 		
-		print_debug("Wish parseObjective fail. Type: ", type)
+		print_debug("Wish parseObjective() fail. Type: ", type)
 		return "Oops!"
 
 	func complete():
@@ -198,6 +208,7 @@ class Reward:
 	func _init(_type: int, _key: String, _amount = 1):
 		
 		if _type == -1:
+			# in this case, _key is save data.
 			_load(str2var(_key))
 			return
 		
@@ -234,10 +245,10 @@ class Reward:
 	func turnIn():
 		match type:
 			gv.WishReward.RESOURCE:
-				gv.r[key].a(amount)
+				gv.addToResource(int(key), amount)
 				taq.increaseProgress(gv.Objective.RESOURCES_PRODUCED, key, amount)
 			gv.WishReward.NEW_LORED:
-				gv.g[key].unlock()
+				lv.lored[int(key)].unlock()
 			gv.WishReward.TAB:
 				if key == str(gv.Tab.EXTRA_NORMAL):
 					if not gv.haveLoredsRequiredForExtraNormalUpgradeMenu():
@@ -325,6 +336,18 @@ func _init(_key: String, data: Dictionary = {}):
 	
 	if obj.icon_key == "":
 		obj.setIconKey(giver)
+	
+	if alreadyComplete():
+		obj.complete()
+	
+	giverName = lv.lored[int(giver)].name
+	giverColor = lv.lored[int(giver)].color
+
+func alreadyComplete():
+	# different from Objective.alreadyComplete
+	if key == "upgrade_stone":
+		if lv.lored[lv.Type.STONE].level >= 2:
+			return true
 
 func assumeName():
 	if name != "":
@@ -333,16 +356,26 @@ func assumeName():
 
 func assumeColor():
 	if obj.type == gv.Objective.MAXED_FUEL_STORAGE:
-		setColor(gv.g[obj.key].fuel_source)
+		setColor(gv.shorthandByResource[lv.lored[int(obj.key)].fuelResource])
+		return
+	if obj.type == gv.Objective.LORED_UPGRADED:
+		setColor(lv.lored[int(obj.key)].shorthandKey)
+		return
+	if obj.type == gv.Objective.RESOURCES_PRODUCED:
+		setColor(gv.shorthandByResource[int(obj.key)])
 		return
 	if obj.key in gv.COLORS.keys():
 		setColor(obj.key)
 		return
 	setColor("common")
 
-func setColor(_color_key: String):
-	color_key = _color_key
-	color = gv.COLORS[color_key]
+func setColor(_color: String):
+	if "," in _color:
+		color = Color(_color)
+	else:
+		color_key = _color
+		color = gv.COLORS[color_key]
+
 
 func setTooltip(_tooltip: MarginContainer):
 	tooltip = _tooltip
@@ -422,8 +455,8 @@ func turnIn():
 	
 	taq.wishCompleted(self)
 	
-	gv.r["joy"].a(1)
-	taq.increaseProgress(gv.Objective.RESOURCES_PRODUCED, "joy")
+	gv.resource[gv.Resource.JOY].a(1)
+	taq.increaseProgress(gv.Objective.RESOURCES_PRODUCED, str(gv.Resource.JOY))
 	
 	die()
 
@@ -453,14 +486,14 @@ func turnIn():
 
 
 func construct_autocomplete():
-	giver = "oil"
+	giver = str(lv.Type.OIL)
 	help_text = "Gahoogie!!! Snaffle. Hehehe~"
 	thank_text = "*farts and poops*"
 	obj = Objective.new(gv.Objective.UPGRADE_PURCHASED, "THE WITCH OF LOREDELITH")
 	rew.append(Reward.new(gv.WishReward.AUTOMATED, str(gv.WishReward.WISH_TURNIN)))
 	key_rew.append(Reward.new(gv.WishReward.AUTOMATED, str(gv.WishReward.WISH_TURNIN)))
 func construct_easier():
-	giver = "paper"
+	giver = str(lv.Type.PAPER)
 	help_text = "Well, hey, there! It's me again! Paper Boy! Haha. Just kiddin. I mean, that is my name, but I know you wouldn't forget my name, so I was just kiddin about that part. You have better conduct than that! Haha. Just kiddin. Uh, well, I guess I'm actually not kiddin.\n\nHey, anyway, talkin about conduct, I think it might be a good idea to get that! The upgrade! The Conduct upgrade! Yeah. So, you probably should, but don't let me boss you around! Haha. Just kiddin. Er, I mean, uh.. Wait, what was I kiddin about?\n\nAnyway, hey, if you haven't done one of those Chemotherapy things yet, uh, I think it might be a good idea to wait a bit! Yeah. You should definitely get some Radiative upgrades that boost Stage 2 because, jeez la weez, Stage 2 is pretty hard, huh?! I sure couldn't walk ten billion miles in your shoes! Haha. Hahaha!!! Just kiddin!!! Hahahah..\n\nI mean, I really couldn't, though."
 	thank_text = "I am a sucker for proper conduct! Haha. Just kiddin."
 	obj = Objective.new(gv.Objective.UPGRADE_PURCHASED, "CONDUCT")
@@ -468,314 +501,348 @@ func construct_easier():
 	key_rew.append(Reward.new(gv.WishReward.EASIER, "10"))
 
 func construct_ciorany():
-	giver = "water"
+	giver = str(lv.Type.WATER)
 	help_text = "I'm actually in [i]shock[/i] at how many you were able to gather!!! And it didn't take you [i]UNDEFINED[/i] years, like it took Seeds and Trees and I!!!"
 	thank_text = "I'm so happy :')"
 	obj = Objective.new(gv.Objective.UPGRADE_PURCHASED, "Cioran")
-	rew.append(Reward.new(gv.WishReward.RESOURCE, "tum", "1000"))
+	rew.append(Reward.new(gv.WishReward.RESOURCE, str(gv.Resource.TUMORS), "1000"))
 func construct_maliggy():
-	giver = "malig"
+	giver = str(lv.Type.MALIGNANCY)
 	help_text = "Hey, don't forget about us!! We're still relevant!!! D':"
 	thank_text = "Whew. :)"
-	obj = Objective.new(gv.Objective.RESOURCES_PRODUCED, "malig", "1e9")
-	rew.append(Reward.new(gv.WishReward.RESOURCE, "tum", "1000"))
+	obj = Objective.new(gv.Objective.RESOURCES_PRODUCED, str(gv.Resource.MALIGNANCY), "1e9")
+	rew.append(Reward.new(gv.WishReward.RESOURCE, str(gv.Resource.TUMORS), "1000"))
 func construct_tumory():
-	giver = "tum"
+	giver = str(lv.Type.TUMORS)
 	help_text = "You read that right, buddy. Five grand. Cough em up. Chop chop. We've got people to infect."
 	thank_text = "Delicious."
-	obj = Objective.new(gv.Objective.RESOURCES_PRODUCED, "tum", "5000")
+	obj = Objective.new(gv.Objective.RESOURCES_PRODUCED, str(gv.Resource.TUMORS), "5000")
 	rew.append(Reward.new(gv.WishReward.TAB, str(gv.Tab.RADIATIVE)))
 	key_rew.append(Reward.new(gv.WishReward.TAB, str(gv.Tab.RADIATIVE)))
 
 func construct_carcy():
-	giver = "carc"
+	giver = str(lv.Type.CARCINOGENS)
 	help_text = "Excuse my appearance, I'm actually pretty likeable once you get to know me. Just give me one puff. C'mon. You won't regret it."
 	thank_text = "Sucker."
 	obj = Objective.new(gv.Objective.UPGRADE_PURCHASED, "Sagan")
-	rew.append(Reward.new(gv.WishReward.RESOURCE, "steel", "1000"))
-	rew.append(Reward.new(gv.WishReward.RESOURCE, "glass", "1000"))
-	rew.append(Reward.new(gv.WishReward.RESOURCE, "hard", "1000"))
-	rew.append(Reward.new(gv.WishReward.RESOURCE, "wire", "1000"))
+	rew.append(Reward.new(gv.WishReward.RESOURCE, str(gv.Resource.STEEL), "1000"))
+	rew.append(Reward.new(gv.WishReward.RESOURCE, str(gv.Resource.GLASS), "1000"))
+	rew.append(Reward.new(gv.WishReward.RESOURCE, str(gv.Resource.HARDWOOD), "1000"))
+	rew.append(Reward.new(gv.WishReward.RESOURCE, str(gv.Resource.WIRE), "1000"))
 
 func construct_plasty():
-	giver = "plast"
+	giver = str(lv.Type.PLASTIC)
 	help_text = "I'm a plastic bag."
 	thank_text = "[i]*crinkle*"
-	obj = Objective.new(gv.Objective.RESOURCES_PRODUCED, "plast", "100")
-	rew.append(Reward.new(gv.WishReward.RESOURCE, "humus", "1000"))
-	rew.append(Reward.new(gv.WishReward.NEW_LORED, "carc"))
-	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, "carc"))
+	obj = Objective.new(gv.Objective.RESOURCES_PRODUCED, str(gv.Resource.PLASTIC), "100")
+	rew.append(Reward.new(gv.WishReward.RESOURCE, str(gv.Resource.HUMUS), "1000"))
+	rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.CARCINOGENS)))
+	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.CARCINOGENS)))
 func construct_papey():
-	giver = "paper"
+	giver = str(lv.Type.PAPER)
 	help_text = "Well, hey, there! I'm Paper Boy. Your local neighborhood Paper Boy! Hahah! Just kiddin. Who am I, Spider-man? Haha! Just kiddin. If anything, I'd be Spider-boy. Haha! Just kiddin. But, anyway, yeah, so, like I was sayin, hi there!\n\nIf you need any help figuring out how we work together up here, ask me anytime! Also, try checkin the hold button, on account that it shows who else is using their stuff. Like, look at Pulp! It'll say I use his stuff. That's on account of the fact that I do use his stuff! Haha! Just kiddin. I mean, I do actually, but the way I said it was weird, so I was just kiddin about that part. Haha. Just kiddin. I mean, not really. Okay, yeah, so, anyway. Cya around!"
 	thank_text = "Thanks bunches, pal! Haha."
-	obj = Objective.new(gv.Objective.RESOURCES_PRODUCED, "paper", "100")
-	rew.append(Reward.new(gv.WishReward.RESOURCE, "axe", "1000"))
-	rew.append(Reward.new(gv.WishReward.NEW_LORED, "toba"))
-	rew.append(Reward.new(gv.WishReward.NEW_LORED, "ciga"))
-	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, "toba"))
-	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, "ciga"))
+	obj = Objective.new(gv.Objective.RESOURCES_PRODUCED, str(gv.Resource.PAPER), "100")
+	rew.append(Reward.new(gv.WishReward.RESOURCE, str(gv.Resource.AXES), "1000"))
+	rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.TOBACCO)))
+	rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.CIGARETTES)))
+	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.TOBACCO)))
+	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.CIGARETTES)))
 
 func construct_galey():
-	giver = "gale"
+	giver = str(lv.Type.GALENA)
 	help_text = "W-w-w-w-wo-o-u-u-u-l-l-d-d-d y-y-y-o-o-o-u-u-u-u g-g-g-g-g-g-get s-s-s-o-o-m-m-m-e L-L-L-E-E-E-A-A-A-D?"
 	thank_text = "A-h-o-o-o-o-o-o-o-o-o-oh-oh-oh-oh-oh-oh-h-h-h-e-e-e-e-e-e"
-	obj = Objective.new(gv.Objective.RESOURCES_PRODUCED, "lead", "100")
-	rew.append(Reward.new(gv.WishReward.RESOURCE, "axe", "100"))
-	rew.append(Reward.new(gv.WishReward.NEW_LORED, "paper"))
-	rew.append(Reward.new(gv.WishReward.NEW_LORED, "pulp"))
-	rew.append(Reward.new(gv.WishReward.NEW_LORED, "pet"))
-	rew.append(Reward.new(gv.WishReward.NEW_LORED, "plast"))
-	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, "paper"))
-	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, "pulp"))
-	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, "pet"))
-	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, "plast"))
+	obj = Objective.new(gv.Objective.RESOURCES_PRODUCED, str(gv.Resource.LEAD), "100")
+	rew.append(Reward.new(gv.WishReward.RESOURCE, str(gv.Resource.AXES), "100"))
+	rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.PAPER)))
+	rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.WOOD_PULP)))
+	rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.PETROLEUM)))
+	rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.PLASTIC)))
+	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.PAPER)))
+	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.WOOD_PULP)))
+	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.PETROLEUM)))
+	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.PLASTIC)))
 
 func construct_horsey():
-	giver = "humus"
+	giver = str(lv.Type.HUMUS)
 	help_text = "Neigh!"
 	thank_text = "Whinny."
 	obj = Objective.new(gv.Objective.LORED_UPGRADED, "humus")
-	rew.append(Reward.new(gv.WishReward.RESOURCE, "water", "500"))
-	rew.append(Reward.new(gv.WishReward.RESOURCE, "wood", "500"))
-	rew.append(Reward.new(gv.WishReward.RESOURCE, "liq", "500"))
-	rew.append(Reward.new(gv.WishReward.NEW_LORED, "lead"))
-	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, "lead"))
+	rew.append(Reward.new(gv.WishReward.RESOURCE, str(gv.Resource.WATER), "500"))
+	rew.append(Reward.new(gv.WishReward.RESOURCE, str(gv.Resource.WOOD), "500"))
+	rew.append(Reward.new(gv.WishReward.RESOURCE, str(gv.Resource.LIQUID_IRON), "500"))
+	rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.LEAD)))
+	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.LEAD)))
 func construct_steely():
-	giver = "steel"
+	giver = str(lv.Type.STEEL)
 	help_text = "No doubt you'll need lots of [i]me[/i] to progress! Hahaheyyy!"
 	thank_text = "Sick!"
-	obj = Objective.new(gv.Objective.LORED_UPGRADED, "steel")
-	rew.append(Reward.new(gv.WishReward.RESOURCE, "water", "500"))
-	rew.append(Reward.new(gv.WishReward.RESOURCE, "wood", "500"))
-	rew.append(Reward.new(gv.WishReward.RESOURCE, "liq", "500"))
-	rew.append(Reward.new(gv.WishReward.NEW_LORED, "gale"))
-	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, "gale"))
+	obj = Objective.new(gv.Objective.LORED_UPGRADED, str(lv.Type.STEEL))
+	rew.append(Reward.new(gv.WishReward.RESOURCE, str(gv.Resource.WATER), "500"))
+	rew.append(Reward.new(gv.WishReward.RESOURCE, str(gv.Resource.WOOD), "500"))
+	rew.append(Reward.new(gv.WishReward.RESOURCE, str(gv.Resource.LIQUID_IRON), "500"))
+	rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.GALENA)))
+	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.GALENA)))
 func construct_joy3():
-	giver = "iron"
+	giver = str(lv.Type.IRON)
 	help_text = "Our new friends are so cool! I'm glad we can all come together and have fun. Let's get some more joy!\n\nWhat's automated halt and hold? I don't know. Is there a time where you have to manually click on halt or hold?"
 	thank_text = "Yay! Automatic halty hold! Whatever that is!"
-	obj = Objective.new(gv.Objective.RESOURCES_PRODUCED, "joy", "10")
-	rew.append(Reward.new(gv.WishReward.RESOURCE, "water", "500"))
-	rew.append(Reward.new(gv.WishReward.RESOURCE, "wood", "500"))
-	rew.append(Reward.new(gv.WishReward.RESOURCE, "liq", "500"))
+	obj = Objective.new(gv.Objective.RESOURCES_PRODUCED, str(gv.Resource.JOY), "10")
+	rew.append(Reward.new(gv.WishReward.RESOURCE, str(gv.Resource.WATER), "500"))
+	rew.append(Reward.new(gv.WishReward.RESOURCE, str(gv.Resource.WOOD), "500"))
+	rew.append(Reward.new(gv.WishReward.RESOURCE, str(gv.Resource.LIQUID_IRON), "500"))
 	rew.append(Reward.new(gv.WishReward.AUTOMATED, str(gv.WishReward.HALT_AND_HOLD)))
 	key_rew.append(Reward.new(gv.WishReward.AUTOMATED, str(gv.WishReward.HALT_AND_HOLD)))
 
 func construct_treey():
-	giver = "tree"
+	giver = str(lv.Type.TREES)
 	help_text = "Woohoo! There's a ton of friends here, now!! That's CrAzy!!!\n\nSoil's here, too!! My favorite thing in the [i]whole void!![/i] I need Soil's soil to get [i]stronger!!!![/i]\n\nAlso, listen to this. It's crazy. Those four are in a loop. They all require each other to work. I'm talking about Steel, Hardwood, Wire, and Glass. Each of the four have their own branch. Hardwood is the worst. She has a loop of her own, and I'm not talking about her earrings. More like she's loopy! Ha!! She's got a loop in her own loop. It's super confusing!!! [i]It's crazy!!!"
 	thank_text = "[i]YEAH, LET'S GOOOOOO! SOIL!!!"
-	obj = Objective.new(gv.Objective.LORED_UPGRADED, "tree")
-	rew.append(Reward.new(gv.WishReward.RESOURCE, "steel", "50"))
-	rew.append(Reward.new(gv.WishReward.RESOURCE, "hard", "50"))
-	rew.append(Reward.new(gv.WishReward.RESOURCE, "wire", "50"))
-	rew.append(Reward.new(gv.WishReward.RESOURCE, "glass", "50"))
-	rew.append(Reward.new(gv.WishReward.NEW_LORED, "tum"))
-	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, "tum"))
+	obj = Objective.new(gv.Objective.LORED_UPGRADED, str(lv.Type.TREES))
+	rew.append(Reward.new(gv.WishReward.RESOURCE, str(gv.Resource.STEEL), "50"))
+	rew.append(Reward.new(gv.WishReward.RESOURCE, str(gv.Resource.HARDWOOD), "50"))
+	rew.append(Reward.new(gv.WishReward.RESOURCE, str(gv.Resource.WIRE), "50"))
+	rew.append(Reward.new(gv.WishReward.RESOURCE, str(gv.Resource.GLASS), "50"))
+	rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.TUMORS)))
+	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.TUMORS)))
 	rew.append(Reward.new(gv.WishReward.TAB, str(gv.Tab.EXTRA_NORMAL)))
 	key_rew.append(Reward.new(gv.WishReward.TAB, str(gv.Tab.EXTRA_NORMAL)))
 
 func construct_axy():
-	giver = "axe"
+	giver = str(lv.Type.AXES)
 	help_text = "I require 0.8 Hardwood and 0.25 Steel per cycle. Satisy these requirements and I will assemble 1.0 axes. If you require further assistance, you can find help in the Help section of your Alaxa app."
 	thank_text = "Job complete."
-	obj = Objective.new(gv.Objective.RESOURCES_PRODUCED, "hard", "20")
-	rew.append(Reward.new(gv.WishReward.RESOURCE, "wood", "150"))
-	rew.append(Reward.new(gv.WishReward.NEW_LORED, "humus"))
-	rew.append(Reward.new(gv.WishReward.NEW_LORED, "soil"))
-	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, "humus"))
-	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, "soil"))
+	obj = Objective.new(gv.Objective.RESOURCES_PRODUCED, str(gv.Resource.HARDWOOD), "20")
+	rew.append(Reward.new(gv.WishReward.RESOURCE, str(gv.Resource.WOOD), "150"))
+	rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.HUMUS)))
+	rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.SOIL)))
+	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.HUMUS)))
+	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.SOIL)))
 func construct_hardy():
-	giver = "hard"
+	giver = str(lv.Type.HARDWOOD)
 	help_text = "Hiya, stud. Care to help a girl out with some wood? I'll make it hard for you."
 	thank_text = "Call me later."
-	obj = Objective.new(gv.Objective.RESOURCES_PRODUCED, "wood", "300")
-	rew.append(Reward.new(gv.WishReward.RESOURCE, "axe", "10"))
-	rew.append(Reward.new(gv.WishReward.RESOURCE, "steel", "50"))
-	rew.append(Reward.new(gv.WishReward.NEW_LORED, "glass"))
-	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, "glass"))
+	obj = Objective.new(gv.Objective.RESOURCES_PRODUCED, str(gv.Resource.WOOD), "300")
+	rew.append(Reward.new(gv.WishReward.RESOURCE, str(gv.Resource.AXES), "10"))
+	rew.append(Reward.new(gv.WishReward.RESOURCE, str(gv.Resource.STEEL), "50"))
+	rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.GLASS)))
+	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.GLASS)))
 func construct_woody():
-	giver = "wood"
+	giver = str(lv.Type.WOOD)
 	help_text = "Hey! I heard you were strong! Let's fight!\n\nJust kiddin. Hey, can you help me get some axes? I need them to make wood."
 	thank_text = "Wow, that was fast! Not as fast as me, but pretty good!"
-	obj = Objective.new(gv.Objective.RESOURCES_PRODUCED, "axe", "20")
-	rew.append(Reward.new(gv.WishReward.RESOURCE, "hard", "10"))
-	rew.append(Reward.new(gv.WishReward.RESOURCE, "sand", "250"))
-	rew.append(Reward.new(gv.WishReward.NEW_LORED, "sand"))
-	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, "sand"))
+	obj = Objective.new(gv.Objective.RESOURCES_PRODUCED, str(gv.Resource.AXES), "20")
+	rew.append(Reward.new(gv.WishReward.RESOURCE, str(gv.Resource.HARDWOOD), "10"))
+	rew.append(Reward.new(gv.WishReward.RESOURCE, str(gv.Resource.SAND), "250"))
+	rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.SAND)))
+	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.SAND)))
 
 func construct_gramma():
-	giver = "wire"
+	giver = str(lv.Type.WIRE)
 	help_text = "Oooh! Goodness gracious! Look at you!\n\nNow stop causing a ruckus you little heathen and come help me get some wire."
 	thank_text = "Children are so kind."
-	obj = Objective.new(gv.Objective.RESOURCES_PRODUCED, "wire", "25")
-	rew.append(Reward.new(gv.WishReward.RESOURCE, "liq", "100"))
-	rew.append(Reward.new(gv.WishReward.RESOURCE, "axe", "5"))
-	rew.append(Reward.new(gv.WishReward.NEW_LORED, "axe"))
-	rew.append(Reward.new(gv.WishReward.NEW_LORED, "wood"))
-	rew.append(Reward.new(gv.WishReward.NEW_LORED, "hard"))
-	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, "axe"))
-	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, "wood"))
-	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, "hard"))
+	obj = Objective.new(gv.Objective.RESOURCES_PRODUCED, str(gv.Resource.WIRE), "25")
+	rew.append(Reward.new(gv.WishReward.RESOURCE, str(gv.Resource.LIQUID_IRON), "100"))
+	rew.append(Reward.new(gv.WishReward.RESOURCE, str(gv.Resource.AXES), "5"))
+	rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.AXES)))
+	rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.WOOD)))
+	rew.append(Reward.new(gv.gv.WishReward.NEW_LORED, str(lv.Type.HARDWOOD)))
+	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.AXES)))
+	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.WOOD)))
+	key_rew.append(Reward.new(gv.gv.WishReward.NEW_LORED, str(lv.Type.HARDWOOD)))
 
 func construct_liqy():
-	giver = "liq"
+	giver = str(lv.Type.LIQUID_IRON)
 	help_text = "Some freaking little freaker keeps throwing iron on my [i]head!!![/i]\n\nSo anyways, I'm making soup."
 	thank_text = "Soup."
-	obj = Objective.new(gv.Objective.RESOURCES_PRODUCED, "steel", "3")
-	rew.append(Reward.new(gv.WishReward.RESOURCE, "wire", "20"))
-	rew.append(Reward.new(gv.WishReward.RESOURCE, "glass", "30"))
-	rew.append(Reward.new(gv.WishReward.NEW_LORED, "wire"))
-	rew.append(Reward.new(gv.WishReward.NEW_LORED, "draw"))
-	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, "wire"))
-	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, "draw"))
+	obj = Objective.new(gv.Objective.RESOURCES_PRODUCED, str(gv.Resource.STEEL), "3")
+	rew.append(Reward.new(gv.WishReward.RESOURCE, str(gv.Resource.WIRE), "20"))
+	rew.append(Reward.new(gv.WishReward.RESOURCE, str(gv.Resource.GLASS), "30"))
+	rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.WIRE)))
+	rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.DRAW_PLATE)))
+	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.WIRE)))
+	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.DRAW_PLATE)))
 
 func construct_waterbuddy():
-	giver = "water"
+	giver = str(lv.Type.WATER)
 	help_text = "Okay, lemme show you around my pool. Check it out!\n\nAlso, in case you were curious, I can help you figure out the relationship Seeds and Trees and I have. It's pretty simple: Trees grows seeds to trees using seeds. I mean trees. Or--oh, wait, did I say it right the first time?\n\nHuh? Anyway, I don't know. I'm still just so stoked to have you here!!"
 	thank_text = "You did it! Man, I can tell that we are gonna be friends."
-	obj = Objective.new(gv.Objective.LORED_UPGRADED, "seed")
-	rew.append(Reward.new(gv.WishReward.RESOURCE, "hard", "95"))
-	rew.append(Reward.new(gv.WishReward.RESOURCE, "steel", "25"))
-	rew.append(Reward.new(gv.WishReward.NEW_LORED, "steel"))
-	rew.append(Reward.new(gv.WishReward.NEW_LORED, "liq"))
-	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, "steel"))
-	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, "liq"))
+	obj = Objective.new(gv.Objective.LORED_UPGRADED, str(lv.Type.SEEDS))
+	rew.append(Reward.new(gv.WishReward.RESOURCE, str(gv.Resource.HARDWOOD), "95"))
+	rew.append(Reward.new(gv.WishReward.RESOURCE, str(gv.Resource.STEEL), "25"))
+	rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.STEEL)))
+	rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.LIQUID_IRON)))
+	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.STEEL)))
+	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.LIQUID_IRON)))
 
 func construct_a_new_leaf():
-	giver = "water"
+	giver = str(lv.Type.WATER)
 	help_text = "Whoa!\n\nSeeds, Trees, look! There's others out there! :0 There are so many of them! Whoooooooooooa! Whaaaaat?! !!!!"
 	thank_text = "It's really great to meet you!! I'm Water.\n\nHey, come here! Let me show you my pool!"
 	obj = Objective.new(gv.Objective.UPGRADE_PURCHASED, "upgrade_name")
-	rew.append(Reward.new(gv.WishReward.RESOURCE, "seed", "2"))
-	rew.append(Reward.new(gv.WishReward.RESOURCE, "soil", "25"))
-	rew.append(Reward.new(gv.WishReward.RESOURCE, "wood", "80"))
+	rew.append(Reward.new(gv.WishReward.RESOURCE, str(gv.Resource.SEEDS), "2"))
+	rew.append(Reward.new(gv.WishReward.RESOURCE, str(gv.Resource.SOIL), "25"))
+	rew.append(Reward.new(gv.WishReward.RESOURCE, str(gv.Resource.WOOD), "80"))
 	rew.append(Reward.new(gv.WishReward.TAB, str(gv.Tab.S2)))
-	rew.append(Reward.new(gv.WishReward.NEW_LORED, "water"))
-	rew.append(Reward.new(gv.WishReward.NEW_LORED, "seed"))
-	rew.append(Reward.new(gv.WishReward.NEW_LORED, "tree"))
-	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, "water"))
-	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, "seed"))
-	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, "tree"))
+	rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.WATER)))
+	rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.SEEDS)))
+	rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.TREES)))
+	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.WATER)))
+	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.SEEDS)))
+	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.TREES)))
 	key_rew.append(Reward.new(gv.WishReward.TAB, str(gv.Tab.S2)))
 
 func construct_joy2():
-	giver = "iron"
+	giver = str(lv.Type.IRON)
 	help_text = "This one just came in straight from the developer himself! No, really! Don't believe me? Ask him!"
 	thank_text = "Hey, the developer sent a message for you, as if I were some kind of Post LORED: \"You're a big stinky winky.\"\n\nI swear! It was him!! Not me! I can't believe he made me say that."
-	obj = Objective.new(gv.Objective.RESOURCES_PRODUCED, "joy", "10")
+	obj = Objective.new(gv.Objective.RESOURCES_PRODUCED, str(gv.Resource.JOY), "10")
 	rew.append(Reward.new(gv.WishReward.MAX_RANDOM_WISHES, "", 2))
 	key_rew.append(Reward.new(gv.WishReward.MAX_RANDOM_WISHES, "", 2))
 
 func construct_soccer_dude():
-	giver = "copo"
-	help_text = "You've got to reset to get this one, boss, see? But, you don't have to reset right now, boss. Do what you want, you're the boss, boss, see, boss?"
+	giver = str(lv.Type.COPPER_ORE)
+	help_text = "You've got to reset to get this one, boss, see? But, you don't have to reset right now, boss. Do what you want. You're the boss, boss, see, boss?"
 	thank_text = "Wicked, boss, real wicked. We're rolling with the big cats, now, boss."
 	obj = Objective.new(gv.Objective.UPGRADE_PURCHASED, "SOCCER DUDE")
-	rew.append(Reward.new(gv.WishReward.RESOURCE, "malig", "1000"))
+	rew.append(Reward.new(gv.WishReward.RESOURCE, str(gv.Resource.MALIGNANCY), "1000"))
 
 func construct_malignancy():
-	giver = "malig" #notez1 rewrite this dialogue, it's stupid
-	help_text = "Hey!! We just got here. This is a crazy situation we're in! There's a whole bunch of us spawning out of nothing!!! And we noticed that we can throw ourselves overboard to get these wacky Malignant upgrades. But before [i]you[/i] can get the upgrades, you also have to jump off?/n/nI don't know, I was born 20 seconds ago. Just keep clicking buttons."
+	giver = str(lv.Type.MALIGNANCY)
+	help_text = "Hey!! We just got here. This is a crazy situation we're in! There's a whole bunch of us spawning out of nothing!!! And we noticed that we can throw ourselves overboard to get these wacky Malignant upgrades. But before [i]you[/i] can get the upgrades, you also have to jump off?\n\nI don't know, I was born 20 seconds ago. Just keep clicking buttons."
 	thank_text = "Okay, you definitely have to reset to get the Malignant upgrades. You'll see! Good luck."
-	obj = Objective.new(gv.Objective.RESOURCES_PRODUCED, "malig", "3e3")
+	obj = Objective.new(gv.Objective.RESOURCES_PRODUCED, str(gv.Resource.MALIGNANCY), "3e3")
 	rew.append(Reward.new(gv.WishReward.TAB, str(gv.Tab.MALIGNANT)))
 	key_rew.append(Reward.new(gv.WishReward.TAB, str(gv.Tab.MALIGNANT)))
 
 func construct_sand():
-	giver = "jo"
+	giver = str(lv.Type.JOULES)
 	help_text = "If you really want to progress, you could get this Upgrade over here."
 	thank_text = "Yeah, uhh... good job."
 	obj = Objective.new(gv.Objective.UPGRADE_PURCHASED, "SAND")
-	rew.append(Reward.new(gv.WishReward.RESOURCE, "malig", "10"))
-	rew.append(Reward.new(gv.WishReward.NEW_LORED, "tar"))
-	rew.append(Reward.new(gv.WishReward.NEW_LORED, "oil"))
-	rew.append(Reward.new(gv.WishReward.NEW_LORED, "malig"))
-	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, "tar"))
-	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, "oil"))
-	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, "malig"))
+	rew.append(Reward.new(gv.WishReward.RESOURCE, str(gv.Resource.MALIGNANCY), "10"))
+	rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.TARBALLS)))
+	rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.OIL)))
+	rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.MALIGNANCY)))
+	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.TARBALLS)))
+	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.OIL)))
+	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.MALIGNANCY)))
 
 func construct_rye():
-	giver = "growth"
+	giver = str(lv.Type.GROWTH)
 	help_text = "[i]I CURRENTLY AM IN AN UNFORTUNATE SITUATION."
 	thank_text = "[i]IT WOULD APPEAR THAT THERE WILL BE NO END TO MY SUFFERING."
 	obj = Objective.new(gv.Objective.UPGRADE_PURCHASED, "RYE")
-	rew.append(Reward.new(gv.WishReward.NEW_LORED, "jo"))
-	rew.append(Reward.new(gv.WishReward.NEW_LORED, "conc"))
-	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, "jo"))
-	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, "conc"))
+	rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.JOULES)))
+	rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.CONCRETE)))
+	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.JOULES)))
+	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.CONCRETE)))
 
 func construct_joy():
-	giver = "iron"
+	giver = str(lv.Type.IRON)
 	help_text = "Hey, it looks like everyone is opening up to you! They're sharing their Wishes! Isn't that nice?"
 	thank_text = "Whoa, look! Growth just showed up!"
-	obj = Objective.new(gv.Objective.RESOURCES_PRODUCED, "joy", "3")
-	rew.append(Reward.new(gv.WishReward.NEW_LORED, "growth"))
-	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, "growth"))
+	obj = Objective.new(gv.Objective.RESOURCES_PRODUCED, str(gv.Resource.JOY), "3")
+	rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.GROWTH)))
+	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.GROWTH)))
 
 func construct_grinder():
-	giver = "stone"
+	giver = str(lv.Type.STONE)
 	help_text = "Whoa?! Does the GRINDER upgrade work on rocks?"
 	thank_text = "GRINDER is awesome!"
 	obj = Objective.new(gv.Objective.UPGRADE_PURCHASED, "GRINDER")
-	rew.append(Reward.new(gv.WishReward.RESOURCE, "iron", 30))
-	rew.append(Reward.new(gv.WishReward.RESOURCE, "cop", 30))
+	rew.append(Reward.new(gv.WishReward.RESOURCE, str(gv.Resource.IRON), 30))
+	rew.append(Reward.new(gv.WishReward.RESOURCE, str(gv.Resource.COPPER), 30))
 	rew.append(Reward.new(gv.WishReward.MAX_RANDOM_WISHES, "", 2))
 	key_rew.append(Reward.new(gv.WishReward.MAX_RANDOM_WISHES, "", 2))
 
 func construct_upgrades():
-	giver = "copo"
+	giver = str(lv.Type.COPPER_ORE)
 	help_text = "Ey, boss, I see you workin hard, real hard, I like that. But, lemme tell ya--you could be gettin this done a lot easier if you just did it with actual Upgrades. No, not upgrades like y'been doin--[i]Upgrades[/i], boss, [i]Upgrades[/i]! Whataya say to passin me a couple Stone--say, 40--and I tell ya all about Upgrades?"
 	thank_text = "That's sweet, boss, that's real sweet. Thanks for the dough, I'm gonna put this to real good use, you'll see. Catch ya later, boss, catch ya later. Oh! Upgrades, right. Just press Q, boss, you can handle it."
-	obj = Objective.new(gv.Objective.RESOURCES_PRODUCED, "stone", "40")
+	obj = Objective.new(gv.Objective.RESOURCES_PRODUCED, str(gv.Resource.STONE), "40")
 	rew.append(Reward.new(gv.WishReward.TAB, str(gv.Tab.NORMAL)))
 	key_rew.append(Reward.new(gv.WishReward.TAB, str(gv.Tab.NORMAL)))
 
 func construct_upgrade_stone():
-	giver = "iron"
+	giver = str(lv.Type.IRON)
 	help_text = "Stone seems like he's got a little much to do. Could you upgrade him to make it easier on him?"
 	thank_text = "Awesome! I bet he's liking that. Thanks :)" #note replace any :) text found in help_text or thank_text with the Joy icon. DO IT
-	obj = Objective.new(gv.Objective.LORED_UPGRADED, "stone")
-	rew.append(Reward.new(gv.WishReward.RESOURCE, "stone", 50))
+	obj = Objective.new(gv.Objective.LORED_UPGRADED, str(lv.Type.STONE))
+	rew.append(Reward.new(gv.WishReward.RESOURCE, str(gv.Resource.STONE), 50))
 
 func construct_importance_of_coal():
-	giver = "coal"
+	giver = str(lv.Type.COAL)
 	help_text = "Yikes!! Everyone is taking my stuff! No rest for the righteous, I guess!"
 	thank_text = "Whew."
-	obj = Objective.new(gv.Objective.RESOURCES_PRODUCED, "coal", "25")
-	rew.append(Reward.new(gv.WishReward.RESOURCE, "coal", 50))
+	obj = Objective.new(gv.Objective.RESOURCES_PRODUCED, str(gv.Resource.COAL), "25")
+	rew.append(Reward.new(gv.WishReward.RESOURCE, str(gv.Resource.COAL), 50))
 
 func construct_collection():
-	giver = "stone"
+	giver = str(lv.Type.STONE)
 	help_text = "I'm just going to pick up some of these."
 	thank_text = "Rocks are neat."
-	obj = Objective.new(gv.Objective.RESOURCES_PRODUCED, "stone", "10")
-	rew.append(Reward.new(gv.WishReward.RESOURCE, "iron", 20))
-	rew.append(Reward.new(gv.WishReward.RESOURCE, "cop", 10))
-	rew.append(Reward.new(gv.WishReward.NEW_LORED, "irono"))
-	rew.append(Reward.new(gv.WishReward.NEW_LORED, "copo"))
-	rew.append(Reward.new(gv.WishReward.NEW_LORED, "iron"))
-	rew.append(Reward.new(gv.WishReward.NEW_LORED, "cop"))
-	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, "irono"))
-	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, "copo"))
-	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, "iron"))
-	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, "cop"))
+	obj = Objective.new(gv.Objective.RESOURCES_PRODUCED, str(gv.Resource.STONE), "10")
+	rew.append(Reward.new(gv.WishReward.RESOURCE, str(gv.Resource.IRON), 20))
+	rew.append(Reward.new(gv.WishReward.RESOURCE, str(gv.Resource.COPPER), 10))
+	rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.IRON_ORE)))
+	rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.COPPER_ORE)))
+	rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.IRON)))
+	rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.COPPER)))
+	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.IRON_ORE)))
+	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.COPPER_ORE)))
+	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.IRON)))
+	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.COPPER)))
 
 func construct_fuel():
-	giver = "coal"
+	giver = str(lv.Type.COAL)
 	help_text = "If Stone wants my stuff, I'm happy to share!"
 	thank_text = "Glad I could help. :)"
-	obj = Objective.new(gv.Objective.MAXED_FUEL_STORAGE, "stone")
-	rew.append(Reward.new(gv.WishReward.RESOURCE, "coal", 10))
-	rew.append(Reward.new(gv.WishReward.RESOURCE, "stone", 10))
+	obj = Objective.new(gv.Objective.MAXED_FUEL_STORAGE, str(lv.Type.STONE))
+	rew.append(Reward.new(gv.WishReward.RESOURCE, str(gv.Resource.COAL), 10))
+	rew.append(Reward.new(gv.WishReward.RESOURCE, str(gv.Resource.STONE), 10))
 
 func construct_stuff():
-	giver = "stone"
+	giver = str(lv.Type.STONE)
 	help_text = "I want to pick up rocks, but I'm out of [i]stuff[/i]. Help!"
 	thank_text = "That's the stuff. Thanks!"
-	obj = Objective.new(gv.Objective.LORED_UPGRADED, "coal")
+	obj = Objective.new(gv.Objective.LORED_UPGRADED, str(lv.Type.COAL))
 
+
+
+
+
+
+
+func construct_veryLowCoal():
+	giver = str(lv.Type.COAL)
+	match taq.completed_wishes.count("veryLowCoal"):
+		0:
+			help_text = "For the love of all that is good, please help me! This is [i]way[/i] too much for me to handle!! :("
+			thank_text = "Huff. Huff. Hoh my goodness. Thank you. That was crazy. Wow."
+		1:
+			help_text = "I'm so sorry. It's me again. I need your help again u.u"
+			thank_text = "Thanks again. Sorry I keep needing your help u.u"
+		2:
+			help_text = ":( It's me again. Sorry. Would you help?"
+			thank_text = "Thanks so much. You're a livesaver. I should be good from here."
+		3:
+			help_text = "...heyyy. Long time no see! It's me again."
+			thank_text = "Thanks! See you next time."
+		4:
+			help_text = "What's up! Need your help again :)"
+			thank_text = "Hey, see you next time, pal!"
+		5:
+			help_text = "There he is! Whazaaaaap?! You know the drill, buddy!"
+			thank_text = "Bro, you are the best! That's what's up!"
+		_:
+			help_text = "[pls fix your coal shortage, i've run out of dialogue ideas for frick's sake]"
+			thank_text = "[but Coal still sends his best]"
+	
+	obj = Objective.new(gv.Objective.RESOURCES_PRODUCED, str(gv.Resource.COAL), Big.new(lv.lored[lv.Type.COAL].output).m(10).toString())
+	rew.append(Reward.new(gv.WishReward.RESOURCE, str(gv.Resource.COAL), Big.new(lv.lored[lv.Type.COAL].output).m(25)))
+	gv.emit_signal("manualLabor")
 
 
 
@@ -804,11 +871,11 @@ func construct_random():
 	
 	var selected_type: String
 	
-	if gv.r["joy"].greater(8):
+	if gv.resource[gv.Resource.JOY].greater(8):
 		
 		var possible_types: Dictionary = get_possible_types()
 		
-		var total_points: int
+		var total_points: int = 0
 		for p in possible_types:
 			total_points += possible_types[p]
 		
@@ -829,8 +896,12 @@ func construct_random():
 	
 	key = selected_type
 	
-	var construct_method = "construct_" + key if not ":" in key else "construct_" + key.split(":")[0]
-	call(construct_method)
+	
+	var constructMethod := "construct_" + key
+	if ":" in key:
+		constructMethod = constructMethod.split(":")[0]
+	call(constructMethod)
+	
 	
 	generateHelpAndThankText()
 
@@ -864,12 +935,13 @@ func get_possible_types() -> Dictionary:
 				break
 	
 	# max_fuel 100
-	if notAnotherOngoingWishOfThisType("random_max_fuel"):
-		for x in gv.list.lored["active"]:
-			var percent_of_max = Big.new(gv.g[x].f.t).m(0.25)
-			if gv.g[x].f.f.less(percent_of_max):
-				possible_types["random_max_fuel:" + x] = 100
-				break
+	if diff.FuelStorage <= 2:
+		if notAnotherOngoingWishOfThisType("random_max_fuel"):
+			for x in gv.list.lored["active"]:
+				print("x should be an int. is it? x is a(n): ", typeof(x))
+				if lv.lored[x].currentFuelPercent < 0.25:
+					possible_types["random_max_fuel:" + x] = 100
+					break
 	
 	# joy_or_grief 20
 	if true:
@@ -899,7 +971,7 @@ func construct_random_collect():
 	
 	setRandomGiver()
 	
-	var resource = randomResource()
+	var resource = str(randomResource())
 	
 	var difficulty = rand_range(20,80)
 	
@@ -991,7 +1063,7 @@ func setRandomGiver():
 func randomLORED() -> String:
 	return gv.list.lored["active"][randi() % gv.list.lored["active"].size()]
 
-func randomResource() -> String:
+func randomResource() -> int:
 	return gv.list["unlocked resources"][randi() % gv.list["unlocked resources"].size()]
 
 func generateRandomRewards(reward_mod := 0.0):
@@ -1007,10 +1079,10 @@ func generateRandomRewards(reward_mod := 0.0):
 	
 	for i in reward_size:
 		
-		var resource = randomResource()
+		var resource = str(randomResource())
 		if not gv.everyStage2LOREDunlocked():
 			while resource in gv.list.lored[gv.Tab.S2]:
-				resource = randomResource()
+				resource = str(randomResource())
 		var amount: Big
 		
 		if gv.isStage1Or2LORED(resource):
@@ -1052,14 +1124,14 @@ func generateHelpAndThankText():
 					thank_text = "Truly righteous, Coal. Well-done, well-done."
 				"irono":
 					match roll:
-						0: help_text = "Coal, are you fucking kidding me? Hurry it up."
-						1: help_text = "Are you kidding me? How did I get this low on fuel? Did you upgrade me too quickly? Coal better not have a negative net output. I will [i]FUCK[/i]ing [i]LOSE[/i] my [i]FUCK[/i]ing [i]MIND[/i]. I will [i]FIND YOU[/i]. [i]FUEL ME UP. NOW.[/i]"
+						0: help_text = "Coal, are you kidding me? Hurry it up."
+						1: help_text = "Are you kidding me? How did I get this low on fuel? Did you upgrade me too quickly? Coal better not have a negative net output. I will [i]LOSE[/i] my [i]MIND[/i]. I will [i]FIND YOU[/i]. [i]FUEL ME UP. NOW.[/i]"
 						2: help_text = "I have a very important role in this system. Don't you understand? I [i]CAN'T[/i] have low fuel. FIX IT."
-					thank_text = "Thanks. Fucking bitch. Make sure it doesn't happen again."
+					thank_text = "Thanks. Dummy. Make sure it doesn't happen again."
 				"coal":
 					match roll:
 						0: help_text = "Just give me a sec, I'll topped off in a flash."
-						1: help_text = "Heeheeeee, I literally have priority over everyone else when it comes to fueling up. THAT'S RIGHT, YOU SICK FUCKS. NO MATTER HOW MUCH YOU TAKE, I'LL [i]ALWAYS[/i] BE ABLE TO HIT MAX FUEL. Oh! Gosh, I lost it for just a bit, there! Tee hee. Sorry!"
+						1: help_text = "Heeheeeee, I literally have priority over everyone else when it comes to fueling up. THAT'S RIGHT, YOU SICK FREAKS. NO MATTER HOW MUCH YOU TAKE, I'LL [i]ALWAYS[/i] BE ABLE TO HIT MAX FUEL. Oh! Gosh, I lost it for just a bit, there! Tee hee. Sorry!"
 						2: help_text = "Yup, yup! Won't take me but a moment."
 					thank_text = "That's what I'm talking about, baby! Woo!"
 				"stone":
@@ -1077,7 +1149,7 @@ func generateHelpAndThankText():
 							match roll:
 								0: help_text = "This site was already reserved? Oh..."
 								1:
-									help_text = "I envisioned a future where there were no trees, no campsites. The air was poisonous. The bug balance of life was fucked up. Farm food rotted, billions died. Marshmallow factories went bankrupt, as there were no campers to buy marshmallows. [i]S'mores[/i]... more like [i]n'mores[/i]. We followed soon after. I was the only one left, in a desert, my lips chapped, unable to move, as the lack of any moisture left my skin taut and crusty. I sat before a circle of rocks, a rod in my hand... with no wood for a fire, nothing stuck on the rod, and no one to share any of it with anyway. I waited for death, but it never came."
+									help_text = "I envisioned a future where there were no trees, no campsites. The air was poisonous. The bug balance of life was messed up. Farm food rotted, billions died. Marshmallow factories went bankrupt, as there were no campers to buy marshmallows. [i]S'mores[/i]... more like [i]n'mores[/i]. We followed soon after. I was the only one left, in a desert, my lips chapped, unable to move, as the lack of any moisture left my skin taut and crusty. I sat before a circle of rocks, a rod in my hand... with no wood for a fire, nothing stuck on the rod, and no one to share any of it with anyway. I waited for death, but it never came."
 									thank_text = "In truth, I died when those factories went under. I am not [i]a'live[/i] without [i]s'mores[/i]. But, it's okay. In real life, people wouldn't stop buying marshmallows, even if all the trees were gone. ...Right?"
 								2: help_text = "We have to go back to town for toilet paper? ... :("
 						"iron":
@@ -1101,8 +1173,8 @@ func generateHelpAndThankText():
 						"coal":
 							match roll:
 								0: help_text = "THAAAAAAAAT'S IT. Y'AAAALL CAN DIE. JUST DIE!"
-								1: help_text = "NO MORE FUCKING FUN. NO. NOT MORE YOU FUCKERS."
-								2: help_text = "I'VE HAD IT WITH YOU MISERABLE SHITHEADS. THIS IS WHAT YOU DESERVE."
+								1: help_text = "NO MORE FUN. NO. NO MORE, YOU LOSERS."
+								2: help_text = "I'VE HAD IT WITH YOU MISERABLE FREAKS. THIS IS WHAT YOU DESERVE."
 							thank_text = "Golly, did I say all that? Sorry! Tee hee!"
 						"stone":
 							match roll:
@@ -1330,7 +1402,7 @@ func generateHelpAndThankText():
 							help_text = "Look at this idiot! Ever heard of chemotherapy, you ding dong?!"
 							thank_text = "Good gawd."
 						"cop":
-							help_text = "Fuck that guy. He's a stupid fuck, those aren't s'mores."
+							help_text = "Screw that guy. He's stupid. Those aren't s'mores."
 							thank_text = "All right. Moving on."
 						"iron":
 							help_text = "Iron LORED. I follow you, my brother. My captain. My king."
@@ -1340,7 +1412,7 @@ func generateHelpAndThankText():
 							thank_text = "Oof! Well, he's still going. Good on him! [i]I[/i] choose to work [i]smarter[/i]."
 						"irono":
 							help_text = "I'm... already.. what? I [i]obviously[/i] want more Iron Ore. How come I can even Wish for this? I'm a psychopath, and even I think something is up here. What would happen if you discarded this Wish? Why would you even do that? I'm not going to stop. I'm [i]never[/i] going to stop. You know what? I don't care. Discard it. See what happens. Go on. Do it. I double-homicide-dare you."
-							thank_text = "Okay. Whatever. You'll get free random resources out of thin air for not lifting a fucking finger, as if that makes any sense. Take it to the bank, you three-dimensional freak. If I could aim out of the screen and at you, I would."
+							thank_text = "Okay. Whatever. You'll get free random resources out of thin air for not lifting a dang finger, as if that makes any sense. Take it to the bank, you three-dimensional freak. If I could aim out of the screen and at you, I would."
 						"coal":
 							help_text = "Yes. [i]JAB[/i] that shovel in, real deep."
 							thank_text = "EXCELLENT."
@@ -1380,7 +1452,7 @@ func generateHelpAndThankText():
 							help_text = "Iron Ore's good for something, I guess!"
 							thank_text = "Yup!"
 						"coal":
-							help_text = "THAT'S GODDAMN RIGHT. WE NEED MORE COAL! YOU ALL WON'T FUCKING GIVE ME A SECOND'S BREAK!"
+							help_text = "THAT'S DAMN RIGHT. WE NEED MORE COAL! YOU ALL WON'T FREAKING GIVE ME A SECOND'S BREAK!"
 							thank_text = "Oops! Excuse me! Hee hee."
 						"stone":
 							help_text = "More Stone, more Coal!"
@@ -1568,9 +1640,9 @@ func generateHelpAndThankText():
 							thank_text = "You're safe... for now."
 						"coal":
 							match roll:
-								0: help_text = "THAT'S IT! YOU'VE ALL HAD ENOUGH! [i]I'M FUCKING SICK OF IT!"
-								1: help_text = "NO MORE FUCKING COAL FOR YOU MOTHERFUCKERS, GODDAMNIT. [i]I DON'T HAVE ENOUGH FOR MYSELF!"
-								2: help_text = "ABSOLUTELY NO MORE COAL FOR [i]ANNNNNYYYYY[/i] OF YOU STUPID FUCKERS. [i]I'M NOT DOING THIS SHIT ANYMORE[/i]."
+								0: help_text = "THAT'S IT! YOU'VE ALL HAD ENOUGH! [i]I'M SICK OF IT!"
+								1: help_text = "NO MORE COAL FOR YOU MOTHERFRICKERS, GODDARNIT. [i]I DON'T HAVE ENOUGH FOR MYSELF!"
+								2: help_text = "ABSOLUTELY NO MORE COAL FOR [i]ANNNNNYYYYY[/i] OF YOU STUPID FREAKS. [i]I'M NOT DOING THIS SHIT ANYMORE[/i]."
 							thank_text = "Hee hee! Sorry about that. I didn't mean it. Tee hee! :)"
 						"stone":
 							match roll:

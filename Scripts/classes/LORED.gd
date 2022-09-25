@@ -1,4 +1,4 @@
-class_name LORED
+class_name oldLORED
 extends "res://Scripts/classes/Purchasable.gd"
 
 
@@ -45,10 +45,63 @@ var level := 1
 var d : Num # output; damage, basically
 var f := Num.new() # fuel
 var fc := Num.new() # fuel cost
-var crit := Num.new(0.0) # crit chance
+var crit := Float.new(0.0) # crit chance
 var speed: Float
 var times_purchased := 0
 var stage_key: int
+
+
+
+
+func save() -> String:
+	
+	var data := {}
+	
+	for x in saved_vars:
+		if get(x) is Ob.Num:
+			data[x] = get(x).save()
+		else:
+			data[x] = var2str(get(x))
+	
+	return var2str(data)
+
+func load(data: Dictionary) -> void:
+	
+	for x in saved_vars:
+		
+		if not x in data.keys():
+			continue
+		
+		if get(x) is Ob.Num:
+			get(x).load(data[x])
+		else:
+			set(x, str2var(data[x]))
+	
+	if not active:
+		return
+	
+	unlockResource()
+	
+	level = str2var(data["level"])
+	
+	if not gv.option["on_save_halt"]:
+		halt = false
+	if not gv.option["on_save_hold"]:
+		hold = false
+	
+	gv.list.lored["active " + str(stage_key)].append(key)
+	
+	if key != "stone":
+		increase_cost()
+	
+	for x in level - 1:
+		d.m.m(2)
+		fc.m.m(2)
+		f.m.m(2)
+		increase_cost()
+	
+	sync()
+
 
 
 
@@ -84,7 +137,7 @@ func _init(
 	setStartingFuelDrain()
 	setStartingBaseFuel()
 	setStartingCurrentFuel()
-
+	
 	populate_emote_pool()
 
 func initSpeed(_speed: float) -> void:
@@ -156,7 +209,7 @@ func setStartingCurrentFuel() -> void:
 		f.f = Big.new(fc.b).m(speed.b).m(1.02)
 		return
 	
-	f.f = Big.new(f.t)
+	f.f = Big.new(f.t).m(diff.FuelStorage)
 
 func populate_emote_pool() -> void:
 
@@ -188,7 +241,7 @@ func populate_emote_pool() -> void:
 			emote_pool.append(Emote.new("This makes me want to dribble, dribble."))
 			
 		"oil":
-			emote_pool.append(Emote.new("but i'm just a baby"))
+			emote_pool.append(Emote.new("but i just a baby"))
 			emote_pool.append(Emote.new("plbdffffffffshh"))
 			emote_pool.append(Emote.new("pow pow pow pow"))
 			emote_pool.append(Emote.new("AHHHHHHHHHHH"))
@@ -232,7 +285,7 @@ func populate_emote_pool() -> void:
 			emote_pool.append(Emote.new("thanks for working so hard, Stone!", "stone", "i couldn't do it without you, buddy!"))
 			emote_pool.append(Emote.new("Iron Ore's methods may be extreme, but we need him nonetheless!", "irono", "i can hear you, but i'm going to pretend like i can't"))
 			#emote_pool.append(Emote.new("Growth must be so smart to make Growth out of Iron and Copper.", Vector2(160, 59), "growth", "you're too kind! actually, all you do i--AHHHH OH GAWD", Vector2(140, 59)))
-			emote_pool.append(Emote.new("Hardwood, can i borrow your helmet?", "hard", "yes, but actually no"))
+			emote_pool.append(Emote.new("Hardwood, can i borrow your helmet?", "hard", "yes, but actually no", "hard"))
 			emote_pool.append(Emote.new("i shouldn't have left that one in for so long"))
 			emote_pool.append(Emote.new("at this point, i'm going to need more toasters"))
 			emote_pool.append(Emote.new("my arm is getting tired"))
@@ -306,6 +359,18 @@ func populate_emote_pool() -> void:
 			emote_pool.append(Emote.new("i always liked playing support."))
 			emote_pool.append(Emote.new("why is this stuff purple?"))
 
+func setDifficultyValues():
+	
+	d.diffM = Big.new(diff.Output)
+	for x in b:
+		b[x].diffM = Big.new(diff.Input)
+	speed.diffM = 1 / diff.Haste
+	crit.diffA = diff.Crit
+	f.diffM = Big.new(diff.FuelStorage)
+	fc.diffM = Big.new(diff.FuelConsumption)
+	
+	sync()
+
 
 func queueSync():
 	sync_queued = true
@@ -321,22 +386,12 @@ func sync():
 	fc.sync()
 	speed.sync()
 	crit.sync()
+	crit.t = clamp(crit.t, 0, 100)
 	sync_cost() # in cPurchasable.gd
 	for x in b:
 		b[x].sync()
 	
-	gv.r[key].resetToZero_ifNegative()
-	
-	sync_Difficulty()
-
-func sync_Difficulty():
-	d.t.m(diff.getOutput())
-	for x in b:
-		b[x].t.m(diff.getInput())
-	speed.t *= diff.getHaste()
-	crit.t.a(diff.getCrit())
-	f.t.m(diff.getFuelStorage())
-	fc.t.m(diff.getFuelConsumption())
+	gv.resource[key].resetToZero_ifNegative()
 
 func sync_dynamics() -> void:
 	
@@ -349,7 +404,10 @@ func sync_dynamics() -> void:
 			continue
 		
 		if x == "Limit Break":
-			d.lbm = gv.up[x].effects[0].effect.t
+			if diff.active_difficulty == diff.Difficulty.SONIC:
+				speed.lbm = gv.up[x].effects[0].effect.t.toFloat()
+			else:
+				d.lbm = gv.up[x].effects[0].effect.t
 		
 		match key:
 			
@@ -397,7 +455,7 @@ func net(get_raw_power := false, ignore_halt := false) -> Array:
 	var drain = Big.new(0)
 	
 	if active:
-		gain = Big.new(d.t).d(speed.t).m(Big.new(1).a(crit.t.percent(10))).d(jobs[0].base_duration)
+		gain = Big.new(d.t).d(speed.t).m(Big.new(1).a(crit.t / 10)).d(jobs[0].base_duration)
 	else:
 		gain = Big.new(0)
 	
@@ -420,7 +478,7 @@ func net(get_raw_power := false, ignore_halt := false) -> Array:
 			if not gv.up[u].active() or not gv.g[g].active:
 				continue
 			
-			var gay: Big = Big.new(gv.g[g].d.t).d(gv.g[g].speed.t).d(gv.g[g].jobs[0].base_duration).m(Big.new(1).a(Big.new(gv.g[g].crit.t).d(10)))
+			var gay: Big = Big.new(gv.g[g].d.t).d(gv.g[g].speed.t).d(gv.g[g].jobs[0].base_duration).m(Big.new(1).a(gv.g[g].crit.t / 10))
 			
 			gain.a(gay)
 			
@@ -560,7 +618,8 @@ func bought():
 	
 	taq.increaseProgress(gv.Objective.LORED_UPGRADED, key)
 	
-	gv.list.lored["active " + str(stage_key)].append(key)
+	if not key in gv.list.lored["active " + str(stage_key)]:
+		gv.list.lored["active " + str(stage_key)].append(key)
 	
 	# already owned; upgrading
 	if active:
@@ -598,6 +657,9 @@ func bought():
 func unlockResource():
 	
 	if not stage in ["1", "2"]:
+		return
+	
+	if not unlocked:
 		return
 	
 	for x in b:
@@ -888,9 +950,9 @@ func logic() -> String:
 				return "na burn"
 			if gv.r[x].less(Big.new(d.t).m(b[x].t)):
 				return "na burn"
-			if x == "iron" and Big.new(gv.r["iron"]).a(d.t).less_equal(20):
+			if x == "iron" and Big.new(gv.resource[gv.Resource.IRON]).a(d.t).less_equal(20):
 				return "na burn"
-			if x == "cop" and Big.new(gv.r["cop"]).a(d.t).less_equal(20):
+			if x == "cop" and Big.new(gv.resource[gv.Resource.COPPER]).a(d.t).less_equal(20):
 				return "na burn"
 			if x == "stone" and Big.new(gv.r["stone"]).a(d.t).less_equal(30):
 				return "na burn"
@@ -902,7 +964,7 @@ func logic() -> String:
 		if true:
 			match key:
 				"jo":
-					if gv.r["coal"].less(gv.g["coal"].d.t):
+					if gv.r["coal"].less(lv.lored[lv.Type.COAL].output):
 						return "na burn"
 	
 	return "cook " + key
@@ -928,57 +990,6 @@ func update_goal(goal: String):
 	manager.gn_item_name.text = goal
 
 
-
-func save() -> String:
-	
-	var data := {}
-	
-	for x in saved_vars:
-		if get(x) is Ob.Num:
-			data[x] = get(x).save()
-		else:
-			data[x] = var2str(get(x))
-	
-	return var2str(data)
-
-func load(data: Dictionary) -> void:
-	
-	for x in saved_vars:
-		
-		if not x in data.keys():
-			continue
-		
-		if get(x) is Ob.Num:
-			get(x).load(data[x])
-		else:
-			set(x, str2var(data[x]))
-	
-	if not active:
-		return
-	
-	unlockResource()
-	
-	level = str2var(data["level"])
-	
-	if not gv.option["on_save_halt"]:
-		halt = false
-	if not gv.option["on_save_hold"]:
-		hold = false
-	
-	gv.list.lored["active " + str(stage_key)].append(key)
-	
-	if key != "stone":
-		increase_cost()
-	
-	for x in level - 1:
-		d.m.m(2)
-		fc.m.m(2)
-		f.m.m(2)
-		increase_cost()
-	
-	f.f = f.t
-	
-	sync()
 
 
 

@@ -1,11 +1,6 @@
 extends MarginContainer
 
 
-var fps := {
-	"ref": FPS.new(0.05),
-	"color": FPS.new(0.1),
-}
-
 
 const gnxpf := "v/xp/f"
 const gnxpt := "v/xp/t"
@@ -18,54 +13,43 @@ func _ready():
 	
 	hide()
 	
-	gv.connect("limit_break_leveled_up", self, "set_fps")
+	gv.connect("limit_break_leveled_up", self, "levelUp")
 
 
+func update():
+	
+	var t = Timer.new()
+	add_child(t)
+	
+	while gv.active_scene == gv.Scene.ROOT:
+		
+		var percent = clamp(gv.lb_xp.f.percent(gv.lb_xp.t), 0, 1)
+		
+		get_node(gncf).rect_size.x = min(percent * get_node(gnct).rect_size.x, get_node(gnct).rect_size.x)
+		
+		get_node(gnxpf).text = gv.lb_xp.f.toString()
+		get_node(gnxpt).text = gv.lb_xp.t.toString()
+		
+		get_node(gnd).text = gv.up["Limit Break"].effects[0].effect.t.toString() + "x"
+		
+		
+		
+		t.start(gv.fps)
+		yield(t, "timeout")
+	
+	t.queue_free()
 
-func set_fps(which: String):
-	fps[which].set = true
+func levelUp():
 	
 	var gay = gv.SRC["flash"].instance()
 	add_child(gay)
 	gay.flash(Color(1,1,1))
-
-
-func _physics_process(delta: float) -> void:
 	
-	if not visible:
-		return
-	
-	for x in fps:
-		if fps[x].f > 0:
-			fps[x].f -= delta
-	
-	if fps["ref"].f <= 0:
-		r_limit_break()
-		fps["ref"].f = fps["ref"].t
-	
-	if fps["color"].set:
-		if fps["color"].f <= 0:
-			r_set_colors()
-			fps["color"].set = false
+	setColors()
 
 
 
-func r_limit_break():
-	
-	if gv.active_scene != gv.Scene.ROOT:
-		return
-	
-	var percent = clamp(gv.lb_xp.f.percent(gv.lb_xp.t), 0, 1)
-	
-	get_node(gncf).rect_size.x = min(percent * get_node(gnct).rect_size.x, get_node(gnct).rect_size.x)
-	
-	get_node(gnxpf).text = gv.lb_xp.f.toString()
-	get_node(gnxpt).text = gv.lb_xp.t.toString()
-	
-	get_node(gnd).text = gv.up["Limit Break"].effects[0].effect.t.toString() + "x"
-
-
-func r_set_colors():
+func setColors():
 	
 	var color = get_color_by_key(floor(gv.up["Limit Break"].effects[0].effect.t.toFloat()))
 	

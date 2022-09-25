@@ -1,34 +1,34 @@
 extends MarginContainer
 
 
-var lored_key: String
+var lored: int
 
 
-func setup(key: String):
+func setup(key: int):
 	
-	lored_key = key
+	lored = key
 	
 	static_vals()
 	
 	updateStorage()
-	if not gv.g[lored_key].smart:
+	if not lv.lored[lored].smart:
 		basicLOREDupdateConsumption()
 
 func static_vals():
 	
 	var icon: Texture
 	var color: Color
-	var fuel_source = gv.g[lored_key].fuel_source
+	var fuel_source = lv.lored[lored].fuelResource
 	
 	icon = gv.sprite[fuel_source]
 	color = gv.COLORS[fuel_source]
 	
-	if not gv.g[lored_key].smart:
+	if not lv.lored[lored].smart:
 		get_node("basicLORED").show()
 		#get_node("basicLORED/fuel resource/h/icon/Sprite").texture = icon
-		#get_node("basicLORED/fuel resource/h/text").text = gv.g[fuel_source].name
+		#get_node("basicLORED/fuel resource/h/text").text = gvv.g[fuel_source].name
 		get_node("basicLORED/consumption/h/icon/Sprite").self_modulate = color
-		get_node("basicLORED/storage/h/Fuel Progress").setup(lored_key)
+		get_node("basicLORED/storage/h/Fuel Progress").setup(lored)
 		get_node("basicLORED/storage/ct").modulate = color
 
 func updateStorage():
@@ -39,11 +39,11 @@ func updateStorage():
 	while not is_queued_for_deletion():
 		
 		var maxSize = get_node("basicLORED/storage/ct").rect_size.x
-		var fuelPercent = gv.g[lored_key].f.f.percent(gv.g[lored_key].f.t)
+		var fuelPercent = lv.lored[lored].currentFuel.percent(lv.lored[lored].fuelStorage)
 		get_node("basicLORED/storage/ct/c").rect_size.x = min(fuelPercent * maxSize, maxSize)
 		
-		var currentFuel = gv.g[lored_key].f.f.toString()
-		var maxFuel = gv.g[lored_key].f.t.toString()
+		var currentFuel = lv.lored[lored].currentFuelText
+		var maxFuel = lv.lored[lored].fuelStorageText
 		get_node("basicLORED/storage/text").text = currentFuel + " / " + maxFuel
 		
 		t.start(gv.fps)
@@ -56,15 +56,14 @@ func basicLOREDupdateConsumption():
 	var t = Timer.new()
 	add_child(t)
 	
-	var fuel_source = gv.g[lored_key].fuel_source
-	var fuelResource = "[img=<16>]" + gv.sprite[fuel_source].get_path() + "[/img] " + gv.g[fuel_source].name
+	var fuel_source = lv.lored[lored].fuelResourceShorthand
+	var fuelResource = "[img=<16>]" + gv.sprite[fuel_source].get_path() + "[/img] " + gv.resourceName[fuel_source]
 	
 	while not is_queued_for_deletion():
 		
-		var drain = Big.new(gv.g[lored_key].fc.t)
-		var consumptionText: String = drain.toString() + " " + fuelResource + " /s"
+		var consumptionText: String = lv.lored[lored].fuelCostText + " " + fuelResource + " /s"
 		
-		if gv.g[lored_key].f.f.less(gv.g[lored_key].f.t):
+		if not lv.lored[lored].fullFuel():
 			consumptionText += " (x2)"
 		
 		get_node("basicLORED/consumption/text").bbcode_text = "[center]" + consumptionText

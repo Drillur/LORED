@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=2]
+[gd_scene load_steps=24 format=2]
 
 [ext_resource path="res://Scripts/_Root.gd" type="Script" id=1]
 [ext_resource path="res://Scripts/map.gd" type="Script" id=2]
@@ -6,9 +6,7 @@
 [ext_resource path="res://Scripts/tooltip/tooltip_master.gd" type="Script" id=5]
 [ext_resource path="res://Prefabs/upgrade/upgrade_container.tscn" type="PackedScene" id=6]
 [ext_resource path="res://Prefabs/Limit Break.tscn" type="PackedScene" id=7]
-[ext_resource path="res://Sprites/Menu/Out.png" type="Texture" id=8]
 [ext_resource path="res://Prefabs/lored/LORED Manager.tscn" type="PackedScene" id=9]
-[ext_resource path="res://Scripts/resources.gd" type="Script" id=10]
 [ext_resource path="res://Styles/Master Theme.tres" type="Theme" id=11]
 [ext_resource path="res://Sprites/tab/s1n.png" type="Texture" id=13]
 [ext_resource path="res://Sprites/tab/t0.png" type="Texture" id=14]
@@ -25,6 +23,18 @@ border_width_bottom = 3
 border_color = Color( 1, 0, 0.631373, 0.301961 )
 corner_radius_bottom_right = 5
 corner_radius_bottom_left = 5
+expand_margin_left = 10.0
+expand_margin_right = 10.0
+expand_margin_top = 10.0
+expand_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxFlat" id=8]
+bg_color = Color( 0.0588235, 0.0588235, 0.0588235, 1 )
+draw_center = false
+border_width_top = 3
+border_color = Color( 1, 0, 0.631373, 0.301961 )
+corner_radius_top_left = 5
+corner_radius_top_right = 5
 expand_margin_left = 10.0
 expand_margin_right = 10.0
 expand_margin_top = 10.0
@@ -68,25 +78,6 @@ anti_aliasing = false
 [sub_resource type="StyleBoxFlat" id=15]
 draw_center = false
 
-[sub_resource type="StyleBoxFlat" id=7]
-bg_color = Color( 0.164706, 0.164706, 0.164706, 1 )
-border_width_left = 1
-border_width_right = 1
-border_color = Color( 0.0627451, 0.0627451, 0.0627451, 1 )
-border_blend = true
-
-[sub_resource type="StyleBoxFlat" id=8]
-bg_color = Color( 0.0588235, 0.0588235, 0.0588235, 1 )
-draw_center = false
-border_width_top = 3
-border_color = Color( 1, 0, 0.631373, 0.301961 )
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-expand_margin_left = 10.0
-expand_margin_right = 10.0
-expand_margin_top = 10.0
-expand_margin_bottom = 10.0
-
 [sub_resource type="DynamicFont" id=10]
 outline_size = 2
 outline_color = Color( 0, 0, 0, 1 )
@@ -102,22 +93,30 @@ __meta__ = {
 [node name="map" type="Area2D" parent="."]
 script = ExtResource( 2 )
 
+[node name="LORED Manager" parent="." instance=ExtResource( 9 )]
+margin_right = 1280.0
+margin_bottom = 720.0
+rect_pivot_offset = Vector2( 0, -73 )
+size_flags_vertical = 3
+
 [node name="m" type="MarginContainer" parent="."]
 margin_right = 1280.0
 margin_bottom = 720.0
+mouse_filter = 2
 custom_constants/margin_right = 0
 custom_constants/margin_top = 0
 custom_constants/margin_left = 0
 custom_constants/margin_bottom = 0
 
 [node name="v" type="VBoxContainer" parent="m"]
+visible = false
 margin_right = 1280.0
 margin_bottom = 720.0
 custom_constants/separation = 0
 
 [node name="top" type="MarginContainer" parent="m/v"]
 margin_right = 1280.0
-margin_bottom = 74.0
+margin_bottom = 20.0
 custom_constants/margin_right = 10
 custom_constants/margin_top = 10
 custom_constants/margin_left = 10
@@ -127,199 +126,25 @@ custom_constants/margin_bottom = 10
 margin_left = 10.0
 margin_top = 10.0
 margin_right = 1270.0
-margin_bottom = 64.0
+margin_bottom = 10.0
 custom_styles/panel = SubResource( 1 )
 
 [node name="h" type="HBoxContainer" parent="m/v/top"]
 margin_left = 10.0
 margin_top = 10.0
 margin_right = 1270.0
-margin_bottom = 64.0
+margin_bottom = 10.0
 custom_constants/separation = 10
-
-[node name="menu" type="MarginContainer" parent="m/v/top/h"]
-margin_top = 11.0
-margin_right = 32.0
-margin_bottom = 43.0
-size_flags_horizontal = 4
-size_flags_vertical = 4
-custom_constants/margin_right = 0
-custom_constants/margin_top = 0
-custom_constants/margin_left = 0
-custom_constants/margin_bottom = 0
-
-[node name="button" type="Button" parent="m/v/top/h/menu"]
-self_modulate = Color( 0.333333, 0.333333, 0.333333, 1 )
-margin_right = 32.0
-margin_bottom = 32.0
-focus_mode = 0
-mouse_default_cursor_shape = 2
-custom_fonts/font = SubResource( 11 )
-custom_styles/hover = SubResource( 12 )
-custom_styles/pressed = SubResource( 13 )
-custom_styles/normal = SubResource( 14 )
-enabled_focus_mode = 0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="m" type="MarginContainer" parent="m/v/top/h/menu"]
-margin_right = 32.0
-margin_bottom = 32.0
-mouse_filter = 2
-size_flags_horizontal = 4
-custom_constants/margin_right = 4
-custom_constants/margin_top = 4
-custom_constants/margin_left = 4
-custom_constants/margin_bottom = 4
-
-[node name="icon" type="Panel" parent="m/v/top/h/menu/m"]
-margin_left = 4.0
-margin_top = 4.0
-margin_right = 28.0
-margin_bottom = 28.0
-rect_min_size = Vector2( 24, 24 )
-mouse_filter = 2
-custom_styles/panel = SubResource( 15 )
-
-[node name="Sprite" type="Sprite" parent="m/v/top/h/menu/m/icon"]
-self_modulate = Color( 1, 0, 0.631373, 0.501961 )
-scale = Vector2( 0.5, 0.5 )
-texture = ExtResource( 19 )
-centered = false
-
-[node name="shadow" type="Sprite" parent="m/v/top/h/menu/m/icon/Sprite"]
-self_modulate = Color( 0, 0, 0, 0.501961 )
-show_behind_parent = true
-position = Vector2( 2, 2 )
-texture = ExtResource( 19 )
-centered = false
-
-[node name="main menu" type="MarginContainer" parent="m/v/top/h"]
-margin_left = 42.0
-margin_top = 11.0
-margin_right = 74.0
-margin_bottom = 43.0
-size_flags_horizontal = 4
-size_flags_vertical = 4
-custom_constants/margin_right = 0
-custom_constants/margin_top = 0
-custom_constants/margin_left = 0
-custom_constants/margin_bottom = 0
-
-[node name="button" type="Button" parent="m/v/top/h/main menu"]
-self_modulate = Color( 0.333333, 0.333333, 0.333333, 1 )
-margin_right = 32.0
-margin_bottom = 32.0
-hint_tooltip = "Exit to Main Menu"
-focus_mode = 0
-mouse_default_cursor_shape = 2
-custom_fonts/font = SubResource( 11 )
-custom_styles/hover = SubResource( 12 )
-custom_styles/pressed = SubResource( 13 )
-custom_styles/normal = SubResource( 14 )
-enabled_focus_mode = 0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="m" type="MarginContainer" parent="m/v/top/h/main menu"]
-margin_right = 32.0
-margin_bottom = 32.0
-mouse_filter = 2
-size_flags_horizontal = 4
-custom_constants/margin_right = 4
-custom_constants/margin_top = 4
-custom_constants/margin_left = 4
-custom_constants/margin_bottom = 4
-
-[node name="icon" type="Panel" parent="m/v/top/h/main menu/m"]
-margin_left = 4.0
-margin_top = 4.0
-margin_right = 28.0
-margin_bottom = 28.0
-rect_min_size = Vector2( 24, 24 )
-mouse_filter = 2
-custom_styles/panel = SubResource( 15 )
-
-[node name="Sprite" type="Sprite" parent="m/v/top/h/main menu/m/icon"]
-self_modulate = Color( 1, 0, 0.631373, 0.501961 )
-scale = Vector2( 0.5, 0.5 )
-texture = ExtResource( 8 )
-centered = false
-
-[node name="shadow" type="Sprite" parent="m/v/top/h/main menu/m/icon/Sprite"]
-self_modulate = Color( 0, 0, 0, 0.501961 )
-show_behind_parent = true
-position = Vector2( 2, 2 )
-texture = ExtResource( 8 )
-centered = false
-
-[node name="resources" type="MarginContainer" parent="m/v/top/h"]
-margin_left = 84.0
-margin_right = 88.0
-margin_bottom = 54.0
-script = ExtResource( 10 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="s1" type="HBoxContainer" parent="m/v/top/h/resources"]
-margin_right = 4.0
-margin_bottom = 54.0
-custom_constants/separation = 10
-
-[node name="buffer" type="Panel" parent="m/v/top/h/resources/s1"]
-margin_right = 4.0
-margin_bottom = 54.0
-rect_min_size = Vector2( 4, 0 )
-custom_styles/panel = SubResource( 7 )
-
-[node name="s2" type="HBoxContainer" parent="m/v/top/h/resources"]
-visible = false
-margin_right = 4.0
-margin_bottom = 54.0
-custom_constants/separation = 10
-
-[node name="buffer" type="Panel" parent="m/v/top/h/resources/s2"]
-margin_right = 4.0
-margin_bottom = 56.0
-rect_min_size = Vector2( 4, 0 )
-custom_styles/panel = SubResource( 7 )
-
-[node name="s3" type="HBoxContainer" parent="m/v/top/h/resources"]
-visible = false
-margin_right = 4.0
-margin_bottom = 54.0
-custom_constants/separation = 10
-
-[node name="buffer" type="Panel" parent="m/v/top/h/resources/s3"]
-margin_right = 4.0
-margin_bottom = 54.0
-rect_min_size = Vector2( 4, 0 )
-custom_styles/panel = SubResource( 7 )
 
 [node name="r" type="HBoxContainer" parent="m/v/top/h"]
-margin_left = 1125.0
+margin_left = 1260.0
 margin_right = 1260.0
-margin_bottom = 54.0
 size_flags_horizontal = 10
 
-[node name="Limit Break" parent="m/v/top/h/r" instance=ExtResource( 7 )]
-anchor_right = 0.0
-margin_right = 135.0
-
-[node name="LORED Manager" parent="m/v" instance=ExtResource( 9 )]
-margin_top = 74.0
-margin_right = 1280.0
-margin_bottom = 720.0
-rect_pivot_offset = Vector2( 0, -73 )
-size_flags_vertical = 3
-
 [node name="Bottom" type="HBoxContainer" parent="m/v"]
-margin_top = 720.0
+margin_top = 20.0
 margin_right = 1280.0
-margin_bottom = 720.0
+margin_bottom = 20.0
 
 [node name="Left" type="Panel" parent="m/v/Bottom"]
 size_flags_horizontal = 0
@@ -376,6 +201,7 @@ size_flags_horizontal = 4
 size_flags_vertical = 6
 
 [node name="Menu" parent="m" instance=ExtResource( 21 )]
+visible = false
 margin_left = 401.0
 margin_top = 210.0
 margin_right = 879.0
@@ -386,18 +212,20 @@ __meta__ = {
 "_edit_lock_": true
 }
 
+[node name="Limit Break" parent="misc" instance=ExtResource( 7 )]
+anchor_right = 0.0
+margin_left = 1111.0
+margin_top = 10.0
+margin_right = 1246.0
+margin_bottom = 64.0
+
 [node name="tabs" type="MarginContainer" parent="misc"]
-margin_left = -1.0
-margin_top = 75.0
-margin_right = 72.0
-margin_bottom = 235.0
+margin_right = 73.0
+margin_bottom = 160.0
 custom_constants/margin_right = 10
 custom_constants/margin_top = 10
 custom_constants/margin_left = 10
 custom_constants/margin_bottom = 10
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="v" type="VBoxContainer" parent="misc/tabs"]
 margin_left = 10.0
@@ -406,9 +234,67 @@ margin_right = 63.0
 margin_bottom = 150.0
 custom_constants/separation = 10
 
-[node name="upgrades" type="Button" parent="misc/tabs/v"]
+[node name="menu" type="MarginContainer" parent="misc/tabs/v"]
 margin_right = 53.0
-margin_bottom = 40.0
+margin_bottom = 32.0
+size_flags_vertical = 4
+custom_constants/margin_right = 0
+custom_constants/margin_top = 0
+custom_constants/margin_left = 0
+custom_constants/margin_bottom = 0
+
+[node name="button" type="Button" parent="misc/tabs/v/menu"]
+self_modulate = Color( 0.333333, 0.333333, 0.333333, 1 )
+margin_right = 53.0
+margin_bottom = 32.0
+focus_mode = 0
+mouse_default_cursor_shape = 2
+custom_fonts/font = SubResource( 11 )
+custom_styles/hover = SubResource( 12 )
+custom_styles/pressed = SubResource( 13 )
+custom_styles/normal = SubResource( 14 )
+enabled_focus_mode = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="m" type="MarginContainer" parent="misc/tabs/v/menu"]
+margin_left = 10.0
+margin_right = 42.0
+margin_bottom = 32.0
+mouse_filter = 2
+size_flags_horizontal = 4
+custom_constants/margin_right = 4
+custom_constants/margin_top = 4
+custom_constants/margin_left = 4
+custom_constants/margin_bottom = 4
+
+[node name="icon" type="Panel" parent="misc/tabs/v/menu/m"]
+margin_left = 4.0
+margin_top = 4.0
+margin_right = 28.0
+margin_bottom = 28.0
+rect_min_size = Vector2( 24, 24 )
+mouse_filter = 2
+custom_styles/panel = SubResource( 15 )
+
+[node name="Sprite" type="Sprite" parent="misc/tabs/v/menu/m/icon"]
+self_modulate = Color( 1, 0, 0.631373, 0.501961 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 19 )
+centered = false
+
+[node name="shadow" type="Sprite" parent="misc/tabs/v/menu/m/icon/Sprite"]
+self_modulate = Color( 0, 0, 0, 0.501961 )
+show_behind_parent = true
+position = Vector2( 2, 2 )
+texture = ExtResource( 19 )
+centered = false
+
+[node name="upgrades" type="Button" parent="misc/tabs/v"]
+margin_top = 42.0
+margin_right = 53.0
+margin_bottom = 82.0
 rect_min_size = Vector2( 0, 40 )
 focus_mode = 0
 mouse_default_cursor_shape = 2
@@ -419,10 +305,9 @@ position = Vector2( 26, 20 )
 texture = ExtResource( 13 )
 
 [node name="1" type="Button" parent="misc/tabs/v"]
-visible = false
-margin_top = 50.0
+margin_top = 92.0
 margin_right = 53.0
-margin_bottom = 90.0
+margin_bottom = 132.0
 rect_min_size = Vector2( 0, 40 )
 focus_mode = 0
 mouse_default_cursor_shape = 2
@@ -574,16 +459,11 @@ size_flags_horizontal = 3
 script = ExtResource( 5 )
 
 [node name="Button" type="Button" parent="."]
-visible = false
 margin_right = 25.0
 margin_bottom = 27.0
 mouse_default_cursor_shape = 16
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[connection signal="pressed" from="m/v/top/h/menu/button" to="." method="_on_menu_pressed"]
-[connection signal="pressed" from="m/v/top/h/main menu/button" to="." method="_on_main_menu_pressed"]
+[connection signal="pressed" from="misc/tabs/v/menu/button" to="." method="_on_menu_pressed"]
 [connection signal="pressed" from="misc/tabs/v/upgrades" to="." method="_on_upgrades_pressed"]
 [connection signal="pressed" from="misc/tabs/v/1" to="." method="_on_s1_pressed"]
 [connection signal="pressed" from="misc/tabs/v/2" to="." method="_on_s2_pressed"]

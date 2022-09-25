@@ -7,7 +7,6 @@ onready var importDialog = get_node("FileDialog")
 
 onready var all_saves := get_node("all saves")
 onready var importWindow := get_node("import")
-onready var new_game_window = get_node("sc/h/New Game")
 onready var importByStringWindow = get_node("import/byString")
 onready var importByStringFailureWindow = get_node("import/byString failure")
 onready var importByFileWindow = get_node("import/byFile failure")
@@ -29,8 +28,8 @@ onready var customize_Crit_text = get_node("new game/m/v/diff/m/v/v/custom/m/v/l
 onready var customize_Crit_slider = get_node("new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/Crit/h/HSlider")
 onready var customize_FuelStorage_text = get_node("new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelStorage/TextEdit")
 onready var customize_FuelStorage_slider = get_node("new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelStorage/h/HSlider")
-onready var customize_FuelConsumption_text = get_node("new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelConsumption2/TextEdit")
-onready var customize_FuelConsumption_slider = get_node("new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelConsumption2/h/HSlider")
+onready var customize_FuelConsumption_text = get_node("new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelConsumption/TextEdit")
+onready var customize_FuelConsumption_slider = get_node("new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelConsumption/h/HSlider")
 
 
 onready var _Output = get_node("new game/m/v/diff/m/v/v/values/m/v/lored/m/v/Output/text")
@@ -81,17 +80,17 @@ const COLORS := {
 
 func _ready():
 	
+	
+	gv.active_scene = gv.Scene.MAIN_MENU
+	
 	gv.connect("hideAllActions", self, "_on_color_cancel_pressed")
 	
 	get_tree().get_root().connect("size_changed", self, "windowSizeChanged")
-	
-	gv.active_scene = gv.Scene.MAIN_MENU
 	
 	gv.connect("edit_save_color", self, "setColoringNode")
 	
 	all_saves.hide()
 	color_picker.hide()
-	new_game_window.hide()
 	all_saves.hide()
 	importWindow.hide()
 	importByStringWindow.hide()
@@ -106,10 +105,10 @@ func _ready():
 	get_node("h").show()
 	
 	for difficulty in diff.Difficulty:
-		diffDropdown.add_item(str(difficulty).capitalize())
+		diffDropdown.add_item(difficulty.capitalize())
 	
-	diffDropdown.select(3)
-	_on_difficulty_selected(3)
+	diffDropdown.select(4)
+	_on_difficulty_selected(4)
 	
 	setupAllSaves()
 	
@@ -118,6 +117,9 @@ func _ready():
 	windowSizeChanged()
 	
 	_on_randomize_pressed()
+	
+	for x in DEFAULT_VALUES:
+		resetDiffOption(x)
 
 func hideMouseoverFlairs():
 	
@@ -129,6 +131,7 @@ func hideMouseoverFlairs():
 	get_node("all saves/top/h/v/v/refresh/flair/Sprite").hide()
 	get_node("import/top/h/v/v/back/flair/Sprite").hide()
 	get_node("new game/top/h/v/v/back/flair/Sprite").hide()
+	get_node("new game/top/h/v/v/begin/flair/Sprite").hide()
 
 
 
@@ -201,8 +204,8 @@ func resetDiff():
 	diffValues.show()
 	diffCustom.hide()
 	
-	diffDropdown.select(3)
-	_on_difficulty_selected(3)
+	diffDropdown.select(5)
+	_on_difficulty_selected(5)
 	
 	for x in DEFAULT_VALUES:
 		setOptionValue(x, diff.call("get" + x))
@@ -216,7 +219,7 @@ func resetDiff():
 
 func resetDiffOption(attribute: String):
 	
-	if attribute == "CritAdd":
+	if attribute == "Crit":
 		get("customize_" + attribute + "_text").text = str(DEFAULT_VALUES[attribute])
 	else:
 		get("customize_" + attribute + "_text").text = addDecimalToAttributeValueIfNeeded(DEFAULT_VALUES[attribute])
@@ -400,11 +403,6 @@ func _on_continue_pressed() -> void:
 	var saveName = save_blocks["mostRecentSave"].saveName
 	var saveColor = save_blocks["mostRecentSave"].color
 	SaveManager.loadGame(saveName, saveColor)
-func _on_new_game_pressed() -> void:
-	if new_game_window.visible:
-		new_game_window._on_back_pressed()
-	else:
-		new_game_window.show()
 
 func _on_load_pressed() -> void:
 	all_saves.show()
@@ -582,7 +580,7 @@ func _on_HSlider_value_changed(value: float, attribute: String) -> void:
 	if get("customize_" + attribute + "_text").has_focus():
 		return
 	
-	if attribute == "CritAdd":
+	if attribute == "Crit":
 		get("customize_" + attribute + "_text").text = str(value)
 	else:
 		get("customize_" + attribute + "_text").text = addDecimalToAttributeValueIfNeeded(value)
@@ -590,7 +588,7 @@ func _on_HSlider_value_changed(value: float, attribute: String) -> void:
 
 func updateOptionValues():
 	for x in DEFAULT_VALUES:
-		setOptionValue(x, diff.call("get" + x))
+		setOptionValue(x, diff.get(x))
 
 func _on_difficulty_selected(index: int) -> void:
 	
@@ -617,10 +615,41 @@ func randomizeSaveNameAndColor(saveNameNode, colorNode):
 func _on_randomize_pressed() -> void:
 	randomizeSaveNameAndColor(get_node("new game/m/v/save info/m/v/filename/TextEdit"), get_node("new game/m/v/save info/m/v/v2/color/m/ColorRect"))
 	color_picker.hide()
-
+func _on_custom_randomize_pressed() -> void:
+	for d in DEFAULT_VALUES:
+		var _min = MIN_VALUES[d]
+		var _max = MAX_VALUES[d]
+		var randomVal = stepify(rand_range(_min, _max), 0.1)
+		get_node("new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/" + d + "/h/HSlider").value = randomVal
+		_on_HSlider_value_changed(randomVal, d)
 
 func _on_new_color_pressed() -> void:
 	gv.emit_signal("edit_save_color", get_node("new game/m/v/save info/m/v/v2/color/m/ColorRect"))
+
+func _on_newgame_play_pressed() -> void:
+	if get_node("new game/m/v/diff/m/v/v/custom").visible:
+		for d in DEFAULT_VALUES:
+			var val = float(get_node("new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/" + d + "/TextEdit").text)
+			diff.call("set" + d, val)
+	
+	var saveName = get_node("new game/m/v/save info/m/v/filename/TextEdit").text
+	
+	if not saveName.is_valid_filename():
+		get_node("filename error").show()
+		
+		var t = Timer.new()
+		add_child(t)
+		t.start(5)
+		yield(t, "timeout")
+		t.queue_free()
+		get_node("filename error").hide()
+		return
+	
+	saveName = SaveManager.getUniqueFilename(saveName)
+	
+	var saveColor = get_node("new game/m/v/save info/m/v/v2/color/m/ColorRect").color
+	
+	SaveManager.loadNewGame(saveName, saveColor)
 
 # if adding new main menu buttons, add signals for mouse_entered
 # then call buttonEntered and buttonExited with their path (see funcs directly below) to make it all work
@@ -654,7 +683,15 @@ func _on_new_diff_entered() -> void:
 func _on_new_prefs_mouse_entered() -> void:
 	get_node("new game/m/v/v/h/prefs/v/h/text").add_font_override("font", gv.font.buttonHover)
 func _on_randomize_mouse_entered() -> void:
-	get_node("new game/m/v/save info/m/v/save info/v/h/text").add_font_override("font", gv.font.buttonHover)
+	get_node("new game/m/v/save info/m/v/randomize/v/h/text").add_font_override("font", gv.font.buttonHover)
+func _on_custom_randomize_mouse_entered() -> void:
+	get_node("new game/m/v/diff/m/v/v/custom/m/v/randomize/v/h/text").add_font_override("font", gv.font.buttonHover)
+func _on_newgame_play_mouse_entered() -> void:
+	buttonEntered("new game/top/h/v/v/begin")
+
+
+
+
 
 
 func _on_continue_mouse_exited() -> void:
@@ -686,7 +723,12 @@ func _on_new_diff_mouse_exited() -> void:
 func _on_new_prefs_mouse_exited() -> void:
 	get_node("new game/m/v/v/h/prefs/v/h/text").add_font_override("font", gv.font.buttonNormal)
 func _on_randomize_mouse_exited() -> void:
-	get_node("new game/m/v/save info/m/v/save info/v/h/text").add_font_override("font", gv.font.buttonNormal)
+	get_node("new game/m/v/save info/m/v/randomize/v/h/text").add_font_override("font", gv.font.buttonNormal)
+func _on_custom_randomize_mouse_exited() -> void:
+	get_node("new game/m/v/diff/m/v/v/custom/m/v/randomize/v/h/text").add_font_override("font", gv.font.buttonNormal)
+func _on_newgame_play_mouse_exited() -> void:
+	buttonExited("new game/top/h/v/v/begin")
+
 
 
 func buttonEntered(path: String):
@@ -702,21 +744,6 @@ func _on_exit_pressed() -> void:
 	get_tree().quit()
 func _on_dontExit_pressed() -> void:
 	exitConfirm.hide()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

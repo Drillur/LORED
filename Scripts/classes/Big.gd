@@ -90,7 +90,7 @@ func calc(big = self):
 	if big.mantissa >= 1 and big.mantissa < 10:
 		return
 	
-	if big.mantissa == 0.0:
+	if is_zero_approx(big.mantissa):
 		big.exponent = 0
 		return
 	
@@ -111,7 +111,7 @@ func percent(n):
 	
 	n = type_check(n)
 	
-	if n.mantissa == 0.0:
+	if is_zero_approx(n.mantissa):
 		# prevents division of 0
 		return 0.0
 	
@@ -143,7 +143,7 @@ func d(n):
 	
 	n = type_check(n)
 	
-	if n.mantissa == 0:
+	if is_zero_approx(n.mantissa):
 		return self
 	
 	mantissa /= n.mantissa
@@ -267,7 +267,7 @@ func nearly(n) -> bool:
 	# useful for finishing off monsters with very nearly 0 hp
 	n = type_check(n)
 	calc(n)
-	if n.mantissa == 0.0 and exponent < 0:
+	if is_zero_approx(n.mantissa) and exponent < 0:
 		# example: exponent = -2, meaning 0.04
 		return true
 	return n.exponent == exponent and (n.mantissa > mantissa * 0.98 and n.mantissa < mantissa * 1.02)
@@ -282,9 +282,9 @@ func greater(n):
 	n = type_check(n)
 	calc(n)
 	
-	if mantissa == 0.0:
+	if is_zero_approx(mantissa):
 		return false
-	elif n.mantissa == 0.0 and mantissa > 0:
+	elif is_zero_approx(n.mantissa) and mantissa > 0:
 		return true
 	
 	if exponent > n.exponent:
@@ -307,9 +307,9 @@ func less(n):
 	n = type_check(n)
 	calc(n)
 	
-	if mantissa > 0 and n.mantissa == 0:
+	if mantissa > 0 and is_zero_approx(n.mantissa):
 		return false
-	if mantissa == 0.0 and n.mantissa > 0.0:
+	if is_zero_approx(mantissa) and n.mantissa > 0.0:
 		return true
 	
 	if exponent < n.exponent:
@@ -365,7 +365,7 @@ func roundDown():
 		mantissa = stepify(mantissa, 0.0001)
 	return self
 
-func print() -> String:
+func read() -> String:
 	return toString()
 
 func toString() -> String:
@@ -385,7 +385,7 @@ func toString() -> String:
 
 func format_val_hub(value: float) -> String:
 	
-	if value == 0.0:
+	if is_zero_approx(value):
 		return "0"
 	
 	if value < 100.0:
@@ -426,9 +426,7 @@ func toEngineering():
 	return format_val_hub(mantissa * pow(10, mod)) + "e" + format_val_hub(exponent - mod)
 
 func toLog():
-	
 	var dec = "." + str(floor(abs(log(mantissa) / log(10) * 100))).pad_zeros(2)
-	
 	return "e" + format_exponent(exponent) + dec
 
 func format_exponent(value: int) -> String:

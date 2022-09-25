@@ -17,7 +17,7 @@ func f(value: float) -> String:
 	
 	# master func; redirects depending on value
 	
-	if value == 0.0:
+	if is_zero_approx(value):
 		return "0"
 	
 	var _sign := sign(value)
@@ -54,10 +54,11 @@ func format_val_medium(_sign: int, value: float) -> String:
 	
 	var string = str(round(value))
 	var mod = string.length() % 3
-	var output = ""
+	var output = string.left(3)
 	
-	for i in range(0, string.length()):
-		if i != 0 && i % 3 == mod:
+	for i in range(3, string.length()):
+		#if i != 0 && i % 3 == mod:
+		if i % 3 == mod:
 			output += ","
 		output += string[i]
 	

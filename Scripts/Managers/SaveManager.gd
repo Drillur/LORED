@@ -75,41 +75,6 @@ func save(path := save_path, type := "normal"):
 			save_file.store_line(save_text)
 			save_file.close()
 
-func save_fileSpecificInfo() -> String:
-	
-	var data := {}
-	
-	data["game version"] = ProjectSettings.get_setting("application/config/Version")
-	
-	for x in saved_vars:
-		if get(x) is Big:
-			data[x] = get(x).save()
-		else:
-			data[x] = var2str(get(x))
-	
-	data["difficulty"] = diff.active_difficulty
-	
-	return var2str(data)
-
-func load_fileSpecificInfo(data: Dictionary):
-	
-	game_version = data["game version"]
-	
-	for x in saved_vars:
-		
-		if not x in data.keys():
-			continue
-		
-		if get(x) is Big:
-			get(x).load(data[x])
-		else:
-			set(x, str2var(data[x]))
-
-
-
-
-
-
 func load(path := save_path) -> bool:
 	
 	save_path = path
@@ -125,6 +90,58 @@ func load(path := save_path) -> bool:
 	rt._load(str2var(data["root"]))
 	
 	return true
+
+
+func loadNewGame(filename: String, _saveFileColor: Color):
+	loadGame(filename, _saveFileColor)
+	
+	var t = Timer.new()
+	add_child(t)
+	t.start(1)
+	yield(t, "timeout")
+	t.queue_free()
+	
+	save()
+func loadGame(filename: String, _saveFileColor: Color):
+	
+	setSavePath(filename)
+	setSaveFileColor(_saveFileColor)
+	
+	gv.changeScene(gv.Scene.ROOT)
+
+
+func save_fileSpecificInfo() -> String:
+	
+	var data := {}
+	
+	data["game version"] = ProjectSettings.get_setting("application/config/Version")
+	
+	for x in saved_vars:
+		if get(x) is Big:
+			data[x] = get(x).save()
+		else:
+			data[x] = var2str(get(x))
+	
+	data["difficulty"] = diff.save()
+	
+	return var2str(data)
+
+func load_fileSpecificInfo(data: Dictionary):
+	
+	game_version = data["game version"]
+	
+	diff.load(str2var(data["difficulty"]))
+	
+	for x in saved_vars:
+		
+		if not x in data.keys():
+			continue
+		
+		if get(x) is Big:
+			get(x).load(data[x])
+		else:
+			set(x, str2var(data[x]))
+
 
 func textIsConvertibleToSave(text: String) -> bool:
 	
@@ -358,13 +375,6 @@ func importedFileIsCompatible(path: String) -> bool:
 	return true
 
 
-
-func loadGame(filename: String, _saveFileColor: Color):
-	
-	setSavePath(filename)
-	setSaveFileColor(_saveFileColor)
-	Boot.go()
-	get_tree().change_scene("res://Scenes/Root.tscn")
 
 
 

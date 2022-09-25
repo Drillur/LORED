@@ -15,16 +15,16 @@ func flash(color := Color(1, 0, 0)) -> void:
 	
 	var alpha = 0.25
 	
-	while true:
+	var t = Timer.new()
+	t.set_wait_time(rate)
+	add_child(t)
+	
+	while not is_queued_for_deletion():
 		
 		self_modulate = Color(color.r, color.g, color.b, alpha)
 		
-		var t = Timer.new()
-		t.set_wait_time(rate)
-		add_child(t)
 		t.start()
 		yield(t, "timeout")
-		t.queue_free()
 		
 		match alpha:
 			0.25:
@@ -33,3 +33,5 @@ func flash(color := Color(1, 0, 0)) -> void:
 				alpha = 0.07
 			0.07:
 				queue_free()
+	
+	t.queue_free()

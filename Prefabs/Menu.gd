@@ -272,8 +272,6 @@ func _on_animations_pressed() -> void:
 	gv.option["animations"] = animations.pressed
 func _on_color_blind_pressed() -> void:
 	gv.option["color blind"] = color_blind.pressed
-	for x in gv.g:
-		gv.g[x].manager.color_blind.visible = color_blind.pressed
 	rt.get_node(rt.gnupcon).r_update()
 func _on_deaf_pressed() -> void:
 	gv.option["deaf"] = deaf.pressed

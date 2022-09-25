@@ -233,7 +233,7 @@ __meta__ = {
 
 [node name="m" type="MarginContainer" parent="sc"]
 margin_right = 478.0
-margin_bottom = 286.0
+margin_bottom = 271.0
 size_flags_horizontal = 0
 custom_constants/margin_right = 2
 custom_constants/margin_top = 2
@@ -248,14 +248,14 @@ self_modulate = Color( 1, 0, 0.380392, 1 )
 margin_left = 2.0
 margin_top = 2.0
 margin_right = 476.0
-margin_bottom = 284.0
+margin_bottom = 269.0
 custom_styles/panel = SubResource( 2 )
 
 [node name="v" type="VBoxContainer" parent="sc/m"]
 margin_left = 2.0
 margin_top = 2.0
 margin_right = 476.0
-margin_bottom = 284.0
+margin_bottom = 269.0
 custom_constants/separation = 0
 
 [node name="top" type="MarginContainer" parent="sc/m/v"]
@@ -2257,7 +2257,6 @@ text = "(There's gonna be more stuff here at some point.)"
 valign = 1
 
 [node name="save" type="MarginContainer" parent="sc/m/v"]
-visible = false
 margin_top = 56.0
 margin_right = 474.0
 margin_bottom = 267.0
@@ -2702,6 +2701,7 @@ text = "Delete Save"
 align = 1
 
 [node name="hard reset" type="MarginContainer" parent="sc/m/v"]
+visible = false
 margin_top = 56.0
 margin_right = 474.0
 margin_bottom = 282.0

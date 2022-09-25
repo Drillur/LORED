@@ -25,6 +25,9 @@ class Num:
 	var da := Big.new(0) # dynamic a
 	var dm := Big.new() # dynamic m
 	
+	var diffA := Big.new(0)
+	var diffM := Big.new()
+	
 	var haxm := 1.0
 	
 	#var spell_m := Big.new()
@@ -38,7 +41,7 @@ class Num:
 		b = Big.new(base)
 		sync()
 	
-	func print(include_f := false) -> String:
+	func read(include_f := false) -> String:
 		if include_f:
 			return f.toString() + "/" + t.toString()
 		return t.toString()
@@ -66,11 +69,13 @@ class Num:
 		t.a(a)
 		t.a(ua)
 		t.a(da)
+		t.a(diffA)
 		
 		t.m(m)
 		t.m(um)
 		t.m(dm)
 		t.m(lbm)
+		t.m(diffM)
 		
 		t.m(haxm)
 		
@@ -101,7 +106,7 @@ class Num:
 	
 	func report():
 		
-		# prints every value;
+		# prinnts every value;
 		# useful in finding errors
 		
 		print_debug("--REPORT::")
@@ -126,6 +131,11 @@ class Float:
 	var ua := 0.0
 	var um := 1.0
 	
+	var lbm := 1.0
+	
+	var diffA := 0.0
+	var diffM := 1.0
+	
 	var haxm := 1.0
 	var off_m := 1.0
 	
@@ -137,7 +147,7 @@ class Float:
 		haxm = gv.hax_pow
 		sync()
 	
-	func print(include_f := false) -> String:
+	func read(include_f := false) -> String:
 		if include_f:
 			return str(f) + "/" + str(t)
 		return str(t)
@@ -156,9 +166,13 @@ class Float:
 		
 		t += a
 		t += ua
+		t += diffA
 		
 		t *= m
 		t *= um
+		t *= diffM
+		
+		t /= lbm
 		
 		t /= haxm
 		t /= off_m

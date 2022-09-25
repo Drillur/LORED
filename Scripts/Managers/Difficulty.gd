@@ -1,66 +1,78 @@
 extends Node
 
 
-var modifier_lored_output := 1.0 setget setOutput, getOutput
-var modifier_lored_input := 1.0 setget setInput, getInput
-var modifier_lored_haste := 1.0 setget setHaste, getHaste
-var modifier_lored_crit := 0.0 setget setCrit, getCrit
-var modifier_lored_fuel_consumption := 1.0 setget setFuelConsumption, getFuelConsumption
-var modifier_lored_fuel_storage := 1.0 setget setFuelStorage, getFuelStorage
+var saved_vars := ["active_difficulty", "Output", "Input", "Haste", "Crit", "FuelConsumption", "FuelStorage",]
+
+
+var Output := 1.0 setget setOutput
+var Input := 1.0 setget setInput
+var Haste := 1.0 setget setHaste
+var Crit := 0.0 setget setCrit
+var FuelConsumption := 1.0 setget setFuelConsumption
+var FuelStorage := 1.0 setget setFuelStorage
+
+var unlockedUpgrades := [] setget setUnlockedUpgrades
 
 enum Difficulty {
 	# new difficulties must be added at the bottom
 	CUSTOM,
 	MARATHON,
 	HARD,
-	NORMAL,
 	TORTOISE,
-	EASY,
-	SPEEDRUN,
-	HACKS,
+	NORMAL, # 4
+	EASY, # 5
+	SONIC,
 }
 const DifficultyDescription := {
 	Difficulty.CUSTOM: "Go wild!",
 	Difficulty.MARATHON: "For freaks or excessive idling.",
+	Difficulty.TORTOISE: "Slow and steady wins the race. Permanently owns Limit Break.",
 	Difficulty.HARD: "For the patient.",
 	Difficulty.NORMAL: "Intended values. First-time or returning players should begin here.",
-	Difficulty.TORTOISE: "Slow and steady wins the race.",
 	Difficulty.EASY: "For the impatient.",
-	Difficulty.SPEEDRUN: "Warp 1. Engage.",
-	Difficulty.HACKS: "~dev_mode = true~",
+	Difficulty.SONIC: "Prepare yourself for game-breaking speed. Permanently owns THE WITCH OF LOREDELITH and Limit Break; Limit Break instead affects LORED haste.",
 }
-var active_difficulty = Difficulty.NORMAL
+var active_difficulty: int = Difficulty.NORMAL
 
+
+func save():
+	
+	var data := {}
+	
+	for x in saved_vars:
+		data[x] = var2str(get(x))
+	
+	return var2str(data)
+
+func load(data: Dictionary):
+	
+	active_difficulty = str2var(data["active_difficulty"])
+	
+	if active_difficulty == Difficulty.CUSTOM:
+		for x in saved_vars:
+			if not x in data.keys():
+				continue
+			if x == "active_difficulty":
+				continue
+			set(x, float(str2var(data[x])))
+	else:
+		changeDifficulty(active_difficulty)
 
 func setOutput(val: float):
-	modifier_lored_output = val
-func getOutput() -> float:
-	return modifier_lored_output
-
+	Output = val
 func setInput(val: float):
-	modifier_lored_input = val
-func getInput() -> float:
-	return modifier_lored_input
-
+	Input = val
 func setHaste(val: float):
-	modifier_lored_haste = val
-func getHaste() -> float:
-	return modifier_lored_haste
-
+	Haste = val
 func setCrit(val: float):
-	modifier_lored_crit = val
-func getCrit() -> float:
-	return modifier_lored_crit
-
+	Crit = val
 func setFuelConsumption(val: float):
-	modifier_lored_fuel_consumption = val
-func getFuelConsumption() -> float:
-	return modifier_lored_fuel_consumption
-
+	FuelConsumption = val
 func setFuelStorage(val: float):
-	modifier_lored_fuel_storage = val
-func getFuelStorage() -> float:
-	return modifier_lored_fuel_storage
+	FuelStorage = val
+func setUnlockedUpgrades(val: Array):
+	unlockedUpgrades = val
+
 
 
 func resetAll():
@@ -70,10 +82,9 @@ func resetAll():
 	setCrit(0)
 	setFuelConsumption(1)
 	setFuelStorage(1)
+	setUnlockedUpgrades([])
 
 func changeDifficulty(new_diff: int):
-	
-	#zhere ^
 	
 	active_difficulty = new_diff
 	resetAll()
@@ -88,34 +99,41 @@ func changeDifficulty(new_diff: int):
 			setFuelConsumption(2)
 			setCrit(-100)
 		
+		Difficulty.TORTOISE:
+			setHaste(0.1)
+			setCrit(50)
+			setFuelStorage(10)
+			setUnlockedUpgrades(["Limit Break"])
+		
 		Difficulty.HARD:
-			setHaste(0.5)
-			setOutput(0.5)
+			setHaste(0.75)
+			setOutput(0.75)
 			setFuelConsumption(2)
 			setCrit(-5)
 		
-		Difficulty.TORTOISE:
-			setHaste(0.1)
-			setCrit(35)
-		
 		Difficulty.EASY:
-			setHaste(2)
+			setHaste(1.25)
 			setFuelConsumption(0.5)
 		
-		Difficulty.SPEEDRUN:
-			setHaste(2)
-			setOutput(2)
-			setInput(0.5)
-			setCrit(10)
-		
-		Difficulty.HACKS:
-			setHaste(5)
-			setInput(0)
-			setCrit(100)
+		Difficulty.SONIC:
+			#setHaste(0.1)
+			setUnlockedUpgrades(["Limit Break", "THE WITCH OF LOREDELITH"])
 	
-	gv.syncLOREDs()
+	lv.syncLOREDs()
 
 
 
 func getDifficultyText() -> String:
 	return Difficulty.keys()[active_difficulty].capitalize()
+
+func readAll() -> String:
+	var text: String
+	text += getDifficultyText() + "\n"
+	for v in saved_vars:
+		if v == "active_difficulty":
+			continue
+		text += readVal(v) + "\n"
+	return text
+func readVal(val: String) -> String:
+	return val + ": " + str(get(val))
+

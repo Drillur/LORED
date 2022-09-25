@@ -5,18 +5,18 @@ extends Node
 
 
 const hax_pow := 1.0 # 1.0 for normal
-var fps: float
+var fps: float = 0.0666 # default (15 fps) - [0.0666, 0.0333, 0.0166] # 15, 30, 60
 const PLATFORM := "pc" # keep lower-case # "browser", "pc"
 const dev_mode := true
-const DEFAULT_KEY_LOREDS := ["stone", "conc", "malig", "water", "lead", "tree", "soil", "steel", "wire", "glass", "tum", "wood"]
 
 const PATCH_NOTES := {
 
 #	 "3.0.0": [
-#		"Added a main menu with save management.",
+#		"Added a main menu with save management (desktop-only).",
 #		"Added difficulty options.",
 #		"Merged quests and tasks into Wishes."
 #		"LOREDs now think out-loud and may speak to each other.",
+#		"New UI.",
 #	],
 	
 	"2.2.28": [
@@ -226,19 +226,73 @@ const PATCH_NOTES := {
 }
 
 
+var saved_vars := [
+	"run1", "run2", "run3", "run4",
+	"cur_clock", "time_played", "wishes_completed", "times_game_loaded", "highest_run",
+	"most_resources_gained", "option",
+	"lb_xp",
+]
+
+
+
+func save() -> String:
+	
+	var data := {}
+	
+	for x in saved_vars:
+		if get(x) is Big or get(x) is Ob.Num:
+			data[x] = get(x).save()
+		else:
+			data[x] = var2str(get(x))
+	
+	data["resources"] = {}
+	for x in resource:
+		data["resources"][x] = resource[x].save()
+	
+	return var2str(data)
+
+func load(data: Dictionary):
+	
+	#* Copy-paste this block to a script where saving a Dictionary is necessary
+	var saved_vars_dict := {}
+	
+	for x in saved_vars:
+		saved_vars_dict[x] = get(x)
+	
+	var loadedVars = SaveManager.loadSavedVars(saved_vars_dict, data)
+	
+	for x in saved_vars:
+		if get(x) is Ob.Num:
+			get(x).load(data[x])
+		else:
+			set(x, loadedVars[x])
+	#*
+	
+	for x in resource:
+		if not x in data["resources"]:
+			continue
+		resource[x].load(data["resources"][x])
+	
+	save_slot_clock = cur_clock
+	cur_clock = OS.get_unix_time() # set to the same time as cur_clock in the save data (8 lines up)
+
+
+
 func _ready():
 	
 	randomize()
 	
-	for x in g:
-		r[x] = Big.new(0)
-	
+	setShorthandByResource()
 	resetList()
 	
 	init_menu_and_stats()
 	update_clock()
 	
 	setupFonts()
+	
+	for r in gv.Resource.values():
+		gv.resourceName[r] = gv.Resource.keys()[r].capitalize().replace("_", " ")
+		gv.resourceText[r] = ""
 
 func setupFonts():
 	font.buttonNormal.font_data = load("res://Fonts/Roboto-Light.ttf")
@@ -288,7 +342,7 @@ func init_menu_and_stats():
 
 
 
-const loreds_required_for_s2_autoup_upgrades_to_begin_purchasing := ["seed", "tree", "water", "soil", "humus", "sand", "glass", "liq", "steel", "hard", "axe", "wood", "draw","wire"]
+var loreds_required_for_s2_autoup_upgrades_to_begin_purchasing: Array
 var s2_upgrades_may_be_autobought := false
 
 var fresh_run := true
@@ -297,35 +351,34 @@ func check_for_the_s2_shit():
 	if s2_upgrades_may_be_autobought:
 		return
 	for x in loreds_required_for_s2_autoup_upgrades_to_begin_purchasing:
-		if not g[x].active:
+		if not lv.lored[x].purchased:
 			return
 	s2_upgrades_may_be_autobought = true
-	#note i commented this line out because it was unlocking s2n before the quest unlocked it
-	#get_node("/root/Root").unlock_tab(Tab.EXTRA_NORMAL)
 
 const SRC := {
 	"alert": preload("res://Prefabs/alert.tscn"),
 	"emote": preload("res://Prefabs/lored/Emote.tscn"),
 	"flash": preload("res://Prefabs/Flash.tscn"),
+	"lored level up": preload("res://Prefabs/lored/LevelUp.tscn"),
 	
 	"wish vico": preload("res://Prefabs/Wish/Wish Vico.tscn"),
 	"task entry": preload("res://Prefabs/tooltip/tip_lored_task_entry.tscn"),
-	"upgrade block": preload("res://Prefabs/tooltip/upgrade_block.tscn"),
 	
-	"unit": preload("res://Prefabs/Cavern/Unit.tscn"),
+	"manual labor": preload("res://Prefabs/lored/Manual Labor.tscn"),
+	"LORED": preload("res://Prefabs/NewLORED/LORED.tscn"),
 	
 	"patch version": preload("res://Prefabs/Patch/version.tscn"),
 	"patch entry": preload("res://Prefabs/Patch/entry.tscn"),
 	
 	"price": preload("res://Prefabs/tooltip/price.tscn"),
 	
-	"cavern/buff": preload("res://Prefabs/Cavern/Buff.tscn"),
-	
 	"tooltip/LORED": preload("res://Prefabs/tooltip/LORED.tscn"),
 	"tooltip/autobuyer": preload("res://Prefabs/tooltip/AutobuyerTooltip.tscn"),
-	"tooltip/spell": preload("res://Prefabs/Cavern/SpellTooltip.tscn"),
 	"tooltip/upgrade": preload("res://Prefabs/tooltip/Upgrade Tooltip.tscn"),
 	"tooltip/wish": preload("res://Prefabs/Wish/Wish Tooltip.tscn"),
+	"tooltip/level up": preload("res://Prefabs/tooltip/Tooltip Level Up.tscn"),
+	"tooltip/lored info": preload("res://Prefabs/tooltip/Tooltip Info.tscn"),
+	"tooltip/lored alert": preload("res://Prefabs/tooltip/Tooltip Lored Alert.tscn"),
 	
 	"label": preload("res://Prefabs/template/Label.tscn"),
 	"job label": preload("res://Prefabs/template/job label.tscn"),
@@ -336,7 +389,7 @@ const SRC := {
 	"save block": preload("res://Prefabs/menu/Save Block.tscn"),
 }
 
-signal limit_break_leveled_up(which) # here -> Limit Break.gd
+signal limit_break_leveled_up # here -> Limit Break.gd
 var lb_xp = Ob.Num.new(1000)
 
 func reset_lb():
@@ -367,10 +420,13 @@ func lb_xp_check():
 	up["Limit Break"].sync_effects()
 	
 	for x in list.lored[Tab.S1] + list.lored[Tab.S2]:
-		g[x].d.lbm = up["Limit Break"].effects[0].effect.t
-		g[x].d.sync()
+		var lbVal = up["Limit Break"].effects[0].effect.t
+		if diff.active_difficulty == diff.Difficulty.SONIC:
+			lv.lored[x].setHasteValue(lv.Num.MULTIPLY, lv.Num.BY_LIMIT_BREAK, lbVal.toFloat())
+		else:
+			lv.lored[x].setOutputValue(lv.Num.MULTIPLY, lv.Num.BY_LIMIT_BREAK, lbVal)
 	
-	emit_signal("limit_break_leveled_up", "color")
+	emit_signal("limit_break_leveled_up")
 
 func increase_lb_xp(value):
 	
@@ -386,6 +442,8 @@ signal autobuyer_purchased(key) # -> LORED.gd
 signal amount_updated(key) # LORED.gd -> resources.gd
 signal net_updated(net)
 signal wishReward(type, key) # -> Root.gd
+
+signal throwFuel(resource) # LORED Manager.gd -> LORED Manager.gd
 
 signal upgrade_purchased(key, routine) # Upgrade Slot.gd -> up_container.gd
 
@@ -407,24 +465,9 @@ const LIMIT_BREAK_COLORS := {
 	14: Color(0, 1, 0),
 }
 
-var spell_sprite := {
-	
-	Cav.eSpell.ARCANE_FOCUS: preload("res://Sprites/resources/axe.png"),
-	Cav.eSpell.CORE_RIFT: preload("res://Sprites/resources/water.png"),
-	Cav.eSpell.VITALIZE: preload("res://Sprites/resources/seed.png"),
-	Cav.eSpell.ARCANE_FLOW: preload("res://Sprites/resources/iron.png"),
+var resourceSprite := {
 	
 }
-
-var buff_sprite := {
-	
-	Cav.Buff.RIFT: preload("res://Sprites/resources/water.png"),
-	Cav.Buff.ARCANE_FLOW: preload("res://Sprites/resources/iron.png"),
-	
-	Cav.Buff.SCORCHING: preload("res://Sprites/resources/axe.png"),
-	
-}
-
 var sprite := {
 	
 	"joy": preload("res://Sprites/resources/Joy.png"),
@@ -517,6 +560,50 @@ var sprite := {
 	"thewitchofloredelith" : preload("res://Sprites/upgrades/thewitchofloredelith.png"),
 	"abeewithdaggers" : preload("res://Sprites/upgrades/abeewithdaggers.png"),
 }
+var shorthandByResource := {}
+func setShorthandByResource():
+	shorthandByResource[Resource.COAL] = "coal"
+	shorthandByResource[Resource.IRON] = "iron"
+	shorthandByResource[Resource.COPPER] = "cop"
+	shorthandByResource[Resource.STONE] = "stone"
+	shorthandByResource[Resource.IRON_ORE] = "irono"
+	shorthandByResource[Resource.COPPER_ORE] = "copo"
+	shorthandByResource[Resource.GROWTH] = "growth"
+	shorthandByResource[Resource.JOULES] = "jo"
+	shorthandByResource[Resource.CONCRETE] = "conc"
+	shorthandByResource[Resource.MALIGNANCY] = "malig"
+	shorthandByResource[Resource.TARBALLS] = "tar"
+	shorthandByResource[Resource.OIL] = "oil"
+	shorthandByResource[Resource.WATER] = "water"
+	shorthandByResource[Resource.HUMUS] = "humus"
+	shorthandByResource[Resource.SEEDS] = "seed"
+	shorthandByResource[Resource.TREES] = "tree"
+	shorthandByResource[Resource.SOIL] = "soil"
+	shorthandByResource[Resource.AXES] = "axe"
+	shorthandByResource[Resource.WOOD] = "wood"
+	shorthandByResource[Resource.HARDWOOD] = "hard"
+	shorthandByResource[Resource.LIQUID_IRON] = "liq"
+	shorthandByResource[Resource.STEEL] = "steel"
+	shorthandByResource[Resource.SAND] = "sand"
+	shorthandByResource[Resource.GLASS] = "glass"
+	shorthandByResource[Resource.DRAW_PLATE] = "draw"
+	shorthandByResource[Resource.WIRE] = "wire"
+	shorthandByResource[Resource.GALENA] = "gale"
+	shorthandByResource[Resource.LEAD] = "lead"
+	shorthandByResource[Resource.PETROLEUM] = "pet"
+	shorthandByResource[Resource.WOOD_PULP] = "pulp"
+	shorthandByResource[Resource.PAPER] = "paper"
+	shorthandByResource[Resource.PLASTIC] = "plast"
+	shorthandByResource[Resource.TOBACCO] = "toba"
+	shorthandByResource[Resource.CIGARETTES] = "ciga"
+	shorthandByResource[Resource.CARCINOGENS] = "carc"
+	shorthandByResource[Resource.TUMORS] = "tum"
+	
+	var rKeys = Resource.keys()
+	for r in Resource.values():
+		if r in shorthandByResource:
+			continue
+		shorthandByResource[r] = rKeys[r].to_lower()
 
 const anim = {
 	"tum": preload("res://Sprites/animations/tum.tres"),
@@ -557,59 +644,9 @@ const anim = {
 	"humus" : preload("res://Sprites/animations/humus.tres"),
 }
 
-var quest: Array
-var g := { #DO NOT RE-ARRANGE. ui depends on them being like this
-	"tar" : LORED,
-	"malig" : LORED,
-	"oil" : LORED,
-	"growth" : LORED,
-	"jo" : LORED,
-	"conc" : LORED,
-	"iron" : LORED,
-	"cop" : LORED,
-	"irono" : LORED,
-	"copo" : LORED,
-	"coal" : LORED,
-	"stone" : LORED,
-	"tum" : LORED,
-	"hard" : LORED,
-	"wood" : LORED,
-	"axe" : LORED,
-	"draw" : LORED,
-	"wire" : LORED,
-	"glass" : LORED,
-	"sand" : LORED,
-	"steel" : LORED,
-	"liq" : LORED,
-	"tree" : LORED,
-	"water" : LORED,
-	"seed" : LORED,
-	"soil" : LORED,
-	"humus" : LORED,
-	"carc" : LORED,
-	"plast" : LORED,
-	"pet" : LORED,
-	"ciga" : LORED,
-	"toba" : LORED,
-	"paper" : LORED,
-	"pulp" : LORED,
-	"lead" : LORED,
-	"gale" : LORED,
-}
-
-var warlock := Unit.new(Cav.UnitClass.ARCANE_LORED)
-
 var autobuy_speed := 0.25
 var up := {}
 
-#var color := {
-#	Lored.COPPER: Color(1, 0.74, 0.05),
-#	Lored.IRON: Color(0.07, 0.89, 1),
-#	Lored.COPPER_ORE: Color(0.7, 0.33, 0),
-#	Lored.IRON_ORE: Color(0, 0.517647, 0.905882),
-#	Lored.STONE: Color(0.79, 0.79, 0.79),
-#	Lored.COAL: Color(0.7, 0, 1),
-#}
 var COLORS := {
 	"fire": Color(1, 0, 0),
 	"frost": Color(0, 0.694118, 1),
@@ -699,8 +736,8 @@ var COLORS := {
 var open_tab := -1
 
 func haveLoredsRequiredForExtraNormalUpgradeMenu() -> bool:
-	for x in ["soil", "seed", "water", "tree", "sand", "draw", "axe", "liq", "steel", "wire", "glass", "hard", "wood", "humus"]:
-		if not g[x].active:
+	for x in [lv.Type.SOIL, lv.Type.SEEDS, lv.Type.WATER, lv.Type.TREES, lv.Type.SAND, lv.Type.DRAW_PLATE, lv.Type.AXES, lv.Type.LIQUID_IRON, lv.Type.STEEL, lv.Type.WIRE, lv.Type.GLASS, lv.Type.HARDWOOD, lv.Type.WOOD, lv.Type.HUMUS]:
+		if not lv.lored[x].purchased:
 			return false
 	return true
 
@@ -708,44 +745,17 @@ func haveLoredsRequiredForExtraNormalUpgradeMenu() -> bool:
 
 
 
-func time_remaining_in_seconds(
-	lored_key: String,
-	present_amount: Big,
-	total_amount: Big) -> Big:
-	
-	
-	if g[lored_key].halt:
-		return Big.new(0)
-	
-	var net = g[lored_key].net()
-	
-	if net[1].greater(net[0]):
-		return Big.new(0)
-	
-	net = net[0].s(net[1])
-	
-	if net.equal(0):
-		return Big.new(0)
-	
-	var delta: Big = Big.new(total_amount).s(present_amount)
-	var incoming_amount := Big.new(0)
-	
-	
-	if g[lored_key].working:
-		incoming_amount.a(g[lored_key].d.t)
-	
-	return Big.new(delta).s(incoming_amount).d(net)
 
 func time_remaining_including_INF(
-	lored_key: String,
+	lored: int,
 	present_amount: Big,
 	total_amount: Big):
 	
 	
-	if g[lored_key].halt:
+	if lv.lored[lored].asleep:
 		return INF
 	
-	var net = g[lored_key].net()
+	var net = lv.lored[lored].net()
 	
 	if net[1].greater(net[0]):
 		return INF
@@ -759,22 +769,22 @@ func time_remaining_including_INF(
 	var incoming_amount := Big.new(0)
 	
 	
-	if g[lored_key].working:
-		incoming_amount.a(g[lored_key].d.t)
+	if lv.lored[lored].working:
+		incoming_amount.a(lv.lored[lored].d.t)
 	
 	return Big.new(delta).s(incoming_amount).d(net)
 
 func time_remaining(
-	lored_key: String,
+	lored: int,
 	present_amount: Big,
 	total_amount: Big) -> String:
 	
 	
-	if g[lored_key].halt:
-		return "Halt"
+	if lv.lored[lored].asleep:
+		return "Asleep"
 	
 	
-	var net = g[lored_key].net()
+	var net = lv.lored[lored].net() #z
 	
 	if net[1].greater(net[0]):
 		return "-"
@@ -788,8 +798,8 @@ func time_remaining(
 	var incoming_amount := Big.new(0)
 	
 	
-	if g[lored_key].working:
-		incoming_amount.a(g[lored_key].d.t)
+	if lv.lored[lored].working:
+		incoming_amount.a(lv.lored[lored].output)
 	
 	return parse_time(Big.new(delta).s(incoming_amount).d(net))
 
@@ -928,59 +938,77 @@ func parse_time_float(val: float) -> String:
 	
 	return str(floor(val)) + "mil"
 
-#class PowersOf10:
-#
-#	var powers := []
-#
-#	func _init():
-#
-#		for x in 3080:
-#			powers.append(pow(10, x))#(Big.new("1e" + str(x)))
-#
-#	func lookup(power: int):
-#
-#		return powers[power]
-#
-#var powers_of_10 = PowersOf10.new()
 
-var r := {
-	"joy": Big.new(0),
-	"grief": Big.new(0),
-	"embryo": Big.new(0),
-	"spirit": Big.new(0),
-	"mana": Big.new(0),
-}
-var r_name := {
-	"grief": "Grief",
-	"joy": "Joy",
-	"spirit": "Spirit",
-	#"blood": "Blood",
-	"embryo": "Embryo",
-	"r": "Mana",
+func resetResources():
+	for r in Resource.values():
+		resource[r] = Big.new(0)
+
+enum Resource {
+	IRON,
+	COPPER,
+	STONE,
+	IRON_ORE,
+	COPPER_ORE,
+	COAL,
+	GROWTH,
+	JOULES,
+	CONCRETE,
+	MALIGNANCY,
+	TARBALLS,
+	OIL,
+	
+	WATER,
+	HUMUS,
+	SEEDS,
+	TREES,
+	SOIL,
+	AXES,
+	WOOD,
+	HARDWOOD,
+	LIQUID_IRON,
+	STEEL,
+	SAND,
+	GLASS,
+	DRAW_PLATE,
+	WIRE,
+	GALENA,
+	LEAD,
+	PETROLEUM,
+	WOOD_PULP,
+	PAPER,
+	PLASTIC,
+	TOBACCO,
+	CIGARETTES,
+	CARCINOGENS,
+	TUMORS,
+	
+	JOY,
+	GRIEF,
+	EMBRYO,
+	SPIRIT,
+	
+	MANA,
 }
 var resource := {}
+var resourceName := {}
+var resourceText := {}
+var resourceColor := {}
+func addToResource(key: int, val):
+	resource[key].a(val)
+	emit_signal("resourceChanged", key)
+func subtractFromResource(key: int, val):
+	resource[key].s(val)
+	emit_signal("resourceChanged", key)
+func setResource(key: int, val):
+	resource[key] = Big.new(val)
+	emit_signal("resourceChanged", key)
+var resourcesNotBeingExported := []
+func updateResources():
+	for r in resource:
+		emit_signal("resourceChanged", r)
 
+signal resourceChanged(key)
 
-
-
-enum NumType {
-	TOTAL,
-	BASE,
-	ADD,
-	MULTIPLY,
-	FROM_LEVELS,
-	FROM_UPGRADES,
-	LIMIT_BREAK,
-	I_DRINK_YOUR_MILKSHAKE,
-}
-enum Lored {
-	COAL, STONE, IRON_ORE, COPPER_ORE, IRON, COPPER,
-	GROWTH, CONCRETE, JOULES, OIL, TARBALLS, MALIGNANCY,
-}
-enum Job{
-	BORER_DIG,
-	FURNACE_COOK,
-}
 enum Upgrade {
 	GRINDER,
 	UPGRADE_NAME,
@@ -1049,10 +1077,10 @@ func resetList():
 		lored = {
 			Tab.S1: [], Tab.S2: [], Tab.S3: [], Tab.S4: [],
 			"active": ["stone"], "active " + str(Tab.S1): ["stone"], "active " + str(Tab.S2): [], "active " + str(Tab.S3): [], "active " + str(Tab.S4): [],
-			"rare quest whitelist": [],
 			"unlocked and inactive": [],
 		},
 		"unlocked resources": ["stone"], #note stage 3 resources need to be manually added
+		"fuel resource": [],
 	}
 	
 	for t in Tab:
@@ -1096,100 +1124,6 @@ func highestResetKey() -> String:
 		3: return "spirit"
 	return "oops" #s4
 
-func isStage1Or2LORED(key: String) -> bool:
-	return key in gv.list.lored[gv.Tab.S1] or key in gv.list.lored[gv.Tab.S2]
-
-func setSpellDesc(spell: Spell):
-	
-	var actions = spell.order.size()
-	var i = 0
-	for o in spell.order:
-		
-		match o:
-			
-			Cav.AbilityAction.DEAL_DAMAGE:
-				
-				spell.desc += "deals "
-				
-				var ii = 0
-				for d in spell.damage.types:
-					
-					spell.desc += "{damage" + str(ii) + "}"
-					
-					ii += 1
-					
-					if spell.damage.types == ii:
-						spell.desc += " damage"
-						if ii > 1:
-							spell.desc += " simultaneously"
-					elif spell.damage.types == ii + 1:
-						if spell.damage.types > 2:
-							spell.desc += ", "
-						spell.desc += " and "
-					elif spell.damage.types > ii + 1:
-						spell.desc += ", "
-			
-			Cav.AbilityAction.APPLY_BUFF:
-				var buff: String = Cav.Buff.keys()[spell.applied_buff]
-				spell.desc += "applies {buff:" + buff + "}"
-			
-			Cav.AbilityAction.RESTORE_HEALTH:
-				if spell.is_channeled:
-					spell.desc += "restores {restore_health per sec} health per second"
-				else:
-					spell.desc += "restores {restore_health} health"
-				continue
-			
-			Cav.AbilityAction.RESTORE_MANA:
-				if spell.is_channeled:
-					spell.desc += "restores {restore_mana per sec} per second"
-				else:
-					spell.desc += "restores {restore_mana}"
-				continue
-			
-			Cav.AbilityAction.RESTORE_HEALTH, Cav.AbilityAction.RESTORE_MANA:
-				if spell.requires_target:
-					spell.desc += " to a target"
-				else:
-					spell.desc += " to the Warlock"
-			
-			Cav.AbilityAction.CONSIDER_SPECIAL_EFFECTS:
-				
-				var buff: String
-				
-				for x in spell.special_req_type.size():
-					
-					match spell.special_action_type[x]:
-						Cav.SpecialEffect.APPLY_BUFF:
-							buff = Cav.Buff.keys()[spell.special_action[x]]
-							spell.desc += "Applies " + "{buff:" + buff + "} "
-						Cav.SpecialEffect.BECOME_SPLASH:
-							buff = Cav.Buff.keys()[spell.special_action[x]]
-							spell.desc += "Becomes splash "
-					
-					match spell.special_req_type[x]:
-						Cav.SpecialEffectRequirement.STACK_LIMIT:
-							buff = Cav.Buff.keys()[spell.special_req[x]]
-							spell.desc += "if the target has 5 stacks of "
-							spell.desc += "{buff:" + buff + "}. "
-		
-		if i == 0:
-			spell.desc[0] = spell.desc[0].to_upper()
-		
-		i += 1
-		
-		if o == Cav.AbilityAction.CONSIDER_SPECIAL_EFFECTS:
-			continue
-		
-		if actions == i:
-			spell.desc += "."
-		elif actions == i + 1:
-			if actions > 2 or spell.deals_damage and spell.damage.types >= 2:
-				spell.desc += ","
-			spell.desc += " and "
-		elif actions -1 > i + 1:
-			spell.desc += ", "
-
 func xIsNearlyY(x: float, y: float) -> bool:
 	return x > y * 0.98 and x < y * 1.02
 
@@ -1215,55 +1149,6 @@ func version_older_than(_save_version: String, _version: String) -> bool:
 		return true
 	
 	return false
-
-
-func getSpellName(type: int) -> String:
-	return Cav.eSpell.keys()[type].to_lower().capitalize().replace("_", " ")
-func getBuffName(type: int) -> String:
-	return Cav.Buff.keys()[type].to_lower().capitalize().replace("_", " ")
-
-func damageTypeToStr(type: int) -> String:
-	return Cav.DamageType.keys()[type].to_lower()
-
-func damageTypeToNR(type: int) -> int:
-	
-	# Natural Reaction
-	
-	match type:
-		Cav.DamageType.FIRE:
-			return Cav.Buff.BURNING
-		Cav.DamageType.FROST:
-			return Cav.Buff.CHILLED
-		Cav.DamageType.EARTH:
-			return Cav.Buff.BATTERED
-		Cav.DamageType.AIR:
-			return Cav.Buff.OXIDIZED
-	
-	return 0 # will never return this
-
-var target: Unit
-signal new_gcd(duration) # Unit.gd -> SpellButton.gd
-signal gcd_stopped # Cavern/Cavern.gd -> SpellButton.gd
-signal casting_completed # SpellManager.gd -> ?
-signal cooldown_completed(spell_type) # should be an int || SpellManager.gd -> ?
-
-signal mana_restored(amount, surplus) # Unit.gd -> Scenes/Cavern.gd
-signal buff_applied(target, data) # Unit.gd -> Scenes/Cavern.gd
-
-func getSpellBorderColor(spell: int) -> Color:
-	
-	if Cav.spell[spell].costs_health:
-		return gv.COLORS["health"]
-	if Cav.spell[spell].costs_mana:
-		return gv.COLORS["mana"]
-	if Cav.spell[spell].costs_stamina:
-		return gv.COLORS["stamina"]
-	if Cav.spell[spell].restores_health:
-		return gv.COLORS["health"]
-	if Cav.spell[spell].restores_mana:
-		return gv.COLORS["mana"]
-	return Color(1,1,1)
-
 
 
 func commaifyAnArrayOfStrings(list: Array) -> String:
@@ -1292,17 +1177,6 @@ func commaifyAnArrayOfStrings(list: Array) -> String:
 	
 	return "Oops!"
 
-
-
-func syncLOREDs(immediately := false):
-	
-	if immediately:
-		for x in g:
-			g[x].sync()
-		return
-	
-	for x in g:
-		g[x].queueSync()
 
 
 
@@ -1358,8 +1232,15 @@ func close():
 	# Root closed
 	resetList()
 	
-	g.clear()
+	time_played = 0
+	
+	lv.close()
 	up.clear()
+	resource.clear()
+	for r in resource:
+		gv.resourceChanged[r] = true
+func open():
+	resetResources()
 
 
 # main menu
@@ -1377,56 +1258,18 @@ func getRandomColor() -> Color:
 
 
 
-var saved_vars := [
-	"run1", "run2", "run3", "run4",
-	"cur_clock", "time_played", "wishes_completed", "times_game_loaded", "highest_run",
-	"most_resources_gained", "option",
-	"lb_xp",
-]
-
-func save() -> String:
-	
-	var data := {}
-	
-	for x in saved_vars:
-		if get(x) is Big or get(x) is Ob.Num:
-			data[x] = get(x).save()
-		else:
-			data[x] = var2str(get(x))
-	
-	data["resources"] = {}
-	for x in r:
-		data["resources"][x] = r[x].save()
-	
-	return var2str(data)
-
-func load(data: Dictionary):
-	
-	#*
-	var saved_vars_dict := {}
-	
-	for x in saved_vars:
-		saved_vars_dict[x] = get(x)
-	
-	var loadedVars = SaveManager.loadSavedVars(saved_vars_dict, data)
-	
-	for x in saved_vars:
-		if get(x) is Ob.Num:
-			get(x).load(data[x])
-		else:
-			set(x, loadedVars[x])
-	#*
-	
-	for x in r:
-		if not x in data["resources"]:
-			continue
-		r[x].load(data["resources"][x])
-	
-	save_slot_clock = cur_clock
-	cur_clock = OS.get_unix_time() # set to the same time as cur_clock in the save data (8 lines up)
 
 
 
+func changeScene(newScene: int):
+	
+	Boot.go()
+	open()
+	
+	match newScene:
+		Scene.ROOT:
+			get_tree().change_scene("res://Scenes/Root.tscn")
 
 
-
+signal manualLabor
+var manualLaborActive := false

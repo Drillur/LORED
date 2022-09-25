@@ -10,29 +10,19 @@ config_version=4
 
 _global_script_classes=[ {
 "base": "Reference",
-"class": "Ability",
-"language": "GDScript",
-"path": "res://Scripts/classes/Cavern/Ability.gd"
-}, {
-"base": "Reference",
 "class": "Big",
 "language": "GDScript",
 "path": "res://Scripts/classes/Big.gd"
 }, {
-"base": "Ability",
-"class": "Buff",
+"base": "Reference",
+"class": "Bits",
 "language": "GDScript",
-"path": "res://Scripts/classes/Cavern/Buff.gd"
+"path": "res://Scripts/LORED/Bits.gd"
 }, {
-"base": "Node",
-"class": "BuffManager",
+"base": "Reference",
+"class": "BitsFloat",
 "language": "GDScript",
-"path": "res://Scripts/Managers/Cavern/BuffManager.gd"
-}, {
-"base": "Node",
-"class": "CavernEnums",
-"language": "GDScript",
-"path": "res://Scripts/classes/Cavern/Cavern.gd"
+"path": "res://Scripts/LORED/BitsFloat.gd"
 }, {
 "base": "Reference",
 "class": "Effect",
@@ -43,11 +33,6 @@ _global_script_classes=[ {
 "class": "Emote",
 "language": "GDScript",
 "path": "res://Scripts/classes/Emote.gd"
-}, {
-"base": "Reference",
-"class": "FPS",
-"language": "GDScript",
-"path": "res://Scripts/classes/FPS.gd"
 }, {
 "base": "Node",
 "class": "FormatValue",
@@ -62,22 +47,22 @@ _global_script_classes=[ {
 "base": "Reference",
 "class": "Job",
 "language": "GDScript",
-"path": "res://Scripts/classes/Job.gd"
+"path": "res://Scripts/LORED/Job.gd"
 }, {
 "base": "Reference",
 "class": "LORED",
 "language": "GDScript",
-"path": "res://Scripts/classes/LORED.gd"
+"path": "res://Scripts/LORED/LORED.gd"
 }, {
-"base": "Reference",
-"class": "LOREDnew",
+"base": "Node2D",
+"class": "LOREDManager",
 "language": "GDScript",
-"path": "res://Scripts/classes/NewLORED.gd"
+"path": "res://Scripts/LORED/LORED Manager.gd"
 }, {
 "base": "Node",
-"class": "LOREDnewest",
+"class": "LOREDVars",
 "language": "GDScript",
-"path": "res://Scripts/classes/LOREDnewest.gd"
+"path": "res://Scripts/LORED/LORED Vars.gd"
 }, {
 "base": "Reference",
 "class": "Ob",
@@ -88,26 +73,6 @@ _global_script_classes=[ {
 "class": "Purchasable",
 "language": "GDScript",
 "path": "res://Scripts/classes/Purchasable.gd"
-}, {
-"base": "Ability",
-"class": "Spell",
-"language": "GDScript",
-"path": "res://Scripts/classes/Cavern/Spell.gd"
-}, {
-"base": "Node",
-"class": "SpellManager",
-"language": "GDScript",
-"path": "res://Scripts/Managers/Cavern/SpellManager.gd"
-}, {
-"base": "Reference",
-"class": "Unit",
-"language": "GDScript",
-"path": "res://Scripts/classes/Cavern/Unit.gd"
-}, {
-"base": "Node",
-"class": "UnitManager",
-"language": "GDScript",
-"path": "res://Scripts/Managers/Cavern/UnitManager.gd"
 }, {
 "base": "Reference",
 "class": "Upgrade",
@@ -133,33 +98,38 @@ _global_script_classes=[ {
 "class": "_save",
 "language": "GDScript",
 "path": "res://Scripts/save.gd"
+}, {
+"base": "Reference",
+"class": "oldJob",
+"language": "GDScript",
+"path": "res://Scripts/classes/Job.gd"
+}, {
+"base": "Reference",
+"class": "oldLORED",
+"language": "GDScript",
+"path": "res://Scripts/classes/LORED.gd"
 } ]
 _global_script_class_icons={
-"Ability": "",
 "Big": "",
-"Buff": "",
-"BuffManager": "",
-"CavernEnums": "",
+"Bits": "",
+"BitsFloat": "",
 "Effect": "",
 "Emote": "",
-"FPS": "",
 "FormatValue": "",
 "GlobalVariables": "",
 "Job": "",
 "LORED": "",
-"LOREDnew": "",
-"LOREDnewest": "",
+"LOREDManager": "",
+"LOREDVars": "",
 "Ob": "",
 "Purchasable": "",
-"Spell": "",
-"SpellManager": "",
-"Unit": "",
-"UnitManager": "",
 "Upgrade": "",
 "Wish": "",
 "WishManager": "",
 "_root": "",
-"_save": ""
+"_save": "",
+"oldJob": "",
+"oldLORED": ""
 }
 
 [application]
@@ -173,15 +143,14 @@ config/Version="3.0.0"
 
 [autoload]
 
-Cav="*res://Scripts/classes/Cavern/Cavern.gd"
 gv="*res://Scripts/autoload/_vars.gd"
 taq="*res://Scripts/autoload/WishManager.gd"
 fval="*res://Scripts/autoload/format_value.gd"
 sm="*res://Scripts/Managers/Cavern/SpellManager.gd"
 bm="*res://Scripts/Managers/Cavern/BuffManager.gd"
 um="*res://Scripts/Managers/Cavern/UnitManager.gd"
+lv="*res://Scripts/LORED/LORED Vars.gd"
 diff="*res://Scripts/Managers/Difficulty.gd"
-lv="*res://Scripts/Vars/LORED.gd"
 SaveManager="*res://Scripts/Managers/SaveManager.gd"
 Boot="*res://Scripts/autoload/Boot.gd"
 

@@ -1,4 +1,4 @@
-[gd_scene load_steps=73 format=2]
+[gd_scene load_steps=66 format=2]
 
 [ext_resource path="res://Fonts/Roboto-Black.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Sprites/Menu/Difficulty.png" type="Texture" id=2]
@@ -11,7 +11,6 @@
 [ext_resource path="res://Sprites/Menu/Check.png" type="Texture" id=9]
 [ext_resource path="res://Sprites/Menu/Refresh.png" type="Texture" id=10]
 [ext_resource path="res://Sprites/Menu/Back.png" type="Texture" id=11]
-[ext_resource path="res://Prefabs/menu/New Game.tscn" type="PackedScene" id=12]
 [ext_resource path="res://Prefabs/menu/wallpapersden.com_purple-sunrise-4k-vaporwave_1920x1080.jpg" type="Texture" id=13]
 [ext_resource path="res://Fonts/Roboto-Medium.ttf" type="DynamicFontData" id=14]
 [ext_resource path="res://Fonts/Roboto-Light.ttf" type="DynamicFontData" id=15]
@@ -195,64 +194,6 @@ anti_aliasing = false
 
 [sub_resource type="StyleBoxFlat" id=48]
 draw_center = false
-
-[sub_resource type="DynamicFont" id=61]
-size = 12
-outline_color = Color( 0, 0, 0, 1 )
-font_data = ExtResource( 1 )
-
-[sub_resource type="StyleBoxFlat" id=62]
-bg_color = Color( 0.423529, 0.423529, 0.423529, 1 )
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
-shadow_color = Color( 0.117188, 0.117188, 0.117188, 0.54902 )
-shadow_size = 4
-anti_aliasing = false
-
-[sub_resource type="StyleBoxFlat" id=63]
-bg_color = Color( 0.25098, 0.25098, 0.25098, 1 )
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
-shadow_color = Color( 0.0390625, 0.0390625, 0.0390625, 0.54902 )
-shadow_size = 4
-anti_aliasing = false
-
-[sub_resource type="StyleBoxFlat" id=64]
-bg_color = Color( 0.352941, 0.352941, 0.352941, 1 )
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
-shadow_color = Color( 0.078125, 0.078125, 0.078125, 0.54902 )
-shadow_size = 4
-anti_aliasing = false
-
-[sub_resource type="StyleBoxFlat" id=65]
-bg_color = Color( 0.180392, 0.180392, 0.180392, 1 )
-draw_center = false
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color( 1, 1, 1, 1 )
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
-expand_margin_left = 15.0
-expand_margin_right = 15.0
-expand_margin_top = 2.0
-expand_margin_bottom = 2.0
-shadow_color = Color( 0.0509804, 0.0509804, 0.0509804, 0.6 )
-anti_aliasing = false
-
-[sub_resource type="DynamicFont" id=6]
-size = 14
-font_data = ExtResource( 1 )
 
 [sub_resource type="StyleBoxFlat" id=13]
 bg_color = Color( 0.152344, 0.152344, 0.152344, 1 )
@@ -685,22 +626,23 @@ custom_fonts/font = SubResource( 38 )
 text = "Play"
 
 [node name="m" type="MarginContainer" parent="new game"]
-margin_left = 366.0
-margin_top = 213.0
-margin_right = 914.0
-margin_bottom = 506.0
+margin_left = 390.0
+margin_top = 103.0
+margin_right = 890.0
+margin_bottom = 616.0
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
 [node name="v" type="VBoxContainer" parent="new game/m"]
-margin_right = 548.0
-margin_bottom = 293.0
+margin_right = 500.0
+margin_bottom = 513.0
 custom_constants/separation = 20
 alignment = 1
 
 [node name="save info" type="MarginContainer" parent="new game/m/v"]
-margin_left = 189.0
-margin_right = 359.0
+visible = false
+margin_left = 97.0
+margin_right = 267.0
 margin_bottom = 192.0
 size_flags_horizontal = 4
 
@@ -788,6 +730,7 @@ script = ExtResource( 18 )
 margin_right = 150.0
 margin_bottom = 20.0
 rect_pivot_offset = Vector2( 71, 48 )
+focus_mode = 0
 mouse_default_cursor_shape = 2
 custom_styles/hover = SubResource( 58 )
 custom_styles/pressed = SubResource( 59 )
@@ -796,7 +739,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="save info" type="MarginContainer" parent="new game/m/v/save info/m/v"]
+[node name="randomize" type="MarginContainer" parent="new game/m/v/save info/m/v"]
 margin_top = 112.0
 margin_right = 150.0
 margin_bottom = 172.0
@@ -811,24 +754,24 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="bg" type="Panel" parent="new game/m/v/save info/m/v/save info"]
+[node name="bg" type="Panel" parent="new game/m/v/save info/m/v/randomize"]
 margin_right = 150.0
 margin_bottom = 60.0
 mouse_filter = 2
 custom_styles/panel = SubResource( 42 )
 
-[node name="v" type="VBoxContainer" parent="new game/m/v/save info/m/v/save info"]
+[node name="v" type="VBoxContainer" parent="new game/m/v/save info/m/v/randomize"]
 margin_right = 150.0
 margin_bottom = 60.0
 alignment = 1
 
-[node name="h" type="HBoxContainer" parent="new game/m/v/save info/m/v/save info/v"]
+[node name="h" type="HBoxContainer" parent="new game/m/v/save info/m/v/randomize/v"]
 margin_top = 18.0
 margin_right = 150.0
 margin_bottom = 42.0
 alignment = 1
 
-[node name="flair" type="Panel" parent="new game/m/v/save info/m/v/save info/v/h"]
+[node name="flair" type="Panel" parent="new game/m/v/save info/m/v/randomize/v/h"]
 margin_left = 21.0
 margin_right = 45.0
 margin_bottom = 24.0
@@ -836,17 +779,17 @@ rect_min_size = Vector2( 24, 24 )
 size_flags_vertical = 4
 custom_styles/panel = SubResource( 39 )
 
-[node name="Sprite" type="Sprite" parent="new game/m/v/save info/m/v/save info/v/h/flair"]
+[node name="Sprite" type="Sprite" parent="new game/m/v/save info/m/v/randomize/v/h/flair"]
 position = Vector2( 12, 12 )
 texture = ExtResource( 10 )
 
-[node name="Sprite2" type="Sprite" parent="new game/m/v/save info/m/v/save info/v/h/flair/Sprite"]
+[node name="Sprite2" type="Sprite" parent="new game/m/v/save info/m/v/randomize/v/h/flair/Sprite"]
 self_modulate = Color( 0, 0, 0, 0.501961 )
 show_behind_parent = true
 position = Vector2( 2, 2 )
 texture = ExtResource( 10 )
 
-[node name="text" type="Label" parent="new game/m/v/save info/m/v/save info/v/h"]
+[node name="text" type="Label" parent="new game/m/v/save info/m/v/randomize/v/h"]
 margin_left = 49.0
 margin_top = 2.0
 margin_right = 129.0
@@ -857,7 +800,7 @@ custom_fonts/font = SubResource( 38 )
 text = "Randomize"
 align = 1
 
-[node name="desc" type="Label" parent="new game/m/v/save info/m/v/save info/v"]
+[node name="desc" type="Label" parent="new game/m/v/save info/m/v/randomize/v"]
 visible = false
 margin_top = 36.0
 margin_right = 180.0
@@ -870,7 +813,7 @@ text = "Set the filename and color"
 align = 1
 autowrap = true
 
-[node name="button" type="Button" parent="new game/m/v/save info/m/v/save info"]
+[node name="button" type="Button" parent="new game/m/v/save info/m/v/randomize"]
 margin_right = 150.0
 margin_bottom = 60.0
 rect_min_size = Vector2( 0, 32 )
@@ -886,23 +829,20 @@ __meta__ = {
 }
 
 [node name="diff" type="MarginContainer" parent="new game/m/v"]
-visible = false
-margin_left = 24.0
-margin_top = 126.0
-margin_right = 524.0
-margin_bottom = 263.0
+margin_right = 500.0
+margin_bottom = 412.0
 rect_min_size = Vector2( 500, 0 )
 size_flags_horizontal = 4
 
 [node name="bg" type="Panel" parent="new game/m/v/diff"]
 margin_right = 500.0
-margin_bottom = 137.0
+margin_bottom = 412.0
 mouse_filter = 2
 custom_styles/panel = SubResource( 56 )
 
 [node name="m" type="MarginContainer" parent="new game/m/v/diff"]
 margin_right = 500.0
-margin_bottom = 137.0
+margin_bottom = 412.0
 custom_constants/margin_right = 10
 custom_constants/margin_top = 10
 custom_constants/margin_left = 10
@@ -912,28 +852,28 @@ custom_constants/margin_bottom = 10
 margin_left = 10.0
 margin_top = 10.0
 margin_right = 490.0
-margin_bottom = 127.0
+margin_bottom = 402.0
+rect_pivot_offset = Vector2( -577, 177 )
 custom_constants/separation = 10
 
 [node name="v" type="VBoxContainer" parent="new game/m/v/diff/m/v"]
 margin_right = 480.0
-margin_bottom = 92.0
+margin_bottom = 367.0
 custom_constants/separation = 10
 
 [node name="custom" type="MarginContainer" parent="new game/m/v/diff/m/v/v"]
-visible = false
 margin_right = 480.0
-margin_bottom = 195.0
+margin_bottom = 265.0
 
 [node name="bg" type="Panel" parent="new game/m/v/diff/m/v/v/custom"]
 self_modulate = Color( 0.219608, 0.219608, 0.219608, 1 )
 margin_right = 480.0
-margin_bottom = 195.0
+margin_bottom = 265.0
 custom_styles/panel = SubResource( 1 )
 
 [node name="m" type="MarginContainer" parent="new game/m/v/diff/m/v/v/custom"]
 margin_right = 480.0
-margin_bottom = 195.0
+margin_bottom = 265.0
 custom_constants/margin_right = 10
 custom_constants/margin_top = 10
 custom_constants/margin_left = 10
@@ -943,7 +883,7 @@ custom_constants/margin_bottom = 10
 margin_left = 10.0
 margin_top = 10.0
 margin_right = 470.0
-margin_bottom = 185.0
+margin_bottom = 255.0
 custom_constants/separation = 10
 
 [node name="text" type="Label" parent="new game/m/v/diff/m/v/v/custom/m/v"]
@@ -1255,50 +1195,50 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="FuelConsumption2" type="HBoxContainer" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v"]
+[node name="FuelConsumption" type="HBoxContainer" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v"]
 margin_top = 88.0
 margin_right = 218.0
 margin_bottom = 128.0
 
-[node name="h" type="VBoxContainer" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelConsumption2"]
+[node name="h" type="VBoxContainer" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelConsumption"]
 margin_right = 150.0
 margin_bottom = 40.0
 size_flags_horizontal = 3
 custom_constants/separation = 0
 
-[node name="FuelConsumption" type="HBoxContainer" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelConsumption2/h"]
+[node name="FuelConsumption" type="HBoxContainer" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelConsumption/h"]
 margin_right = 150.0
 margin_bottom = 24.0
 size_flags_horizontal = 3
 
-[node name="icon" type="Panel" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelConsumption2/h/FuelConsumption"]
+[node name="icon" type="Panel" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelConsumption/h/FuelConsumption"]
 margin_right = 24.0
 margin_bottom = 24.0
 rect_min_size = Vector2( 24, 24 )
 size_flags_vertical = 4
 custom_styles/panel = SubResource( 39 )
 
-[node name="Sprite" type="Sprite" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelConsumption2/h/FuelConsumption/icon"]
+[node name="Sprite" type="Sprite" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelConsumption/h/FuelConsumption/icon"]
 position = Vector2( 12, 12 )
 texture = ExtResource( 28 )
 
-[node name="Sprite2" type="Sprite" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelConsumption2/h/FuelConsumption/icon/Sprite"]
+[node name="Sprite2" type="Sprite" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelConsumption/h/FuelConsumption/icon/Sprite"]
 self_modulate = Color( 0, 0, 0, 0.501961 )
 show_behind_parent = true
 position = Vector2( 2, 2 )
 texture = ExtResource( 28 )
 
-[node name="flair" type="Label" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelConsumption2/h/FuelConsumption"]
+[node name="flair" type="Label" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelConsumption/h/FuelConsumption"]
 margin_left = 28.0
 margin_top = 4.0
-margin_right = 126.0
+margin_right = 78.0
 margin_bottom = 19.0
 mouse_filter = 1
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 5 )
-text = "Fuel Consumption"
+text = "Fuel Cost"
 
-[node name="HSlider" type="HSlider" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelConsumption2/h"]
+[node name="HSlider" type="HSlider" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelConsumption/h"]
 margin_top = 24.0
 margin_right = 150.0
 margin_bottom = 40.0
@@ -1307,7 +1247,7 @@ max_value = 10.0
 step = 0.1
 value = 1.0
 
-[node name="TextEdit" type="TextEdit" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelConsumption2"]
+[node name="TextEdit" type="TextEdit" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelConsumption"]
 margin_left = 154.0
 margin_top = 6.0
 margin_right = 218.0
@@ -1387,6 +1327,98 @@ size_flags_vertical = 8
 custom_fonts/font = SubResource( 4 )
 text = "8.8"
 breakpoint_gutter = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="randomize" type="MarginContainer" parent="new game/m/v/diff/m/v/v/custom/m/v"]
+margin_left = 160.0
+margin_top = 185.0
+margin_right = 300.0
+margin_bottom = 245.0
+rect_min_size = Vector2( 140, 60 )
+rect_pivot_offset = Vector2( -400, -343 )
+mouse_filter = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+custom_constants/margin_right = 0
+custom_constants/margin_top = 0
+custom_constants/margin_left = 0
+custom_constants/margin_bottom = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="bg" type="Panel" parent="new game/m/v/diff/m/v/v/custom/m/v/randomize"]
+margin_right = 140.0
+margin_bottom = 60.0
+mouse_filter = 2
+custom_styles/panel = SubResource( 42 )
+
+[node name="v" type="VBoxContainer" parent="new game/m/v/diff/m/v/v/custom/m/v/randomize"]
+margin_right = 140.0
+margin_bottom = 60.0
+alignment = 1
+
+[node name="h" type="HBoxContainer" parent="new game/m/v/diff/m/v/v/custom/m/v/randomize/v"]
+margin_top = 18.0
+margin_right = 140.0
+margin_bottom = 42.0
+alignment = 1
+
+[node name="flair" type="Panel" parent="new game/m/v/diff/m/v/v/custom/m/v/randomize/v/h"]
+margin_left = 16.0
+margin_right = 40.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 24, 24 )
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 39 )
+
+[node name="Sprite" type="Sprite" parent="new game/m/v/diff/m/v/v/custom/m/v/randomize/v/h/flair"]
+position = Vector2( 12, 12 )
+texture = ExtResource( 10 )
+
+[node name="Sprite2" type="Sprite" parent="new game/m/v/diff/m/v/v/custom/m/v/randomize/v/h/flair/Sprite"]
+self_modulate = Color( 0, 0, 0, 0.501961 )
+show_behind_parent = true
+position = Vector2( 2, 2 )
+texture = ExtResource( 10 )
+
+[node name="text" type="Label" parent="new game/m/v/diff/m/v/v/custom/m/v/randomize/v/h"]
+margin_left = 44.0
+margin_top = 2.0
+margin_right = 124.0
+margin_bottom = 21.0
+size_flags_horizontal = 4
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 38 )
+text = "Randomize"
+align = 1
+
+[node name="desc" type="Label" parent="new game/m/v/diff/m/v/v/custom/m/v/randomize/v"]
+visible = false
+margin_top = 36.0
+margin_right = 180.0
+margin_bottom = 51.0
+hint_tooltip = "Step: 0.1"
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 41 )
+text = "Set the filename and color"
+align = 1
+autowrap = true
+
+[node name="button" type="Button" parent="new game/m/v/diff/m/v/v/custom/m/v/randomize"]
+margin_right = 140.0
+margin_bottom = 60.0
+rect_min_size = Vector2( 0, 32 )
+focus_mode = 0
+mouse_default_cursor_shape = 2
+custom_fonts/font = SubResource( 34 )
+custom_styles/hover = SubResource( 36 )
+custom_styles/pressed = SubResource( 37 )
+custom_styles/normal = SubResource( 35 )
+enabled_focus_mode = 0
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -1706,8 +1738,9 @@ custom_fonts/font = SubResource( 3 )
 text = "10.0x"
 
 [node name="presets" type="MarginContainer" parent="new game/m/v/diff/m/v/v"]
+margin_top = 275.0
 margin_right = 480.0
-margin_bottom = 92.0
+margin_bottom = 367.0
 
 [node name="bg" type="Panel" parent="new game/m/v/diff/m/v/v/presets"]
 self_modulate = Color( 0.219608, 0.219608, 0.219608, 1 )
@@ -1749,7 +1782,6 @@ text = "Select difficulty"
 margin_top = 57.0
 margin_right = 460.0
 margin_bottom = 72.0
-hint_tooltip = "Step: 0.1"
 mouse_filter = 1
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 5 )
@@ -1757,10 +1789,9 @@ text = "desc aslkjedf ;lkajs df;klja sd;lk fjas;kldf j;lkasjd f;klasj df;lkajs f
 autowrap = true
 
 [node name="flair" type="Label" parent="new game/m/v/diff/m/v"]
-margin_top = 102.0
+margin_top = 377.0
 margin_right = 480.0
-margin_bottom = 117.0
-hint_tooltip = "Calculated before Crit Chance (Additive)."
+margin_bottom = 392.0
 mouse_filter = 0
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 5 )
@@ -1869,14 +1900,14 @@ __meta__ = {
 }
 
 [node name="v" type="VBoxContainer" parent="new game/m/v"]
-margin_top = 212.0
-margin_right = 548.0
-margin_bottom = 293.0
+margin_top = 432.0
+margin_right = 500.0
+margin_bottom = 513.0
 size_flags_vertical = 8
 alignment = 2
 
 [node name="text" type="Label" parent="new game/m/v/v"]
-margin_right = 548.0
+margin_right = 500.0
 margin_bottom = 17.0
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 49 )
@@ -1885,12 +1916,13 @@ align = 1
 
 [node name="h" type="HBoxContainer" parent="new game/m/v/v"]
 margin_top = 21.0
-margin_right = 548.0
+margin_right = 500.0
 margin_bottom = 81.0
 alignment = 1
 
 [node name="save info" type="MarginContainer" parent="new game/m/v/v/h"]
-margin_right = 180.0
+margin_left = 68.0
+margin_right = 248.0
 margin_bottom = 60.0
 rect_min_size = Vector2( 180, 60 )
 mouse_filter = 2
@@ -1979,8 +2011,8 @@ __meta__ = {
 }
 
 [node name="diff" type="MarginContainer" parent="new game/m/v/v/h"]
-margin_left = 184.0
-margin_right = 364.0
+margin_left = 252.0
+margin_right = 432.0
 margin_bottom = 60.0
 rect_min_size = Vector2( 180, 60 )
 mouse_filter = 2
@@ -2070,6 +2102,7 @@ __meta__ = {
 }
 
 [node name="prefs" type="MarginContainer" parent="new game/m/v/v/h"]
+visible = false
 margin_left = 368.0
 margin_right = 548.0
 margin_bottom = 60.0
@@ -2326,7 +2359,6 @@ custom_styles/panel = SubResource( 39 )
 
 [node name="Sprite" type="Sprite" parent="all saves/top/h/v/v/refresh/flair"]
 position = Vector2( 12, 12 )
-scale = Vector2( 0.5, 0.5 )
 texture = ExtResource( 10 )
 
 [node name="m" type="MarginContainer" parent="all saves/top/h/v/v/refresh"]
@@ -3275,291 +3307,6 @@ centered = false
 
 [node name="tip" type="Node2D" parent="."]
 
-[node name="sc" type="ScrollContainer" parent="."]
-visible = false
-margin_right = 1280.0
-margin_bottom = 720.0
-scroll_vertical_enabled = false
-
-[node name="h" type="HBoxContainer" parent="sc"]
-margin_top = 32.0
-margin_right = 672.0
-margin_bottom = 688.0
-rect_pivot_offset = Vector2( 1, 1 )
-size_flags_vertical = 6
-custom_constants/separation = 20
-
-[node name="indent" type="Panel" parent="sc/h"]
-margin_right = 100.0
-margin_bottom = 656.0
-rect_min_size = Vector2( 100, 0 )
-rect_pivot_offset = Vector2( -2, -5 )
-custom_styles/panel = SubResource( 7 )
-
-[node name="v" type="VBoxContainer" parent="sc/h"]
-margin_left = 120.0
-margin_top = 252.0
-margin_right = 227.0
-margin_bottom = 404.0
-size_flags_vertical = 4
-custom_constants/separation = 8
-
-[node name="new" type="MarginContainer" parent="sc/h/v"]
-margin_right = 107.0
-margin_bottom = 32.0
-mouse_filter = 2
-custom_constants/margin_right = 0
-custom_constants/margin_top = 0
-custom_constants/margin_left = 0
-custom_constants/margin_bottom = 0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="button" type="Button" parent="sc/h/v/new"]
-self_modulate = Color( 1, 0, 0.678431, 1 )
-margin_right = 107.0
-margin_bottom = 32.0
-rect_min_size = Vector2( 60, 32 )
-focus_mode = 0
-mouse_default_cursor_shape = 2
-custom_fonts/font = SubResource( 61 )
-custom_styles/hover = SubResource( 62 )
-custom_styles/pressed = SubResource( 63 )
-custom_styles/normal = SubResource( 64 )
-enabled_focus_mode = 0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="m" type="MarginContainer" parent="sc/h/v/new"]
-margin_right = 107.0
-margin_bottom = 32.0
-mouse_filter = 2
-custom_constants/margin_right = 15
-custom_constants/margin_top = 2
-custom_constants/margin_left = 15
-custom_constants/margin_bottom = 2
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="afford" type="Panel" parent="sc/h/v/new/m"]
-visible = false
-self_modulate = Color( 0.2, 0.945098, 1, 1 )
-margin_left = 15.0
-margin_top = 2.0
-margin_right = 92.0
-margin_bottom = 30.0
-mouse_filter = 2
-custom_styles/panel = SubResource( 65 )
-
-[node name="text" type="Label" parent="sc/h/v/new/m"]
-margin_left = 15.0
-margin_top = 7.0
-margin_right = 92.0
-margin_bottom = 24.0
-custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-custom_fonts/font = SubResource( 6 )
-text = "New Game"
-align = 1
-
-[node name="options" type="MarginContainer" parent="sc/h/v"]
-margin_top = 40.0
-margin_right = 107.0
-margin_bottom = 72.0
-mouse_filter = 2
-custom_constants/margin_right = 0
-custom_constants/margin_top = 0
-custom_constants/margin_left = 0
-custom_constants/margin_bottom = 0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="button" type="Button" parent="sc/h/v/options"]
-self_modulate = Color( 0.137255, 0.698039, 0.552941, 1 )
-margin_right = 107.0
-margin_bottom = 32.0
-rect_min_size = Vector2( 60, 32 )
-focus_mode = 0
-mouse_default_cursor_shape = 2
-custom_fonts/font = SubResource( 61 )
-custom_styles/hover = SubResource( 62 )
-custom_styles/pressed = SubResource( 63 )
-custom_styles/normal = SubResource( 64 )
-enabled_focus_mode = 0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="m" type="MarginContainer" parent="sc/h/v/options"]
-margin_right = 107.0
-margin_bottom = 32.0
-mouse_filter = 2
-custom_constants/margin_right = 15
-custom_constants/margin_top = 2
-custom_constants/margin_left = 15
-custom_constants/margin_bottom = 2
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="afford" type="Panel" parent="sc/h/v/options/m"]
-visible = false
-self_modulate = Color( 0.2, 0.945098, 1, 1 )
-margin_left = 15.0
-margin_top = 2.0
-margin_right = 92.0
-margin_bottom = 30.0
-mouse_filter = 2
-custom_styles/panel = SubResource( 65 )
-
-[node name="text" type="Label" parent="sc/h/v/options/m"]
-margin_left = 15.0
-margin_top = 7.0
-margin_right = 92.0
-margin_bottom = 24.0
-custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-custom_fonts/font = SubResource( 6 )
-text = "Options"
-align = 1
-
-[node name="patch notes" type="MarginContainer" parent="sc/h/v"]
-margin_top = 80.0
-margin_right = 107.0
-margin_bottom = 112.0
-mouse_filter = 2
-custom_constants/margin_right = 0
-custom_constants/margin_top = 0
-custom_constants/margin_left = 0
-custom_constants/margin_bottom = 0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="button" type="Button" parent="sc/h/v/patch notes"]
-self_modulate = Color( 0.996078, 0.443137, 0.172549, 1 )
-margin_right = 107.0
-margin_bottom = 32.0
-rect_min_size = Vector2( 60, 32 )
-focus_mode = 0
-mouse_default_cursor_shape = 2
-custom_fonts/font = SubResource( 61 )
-custom_styles/hover = SubResource( 62 )
-custom_styles/pressed = SubResource( 63 )
-custom_styles/normal = SubResource( 64 )
-enabled_focus_mode = 0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="m" type="MarginContainer" parent="sc/h/v/patch notes"]
-margin_right = 107.0
-margin_bottom = 32.0
-mouse_filter = 2
-custom_constants/margin_right = 15
-custom_constants/margin_top = 2
-custom_constants/margin_left = 15
-custom_constants/margin_bottom = 2
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="afford" type="Panel" parent="sc/h/v/patch notes/m"]
-visible = false
-self_modulate = Color( 0.2, 0.945098, 1, 1 )
-margin_left = 15.0
-margin_top = 2.0
-margin_right = 92.0
-margin_bottom = 30.0
-mouse_filter = 2
-custom_styles/panel = SubResource( 65 )
-
-[node name="text" type="Label" parent="sc/h/v/patch notes/m"]
-margin_left = 15.0
-margin_top = 7.0
-margin_right = 92.0
-margin_bottom = 24.0
-custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-custom_fonts/font = SubResource( 6 )
-text = "Patch Notes"
-align = 1
-
-[node name="credits" type="MarginContainer" parent="sc/h/v"]
-margin_top = 120.0
-margin_right = 107.0
-margin_bottom = 152.0
-mouse_filter = 2
-custom_constants/margin_right = 0
-custom_constants/margin_top = 0
-custom_constants/margin_left = 0
-custom_constants/margin_bottom = 0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="button" type="Button" parent="sc/h/v/credits"]
-self_modulate = Color( 1, 0.427451, 0.588235, 1 )
-margin_right = 107.0
-margin_bottom = 32.0
-rect_min_size = Vector2( 60, 32 )
-focus_mode = 0
-mouse_default_cursor_shape = 2
-custom_fonts/font = SubResource( 61 )
-custom_styles/hover = SubResource( 62 )
-custom_styles/pressed = SubResource( 63 )
-custom_styles/normal = SubResource( 64 )
-enabled_focus_mode = 0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="m" type="MarginContainer" parent="sc/h/v/credits"]
-margin_right = 107.0
-margin_bottom = 32.0
-mouse_filter = 2
-custom_constants/margin_right = 15
-custom_constants/margin_top = 2
-custom_constants/margin_left = 15
-custom_constants/margin_bottom = 2
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="afford" type="Panel" parent="sc/h/v/credits/m"]
-visible = false
-self_modulate = Color( 0.2, 0.945098, 1, 1 )
-margin_left = 15.0
-margin_top = 2.0
-margin_right = 92.0
-margin_bottom = 30.0
-mouse_filter = 2
-custom_styles/panel = SubResource( 65 )
-
-[node name="text" type="Label" parent="sc/h/v/credits/m"]
-margin_left = 15.0
-margin_top = 7.0
-margin_right = 92.0
-margin_bottom = 24.0
-custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-custom_fonts/font = SubResource( 6 )
-text = "Credits"
-align = 1
-
-[node name="New Game" parent="sc/h" instance=ExtResource( 12 )]
-margin_left = 247.0
-margin_right = 552.0
-size_flags_vertical = 4
-
-[node name="indent2" type="Panel" parent="sc/h"]
-margin_left = 572.0
-margin_right = 672.0
-margin_bottom = 656.0
-rect_min_size = Vector2( 100, 0 )
-rect_pivot_offset = Vector2( -2, -5 )
-custom_styles/panel = SubResource( 7 )
-
 [node name="color" type="HBoxContainer" parent="."]
 margin_left = 1204.0
 margin_right = 1280.0
@@ -3603,10 +3350,10 @@ margin_right = 318.0
 margin_bottom = 508.0
 
 [node name="ColorPicker" type="ColorPicker" parent="color/m/m/v"]
-margin_left = 44.0
-margin_top = 44.0
-margin_right = 352.0
-margin_bottom = 506.0
+margin_left = 180.0
+margin_top = 180.0
+margin_right = 488.0
+margin_bottom = 642.0
 size_flags_horizontal = 4
 size_flags_vertical = 4
 __meta__ = {
@@ -4038,20 +3785,23 @@ __meta__ = {
 [connection signal="mouse_entered" from="new game/top/h/v/v/back/m/button" to="." method="_on_newgame_back_mouse_entered"]
 [connection signal="mouse_exited" from="new game/top/h/v/v/back/m/button" to="." method="_on_newgame_back_mouse_exited"]
 [connection signal="pressed" from="new game/top/h/v/v/back/m/button" to="." method="_on_newgame_back_pressed"]
-[connection signal="mouse_entered" from="new game/top/h/v/v/begin/m/button" to="." method="_on_newgame_back_mouse_entered"]
-[connection signal="mouse_exited" from="new game/top/h/v/v/begin/m/button" to="." method="_on_newgame_back_mouse_exited"]
-[connection signal="pressed" from="new game/top/h/v/v/begin/m/button" to="." method="_on_newgame_back_pressed"]
+[connection signal="mouse_entered" from="new game/top/h/v/v/begin/m/button" to="." method="_on_newgame_play_mouse_entered"]
+[connection signal="mouse_exited" from="new game/top/h/v/v/begin/m/button" to="." method="_on_newgame_play_mouse_exited"]
+[connection signal="pressed" from="new game/top/h/v/v/begin/m/button" to="." method="_on_newgame_play_pressed"]
 [connection signal="text_changed" from="new game/m/v/save info/m/v/filename/TextEdit" to="." method="_on_import_byString_savename_text_changed"]
 [connection signal="pressed" from="new game/m/v/save info/m/v/v2/color/m/select" to="." method="_on_new_color_pressed"]
-[connection signal="mouse_entered" from="new game/m/v/save info/m/v/save info/button" to="." method="_on_randomize_mouse_entered"]
-[connection signal="mouse_exited" from="new game/m/v/save info/m/v/save info/button" to="." method="_on_randomize_mouse_exited"]
-[connection signal="pressed" from="new game/m/v/save info/m/v/save info/button" to="." method="_on_randomize_pressed"]
+[connection signal="mouse_entered" from="new game/m/v/save info/m/v/randomize/button" to="." method="_on_randomize_mouse_entered"]
+[connection signal="mouse_exited" from="new game/m/v/save info/m/v/randomize/button" to="." method="_on_randomize_mouse_exited"]
+[connection signal="pressed" from="new game/m/v/save info/m/v/randomize/button" to="." method="_on_randomize_pressed"]
 [connection signal="value_changed" from="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/Output/h/HSlider" to="." method="_on_HSlider_value_changed" binds= [ "Output" ]]
 [connection signal="value_changed" from="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/Input/h/HSlider" to="." method="_on_HSlider_value_changed" binds= [ "Input" ]]
 [connection signal="value_changed" from="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/Haste/h/HSlider" to="." method="_on_HSlider_value_changed" binds= [ "Haste" ]]
 [connection signal="value_changed" from="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/Crit/h/HSlider" to="." method="_on_HSlider_value_changed" binds= [ "Crit" ]]
-[connection signal="value_changed" from="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelConsumption2/h/HSlider" to="." method="_on_HSlider_value_changed" binds= [ "FuelConsumption" ]]
+[connection signal="value_changed" from="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelConsumption/h/HSlider" to="." method="_on_HSlider_value_changed" binds= [ "FuelConsumption" ]]
 [connection signal="value_changed" from="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelStorage/h/HSlider" to="." method="_on_HSlider_value_changed" binds= [ "FuelStorage" ]]
+[connection signal="mouse_entered" from="new game/m/v/diff/m/v/v/custom/m/v/randomize/button" to="." method="_on_custom_randomize_mouse_entered"]
+[connection signal="mouse_exited" from="new game/m/v/diff/m/v/v/custom/m/v/randomize/button" to="." method="_on_custom_randomize_mouse_exited"]
+[connection signal="pressed" from="new game/m/v/diff/m/v/v/custom/m/v/randomize/button" to="." method="_on_custom_randomize_pressed"]
 [connection signal="item_selected" from="new game/m/v/diff/m/v/v/presets/m/v/select" to="." method="_on_difficulty_selected"]
 [connection signal="text_changed" from="new game/m/v/prefs/m/v/filename/TextEdit" to="." method="_on_import_byString_savename_text_changed"]
 [connection signal="mouse_entered" from="new game/m/v/v/h/save info/button" to="." method="_on_new_saveinfo_mouse_entered"]
@@ -4088,7 +3838,6 @@ __meta__ = {
 [connection signal="pressed" from="import/byString/m/v/h/cancel/button" to="." method="_on_import_byString_cancel_pressed"]
 [connection signal="pressed" from="import/byString failure/m/v/accept/button" to="." method="_on_import_byString_failure_pressed"]
 [connection signal="pressed" from="import/byFile failure/m/v/accept/button" to="." method="_on_import_byFile_failure_pressed"]
-[connection signal="pressed" from="sc/h/v/new/button" to="." method="_on_new_game_pressed"]
 [connection signal="color_changed" from="color/m/m/v/ColorPicker" to="." method="_on_ColorPicker_color_changed"]
 [connection signal="pressed" from="color/m/m/v/h/accept/button" to="." method="_on_accept_color_edit_pressed"]
 [connection signal="pressed" from="color/m/m/v/h/cancel/button" to="." method="_on_color_cancel_pressed"]

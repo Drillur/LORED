@@ -38,6 +38,8 @@ func setup(_wish: Wish) -> void:
 	gn_done.self_modulate = wish.color
 	
 	gn_obj.text = wish.obj.parseObjective()
+	if wish.key == "stuff":
+		gn_obj.text = "Get Coal on the team! We need his stuff!"
 	
 	gn_icon.set_texture(gv.sprite[wish.obj.icon_key])
 	
@@ -118,7 +120,7 @@ func discard():
 	
 	wish.die()
 	
-	gv.r["grief"].a(1)
+	gv.resource[gv.Resource.GRIEF].a(1)
 	taq.increaseProgress(gv.Objective.RESOURCES_PRODUCED, "grief")
 
 func turnedInOrDiscarded():
@@ -126,43 +128,45 @@ func turnedInOrDiscarded():
 	ready = false
 	hide()
 
+var flyingTextPosition = Vector2(rect_size.x / 2 + 10, get_global_mouse_position().y - rect_size.y - 10)
 func flyingTextIfComplete():
-
-	var amount: Big
-	var icon_key: String
-	var color_key: String
-
+	
+	var texts := []
+	
 	for r in wish.rew:
-
+		
 		if r.type != gv.WishReward.RESOURCE:
 			continue
-
-		amount = r.amount
-		icon_key = r.key
-		color_key = r.key
-
-		flyingText(amount.toString(), gv.sprite[icon_key], gv.COLORS[color_key])
-
-		var t = Timer.new()
-		add_child(t)
-		t.start(0.3)
-		yield(t, "timeout")
-		t.queue_free()
-
-	flyingText("1", gv.sprite["joy"], gv.COLORS["joy"])
+		
+		var details := {}
+		var shorthand = gv.shorthandByResource[int(r.key)]
+		
+		details["text"] = "+" + r.amount.toString()
+		details["icon"] = gv.sprite[shorthand]
+		details["color"] = gv.COLORS[shorthand]
+		details["position"] = Vector2(flyingTextPosition)
+		
+		texts.append(details)
+	
+	texts.append({ # joy
+		"text": "+1",
+		"icon": gv.sprite["joy"],
+		"color": gv.COLORS["joy"],
+		"position": flyingTextPosition
+	})
+	
+	rt.throwTexts(texts)
 
 func flyingTextIfDiscarded():
-	flyingText("1", gv.sprite["grief"], gv.COLORS["grief"])
+	throwText("+1", gv.sprite["grief"], gv.COLORS["grief"])
 
-func flyingText(amount: String, icon: Texture, color: Color):
-	
-	var ft = gv.SRC["flying text"].instance()
-	
-	ft.init({"text": "+ " + amount, "icon": icon, "color": color, "life": 10})
-	
-	ft.rect_position = Vector2(rect_size.x / 2, rect_global_position.y - get_viewport_rect().size.y)
-	rt.get_node("WishAnchor").add_child(ft)
-
+func throwText(amount: String, icon: Texture, color: Color):
+	rt.throwText({
+		"text": amount,
+		"icon": icon,
+		"color": color,
+		"position": Vector2(flyingTextPosition)
+	})
 
 
 
@@ -200,8 +204,6 @@ func update():
 	gn_progress_f.rect_size.x = min(wish.obj.current_count.percent(wish.obj.required_count) * gn_progress.rect_size.x, gn_progress.rect_size.x)
 	
 	gn_count.text = wish.obj.parseCount()
-	if gn_count.text == "0/1":
-		print("count = 0/1")
 	
 	var t = Timer.new()
 	add_child(t)

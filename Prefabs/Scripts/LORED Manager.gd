@@ -3,26 +3,31 @@ extends MarginContainer
 
 
 var src := {
-	lored = preload("res://Prefabs/lored/LORED.tscn"),
 	hbox = preload("res://Prefabs/template/HBoxContainer 10 separation.tscn"),
 }
 
 var cont := {}
 
-var g_keys = gv.g.keys()
+var LOREDKeys: Array = lv.Type.keys()
+#var g_keys = gv.g.keys()
 
 func _ready():
 	get_node("sc/v/3").hide()
 	
 	gv.connect("autobuyer_purchased", self, "autobuyer_purchased")
-	gv.connect("buff_spell_cast", self, "receive_buff")
+	gv.connect("manualLabor", self, "instanceManualLabor")
+	
+	for f in lv.lored:
+		add_child(lv.lored[f])
 
 
 func setup():
 	
 	setup_s1()
+	return
 	setup_s2()
 	setup_s3()
+	
 
 func setup_s2():
 	
@@ -72,24 +77,18 @@ func setup_s2():
 
 func setup_s1():
 	
-	var i = 0
-	for x in gv.list.lored[gv.Tab.S1]:
-		
-		cont[x] = src.lored.instance()
-		cont[x].setup(x)
-		
-		# add children
-		if i % 2 == 0:
-			cont["h1" + str(i)] = src.hbox.instance()
-			get_node("sc/v/" + gv.g[x].type[1]).add_child(cont["h1" + str(i)])
-			cont["h1" + str(i)].add_child(cont[x])
-		else:
-			cont["h1" + str(i - 1)].add_child(cont[x])
-		
-		i += 1
+	assignChildren(get_node("sc/v/1"))
+
+func assignChildren(motherNode):
+	for child in motherNode.get_children():
+		if child.name in LOREDKeys:
+			var type = lv.Type[child.name]
+			cont[type] = child
+			cont[type].hide()
+			lv.lored[type].assignVico(child)
+		if child.get_child_count() > 0:
+			assignChildren(child)
 	
-	cont["coal"].show()
-	cont["stone"].show()
 
 func setup_s3():
 	return
@@ -102,7 +101,7 @@ func setup_s3():
 
 func add_stuffs(key: String, i: int):
 	
-	cont[key] = src.lored.instance()
+	cont[key] = gv.SRC["LORED"].instance()
 	cont[key].setup(key)
 	
 	var stage = gv.g[key].stage
@@ -117,20 +116,10 @@ func add_stuffs(key: String, i: int):
 func autobuyer_purchased(key):
 	cont[key].r_autobuy()
 
-func receive_buff(spell: String, target := "") -> void:
-	
-	pass
 
 
-func save() -> String:
-	
-	var data := {}
-	
-	for x in gv.g:
-		data[x] = gv.g[x].save()
-	
-	return var2str(data)
 
-func load(data: Dictionary) -> void:
-	for x in data:
-		gv.g[x].load(str2var(data[x]))
+func instanceManualLabor():
+	var stinky = gv.SRC["manual labor"].instance()
+	get_node("sc/v/1").add_child(stinky)
+	gv.manualLaborActive = true

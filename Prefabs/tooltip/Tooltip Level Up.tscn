@@ -1,0 +1,659 @@
+[gd_scene load_steps=21 format=2]
+
+[ext_resource path="res://Fonts/Roboto-BlackItalic.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://Sprites/Menu/Level.png" type="Texture" id=2]
+[ext_resource path="res://Fonts/Roboto-Black.ttf" type="DynamicFontData" id=3]
+[ext_resource path="res://Fonts/Roboto-Medium.ttf" type="DynamicFontData" id=4]
+[ext_resource path="res://Sprites/Menu/fuel.png" type="Texture" id=5]
+[ext_resource path="res://Prefabs/tooltip/Tooltip Level Up.gd" type="Script" id=6]
+[ext_resource path="res://Sprites/Menu/output.png" type="Texture" id=7]
+[ext_resource path="res://Sprites/Menu/drain rate.png" type="Texture" id=8]
+[ext_resource path="res://Sprites/Menu/input.png" type="Texture" id=9]
+[ext_resource path="res://Sprites/Menu/Cost.png" type="Texture" id=10]
+[ext_resource path="res://Fonts/Roboto-BoldItalic.ttf" type="DynamicFontData" id=11]
+[ext_resource path="res://Prefabs/tooltip/PriceContainer.tscn" type="PackedScene" id=12]
+
+[sub_resource type="StyleBoxFlat" id=7]
+bg_color = Color( 1, 1, 1, 0.03 )
+border_color = Color( 1, 1, 1, 0.65 )
+
+[sub_resource type="StyleBoxFlat" id=8]
+bg_color = Color( 1, 1, 1, 0.0509804 )
+border_color = Color( 1, 1, 1, 0.65 )
+expand_margin_left = 10.0
+expand_margin_right = 10.0
+expand_margin_top = 10.0
+expand_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxFlat" id=2]
+draw_center = false
+
+[sub_resource type="DynamicFont" id=3]
+size = 17
+outline_color = Color( 0, 0, 0, 1 )
+font_data = ExtResource( 1 )
+
+[sub_resource type="DynamicFont" id=9]
+size = 8
+font_data = ExtResource( 11 )
+
+[sub_resource type="StyleBoxFlat" id=10]
+bg_color = Color( 1, 1, 1, 0.03 )
+border_color = Color( 1, 1, 1, 0.65 )
+expand_margin_left = 10.0
+expand_margin_right = 10.0
+expand_margin_top = 10.0
+expand_margin_bottom = 10.0
+
+[sub_resource type="DynamicFont" id=4]
+size = 12
+outline_color = Color( 0, 0, 0, 1 )
+font_data = ExtResource( 4 )
+
+[sub_resource type="DynamicFont" id=5]
+size = 14
+outline_color = Color( 0, 0, 0, 1 )
+font_data = ExtResource( 3 )
+
+[node name="Tooltip Level Up" type="MarginContainer"]
+margin_right = 118.0
+margin_bottom = 64.0
+custom_constants/margin_right = 2
+custom_constants/margin_top = 2
+custom_constants/margin_left = 2
+custom_constants/margin_bottom = 2
+script = ExtResource( 6 )
+
+[node name="bg" type="Panel" parent="."]
+margin_left = 2.0
+margin_top = 2.0
+margin_right = 177.0
+margin_bottom = 305.0
+custom_styles/panel = SubResource( 7 )
+
+[node name="m" type="MarginContainer" parent="."]
+margin_left = 2.0
+margin_top = 2.0
+margin_right = 177.0
+margin_bottom = 305.0
+custom_constants/margin_right = 10
+custom_constants/margin_top = 10
+custom_constants/margin_left = 10
+custom_constants/margin_bottom = 10
+
+[node name="v" type="VBoxContainer" parent="m"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 165.0
+margin_bottom = 293.0
+custom_constants/separation = 10
+
+[node name="v" type="VBoxContainer" parent="m/v"]
+margin_right = 155.0
+margin_bottom = 102.0
+custom_constants/separation = 20
+
+[node name="top" type="MarginContainer" parent="m/v/v"]
+margin_right = 155.0
+margin_bottom = 36.0
+
+[node name="bg" type="Panel" parent="m/v/v/top"]
+margin_right = 155.0
+margin_bottom = 36.0
+custom_styles/panel = SubResource( 8 )
+
+[node name="v" type="VBoxContainer" parent="m/v/v/top"]
+margin_right = 155.0
+margin_bottom = 36.0
+
+[node name="m" type="MarginContainer" parent="m/v/v/top/v"]
+margin_right = 155.0
+margin_bottom = 36.0
+custom_constants/margin_right = 0
+custom_constants/margin_top = 0
+custom_constants/margin_left = 0
+custom_constants/margin_bottom = 0
+
+[node name="h" type="HBoxContainer" parent="m/v/v/top/v/m"]
+margin_right = 155.0
+margin_bottom = 36.0
+custom_constants/separation = 8
+alignment = 1
+
+[node name="icon" type="Panel" parent="m/v/v/top/v/m/h"]
+margin_left = 30.0
+margin_right = 48.0
+margin_bottom = 36.0
+rect_min_size = Vector2( 18, 36 )
+size_flags_horizontal = 0
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Sprite" type="Sprite" parent="m/v/v/top/v/m/h/icon"]
+position = Vector2( 9, 18 )
+texture = ExtResource( 2 )
+
+[node name="shadow" type="Sprite" parent="m/v/v/top/v/m/h/icon/Sprite"]
+self_modulate = Color( 0, 0, 0, 1 )
+show_behind_parent = true
+position = Vector2( 2, 2 )
+texture = ExtResource( 2 )
+
+[node name="text" type="Label" parent="m/v/v/top/v/m/h"]
+margin_left = 56.0
+margin_top = 7.0
+margin_right = 124.0
+margin_bottom = 28.0
+size_flags_horizontal = 4
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 3 )
+text = "Level up!"
+valign = 1
+
+[node name="first" type="MarginContainer" parent="m/v/v/top/v"]
+visible = false
+margin_top = 40.0
+margin_right = 215.0
+margin_bottom = 76.0
+rect_min_size = Vector2( 0, 36 )
+custom_constants/margin_right = 0
+custom_constants/margin_top = 0
+custom_constants/margin_left = 0
+custom_constants/margin_bottom = 0
+
+[node name="v" type="VBoxContainer" parent="m/v/v/top/v/first"]
+margin_right = 215.0
+margin_bottom = 36.0
+custom_constants/separation = -3
+alignment = 1
+
+[node name="text" type="Label" parent="m/v/v/top/v/first/v"]
+margin_top = 4.0
+margin_right = 215.0
+margin_bottom = 25.0
+size_flags_horizontal = 4
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 3 )
+text = "Ask Carcinogens to join you!"
+valign = 1
+
+[node name="net" type="Label" parent="m/v/v/top/v/first/v"]
+self_modulate = Color( 1, 1, 1, 0.172549 )
+margin_top = 22.0
+margin_right = 215.0
+margin_bottom = 32.0
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 9 )
+text = "(With a bribe.)"
+align = 1
+
+[node name="cost" type="MarginContainer" parent="m/v/v"]
+margin_top = 56.0
+margin_right = 155.0
+margin_bottom = 102.0
+custom_constants/margin_right = 0
+custom_constants/margin_top = 0
+custom_constants/margin_left = 0
+custom_constants/margin_bottom = 0
+
+[node name="bg" type="Panel" parent="m/v/v/cost"]
+margin_right = 155.0
+margin_bottom = 46.0
+custom_styles/panel = SubResource( 10 )
+
+[node name="CostContainer" parent="m/v/v/cost" instance=ExtResource( 12 )]
+unique_name_in_owner = true
+margin_right = 155.0
+
+[node name="bot" type="MarginContainer" parent="m/v"]
+margin_top = 112.0
+margin_right = 155.0
+margin_bottom = 283.0
+custom_constants/margin_right = 0
+custom_constants/margin_top = 0
+custom_constants/margin_left = 0
+custom_constants/margin_bottom = -10
+
+[node name="h" type="HBoxContainer" parent="m/v/bot"]
+margin_right = 155.0
+margin_bottom = 181.0
+custom_constants/separation = 10
+alignment = 1
+
+[node name="v" type="VBoxContainer" parent="m/v/bot/h"]
+margin_right = 94.0
+margin_bottom = 181.0
+custom_constants/separation = -7
+alignment = 1
+
+[node name="level" type="HBoxContainer" parent="m/v/bot/h/v"]
+margin_right = 94.0
+margin_bottom = 36.0
+custom_constants/separation = 8
+
+[node name="icon" type="Panel" parent="m/v/bot/h/v/level"]
+margin_right = 18.0
+margin_bottom = 36.0
+rect_min_size = Vector2( 18, 36 )
+size_flags_horizontal = 0
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Sprite" type="Sprite" parent="m/v/bot/h/v/level/icon"]
+position = Vector2( 9, 18 )
+texture = ExtResource( 2 )
+
+[node name="shadow" type="Sprite" parent="m/v/bot/h/v/level/icon/Sprite"]
+self_modulate = Color( 0, 0, 0, 1 )
+show_behind_parent = true
+position = Vector2( 2, 2 )
+texture = ExtResource( 2 )
+
+[node name="text" type="Label" parent="m/v/bot/h/v/level"]
+margin_left = 26.0
+margin_top = 10.0
+margin_right = 54.0
+margin_bottom = 25.0
+size_flags_horizontal = 4
+custom_fonts/font = SubResource( 4 )
+text = "Level"
+valign = 1
+
+[node name="Output" type="HBoxContainer" parent="m/v/bot/h/v"]
+margin_top = 29.0
+margin_right = 94.0
+margin_bottom = 65.0
+custom_constants/separation = 8
+
+[node name="icon" type="Panel" parent="m/v/bot/h/v/Output"]
+margin_right = 18.0
+margin_bottom = 36.0
+rect_min_size = Vector2( 18, 36 )
+size_flags_horizontal = 0
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Sprite" type="Sprite" parent="m/v/bot/h/v/Output/icon"]
+position = Vector2( 9, 18 )
+texture = ExtResource( 7 )
+
+[node name="shadow" type="Sprite" parent="m/v/bot/h/v/Output/icon/Sprite"]
+self_modulate = Color( 0, 0, 0, 1 )
+show_behind_parent = true
+position = Vector2( 2, 2 )
+texture = ExtResource( 7 )
+
+[node name="text" type="Label" parent="m/v/bot/h/v/Output"]
+margin_left = 26.0
+margin_top = 10.0
+margin_right = 63.0
+margin_bottom = 25.0
+size_flags_horizontal = 4
+custom_fonts/font = SubResource( 4 )
+text = "Output"
+valign = 1
+
+[node name="Input" type="HBoxContainer" parent="m/v/bot/h/v"]
+margin_top = 58.0
+margin_right = 94.0
+margin_bottom = 94.0
+custom_constants/separation = 8
+
+[node name="icon" type="Panel" parent="m/v/bot/h/v/Input"]
+margin_right = 18.0
+margin_bottom = 36.0
+rect_min_size = Vector2( 18, 36 )
+size_flags_horizontal = 0
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Sprite" type="Sprite" parent="m/v/bot/h/v/Input/icon"]
+position = Vector2( 9, 18 )
+texture = ExtResource( 9 )
+
+[node name="shadow" type="Sprite" parent="m/v/bot/h/v/Input/icon/Sprite"]
+self_modulate = Color( 0, 0, 0, 1 )
+show_behind_parent = true
+position = Vector2( 2, 2 )
+texture = ExtResource( 9 )
+
+[node name="text" type="Label" parent="m/v/bot/h/v/Input"]
+margin_left = 26.0
+margin_top = 10.0
+margin_right = 54.0
+margin_bottom = 25.0
+size_flags_horizontal = 4
+custom_fonts/font = SubResource( 4 )
+text = "Input"
+valign = 1
+
+[node name="FuelCost" type="HBoxContainer" parent="m/v/bot/h/v"]
+margin_top = 87.0
+margin_right = 94.0
+margin_bottom = 123.0
+custom_constants/separation = 8
+
+[node name="icon" type="Panel" parent="m/v/bot/h/v/FuelCost"]
+margin_right = 18.0
+margin_bottom = 36.0
+rect_min_size = Vector2( 18, 36 )
+size_flags_horizontal = 0
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Sprite" type="Sprite" parent="m/v/bot/h/v/FuelCost/icon"]
+position = Vector2( 9, 18 )
+texture = ExtResource( 8 )
+
+[node name="shadow" type="Sprite" parent="m/v/bot/h/v/FuelCost/icon/Sprite"]
+self_modulate = Color( 0, 0, 0, 1 )
+show_behind_parent = true
+position = Vector2( 2, 2 )
+texture = ExtResource( 8 )
+
+[node name="text" type="Label" parent="m/v/bot/h/v/FuelCost"]
+margin_left = 26.0
+margin_top = 10.0
+margin_right = 77.0
+margin_bottom = 25.0
+size_flags_horizontal = 4
+custom_fonts/font = SubResource( 4 )
+text = "Fuel Cost"
+valign = 1
+
+[node name="FuelStorage" type="HBoxContainer" parent="m/v/bot/h/v"]
+margin_top = 116.0
+margin_right = 94.0
+margin_bottom = 152.0
+custom_constants/separation = 8
+
+[node name="icon" type="Panel" parent="m/v/bot/h/v/FuelStorage"]
+margin_right = 18.0
+margin_bottom = 36.0
+rect_min_size = Vector2( 18, 36 )
+size_flags_horizontal = 0
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Sprite" type="Sprite" parent="m/v/bot/h/v/FuelStorage/icon"]
+position = Vector2( 9, 18 )
+texture = ExtResource( 5 )
+
+[node name="shadow" type="Sprite" parent="m/v/bot/h/v/FuelStorage/icon/Sprite"]
+self_modulate = Color( 0, 0, 0, 1 )
+show_behind_parent = true
+position = Vector2( 2, 2 )
+texture = ExtResource( 5 )
+
+[node name="text" type="Label" parent="m/v/bot/h/v/FuelStorage"]
+margin_left = 26.0
+margin_top = 10.0
+margin_right = 94.0
+margin_bottom = 25.0
+size_flags_horizontal = 4
+custom_fonts/font = SubResource( 4 )
+text = "Fuel Storage"
+valign = 1
+
+[node name="Cost" type="HBoxContainer" parent="m/v/bot/h/v"]
+margin_top = 145.0
+margin_right = 94.0
+margin_bottom = 181.0
+custom_constants/separation = 8
+
+[node name="icon" type="Panel" parent="m/v/bot/h/v/Cost"]
+margin_right = 18.0
+margin_bottom = 36.0
+rect_min_size = Vector2( 18, 36 )
+size_flags_horizontal = 0
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Sprite" type="Sprite" parent="m/v/bot/h/v/Cost/icon"]
+position = Vector2( 9, 18 )
+texture = ExtResource( 10 )
+
+[node name="shadow" type="Sprite" parent="m/v/bot/h/v/Cost/icon/Sprite"]
+self_modulate = Color( 0, 0, 0, 1 )
+show_behind_parent = true
+position = Vector2( 2, 2 )
+texture = ExtResource( 10 )
+
+[node name="text" type="Label" parent="m/v/bot/h/v/Cost"]
+margin_left = 26.0
+margin_top = 10.0
+margin_right = 51.0
+margin_bottom = 25.0
+size_flags_horizontal = 4
+custom_fonts/font = SubResource( 4 )
+text = "Cost"
+valign = 1
+
+[node name="current" type="VBoxContainer" parent="m/v/bot/h"]
+margin_left = 104.0
+margin_right = 112.0
+margin_bottom = 181.0
+custom_constants/separation = -7
+
+[node name="Label" type="Label" parent="m/v/bot/h/current"]
+margin_right = 8.0
+margin_bottom = 36.0
+rect_min_size = Vector2( 0, 36 )
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 5 )
+text = "4"
+align = 1
+valign = 1
+
+[node name="Label2" type="Label" parent="m/v/bot/h/current"]
+margin_top = 29.0
+margin_right = 8.0
+margin_bottom = 65.0
+rect_min_size = Vector2( 0, 36 )
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 5 )
+text = "4"
+align = 1
+valign = 1
+
+[node name="Label3" type="Label" parent="m/v/bot/h/current"]
+margin_top = 58.0
+margin_right = 8.0
+margin_bottom = 94.0
+rect_min_size = Vector2( 0, 36 )
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 5 )
+text = "4"
+align = 1
+valign = 1
+
+[node name="Label4" type="Label" parent="m/v/bot/h/current"]
+margin_top = 87.0
+margin_right = 8.0
+margin_bottom = 123.0
+rect_min_size = Vector2( 0, 36 )
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 5 )
+text = "4"
+align = 1
+valign = 1
+
+[node name="Label5" type="Label" parent="m/v/bot/h/current"]
+margin_top = 116.0
+margin_right = 8.0
+margin_bottom = 152.0
+rect_min_size = Vector2( 0, 36 )
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 5 )
+text = "4"
+align = 1
+valign = 1
+
+[node name="increase" type="VBoxContainer" parent="m/v/bot/h"]
+margin_left = 122.0
+margin_right = 137.0
+margin_bottom = 181.0
+custom_constants/separation = -7
+
+[node name="Label" type="Label" parent="m/v/bot/h/increase"]
+margin_right = 15.0
+margin_bottom = 36.0
+rect_min_size = Vector2( 0, 36 )
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 5 )
+text = "+1"
+align = 1
+valign = 1
+
+[node name="Label2" type="Label" parent="m/v/bot/h/increase"]
+margin_top = 29.0
+margin_right = 15.0
+margin_bottom = 65.0
+rect_min_size = Vector2( 0, 36 )
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 5 )
+text = "x2"
+align = 1
+valign = 1
+
+[node name="Label3" type="Label" parent="m/v/bot/h/increase"]
+margin_top = 58.0
+margin_right = 15.0
+margin_bottom = 94.0
+rect_min_size = Vector2( 0, 36 )
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 5 )
+text = "x2"
+align = 1
+valign = 1
+
+[node name="Label4" type="Label" parent="m/v/bot/h/increase"]
+margin_top = 87.0
+margin_right = 15.0
+margin_bottom = 123.0
+rect_min_size = Vector2( 0, 36 )
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 5 )
+text = "x2"
+align = 1
+valign = 1
+
+[node name="Label5" type="Label" parent="m/v/bot/h/increase"]
+margin_top = 116.0
+margin_right = 15.0
+margin_bottom = 152.0
+rect_min_size = Vector2( 0, 36 )
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 5 )
+text = "x2"
+align = 1
+valign = 1
+
+[node name="Label6" type="Label" parent="m/v/bot/h/increase"]
+margin_top = 145.0
+margin_right = 15.0
+margin_bottom = 181.0
+rect_min_size = Vector2( 0, 36 )
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 5 )
+text = "x3"
+align = 1
+valign = 1
+
+[node name="result" type="VBoxContainer" parent="m/v/bot/h"]
+margin_left = 147.0
+margin_right = 155.0
+margin_bottom = 181.0
+custom_constants/separation = -7
+
+[node name="Label" type="Label" parent="m/v/bot/h/result"]
+margin_right = 8.0
+margin_bottom = 36.0
+rect_min_size = Vector2( 0, 36 )
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 5 )
+text = "5"
+align = 1
+valign = 1
+
+[node name="Label2" type="Label" parent="m/v/bot/h/result"]
+margin_top = 29.0
+margin_right = 8.0
+margin_bottom = 65.0
+rect_min_size = Vector2( 0, 36 )
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 5 )
+text = "8"
+align = 1
+valign = 1
+
+[node name="Label3" type="Label" parent="m/v/bot/h/result"]
+margin_top = 58.0
+margin_right = 8.0
+margin_bottom = 94.0
+rect_min_size = Vector2( 0, 36 )
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 5 )
+text = "8"
+align = 1
+valign = 1
+
+[node name="Label4" type="Label" parent="m/v/bot/h/result"]
+margin_top = 87.0
+margin_right = 8.0
+margin_bottom = 123.0
+rect_min_size = Vector2( 0, 36 )
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 5 )
+text = "8"
+align = 1
+valign = 1
+
+[node name="Label5" type="Label" parent="m/v/bot/h/result"]
+margin_top = 116.0
+margin_right = 8.0
+margin_bottom = 152.0
+rect_min_size = Vector2( 0, 36 )
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 5 )
+text = "8"
+align = 1
+valign = 1

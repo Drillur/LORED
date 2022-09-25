@@ -1,4 +1,4 @@
-class_name Job
+class_name oldJob
 extends Reference
 
 
@@ -211,7 +211,7 @@ func crit_roll() -> float:
 	var f := 1.0
 	
 	var roll = rand_range(0, 100)
-	if gv.g[lored_key].crit.t.greater_equal(roll):
+	if gv.g[lored_key].crit.t >= roll:
 		f *= rand_range(7.5, 12.5)
 		gv.g[lored_key].manager.crit = true
 	

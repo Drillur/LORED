@@ -9,14 +9,14 @@
 [ext_resource path="res://Fonts/Roboto-MediumItalic.ttf" type="DynamicFontData" id=7]
 [ext_resource path="res://Sprites/misc/hold_false.png" type="Texture" id=9]
 [ext_resource path="res://Styles/Labels/name.tres" type="DynamicFont" id=10]
-[ext_resource path="res://Scripts/lored/Progress Bar.gd" type="Script" id=11]
+[ext_resource path="res://Scripts/oldLORED/Progress Bar.gd" type="Script" id=11]
 [ext_resource path="res://Styles/Labels/halt_text.tres" type="DynamicFont" id=12]
 [ext_resource path="res://Fonts/Roboto-Black.ttf" type="DynamicFontData" id=13]
 [ext_resource path="res://Styles/Labels/Num.tres" type="DynamicFont" id=14]
 [ext_resource path="res://Sprites/animations/autobuyer.tres" type="SpriteFrames" id=15]
-[ext_resource path="res://Scripts/lored/AnimatedSprite.gd" type="Script" id=16]
-[ext_resource path="res://Scripts/lored/Fuel.gd" type="Script" id=17]
-[ext_resource path="res://Scripts/lored/Status Indicator.gd" type="Script" id=18]
+[ext_resource path="res://Scripts/oldLORED/AnimatedSprite.gd" type="Script" id=16]
+[ext_resource path="res://Scripts/oldLORED/Fuel.gd" type="Script" id=17]
+[ext_resource path="res://Scripts/oldLORED/Status Indicator.gd" type="Script" id=18]
 [ext_resource path="res://Styles/Labels/Flair.tres" type="DynamicFont" id=19]
 
 [sub_resource type="StyleBoxFlat" id=1]
@@ -230,7 +230,7 @@ draw_center = false
 anchor_right = 0.0125
 anchor_bottom = 0.0638889
 margin_right = 262.0
-margin_bottom = 121.0
+margin_bottom = 109.0
 size_flags_vertical = 0
 custom_constants/margin_right = 10
 custom_constants/margin_top = 10
@@ -241,16 +241,16 @@ script = ExtResource( 6 )
 [node name="v" type="VBoxContainer" parent="."]
 margin_left = 10.0
 margin_top = 10.0
-margin_right = 296.0
-margin_bottom = 157.0
+margin_right = 268.0
+margin_bottom = 145.0
 
 [node name="m" type="MarginContainer" parent="v"]
-margin_right = 286.0
-margin_bottom = 129.0
+margin_right = 258.0
+margin_bottom = 135.0
 
 [node name="bg" type="Panel" parent="v/m"]
-margin_right = 286.0
-margin_bottom = 129.0
+margin_right = 258.0
+margin_bottom = 135.0
 custom_styles/panel = SubResource( 1 )
 
 [node name="status" type="Panel" parent="v/m/bg"]
@@ -259,31 +259,27 @@ margin_left = -10.0
 margin_top = -10.0
 custom_styles/panel = SubResource( 2 )
 script = ExtResource( 18 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="bg2" type="Panel" parent="v/m"]
-margin_right = 286.0
-margin_bottom = 129.0
+margin_right = 258.0
+margin_bottom = 135.0
 rect_min_size = Vector2( 0, 78 )
 custom_styles/panel = SubResource( 3 )
 
 [node name="v" type="VBoxContainer" parent="v/m"]
-margin_right = 286.0
-margin_bottom = 129.0
+margin_right = 258.0
+margin_bottom = 135.0
 custom_constants/separation = 8
 
 [node name="h" type="HBoxContainer" parent="v/m/v"]
-margin_right = 286.0
-margin_bottom = 80.0
+margin_right = 258.0
+margin_bottom = 68.0
 custom_constants/separation = 10
 alignment = 1
 
 [node name="animation" type="Panel" parent="v/m/v/h"]
-margin_top = 6.0
 margin_right = 68.0
-margin_bottom = 74.0
+margin_bottom = 68.0
 rect_min_size = Vector2( 68, 68 )
 size_flags_horizontal = 0
 size_flags_vertical = 4
@@ -297,7 +293,7 @@ position = Vector2( 34, 34 )
 scale = Vector2( 2, 2 )
 frames = ExtResource( 1 )
 animation = "ff"
-frame = 1
+frame = 31
 playing = true
 script = ExtResource( 16 )
 
@@ -305,12 +301,12 @@ script = ExtResource( 16 )
 
 [node name="lored" type="VBoxContainer" parent="v/m/v/h"]
 margin_left = 78.0
-margin_right = 286.0
-margin_bottom = 80.0
+margin_right = 258.0
+margin_bottom = 68.0
 rect_min_size = Vector2( 108, 0 )
 
 [node name="h" type="HBoxContainer" parent="v/m/v/h/lored"]
-margin_right = 208.0
+margin_right = 180.0
 margin_bottom = 36.0
 
 [node name="icon" type="Panel" parent="v/m/v/h/lored/h"]
@@ -330,7 +326,7 @@ texture = ExtResource( 4 )
 
 [node name="v" type="VBoxContainer" parent="v/m/v/h/lored/h"]
 margin_left = 40.0
-margin_right = 208.0
+margin_right = 180.0
 margin_bottom = 36.0
 size_flags_horizontal = 3
 custom_constants/separation = 0
@@ -349,44 +345,45 @@ text = "Copper Ore"
 modulate = Color( 0.806152, 0.806152, 0.806152, 1 )
 self_modulate = Color( 1, 0.49, 0, 1 )
 margin_top = 2.0
-margin_right = 168.0
+margin_right = 140.0
 margin_bottom = 19.0
 rect_min_size = Vector2( 68, 0 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = ExtResource( 14 )
 text = "123e123"
 
 [node name="net" type="Label" parent="v/m/v/h/lored/h/v"]
-visible = false
 modulate = Color( 0.801758, 0.801758, 0.801758, 1 )
-margin_top = 17.0
+margin_top = 19.0
 margin_right = 140.0
-margin_bottom = 31.0
+margin_bottom = 33.0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 6 )
 text = "123e12/s"
 
 [node name="item name" type="Label" parent="v/m/v/h/lored/h/v"]
+visible = false
 modulate = Color( 0.801758, 0.801758, 0.801758, 1 )
 margin_top = 19.0
 margin_right = 168.0
 margin_bottom = 34.0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = ExtResource( 19 )
 text = "Wants to cast Hex"
 autowrap = true
 
 [node name="h2" type="HBoxContainer" parent="v/m/v/h/lored"]
 margin_top = 40.0
-margin_right = 208.0
-margin_bottom = 80.0
+margin_right = 180.0
+margin_bottom = 60.0
 
 [node name="Fuel Progress" parent="v/m/v/h/lored/h2" instance=ExtResource( 5 )]
-margin_top = 8.0
-margin_bottom = 32.0
+visible = false
 
 [node name="task" type="Panel" parent="v/m/v/h/lored/h2"]
-margin_left = 28.0
-margin_right = 208.0
-margin_bottom = 40.0
-rect_min_size = Vector2( 180, 40 )
+margin_right = 180.0
+margin_bottom = 20.0
+rect_min_size = Vector2( 180, 20 )
 size_flags_horizontal = 3
 size_flags_vertical = 4
 custom_styles/panel = SubResource( 7 )
@@ -419,17 +416,17 @@ modulate = Color( 0.806152, 0.806152, 0.806152, 1 )
 self_modulate = Color( 0.960784, 0.45098, 0, 1 )
 anchor_right = 1.0
 anchor_bottom = 1.0
+margin_top = -1.0
 margin_right = -5.0
+margin_bottom = -1.0
 rect_min_size = Vector2( 68, 0 )
 custom_fonts/font = SubResource( 10 )
 text = "+16"
 align = 2
 valign = 2
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="task text" type="Label" parent="v/m/v/h/lored/h2/task"]
+visible = false
 modulate = Color( 0.806152, 0.806152, 0.806152, 1 )
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -446,10 +443,9 @@ autowrap = true
 autostart = true
 
 [node name="fuel" type="HBoxContainer" parent="v/m/v"]
-visible = false
-margin_top = 88.0
+margin_top = 76.0
 margin_right = 258.0
-margin_bottom = 98.0
+margin_bottom = 86.0
 mouse_filter = 0
 alignment = 1
 script = ExtResource( 17 )
@@ -509,9 +505,9 @@ __meta__ = {
 }
 
 [node name="interactables" type="MarginContainer" parent="v/m/v"]
-margin_top = 88.0
-margin_right = 286.0
-margin_bottom = 129.0
+margin_top = 94.0
+margin_right = 258.0
+margin_bottom = 135.0
 size_flags_vertical = 4
 custom_constants/margin_right = 5
 custom_constants/margin_top = 5
@@ -521,33 +517,34 @@ custom_constants/margin_bottom = 0
 [node name="bg" type="Panel" parent="v/m/v/interactables"]
 margin_left = 5.0
 margin_top = 5.0
-margin_right = 281.0
+margin_right = 253.0
 margin_bottom = 41.0
 custom_styles/panel = SubResource( 13 )
 
 [node name="lored" type="VBoxContainer" parent="v/m/v/interactables"]
 margin_left = 5.0
 margin_top = 5.0
-margin_right = 281.0
+margin_right = 253.0
 margin_bottom = 41.0
 custom_constants/separation = 6
 alignment = 1
 
 [node name="h" type="HBoxContainer" parent="v/m/v/interactables/lored"]
-margin_right = 276.0
+margin_right = 248.0
 margin_bottom = 36.0
 rect_min_size = Vector2( 66, 0 )
 custom_constants/separation = 12
 alignment = 1
 
 [node name="halt" type="Button" parent="v/m/v/interactables/lored/h"]
-margin_left = 15.0
+margin_left = 49.0
 margin_top = 2.0
-margin_right = 48.0
+margin_right = 82.0
 margin_bottom = 34.0
 rect_min_size = Vector2( 33, 32 )
 focus_mode = 0
 mouse_default_cursor_shape = 2
+size_flags_horizontal = 0
 size_flags_vertical = 4
 custom_fonts/font = ExtResource( 12 )
 custom_styles/hover = SubResource( 14 )
@@ -560,9 +557,10 @@ __meta__ = {
 }
 
 [node name="buy" type="MarginContainer" parent="v/m/v/interactables/lored/h"]
-margin_left = 60.0
-margin_right = 215.0
+margin_left = 94.0
+margin_right = 154.0
 margin_bottom = 36.0
+size_flags_horizontal = 4
 custom_constants/margin_right = 0
 custom_constants/margin_top = 2
 custom_constants/margin_left = 0
@@ -573,7 +571,7 @@ __meta__ = {
 
 [node name="button" type="Button" parent="v/m/v/interactables/lored/h/buy"]
 margin_top = 2.0
-margin_right = 155.0
+margin_right = 60.0
 margin_bottom = 34.0
 rect_min_size = Vector2( 60, 32 )
 focus_mode = 0
@@ -589,25 +587,30 @@ __meta__ = {
 
 [node name="afford" type="Panel" parent="v/m/v/interactables/lored/h/buy"]
 margin_top = 2.0
-margin_right = 155.0
+margin_right = 60.0
 margin_bottom = 34.0
 mouse_filter = 2
 custom_styles/panel = SubResource( 21 )
 
 [node name="h" type="HBoxContainer" parent="v/m/v/interactables/lored/h/buy"]
 margin_top = 2.0
-margin_right = 155.0
+margin_right = 60.0
 margin_bottom = 34.0
 mouse_filter = 2
 custom_constants/separation = 8
 alignment = 1
 
 [node name="color blind" type="CheckBox" parent="v/m/v/interactables/lored/h/buy/h"]
-margin_right = 24.0
-margin_bottom = 32.0
+margin_left = 6.0
+margin_top = 4.0
+margin_right = 30.0
+margin_bottom = 28.0
 mouse_filter = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 
 [node name="name" type="Label" parent="v/m/v/interactables/lored/h/buy/h"]
+visible = false
 margin_left = 32.0
 margin_top = 7.0
 margin_right = 132.0
@@ -619,9 +622,9 @@ text = "Carcinogens"
 align = 1
 
 [node name="autobuy" type="Panel" parent="v/m/v/interactables/lored/h/buy/h"]
-margin_left = 140.0
+margin_left = 38.0
 margin_top = 8.0
-margin_right = 155.0
+margin_right = 53.0
 margin_bottom = 23.0
 rect_min_size = Vector2( 15, 15 )
 mouse_filter = 2
@@ -636,17 +639,18 @@ __meta__ = {
 position = Vector2( 7, 7 )
 scale = Vector2( 0.6, 0.6 )
 frames = ExtResource( 15 )
-frame = 8
+frame = 12
 playing = true
 
 [node name="hold" type="Button" parent="v/m/v/interactables/lored/h"]
-margin_left = 227.0
+margin_left = 166.0
 margin_top = 2.0
-margin_right = 260.0
+margin_right = 199.0
 margin_bottom = 34.0
 rect_min_size = Vector2( 33, 32 )
 focus_mode = 0
 mouse_default_cursor_shape = 2
+size_flags_horizontal = 4
 size_flags_vertical = 4
 custom_fonts/font = ExtResource( 12 )
 custom_styles/hover = SubResource( 14 )

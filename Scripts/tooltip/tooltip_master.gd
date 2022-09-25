@@ -1,7 +1,5 @@
 extends Node2D
 
-onready var tip_halt_prefab = preload("res://Prefabs/tooltip/tip_halt.tscn")
-onready var tip_hold_prefab = preload("res://Prefabs/tooltip/tip_hold.tscn")
 var prefab := {
 	"task step" : preload("res://Prefabs/task/task_step.tscn"),
 	"task rr" : preload("res://Prefabs/task/task_rr.tscn"),
@@ -15,8 +13,9 @@ onready var rt = get_owner()
 var tip = 0
 var tip_filled := false
 var type := "no"
+var other: Dictionary
 
-func _call(source : String, other := {}) -> void:
+func _call(source : String, _other := {}) -> void:
 	
 	if tip_filled:
 		if is_instance_valid(tip):
@@ -24,6 +23,7 @@ func _call(source : String, other := {}) -> void:
 		tip_filled = false
 	
 	type = source
+	other = _other
 	
 	if type == "no":
 		return
@@ -34,3 +34,9 @@ func _call(source : String, other := {}) -> void:
 	tip_filled = true
 
 
+
+func refresh():
+	var _type = type
+	var _other = other
+	_call("no")
+	_call(_type, _other)

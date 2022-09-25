@@ -52,9 +52,6 @@ custom_constants/margin_top = 0
 custom_constants/margin_left = 0
 custom_constants/margin_bottom = 0
 script = ExtResource( 2 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="bg" type="Panel" parent="."]
 margin_right = 95.0
@@ -75,8 +72,8 @@ margin_top = 17.0
 margin_right = 85.0
 margin_bottom = 28.0
 rect_pivot_offset = Vector2( 240, -30 )
-custom_fonts/font = SubResource( 2 )
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 2 )
 text = "a"
 align = 1
 autowrap = true

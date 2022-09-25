@@ -104,6 +104,10 @@ func apply():
 	
 	for e in effects:
 		e.apply(name)
+	
+	if key in ["upgrade_name", "upgrade_description"]:
+		lv.syncStage1and2_costModifier()
+	
 	applied = true
 
 func refund():
@@ -113,7 +117,7 @@ func refund():
 	refundable = false
 	sync_cost()
 	for c in cost:
-		gv.r[c].a(cost[c].t)
+		gv.resource[c].a(cost[c].t)
 
 func remove(reset := false):
 	
@@ -133,7 +137,7 @@ func takeaway_price():
 		return
 	
 	for c in cost:
-		gv.r[c].s(cost[c].t)
+		gv.resource[c].s(cost[c].t)
 
 func sync():
 	
@@ -168,14 +172,14 @@ func sync_desc():
 	
 	
 	if "{other}" in desc.f:
-		desc.f = desc.f.format({"other": other.print()})
+		desc.f = desc.f.format({"other": other.read()})
 	
 	if effects.size() == 0:
 		return
 	
 	while "{e" in desc.f:
 		var i := int(desc.f.split("{e")[1][0])
-		desc.f = desc.f.format({"e" + str(i): effects[i].effect.print()})
+		desc.f = desc.f.format({"e" + str(i): effects[i].effect.read()})
 
 func get_effect_text(index: int):
 	
@@ -200,7 +204,7 @@ func time_to_buy():
 	var longest_time = Big.new(0)
 	
 	for c in cost:
-		var time_to_c = gv.time_remaining_including_INF(c, gv.r[c], cost[c].t)
+		var time_to_c = gv.time_remaining_including_INF(c, gv.resource[c], cost[c].t) #x
 		if typeof(time_to_c) != TYPE_INT:
 			return INF
 		if time_to_c.greater(longest_time):

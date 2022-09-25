@@ -62,7 +62,7 @@ func procedure():
 	
 	while not confirmed and gv.up["PROCEDURE"].active() and visible and gv.open_tab == gv.Tab.MALIGNANT:
 		
-		if gv.r["malig"].greater_equal(gv.up["ROUTINE"].cost["malig"].t):
+		if gv.resource[gv.Resource.MALIGNANCY].greater_equal(gv.up["ROUTINE"].cost["malig"].t):
 			
 			var routine = rt.get_node(rt.gnupcon).cont["ROUTINE"].get_routine_info()[0].toString()
 			
@@ -774,15 +774,9 @@ func upgrade_purchased(key: String, routine := []):
 		
 		i += 1
 	
+	var t = Timer.new()
+	add_child(t)
 	for x in gv.up[key].cost:
-		
-		var t = Timer.new()
-		t.set_wait_time(0.02)
-		t.set_one_shot(true)
-		add_child(t)
-		t.start()
-		yield(t, "timeout")
-		t.queue_free()
 		
 		# dtext
 		cont_flying_texts["(upgrade purchased flying text)" + str(i)] = rt.prefab["dtext"].instance()
@@ -813,6 +807,11 @@ func upgrade_purchased(key: String, routine := []):
 		$flying_texts.add_child(cont_flying_texts["(upgrade purchased flying text)" + str(i)])
 		
 		i += 1
+		
+		t.start(0.02)
+		yield(t, "timeout")
+	
+	t.queue_free()
 
 
 func update_folder():

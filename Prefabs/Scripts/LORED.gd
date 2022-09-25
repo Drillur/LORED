@@ -12,7 +12,7 @@ var some_started := false
 
 var net: Array
 
-var lored: LORED
+var lored: oldLORED
 var key := "copo"
 
 var emotes := {
@@ -64,7 +64,7 @@ func setup(_key: String) -> void:
 	
 	key = _key
 	
-	lored = gv.g[key]
+	lored = lv.lored[key]
 	lored.manager = self
 	
 	hide()
@@ -131,6 +131,8 @@ func start_all():
 	r_update_halt()
 	r_update_hold()
 	r_buy_button_only()
+	
+	lored.setDifficultyValues()
 	
 	start()
 	if not lored.smart:
@@ -209,10 +211,6 @@ func r_setup():
 		
 		frame_set[key] = false
 		frame_set[key + " last"] = 0
-		
-		# flip horizontal
-		if key in ["irono", "copo", "iron", "jo", "liq"]:
-			gn_frames.flip_h = true
 	
 	if lored.used_by.size() == 0:
 		get_node(gnhold).hide()
@@ -343,7 +341,7 @@ func autobuy():
 	autobuy()
 
 func start():
-	#zbefore start is called, Difficulty should be set.
+	
 	while lored.unlocked and lored.active and not lored.halt:
 		
 		if lored.sync_queued:
@@ -402,7 +400,7 @@ func task_master(beginning := true):
 				
 				for x in lored.b:
 					var less = Big.new(lored.d.t).m(lored.b[x].t)
-					gv.r[x].s(less)
+					gv.resource[x].s(less)
 			
 			return
 		
@@ -499,7 +497,7 @@ func witch():
 		
 		var witch_mod_fps: Big = Big.new(lored.witch).m(gv.fps)
 		
-		gv.r[key].a(witch_mod_fps)
+		gv.resource[key].a(witch_mod_fps)
 		gv.increase_lb_xp(witch_mod_fps)
 		taq.increaseProgress(gv.Objective.RESOURCES_PRODUCED, lored.key, witch_mod_fps)
 		
@@ -577,7 +575,7 @@ func w_output_master(f) -> void:
 	
 	w_bonus_output(f.key, f.inhand)
 	
-	gv.r[f.key].a(f.inhand)
+	gv.resource[f.key].a(f.inhand)
 	gv.increase_lb_xp(f.inhand)
 	taq.increaseProgress(gv.Objective.RESOURCES_PRODUCED, f.key, f.inhand)
 	flying_texts()
@@ -588,17 +586,17 @@ func w_bonus_output(_key : String, inhand : Big) -> void:
 		"coal":
 			if gv.up["wait that's not fair"].active():
 				var bla = Big.new(inhand).m(10)
-				gv.r["stone"].a(bla)
+				gv.resource["stone"].a(bla)
 				gv.increase_lb_xp(bla)
 				taq.increaseProgress(gv.Objective.RESOURCES_PRODUCED, "stone", bla)
 		"irono":
 			if gv.up["I RUN"].active():
-				gv.r["iron"].a(inhand)
+				gv.resource[gv.Resource.IRON].a(inhand)
 				gv.increase_lb_xp(inhand)
 				taq.increaseProgress(gv.Objective.RESOURCES_PRODUCED, "iron", inhand)
 		"copo":
 			if gv.up["THE THIRD"].active():
-				gv.r["cop"].a(inhand)
+				gv.resource[gv.Resource.COPPER].a(inhand)
 				gv.increase_lb_xp(inhand)
 				taq.increaseProgress(gv.Objective.RESOURCES_PRODUCED, "cop", inhand)
 		"growth":
@@ -641,9 +639,9 @@ func softlock_not_enough_wire():
 	if gv.g["draw"].active:
 		return
 	
-	if gv.r["wire"].less(20):
+	if gv.resource[gv.Resource.WIRE].less(20):
 		print_debug("You couldn't afford to purchase the Draw Plate LORED, so you've been given 20 Wire.")
-		gv.r["wire"].a(20)
+		gv.resource[gv.Resource.WIRE].a(20)
 
 func softlock_wood_cycle():
 	
@@ -657,11 +655,11 @@ func softlock_wood_cycle():
 		if gv.g[x].halt:
 			return
 		
-		if gv.r["axe"].greater(Big.new(gv.g["wood"].d.t).m(gv.g["wood"].b["axe"].t)):
+		if gv.resource[gv.Resource.AXES].greater(lv.lored[lv.Type.WOOD].getRequiredResource(lv.Job.WOOD, gv.Resource.AXES)):
 			return
-		if gv.r["wood"].greater(Big.new(gv.g["hard"].d.t).m(gv.g["hard"].b["wood"].t)):
+		if gv.resource[gv.Resource.WOOD].greater(lv.lored[lv.Type.HARDWOOD].getRequiredResource(lv.Job.HARDWOOD, gv.Resource.AXES)):
 			return
-		if gv.r["hard"].greater(Big.new(gv.g["axe"].d.t).m(gv.g["axe"].b["hard"].t)):
+		if gv.resource[gv.Resource.HARDWOOD].greater(lv.lored[lv.Type.AXES].getRequiredResource(lv.Job.AXES, gv.Resource.HARDWOOD)):
 			return
 	
 	print_debug("Axes, Wood, and Hardwood dropped low enough that none of them could take from each other, so you've been given free resources.")
@@ -745,7 +743,7 @@ func r_d():
 	
 	while true:
 		
-		gn_d.text = "+" + lored.d.print()
+		gn_d.text = "+" + lored.d.read()
 		
 		var t = Timer.new()
 		add_child(t)

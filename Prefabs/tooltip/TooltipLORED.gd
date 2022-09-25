@@ -19,17 +19,17 @@ var jobs: Array
 
 
 
-func init(_lored_key: String):
+func init(_lored_key: int):
 	
-	lored = gv.g[_lored_key]
+	lored = lv.lored[_lored_key]
 	
 	yield(self, "ready")
 	
-	icon.texture = gv.sprite[_lored_key]
+	icon.texture = lored.icon
 	lored_name.text = lored.name
-	if lored.halt:
+	if lored.asleep:
 		tag_halt.show()
-	if lored.hold:
+	if not lored.exporting:
 		tag_hold.show()
 	
 	lored_level.self_modulate = lored.color
@@ -82,8 +82,8 @@ func update():
 		
 		if stats.visible:
 			gross.text = lored.net(true, true)[0].toString() + "/s"
-			haste.text = fval.f(lored.speed.b / lored.speed.t * 100) + "%"
-			crit.text = lored.crit.t.toString() + "%"
+			haste.text = lored.hasteText
+			crit.text = lored.critText
 		
 		
 		$Timer.start(1)

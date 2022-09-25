@@ -93,6 +93,9 @@ func load(data: Dictionary):
 			continue
 		for r in Wish.new(w).key_rew:
 			r.turnIn()
+	
+	if "veryLowCoal" in active_wish_keys:
+		gv.emit_signal("manualLabor")
 
 
 func reset(reset_type: int):
@@ -122,8 +125,11 @@ func reset(reset_type: int):
 func close():
 	# scene changed. #002
 	wish.clear()
+	updateWishCount()
 	active_wish_keys.clear()
 	completed_wishes.clear()
+	checkpoint = 0
+	max_random_wishes = 0
 
 
 func setupGNNodes():
@@ -338,12 +344,18 @@ func getSelectedWish() -> String:
 		0:
 			if wishCompleteOrAlreadyActive("stuff"):
 				return "n"
-			if not gv.g["coal"].active:
+			if not lv.lored[lv.Type.COAL].purchased:
 				return "stuff"
 			checkpoint = 1
 			return "r"
 	
-	#note THIS CANNOT BE COMMENTED OUT. if it's not, erase this comment i guess
+	if gv.resource[gv.Resource.COAL].less(Big.new(lv.lored[lv.Type.COAL].output).m(2)):
+		if not "veryLowCoal" in active_wish_keys and not gv.manualLaborActive:
+			var duration = lv.lored[lv.Type.COAL].getJobDuration(0)
+			var minimum_fuel = Big.new(duration).m(lv.lored[lv.Type.COAL].fuelCost).m(1.1)
+			if lv.lored[lv.Type.COAL].currentFuel.less(minimum_fuel) and not lv.lored[lv.Type.COAL].working:
+				return "veryLowCoal"
+	
 	if gv.list.lored["unlocked and inactive"].size() > 0:
 		return "r"
 	
@@ -363,18 +375,23 @@ func wishCompleteOrAlreadyActive(key: String) -> bool:
 
 func maxedFuelStorageManager(wish: Wish):
 	
+	var t = Timer.new()
+	add_child(t)
+	
 	while not wish.ready and wish.exists:
 		
-		var lored_key = wish.obj.key
-		var fuel_percentage = Big.new(gv.g[lored_key].f.f.percent(gv.g[lored_key].f.t)).m(100)
+		if gv.active_scene != gv.Scene.ROOT:
+			break
+		
+		var lored_key = int(wish.obj.key)
+		var fuel_percentage = Big.new(lv.lored[lored_key].currentFuelPercent).m(100)
 		
 		wish.setCount(fuel_percentage)
 		
-		var t = Timer.new()
-		add_child(t)
 		t.start(0.1)
 		yield(t, "timeout")
-		t.queue_free()
+	
+	t.queue_free()
 
 func breakManager(wish: Wish):
 	
@@ -388,7 +405,7 @@ func breakManager(wish: Wish):
 		if gv.active_scene == gv.Scene.MAIN_MENU:
 			return
 		
-		var lored_key = wish.obj.key
+		var lored_key = int(wish.obj.key)
 		
 		if not gv.g[lored_key].working:
 			wish.setCount(Big.new(wish.obj.current_count).a(1))
@@ -416,7 +433,7 @@ func hoardManager(wish: Wish):
 		if gv.active_scene == gv.Scene.MAIN_MENU:
 			return
 		
-		var lored_key = wish.obj.key
+		var lored_key = int(wish.obj.key)
 		
 		if gv.g[lored_key].hold:
 			wish.setCount(Big.new(wish.obj.current_count).a(1))

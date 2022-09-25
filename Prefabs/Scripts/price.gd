@@ -2,67 +2,49 @@ extends MarginContainer
 
 
 
-var key: String
-var _owner: String
-
-var total: Big
+var resource: int
+var totalCost: Big
 
 onready var icon = get_node("m/h/icon/Sprite")
-onready var resource = get_node("m/h/resource")
-onready var lored_name = get_node("m/h/name")
+onready var gnResource = get_node("m/h/resource")
+onready var resourceName = get_node("m/h/name")
 onready var check = get_node("m/h/p/CheckBox")
 
 
-func _ready() -> void:
-	set_physics_process(false)
-
-func setup(__owner: String, _key, _name = "", _color = ""):
+func setup(_totalCost: Big, _resource: int):
 	
-	key = _key
-	_owner = __owner
+	resource = _resource
+	totalCost = _totalCost
+	var shorthand = gv.shorthandByResource[resource]
 	
 	yield(self, "ready")
 	
-	# text
-	if true:
-		
-		if _name == "":
-			_name = gv.g[key].name
-		lored_name.text = _name
-		
-		if _owner in gv.g.keys():
-			total = gv.g[_owner].cost[key].t
-		elif _owner in gv.up.keys():
-			total = gv.up[_owner].cost[key].t
-		elif _owner == "cac":
-			total = gv.cac_cost[key]
-	
-	# texture
-	icon.texture = gv.sprite[key]
-	
-	# color
-	if typeof(_color) == TYPE_STRING:
-		_color = gv.g[key].color
-	resource.self_modulate = _color
+	icon.texture = gv.sprite[shorthand]
+	resourceName.text = gv.resourceName[resource]
+	gnResource.self_modulate = gv.COLORS[shorthand]
 	
 	updateLoop()
 
 func updateLoop():
 	
-	while true:
+	var totalCostText = totalCost.toString()
+	var t = Timer.new()
+	add_child(t)
+	
+	while not is_queued_for_deletion():
 		
-		resource.text = gv.r[key].toString() + "/" + total.toString()
-		check.pressed = gv.r[key].greater_equal(total)
+		gnResource.text = gv.resource[resource].toString() + "/" + totalCostText
+		check.pressed = gv.resource[resource].greater_equal(totalCost)
 		
-		var t = Timer.new()
-		add_child(t)
 		t.start(gv.fps)
 		yield(t, "timeout")
-		t.queue_free()
+	
+	t.queue_free()
 
-var cont := {}
 func flash():
 	
-	cont["flash"] = gv.SRC["flash"].instance()
-	add_child(cont["flash"])
-	cont["flash"].flash(Color(1,0,0))
+	if gv.resource[resource].less(totalCost):
+		
+		var flash = gv.SRC["flash"].instance()
+		add_child(flash)
+		flash.flash(Color(1,0,0))
