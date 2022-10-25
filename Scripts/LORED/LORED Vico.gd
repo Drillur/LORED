@@ -2,20 +2,20 @@ extends MarginContainer
 
 
 
-onready var icon = get_node("m/v/top/v/mid/v2/resource/icon/Sprite")
-onready var iconShadow = get_node("m/v/top/v/mid/v2/resource/icon/Sprite/shadow")
-onready var gnResourceText = get_node("m/v/top/v/mid/v2/resource/v/amount")
-onready var animation = get_node("m/v/top/v/mid/animation/AnimatedSprite")
-onready var currentProgress = get_node("progress/current")
-onready var misc = get_node("misc")
-onready var fuelProgress = get_node("%Fuel Progress")
-onready var check = get_node("%Check") setget , getCheck
-onready var alert = get_node("%alert")
-onready var production = get_node("%production")
 onready var t = get_node("Timer")
+onready var misc = get_node("misc")
+onready var jobs = get_node("%jobs")
+onready var alert = get_node("%alert")
 onready var status = get_node("%status")
-func getCheck():
-	return check
+onready var production = get_node("%production")
+onready var asleepAlert = get_node("%asleepAlert")
+onready var check = get_node("%Check") setget , getCheck
+onready var currentProgress = get_node("progress/current")
+onready var fuelProgress_alarm = get_node("%Fuel Progress")
+onready var icon = get_node("m/v/top/v/mid/v2/resource/icon/Sprite")
+onready var animation = get_node("m/v/top/v/mid/animation/AnimatedSprite")
+onready var gnResourceText = get_node("m/v/top/v/mid/v2/resource/v/amount")
+onready var iconShadow = get_node("m/v/top/v/mid/v2/resource/icon/Sprite/shadow")
 
 onready var rt = get_node("/root/Root")
 
@@ -24,6 +24,10 @@ var manager: Node2D
 
 
 func _ready() -> void:
+	
+	alert.hide()
+	asleepAlert.hide()
+	
 	setup(lv.Type[name])
 	updateResourceTextTimer = Timer.new()
 	updateResourceTextTimer.one_shot = true
@@ -39,88 +43,42 @@ func _ready() -> void:
 func setup(type: int):
 	setColors(type)
 	#setIcon(type)
-	fuelProgress.setup(type, false)
+	fuelProgress_alarm.setup(type, false)
+	
 	animation.init(type)
 	if type in lv.smallerAnimationList:
 		animation.scale = Vector2(2,2)
 
 func setColors(type: int):
 	var loredColor = lv.lored[type].color
-	var fadedLoredColor = getFadedColor(type)
+	var fadedLoredColor = lv.getFadedColor(type)
 	get_node("bg_color").self_modulate = loredColor
 	get_node("m/v/top/v/mid/animation").modulate = fadedLoredColor
-	get_node("m/v/bot/m/h/info").modulate = fadedLoredColor
+	get_node("%info").modulate = fadedLoredColor
 	get_node("m/v/bot/m/h/sleep").modulate = fadedLoredColor
-	get_node("m/v/bot/m/h/export").modulate = fadedLoredColor
 	get_node("%level up/icon/Sprite").modulate = fadedLoredColor
 	get_node("%level up/Button").self_modulate = fadedLoredColor
 	get_node("progress/current/edge").self_modulate = loredColor
+	asleepAlert.modulate = loredColor
+	jobs.modulate = fadedLoredColor
+	#get_node("%fuel/Button").self_modulate = fadedLoredColor
 
-func getFadedColor(type: int) -> Color:
-	
-	match type:
-		lv.Type.STEEL:
-			return Color(0.823529, 0.898039, 0.92549)
-		lv.Type.HUMUS:
-			return Color(0.6, 0.3, 0)
-		lv.Type.GALENA:
-			return Color(0.701961, 0.792157, 0.929412)
-		lv.Type.CIGARETTES:
-			return Color(0.97, 0.8, 0.6)
-		lv.Type.LIQUID_IRON:
-			return Color(0.7, 0.94, .985) # Color(0.27, 0.888, .97)
-		lv.Type.WOOD:
-			return Color(0.77, 0.68, 0.6)
-		lv.Type.TOBACCO:
-			return Color(0.85, 0.75, 0.63)
-		lv.Type.GLASS:
-			return Color(0.81, 0.93, 1.0)
-		lv.Type.SEEDS:
-			return Color(.8,.8,.8)
-		lv.Type.TREES:
-			return Color(0.864746, 0.988281, 0.679443)
-		lv.Type.WATER:
-			return Color(0.570313, 0.859009, 1)
-		lv.Type.COAL:
-			return Color(0.9, 0.3, 1)
-		lv.Type.STONE:
-			return Color(0.788235, 0.788235, 0.788235)
-		lv.Type.IRON_ORE:
-			return Color(0.5, 0.788732, 1)
-		lv.Type.COPPER_ORE:
-			return Color(0.695313, 0.502379, 0.334076)
-		lv.Type.IRON:
-			return Color(0.496094, 0.940717, 1)
-		lv.Type.COPPER:
-			return Color(1, 0.862001, 0.496094)
-		lv.Type.GROWTH:
-			return Color(0.890041, 1, 0.5)
-		lv.Type.CONCRETE:
-			return Color(0.6, 0.6, 0.6)
-		lv.Type.JOULES:
-			return Color(1, 0.9572, 0.503906)
-		lv.Type.MALIGNANCY:
-			return Color(0.882353, 0.121569, 0.352941)
-		lv.Type.TARBALLS:
-			return Color(0.560784, 0.439216, 1)
-		lv.Type.OIL:
-			return Color(0.647059, 0.298039, 0.658824)
-		_:
-			var loredColor = lv.lored[type].color
-			return Color((1 - loredColor.r) / 2 + loredColor.r, (1 - loredColor.g) / 2 + loredColor.g, (1 - loredColor.b) / 2 + loredColor.b)
 
 
 func assignManager(_manager: Node2D):
 	manager = _manager
 
+func getCheck():
+	return check
 
 
 # - - - Signals
 
 func _on_level_pressed() -> void:
 	manager.purchase()
-func _on_export_pressed() -> void:
-	manager.switchExport()
+func _on_asleep_pressed() -> void:
+	manager.asleepClicked(true)
+	updateSleepButton()
 
 func _on_mouse_exited() -> void:
 	rt.get_node("global_tip")._call("no")
@@ -130,6 +88,10 @@ func _on_level_mouse_entered() -> void:
 	rt.get_node("global_tip")._call("lored level up", {"color": manager.color, "lored": manager.type})
 func _on_alert_mouse_entered() -> void:
 	rt.get_node("global_tip")._call("lored alert", {"type": manager.type, "alert": manager.activeAlert})
+func _on_jobs_mouse_entered() -> void:
+	rt.get_node("global_tip")._call("lored jobs", {"lored": manager.type})
+func _on_asleep_mouse_entered() -> void:
+	rt.get_node("global_tip")._call("lored asleep", {"lored": manager.type})
 
 func _on_visibility_changed() -> void:
 	if visible:
@@ -141,16 +103,18 @@ func _on_visibility_changed() -> void:
 
 func enterStandby():
 	
-	production.hide()
+	hideProduction()
 	hideProgress()
 	get_node("%info").hide()
 	get_node("%sleep").hide()
-	get_node("%export").hide()
+	jobs.hide()
 
 func enterActive():
 	get_node("%info").show()
-	get_node("%sleep").show()
-	get_node("%export").show()
+	if "upgrade_stone" in taq.completed_wishes:
+		get_node("%sleep").show()
+	if "jobs" in taq.completed_wishes:
+		jobs.show()
 
 
 
@@ -185,6 +149,9 @@ func updateProduction(resource: int = primaryResource):
 	production.show()
 	production.text = lv.netText(resource) + "/s"
 
+func hideProduction():
+	production.hide()
+
 func setStatusText(text: String):
 	if text == "":
 		status.hide()
@@ -193,7 +160,7 @@ func setStatusText(text: String):
 	status.show()
 
 func finishedWorkingForNow():
-	production.hide()
+	hideProduction()
 
 func stop():
 	t.stop()
@@ -222,6 +189,23 @@ func hideCheck():
 	check.hide()
 func showCheck():
 	check.show()
+
+func sleepUnlocked():
+	if manager.mode == lv.Mode.ACTIVE:
+		get_node("%sleep").show()
+func jobsUnlocked():
+	if manager.mode == lv.Mode.ACTIVE:
+		get_node("%jobs").show()
+
+func updateSleepButton():
+	get_node("%sleep/icon/asleep").visible = manager.asleep
+	get_node("%sleep/icon/awake").visible = not manager.asleep
+
+func flashSleep():
+	
+	var flash = gv.SRC["flash"].instance()
+	get_node("%sleep").add_child(flash)
+	flash.flash(Color(1,1,1))
 
 
 
@@ -302,10 +286,23 @@ func hideAlert():
 		if rt.get_node("global_tip").type == "lored alert":
 			_on_mouse_exited()
 func alert_lowFuel():
-	fuelProgress.show()
-	fuelProgress.update()
+	fuelProgress_alarm.show()
+	fuelProgress_alarm.update()
 func alert_lowFuel_stop():
-	fuelProgress.stop()
-	fuelProgress.hide()
+	fuelProgress_alarm.stop()
+	fuelProgress_alarm.hide()
+
+func alert_asleep():
+	asleepAlert.show()
+func alert_asleep_stop():
+	asleepAlert.hide()
+
+
+
+
+
+
+
+
 
 

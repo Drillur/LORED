@@ -48,6 +48,7 @@ func setupVico():
 func setupSignals():
 	gv.connect("fuelResourceEmpty", self, "fuelResourceEmpty")
 	gv.connect("throwFuel", self, "catchFuel")
+	gv.connect("exportChanged", self, "exportChanged")
 
 func setupElements():
 	
@@ -60,14 +61,17 @@ func setupElements():
 func justAppearedForTheFirstTime():
 	syncAll()
 	lored.syncJobs_all()
-	updatePrimaryResource(lored.jobs.values()[0])
+	updatePrimaryResource(getPrimaryResource())
 	enterStandby()
 
-func updatePrimaryResource(job: Job):
+func updatePrimaryResource(resource: int):
 	
-	vico.setIcon(job.primaryResourceIcon)
-	vico.primaryResource = job.primaryResource
-	vico.resourceTextColor = job.primaryResourceColor
+	if resource == -1:
+		return
+	
+	vico.primaryResource = resource
+	vico.setIcon(gv.sprite[gv.shorthandByResource[resource]])
+	vico.resourceTextColor = gv.COLORS[gv.shorthandByResource[resource]]
 
 
 
@@ -101,7 +105,7 @@ func syncQueue():
 	var newQueue := []
 	
 	if lored.queue.has(lv.Queue.FUEL_STORAGE):
-		setQuarterTank(Big.new(getFuelStorage()).d(4))
+		lored.setQuarterTank(Big.new(getFuelStorage()).d(4))
 	
 	if lored.queue.has(lv.Queue.FUEL_COST):
 		updateFuelDrain()
@@ -114,6 +118,8 @@ func syncQueue():
 	
 	for item in newQueue:
 		lored.queue(item)
+	
+	rt.get_node("global_tip").refresh()
 
 
 
@@ -133,9 +139,6 @@ func getSmart() -> bool:
 var asleep: bool setget , getAsleep
 func getAsleep() -> bool:
 	return lored.asleep
-var exporting: bool setget , getExporting
-func getExporting() -> bool:
-	return lored.exporting
 var working: bool setget , getWorking
 func getWorking() -> bool:
 	return lored.working
@@ -213,9 +216,6 @@ var fuelStorageText: String setget , getFuelStorageText
 var currentFuel: Big setget setCurrentFuel, getCurrentFuel
 var currentFuelText: String setget , getCurrentFuelText
 var currentFuelPercent: float setget , getCurrentFuelPercent
-var quarterTank: Big setget setQuarterTank
-var quarterTankText: String setget , getQuarterTankText
-var quarterTankUpdated := true
 func getFuelStorage() -> Big:
 	return lored.fuelStorage
 func getFuelStorageText() -> String:
@@ -230,16 +230,13 @@ func getCurrentFuelPercent() -> float:
 	return lored.currentFuelPercent
 func fullFuel() -> bool:
 	return lored.currentFuel.greater_equal(lored.fuelStorage)
-func setQuarterTank(val: Big):
-	quarterTank = val
-	quarterTankUpdated = true
+
+var quarterTank: Big setget , getQuarterTank
+var quarterTankText: String setget , getQuarterTankText
+func getQuarterTank() -> Big:
+	return lored.quarterTank
 func getQuarterTankText() -> String:
-	if quarterTankUpdated:
-		setQuarterTankText()
-	return quarterTankText
-func setQuarterTankText():
-	quarterTankUpdated = false
-	quarterTankText = quarterTank.toString()
+	return lored.quarterTankText
 
 
 var crit: float setget , getCrit
@@ -293,19 +290,54 @@ func getShorthandKey():
 
 func getRequiredResource(job: int, resource: int) -> Big:
 	return lored.jobs[job].getRequiredResource(resource)
+func pronoun(word: String):
 
-func pronoun(index: int):
-	return lored.pronoun[index]
+	if word in ["he", "she"]:
+		return lored.pronoun[0]
+	elif word in ["him", "her"]:
+		return lored.pronoun[1]
+	elif word in ["his", "hers"]:
+		return lored.pronoun[2]
+	return "i suck"
+
+func getPrimaryResource() -> int:
+	return lored.jobs.values()[0].primaryResource
+
+var totalJobTime: float setget , getTotalJobTime
+func getTotalJobTime() -> float:
+	return lored.totalJobTime
+
+var usedResources: Array setget , getUsedResources
+func getUsedResources() -> Array:
+	return lored.usedResources
+
+var queue: Array setget , getQueue
+func getQueue() -> Array:
+	return lored.queue
 
 
 
 # - - - Duplicate functions
+
+func editValue(attribute: int, typeOfEdit: int, item: int, amount, index = 0):
+	lored.editValue(attribute, typeOfEdit, item, amount, index)
 
 func syncCostModifier():
 	lored.syncCostModifier()
 
 func getJobDuration(index: int) -> float:
 	return lored.getJobDuration(index)
+
+func setHasteValue(folder: int, item: int, amount):
+	lored.setHasteValue(folder, item, amount)
+func setOutputValue(folder: int, item: int, amount):
+	lored.setOutputValue(folder, item, amount)
+
+func updateOfflineNet(resource: int):
+	lored.updateOfflineNet(resource)
+
+func getOfflineEarnings(timeOffline: int):
+	lored.getOfflineEarnings(timeOffline)
 
 
 
@@ -315,10 +347,16 @@ func unlock():
 	lored.unlocked = true
 	vico.show()
 
+func sleepUnlocked():
+	vico.sleepUnlocked()
+func jobsUnlocked():
+	vico.jobsUnlocked()
+
 func purchase():
 	if canAffordPurchase():
 		lored.prePurchase()
 		lored.purchased()
+		updateVicoCheck()
 		rt.get_node("global_tip").refresh()
 		vico.levelUpFlash()
 		vico.levelUpText()
@@ -329,15 +367,23 @@ func forcePurchase():
 	syncQueue()
 
 
-func switchExport():
-	if getExporting():
-		stopExport()
+
+func asleepClicked(manual := false):
+	if getAsleep():
+		wakeUp()
 	else:
-		resumeExport()
-func stopExport():
-	lored.stopExport()
-func resumeExport():
-	lored.resumeExport()
+		putToSleep()
+		watchSleepTime()
+	if manual:
+		rt.get_node("global_tip").refresh("lored asleep")
+func putToSleep():
+	lored.asleep = true
+func wakeUp():
+	lored.asleep = false
+
+
+func flashSleep():
+	vico.flashSleep()
 
 
 
@@ -350,15 +396,18 @@ func watchCost():
 	
 	while not is_queued_for_deletion():
 		
-		if canAffordPurchase():
-			vico.check.show()
-		else:
-			vico.check.hide()
+		updateVicoCheck()
 		
 		t.start(0.25 if mode == lv.Mode.ACTIVE else 1)
 		yield(t, "timeout")
 	
 	t.queue_free()
+
+func updateVicoCheck():
+	if canAffordPurchase():
+		vico.showCheck()
+	else:
+		vico.hideCheck()
 
 func watchCurrentFuel():
 	
@@ -378,6 +427,42 @@ func watchCurrentFuel():
 	
 	t.queue_free()
 
+var watchingSleepTime := false
+func watchSleepTime():
+	
+	if lv.AlertType.ASLEEP in alerts:
+		return
+	
+	if watchingSleepTime:
+		return
+	
+	if not getAsleep():
+		return
+	
+	watchingSleepTime = true
+	var sleepTime := 0
+	
+	var t = Timer.new()
+	add_child(t)
+	
+	while not is_queued_for_deletion():
+		
+		t.start(1)
+		yield(t,"timeout")
+		
+		if not getAsleep():
+			break
+		
+		sleepTime += 1
+		
+		if sleepTime >= 30:
+			newAlert(lv.AlertType.ASLEEP)
+			break
+	
+	watchingSleepTime = false
+	t.queue_free()
+
+
 
 
 # - - - Checkers
@@ -390,6 +475,12 @@ func canAffordPurchase() -> bool:
 			return false
 	
 	return true
+
+func exportChanged(resource: int):
+	if not resource in lored.usedResources:
+		return
+	if resource in gv.resourcesNotBeingExported:
+		newAlert(lv.AlertType.REQUIRED_RESOURCE_NOT_EXPORTING)
 
 
 
@@ -422,7 +513,8 @@ func stopAlert(type: int):
 	
 	alerts.erase(type)
 	
-	resumeUnfinishedAlert()
+	if type == activeAlert:
+		resumeUnfinishedAlert()
 
 func resumeUnfinishedAlert():
 	for alert in alerts:
@@ -437,6 +529,8 @@ func allAlertsGone():
 func startAlertProcess(type: int):
 	activeAlert = type
 	match type:
+		lv.AlertType.ASLEEP:
+			alert_asleep()
 		lv.AlertType.LOW_FUEL:
 			alert_lowFuel()
 func stopAlertProcess(type: int):
@@ -465,6 +559,27 @@ func alert_lowFuel():
 func alert_lowFuel_stop():
 	vico.alert_lowFuel_stop()
 
+func alert_asleep():
+	
+	vico.alert_asleep()
+	
+	var t = Timer.new()
+	add_child(t)
+	
+	while not is_queued_for_deletion():
+		
+		if not getAsleep():
+			stopAlert(lv.AlertType.ASLEEP)
+			alert_asleep_stop()
+			break
+		
+		t.start(1)
+		yield(t, "timeout")
+	
+	t.queue_free()
+func alert_asleep_stop():
+	vico.alert_asleep_stop()
+
 
 
 # - - - Modes
@@ -476,8 +591,10 @@ func enterStandby():
 	# called by Vico when it becomes visible.
 	mode = lv.Mode.STANDBY
 	vico.enterStandby()
+	gv.append(gv.list.lored["unlocked and inactive"], type)
 
 func enterActive():
+	gv.list.lored["unlocked and inactive"].erase(type)
 	mode = lv.Mode.ACTIVE
 	vico.enterActive()
 	watchCurrentFuel()
@@ -513,6 +630,9 @@ func repeatedlyLookForWork():
 	while getWorking() == false:
 		jobTimer.start(1)
 		yield(jobTimer, "timeout")
+		if getAsleep():
+			cleanUpIfAsleep()
+			continue
 		if canAndShouldRefuel():
 			workJob(nextJob)
 		else:
@@ -541,10 +661,13 @@ func canStartJob(job: Job) -> bool:
 						var coloredResourceName = "[color=#" + gv.COLORS[gv.shorthandByResource[getFuelResource()]].to_html() + "]" + gv.resourceName[getFuelResource()] + "[/color]"
 						updateStatus("Letting " + coloredResourceName + "\ncatch up.")
 						return false
-		if gv.resource[getFuelResource()].less(quarterTank):
+		var requiredFuel = lored.refuelJob.requiredResourcesBits[getFuelResource()].total
+		if gv.resource[getFuelResource()].less(getQuarterTank()):
 			reasonWhyCannotStartJob = lv.ReasonCannotBeginJob.INSUFFICIENT_FUEL_RESOURCE
 			var coloredResourceName = "[color=#" + gv.COLORS[gv.shorthandByResource[getFuelResource()]].to_html() + "]" + gv.resourceName[getFuelResource()] + "[/color]"
-			updateStatus("Awaiting " + getQuarterTankText() + " available " + coloredResourceName + ".")
+			updateStatus("Awaiting " + requiredFuel.toString() + " available " + coloredResourceName + ".")
+			updatePrimaryResource(getFuelResource())
+			vico.hideProduction()
 			return false
 	
 	if lored.currentFuel.less(job.requiredFuel):
@@ -553,8 +676,9 @@ func canStartJob(job: Job) -> bool:
 	
 	if not job.haveAndCanUseRequiredResources():
 		# reasonWhyCannotStartJob is set in job.haveAndCanUseRequiredResources()
+		if reasonWhyCannotStartJob == lv.ReasonCannotBeginJob.LORED_NOT_EXPORTING:
+			updateStatus("Required resource(s) are not being exported.")
 		return false
-	
 	reasonWhyCannotStartJob = -1
 	lored.working = true
 	return true
@@ -565,18 +689,17 @@ func workJob(job: Job):
 	
 	if job.requiresResource:
 		takeRequiredResources(job.requiredResources)
-		updateDrainForRequiredResources(job.drainRate)
 	takeRequiredFuelFromStorage(job.requiredFuel)
-	
-	if job.type == lv.Job.REFUEL:
-		gv.subtractFromResource(job.primaryResource, quarterTank)
 	
 	var currentTime = OS.get_ticks_msec()
 	vico.jobStarted(job.duration, currentTime)
 	
-	updatePrimaryResource(job)
-	vico.updateProduction()
-	updateStatus(job.actionText)
+	updatePrimaryResource(job.primaryResource)
+	if job.type == lv.Job.REFUEL:
+		vico.hideProduction()
+	else:
+		vico.updateProduction()
+	updateStatus(job.vicoText)
 	
 	
 	
@@ -595,19 +718,20 @@ func workJob(job: Job):
 		resetCritRolls()
 	
 	if job.type == lv.Job.REFUEL:
-		lored.currentFuel.a(quarterTank)
+		lored.currentFuel.a(getQuarterTank())
 	
 	syncQueue()
+	
+	if getAsleep():
+		quitWorkingForNow()
+		return
 	
 	if canAndShouldRefuel():
 		workJob(nextJob)
 	elif canStartAnotherJob():
 		workJob(nextJob)
 	else:
-		lored.working = false
-		vico.hideProgress()
-		repeatedlyLookForWork()
-		lored.finishedWorkingForNow()
+		quitWorkingForNow()
 
 func rollForCrit() -> float:
 	var critMultiplier = 1.0
@@ -629,9 +753,6 @@ func takeRequiredFuelFromStorage(requiredFuel: Big):
 func takeRequiredResources(_requiredResources: Dictionary):
 	for resource in _requiredResources:
 		gv.subtractFromResource(resource, _requiredResources[resource])
-func updateDrainForRequiredResources(drainRate: Dictionary):
-	for resource in drainRate:
-		lv.updateDrain(resource, type, drainRate[resource])
 
 func giveProducedResources(_producedResources: Dictionary):
 	for resource in _producedResources:
@@ -674,6 +795,7 @@ func canAndShouldRefuel() -> bool:
 	
 	if canStartJob(lored.refuelJob):
 		nextJob = lored.refuelJob
+		updatePrimaryResource(getPrimaryResource())
 		return true
 	
 	return false
@@ -682,6 +804,17 @@ func updateRequiredFuelForAllJobs():
 	for job in lored.jobs.values():
 		job.updateRequiredFuel()
 
+func quitWorkingForNow():
+	lored.working = false
+	vico.hideProgress()
+	repeatedlyLookForWork()
+	lored.finishedWorkingForNow()
+	cleanUpIfAsleep()
+
+func cleanUpIfAsleep():
+	if getAsleep():
+		vico.hideProduction()
+		updateStatus("")
 
 
 # - - - Status

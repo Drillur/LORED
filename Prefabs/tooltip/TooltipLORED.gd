@@ -29,8 +29,6 @@ func init(_lored_key: int):
 	lored_name.text = lored.name
 	if lored.asleep:
 		tag_halt.show()
-	if not lored.exporting:
-		tag_hold.show()
 	
 	lored_level.self_modulate = lored.color
 	

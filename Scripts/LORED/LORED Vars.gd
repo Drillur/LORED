@@ -51,12 +51,19 @@ enum Num {
 	DIVIDE,
 	ADD,
 	ADD_FUEL,
+	SUBTRACT,
 	FROM_LEVELS,
 	FROM_UPGRADES,
 	BY_LORED_OUTPUT,
 	BY_LORED_INPUT,
 	BY_LIMIT_BREAK,
 	BY_LORED_HASTE,
+	BY_LORED_FUEL_STORAGE,
+}
+enum Attribute {
+	HASTE,
+	OUTPUT,
+	COST,
 }
 
 enum Job {
@@ -120,10 +127,10 @@ enum Queue {
 }
 
 enum AlertType {
+	ASLEEP,
 	LOW_FUEL,
 	REQUIRED_RESOURCE_NOT_EXPORTING,
 	NEGATIVE_PRODUCTION,
-	ASLEEP,
 }
 
 enum FuelResourceDrain {
@@ -150,7 +157,7 @@ enum ReasonCannotBeginJob {
 
 var DEFAULT_KEY_LOREDS := [Type.STONE, Type.CONCRETE, Type.MALIGNANCY, Type.WATER, Type.LEAD, Type.TREES, Type.SOIL, Type.STEEL, Type.WIRE, Type.GLASS, Type.TUMORS, Type.WOOD]
 var loreds_required_for_s2_autoup_upgrades_to_begin_purchasing := [Type.SEEDS, Type.TREES, Type.WATER, Type.SOIL, Type.HUMUS, Type.SAND, Type.GLASS, Type.LIQUID_IRON, Type.STEEL, Type.HARDWOOD, Type.AXES, Type.WOOD, Type.DRAW_PLATE, Type.WIRE]
-var smallerAnimationList := [
+const smallerAnimationList := [
 	Type.STONE,
 	Type.COAL,
 	Type.IRON_ORE,
@@ -340,3 +347,91 @@ func reportNet(resource: int):
 	reportDrain(resource)
 
 
+func getOfflineEarnings(timeOffline: int):
+	gv.clearOfflineEarnings()
+	for f in lored.values():
+		f.getOfflineEarnings(timeOffline)
+	logOfflineEarnings()
+
+func logOfflineEarnings():
+	var data := {}
+	for resource in gv.offlineEarnings:
+		var text = "+" if gv.offlineEarnings[resource][1] == 1 else "-"
+		data[resource] = text + gv.offlineEarnings[resource][0].toString()
+	LogManager.log(LogManager.Type.OFFLINE_EARNINGS, var2str(data))
+
+#var offlineEarnings: Dictionary setget , getOfflineEarnings
+#func getOfflineEarnings() -> Dictionary:
+#	for f in lored.values():
+#		f.
+#	pass
+
+
+
+
+# - - - Handy
+
+func getFadedColor(type: int) -> Color:
+	
+	match type:
+		lv.Type.STEEL:
+			return Color(0.823529, 0.898039, 0.92549)
+		lv.Type.HUMUS:
+			return Color(0.6, 0.3, 0)
+		lv.Type.GALENA:
+			return Color(0.701961, 0.792157, 0.929412)
+		lv.Type.CIGARETTES:
+			return Color(0.97, 0.8, 0.6)
+		lv.Type.LIQUID_IRON:
+			return Color(0.7, 0.94, .985) # Color(0.27, 0.888, .97)
+		lv.Type.WOOD:
+			return Color(0.77, 0.68, 0.6)
+		lv.Type.TOBACCO:
+			return Color(0.85, 0.75, 0.63)
+		lv.Type.GLASS:
+			return Color(0.81, 0.93, 1.0)
+		lv.Type.SEEDS:
+			return Color(.8,.8,.8)
+		lv.Type.TREES:
+			return Color(0.864746, 0.988281, 0.679443)
+		lv.Type.WATER:
+			return Color(0.570313, 0.859009, 1)
+		lv.Type.COAL:
+			return Color(0.9, 0.3, 1)
+		lv.Type.STONE:
+			return Color(0.788235, 0.788235, 0.788235)
+		lv.Type.IRON_ORE:
+			return Color(0.5, 0.788732, 1)
+		lv.Type.COPPER_ORE:
+			return Color(0.695313, 0.502379, 0.334076)
+		lv.Type.IRON:
+			return Color(0.496094, 0.940717, 1)
+		lv.Type.COPPER:
+			return Color(1, 0.862001, 0.496094)
+		lv.Type.GROWTH:
+			return Color(0.890041, 1, 0.5)
+		lv.Type.CONCRETE:
+			return Color(0.6, 0.6, 0.6)
+		lv.Type.JOULES:
+			return Color(1, 0.9572, 0.503906)
+		lv.Type.MALIGNANCY:
+			return Color(0.882353, 0.121569, 0.352941)
+		lv.Type.TARBALLS:
+			return Color(0.560784, 0.439216, 1)
+		lv.Type.OIL:
+			return Color(0.647059, 0.298039, 0.658824)
+		_:
+			var loredColor = lv.lored[type].color
+			return Color((1 - loredColor.r) / 2 + loredColor.r, (1 - loredColor.g) / 2 + loredColor.g, (1 - loredColor.b) / 2 + loredColor.b)
+
+
+
+
+# - - - Actions
+
+func sleepUnlocked():
+	for x in lored.values():
+		x.sleepUnlocked()
+func jobsUnlocked():
+	for x in lored.values():
+		x.jobsUnlocked()

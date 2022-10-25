@@ -785,7 +785,10 @@ func upgrade_purchased(key: String, routine := []):
 		if key == "ROUTINE":
 			_text = "- " + routine[1].toString()
 		
-		cont_flying_texts["(upgrade purchased flying text)" + str(i)].init({"text": _text, "icon": gv.sprite[x], "color": gv.g[x].color, "life": 20})
+		#on the line below: invalid get index '2' (on base; dictionary). my guess is the sprite fucked up. but also gv.g needs to be fixed.
+		var icon = gv.sprite[gv.shorthandByResource[x]]
+		
+		cont_flying_texts["(upgrade purchased flying text)" + str(i)].init({"text": _text, "icon": icon, "color": gv.resourceColor[x], "life": 20})
 		
 		if i == 0:
 			cont_flying_texts["(upgrade purchased flying text)" + str(i)].rect_position = Vector2(

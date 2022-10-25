@@ -52,10 +52,22 @@ func multiplyValue(folder: int, item: int, amount):
 	# folder example: MULTIPLIER
 	# item example: FROM_LEVELS
 	bits[folder][item].m(amount)
+func divideValue(folder: int, item: int, amount):
+	bits[folder][item].d(amount)
+func addToValue(folder: int, item: int, amount):
+	bits[folder][item].a(amount)
+func subtractFromValue(folder: int, item: int, amount):
+	bits[folder][item].s(amount)
 
 
 func setValue(folder: int, item: int, amount):
 	bits[folder][item] = Big.new(amount)
+
+func setValue_inferValueByLOREDType(folder: int, lored: int):
+	if lv.Num.BY_LORED_FUEL_STORAGE in bits[folder]:
+		bits[folder][lv.Num.BY_LORED_FUEL_STORAGE] = Big.new(lv.lored[lored].fuelStorage)
+	if lv.Num.BY_LORED_INPUT in bits[folder]:
+		bits[folder][lv.Num.BY_LORED_INPUT] = Big.new(lv.lored[lored].input)
 
 func changeBase(val: Big):
 	base = val

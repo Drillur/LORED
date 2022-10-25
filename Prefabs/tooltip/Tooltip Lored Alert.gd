@@ -13,16 +13,41 @@ func setup(_lored: int, alert: int):
 	updateMethod = "update" + key
 	
 	get_node("%" + key).show()
-	get_node("%sub_" + key).show()
+	get_node("%icon " + key).show()
 	
 	yield(self, "ready")
 	
 	match alert:
+		lv.AlertType.REQUIRED_RESOURCE_NOT_EXPORTING:
+			
+			get_node("%top text").text = "Required Resource Not Exporting"
+			get_node("%sub").hide()
+			
+			var blockedResource: int
+			
+			for resource in lv.lored[lored].usedResources:
+				if resource in gv.resourcesNotBeingExported:
+					blockedResource = resource
+					break
+			
+			var icon = gv.sprite[gv.shorthandByResource[blockedResource]]
+			get_node("%iconRequiredResource").texture = icon
+			get_node("%iconRequiredResource/shadow").texture = icon
+			
+			get_node("%textRequiredResource").text = gv.resourceName[blockedResource]
+		
+		lv.AlertType.ASLEEP:
+			get_node("%top text").text = "Asleep"
+			get_node("%sub_" + key).show()
+			rect_min_size.x = 244
+			return
 		lv.AlertType.LOW_FUEL:
 			
 			rect_min_size.x = 268
 			var resourceColor = gv.COLORS[gv.shorthandByResource[lv.lored[lored].fuelResource]]
+			get_node("%sub_" + key).show()
 			
+			get_node("%top text").text = "Low Fuel"
 			get_node("%fuelResource").text = gv.resourceName[lv.lored[lored].fuelResource]
 			get_node("%fuelResource").self_modulate = resourceColor
 			get_node("%fuelCost").self_modulate = resourceColor

@@ -65,6 +65,11 @@ _global_script_classes=[ {
 "path": "res://Scripts/LORED/LORED Vars.gd"
 }, {
 "base": "Reference",
+"class": "Log",
+"language": "GDScript",
+"path": "res://Scripts/Log/Log.gd"
+}, {
+"base": "Reference",
 "class": "Ob",
 "language": "GDScript",
 "path": "res://Scripts/classes/Object.gd"
@@ -121,6 +126,7 @@ _global_script_class_icons={
 "LORED": "",
 "LOREDManager": "",
 "LOREDVars": "",
+"Log": "",
 "Ob": "",
 "Purchasable": "",
 "Upgrade": "",
@@ -146,9 +152,7 @@ config/Version="3.0.0"
 gv="*res://Scripts/autoload/_vars.gd"
 taq="*res://Scripts/autoload/WishManager.gd"
 fval="*res://Scripts/autoload/format_value.gd"
-sm="*res://Scripts/Managers/Cavern/SpellManager.gd"
-bm="*res://Scripts/Managers/Cavern/BuffManager.gd"
-um="*res://Scripts/Managers/Cavern/UnitManager.gd"
+LogManager="*res://Scripts/Log/LogManager.gd"
 lv="*res://Scripts/LORED/LORED Vars.gd"
 diff="*res://Scripts/Managers/Difficulty.gd"
 SaveManager="*res://Scripts/Managers/SaveManager.gd"

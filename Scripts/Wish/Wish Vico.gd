@@ -67,7 +67,10 @@ func _on_Button_gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.pressed:
 		match event.button_index:
 			BUTTON_LEFT:
-				turnIn()
+				if ready:
+					turnIn()
+				else:
+					flashRequirements()
 			BUTTON_RIGHT:
 				if discard_prompted:
 					discard()
@@ -121,7 +124,7 @@ func discard():
 	wish.die()
 	
 	gv.resource[gv.Resource.GRIEF].a(1)
-	taq.increaseProgress(gv.Objective.RESOURCES_PRODUCED, "grief")
+	taq.increaseProgress(gv.Objective.RESOURCES_PRODUCED, str(gv.Resource.GRIEF))
 
 func turnedInOrDiscarded():
 	complete = true
@@ -215,3 +218,9 @@ func update():
 	if update_queued:
 		update()
 
+
+
+func flashRequirements():
+	if wish.obj.type == gv.Objective.BREAK:
+		var lored = wish.objKey()
+		lv.lored[lored].flashSleep()

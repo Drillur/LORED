@@ -4,30 +4,31 @@ extends MarginContainer
 onready var v = get_node("h/v")
 onready var time = get_node("%time")
 
-var key: int
+var forUpgrade := false
+var key = 0
 
 var cont := {}
 
-func setup(_key: int, cost: Dictionary):
+func setupUpgrade(_key, cost: Dictionary):
+	forUpgrade = true
+	key = _key
+	for x in cost:
+		cont[x] = gv.SRC["price"].instance()
+		cont[x].setup(cost[x].t, x)
+		v.add_child(cont[x])
+	time()
+
+func setup(_key, cost: Dictionary):
 	
 	key = _key
 	
-	var i := 0
 	for x in cost:
 		
 		cont[x] = gv.SRC["price"].instance()
 		
 		cont[x].setup(cost[x], x)
 		
-		
-		# alternate backgrounds
-		#if i % 2 == 1:
-		#	cont[x].get_node("bg").show()
-		#	#cont[x].get_node("bg").self_modulate = gv.COLORS[x]
-		
 		v.add_child(cont[x])
-		
-		i += 1
 	
 	time()
 
@@ -59,9 +60,6 @@ func time():
 
 func time_remaining_in_seconds(resource: int, total_amount: Big):
 	
-	if lv.lored[key].asleep:
-		return Big.new(0)
-	
 	var netArray = lv.net(resource)
 	var net = netArray[0]
 	var netSign = netArray[1]
@@ -71,12 +69,8 @@ func time_remaining_in_seconds(resource: int, total_amount: Big):
 	
 	
 	var delta: Big = Big.new(total_amount).s(gv.resource[resource])
-	var incoming_amount := Big.new(0)
 	
-	if lv.lored[key].working:
-		incoming_amount.a(lv.lored[key].output)
-	
-	return Big.new(delta).s(incoming_amount).d(net)
+	return Big.new(delta).d(net)
 
 
 func flash():

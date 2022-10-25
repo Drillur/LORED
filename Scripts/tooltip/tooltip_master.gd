@@ -1,9 +1,6 @@
 extends Node2D
 
 var prefab := {
-	"task step" : preload("res://Prefabs/task/task_step.tscn"),
-	"task rr" : preload("res://Prefabs/task/task_rr.tscn"),
-	"task r" : preload("res://Prefabs/task/task_r.tscn"),
 	"dtext" : preload("res://Prefabs/dtext.tscn"),
 	"task complete" : preload("res://Prefabs/lored_buy.tscn"),
 	"tooltip" : preload("res://Prefabs/tooltip/tooltip.tscn"),
@@ -35,8 +32,13 @@ func _call(source : String, _other := {}) -> void:
 
 
 
-func refresh():
-	var _type = type
-	var _other = other
+func refresh(currentType: String = type):
+	
+	if not tip_filled:
+		return
+	if currentType != type:
+		return
+	
+	var currentOther = other
 	_call("no")
-	_call(_type, _other)
+	_call(currentType, currentOther)

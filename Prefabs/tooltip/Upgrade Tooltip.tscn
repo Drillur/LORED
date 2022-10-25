@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=2]
+[gd_scene load_steps=19 format=2]
 
 [ext_resource path="res://Fonts/Roboto-BlackItalic.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Fonts/Roboto-Medium.ttf" type="DynamicFontData" id=2]
@@ -6,37 +6,36 @@
 [ext_resource path="res://Fonts/Roboto-Black.ttf" type="DynamicFontData" id=4]
 [ext_resource path="res://Prefabs/upgrade/upgrade icon.tscn" type="PackedScene" id=5]
 [ext_resource path="res://Prefabs/tooltip/PriceContainer.tscn" type="PackedScene" id=6]
+[ext_resource path="res://Sprites/Menu/autobuy.png" type="Texture" id=7]
 [ext_resource path="res://Prefabs/tooltip/Upgrade Tooltip.gd" type="Script" id=8]
 
-[sub_resource type="StyleBoxFlat" id=1]
+[sub_resource type="StyleBoxFlat" id=8]
 bg_color = Color( 1, 1, 1, 0.0509804 )
+border_color = Color( 1, 1, 1, 0.65 )
 expand_margin_left = 10.0
 expand_margin_right = 10.0
 expand_margin_top = 10.0
 expand_margin_bottom = 10.0
 
-[sub_resource type="StyleBoxFlat" id=2]
-bg_color = Color( 1, 0.658824, 0, 0.2 )
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color( 1, 0.658824, 0, 0.4 )
-expand_margin_left = 5.0
-expand_margin_right = 5.0
-expand_margin_top = 5.0
-expand_margin_bottom = 5.0
-anti_aliasing = false
-
 [sub_resource type="DynamicFont" id=3]
-size = 12
-outline_color = Color( 0, 0, 0, 1 )
-font_data = ExtResource( 3 )
-
-[sub_resource type="DynamicFont" id=4]
 size = 17
 outline_color = Color( 0, 0, 0, 1 )
 font_data = ExtResource( 1 )
+
+[sub_resource type="StyleBoxFlat" id=10]
+bg_color = Color( 1, 1, 1, 0.03 )
+border_color = Color( 1, 1, 1, 0.65 )
+expand_margin_left = 10.0
+expand_margin_right = 10.0
+expand_margin_top = 10.0
+expand_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxFlat" id=15]
+draw_center = false
+
+[sub_resource type="DynamicFont" id=14]
+size = 13
+font_data = ExtResource( 2 )
 
 [sub_resource type="DynamicFont" id=5]
 size = 12
@@ -46,11 +45,11 @@ font_data = ExtResource( 3 )
 size = 14
 font_data = ExtResource( 4 )
 
-[sub_resource type="DynamicFont" id=7]
+[sub_resource type="DynamicFont" id=12]
 size = 12
 font_data = ExtResource( 2 )
 
-[sub_resource type="StyleBoxFlat" id=8]
+[sub_resource type="StyleBoxFlat" id=13]
 bg_color = Color( 0.152344, 0, 0, 1 )
 border_width_left = 1
 border_width_top = 1
@@ -67,56 +66,103 @@ size = 13
 outline_color = Color( 0, 0, 0, 1 )
 font_data = ExtResource( 1 )
 
-[sub_resource type="DynamicFont" id=10]
-size = 13
-font_data = ExtResource( 2 )
-
-[node name="Upgrade Tooltip" type="MarginContainer"]
-margin_right = 240.0
-margin_bottom = 94.0
-rect_min_size = Vector2( 240, 0 )
-custom_constants/margin_right = 12
-custom_constants/margin_top = 12
-custom_constants/margin_left = 12
-custom_constants/margin_bottom = 12
+[node name="Tooltip Level Up" type="MarginContainer"]
+margin_right = 94.0
+margin_bottom = 112.0
+custom_constants/margin_right = 2
+custom_constants/margin_top = 2
+custom_constants/margin_left = 2
+custom_constants/margin_bottom = 2
 script = ExtResource( 8 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="v" type="VBoxContainer" parent="."]
-margin_left = 12.0
-margin_top = 12.0
-margin_right = 228.0
-margin_bottom = 102.0
-custom_constants/separation = 10
-
-[node name="header" type="MarginContainer" parent="v"]
-margin_right = 216.0
-margin_bottom = 42.0
-custom_constants/margin_top = 0
+[node name="m" type="MarginContainer" parent="."]
+margin_left = 2.0
+margin_top = 2.0
+margin_right = 92.0
+margin_bottom = 110.0
+custom_constants/margin_right = 10
+custom_constants/margin_top = 10
+custom_constants/margin_left = 10
 custom_constants/margin_bottom = 10
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="bg" type="Panel" parent="v/header"]
-margin_right = 216.0
-margin_bottom = 32.0
-custom_styles/panel = SubResource( 1 )
-
-[node name="v" type="VBoxContainer" parent="v/header"]
-margin_right = 216.0
-margin_bottom = 32.0
-size_flags_horizontal = 3
+[node name="v" type="VBoxContainer" parent="m"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 80.0
+margin_bottom = 98.0
 custom_constants/separation = 10
+
+[node name="v" type="VBoxContainer" parent="m/v"]
+margin_right = 70.0
+margin_bottom = 32.0
+custom_constants/separation = 20
+
+[node name="top" type="MarginContainer" parent="m/v/v"]
+margin_right = 70.0
+margin_bottom = 32.0
+
+[node name="bg" type="Panel" parent="m/v/v/top"]
+margin_right = 70.0
+margin_bottom = 32.0
+custom_styles/panel = SubResource( 8 )
+
+[node name="v" type="VBoxContainer" parent="m/v/v/top"]
+margin_right = 70.0
+margin_bottom = 32.0
+
+[node name="m" type="MarginContainer" parent="m/v/v/top/v"]
+margin_right = 70.0
+margin_bottom = 32.0
+custom_constants/margin_right = 0
+custom_constants/margin_top = 0
+custom_constants/margin_left = 0
+custom_constants/margin_bottom = 0
+
+[node name="h" type="HBoxContainer" parent="m/v/v/top/v/m"]
+margin_right = 70.0
+margin_bottom = 32.0
+custom_constants/separation = 8
 alignment = 1
 
-[node name="refundable" type="MarginContainer" parent="v/header/v"]
+[node name="icon" parent="m/v/v/top/v/m/h" instance=ExtResource( 5 )]
+unique_name_in_owner = true
+size_flags_vertical = 4
+
+[node name="upgradeName" type="Label" parent="m/v/v/top/v/m/h"]
+unique_name_in_owner = true
+margin_left = 40.0
+margin_top = 5.0
+margin_right = 70.0
+margin_bottom = 26.0
+size_flags_horizontal = 4
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 3 )
+text = "test"
+valign = 1
+
+[node name="sub" type="MarginContainer" parent="m/v/v"]
+unique_name_in_owner = true
 visible = false
-margin_left = 66.0
-margin_right = 150.0
-margin_bottom = 25.0
+margin_top = 52.0
+margin_right = 93.0
+margin_bottom = 52.0
+custom_constants/margin_right = 0
+custom_constants/margin_top = 0
+custom_constants/margin_left = 0
+custom_constants/margin_bottom = 0
+
+[node name="bg" type="Panel" parent="m/v/v/sub"]
+margin_right = 93.0
+custom_styles/panel = SubResource( 10 )
+
+[node name="v" type="VBoxContainer" parent="m/v/v/sub"]
+margin_right = 93.0
+
+[node name="refundable" type="MarginContainer" parent="m/v/v/sub/v"]
+unique_name_in_owner = true
+visible = false
+margin_right = 115.0
+margin_bottom = 28.0
 rect_min_size = Vector2( 66, 0 )
 size_flags_horizontal = 4
 size_flags_vertical = 4
@@ -125,111 +171,128 @@ custom_constants/margin_top = 5
 custom_constants/margin_left = 5
 custom_constants/margin_bottom = 5
 
-[node name="Panel" type="Panel" parent="v/header/v/refundable"]
+[node name="h" type="HBoxContainer" parent="m/v/v/sub/v/refundable"]
 margin_left = 5.0
 margin_top = 5.0
-margin_right = 79.0
-margin_bottom = 20.0
-mouse_filter = 2
-custom_styles/panel = SubResource( 2 )
+margin_right = 110.0
+margin_bottom = 23.0
+custom_constants/separation = 8
+alignment = 1
 
-[node name="Label" type="Label" parent="v/header/v/refundable"]
-margin_left = 5.0
-margin_top = 5.0
-margin_right = 79.0
-margin_bottom = 20.0
-size_flags_horizontal = 4
-custom_fonts/font = SubResource( 3 )
-custom_colors/font_color = Color( 1, 1, 1, 1 )
-custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-text = "Pending reset"
-
-[node name="h" type="HBoxContainer" parent="v/header/v"]
-margin_right = 216.0
-margin_bottom = 32.0
-
-[node name="icon" parent="v/header/v/h" instance=ExtResource( 5 )]
+[node name="icon" type="Panel" parent="m/v/v/sub/v/refundable/h"]
+margin_right = 18.0
+margin_bottom = 18.0
+rect_min_size = Vector2( 18, 18 )
+size_flags_horizontal = 0
 size_flags_vertical = 4
+custom_styles/panel = SubResource( 15 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[node name="name" type="Label" parent="v/header/v/h"]
-margin_left = 36.0
-margin_top = 5.0
-margin_right = 216.0
-margin_bottom = 26.0
-size_flags_horizontal = 3
-custom_fonts/font = SubResource( 4 )
-custom_colors/font_color = Color( 0.8, 0.8, 0.8, 1 )
-text = "AUTOSHOVELER"
-valign = 1
-autowrap = true
+[node name="Sprite" type="Sprite" parent="m/v/v/sub/v/refundable/h/icon"]
+self_modulate = Color( 1, 0.658824, 0, 1 )
+position = Vector2( 9, 9 )
+texture = ExtResource( 7 )
 
-[node name="desc" type="RichTextLabel" parent="v"]
-margin_top = 52.0
-margin_right = 216.0
-margin_bottom = 70.0
+[node name="shadow" type="Sprite" parent="m/v/v/sub/v/refundable/h/icon/Sprite"]
+self_modulate = Color( 0, 0, 0, 1 )
+show_behind_parent = true
+position = Vector2( 2, 2 )
+texture = ExtResource( 7 )
+
+[node name="name" type="Label" parent="m/v/v/sub/v/refundable/h"]
+margin_left = 26.0
+margin_right = 105.0
+margin_bottom = 17.0
 size_flags_horizontal = 3
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 14 )
+text = "Pending reset"
+align = 1
+
+[node name="cost" parent="m/v/v/sub/v" instance=ExtResource( 6 )]
+unique_name_in_owner = true
+visible = false
+margin_right = 93.0
+
+[node name="bot" type="MarginContainer" parent="m/v"]
+margin_top = 42.0
+margin_right = 70.0
+margin_bottom = 88.0
+custom_constants/margin_right = 0
+custom_constants/margin_top = 10
+custom_constants/margin_left = 0
+custom_constants/margin_bottom = 0
+
+[node name="desc" type="RichTextLabel" parent="m/v/bot"]
+unique_name_in_owner = true
+margin_top = 10.0
+margin_right = 70.0
+margin_bottom = 46.0
+size_flags_horizontal = 3
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/italics_font = SubResource( 5 )
 custom_fonts/bold_font = SubResource( 6 )
-custom_fonts/normal_font = SubResource( 7 )
+custom_fonts/normal_font = SubResource( 12 )
 bbcode_enabled = true
 bbcode_text = "[b][color=#b300ff]Coal[/color][/b] haste x[b]1.1[/b]."
 text = "Coal haste x1.1."
 fit_content_height = true
 
-[node name="req" type="MarginContainer" parent="v"]
+[node name="req" type="MarginContainer" parent="m/v"]
+unique_name_in_owner = true
 visible = false
-margin_top = 80.0
-margin_right = 216.0
-margin_bottom = 198.0
+margin_top = 146.0
+margin_right = 165.0
+margin_bottom = 304.0
 custom_constants/margin_right = 10
 custom_constants/margin_top = 10
 custom_constants/margin_left = 10
 custom_constants/margin_bottom = 10
 
-[node name="bg" type="Panel" parent="v/req"]
+[node name="bg" type="Panel" parent="m/v/req"]
 margin_left = 10.0
 margin_top = 10.0
-margin_right = 206.0
-margin_bottom = 108.0
-custom_styles/panel = SubResource( 8 )
+margin_right = 155.0
+margin_bottom = 148.0
+custom_styles/panel = SubResource( 13 )
 
-[node name="v" type="VBoxContainer" parent="v/req"]
+[node name="v" type="VBoxContainer" parent="m/v/req"]
 margin_left = 10.0
 margin_top = 10.0
-margin_right = 206.0
-margin_bottom = 108.0
+margin_right = 155.0
+margin_bottom = 148.0
 alignment = 1
 
-[node name="flair" type="Label" parent="v/req/v"]
+[node name="flair" type="Label" parent="m/v/req/v"]
 self_modulate = Color( 0.796875, 0.796875, 0.796875, 1 )
-margin_right = 196.0
+margin_right = 145.0
 margin_bottom = 17.0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 9 )
 text = "	Required upgrade:"
 align = 1
 
-[node name="h" type="HBoxContainer" parent="v/req/v"]
+[node name="h" type="HBoxContainer" parent="m/v/req/v"]
 margin_top = 21.0
-margin_right = 196.0
-margin_bottom = 98.0
+margin_right = 145.0
+margin_bottom = 138.0
 custom_constants/separation = 3
 alignment = 1
 
-[node name="icon" parent="v/req/v/h" instance=ExtResource( 5 )]
-margin_bottom = 77.0
+[node name="reqIcon" parent="m/v/req/v/h" instance=ExtResource( 5 )]
+unique_name_in_owner = true
+margin_bottom = 117.0
 
-[node name="name" type="Label" parent="v/req/v/h"]
+[node name="reqName" type="Label" parent="m/v/req/v/h"]
+unique_name_in_owner = true
 margin_left = 35.0
-margin_right = 196.0
-margin_bottom = 77.0
+margin_right = 145.0
+margin_bottom = 117.0
 size_flags_horizontal = 3
-custom_fonts/font = SubResource( 10 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 14 )
 text = "what in cousin-fuckin tarnation alabama betty crocker miss fuckin betty white shit is this"
 align = 1
 autowrap = true
-
-[node name="price" parent="v" instance=ExtResource( 6 )]
-visible = false
-margin_top = 80.0
-margin_right = 216.0
-margin_bottom = 90.0

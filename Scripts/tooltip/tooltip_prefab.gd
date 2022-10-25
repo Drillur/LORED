@@ -46,6 +46,33 @@ func _call(source : String, other: Dictionary) -> void:
 			temp["lored"] = other["lored"]
 			$bg.self_modulate = other["color"]
 		
+		elif "lored export" == type:
+			
+			cont[type] = gv.SRC["tooltip/lored export"].instance()
+			cont[type].setup(other["lored"])
+			add_child(cont[type])
+			
+			temp["lored"] = other["lored"]
+			$bg.self_modulate = lv.lored[other["lored"]].color
+		
+		elif "lored asleep" == type:
+			
+			cont[type] = gv.SRC["tooltip/lored asleep"].instance()
+			cont[type].setup(other["lored"])
+			add_child(cont[type])
+			
+			temp["lored"] = other["lored"]
+			$bg.self_modulate = lv.lored[other["lored"]].color
+		
+		elif "lored jobs" == type:
+			
+			cont[type] = gv.SRC["tooltip/lored jobs"].instance()
+			cont[type].setup(other["lored"])
+			add_child(cont[type])
+			
+			temp["lored"] = other["lored"]
+			$bg.self_modulate = lv.lored[other["lored"]].color
+		
 		elif "lored info" == type:
 			
 			cont[type] = gv.SRC["tooltip/lored info"].instance()
@@ -218,7 +245,7 @@ func r_tip(move_tip := false) -> void:
 			
 			return
 		
-		elif type in ["lored level up", "lored info", "lored alert"]:
+		elif type in ["lored export", "lored level up", "lored info", "lored alert", "lored jobs", "lored asleep"]:
 			
 			var f = temp["lored"]
 			

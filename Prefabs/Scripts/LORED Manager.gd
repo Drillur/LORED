@@ -23,61 +23,9 @@ func _ready():
 
 func setup():
 	
-	setup_s1()
-	return
-	setup_s2()
-	setup_s3()
-	
-
-func setup_s2():
-	
-	var i = 0
-	add_stuffs("carc", i)
-	add_stuffs("tum", i)
-	
-	i += 1
-	add_stuffs("plast", i)
-	add_stuffs("toba", i)
-	add_stuffs("ciga", i)
-	
-	i += 1
-	add_stuffs("pet", i)
-	add_stuffs("pulp", i)
-	add_stuffs("paper", i)
-	
-	i += 1
-	add_stuffs("gale", i)
-	add_stuffs("lead", i)
-	
-	i += 1
-	add_stuffs("draw", i)
-	add_stuffs("wire", i)
-	
-	i += 1
-	add_stuffs("sand", i)
-	add_stuffs("glass", i)
-	
-	i += 1
-	add_stuffs("liq", i)
-	add_stuffs("steel", i)
-	
-	i += 1
-	add_stuffs("axe", i)
-	add_stuffs("wood", i)
-	add_stuffs("hard", i)
-	
-	i += 1
-	add_stuffs("seed", i)
-	add_stuffs("tree", i)
-	add_stuffs("soil", i)
-	
-	i += 1
-	add_stuffs("water", i)
-	add_stuffs("humus", i)
-
-func setup_s1():
-	
 	assignChildren(get_node("sc/v/1"))
+	assignChildren(get_node("sc/v/2"))
+
 
 func assignChildren(motherNode):
 	for child in motherNode.get_children():

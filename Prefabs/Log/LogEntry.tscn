@@ -1,0 +1,89 @@
+[gd_scene load_steps=9 format=2]
+
+[ext_resource path="res://Fonts/Roboto-Medium.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://Sprites/Menu/Report.png" type="Texture" id=2]
+
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 1, 1, 1, 0.06 )
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color( 1, 1, 1, 0.65098 )
+
+[sub_resource type="DynamicFont" id=2]
+size = 12
+outline_color = Color( 0, 0, 0, 1 )
+font_data = ExtResource( 1 )
+
+[sub_resource type="StyleBoxFlat" id=6]
+bg_color = Color( 0, 0, 0, 0.25 )
+draw_center = false
+
+[sub_resource type="StyleBoxFlat" id=3]
+bg_color = Color( 1, 1, 1, 0.08 )
+
+[sub_resource type="StyleBoxFlat" id=4]
+bg_color = Color( 1, 1, 1, 0.04 )
+
+[sub_resource type="StyleBoxFlat" id=5]
+bg_color = Color( 1, 1, 1, 0.0392157 )
+draw_center = false
+
+[node name="LogEntry" type="MarginContainer"]
+margin_right = 40.0
+margin_bottom = 40.0
+rect_pivot_offset = Vector2( -166, -61 )
+
+[node name="bg" type="Panel" parent="."]
+margin_right = 56.0
+margin_bottom = 56.0
+custom_styles/panel = SubResource( 1 )
+
+[node name="m" type="MarginContainer" parent="."]
+margin_right = 56.0
+margin_bottom = 56.0
+custom_constants/margin_right = 10
+custom_constants/margin_top = 10
+custom_constants/margin_left = 10
+custom_constants/margin_bottom = 10
+
+[node name="text" type="Label" parent="m"]
+visible = false
+margin_left = 10.0
+margin_top = 20.0
+margin_right = 134.0
+margin_bottom = 35.0
+custom_fonts/font = SubResource( 2 )
+text = "Offline Earnings Report"
+align = 1
+
+[node name="Panel" type="Panel" parent="m"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 46.0
+margin_bottom = 46.0
+rect_min_size = Vector2( 36, 36 )
+mouse_filter = 2
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 6 )
+
+[node name="icon" type="Sprite" parent="m/Panel"]
+unique_name_in_owner = true
+position = Vector2( 18, 18 )
+texture = ExtResource( 2 )
+
+[node name="shadow" type="Sprite" parent="m/Panel/icon"]
+self_modulate = Color( 0, 0, 0, 1 )
+show_behind_parent = true
+position = Vector2( 1, 1 )
+texture = ExtResource( 2 )
+
+[node name="Button" type="Button" parent="."]
+margin_right = 56.0
+margin_bottom = 56.0
+rect_min_size = Vector2( 36, 36 )
+focus_mode = 0
+custom_styles/hover = SubResource( 3 )
+custom_styles/pressed = SubResource( 4 )
+custom_styles/normal = SubResource( 5 )

@@ -1,14 +1,14 @@
 extends MarginContainer
 
 
-onready var icon = get_node("v/header/v/h/icon")
-onready var gn_name = get_node("v/header/v/h/name")
-onready var desc = get_node("v/desc")
-onready var req = get_node("v/req")
-onready var req_icon = get_node("v/req/v/h/icon")
-onready var req_name = get_node("v/req/v/h/name")
-onready var price = get_node("v/price")
-onready var refundable = get_node("v/header/v/refundable")
+onready var icon = get_node("%icon")
+onready var upgradeName = get_node("%upgradeName")
+onready var desc = get_node("%desc")
+onready var req = get_node("%req")
+onready var reqIcon = get_node("%reqIcon")
+onready var reqName = get_node("%reqName")
+onready var cost = get_node("%cost")
+onready var refundable = get_node("%refundable")
 
 var up: Upgrade
 var cont := {}
@@ -22,18 +22,20 @@ func init(_upgrade_key: String) -> void:
 	up.active_tooltip_exists = true
 	
 	icon.init(_upgrade_key)
-	gn_name.text = up.name
+	upgradeName.text = up.name
 	
 	display()
 
 func display():
 	
-	refundable.visible = up.refundable
+	if up.refundable:
+		refundable.show()
+		get_node("%sub").show()
 	
 	if not up.requirements():
 		req.show()
-		req_icon.init(up.requires[0])
-		req_name.text = gv.up[up.requires[0]].name
+		reqIcon.init(up.requires[0])
+		reqName.text = gv.up[up.requires[0]].name
 		desc.bbcode_text = random_desc()
 	else:
 		req.hide()
@@ -42,7 +44,7 @@ func display():
 	
 	var t = Timer.new()
 	add_child(t)
-	t.start(.05)
+	t.start(.01)
 	yield(t, "timeout")
 	t.queue_free()
 	
@@ -74,7 +76,7 @@ func set_desc():
 
 func price_stuff() -> void:
 	
-	price.hide()
+	cost.hide()
 	
 	if price_filled:
 		return
@@ -88,17 +90,22 @@ func price_stuff() -> void:
 	if up.cost.size() == 0:
 		return
 	
-	price.show()
+	cost.show()
+	get_node("%sub").show()
 	
-	price.setup(up.key, up.cost)
-	price.get_node("bg").show()
+	cost.setupUpgrade(up.key, up.cost)
+	#cost.get_node("bg").show()
 	
 	price_filled = true
 
 func random_desc() -> String:
 	
-	var roll : int = randi() % 40
+	var roll : int = 42#randi() % 41
 	match roll:
+		41:
+			return "Your favorite candy is now the healthiest food in the world for humans to consume. However, mega corps purchase the rights to selling it, and, aware of the levels of demand, boost the price to unreasonable levels. Finally united against the greed of mega corps around the world, every country fights to destroy all mega corps. Country leaders, backed by the mega corps, step down honorably. Power returns to the people. Chaos ensues. Walmart shelves are empty. Toilet paper castles appear in backyards. Best Buy goes completely unaffected. Nintendo still hasn't revealed the N64 2. But, in the end, your food becomes affordable, so congratulations."
+		40:
+			return "Your muscles no longer decay over time. Instead, they decay by 5% every day you use Head & Shoulders 2 in 1 shampoo/conditioner."
 		39:
 			return "Instantly deletes your sugar and caffeine addictions, and fills your fridge with water bottles."
 		38:
@@ -114,7 +121,7 @@ func random_desc() -> String:
 		33:
 			return "Cyberpunk 2077 now additionally allows the customization of nipples."
 		32:
-			return "Halo Infinite has an increased 25% chance to be good."
+			return "Halo Infinite never happened."
 		31:
 			return "Causes every LORED to become a Super Sonic Racer. Everybody. Everybody. Everybody. Everybody. Everybody. Everybody. Everybody. Everybody. Everybody. Everybody. EVERYBODY."
 		30:

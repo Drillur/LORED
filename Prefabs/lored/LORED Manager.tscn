@@ -38,15 +38,13 @@ margin_right = 1174.0
 margin_bottom = 628.0
 size_flags_horizontal = 3
 scroll_horizontal_enabled = false
-scroll_vertical = 100
 
 [node name="texts" type="Node2D" parent="sc"]
 position = Vector2( -10, -10 )
 
 [node name="v" type="VBoxContainer" parent="sc"]
-margin_top = -100.0
 margin_right = 1152.0
-margin_bottom = 685.0
+margin_bottom = 785.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_constants/separation = 20
@@ -156,12 +154,183 @@ margin_right = 432.0
 
 [node name="2" type="VBoxContainer" parent="sc/v"]
 visible = false
-margin_top = 122.0
-margin_right = 1002.0
-margin_bottom = 122.0
+margin_top = 20.0
+margin_right = 1152.0
+margin_bottom = 1540.0
 size_flags_horizontal = 3
 custom_constants/separation = 20
 alignment = 1
+
+[node name="v" type="VBoxContainer" parent="sc/v/2"]
+margin_right = 1152.0
+margin_bottom = 1520.0
+custom_constants/separation = 30
+alignment = 1
+
+[node name="h" type="HBoxContainer" parent="sc/v/2/v"]
+margin_right = 1152.0
+margin_bottom = 125.0
+custom_constants/separation = 30
+alignment = 1
+
+[node name="CARCINOGENS" parent="sc/v/2/v/h" instance=ExtResource( 2 )]
+margin_left = 360.0
+margin_right = 561.0
+
+[node name="TUMORS" parent="sc/v/2/v/h" instance=ExtResource( 2 )]
+margin_left = 591.0
+margin_right = 792.0
+
+[node name="h2" type="HBoxContainer" parent="sc/v/2/v"]
+margin_top = 155.0
+margin_right = 1152.0
+margin_bottom = 280.0
+custom_constants/separation = 30
+alignment = 1
+
+[node name="PLASTIC" parent="sc/v/2/v/h2" instance=ExtResource( 2 )]
+margin_left = 244.0
+margin_right = 445.0
+
+[node name="TOBACCO" parent="sc/v/2/v/h2" instance=ExtResource( 2 )]
+margin_left = 475.0
+margin_right = 676.0
+
+[node name="CIGARETTES" parent="sc/v/2/v/h2" instance=ExtResource( 2 )]
+margin_left = 706.0
+margin_right = 907.0
+
+[node name="h3" type="HBoxContainer" parent="sc/v/2/v"]
+margin_top = 310.0
+margin_right = 1152.0
+margin_bottom = 435.0
+custom_constants/separation = 30
+alignment = 1
+
+[node name="PETROLEUM" parent="sc/v/2/v/h3" instance=ExtResource( 2 )]
+margin_left = 244.0
+margin_right = 445.0
+
+[node name="WOOD_PULP" parent="sc/v/2/v/h3" instance=ExtResource( 2 )]
+margin_left = 475.0
+margin_right = 676.0
+
+[node name="PAPER" parent="sc/v/2/v/h3" instance=ExtResource( 2 )]
+margin_left = 706.0
+margin_right = 907.0
+
+[node name="h4" type="HBoxContainer" parent="sc/v/2/v"]
+margin_top = 465.0
+margin_right = 1152.0
+margin_bottom = 590.0
+custom_constants/separation = 30
+alignment = 1
+
+[node name="GALENA" parent="sc/v/2/v/h4" instance=ExtResource( 2 )]
+margin_left = 360.0
+margin_right = 561.0
+
+[node name="LEAD" parent="sc/v/2/v/h4" instance=ExtResource( 2 )]
+margin_left = 591.0
+margin_right = 792.0
+
+[node name="h5" type="HBoxContainer" parent="sc/v/2/v"]
+margin_top = 620.0
+margin_right = 1152.0
+margin_bottom = 745.0
+custom_constants/separation = 30
+alignment = 1
+
+[node name="DRAW_PLATE" parent="sc/v/2/v/h5" instance=ExtResource( 2 )]
+margin_left = 360.0
+margin_right = 561.0
+
+[node name="WIRE" parent="sc/v/2/v/h5" instance=ExtResource( 2 )]
+margin_left = 591.0
+margin_right = 792.0
+
+[node name="h6" type="HBoxContainer" parent="sc/v/2/v"]
+margin_top = 775.0
+margin_right = 1152.0
+margin_bottom = 900.0
+custom_constants/separation = 30
+alignment = 1
+
+[node name="SAND" parent="sc/v/2/v/h6" instance=ExtResource( 2 )]
+margin_left = 360.0
+margin_right = 561.0
+
+[node name="GLASS" parent="sc/v/2/v/h6" instance=ExtResource( 2 )]
+margin_left = 591.0
+margin_right = 792.0
+
+[node name="h7" type="HBoxContainer" parent="sc/v/2/v"]
+margin_top = 930.0
+margin_right = 1152.0
+margin_bottom = 1055.0
+custom_constants/separation = 30
+alignment = 1
+
+[node name="LIQUID_IRON" parent="sc/v/2/v/h7" instance=ExtResource( 2 )]
+margin_left = 360.0
+margin_right = 561.0
+
+[node name="STEEL" parent="sc/v/2/v/h7" instance=ExtResource( 2 )]
+margin_left = 591.0
+margin_right = 792.0
+
+[node name="h8" type="HBoxContainer" parent="sc/v/2/v"]
+margin_top = 1085.0
+margin_right = 1152.0
+margin_bottom = 1210.0
+custom_constants/separation = 30
+alignment = 1
+
+[node name="AXES" parent="sc/v/2/v/h8" instance=ExtResource( 2 )]
+margin_left = 244.0
+margin_right = 445.0
+
+[node name="WOOD" parent="sc/v/2/v/h8" instance=ExtResource( 2 )]
+margin_left = 475.0
+margin_right = 676.0
+
+[node name="HARDWOOD" parent="sc/v/2/v/h8" instance=ExtResource( 2 )]
+margin_left = 706.0
+margin_right = 907.0
+
+[node name="h9" type="HBoxContainer" parent="sc/v/2/v"]
+margin_top = 1240.0
+margin_right = 1152.0
+margin_bottom = 1365.0
+custom_constants/separation = 30
+alignment = 1
+
+[node name="SEEDS" parent="sc/v/2/v/h9" instance=ExtResource( 2 )]
+margin_left = 244.0
+margin_right = 445.0
+
+[node name="TREES" parent="sc/v/2/v/h9" instance=ExtResource( 2 )]
+margin_left = 475.0
+margin_right = 676.0
+
+[node name="SOIL" parent="sc/v/2/v/h9" instance=ExtResource( 2 )]
+margin_left = 706.0
+margin_right = 907.0
+
+[node name="h10" type="HBoxContainer" parent="sc/v/2/v"]
+margin_top = 1395.0
+margin_right = 1152.0
+margin_bottom = 1520.0
+custom_constants/separation = 30
+alignment = 1
+
+[node name="WATER" parent="sc/v/2/v/h10" instance=ExtResource( 2 )]
+margin_left = 360.0
+margin_right = 561.0
+
+[node name="HUMUS" parent="sc/v/2/v/h10" instance=ExtResource( 2 )]
+margin_left = 591.0
+margin_right = 792.0
 
 [node name="3" type="VBoxContainer" parent="sc/v"]
 visible = false

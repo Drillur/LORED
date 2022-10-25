@@ -22,6 +22,8 @@ const gntaq = "m/v/bot/h/taq"
 const gnLB = "misc/Limit Break"
 const gnupcon = "m/up_container"
 
+onready var earningsReport = get_node("%Earnings Report")
+
 var task_awaiting := "no"
 
 var patched := false # true if in save.data the version is < current version
@@ -81,6 +83,8 @@ func game_start(successful_load: bool) -> void:
 			if lv.lored[type].purchased:
 				lv.lored[type].unlock()
 				lv.lored[type].enterActive()
+		
+		getOfflineEarnings(gv.cur_clock - gv.save_slot_clock - 30)
 	
 	taq.seekNewWish()
 	
@@ -288,7 +292,7 @@ func _notification(ev):
 		var clock_dif = OS.get_unix_time() - gv.last_clock
 		if clock_dif <= 1: return
 		
-		w_total_per_sec(clock_dif)
+		getOfflineEarnings(clock_dif)
 	
 	elif ev == MainLoop.NOTIFICATION_WM_FOCUS_OUT:
 		gv.last_clock = OS.get_unix_time()
@@ -368,6 +372,27 @@ func routineLOREDsync():
 		lv.syncLOREDs()
 	
 	t.queue_free()
+
+func getOfflineEarnings(timeOffline: int):
+	
+	if timeOffline <= 0:
+		return
+	
+	lv.getOfflineEarnings(timeOffline)
+	
+#	only display fuel resource ratios if the ratio is < 1. delete the Fuel Dependency Column in resource production. add Gain and Drain columns. why not
+#	when earnings are reported, and Coal refuels, his net is negative like he isnt working.
+#	but he is!!!
+#	so when he resumes work, he isnt updating his gain. why?
+#	also, if timeOffline < 0, hide Earnings Report.
+#		log timeOffline, and say something like "No offline earnings gained."
+#	add a button in Earnings Report to make it go away
+#	and make it so it automatically goes away in 10 seconds. but log all of the yield amounts
+#	if scrollContainer is scrolled, then stop the timer.
+#	the button to hide it should say "Log Report and Close"
+#	escape should hide the report
+	
+	earningsReport.setup(timeOffline)
 
 func w_total_per_sec(clock_dif : float) -> void:
 	return
@@ -1022,6 +1047,10 @@ func open_up_tab(tab: int):
 	if not tab in gv.unlocked_tabs:
 		return
 	
+	if tab == gv.open_tab:
+		b_tabkey(KEY_ESCAPE)
+		return
+	
 	get_node(gnupcon).col_time(str(tab))
 	
 	menu.hide()
@@ -1149,14 +1178,15 @@ func _load(data: Dictionary):
 	
 	
 	activate_lb_effects()
-	
-	w_total_per_sec(gv.cur_clock - gv.save_slot_clock - 30)
 
 func _on_Button_pressed() -> void:
 	gv.addToResource(gv.Resource.COAL, 100)
 	gv.addToResource(gv.Resource.STONE, 100)
-	lv.reportNet(gv.Resource.COAL)
+	gv.addToResource(gv.Resource.IRON, 100)
+	gv.addToResource(gv.Resource.COPPER, 100)
+	#lv.reportNet(gv.Resource.IRON_ORE)
 	#lv.lored[lv.Type.COAL].lored.currentFuel.s(1)
+	gv.reportOfflineEarnings()
 	pass
 
 

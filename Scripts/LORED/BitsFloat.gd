@@ -20,6 +20,8 @@ func _init(_bits: Dictionary):
 	bits = _bits
 
 
+func changeBase(val: float):
+	base = val
 
 func getTotal() -> float:
 	total = base
@@ -43,11 +45,16 @@ func getTotalText() -> String:
 		totalText = fval.f(total)
 	return totalText
 
-
 func multiplyValue(folder: int, item: int, amount):
 	# folder example: MULTIPLIER
 	# item example: FROM_LEVELS
-	bits[folder][item].m(amount)
+	bits[folder][item] *= amount
+func divideValue(folder: int, item: int, amount):
+	bits[folder][item] /= amount
+func addToValue(folder: int, item: int, amount):
+	bits[folder][item] += amount
+func subtractFromValue(folder: int, item: int, amount):
+	bits[folder][item] -= amount
 
 func setValue(folder: int, item: int, amount):
 	bits[folder][item] = amount

@@ -262,7 +262,7 @@ func load(data: Dictionary):
 	var loadedVars = SaveManager.loadSavedVars(saved_vars_dict, data)
 	
 	for x in saved_vars:
-		if get(x) is Ob.Num:
+		if get(x) is Ob.Num or get(x) is Big:
 			get(x).load(data[x])
 		else:
 			set(x, loadedVars[x])
@@ -293,6 +293,8 @@ func _ready():
 	for r in gv.Resource.values():
 		gv.resourceName[r] = gv.Resource.keys()[r].capitalize().replace("_", " ")
 		gv.resourceText[r] = ""
+	
+	setResourceColors()
 
 func setupFonts():
 	font.buttonNormal.font_data = load("res://Fonts/Roboto-Light.ttf")
@@ -320,9 +322,9 @@ func init_menu_and_stats():
 	option["animations"] = true
 	option["tooltip_halt"] = true
 	option["tooltip_hold"] = true
-	option["tooltip_fuel"] = true
 	option["tooltip_autobuyer"] = true
 	option["tooltip_cost_only"] = false
+	option["tooltipAdvancedInfo"] = false
 	option["on_save_halt"] = false
 	option["on_save_hold"] = false
 	option["im_ss_show_hint"] = true
@@ -379,6 +381,13 @@ const SRC := {
 	"tooltip/level up": preload("res://Prefabs/tooltip/Tooltip Level Up.tscn"),
 	"tooltip/lored info": preload("res://Prefabs/tooltip/Tooltip Info.tscn"),
 	"tooltip/lored alert": preload("res://Prefabs/tooltip/Tooltip Lored Alert.tscn"),
+	"tooltip/lored jobs": preload("res://Prefabs/tooltip/LORED Tooltip Jobs.tscn"),
+	"tooltip/lored job": preload("res://Prefabs/tooltip/LORED Tooltip Job.tscn"),
+	"tooltip/lored asleep": preload("res://Prefabs/tooltip/Asleep.tscn"),
+	"tooltip/lored export": preload("res://Prefabs/tooltip/LORED Tooltip Export.tscn"),
+	
+	"earnings report/resource": preload("res://Prefabs/ui/Earnings Report Resource.tscn"),
+	"labels/medium label": preload("res://Prefabs/Labels/Medium Label.tscn"),
 	
 	"label": preload("res://Prefabs/template/Label.tscn"),
 	"job label": preload("res://Prefabs/template/job label.tscn"),
@@ -648,15 +657,15 @@ var autobuy_speed := 0.25
 var up := {}
 
 var COLORS := {
-	"fire": Color(1, 0, 0),
-	"frost": Color(0, 0.694118, 1),
-	"air": Color(0.612122, 0.394531, 1),
-	"earth": Color(1, 0.6, 0),
-	"stamina": Color(0.501961, 1, 0),
-	"barrier": Color(1, 0.8, 0),
-	"health": Color(1, 0, 0),
-	"mana": Color(0, 0.709804, 1),
-	"overwhelming power": Color(0.721569, 0.34902, 0.901961), #note too close to air?
+#	"fire": Color(1, 0, 0),
+#	"frost": Color(0, 0.694118, 1),
+#	"air": Color(0.612122, 0.394531, 1),
+#	"earth": Color(1, 0.6, 0),
+#	"stamina": Color(0.501961, 1, 0),
+#	"barrier": Color(1, 0.8, 0),
+#	"health": Color(1, 0, 0),
+#	"mana": Color(0, 0.709804, 1),
+#	"overwhelming power": Color(0.721569, 0.34902, 0.901961), #note too close to air?
 	"grief": Color(0.74902, 0.203922, 0.533333),
 	"joy": Color(1, 0.909804, 0),
 	"ciga": Color(0.929412, 0.584314, 0.298039),
@@ -701,21 +710,6 @@ var COLORS := {
 	"witch": Color(0.937255, 0.501961, 0.776471),
 	
 	"spirit": Color(0.88, .12, .35),
-	
-	"flayed corpse": Color(0.88, .12, .35),
-	"defiled dead": Color(0.88, .12, .35),
-	"corpse": Color(0.88, .12, .35),
-	"nearly dead": Color(0.88, .12, .35),
-	"flesh": Color(0.88, .12, .35),
-	"embryo": Color(0.88, .12, .35),
-	"blood": Color(0.88, 0, 0),
-	"bone": Color(0.88, .12, .35),
-	"wax": Color(0.88, .12, .35),
-	"fur": Color(0.88, .12, .35),
-	"meat": Color(0.88, .12, .35),
-	"bagged beast": Color(0.88, .12, .35),
-	"beast body": Color(0.88, .12, .35),
-	"exsanguinated beast": Color(0.88, .12, .35),
 	
 	"thewitchofloredelith": Color(0.937255, 0.501961, 0.776471),
 	"spike": Color(0.76, 0, 0),
@@ -774,6 +768,22 @@ func time_remaining_including_INF(
 	
 	return Big.new(delta).s(incoming_amount).d(net)
 
+func timeUntil(resource: int, threshold: Big):
+	
+	if gv.resource[resource].greater_equal(threshold):
+		return Big.new(0)
+	
+	var rawNet = lv.net(resource)
+	var net = rawNet[0]
+	var _sign = rawNet[1]
+	
+	if _sign < 1:
+		return INF
+	
+	var amountRemaining = Big.new(threshold).s(gv.resource[resource])
+	
+	return Big.new(amountRemaining).d(net)
+
 func time_remaining(
 	lored: int,
 	present_amount: Big,
@@ -802,6 +812,9 @@ func time_remaining(
 		incoming_amount.a(lv.lored[lored].output)
 	
 	return parse_time(Big.new(delta).s(incoming_amount).d(net))
+
+
+
 
 func parse_time(value) -> String:
 	
@@ -898,7 +911,7 @@ func parse_time_big(big: Big) -> String:
 	
 	return big.roundDown().toString() + "mil"
 
-func parse_time_float(val: float) -> String:
+func parse_time_float(val) -> String:
 	
 	if val < 1:
 		return "!"
@@ -943,13 +956,15 @@ func resetResources():
 	for r in Resource.values():
 		resource[r] = Big.new(0)
 
+
+
 enum Resource {
-	IRON,
-	COPPER,
 	STONE,
+	COAL,
 	IRON_ORE,
 	COPPER_ORE,
-	COAL,
+	IRON,
+	COPPER,
 	GROWTH,
 	JOULES,
 	CONCRETE,
@@ -984,10 +999,10 @@ enum Resource {
 	
 	JOY,
 	GRIEF,
-	EMBRYO,
-	SPIRIT,
+	#EMBRYO,
+	#SPIRIT,
 	
-	MANA,
+	#MANA,
 }
 var resource := {}
 var resourceName := {}
@@ -997,15 +1012,72 @@ func addToResource(key: int, val):
 	resource[key].a(val)
 	emit_signal("resourceChanged", key)
 func subtractFromResource(key: int, val):
-	resource[key].s(val)
+	if val.greater(resource[key]):
+		resource[key] = Big.new(0)
+	else:
+		resource[key].s(val)
 	emit_signal("resourceChanged", key)
 func setResource(key: int, val):
 	resource[key] = Big.new(val)
 	emit_signal("resourceChanged", key)
-var resourcesNotBeingExported := []
 func updateResources():
 	for r in resource:
 		emit_signal("resourceChanged", r)
+var resourcesNotBeingExported := []
+func exportBlocked(resource: int):
+	if resource in resourcesNotBeingExported:
+		return
+	resourcesNotBeingExported.append(resource)
+	emit_signal("exportChanged")
+func exportResumed(resource: int):
+	if not resource in resourcesNotBeingExported:
+		return
+	resourcesNotBeingExported.erase(resource)
+	emit_signal("exportChanged")
+
+
+var offlineEarnings := {}
+func logOfflineEarnings(resource: int, amount: Big, _sign: int):
+	if not resource in offlineEarnings:
+		offlineEarnings[resource] = [Big.new(amount), _sign]
+		return
+	
+	if _sign == 1:
+		if offlineEarnings[resource][1] == 1:
+			offlineEarnings[resource][0].a(amount)
+		else:
+			if amount.greater_equal(offlineEarnings[resource][0]):
+				amount.s(offlineEarnings[resource][0])
+				offlineEarnings[resource][0] = Big.new(amount)
+				offlineEarnings[resource][1] = 1
+			else:
+				offlineEarnings[resource][0].s(amount)
+	else:
+		if offlineEarnings[resource][1] == 1:
+			if offlineEarnings[resource][0].greater_equal(amount):
+				offlineEarnings[resource][0].s(amount)
+			else:
+				amount.s(offlineEarnings[resource][0])
+				offlineEarnings[resource][0] = Big.new(amount)
+				offlineEarnings[resource][1] = -1
+		else:
+			offlineEarnings[resource][0].a(amount)
+
+func reportOfflineEarnings():
+	for resource in offlineEarnings:
+		if offlineEarnings[resource][1] == 1:
+			print("+", offlineEarnings[resource][0].toString(), " ", resourceName[resource])
+		else:
+			print("-", offlineEarnings[resource][0].toString(), " ", resourceName[resource])
+
+func clearOfflineEarnings():
+	offlineEarnings.clear()
+
+func setResourceColors():
+	for resource in Resource.values():
+		resourceColor[resource] = COLORS[shorthandByResource[resource]]
+
+signal exportChanged(resource) # lored manager -> exportBlockedhere -> lored manager
 
 signal resourceChanged(key)
 
@@ -1076,11 +1148,12 @@ func resetList():
 		upgrade = {"owned": {}},
 		lored = {
 			Tab.S1: [], Tab.S2: [], Tab.S3: [], Tab.S4: [],
-			"active": ["stone"], "active " + str(Tab.S1): ["stone"], "active " + str(Tab.S2): [], "active " + str(Tab.S3): [], "active " + str(Tab.S4): [],
+			"active": [lv.Type.STONE], "active " + str(Tab.S1): [lv.Type.STONE], "active " + str(Tab.S2): [], "active " + str(Tab.S3): [], "active " + str(Tab.S4): [],
 			"unlocked and inactive": [],
 		},
-		"unlocked resources": ["stone"], #note stage 3 resources need to be manually added
+		"unlocked resources": [Resource.STONE], #note stage 3 resources need to be manually added
 		"fuel resource": [],
+		"resource producer": {},
 	}
 	
 	for t in Tab:
@@ -1092,8 +1165,38 @@ func resetList():
 		list.upgrade["unowned " + str(Tab[t])] = []
 		list.upgrade["owned " + str(Tab[t])] = []
 
+func append(list: Array, value):
+	if value in list:
+		return
+	list.append(value)
+
 func everyStage2LOREDunlocked() -> bool:
 	return list.lored["active " + str(Tab.S2)].size() == list.lored[Tab.S2].size()
+
+func unlockResource(resource: int):
+	if not resource in list["unlocked resources"]:
+		list["unlocked resources"].append(resource)
+
+func addResourceProducer(resource: int, lored: int):
+	if not resource in list["resource producer"]:
+		list["resource producer"][resource] = []
+	if not lored in list["resource producer"][resource]:
+		list["resource producer"][resource].append(lored)
+
+func resourceBeingProduced(resource: int) -> bool:
+	if list["resource producer"][resource].size() == 0:
+		return false
+	for lored in list["resource producer"][resource]:
+		if lv.lored[lored].purchased:
+			return true
+	return false
+
+func producerDrainUpdated(resource: int):
+	if not resource in list["resource producer"]:
+		return
+	for producer in list["resource producer"][resource]:
+		lv.lored[producer].updateOfflineNet(resource)
+
 
 enum Objective {
 	RESOURCES_PRODUCED,
@@ -1103,7 +1206,6 @@ enum Objective {
 	UPGRADES_PURCHASED,
 	MAXED_FUEL_STORAGE,
 	BREAK,
-	HOARD,
 }
 enum WishReward {
 	# add new entries at the bottom
@@ -1115,6 +1217,7 @@ enum WishReward {
 	HALT_AND_HOLD,
 	WISH_TURNIN,
 	EASIER,
+	LORED_FUNCTIONALITY,
 }
 
 func highestResetKey() -> String:

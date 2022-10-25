@@ -100,14 +100,14 @@ script = ExtResource( 10 )
 visible = false
 margin_left = 2.0
 margin_top = 2.0
-margin_right = 180.0
+margin_right = 184.0
 margin_bottom = 139.0
 custom_styles/panel = SubResource( 1 )
 
 [node name="m" type="MarginContainer" parent="."]
 margin_left = 2.0
 margin_top = 2.0
-margin_right = 180.0
+margin_right = 184.0
 margin_bottom = 139.0
 custom_constants/margin_right = 5
 custom_constants/margin_top = 5
@@ -117,22 +117,23 @@ custom_constants/margin_bottom = 5
 [node name="v" type="VBoxContainer" parent="m"]
 margin_left = 5.0
 margin_top = 5.0
-margin_right = 173.0
+margin_right = 177.0
 margin_bottom = 132.0
 custom_constants/separation = 10
 
 [node name="dialogue" type="MarginContainer" parent="m/v"]
-margin_right = 168.0
+margin_right = 172.0
 margin_bottom = 90.0
 
 [node name="bg" type="Panel" parent="m/v/dialogue"]
-margin_right = 168.0
+margin_right = 172.0
 margin_bottom = 90.0
 custom_styles/panel = SubResource( 2 )
 
 [node name="h" type="HBoxContainer" parent="m/v/dialogue"]
-margin_right = 168.0
+margin_right = 172.0
 margin_bottom = 90.0
+custom_constants/separation = 8
 
 [node name="expression" type="MarginContainer" parent="m/v/dialogue/h"]
 margin_right = 64.0
@@ -170,26 +171,26 @@ align = 1
 
 [node name="name" type="MarginContainer" parent="m/v/dialogue/h/expression/v"]
 visible = false
-margin_top = 79.0
+margin_top = 63.0
 margin_right = 64.0
-margin_bottom = 89.0
+margin_bottom = 90.0
 
 [node name="bg" type="Panel" parent="m/v/dialogue/h/expression/v/name"]
 margin_right = 64.0
-margin_bottom = 10.0
+margin_bottom = 27.0
 custom_styles/panel = SubResource( 14 )
 
 [node name="m" type="MarginContainer" parent="m/v/dialogue/h/expression/v/name"]
 margin_right = 64.0
-margin_bottom = 10.0
+margin_bottom = 27.0
 custom_constants/margin_right = 5
 custom_constants/margin_top = 5
 custom_constants/margin_left = 5
 custom_constants/margin_bottom = 5
 
 [node name="m" type="MarginContainer" parent="m/v/dialogue/h"]
-margin_left = 68.0
-margin_right = 168.0
+margin_left = 72.0
+margin_right = 172.0
 margin_bottom = 90.0
 custom_constants/margin_right = 5
 custom_constants/margin_top = 5
@@ -217,20 +218,20 @@ __meta__ = {
 
 [node name="rewards" type="MarginContainer" parent="m/v"]
 margin_top = 100.0
-margin_right = 168.0
+margin_right = 172.0
 margin_bottom = 100.0
 
 [node name="bg" type="Panel" parent="m/v/rewards"]
-margin_right = 168.0
+margin_right = 172.0
 custom_styles/panel = SubResource( 5 )
 
 [node name="h" type="HBoxContainer" parent="m/v/rewards"]
-margin_right = 168.0
+margin_right = 172.0
 alignment = 1
 
 [node name="v" type="VBoxContainer" parent="m/v/rewards/h"]
-margin_left = 84.0
-margin_right = 84.0
+margin_left = 86.0
+margin_right = 86.0
 custom_constants/separation = 0
 
 [node name="r1" type="MarginContainer" parent="m/v/rewards/h/v"]
@@ -574,7 +575,7 @@ text = "Automated halt and hold for Wishes"
 
 [node name="easier" type="MarginContainer" parent="m/v/rewards/h/v"]
 visible = false
-margin_right = 163.0
+margin_right = 152.0
 margin_bottom = 21.0
 custom_constants/margin_right = 5
 custom_constants/margin_top = 3
@@ -584,16 +585,56 @@ custom_constants/margin_bottom = 3
 [node name="flair" type="Label" parent="m/v/rewards/h/v/easier"]
 margin_left = 5.0
 margin_top = 3.0
-margin_right = 158.0
+margin_right = 147.0
 margin_bottom = 18.0
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 6 )
 text = "10x easier Wish objectives"
 
+[node name="sleep" type="MarginContainer" parent="m/v/rewards/h/v"]
+unique_name_in_owner = true
+visible = false
+margin_right = 110.0
+margin_bottom = 21.0
+custom_constants/margin_right = 5
+custom_constants/margin_top = 3
+custom_constants/margin_left = 5
+custom_constants/margin_bottom = 3
+
+[node name="flair" type="Label" parent="m/v/rewards/h/v/sleep"]
+margin_left = 5.0
+margin_top = 3.0
+margin_right = 105.0
+margin_bottom = 18.0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 6 )
+text = "LOREDs can sleep!"
+
+[node name="jobs" type="MarginContainer" parent="m/v/rewards/h/v"]
+unique_name_in_owner = true
+visible = false
+margin_top = 21.0
+margin_right = 181.0
+margin_bottom = 42.0
+custom_constants/margin_right = 5
+custom_constants/margin_top = 3
+custom_constants/margin_left = 5
+custom_constants/margin_bottom = 3
+
+[node name="flair" type="Label" parent="m/v/rewards/h/v/jobs"]
+margin_left = 5.0
+margin_top = 3.0
+margin_right = 176.0
+margin_bottom = 18.0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 6 )
+text = "You can view LOREDs' Job lists!"
+
 [node name="automated turnin" type="MarginContainer" parent="m/v/rewards/h/v"]
 visible = false
+margin_top = 21.0
 margin_right = 163.0
-margin_bottom = 21.0
+margin_bottom = 42.0
 custom_constants/margin_right = 5
 custom_constants/margin_top = 3
 custom_constants/margin_left = 5
@@ -652,40 +693,40 @@ text = "Stage 2"
 
 [node name="random" type="MarginContainer" parent="m/v"]
 margin_top = 110.0
-margin_right = 168.0
+margin_right = 172.0
 margin_bottom = 127.0
 
 [node name="v" type="VBoxContainer" parent="m/v/random"]
-margin_right = 168.0
+margin_right = 172.0
 margin_bottom = 17.0
 custom_constants/separation = 0
 
 [node name="line" type="Panel" parent="m/v/random/v"]
-margin_right = 168.0
+margin_right = 172.0
 margin_bottom = 2.0
 rect_min_size = Vector2( 0, 2 )
 custom_styles/panel = SubResource( 9 )
 
 [node name="m" type="MarginContainer" parent="m/v/random/v"]
 margin_top = 2.0
-margin_right = 168.0
+margin_right = 172.0
 margin_bottom = 17.0
 custom_constants/margin_top = 2
 
 [node name="bg" type="Panel" parent="m/v/random/v/m"]
 self_modulate = Color( 1, 0, 0, 1 )
 margin_top = 2.0
-margin_right = 168.0
+margin_right = 172.0
 margin_bottom = 15.0
 custom_styles/panel = SubResource( 10 )
 
 [node name="v" type="VBoxContainer" parent="m/v/random/v/m"]
 margin_top = 2.0
-margin_right = 168.0
+margin_right = 172.0
 margin_bottom = 15.0
 
 [node name="flair" type="Label" parent="m/v/random/v/m/v"]
-margin_right = 168.0
+margin_right = 172.0
 margin_bottom = 13.0
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 11 )

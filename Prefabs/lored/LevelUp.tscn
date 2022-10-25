@@ -31,16 +31,19 @@ font_data = ExtResource( 1 )
 margin_right = 92.0
 margin_bottom = 57.0
 rect_pivot_offset = Vector2( -108, -39 )
+mouse_filter = 2
 script = ExtResource( 2 )
 
 [node name="bg" type="Panel" parent="."]
 margin_right = 92.0
 margin_bottom = 57.0
+mouse_filter = 2
 custom_styles/panel = SubResource( 1 )
 
 [node name="level up" type="MarginContainer" parent="."]
 margin_right = 92.0
 margin_bottom = 57.0
+mouse_filter = 2
 custom_constants/margin_right = 10
 custom_constants/margin_top = 10
 custom_constants/margin_left = 10
@@ -51,6 +54,7 @@ margin_left = 10.0
 margin_top = 10.0
 margin_right = 82.0
 margin_bottom = 47.0
+mouse_filter = 2
 alignment = 1
 
 [node name="Label" type="Label" parent="level up/VBoxContainer"]
@@ -79,6 +83,7 @@ autowrap = true
 visible = false
 margin_right = 92.0
 margin_bottom = 57.0
+mouse_filter = 2
 custom_constants/margin_right = 10
 custom_constants/margin_top = 10
 custom_constants/margin_left = 10

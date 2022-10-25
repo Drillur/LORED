@@ -4,7 +4,7 @@ extends Reference
 
 
 
-const saved_vars := ["purchased", "keyLORED", "asleep", "exporting", "timesPurchased", "level", "currentFuel"]
+const saved_vars := ["purchased", "keyLORED", "asleep", "timesPurchased", "level", "currentFuel"]
 
 var manager: Node2D
 func assignManager(_manager: Node2D):
@@ -19,16 +19,16 @@ var timesPurchased := 0
 
 var smart := false
 var asleep := false
-var exporting := true
 var working := false # job in progress
+var keyLORED := false
 var unlocked := false # a wish was completed that unlocked this lored
 var purchased := false # purchased at least a single time in the current run
 
 var name: String
 var shorthandKey: String
-var pronoun := ["he", "him", "his"]
 
-var keyLORED := false
+var pronoun := ["he", "him", "his"]
+var unlockedJobs: Array
 
 var color: Color
 
@@ -41,7 +41,7 @@ func save() -> String:
 	var data := {}
 	
 	for x in saved_vars:
-		if get(x) is Ob.Num:
+		if get(x) is Big:
 			data[x] = get(x).save()
 		else:
 			data[x] = var2str(get(x))
@@ -50,33 +50,37 @@ func save() -> String:
 
 func load(data: Dictionary) -> void:
 	
+	#* Copy-paste this block to a script where saving a Dictionary is necessary
+	var saved_vars_dict := {}
+	
 	for x in saved_vars:
-		
-		if not x in data.keys():
-			continue
-		
-		if get(x) is Ob.Num:
+		saved_vars_dict[x] = get(x)
+	
+	var loadedVars = SaveManager.loadSavedVars(saved_vars_dict, data)
+	
+	for x in saved_vars:
+		if get(x) is Ob.Num or get(x) is Big:
 			get(x).load(data[x])
 		else:
-			set(x, str2var(data[x]))
+			set(x, loadedVars[x])
+	#*
 	
 	if not purchased:
 		return
 	
-	#note load jobs above this. also, sync producedResources before this.
-	unlockResources()
+	jobs.values()[0].unlock()
 	
 	if not gv.option["on_save_halt"]:
 		asleep = false
-	if not gv.option["on_save_hold"]:
-		exporting = true 
 	
 	gv.list.lored["active " + str(tab)].append(type)
 	
-	if type != lv.Type.STONE:
-		increaseCost(lv.Num.MULTIPLY, lv.Num.FROM_LEVELS, costModifier)
+	#if type != lv.Type.STONE:
+	increaseCost(lv.Num.MULTIPLY, lv.Num.FROM_LEVELS, costModifier)
 	
-	for x in str2var(data["level"]) - 1:
+	var savedLevel = str2var(data["level"])
+	level = 1
+	for x in savedLevel - 1:
 		levelUp()
 
 
@@ -112,9 +116,17 @@ func _init(_type: int):
 
 func setupRefuelJob():
 	refuelJob = Job.new(lv.Job.REFUEL, type)
-	refuelJob.primaryResource = fuelResource
-	refuelJob.primaryResourceIcon = gv.sprite[gv.shorthandByResource[fuelResource]]
-	refuelJob.primaryResourceColor = gv.COLORS[gv.shorthandByResource[fuelResource]]
+	refuelJob.unlock()
+	refuelJob.requiresResource = true
+	refuelJob.requiredResourcesBits[fuelResource] = Bits.new({
+		lv.Num.BASE: 0.25,
+		lv.Num.MULTIPLY: {
+			lv.Num.BY_LORED_FUEL_STORAGE: Big.new(fuelStorageBits.base),
+		},
+	})
+	match type:
+		lv.Type.OIL:
+			refuelJob.changeBaseDuration(1)
 
 
 func construct_STONE():
@@ -368,7 +380,7 @@ func construct_SAND():
 	color = Color(.87, .70, .45)
 	fuelResource = gv.Resource.COAL
 	icon = preload("res://Sprites/resources/sand.png")
-	pronoun = ["she", "her", "hers"]
+	setPronouns(false)
 func construct_GLASS():
 	addJob(type)
 	stage = 2
@@ -385,7 +397,7 @@ func construct_WIRE():
 	color = Color(0.9, 0.6, 0.14)
 	fuelResource = gv.Resource.JOULES
 	icon = preload("res://Sprites/resources/wire.png")
-	pronoun = ["she", "her", "hers"]
+	setPronouns(false)
 func construct_DRAW_PLATE():
 	addJob(type)
 	stage = 2
@@ -423,7 +435,7 @@ func construct_HARDWOOD():
 	color = Color(0.92549, 0.690196, 0.184314)
 	fuelResource = gv.Resource.JOULES
 	icon = preload("res://Sprites/resources/hard.png")
-	pronoun = ["she", "her", "hers"]
+	setPronouns(false)
 func construct_TUMORS():
 	addJob(type)
 	stage = 2
@@ -440,11 +452,11 @@ func construct_TUMORS():
 
 
 func syncAll():
+	queue(lv.Queue.FUEL_COST)
+	queue(lv.Queue.FUEL_STORAGE)
 	queue(lv.Queue.OUTPUT)
 	queue(lv.Queue.INPUT)
 	queue(lv.Queue.COST)
-	queue(lv.Queue.FUEL_COST)
-	queue(lv.Queue.FUEL_STORAGE)
 	queue(lv.Queue.CRIT)
 	queue(lv.Queue.HASTE)
 
@@ -454,6 +466,40 @@ func queue(that: int):
 		return
 	queue.append(that)
 
+
+
+
+# - - - Handy
+
+func editValue(attribute: int, typeOfEdit: int, item: int, amount, index = 0):
+	
+	var callFunc: String
+	var folder: int
+	
+	match typeOfEdit:
+		lv.Num.MULTIPLY:
+			callFunc = "multiplyValue"
+			folder = lv.Num.MULTIPLY
+		lv.Num.DIVIDE:
+			callFunc = "divideValue"
+			folder = lv.Num.MULTIPLY
+		lv.Num.ADD:
+			callFunc = "addToValue"
+			folder = lv.Num.ADD
+		lv.Num.SUBTRACT:
+			callFunc = "subtractFromValue"
+			folder = lv.Num.ADD
+	
+	match attribute:
+		lv.Attribute.OUTPUT:
+			outputBits.call(callFunc, folder, item, amount)
+			queue(lv.Queue.OUTPUT)
+		lv.Attribute.HASTE:
+			hasteBits.call(callFunc, folder, item, amount)
+			queue(lv.Queue.HASTE)
+		lv.Attribute.COST:
+			costBits[index].call(callFunc, folder, item, amount)
+			queue(lv.Queue.COST)
 
 
 
@@ -476,6 +522,7 @@ var outputBits := Bits.new({
 func syncOutput():
 	output = outputBits.total
 	syncJobs_producedResources()
+	updateOfflineNet = true
 
 func getOutputText() -> String:
 	return outputBits.totalText
@@ -486,10 +533,11 @@ func increaseOutput(folder: int, item: int, amount):
 func setOutputValue(folder: int, item: int, amount):
 	outputBits.setValue(folder, item, amount)
 	queue(lv.Queue.OUTPUT)
+
 var producedResources: Array
 func setProducedResources():
 	for j in jobs:
-		var poop = jobs[j].producedResources.keys()
+		var poop = jobs[j].producedResourcesBits.keys()
 		for p in poop:
 			producedResources.append(p)
 
@@ -525,8 +573,8 @@ func increaseInput(folder: int, item: int, amount):
 var usedResources: Array
 var usedBy: Array
 func setUsedResources():
-	for j in jobs:
-		var poop = jobs[j].requiredResourcesBits.keys()
+	for job in jobs.values():
+		var poop = job.requiredResourcesBits.keys()
 		for p in poop:
 			usedResources.append(p)
 
@@ -630,6 +678,10 @@ var fuelStorageBits := Bits.new({
 
 func syncFuelStorage():
 	fuelStorage = fuelStorageBits.total
+	refuelJob.requiredResourcesBits[fuelResource].setValue(lv.Num.MULTIPLY, lv.Num.BY_LORED_FUEL_STORAGE, fuelStorage)
+	var minimum = Big.new(fuelCost).m(refuelJob.duration)
+	if currentFuel.less(minimum):
+		currentFuel = minimum
 
 func getFuelStorageText() -> String:
 	return fuelStorageBits.totalText
@@ -643,6 +695,21 @@ func getCurrentFuelPercent() -> float:
 func increaseFuelStorage(folder: int, item: int, amount):
 	fuelStorageBits.multiplyValue(folder, item, amount)
 	queue(lv.Queue.FUEL_STORAGE)
+
+
+var quarterTank: Big setget setQuarterTank
+var quarterTankText: String setget , getQuarterTankText
+var quarterTankUpdated := true
+func setQuarterTank(val: Big):
+	quarterTank = val
+	quarterTankUpdated = true
+func getQuarterTankText() -> String:
+	if quarterTankUpdated:
+		setQuarterTankText()
+	return quarterTankText
+func setQuarterTankText():
+	quarterTankUpdated = false
+	quarterTankText = quarterTank.toString()
 
 
 
@@ -688,6 +755,8 @@ var hasteBits := BitsFloat.new({
 func syncHaste():
 	haste = hasteBits.total
 	syncJobs_duration()
+	updateTotalJobTime = true
+	updateOfflineNet = true
 
 func getHasteText() -> String:
 	return hasteBits.totalText
@@ -707,11 +776,6 @@ var jobs: Dictionary
 var refuelJob: Job
 func addJob(jobType: int):
 	jobs[jobType] = Job.new(jobType, type)
-	if unlocked:
-		for r in jobs[jobType].producedResources:
-			if r in gv.list["unlocked resources"]:
-				continue
-			gv.list["unlocked resources"].append(r)
 func syncJobs_all():
 	refuelJob.syncAll()
 	for job in jobs:
@@ -724,6 +788,7 @@ func syncJobs_producedResources():
 	for job in jobs:
 		jobs[job].syncProducedResources()
 func syncJobs_requiredResources():
+	refuelJob.syncRequiredResources()
 	for job in jobs:
 		jobs[job].syncRequiredResources()
 
@@ -760,18 +825,25 @@ func levelUp():
 	
 	level += 1
 	
-	increaseCost(lv.Num.MULTIPLY, lv.Num.FROM_LEVELS, costModifier)
-	
-	increaseOutput(lv.Num.MULTIPLY, lv.Num.FROM_LEVELS, 2)
-	increaseInput(lv.Num.MULTIPLY, lv.Num.FROM_LEVELS, 2)
 	increaseFuelCost(lv.Num.MULTIPLY, lv.Num.FROM_LEVELS, 2)
 	increaseFuelStorage(lv.Num.MULTIPLY, lv.Num.FROM_LEVELS, 2)
+	increaseCost(lv.Num.MULTIPLY, lv.Num.FROM_LEVELS, costModifier)
+	increaseOutput(lv.Num.MULTIPLY, lv.Num.FROM_LEVELS, 2)
+	increaseInput(lv.Num.MULTIPLY, lv.Num.FROM_LEVELS, 2)
+	
+	syncCost()
+	queue.erase(lv.Queue.COST)
+	
+	
 
 func firstPurchaseOfTheRun():
 	
 	purchased = true
 	
 	increaseCost(lv.Num.MULTIPLY, lv.Num.FROM_LEVELS, costModifier)
+	
+	syncCost()
+	queue.erase(lv.Queue.COST)
 	
 	if type != lv.Type.STONE:
 		setFuelToMax()
@@ -786,16 +858,13 @@ func firstPurchaseOfTheRun():
 	
 	gv.list.lored["active"].append(type)
 	
+	jobs.values()[0].unlock()
+	
 	if not gv.s2_upgrades_may_be_autobought:
 		if type in gv.loreds_required_for_s2_autoup_upgrades_to_begin_purchasing:
 			gv.check_for_the_s2_shit()
 func setFuelToMax():
 	currentFuel = Big.new(fuelStorage)
-
-func unlockResources():
-	for r in producedResources:
-		if not r in gv.list["unlocked resources"]:
-			gv.list["unlocked resources"].append(r)
 
 
 
@@ -807,9 +876,15 @@ func jobStarted(job: Job):
 	if job.type == lastJob:
 		if not queue.has(lv.Queue.UPDATE_PRODUCTION):
 			return
+	else:
+		if not lastJob in [-1, lv.Job.REFUEL]:
+			updateGain_zero(jobs[lastJob])
+			updateDrain_zero(jobs[lastJob])
+	lastJob = job.type
+	if job.type == lv.Job.REFUEL:
+		return
 	if queue.has(lv.Queue.UPDATE_PRODUCTION):
 		queue.erase(lv.Queue.UPDATE_PRODUCTION)
-	lastJob = job.type
 	updateGain_working(job)
 	updateDrain_working(job)
 
@@ -828,6 +903,8 @@ func updateDrain_working(job: Job):
 
 
 func finishedWorkingForNow():
+	if lastJob == lv.Job.REFUEL:
+		return
 	updateGain_zero(jobs[lastJob])
 	updateDrain_zero(jobs[lastJob])
 	lastJob = -1
@@ -844,113 +921,74 @@ func updateDrain_zero(job: Job):
 		lv.updateDrain(r, type, Big.new(0))
 
 
+var totalJobTime: float setget , getTotalJobTime
+var updateTotalJobTime := true
+func getTotalJobTime() -> float:
+	if updateTotalJobTime:
+		setTotalJobTime()
+	return totalJobTime
+func setTotalJobTime():
+	updateTotalJobTime = false
+	totalJobTime = 0.0
+	for j in jobs:
+		totalJobTime += jobs[j].duration
 
-#func getTotalJobTime() -> float:
-#	var totalJobTime := 0.0
-#	for j in jobs:
-#		totalJobTime += jobs[j].duration
-#	return totalJobTime
-#
-#func updateTotalProduction():
-#
-#	var totalJobTime := getTotalJobTime()
-#
-#	updateTotalGain(totalJobTime)
-#	updateTotalDrain(totalJobTime)
-#func _updateTotalGain(totalJobTime: float = 0.0):
-#
-#	if totalJobTime == 0.0:
-#		totalJobTime = getTotalJobTime()
-#
-#	for j in jobs:
-#
-#		var baseGainRate: Dictionary = jobs[j].gainRate
-#
-#		# cases where gain is zero
-#		if true:
-#
-#			if asleep or not purchased:
-#				updateTotalGainToZero(baseGainRate.keys())
-#				return
-#
-#			var tenPercentFuel = Big.new(fuelStorage).m(0.1)
-#			if currentFuel.less(tenPercentFuel):
-#
-#				if gv.up["don't take candy from babies"].active():
-#					if stage > 1 and lv.lored[fuelResourceLORED].level <= 5:
-#						updateTotalGainToZero(baseGainRate.keys())
-#						return
-#
-#				if not lv.lored[fuelResourceLORED].purchased:
-#					updateTotalGainToZero(baseGainRate.keys())
-#					return
-#
-#		for r in baseGainRate:
-#
-#			var critBonus = 1 + (crit / 10)
-#			baseGainRate[r].m(critBonus)
-#
-#			var jobDurationRatio = jobs[j].duration / totalJobTime
-#			baseGainRate[r].m(jobDurationRatio)
-#
-#			lv.updateGain(r, type, baseGainRate[r])
-#func updateTotalGainToZero(resources: Array):
-#	for r in resources:
-#		lv.updateGain(r, type, Big.new(0))
-#
-#func updateTotalDrain(totalJobTime: float = 0.0):
-#
-#	if totalJobTime == 0.0:
-#		totalJobTime = getTotalJobTime()
-#
-#	for j in jobs:
-#
-#		var baseDrainRate: Dictionary = jobs[j].drainRate
-#
-#		# cases where drain is zero
-#		if true:
-#
-#			if asleep or not purchased:
-#				updateTotalDrainToZero(baseDrainRate.keys())
-#				return
-#
-#			var tenPercentFuel = Big.new(fuelStorage).m(0.1)
-#			if currentFuel.less(tenPercentFuel):
-#
-#				if gv.up["don't take candy from babies"].active():
-#					if stage > 1 and lv.lored[fuelResourceLORED].level <= 5:
-#						updateTotalDrainToZero(baseDrainRate.keys())
-#						return
-#
-#				if not lv.lored[fuelResourceLORED].purchased:
-#					updateTotalDrainToZero(baseDrainRate.keys())
-#					return
-#
-#		for r in baseDrainRate:
-#
-#			var jobDurationRatio = jobs[j].duration / totalJobTime
-#			baseDrainRate[r].m(jobDurationRatio)
-#
-#			lv.updateDrain(r, type, baseDrainRate[r])
-#
-#	if working:
-#		var fuelUsage: Big = Big.new(fuelCost).m(60)
-#		lv.updateDrain(fuelResource, type, fuelUsage)
-#	else:
-#		lv.updateDrain(fuelResource, type, Big.new(0))
-#func updateTotalDrainToZero(resources: Array):
-#	for r in resources:
-#		lv.updateDrain(r, type, Big.new(0))
+
+func updateOfflineNet(resource: int):
+	for job in jobs.values():
+		job.updateOfflineNet(resource)
+	updateOfflineNet = true
+
+var updateOfflineNet := true
+var offlineNet := {} setget , getOfflineNet
+func getOfflineNet() -> Dictionary:
+	if updateOfflineNet:
+		setOfflineNet()
+	return offlineNet
+func setOfflineNet():
+	updateOfflineNet = false
+	offlineNet = {}
+	for job in jobs.values():
+		offlineNet[job.type] = job.getOfflineNet()
+
+func getOfflineEarnings(timeOffline: int):
+	
+	var offNet = getOfflineNet()
+	
+	if not purchased:
+		return
+	
+	for job in offNet:
+		
+		for resource in offNet[job]:
+			
+			var _sign: int = int(offNet[job][resource][1])
+			
+			if _sign == 0:
+				gv.logOfflineEarnings(resource, Big.new(0), 0)
+				continue
+			
+			var amount: Big = Big.new(offNet[job][resource][0])
+			
+			amount.m(timeOffline)
+			
+			if _sign == 1:
+				gv.addToResource(resource, amount)
+			elif _sign == -1:
+				gv.subtractFromResource(resource, amount)
+			
+			gv.logOfflineEarnings(resource, amount, _sign) 
 
 
 
 # - - - Actions
 
-func stopExport():
-	for resource in producedResources:
-		if not resource in gv.resourcesNotBeingExported:
-			gv.resourcesNotBeingExported.append(resource)
-func resumeExport():
-	for resource in producedResources:
-		if not resource in gv.resourcesNotBeingExported:
-			gv.resourcesNotBeingExported.erase(resource)
+
+
+# - - - Pronouns
+
+func setPronouns(isMale := true):
+	if isMale:
+		pronoun = ["he", "him", "his"]
+	else:
+		pronoun = ["she", "her", "hers"]

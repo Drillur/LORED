@@ -43,6 +43,7 @@ onready var stats_run_1_reset = get_node("sc/m/v/stats/v/run/cont/s1/reset/Label
 onready var stats_run_2_reset = get_node("sc/m/v/stats/v/run/cont/s2/reset/Label")
 onready var stats_run_3_reset = get_node("sc/m/v/stats/v/run/cont/s3/reset/Label")
 onready var stats_run_4_reset = get_node("sc/m/v/stats/v/run/cont/s4/reset/Label")
+onready var tooltipAdvancedInfo = get_node("%tooltipAdvancedInfo/button")
 
 onready var max_random_wishes = get_node("sc/m/v/stats/v/quest/cont/max_random_wishes/Label")
 
@@ -120,8 +121,6 @@ func setup():
 	_on_tip_halt_pressed()
 	tip_hold.pressed = gv.option["tooltip_hold"]
 	_on_tip_hold_pressed()
-	tip_fuel.pressed = gv.option["tooltip_fuel"]
-	_on_tip_fuel_pressed()
 	tip_autobuyer.pressed = gv.option["tooltip_autobuyer"]
 	_on_tip_autobuyer_pressed()
 	
@@ -133,7 +132,12 @@ func setup():
 	#quest_max_tasks.text = "Max tasks +" + str(taq.max_tasks)
 	
 	patch_alert_option.pressed = gv.option["patch alert"]
+	_on_patch_alert_pressed()
 	tutorial_alert_option.pressed = gv.option["tutorial alert"]
+	_on_tutorial_alert_pressed()
+	
+	tooltipAdvancedInfo.pressed = gv.option["tooltipAdvancedInfo"]
+	_on_advancedInfo_button_pressed()
 	
 	update()
 
@@ -287,6 +291,8 @@ func _on_patch_alert_pressed() -> void:
 	gv.option["patch alert"] = patch_alert_option.pressed
 func _on_tutorial_alert_pressed() -> void:
 	gv.option["tutorial alert"] = tutorial_alert_option.pressed
+func _on_advancedInfo_button_pressed() -> void:
+	gv.option["tooltipAdvancedInfo"] = tooltipAdvancedInfo.pressed
 	
 
 func _on_save_halt_pressed() -> void:
@@ -362,6 +368,8 @@ func _on_save_now_pressed() -> void:
 	SaveManager.save()
 	save.start(1)
 	save_bar.rect_size.x = 0
+
+
 
 
 

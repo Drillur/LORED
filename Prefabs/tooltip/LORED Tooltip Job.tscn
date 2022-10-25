@@ -1,0 +1,230 @@
+[gd_scene load_steps=14 format=2]
+
+[ext_resource path="res://Fonts/Roboto-BlackItalic.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://Fonts/Roboto-Medium.ttf" type="DynamicFontData" id=2]
+[ext_resource path="res://Fonts/Roboto-MediumItalic.ttf" type="DynamicFontData" id=3]
+[ext_resource path="res://Prefabs/tooltip/LORED Tooltip Job.gd" type="Script" id=4]
+[ext_resource path="res://Sprites/Menu/Halt.png" type="Texture" id=5]
+[ext_resource path="res://Sprites/Menu/Time.png" type="Texture" id=6]
+[ext_resource path="res://Sprites/Menu/drain rate.png" type="Texture" id=7]
+
+[sub_resource type="StyleBoxFlat" id=8]
+bg_color = Color( 1, 1, 1, 1 )
+border_color = Color( 1, 1, 1, 0.1 )
+
+[sub_resource type="DynamicFont" id=6]
+size = 12
+font_data = ExtResource( 1 )
+
+[sub_resource type="DynamicFont" id=7]
+size = 12
+outline_color = Color( 0, 0, 0, 0.6 )
+font_data = ExtResource( 3 )
+
+[sub_resource type="StyleBoxFlat" id=5]
+bg_color = Color( 0, 0, 0, 0.25 )
+draw_center = false
+
+[sub_resource type="DynamicFont" id=3]
+size = 12
+outline_color = Color( 0, 0, 0, 1 )
+font_data = ExtResource( 2 )
+
+[sub_resource type="StyleBoxFlat" id=9]
+bg_color = Color( 1, 1, 1, 1 )
+draw_center = false
+border_color = Color( 1, 1, 1, 0.1 )
+
+[node name="Job" type="MarginContainer"]
+margin_right = 304.0
+margin_bottom = 42.0
+rect_min_size = Vector2( 304, 40 )
+script = ExtResource( 4 )
+
+[node name="h" type="HBoxContainer" parent="."]
+margin_right = 304.0
+margin_bottom = 42.0
+custom_constants/separation = 10
+alignment = 1
+
+[node name="dot" type="Panel" parent="h"]
+unique_name_in_owner = true
+margin_top = 18.0
+margin_right = 6.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 6, 6 )
+size_flags_horizontal = 0
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 8 )
+
+[node name="v" type="VBoxContainer" parent="h"]
+margin_left = 16.0
+margin_right = 288.0
+margin_bottom = 42.0
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="info" type="RichTextLabel" parent="h/v"]
+unique_name_in_owner = true
+margin_right = 272.0
+margin_bottom = 20.0
+rect_min_size = Vector2( 95, 0 )
+mouse_filter = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/italics_font = SubResource( 6 )
+custom_fonts/normal_font = SubResource( 7 )
+bbcode_enabled = true
+bbcode_text = "[center]May take 123e123 [img=<16>]res://Sprites/resources/coal.png[/img] Coal to refuel."
+text = "May take 123e123  Coal to refuel."
+fit_content_height = true
+scroll_active = false
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="time" type="HBoxContainer" parent="h/v"]
+margin_left = 44.0
+margin_top = 24.0
+margin_right = 227.0
+margin_bottom = 42.0
+size_flags_horizontal = 4
+custom_constants/separation = 10
+alignment = 1
+
+[node name="requiredFuel" type="HBoxContainer" parent="h/v/time"]
+margin_right = 39.0
+margin_bottom = 18.0
+size_flags_vertical = 4
+alignment = 1
+
+[node name="Panel" type="Panel" parent="h/v/time/requiredFuel"]
+margin_right = 18.0
+margin_bottom = 18.0
+rect_min_size = Vector2( 18, 18 )
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 5 )
+
+[node name="requiredFuelIcon" type="Sprite" parent="h/v/time/requiredFuel/Panel"]
+unique_name_in_owner = true
+position = Vector2( 9, 9 )
+texture = ExtResource( 7 )
+
+[node name="shadow" type="Sprite" parent="h/v/time/requiredFuel/Panel/requiredFuelIcon"]
+self_modulate = Color( 0, 0, 0, 1 )
+show_behind_parent = true
+position = Vector2( 1, 1 )
+texture = ExtResource( 7 )
+
+[node name="requiredFuel" type="Label" parent="h/v/time/requiredFuel"]
+unique_name_in_owner = true
+margin_left = 22.0
+margin_top = 1.0
+margin_right = 39.0
+margin_bottom = 16.0
+custom_fonts/font = SubResource( 3 )
+text = "0.3"
+valign = 1
+
+[node name="duration" type="HBoxContainer" parent="h/v/time"]
+margin_left = 49.0
+margin_right = 109.0
+margin_bottom = 18.0
+size_flags_vertical = 4
+alignment = 1
+
+[node name="Panel" type="Panel" parent="h/v/time/duration"]
+margin_right = 18.0
+margin_bottom = 18.0
+rect_min_size = Vector2( 18, 18 )
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 5 )
+
+[node name="loredIcon" type="Sprite" parent="h/v/time/duration/Panel"]
+position = Vector2( 9, 9 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 6 )
+
+[node name="shadow" type="Sprite" parent="h/v/time/duration/Panel/loredIcon"]
+self_modulate = Color( 0, 0, 0, 1 )
+show_behind_parent = true
+position = Vector2( 1, 1 )
+texture = ExtResource( 6 )
+
+[node name="duration" type="Label" parent="h/v/time/duration"]
+unique_name_in_owner = true
+margin_left = 22.0
+margin_top = 1.0
+margin_right = 60.0
+margin_bottom = 16.0
+custom_fonts/font = SubResource( 3 )
+text = "4.0 sec"
+valign = 1
+
+[node name="offline" type="HBoxContainer" parent="h/v/time"]
+unique_name_in_owner = true
+margin_left = 119.0
+margin_right = 183.0
+margin_bottom = 18.0
+size_flags_vertical = 4
+alignment = 1
+
+[node name="Panel" type="Panel" parent="h/v/time/offline"]
+margin_right = 18.0
+margin_bottom = 18.0
+rect_min_size = Vector2( 18, 18 )
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 5 )
+
+[node name="loredIcon" type="Sprite" parent="h/v/time/offline/Panel"]
+position = Vector2( 9, 9 )
+texture = ExtResource( 5 )
+
+[node name="shadow" type="Sprite" parent="h/v/time/offline/Panel/loredIcon"]
+self_modulate = Color( 0, 0, 0, 1 )
+show_behind_parent = true
+position = Vector2( 1, 1 )
+texture = ExtResource( 5 )
+
+[node name="offline0" type="Label" parent="h/v/time/offline"]
+unique_name_in_owner = true
+margin_left = 22.0
+margin_top = 1.0
+margin_right = 64.0
+margin_bottom = 16.0
+custom_fonts/font = SubResource( 3 )
+text = "0.308/s"
+valign = 1
+
+[node name="offline1" type="Label" parent="h/v/time/offline"]
+unique_name_in_owner = true
+visible = false
+margin_left = 68.0
+margin_top = 1.0
+margin_right = 110.0
+margin_bottom = 16.0
+custom_fonts/font = SubResource( 3 )
+text = "0.308/s"
+valign = 1
+
+[node name="offline2" type="Label" parent="h/v/time/offline"]
+unique_name_in_owner = true
+visible = false
+margin_left = 68.0
+margin_top = 1.0
+margin_right = 110.0
+margin_bottom = 16.0
+custom_fonts/font = SubResource( 3 )
+text = "0.308/s"
+valign = 1
+
+[node name="dot2" type="Panel" parent="h"]
+margin_left = 298.0
+margin_top = 18.0
+margin_right = 304.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 6, 6 )
+size_flags_horizontal = 0
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 9 )

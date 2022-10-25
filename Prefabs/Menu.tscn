@@ -207,7 +207,7 @@ font_data = ExtResource( 11 )
 
 [node name="Menu" type="MarginContainer"]
 margin_right = 490.0
-margin_bottom = 828.0
+margin_bottom = 300.0
 size_flags_horizontal = 4
 size_flags_vertical = 4
 script = ExtResource( 20 )
@@ -215,13 +215,12 @@ script = ExtResource( 20 )
 [node name="bg" type="Panel" parent="."]
 visible = false
 margin_right = 490.0
-margin_bottom = 828.0
+margin_bottom = 300.0
 custom_styles/panel = SubResource( 1 )
 
 [node name="sc" type="ScrollContainer" parent="."]
-margin_top = 264.0
-margin_right = 478.0
-margin_bottom = 564.0
+margin_right = 404.0
+margin_bottom = 300.0
 rect_min_size = Vector2( 404, 300 )
 size_flags_horizontal = 0
 size_flags_vertical = 4
@@ -232,8 +231,8 @@ __meta__ = {
 }
 
 [node name="m" type="MarginContainer" parent="sc"]
-margin_right = 478.0
-margin_bottom = 271.0
+margin_right = 390.0
+margin_bottom = 803.0
 size_flags_horizontal = 0
 custom_constants/margin_right = 2
 custom_constants/margin_top = 2
@@ -247,19 +246,19 @@ __meta__ = {
 self_modulate = Color( 1, 0, 0.380392, 1 )
 margin_left = 2.0
 margin_top = 2.0
-margin_right = 476.0
-margin_bottom = 269.0
+margin_right = 388.0
+margin_bottom = 801.0
 custom_styles/panel = SubResource( 2 )
 
 [node name="v" type="VBoxContainer" parent="sc/m"]
 margin_left = 2.0
 margin_top = 2.0
-margin_right = 476.0
-margin_bottom = 269.0
+margin_right = 388.0
+margin_bottom = 801.0
 custom_constants/separation = 0
 
 [node name="top" type="MarginContainer" parent="sc/m/v"]
-margin_right = 474.0
+margin_right = 386.0
 margin_bottom = 56.0
 custom_constants/margin_right = 10
 custom_constants/margin_top = 10
@@ -269,14 +268,14 @@ custom_constants/margin_bottom = 10
 [node name="bg" type="Panel" parent="sc/m/v/top"]
 margin_left = 10.0
 margin_top = 10.0
-margin_right = 464.0
+margin_right = 376.0
 margin_bottom = 46.0
 custom_styles/panel = SubResource( 3 )
 
 [node name="v" type="VBoxContainer" parent="sc/m/v/top"]
 margin_left = 10.0
 margin_top = 10.0
-margin_right = 464.0
+margin_right = 376.0
 margin_bottom = 46.0
 
 [node name="game_title" type="Label" parent="sc/m/v/top/v"]
@@ -297,7 +296,7 @@ align = 1
 valign = 1
 
 [node name="h" type="HBoxContainer" parent="sc/m/v/top/v"]
-margin_right = 454.0
+margin_right = 366.0
 margin_bottom = 36.0
 
 [node name="save" type="MarginContainer" parent="sc/m/v/top/v/h"]
@@ -580,6 +579,7 @@ __meta__ = {
 }
 
 [node name="tutorial" type="MarginContainer" parent="sc/m/v/top/v/h"]
+visible = false
 margin_left = 370.0
 margin_right = 454.0
 margin_bottom = 36.0
@@ -934,9 +934,8 @@ texture = ExtResource( 8 )
 centered = false
 
 [node name="options" type="MarginContainer" parent="sc/m/v"]
-visible = false
 margin_top = 56.0
-margin_right = 474.0
+margin_right = 386.0
 margin_bottom = 588.0
 custom_constants/margin_right = 10
 custom_constants/margin_top = 10
@@ -947,19 +946,19 @@ custom_constants/margin_bottom = 10
 self_modulate = Color( 0.141176, 0.701961, 0.54902, 0.239216 )
 margin_left = 10.0
 margin_top = 10.0
-margin_right = 464.0
+margin_right = 376.0
 margin_bottom = 522.0
 custom_styles/panel = SubResource( 12 )
 
 [node name="v" type="VBoxContainer" parent="sc/m/v/options"]
 margin_left = 10.0
 margin_top = 10.0
-margin_right = 464.0
+margin_right = 376.0
 margin_bottom = 522.0
 custom_constants/separation = 0
 
 [node name="fps" type="HBoxContainer" parent="sc/m/v/options/v"]
-margin_right = 454.0
+margin_right = 366.0
 margin_bottom = 32.0
 custom_constants/separation = 0
 
@@ -983,7 +982,7 @@ valign = 1
 
 [node name="fps2" type="HBoxContainer" parent="sc/m/v/options/v"]
 margin_top = 32.0
-margin_right = 454.0
+margin_right = 366.0
 margin_bottom = 64.0
 custom_constants/separation = 0
 
@@ -1009,7 +1008,7 @@ custom_styles/panel = SubResource( 16 )
 
 [node name="button" type="OptionButton" parent="sc/m/v/options/v/fps2"]
 margin_left = 18.0
-margin_right = 454.0
+margin_right = 366.0
 margin_bottom = 32.0
 rect_min_size = Vector2( 0, 32 )
 focus_mode = 0
@@ -1019,7 +1018,7 @@ text = "Target FPS"
 
 [node name="notation" type="HBoxContainer" parent="sc/m/v/options/v"]
 margin_top = 64.0
-margin_right = 454.0
+margin_right = 366.0
 margin_bottom = 96.0
 custom_constants/separation = 0
 
@@ -1043,7 +1042,7 @@ valign = 1
 
 [node name="notation2" type="HBoxContainer" parent="sc/m/v/options/v"]
 margin_top = 96.0
-margin_right = 454.0
+margin_right = 366.0
 margin_bottom = 128.0
 custom_constants/separation = 0
 
@@ -1069,7 +1068,7 @@ custom_styles/panel = SubResource( 16 )
 
 [node name="button" type="OptionButton" parent="sc/m/v/options/v/notation2"]
 margin_left = 18.0
-margin_right = 454.0
+margin_right = 366.0
 margin_bottom = 32.0
 rect_min_size = Vector2( 0, 32 )
 focus_mode = 0
@@ -1079,7 +1078,7 @@ text = "Scientific notation"
 
 [node name="animations" type="CheckButton" parent="sc/m/v/options/v"]
 margin_top = 128.0
-margin_right = 454.0
+margin_right = 366.0
 margin_bottom = 160.0
 focus_mode = 0
 mouse_default_cursor_shape = 2
@@ -1105,7 +1104,7 @@ __meta__ = {
 
 [node name="flying_numbers" type="CheckButton" parent="sc/m/v/options/v"]
 margin_top = 160.0
-margin_right = 454.0
+margin_right = 366.0
 margin_bottom = 192.0
 focus_mode = 0
 mouse_default_cursor_shape = 2
@@ -1131,7 +1130,7 @@ __meta__ = {
 
 [node name="consolidate_numbers" type="HBoxContainer" parent="sc/m/v/options/v"]
 margin_top = 192.0
-margin_right = 454.0
+margin_right = 366.0
 margin_bottom = 224.0
 custom_constants/separation = 0
 
@@ -1157,7 +1156,7 @@ custom_styles/panel = SubResource( 16 )
 
 [node name="button" type="CheckButton" parent="sc/m/v/options/v/consolidate_numbers"]
 margin_left = 18.0
-margin_right = 454.0
+margin_right = 366.0
 margin_bottom = 32.0
 focus_mode = 0
 mouse_default_cursor_shape = 2
@@ -1184,7 +1183,7 @@ __meta__ = {
 
 [node name="crits_only" type="HBoxContainer" parent="sc/m/v/options/v"]
 margin_top = 224.0
-margin_right = 454.0
+margin_right = 366.0
 margin_bottom = 256.0
 custom_constants/separation = 0
 
@@ -1210,7 +1209,7 @@ custom_styles/panel = SubResource( 16 )
 
 [node name="button" type="CheckButton" parent="sc/m/v/options/v/crits_only"]
 margin_left = 18.0
-margin_right = 454.0
+margin_right = 366.0
 margin_bottom = 32.0
 focus_mode = 0
 mouse_default_cursor_shape = 2
@@ -1235,7 +1234,7 @@ __meta__ = {
 
 [node name="lored chit-chat" type="CheckButton" parent="sc/m/v/options/v"]
 margin_top = 256.0
-margin_right = 454.0
+margin_right = 366.0
 margin_bottom = 288.0
 mouse_default_cursor_shape = 2
 size_flags_horizontal = 3
@@ -1260,7 +1259,7 @@ __meta__ = {
 
 [node name="tooltip" type="HBoxContainer" parent="sc/m/v/options/v"]
 margin_top = 288.0
-margin_right = 454.0
+margin_right = 366.0
 margin_bottom = 320.0
 custom_constants/separation = 0
 
@@ -1275,16 +1274,16 @@ custom_styles/panel = SubResource( 13 )
 
 [node name="Label" type="Label" parent="sc/m/v/options/v/tooltip"]
 margin_left = 10.0
-margin_right = 134.0
+margin_right = 92.0
 margin_bottom = 32.0
 rect_min_size = Vector2( 0, 32 )
 custom_fonts/font = SubResource( 20 )
-text = "Tooltip display options"
+text = "Tooltip options"
 valign = 1
 
 [node name="halt" type="HBoxContainer" parent="sc/m/v/options/v"]
 margin_top = 320.0
-margin_right = 454.0
+margin_right = 366.0
 margin_bottom = 352.0
 custom_constants/separation = 0
 
@@ -1310,13 +1309,13 @@ custom_styles/panel = SubResource( 16 )
 
 [node name="button" type="CheckButton" parent="sc/m/v/options/v/halt"]
 margin_left = 18.0
-margin_right = 454.0
+margin_right = 366.0
 margin_bottom = 32.0
 mouse_default_cursor_shape = 2
 size_flags_horizontal = 3
 theme = ExtResource( 18 )
 pressed = true
-text = "LORED halt"
+text = "Display LORED sleep tooltip"
 __meta__ = {
 "_edit_group_": true
 }
@@ -1335,7 +1334,7 @@ __meta__ = {
 
 [node name="hold" type="HBoxContainer" parent="sc/m/v/options/v"]
 margin_top = 352.0
-margin_right = 454.0
+margin_right = 366.0
 margin_bottom = 384.0
 custom_constants/separation = 0
 
@@ -1361,13 +1360,13 @@ custom_styles/panel = SubResource( 16 )
 
 [node name="button" type="CheckButton" parent="sc/m/v/options/v/hold"]
 margin_left = 18.0
-margin_right = 454.0
+margin_right = 366.0
 margin_bottom = 32.0
 mouse_default_cursor_shape = 2
 size_flags_horizontal = 3
 theme = ExtResource( 18 )
 pressed = true
-text = "LORED hold"
+text = "Display LORED export tooltip"
 __meta__ = {
 "_edit_group_": true
 }
@@ -1380,65 +1379,11 @@ custom_styles/hover = SubResource( 18 )
 custom_styles/pressed = SubResource( 19 )
 custom_styles/focus = SubResource( 19 )
 custom_styles/normal = SubResource( 19 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="fuel" type="HBoxContainer" parent="sc/m/v/options/v"]
-margin_top = 384.0
-margin_right = 454.0
-margin_bottom = 416.0
-custom_constants/separation = 0
-
-[node name="indent" type="Panel" parent="sc/m/v/options/v/fuel"]
-margin_top = 13.0
-margin_right = 12.0
-margin_bottom = 19.0
-rect_min_size = Vector2( 12, 6 )
-size_flags_horizontal = 4
-size_flags_vertical = 4
-custom_styles/panel = SubResource( 13 )
-
-[node name="dot" type="Panel" parent="sc/m/v/options/v/fuel"]
-self_modulate = Color( 0.137255, 0.698039, 0.552941, 1 )
-margin_left = 12.0
-margin_top = 13.0
-margin_right = 18.0
-margin_bottom = 19.0
-rect_min_size = Vector2( 6, 6 )
-size_flags_horizontal = 4
-size_flags_vertical = 4
-custom_styles/panel = SubResource( 16 )
-
-[node name="button" type="CheckButton" parent="sc/m/v/options/v/fuel"]
-margin_left = 18.0
-margin_right = 454.0
-margin_bottom = 32.0
-mouse_default_cursor_shape = 2
-size_flags_horizontal = 3
-theme = ExtResource( 18 )
-pressed = true
-text = "LORED fuel"
-__meta__ = {
-"_edit_group_": true
-}
-
-[node name="highlight" type="Button" parent="sc/m/v/options/v/fuel/button"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-mouse_filter = 1
-custom_styles/hover = SubResource( 18 )
-custom_styles/pressed = SubResource( 19 )
-custom_styles/focus = SubResource( 19 )
-custom_styles/normal = SubResource( 19 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="autobuyer" type="HBoxContainer" parent="sc/m/v/options/v"]
-margin_top = 416.0
-margin_right = 454.0
-margin_bottom = 448.0
+margin_top = 384.0
+margin_right = 366.0
+margin_bottom = 416.0
 custom_constants/separation = 0
 
 [node name="indent" type="Panel" parent="sc/m/v/options/v/autobuyer"]
@@ -1463,13 +1408,13 @@ custom_styles/panel = SubResource( 16 )
 
 [node name="button" type="CheckButton" parent="sc/m/v/options/v/autobuyer"]
 margin_left = 18.0
-margin_right = 454.0
+margin_right = 366.0
 margin_bottom = 32.0
 mouse_default_cursor_shape = 2
 size_flags_horizontal = 3
 theme = ExtResource( 18 )
 pressed = true
-text = "LORED autobuyer"
+text = "Display LORED autobuyer tooltip"
 __meta__ = {
 "_edit_group_": true
 }
@@ -1482,13 +1427,58 @@ custom_styles/hover = SubResource( 18 )
 custom_styles/pressed = SubResource( 19 )
 custom_styles/focus = SubResource( 19 )
 custom_styles/normal = SubResource( 19 )
+
+[node name="tooltipAdvancedInfo" type="HBoxContainer" parent="sc/m/v/options/v"]
+unique_name_in_owner = true
+margin_top = 416.0
+margin_right = 366.0
+margin_bottom = 448.0
+custom_constants/separation = 0
+
+[node name="indent" type="Panel" parent="sc/m/v/options/v/tooltipAdvancedInfo"]
+margin_top = 13.0
+margin_right = 12.0
+margin_bottom = 19.0
+rect_min_size = Vector2( 12, 6 )
+size_flags_horizontal = 4
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 13 )
+
+[node name="dot" type="Panel" parent="sc/m/v/options/v/tooltipAdvancedInfo"]
+self_modulate = Color( 0.137255, 0.698039, 0.552941, 1 )
+margin_left = 12.0
+margin_top = 13.0
+margin_right = 18.0
+margin_bottom = 19.0
+rect_min_size = Vector2( 6, 6 )
+size_flags_horizontal = 4
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 16 )
+
+[node name="button" type="CheckButton" parent="sc/m/v/options/v/tooltipAdvancedInfo"]
+margin_left = 18.0
+margin_right = 366.0
+margin_bottom = 32.0
+mouse_default_cursor_shape = 2
+size_flags_horizontal = 3
+theme = ExtResource( 18 )
+text = "Advanced LORED info tooltip"
 __meta__ = {
-"_edit_use_anchors_": false
+"_edit_group_": true
 }
+
+[node name="highlight" type="Button" parent="sc/m/v/options/v/tooltipAdvancedInfo/button"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 1
+custom_styles/hover = SubResource( 18 )
+custom_styles/pressed = SubResource( 19 )
+custom_styles/focus = SubResource( 19 )
+custom_styles/normal = SubResource( 19 )
 
 [node name="color blind" type="CheckButton" parent="sc/m/v/options/v"]
 margin_top = 448.0
-margin_right = 454.0
+margin_right = 366.0
 margin_bottom = 480.0
 focus_mode = 0
 mouse_default_cursor_shape = 2
@@ -1513,7 +1503,7 @@ __meta__ = {
 
 [node name="deaf" type="CheckButton" parent="sc/m/v/options/v"]
 margin_top = 480.0
-margin_right = 454.0
+margin_right = 366.0
 margin_bottom = 512.0
 mouse_default_cursor_shape = 2
 size_flags_horizontal = 3
@@ -2257,9 +2247,9 @@ text = "(There's gonna be more stuff here at some point.)"
 valign = 1
 
 [node name="save" type="MarginContainer" parent="sc/m/v"]
-margin_top = 56.0
-margin_right = 474.0
-margin_bottom = 267.0
+margin_top = 588.0
+margin_right = 386.0
+margin_bottom = 799.0
 custom_constants/margin_right = 10
 custom_constants/margin_top = 10
 custom_constants/margin_left = 10
@@ -2269,23 +2259,23 @@ custom_constants/margin_bottom = 10
 self_modulate = Color( 0.380392, 0.6, 0.270588, 0.25098 )
 margin_left = 10.0
 margin_top = 10.0
-margin_right = 464.0
+margin_right = 376.0
 margin_bottom = 201.0
 custom_styles/panel = SubResource( 12 )
 
 [node name="v" type="VBoxContainer" parent="sc/m/v/save"]
 margin_left = 10.0
 margin_top = 10.0
-margin_right = 464.0
+margin_right = 376.0
 margin_bottom = 201.0
 custom_constants/separation = 10
 
 [node name="autosave" type="MarginContainer" parent="sc/m/v/save/v"]
-margin_right = 454.0
+margin_right = 366.0
 margin_bottom = 25.0
 
 [node name="bar" type="Panel" parent="sc/m/v/save/v/autosave"]
-margin_right = 454.0
+margin_right = 366.0
 margin_bottom = 25.0
 rect_min_size = Vector2( 68, 5 )
 mouse_filter = 2
@@ -2326,7 +2316,7 @@ __meta__ = {
 }
 
 [node name="Label" type="Label" parent="sc/m/v/save/v/autosave"]
-margin_right = 454.0
+margin_right = 366.0
 margin_bottom = 25.0
 rect_min_size = Vector2( 0, 25 )
 size_flags_vertical = 1
@@ -2338,13 +2328,13 @@ valign = 1
 
 [node name="h" type="HBoxContainer" parent="sc/m/v/save/v"]
 margin_top = 35.0
-margin_right = 454.0
+margin_right = 366.0
 margin_bottom = 71.0
 alignment = 1
 
 [node name="save now" type="MarginContainer" parent="sc/m/v/save/v/h"]
-margin_left = 139.0
-margin_right = 235.0
+margin_left = 95.0
+margin_right = 191.0
 margin_bottom = 36.0
 mouse_filter = 2
 size_flags_horizontal = 4
@@ -2399,8 +2389,8 @@ text = "Save Now"
 align = 1
 
 [node name="export" type="MarginContainer" parent="sc/m/v/save/v/h"]
-margin_left = 239.0
-margin_right = 314.0
+margin_left = 195.0
+margin_right = 270.0
 margin_bottom = 36.0
 mouse_filter = 2
 size_flags_horizontal = 4
@@ -2513,12 +2503,12 @@ align = 1
 
 [node name="options" type="VBoxContainer" parent="sc/m/v/save/v"]
 margin_top = 81.0
-margin_right = 454.0
+margin_right = 366.0
 margin_bottom = 145.0
 custom_constants/separation = 0
 
 [node name="halt" type="CheckButton" parent="sc/m/v/save/v/options"]
-margin_right = 454.0
+margin_right = 366.0
 margin_bottom = 32.0
 mouse_default_cursor_shape = 2
 size_flags_horizontal = 3
@@ -2542,7 +2532,7 @@ __meta__ = {
 
 [node name="hold" type="CheckButton" parent="sc/m/v/save/v/options"]
 margin_top = 32.0
-margin_right = 454.0
+margin_right = 366.0
 margin_bottom = 64.0
 mouse_default_cursor_shape = 2
 size_flags_horizontal = 3
@@ -2644,9 +2634,9 @@ valign = 1
 autowrap = true
 
 [node name="hard reset" type="MarginContainer" parent="sc/m/v/save/v"]
-margin_left = 172.0
+margin_left = 128.0
 margin_top = 155.0
-margin_right = 282.0
+margin_right = 238.0
 margin_bottom = 191.0
 mouse_filter = 2
 size_flags_horizontal = 4
@@ -4450,12 +4440,10 @@ autostart = true
 
 [node name="export" type="FileDialog" parent="."]
 margin_right = 490.0
-margin_bottom = 828.0
+margin_bottom = 300.0
 rect_min_size = Vector2( 400, 200 )
 resizable = true
 access = 2
-current_dir = "/Program Files (x86)/Steam/steamapps/common/Godot Engine/projects/LORED_but_better"
-current_path = "/Program Files (x86)/Steam/steamapps/common/Godot Engine/projects/LORED_but_better/"
 
 [connection signal="visibility_changed" from="sc" to="." method="_on_Menu_visibility_changed"]
 [connection signal="resized" from="sc/m" to="." method="_on_m_resized"]
@@ -4476,8 +4464,8 @@ current_path = "/Program Files (x86)/Steam/steamapps/common/Godot Engine/project
 [connection signal="pressed" from="sc/m/v/options/v/lored chit-chat" to="." method="_on_lored_chitchat_pressed"]
 [connection signal="pressed" from="sc/m/v/options/v/halt/button" to="." method="_on_tip_halt_pressed"]
 [connection signal="pressed" from="sc/m/v/options/v/hold/button" to="." method="_on_tip_hold_pressed"]
-[connection signal="pressed" from="sc/m/v/options/v/fuel/button" to="." method="_on_tip_fuel_pressed"]
 [connection signal="pressed" from="sc/m/v/options/v/autobuyer/button" to="." method="_on_tip_autobuyer_pressed"]
+[connection signal="pressed" from="sc/m/v/options/v/tooltipAdvancedInfo/button" to="." method="_on_advancedInfo_button_pressed"]
 [connection signal="pressed" from="sc/m/v/options/v/color blind" to="." method="_on_color_blind_pressed"]
 [connection signal="pressed" from="sc/m/v/options/v/deaf" to="." method="_on_deaf_pressed"]
 [connection signal="pressed" from="sc/m/v/stats/v/run/top/Button" to="." method="_on_stats_run_pressed"]

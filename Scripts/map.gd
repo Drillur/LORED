@@ -1,6 +1,9 @@
 extends Area2D
 
 onready var rt = get_owner()
+
+onready var earningsReport = get_node("/root/Root/m/Earnings Report")
+
 var status = "no"
 var offset := Vector2()
 var mpos := Vector2()
@@ -28,6 +31,10 @@ func init():
 	
 	pos["upgrade button"] = rt.get_node("misc/tabs/v/upgrades").rect_global_position# + rt.get_node("misc/tabs/v").rect_position + rt.get_node("misc/tabs").rect_position
 	size["upgrade button"] = rt.get_node("misc/tabs/v/upgrades").rect_size
+	
+	bla = rt.get_node("m/Earnings Report")
+	pos["earnings report"] = bla.rect_global_position
+	size["earnings report"] = bla.rect_size
 
 func _input(ev):
 	
@@ -48,6 +55,9 @@ func _input(ev):
 		if rt.get_node(rt.gnupcon).visible and mouse_out(pos["upgrade button"], size["upgrade button"]) and mouse_out(upcon.rect_global_position, upcon.rect_size * rt.scale):
 			rt.get_node(rt.gnupcon).hide()
 			rt.get_node(rt.gnupcon).go_back()
+		
+		if earningsReport.visible and mouse_out(pos["earnings report"], size["earnings report"]):
+			earningsReport.close()
 		
 		status = "no"
 

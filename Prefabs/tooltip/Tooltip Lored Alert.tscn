@@ -1,16 +1,19 @@
-[gd_scene load_steps=23 format=2]
+[gd_scene load_steps=28 format=2]
 
-[ext_resource path="res://Fonts/Roboto-MediumItalic.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://Sprites/Menu/fuel.png" type="Texture" id=1]
 [ext_resource path="res://Fonts/Roboto-BlackItalic.ttf" type="DynamicFontData" id=2]
 [ext_resource path="res://Fonts/Roboto-Medium.ttf" type="DynamicFontData" id=3]
-[ext_resource path="res://Sprites/Menu/Alarm.png" type="Texture" id=4]
+[ext_resource path="res://Fonts/Roboto-BoldItalic.ttf" type="DynamicFontData" id=4]
 [ext_resource path="res://Sprites/Menu/Info.png" type="Texture" id=5]
 [ext_resource path="res://Prefabs/tooltip/Tooltip Lored Alert.gd" type="Script" id=6]
 [ext_resource path="res://Prefabs/FuelBar.tscn" type="PackedScene" id=7]
-[ext_resource path="res://Sprites/Menu/fuel.png" type="Texture" id=8]
+[ext_resource path="res://Sprites/Menu/Fuel Full.png" type="Texture" id=8]
 [ext_resource path="res://Sprites/Menu/drain rate.png" type="Texture" id=9]
 [ext_resource path="res://Fonts/Roboto-Black.ttf" type="DynamicFontData" id=10]
 [ext_resource path="res://Styles/Labels/Normal.tres" type="DynamicFont" id=11]
+[ext_resource path="res://Sprites/Menu/Halt.png" type="Texture" id=12]
+[ext_resource path="res://Sprites/resources/carc.png" type="Texture" id=13]
+[ext_resource path="res://Sprites/Menu/exportFalse.png" type="Texture" id=14]
 
 [sub_resource type="StyleBoxFlat" id=1]
 bg_color = Color( 1, 1, 1, 0.03 )
@@ -32,10 +35,6 @@ size = 17
 outline_color = Color( 0, 0, 0, 1 )
 font_data = ExtResource( 2 )
 
-[sub_resource type="DynamicFont" id=9]
-size = 12
-font_data = ExtResource( 1 )
-
 [sub_resource type="StyleBoxFlat" id=8]
 bg_color = Color( 1, 1, 1, 0.03 )
 border_color = Color( 1, 1, 1, 0.65 )
@@ -43,6 +42,10 @@ expand_margin_left = 10.0
 expand_margin_right = 10.0
 expand_margin_top = 10.0
 expand_margin_bottom = 10.0
+
+[sub_resource type="DynamicFont" id=16]
+size = 12
+font_data = ExtResource( 4 )
 
 [sub_resource type="StyleBoxFlat" id=13]
 draw_center = false
@@ -65,9 +68,17 @@ size = 14
 outline_color = Color( 0, 0, 0, 1 )
 font_data = ExtResource( 10 )
 
+[sub_resource type="StyleBoxFlat" id=17]
+draw_center = false
+
+[sub_resource type="DynamicFont" id=18]
+size = 14
+outline_color = Color( 0, 0, 0, 1 )
+font_data = ExtResource( 10 )
+
 [node name="LORED Alert" type="MarginContainer"]
-margin_right = 268.0
-margin_bottom = 270.0
+margin_right = 84.0
+margin_bottom = 85.0
 rect_min_size = Vector2( 50, 0 )
 custom_constants/margin_right = 2
 custom_constants/margin_top = 2
@@ -78,15 +89,15 @@ script = ExtResource( 6 )
 [node name="bg" type="Panel" parent="."]
 margin_left = 2.0
 margin_top = 2.0
-margin_right = 266.0
-margin_bottom = 268.0
+margin_right = 82.0
+margin_bottom = 83.0
 custom_styles/panel = SubResource( 1 )
 
 [node name="m" type="MarginContainer" parent="."]
 margin_left = 2.0
 margin_top = 2.0
-margin_right = 266.0
-margin_bottom = 268.0
+margin_right = 82.0
+margin_bottom = 83.0
 custom_constants/margin_right = 10
 custom_constants/margin_top = 10
 custom_constants/margin_left = 10
@@ -95,38 +106,39 @@ custom_constants/margin_bottom = 10
 [node name="v" type="VBoxContainer" parent="m"]
 margin_left = 10.0
 margin_top = 10.0
-margin_right = 254.0
-margin_bottom = 256.0
+margin_right = 70.0
+margin_bottom = 71.0
 custom_constants/separation = 10
 
 [node name="v" type="VBoxContainer" parent="m/v"]
-margin_right = 244.0
+margin_right = 60.0
 margin_bottom = 41.0
 custom_constants/separation = 20
 
 [node name="top" type="MarginContainer" parent="m/v/v"]
-margin_right = 244.0
+margin_right = 60.0
 margin_bottom = 21.0
 
 [node name="bg" type="Panel" parent="m/v/v/top"]
-margin_right = 244.0
+margin_right = 60.0
 margin_bottom = 21.0
 custom_styles/panel = SubResource( 2 )
 
 [node name="v" type="VBoxContainer" parent="m/v/v/top"]
-margin_right = 244.0
+margin_right = 60.0
 margin_bottom = 21.0
 custom_constants/separation = 0
 
 [node name="h" type="HBoxContainer" parent="m/v/v/top/v"]
-margin_right = 244.0
+margin_right = 60.0
 margin_bottom = 21.0
+size_flags_horizontal = 4
+custom_constants/separation = 8
 alignment = 1
 
 [node name="icon" type="Panel" parent="m/v/v/top/v/h"]
-margin_left = 78.0
 margin_top = 1.0
-margin_right = 96.0
+margin_right = 18.0
 margin_bottom = 19.0
 rect_min_size = Vector2( 18, 18 )
 size_flags_horizontal = 0
@@ -136,44 +148,56 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Sprite" type="Sprite" parent="m/v/v/top/v/h/icon"]
+[node name="icon LOW_FUEL" type="Sprite" parent="m/v/v/top/v/h/icon"]
+unique_name_in_owner = true
+visible = false
 position = Vector2( 9, 11 )
-texture = ExtResource( 4 )
+texture = ExtResource( 1 )
 
-[node name="shadow" type="Sprite" parent="m/v/v/top/v/h/icon/Sprite"]
+[node name="shadow" type="Sprite" parent="m/v/v/top/v/h/icon/icon LOW_FUEL"]
 self_modulate = Color( 0, 0, 0, 1 )
 show_behind_parent = true
 position = Vector2( 2, 2 )
-texture = ExtResource( 4 )
+texture = ExtResource( 1 )
 
-[node name="VBoxContainer" type="VBoxContainer" parent="m/v/v/top/v/h"]
-margin_left = 100.0
-margin_right = 166.0
-margin_bottom = 21.0
-alignment = 1
+[node name="icon ASLEEP" type="Sprite" parent="m/v/v/top/v/h/icon"]
+unique_name_in_owner = true
+visible = false
+position = Vector2( 9, 11 )
+texture = ExtResource( 12 )
 
-[node name="Name" type="Label" parent="m/v/v/top/v/h/VBoxContainer"]
-margin_right = 66.0
+[node name="shadow" type="Sprite" parent="m/v/v/top/v/h/icon/icon ASLEEP"]
+self_modulate = Color( 0, 0, 0, 1 )
+show_behind_parent = true
+position = Vector2( 2, 2 )
+texture = ExtResource( 12 )
+
+[node name="icon REQUIRED_RESOURCE_NOT_EXPORTING" type="Sprite" parent="m/v/v/top/v/h/icon"]
+unique_name_in_owner = true
+visible = false
+position = Vector2( 9, 11 )
+texture = ExtResource( 14 )
+
+[node name="shadow" type="Sprite" parent="m/v/v/top/v/h/icon/icon REQUIRED_RESOURCE_NOT_EXPORTING"]
+self_modulate = Color( 0, 0, 0, 1 )
+show_behind_parent = true
+position = Vector2( 2, 2 )
+texture = ExtResource( 14 )
+
+[node name="top text" type="Label" parent="m/v/v/top/v/h"]
+unique_name_in_owner = true
+margin_left = 26.0
+margin_right = 60.0
 margin_bottom = 21.0
-size_flags_horizontal = 0
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 3 )
-text = "Low Fuel"
+text = "Test"
 valign = 1
 
-[node name="flair" type="Label" parent="m/v/v/top/v/h/VBoxContainer"]
-visible = false
-margin_top = 25.0
-margin_right = 37.0
-margin_bottom = 40.0
-mouse_filter = 1
-custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-custom_fonts/font = SubResource( 9 )
-text = "Alert"
-
 [node name="sub" type="MarginContainer" parent="m/v/v"]
+unique_name_in_owner = true
 margin_top = 41.0
-margin_right = 244.0
+margin_right = 60.0
 margin_bottom = 41.0
 custom_constants/margin_right = 0
 custom_constants/margin_top = 0
@@ -181,26 +205,49 @@ custom_constants/margin_left = 0
 custom_constants/margin_bottom = 0
 
 [node name="bg" type="Panel" parent="m/v/v/sub"]
-margin_right = 244.0
+margin_right = 60.0
 custom_styles/panel = SubResource( 8 )
 
 [node name="sub_LOW_FUEL" type="HBoxContainer" parent="m/v/v/sub"]
 unique_name_in_owner = true
 visible = false
-margin_right = 244.0
+margin_right = 60.0
 margin_bottom = 24.0
 custom_constants/separation = 20
 alignment = 1
 
 [node name="Fuel Progress" parent="m/v/v/sub/sub_LOW_FUEL" instance=ExtResource( 7 )]
 unique_name_in_owner = true
-margin_left = 117.0
-margin_right = 127.0
+margin_left = 130.0
+margin_top = 4.0
+margin_right = 140.0
+margin_bottom = 28.0
+
+[node name="sub_ASLEEP" type="HBoxContainer" parent="m/v/v/sub"]
+unique_name_in_owner = true
+visible = false
+margin_right = 140.0
+margin_bottom = 33.0
+custom_constants/separation = 20
+alignment = 1
+
+[node name="production" type="Label" parent="m/v/v/sub/sub_ASLEEP"]
+unique_name_in_owner = true
+margin_left = 65.0
+margin_right = 205.0
+margin_bottom = 33.0
+rect_min_size = Vector2( 140, 0 )
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 16 )
+text = "You put this LORED to sleep 10+ seconds ago."
+align = 1
+autowrap = true
 
 [node name="bot" type="MarginContainer" parent="m/v"]
 margin_top = 51.0
-margin_right = 244.0
-margin_bottom = 246.0
+margin_right = 60.0
+margin_bottom = 61.0
 custom_constants/margin_right = 0
 custom_constants/margin_top = 10
 custom_constants/margin_left = 0
@@ -208,33 +255,36 @@ custom_constants/margin_bottom = 0
 
 [node name="LOW_FUEL" type="VBoxContainer" parent="m/v/bot"]
 unique_name_in_owner = true
+visible = false
 margin_top = 10.0
-margin_right = 244.0
-margin_bottom = 195.0
+margin_right = 136.0
+margin_bottom = 177.0
 custom_constants/separation = 8
 
 [node name="info" type="Label" parent="m/v/bot/LOW_FUEL"]
-margin_right = 244.0
-margin_bottom = 69.0
+margin_right = 319.0
+margin_bottom = 51.0
 size_flags_horizontal = 3
 custom_fonts/font = ExtResource( 11 )
-text = "This LORED has low fuel. LOREDs must draw fuel from their own fuel storage in order to work. They will automatically fill their fuel storage by drawing from available resources."
+text = "This LORED has low fuel. LOREDs must draw fuel from their own fuel storage in order to work. They will automatically fill their fuel storage by pulling from available resources."
 valign = 1
 autowrap = true
 
 [node name="v" type="VBoxContainer" parent="m/v/bot/LOW_FUEL"]
-margin_top = 77.0
-margin_right = 244.0
-margin_bottom = 185.0
+margin_top = 59.0
+margin_right = 319.0
+margin_bottom = 167.0
 custom_constants/separation = 0
 
 [node name="h" type="HBoxContainer" parent="m/v/bot/LOW_FUEL/v"]
-margin_right = 244.0
+margin_right = 319.0
 margin_bottom = 36.0
 custom_constants/separation = 8
+alignment = 1
 
 [node name="icon" type="Panel" parent="m/v/bot/LOW_FUEL/v/h"]
-margin_right = 18.0
+margin_left = 91.0
+margin_right = 109.0
 margin_bottom = 36.0
 rect_min_size = Vector2( 18, 36 )
 size_flags_horizontal = 0
@@ -255,8 +305,8 @@ position = Vector2( 2, 2 )
 texture = ExtResource( 5 )
 
 [node name="type" type="HBoxContainer" parent="m/v/bot/LOW_FUEL/v/h"]
-margin_left = 26.0
-margin_right = 136.0
+margin_left = 117.0
+margin_right = 227.0
 margin_bottom = 36.0
 
 [node name="text" type="Label" parent="m/v/bot/LOW_FUEL/v/h/type"]
@@ -283,12 +333,14 @@ valign = 1
 
 [node name="h2" type="HBoxContainer" parent="m/v/bot/LOW_FUEL/v"]
 margin_top = 36.0
-margin_right = 244.0
+margin_right = 319.0
 margin_bottom = 72.0
 custom_constants/separation = 8
+alignment = 1
 
 [node name="icon" type="Panel" parent="m/v/bot/LOW_FUEL/v/h2"]
-margin_right = 18.0
+margin_left = 105.0
+margin_right = 123.0
 margin_bottom = 36.0
 rect_min_size = Vector2( 18, 36 )
 size_flags_horizontal = 0
@@ -309,36 +361,38 @@ position = Vector2( 2, 2 )
 texture = ExtResource( 9 )
 
 [node name="text" type="Label" parent="m/v/bot/LOW_FUEL/v/h2"]
-margin_left = 26.0
+margin_left = 131.0
 margin_top = 10.0
-margin_right = 128.0
+margin_right = 185.0
 margin_bottom = 25.0
 size_flags_horizontal = 4
 custom_fonts/font = SubResource( 11 )
-text = "Fuel Consumption:"
+text = "Fuel Cost:"
 valign = 1
 
 [node name="fuelCost" type="Label" parent="m/v/bot/LOW_FUEL/v/h2"]
 unique_name_in_owner = true
-margin_left = 136.0
+margin_left = 193.0
 margin_top = 9.0
-margin_right = 204.0
+margin_right = 213.0
 margin_bottom = 26.0
 mouse_filter = 1
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 12 )
-text = "123e123/s"
+text = "1/s"
 align = 1
 valign = 1
 
 [node name="h3" type="HBoxContainer" parent="m/v/bot/LOW_FUEL/v"]
 margin_top = 72.0
-margin_right = 244.0
+margin_right = 319.0
 margin_bottom = 108.0
 custom_constants/separation = 8
+alignment = 1
 
 [node name="icon" type="Panel" parent="m/v/bot/LOW_FUEL/v/h3"]
-margin_right = 18.0
+margin_left = 100.0
+margin_right = 118.0
 margin_bottom = 36.0
 rect_min_size = Vector2( 18, 36 )
 size_flags_horizontal = 0
@@ -359,9 +413,9 @@ position = Vector2( 2, 2 )
 texture = ExtResource( 8 )
 
 [node name="text" type="Label" parent="m/v/bot/LOW_FUEL/v/h3"]
-margin_left = 26.0
+margin_left = 126.0
 margin_top = 10.0
-margin_right = 90.0
+margin_right = 190.0
 margin_bottom = 25.0
 size_flags_horizontal = 4
 custom_fonts/font = SubResource( 11 )
@@ -370,13 +424,119 @@ valign = 1
 
 [node name="fuel" type="Label" parent="m/v/bot/LOW_FUEL/v/h3"]
 unique_name_in_owner = true
-margin_left = 98.0
+margin_left = 198.0
 margin_top = 9.0
-margin_right = 221.0
+margin_right = 219.0
 margin_bottom = 26.0
 mouse_filter = 1
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 12 )
-text = "123e123 / 123e123"
+text = "1/1"
 align = 1
+valign = 1
+
+[node name="ASLEEP" type="VBoxContainer" parent="m/v/bot"]
+unique_name_in_owner = true
+visible = false
+margin_top = 10.0
+margin_right = 60.0
+margin_bottom = 61.0
+custom_constants/separation = 8
+
+[node name="info" type="Label" parent="m/v/bot/ASLEEP"]
+visible = false
+margin_right = 271.0
+margin_bottom = 15.0
+size_flags_horizontal = 3
+custom_fonts/font = ExtResource( 11 )
+text = "If you don't care, then neither do I!"
+align = 1
+valign = 1
+autowrap = true
+
+[node name="v" type="VBoxContainer" parent="m/v/bot/ASLEEP"]
+margin_right = 178.0
+margin_bottom = 51.0
+custom_constants/separation = 0
+
+[node name="h" type="HBoxContainer" parent="m/v/bot/ASLEEP/v"]
+margin_right = 178.0
+margin_bottom = 51.0
+custom_constants/separation = 8
+
+[node name="icon" type="Panel" parent="m/v/bot/ASLEEP/v/h"]
+margin_top = 7.0
+margin_right = 18.0
+margin_bottom = 43.0
+rect_min_size = Vector2( 18, 36 )
+size_flags_horizontal = 0
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 13 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Sprite" type="Sprite" parent="m/v/bot/ASLEEP/v/h/icon"]
+position = Vector2( 9, 18 )
+texture = ExtResource( 5 )
+
+[node name="shadow" type="Sprite" parent="m/v/bot/ASLEEP/v/h/icon/Sprite"]
+self_modulate = Color( 0, 0, 0, 1 )
+show_behind_parent = true
+position = Vector2( 2, 2 )
+texture = ExtResource( 5 )
+
+[node name="text" type="Label" parent="m/v/bot/ASLEEP/v/h"]
+margin_left = 26.0
+margin_right = 178.0
+margin_bottom = 51.0
+size_flags_horizontal = 7
+custom_fonts/font = ExtResource( 11 )
+text = "You can disable this and other types of alerts in the options menu."
+valign = 1
+autowrap = true
+
+[node name="REQUIRED_RESOURCE_NOT_EXPORTING2" type="HBoxContainer" parent="m/v/bot"]
+unique_name_in_owner = true
+visible = false
+margin_left = -30.0
+margin_top = 10.0
+margin_right = 89.0
+margin_bottom = 42.0
+size_flags_horizontal = 4
+custom_constants/separation = 8
+alignment = 1
+
+[node name="icon" type="Panel" parent="m/v/bot/REQUIRED_RESOURCE_NOT_EXPORTING2"]
+margin_right = 32.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 32, 32 )
+size_flags_horizontal = 0
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 17 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="iconRequiredResource" type="Sprite" parent="m/v/bot/REQUIRED_RESOURCE_NOT_EXPORTING2/icon"]
+unique_name_in_owner = true
+position = Vector2( 16, 16 )
+texture = ExtResource( 13 )
+
+[node name="shadow" type="Sprite" parent="m/v/bot/REQUIRED_RESOURCE_NOT_EXPORTING2/icon/iconRequiredResource"]
+self_modulate = Color( 0, 0, 0, 1 )
+show_behind_parent = true
+position = Vector2( 2, 2 )
+texture = ExtResource( 13 )
+
+[node name="textRequiredResource" type="Label" parent="m/v/bot/REQUIRED_RESOURCE_NOT_EXPORTING2"]
+unique_name_in_owner = true
+margin_left = 40.0
+margin_top = 7.0
+margin_right = 119.0
+margin_bottom = 24.0
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 18 )
+text = "Carcinogens"
 valign = 1

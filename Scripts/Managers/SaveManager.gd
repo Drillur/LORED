@@ -77,6 +77,8 @@ func save(path := save_path, type := "normal"):
 
 func load(path := save_path) -> bool:
 	
+	# returns successful load
+	
 	save_path = path
 	
 	var data := getSaveData(path)

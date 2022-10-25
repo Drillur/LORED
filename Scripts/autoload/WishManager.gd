@@ -16,6 +16,7 @@ var completed_wishes := []
 var key_wish_keys := [
 	"grinder",
 	"collection",
+	"upgrade_stone",
 	"upgrades",
 	"joy",
 	"rye",
@@ -162,8 +163,6 @@ func newWish(key: String, data: Dictionary = {}):
 			maxedFuelStorageManager(wish[i])
 		gv.Objective.BREAK:
 			breakManager(wish[i])
-		gv.Objective.HOARD:
-			hoardManager(wish[i])
 
 func instanceWishVico(_wish: Wish):
 	var manager = gv.SRC["wish vico"].instance()
@@ -198,54 +197,59 @@ func adjustCheckpointBasedOnCompletedQuest(key: String):
 	match key:
 		"easier", "autocomplete":
 			if "easier" in completed_wishes and "autocomplete" in completed_wishes:
-				checkpoint = 22
+				checkpoint = 25
 		"tumory", "maliggy", "ciorany":
 			if "tumory" in completed_wishes and "maliggy" in completed_wishes and "ciorany" in completed_wishes:
-				checkpoint = 21
+				checkpoint = 24
 		"carcy":
-			checkpoint = 20
+			checkpoint = 23
 		"papey", "plasty":
 			if "papey" in completed_wishes and "plasty" in completed_wishes:
-				checkpoint = 19
+				checkpoint = 22
 		"galey":
-			checkpoint = 18
+			checkpoint = 21
 		"joy3", "steely", "horsey":
 			if "joy3" in completed_wishes and "steely" in completed_wishes and "horsey" in completed_wishes:
-				checkpoint = 17
+				checkpoint = 20
 		"treey":
-			checkpoint = 16
+			checkpoint = 19
 		"woody", "hardy", "axy":
 			if "woody" in completed_wishes and "hardy" in completed_wishes and "axy" in completed_wishes:
-				checkpoint = 15
+				checkpoint = 18
 		"gramma":
-			checkpoint = 14
+			checkpoint = 17
 		"liqy":
-			checkpoint = 13
+			checkpoint = 16
 		"waterbuddy":
-			checkpoint = 12
+			checkpoint = 15
 		"joy2", "a_new_leaf":
 			if "joy2" in completed_wishes and "a_new_leaf" in completed_wishes:
-				checkpoint = 11
+				checkpoint = 14
 		"soccer_dude":
-			checkpoint = 10
+			checkpoint = 13
 		"malignancy":
-			checkpoint = 9
+			checkpoint = 12
 		"sand":
-			checkpoint = 8
+			checkpoint = 11
 		"rye":
-			checkpoint = 7
+			checkpoint = 10
+		"jobs":
+			checkpoint = 9
 		"joy":
-			checkpoint = 6
+			checkpoint = 8
 		"grinder":
-			checkpoint = 5
+			checkpoint = 7
 		"upgrades":
-			checkpoint = 4
+			checkpoint = 6
+		"test_sleep":
+			checkpoint = 5
 		"upgrade_stone", "importance_of_coal":
 			if "upgrade_stone" in completed_wishes and "importance_of_coal" in completed_wishes:
-				checkpoint = 3
-		"collection", "fuel":
-			if "fuel" in completed_wishes and "collection" in completed_wishes:
-				checkpoint = 2
+				checkpoint = 4
+		"collection":
+			checkpoint = 3
+		"fuel":
+			checkpoint = 2
 		"stuff":
 			checkpoint = 1
 
@@ -288,59 +292,64 @@ func getSelectedWish() -> String:
 	
 	var try := []
 	match checkpoint:
-		21:
+		24:
 			try.append("easier")
 			try.append("autocomplete")
-		20:
+		23:
 			try.append("tumory")
 			try.append("maliggy")
 			try.append("ciorany")
-		19:
+		22:
 			try.append("carcy")
-		18:
+		21:
 			try.append("papey")
 			try.append("plasty")
-		17:
+		20:
 			try.append("galey")
-		16:
+		19:
 			try.append("joy3")
 			try.append("steely")
 			try.append("horsey")
-		15:
+		18:
 			try.append("treey")
-		14:
+		17:
 			try.append("woody")
 			try.append("hardy")
 			try.append("axy")
-		13:
+		16:
 			try.append("gramma")
-		12:
+		15:
 			try.append("liqy")
-		11:
+		14:
 			try.append("waterbuddy")
-		10:
+		13:
 			try.append("joy2")
 			try.append("a_new_leaf")
-		9:
+		12:
 			try.append("soccer_dude")
-		8:
+		11:
 			try.append("malignancy")
-		7:
+		10:
 			try.append("sand")
-		6:
+		9:
 			try.append("rye")
-		5:
+		8:
+			try.append("jobs")
+		7:
 			try.append("joy")
-		4:
+		6:
 			try.append("grinder")
-		3:
+		5:
 			try.append("upgrades")
-		2:
+		4:
+			try.append("test_sleep")
+		3:
 			try.append("importance_of_coal")
 			try.append("upgrade_stone")
+		2:
+			try.append("collection")
 		1:
 			try.append("fuel")
-			try.append("collection")
 		0:
 			if wishCompleteOrAlreadyActive("stuff"):
 				return "n"
@@ -395,10 +404,11 @@ func maxedFuelStorageManager(wish: Wish):
 
 func breakManager(wish: Wish):
 	
-	var was_already_halted: bool = gv.g[wish.obj.key].halt
+	var lored: LOREDManager = lv.lored[wish.objKey()]
+	var was_already_halted: bool = lored.asleep
 	
 	if automatedHaltAndHold:
-		gv.g[wish.obj.key].manager.halt(true)
+		lored.putToSleep()
 	
 	while not wish.ready:
 		
@@ -407,42 +417,15 @@ func breakManager(wish: Wish):
 		
 		var lored_key = int(wish.obj.key)
 		
-		if not gv.g[lored_key].working:
+		if not lored.working:
 			wish.setCount(Big.new(wish.obj.current_count).a(1))
 		
 		if wish.ready or not wish.exists:
-			if gv.g[wish.obj.key].halt and not was_already_halted:
-				gv.g[wish.obj.key].manager.halt()
+			if lored.asleep and not was_already_halted:
+				lored.wakeUp()
+				lored.vico.updateSleepButton()
 				return
 		
-		var t = Timer.new()
-		add_child(t)
-		t.start(1)
-		yield(t, "timeout")
-		t.queue_free()
-
-func hoardManager(wish: Wish):
-	
-	var was_already_holding: bool = gv.g[wish.obj.key].hold
-	
-	if automatedHaltAndHold:
-		gv.g[wish.obj.key].manager.hold(true)
-	
-	while not wish.ready:
-		
-		if gv.active_scene == gv.Scene.MAIN_MENU:
-			return
-		
-		var lored_key = int(wish.obj.key)
-		
-		if gv.g[lored_key].hold:
-			wish.setCount(Big.new(wish.obj.current_count).a(1))
-		
-		if wish.ready or not wish.exists:
-			if gv.g[wish.obj.key].hold and not was_already_holding:
-				gv.g[wish.obj.key].manager.hold()
-				return
-			
 		var t = Timer.new()
 		add_child(t)
 		t.start(1)

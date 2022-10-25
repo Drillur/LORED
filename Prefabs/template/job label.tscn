@@ -16,12 +16,9 @@ size = 12
 font_data = ExtResource( 1 )
 
 [node name="Job" type="HBoxContainer"]
-margin_right = 240.0
+margin_right = 250.0
 margin_bottom = 16.0
 script = ExtResource( 3 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="dot" type="Panel" parent="."]
 modulate = Color( 0.800781, 0.800781, 0.800781, 1 )

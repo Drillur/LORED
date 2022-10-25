@@ -6,10 +6,13 @@
 [ext_resource path="res://Fonts/Roboto-Medium.ttf" type="DynamicFontData" id=5]
 
 [sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 0.328125, 0.328125, 0.328125, 1 )
 draw_center = false
 
 [sub_resource type="StyleBoxFlat" id=2]
-bg_color = Color( 1, 1, 1, 1 )
+bg_color = Color( 0.800781, 0.800781, 0.800781, 1 )
+border_width_top = 1
+border_color = Color( 1, 1, 1, 1 )
 
 [sub_resource type="DynamicFont" id=3]
 size = 12
@@ -41,7 +44,6 @@ custom_styles/panel = SubResource( 1 )
 
 [node name="not full" type="Panel" parent="h/base"]
 unique_name_in_owner = true
-visible = false
 margin_left = -2.0
 margin_right = 12.0
 margin_bottom = 24.0
@@ -52,6 +54,7 @@ size_flags_vertical = 4
 custom_styles/panel = SubResource( 1 )
 
 [node name="Sprite" type="Sprite" parent="h/base/not full"]
+modulate = Color( 2, 2, 2, 1 )
 show_behind_parent = true
 position = Vector2( 7, 12 )
 texture = ExtResource( 2 )
@@ -65,7 +68,7 @@ texture = ExtResource( 2 )
 [node name="progress" type="Panel" parent="h/base/not full"]
 unique_name_in_owner = true
 margin_left = 3.0
-margin_top = 19.0
+margin_top = 8.0
 margin_right = 11.0
 margin_bottom = 20.0
 mouse_filter = 2
@@ -73,6 +76,7 @@ custom_styles/panel = SubResource( 2 )
 
 [node name="full" type="Panel" parent="h/base"]
 unique_name_in_owner = true
+visible = false
 margin_right = 10.0
 margin_bottom = 24.0
 rect_min_size = Vector2( 10, 24 )

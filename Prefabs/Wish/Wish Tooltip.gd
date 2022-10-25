@@ -53,6 +53,14 @@ func initiateVisualShit():
 			
 			match r.type:
 				
+				gv.WishReward.LORED_FUNCTIONALITY:
+					get_node("%" + r.key).show()
+#					match r.key:
+#						"sleep":
+#							get_node("%sleep").show()
+#						"jobs":
+#							get_node("%jobs").show()
+				
 				gv.WishReward.EASIER:
 					
 					get_node("m/v/rewards/h/v/easier").show()

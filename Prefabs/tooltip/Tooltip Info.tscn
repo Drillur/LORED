@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=2]
+[gd_scene load_steps=29 format=2]
 
 [ext_resource path="res://Fonts/Roboto-BlackItalic.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Fonts/Roboto-Medium.ttf" type="DynamicFontData" id=2]
@@ -16,6 +16,7 @@
 [ext_resource path="res://Fonts/Roboto-MediumItalic.ttf" type="DynamicFontData" id=14]
 [ext_resource path="res://Prefabs/FuelBar.tscn" type="PackedScene" id=15]
 [ext_resource path="res://Prefabs/tooltip/Tooltip Info.gd" type="Script" id=16]
+[ext_resource path="res://Sprites/Menu/Fuel Full.png" type="Texture" id=17]
 
 [sub_resource type="StyleBoxFlat" id=1]
 bg_color = Color( 1, 1, 1, 0.03 )
@@ -63,6 +64,17 @@ size = 14
 outline_color = Color( 0, 0, 0, 1 )
 font_data = ExtResource( 3 )
 
+[sub_resource type="StyleBoxFlat" id=10]
+bg_color = Color( 0, 0, 0, 0.82 )
+border_color = Color( 1, 1, 1, 0.65 )
+expand_margin_left = 10.0
+expand_margin_right = 10.0
+
+[sub_resource type="DynamicFont" id=11]
+size = 12
+outline_color = Color( 0, 0, 0, 1 )
+font_data = ExtResource( 2 )
+
 [node name="LORED Tooltip Info" type="MarginContainer"]
 margin_right = 40.0
 margin_bottom = 40.0
@@ -75,14 +87,14 @@ script = ExtResource( 16 )
 [node name="bg" type="Panel" parent="."]
 margin_left = 2.0
 margin_top = 2.0
-margin_right = 359.0
+margin_right = 274.0
 margin_bottom = 219.0
 custom_styles/panel = SubResource( 1 )
 
 [node name="m" type="MarginContainer" parent="."]
 margin_left = 2.0
 margin_top = 2.0
-margin_right = 359.0
+margin_right = 274.0
 margin_bottom = 219.0
 custom_constants/margin_right = 10
 custom_constants/margin_top = 10
@@ -92,37 +104,37 @@ custom_constants/margin_bottom = 10
 [node name="v" type="VBoxContainer" parent="m"]
 margin_left = 10.0
 margin_top = 10.0
-margin_right = 347.0
+margin_right = 262.0
 margin_bottom = 207.0
 custom_constants/separation = 10
 
 [node name="v" type="VBoxContainer" parent="m/v"]
-margin_right = 337.0
+margin_right = 252.0
 margin_bottom = 80.0
 custom_constants/separation = 20
 
 [node name="top" type="MarginContainer" parent="m/v/v"]
-margin_right = 337.0
+margin_right = 252.0
 margin_bottom = 36.0
 
 [node name="bg" type="Panel" parent="m/v/v/top"]
-margin_right = 337.0
+margin_right = 252.0
 margin_bottom = 36.0
 custom_styles/panel = SubResource( 2 )
 
 [node name="v" type="VBoxContainer" parent="m/v/v/top"]
-margin_right = 337.0
+margin_right = 252.0
 margin_bottom = 36.0
 custom_constants/separation = 0
 
 [node name="h" type="HBoxContainer" parent="m/v/v/top/v"]
-margin_right = 337.0
+margin_right = 252.0
 margin_bottom = 36.0
 alignment = 1
 
 [node name="Panel" type="Panel" parent="m/v/v/top/v/h"]
-margin_left = 101.0
-margin_right = 137.0
+margin_left = 58.0
+margin_right = 94.0
 margin_bottom = 36.0
 rect_min_size = Vector2( 36, 36 )
 size_flags_vertical = 4
@@ -140,8 +152,8 @@ position = Vector2( 1, 1 )
 texture = ExtResource( 10 )
 
 [node name="VBoxContainer" type="VBoxContainer" parent="m/v/v/top/v/h"]
-margin_left = 141.0
-margin_right = 236.0
+margin_left = 98.0
+margin_right = 193.0
 margin_bottom = 36.0
 alignment = 1
 
@@ -168,7 +180,7 @@ text = "Stone LORED"
 
 [node name="cost" type="MarginContainer" parent="m/v/v"]
 margin_top = 56.0
-margin_right = 337.0
+margin_right = 252.0
 margin_bottom = 80.0
 custom_constants/margin_right = 0
 custom_constants/margin_top = 0
@@ -176,19 +188,19 @@ custom_constants/margin_left = 0
 custom_constants/margin_bottom = 0
 
 [node name="bg" type="Panel" parent="m/v/v/cost"]
-margin_right = 337.0
+margin_right = 252.0
 margin_bottom = 24.0
 custom_styles/panel = SubResource( 8 )
 
 [node name="h" type="HBoxContainer" parent="m/v/v/cost"]
-margin_right = 337.0
+margin_right = 252.0
 margin_bottom = 24.0
 custom_constants/separation = 20
 alignment = 1
 
 [node name="level" type="HBoxContainer" parent="m/v/v/cost/h"]
-margin_left = 120.0
-margin_right = 186.0
+margin_left = 78.0
+margin_right = 144.0
 margin_bottom = 24.0
 custom_constants/separation = 8
 alignment = 1
@@ -246,12 +258,12 @@ valign = 1
 
 [node name="Fuel Progress" parent="m/v/v/cost/h" instance=ExtResource( 15 )]
 unique_name_in_owner = true
-margin_left = 206.0
-margin_right = 216.0
+margin_left = 164.0
+margin_right = 174.0
 
 [node name="bot" type="MarginContainer" parent="m/v"]
 margin_top = 90.0
-margin_right = 337.0
+margin_right = 252.0
 margin_bottom = 197.0
 custom_constants/margin_right = 0
 custom_constants/margin_top = 0
@@ -259,23 +271,24 @@ custom_constants/margin_left = 0
 custom_constants/margin_bottom = -10
 
 [node name="HBoxContainer" type="HBoxContainer" parent="m/v/bot"]
-margin_right = 337.0
+margin_right = 252.0
 margin_bottom = 117.0
 
 [node name="Advanced" type="GridContainer" parent="m/v/bot/HBoxContainer"]
+unique_name_in_owner = true
 visible = false
-margin_right = 394.0
+margin_right = 346.0
 margin_bottom = 376.0
 custom_constants/hseparation = 20
 columns = 2
 
 [node name="Output" type="VBoxContainer" parent="m/v/bot/HBoxContainer/Advanced"]
-margin_right = 204.0
+margin_right = 156.0
 margin_bottom = 133.0
 custom_constants/separation = -4
 
 [node name="total" type="HBoxContainer" parent="m/v/bot/HBoxContainer/Advanced/Output"]
-margin_right = 204.0
+margin_right = 156.0
 margin_bottom = 36.0
 custom_constants/separation = 8
 
@@ -310,7 +323,8 @@ custom_fonts/font = SubResource( 5 )
 text = "Output:"
 valign = 1
 
-[node name="Level" type="Label" parent="m/v/bot/HBoxContainer/Advanced/Output/total"]
+[node name="loredOutputAdvanced" type="Label" parent="m/v/bot/HBoxContainer/Advanced/Output/total"]
+unique_name_in_owner = true
 margin_left = 74.0
 margin_top = 9.0
 margin_right = 137.0
@@ -324,11 +338,11 @@ valign = 1
 
 [node name="v" type="VBoxContainer" parent="m/v/bot/HBoxContainer/Advanced/Output"]
 margin_top = 32.0
-margin_right = 204.0
+margin_right = 156.0
 margin_bottom = 133.0
 
 [node name="base" type="HBoxContainer" parent="m/v/bot/HBoxContainer/Advanced/Output/v"]
-margin_right = 204.0
+margin_right = 156.0
 margin_bottom = 17.0
 
 [node name="indent" type="Label" parent="m/v/bot/HBoxContainer/Advanced/Output/v/base"]
@@ -363,7 +377,7 @@ valign = 1
 
 [node name="upgrades add" type="HBoxContainer" parent="m/v/bot/HBoxContainer/Advanced/Output/v"]
 margin_top = 21.0
-margin_right = 204.0
+margin_right = 156.0
 margin_bottom = 38.0
 
 [node name="indent" type="Label" parent="m/v/bot/HBoxContainer/Advanced/Output/v/upgrades add"]
@@ -398,7 +412,7 @@ valign = 1
 
 [node name="upgrades" type="HBoxContainer" parent="m/v/bot/HBoxContainer/Advanced/Output/v"]
 margin_top = 42.0
-margin_right = 204.0
+margin_right = 156.0
 margin_bottom = 59.0
 
 [node name="indent" type="Label" parent="m/v/bot/HBoxContainer/Advanced/Output/v/upgrades"]
@@ -433,7 +447,7 @@ valign = 1
 
 [node name="levels" type="HBoxContainer" parent="m/v/bot/HBoxContainer/Advanced/Output/v"]
 margin_top = 63.0
-margin_right = 204.0
+margin_right = 156.0
 margin_bottom = 80.0
 
 [node name="indent" type="Label" parent="m/v/bot/HBoxContainer/Advanced/Output/v/levels"]
@@ -468,7 +482,7 @@ valign = 1
 
 [node name="diff" type="HBoxContainer" parent="m/v/bot/HBoxContainer/Advanced/Output/v"]
 margin_top = 84.0
-margin_right = 204.0
+margin_right = 156.0
 margin_bottom = 101.0
 
 [node name="indent" type="Label" parent="m/v/bot/HBoxContainer/Advanced/Output/v/diff"]
@@ -502,8 +516,8 @@ align = 1
 valign = 1
 
 [node name="Input" type="VBoxContainer" parent="m/v/bot/HBoxContainer/Advanced"]
-margin_left = 224.0
-margin_right = 394.0
+margin_left = 176.0
+margin_right = 346.0
 margin_bottom = 133.0
 custom_constants/separation = -4
 
@@ -543,7 +557,8 @@ custom_fonts/font = SubResource( 5 )
 text = "Input:"
 valign = 1
 
-[node name="Level" type="Label" parent="m/v/bot/HBoxContainer/Advanced/Input/total"]
+[node name="loredInputAdvanced" type="Label" parent="m/v/bot/HBoxContainer/Advanced/Input/total"]
+unique_name_in_owner = true
 margin_left = 65.0
 margin_top = 9.0
 margin_right = 80.0
@@ -701,12 +716,12 @@ valign = 1
 
 [node name="Haste" type="VBoxContainer" parent="m/v/bot/HBoxContainer/Advanced"]
 margin_top = 137.0
-margin_right = 204.0
+margin_right = 156.0
 margin_bottom = 207.0
 custom_constants/separation = -4
 
 [node name="total" type="HBoxContainer" parent="m/v/bot/HBoxContainer/Advanced/Haste"]
-margin_right = 204.0
+margin_right = 156.0
 margin_bottom = 36.0
 custom_constants/separation = 8
 
@@ -742,7 +757,8 @@ custom_fonts/font = SubResource( 5 )
 text = "Haste:"
 valign = 1
 
-[node name="Level" type="Label" parent="m/v/bot/HBoxContainer/Advanced/Haste/total"]
+[node name="loredHasteAdvanced" type="Label" parent="m/v/bot/HBoxContainer/Advanced/Haste/total"]
+unique_name_in_owner = true
 margin_left = 69.0
 margin_top = 9.0
 margin_right = 92.0
@@ -756,11 +772,11 @@ valign = 1
 
 [node name="v" type="VBoxContainer" parent="m/v/bot/HBoxContainer/Advanced/Haste"]
 margin_top = 32.0
-margin_right = 204.0
+margin_right = 156.0
 margin_bottom = 70.0
 
 [node name="upgrades" type="HBoxContainer" parent="m/v/bot/HBoxContainer/Advanced/Haste/v"]
-margin_right = 204.0
+margin_right = 156.0
 margin_bottom = 17.0
 
 [node name="indent" type="Label" parent="m/v/bot/HBoxContainer/Advanced/Haste/v/upgrades"]
@@ -795,7 +811,7 @@ valign = 1
 
 [node name="diff" type="HBoxContainer" parent="m/v/bot/HBoxContainer/Advanced/Haste/v"]
 margin_top = 21.0
-margin_right = 204.0
+margin_right = 156.0
 margin_bottom = 38.0
 
 [node name="indent" type="Label" parent="m/v/bot/HBoxContainer/Advanced/Haste/v/diff"]
@@ -829,9 +845,9 @@ align = 1
 valign = 1
 
 [node name="Crit" type="VBoxContainer" parent="m/v/bot/HBoxContainer/Advanced"]
-margin_left = 224.0
+margin_left = 176.0
 margin_top = 137.0
-margin_right = 394.0
+margin_right = 346.0
 margin_bottom = 207.0
 custom_constants/separation = -4
 
@@ -871,7 +887,8 @@ custom_fonts/font = SubResource( 5 )
 text = "Crit Chance:"
 valign = 1
 
-[node name="Level" type="Label" parent="m/v/bot/HBoxContainer/Advanced/Crit/total"]
+[node name="loredCritAdvanced" type="Label" parent="m/v/bot/HBoxContainer/Advanced/Crit/total"]
+unique_name_in_owner = true
 margin_left = 100.0
 margin_top = 9.0
 margin_right = 126.0
@@ -959,12 +976,12 @@ valign = 1
 
 [node name="FuelCost" type="VBoxContainer" parent="m/v/bot/HBoxContainer/Advanced"]
 margin_top = 211.0
-margin_right = 204.0
+margin_right = 156.0
 margin_bottom = 302.0
 custom_constants/separation = -4
 
 [node name="total" type="HBoxContainer" parent="m/v/bot/HBoxContainer/Advanced/FuelCost"]
-margin_right = 204.0
+margin_right = 156.0
 margin_bottom = 36.0
 custom_constants/separation = 8
 
@@ -992,17 +1009,18 @@ texture = ExtResource( 6 )
 [node name="text" type="Label" parent="m/v/bot/HBoxContainer/Advanced/FuelCost/total"]
 margin_left = 26.0
 margin_top = 10.0
-margin_right = 128.0
+margin_right = 80.0
 margin_bottom = 25.0
 size_flags_horizontal = 4
 custom_fonts/font = SubResource( 5 )
-text = "Fuel Consumption:"
+text = "Fuel Cost:"
 valign = 1
 
-[node name="Level" type="Label" parent="m/v/bot/HBoxContainer/Advanced/FuelCost/total"]
-margin_left = 136.0
+[node name="loredFuelCostAdvanced" type="Label" parent="m/v/bot/HBoxContainer/Advanced/FuelCost/total"]
+unique_name_in_owner = true
+margin_left = 88.0
 margin_top = 9.0
-margin_right = 204.0
+margin_right = 156.0
 margin_bottom = 26.0
 mouse_filter = 1
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
@@ -1013,11 +1031,11 @@ valign = 1
 
 [node name="v" type="VBoxContainer" parent="m/v/bot/HBoxContainer/Advanced/FuelCost"]
 margin_top = 32.0
-margin_right = 204.0
+margin_right = 156.0
 margin_bottom = 91.0
 
 [node name="base" type="HBoxContainer" parent="m/v/bot/HBoxContainer/Advanced/FuelCost/v"]
-margin_right = 204.0
+margin_right = 156.0
 margin_bottom = 17.0
 
 [node name="indent" type="Label" parent="m/v/bot/HBoxContainer/Advanced/FuelCost/v/base"]
@@ -1052,7 +1070,7 @@ valign = 1
 
 [node name="upgrades" type="HBoxContainer" parent="m/v/bot/HBoxContainer/Advanced/FuelCost/v"]
 margin_top = 21.0
-margin_right = 204.0
+margin_right = 156.0
 margin_bottom = 38.0
 
 [node name="indent" type="Label" parent="m/v/bot/HBoxContainer/Advanced/FuelCost/v/upgrades"]
@@ -1087,7 +1105,7 @@ valign = 1
 
 [node name="diff" type="HBoxContainer" parent="m/v/bot/HBoxContainer/Advanced/FuelCost/v"]
 margin_top = 42.0
-margin_right = 204.0
+margin_right = 156.0
 margin_bottom = 59.0
 
 [node name="indent" type="Label" parent="m/v/bot/HBoxContainer/Advanced/FuelCost/v/diff"]
@@ -1122,14 +1140,14 @@ valign = 1
 
 [node name="VBoxContainer" type="VBoxContainer" parent="m/v/bot/HBoxContainer/Advanced/FuelCost"]
 margin_top = 87.0
-margin_right = 204.0
+margin_right = 156.0
 margin_bottom = 87.0
 custom_constants/separation = 0
 
 [node name="FuelStorage" type="VBoxContainer" parent="m/v/bot/HBoxContainer/Advanced"]
-margin_left = 224.0
+margin_left = 176.0
 margin_top = 211.0
-margin_right = 394.0
+margin_right = 346.0
 margin_bottom = 302.0
 custom_constants/separation = -4
 
@@ -1169,7 +1187,8 @@ custom_fonts/font = SubResource( 5 )
 text = "Fuel Storage:"
 valign = 1
 
-[node name="Level" type="Label" parent="m/v/bot/HBoxContainer/Advanced/FuelStorage/total"]
+[node name="loredFuelStorageAdvanced" type="Label" parent="m/v/bot/HBoxContainer/Advanced/FuelStorage/total"]
+unique_name_in_owner = true
 margin_left = 105.0
 margin_top = 9.0
 margin_right = 161.0
@@ -1292,12 +1311,12 @@ valign = 1
 
 [node name="Cost" type="VBoxContainer" parent="m/v/bot/HBoxContainer/Advanced"]
 margin_top = 306.0
-margin_right = 204.0
+margin_right = 156.0
 margin_bottom = 376.0
 custom_constants/separation = -4
 
 [node name="total" type="HBoxContainer" parent="m/v/bot/HBoxContainer/Advanced/Cost"]
-margin_right = 204.0
+margin_right = 156.0
 margin_bottom = 36.0
 custom_constants/separation = 8
 
@@ -1332,7 +1351,8 @@ custom_fonts/font = SubResource( 5 )
 text = "Cost:"
 valign = 1
 
-[node name="Level" type="Label" parent="m/v/bot/HBoxContainer/Advanced/Cost/total"]
+[node name="loredCostModifierAdvanced" type="Label" parent="m/v/bot/HBoxContainer/Advanced/Cost/total"]
+unique_name_in_owner = true
 margin_left = 62.0
 margin_top = 9.0
 margin_right = 125.0
@@ -1346,11 +1366,11 @@ valign = 1
 
 [node name="v" type="VBoxContainer" parent="m/v/bot/HBoxContainer/Advanced/Cost"]
 margin_top = 32.0
-margin_right = 204.0
+margin_right = 156.0
 margin_bottom = 70.0
 
 [node name="upgrades" type="HBoxContainer" parent="m/v/bot/HBoxContainer/Advanced/Cost/v"]
-margin_right = 204.0
+margin_right = 156.0
 margin_bottom = 17.0
 
 [node name="indent" type="Label" parent="m/v/bot/HBoxContainer/Advanced/Cost/v/upgrades"]
@@ -1385,7 +1405,7 @@ valign = 1
 
 [node name="diff" type="HBoxContainer" parent="m/v/bot/HBoxContainer/Advanced/Cost/v"]
 margin_top = 21.0
-margin_right = 204.0
+margin_right = 156.0
 margin_bottom = 38.0
 
 [node name="indent" type="Label" parent="m/v/bot/HBoxContainer/Advanced/Cost/v/diff"]
@@ -1419,9 +1439,9 @@ align = 1
 valign = 1
 
 [node name="misc" type="VBoxContainer" parent="m/v/bot/HBoxContainer/Advanced"]
-margin_left = 224.0
+margin_left = 176.0
 margin_top = 306.0
-margin_right = 394.0
+margin_right = 346.0
 margin_bottom = 376.0
 custom_constants/separation = -4
 
@@ -1489,7 +1509,8 @@ custom_fonts/font = SubResource( 5 )
 text = "Fuel Resource:"
 valign = 1
 
-[node name="Level" type="Label" parent="m/v/bot/HBoxContainer/Advanced/misc/v/type"]
+[node name="loredFuelResourceAdvanced" type="Label" parent="m/v/bot/HBoxContainer/Advanced/misc/v/type"]
+unique_name_in_owner = true
 margin_left = 98.0
 margin_right = 126.0
 margin_bottom = 17.0
@@ -1536,14 +1557,15 @@ align = 1
 valign = 1
 
 [node name="Simple" type="GridContainer" parent="m/v/bot/HBoxContainer"]
-margin_right = 337.0
+unique_name_in_owner = true
+margin_right = 252.0
 margin_bottom = 117.0
 custom_constants/vseparation = -9
 custom_constants/hseparation = 20
 columns = 2
 
 [node name="Output" type="HBoxContainer" parent="m/v/bot/HBoxContainer/Simple"]
-margin_right = 156.0
+margin_right = 96.0
 margin_bottom = 36.0
 custom_constants/separation = 8
 
@@ -1582,18 +1604,18 @@ valign = 1
 unique_name_in_owner = true
 margin_left = 74.0
 margin_top = 9.0
-margin_right = 137.0
+margin_right = 82.0
 margin_bottom = 26.0
 mouse_filter = 1
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 6 )
-text = "123e123x"
+text = "1"
 align = 1
 valign = 1
 
 [node name="Input" type="HBoxContainer" parent="m/v/bot/HBoxContainer/Simple"]
-margin_left = 176.0
-margin_right = 337.0
+margin_left = 116.0
+margin_right = 252.0
 margin_bottom = 36.0
 custom_constants/separation = 8
 
@@ -1643,7 +1665,7 @@ valign = 1
 
 [node name="Haste" type="HBoxContainer" parent="m/v/bot/HBoxContainer/Simple"]
 margin_top = 27.0
-margin_right = 156.0
+margin_right = 96.0
 margin_bottom = 63.0
 custom_constants/separation = 8
 
@@ -1693,9 +1715,9 @@ align = 1
 valign = 1
 
 [node name="Crit" type="HBoxContainer" parent="m/v/bot/HBoxContainer/Simple"]
-margin_left = 176.0
+margin_left = 116.0
 margin_top = 27.0
-margin_right = 337.0
+margin_right = 252.0
 margin_bottom = 63.0
 custom_constants/separation = 8
 
@@ -1745,7 +1767,7 @@ valign = 1
 
 [node name="FuelCost" type="HBoxContainer" parent="m/v/bot/HBoxContainer/Simple"]
 margin_top = 54.0
-margin_right = 156.0
+margin_right = 96.0
 margin_bottom = 90.0
 custom_constants/separation = 8
 
@@ -1784,19 +1806,19 @@ valign = 1
 unique_name_in_owner = true
 margin_left = 88.0
 margin_top = 9.0
-margin_right = 156.0
+margin_right = 96.0
 margin_bottom = 26.0
 mouse_filter = 1
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 6 )
-text = "123e123/s"
+text = "1"
 align = 1
 valign = 1
 
 [node name="FuelStorage" type="HBoxContainer" parent="m/v/bot/HBoxContainer/Simple"]
-margin_left = 176.0
+margin_left = 116.0
 margin_top = 54.0
-margin_right = 337.0
+margin_right = 252.0
 margin_bottom = 90.0
 custom_constants/separation = 8
 
@@ -1813,13 +1835,13 @@ __meta__ = {
 
 [node name="Sprite" type="Sprite" parent="m/v/bot/HBoxContainer/Simple/FuelStorage/icon"]
 position = Vector2( 9, 18 )
-texture = ExtResource( 5 )
+texture = ExtResource( 17 )
 
 [node name="shadow" type="Sprite" parent="m/v/bot/HBoxContainer/Simple/FuelStorage/icon/Sprite"]
 self_modulate = Color( 0, 0, 0, 1 )
 show_behind_parent = true
 position = Vector2( 2, 2 )
-texture = ExtResource( 5 )
+texture = ExtResource( 17 )
 
 [node name="text" type="Label" parent="m/v/bot/HBoxContainer/Simple/FuelStorage"]
 margin_left = 26.0
@@ -1835,18 +1857,18 @@ valign = 1
 unique_name_in_owner = true
 margin_left = 105.0
 margin_top = 9.0
-margin_right = 161.0
+margin_right = 113.0
 margin_bottom = 26.0
 mouse_filter = 1
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 6 )
-text = "123e123"
+text = "1"
 align = 1
 valign = 1
 
 [node name="Cost" type="HBoxContainer" parent="m/v/bot/HBoxContainer/Simple"]
 margin_top = 81.0
-margin_right = 156.0
+margin_right = 96.0
 margin_bottom = 117.0
 custom_constants/separation = 8
 
@@ -1885,19 +1907,19 @@ valign = 1
 unique_name_in_owner = true
 margin_left = 62.0
 margin_top = 9.0
-margin_right = 125.0
+margin_right = 70.0
 margin_bottom = 26.0
 mouse_filter = 1
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 6 )
-text = "123e123x"
+text = "1"
 align = 1
 valign = 1
 
 [node name="misc" type="HBoxContainer" parent="m/v/bot/HBoxContainer/Simple"]
-margin_left = 176.0
+margin_left = 116.0
 margin_top = 81.0
-margin_right = 337.0
+margin_right = 252.0
 margin_bottom = 117.0
 custom_constants/separation = 8
 
@@ -1946,5 +1968,28 @@ mouse_filter = 1
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 6 )
 text = "Coal"
+align = 1
+valign = 1
+
+[node name="queue" type="MarginContainer" parent="m/v/bot"]
+unique_name_in_owner = true
+visible = false
+margin_right = 252.0
+margin_bottom = 117.0
+
+[node name="bg" type="Panel" parent="m/v/bot/queue"]
+margin_right = 252.0
+margin_bottom = 117.0
+custom_styles/panel = SubResource( 10 )
+
+[node name="text" type="Label" parent="m/v/bot/queue"]
+margin_left = 74.0
+margin_top = 42.0
+margin_right = 178.0
+margin_bottom = 75.0
+size_flags_horizontal = 4
+custom_fonts/font = SubResource( 11 )
+text = "Changes pending...
+Wait a sec!"
 align = 1
 valign = 1

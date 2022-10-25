@@ -20,7 +20,7 @@ outline_color = Color( 0, 0, 0, 1 )
 font_data = ExtResource( 1 )
 
 [node name="PriceContainer" type="MarginContainer"]
-margin_right = 43.0
+margin_right = 32.0
 margin_bottom = 46.0
 custom_constants/margin_right = 5
 custom_constants/margin_top = 5
@@ -32,14 +32,14 @@ script = ExtResource( 2 )
 visible = false
 margin_left = 5.0
 margin_top = 5.0
-margin_right = 38.0
+margin_right = 49.0
 margin_bottom = 41.0
 custom_styles/panel = SubResource( 1 )
 
 [node name="h" type="HBoxContainer" parent="."]
 margin_left = 5.0
 margin_top = 5.0
-margin_right = 38.0
+margin_right = 49.0
 margin_bottom = 41.0
 alignment = 1
 
@@ -78,12 +78,21 @@ align = 1
 valign = 1
 
 [node name="v" type="VBoxContainer" parent="h"]
-margin_left = 27.0
-margin_right = 27.0
+margin_left = 22.0
+margin_right = 22.0
 margin_bottom = 36.0
 size_flags_horizontal = 6
 custom_constants/separation = 0
 alignment = 1
+
+[node name="right side indent" type="Panel" parent="h"]
+margin_left = 26.0
+margin_right = 44.0
+margin_bottom = 36.0
+rect_min_size = Vector2( 18, 36 )
+size_flags_horizontal = 0
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 3 )
 __meta__ = {
 "_edit_use_anchors_": false
 }

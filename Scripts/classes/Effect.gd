@@ -27,6 +27,7 @@ func _init(
 	):
 	
 	type = _type
+	
 	if typeof(_beneficiaries) == TYPE_ARRAY:
 		for x in _beneficiaries:
 			beneficiaries.append(x)
@@ -108,11 +109,9 @@ func apply(upgrade_name: String):
 			for b in beneficiaries:
 				if other == "all":
 					for c in gv.g[b].cost:
-						gv.g[b].cost[c].um.m(effect.t)
-						gv.g[b].cost[c].sync()
+						lv.lored[b].editValue(lv.Attribute.COST, lv.Num.MULTIPLY, lv.Num.FROM_UPGRADES, effect.t.toFloat(), c)
 				else:
-					gv.g[b].cost[other].um.m(effect.t)
-					gv.g[b].cost[other].sync()
+					lv.lored[b].editValue(lv.Attribute.COST, lv.Num.MULTIPLY, lv.Num.FROM_UPGRADES, effect.t.toFloat(), other)
 		"drain":
 			for b in beneficiaries:
 				if multiplicative:
@@ -123,16 +122,13 @@ func apply(upgrade_name: String):
 					gv.g[b].fc.sync()
 		"haste":
 			for b in beneficiaries:
-				gv.g[b].speed.um /= effect.t.toFloat()
-				gv.g[b].speed.sync()
+				lv.lored[b].editValue(lv.Attribute.HASTE, lv.Num.MULTIPLY, lv.Num.FROM_UPGRADES, effect.t.toFloat())
 		"output":
 			for b in beneficiaries:
 				if multiplicative:
-					gv.g[b].d.um.m(effect.t)
-					gv.g[b].d.sync()
+					lv.lored[b].editValue(lv.Attribute.OUTPUT, lv.Num.MULTIPLY, lv.Num.FROM_UPGRADES, effect.t.toFloat())
 				else:
-					gv.g[b].d.ua.a(effect.t)
-					gv.g[b].d.sync()
+					lv.lored[b].editValue(lv.Attribute.OUTPUT, lv.Num.ADD, lv.Num.FROM_UPGRADES, effect.t.toFloat())
 		"autob":
 			for b in beneficiaries:
 				gv.g[b].autobuy = true
@@ -214,11 +210,9 @@ func remove(upgrade_name: String):
 			for b in beneficiaries:
 				if other == "all":
 					for c in gv.g[b].cost:
-						gv.g[b].cost[c].um.d(effect.t)
-						gv.g[b].cost[c].sync()
+						lv.lored[b].editValue(lv.Attribute.COST, lv.Num.DIVIDE, lv.Num.FROM_UPGRADES, effect.t.toFloat(), c)
 				else:
-					gv.g[b].cost[other].um.d(effect.t)
-					gv.g[b].cost[other].sync()
+					lv.lored[b].editValue(lv.Attribute.COST, lv.Num.DIVIDE, lv.Num.FROM_UPGRADES, effect.t.toFloat(), other)
 		"drain":
 			for b in beneficiaries:
 				if multiplicative:
@@ -229,16 +223,13 @@ func remove(upgrade_name: String):
 					gv.g[b].fc.sync()
 		"haste":
 			for b in beneficiaries:
-				gv.g[b].speed.um *= effect.t.toFloat()
-				gv.g[b].speed.sync()
+				lv.lored[b].editValue(lv.Attribute.HASTE, lv.Num.DIVIDE, lv.Num.FROM_UPGRADES, effect.t.toFloat())
 		"output":
 			for b in beneficiaries:
 				if multiplicative:
-					gv.g[b].d.um.d(effect.t)
-					gv.g[b].d.sync()
+					lv.lored[b].editValue(lv.Attribute.OUTPUT, lv.Num.DIVIDE, lv.Num.FROM_UPGRADES, effect.t.toFloat())
 				else:
-					gv.g[b].d.ua.s(effect.t)
-					gv.g[b].d.sync()
+					lv.lored[b].editValue(lv.Attribute.OUTPUT, lv.Num.SUBTRACT, lv.Num.FROM_UPGRADES, effect.t.toFloat())
 		"autob":
 			for b in beneficiaries:
 				gv.g[b].autobuy = false

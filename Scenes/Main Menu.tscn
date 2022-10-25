@@ -1,4 +1,4 @@
-[gd_scene load_steps=66 format=2]
+[gd_scene load_steps=67 format=2]
 
 [ext_resource path="res://Fonts/Roboto-Black.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Sprites/Menu/Difficulty.png" type="Texture" id=2]
@@ -11,6 +11,7 @@
 [ext_resource path="res://Sprites/Menu/Check.png" type="Texture" id=9]
 [ext_resource path="res://Sprites/Menu/Refresh.png" type="Texture" id=10]
 [ext_resource path="res://Sprites/Menu/Back.png" type="Texture" id=11]
+[ext_resource path="res://Sprites/Menu/Fuel Full.png" type="Texture" id=12]
 [ext_resource path="res://Prefabs/menu/wallpapersden.com_purple-sunrise-4k-vaporwave_1920x1080.jpg" type="Texture" id=13]
 [ext_resource path="res://Fonts/Roboto-Medium.ttf" type="DynamicFontData" id=14]
 [ext_resource path="res://Fonts/Roboto-Light.ttf" type="DynamicFontData" id=15]
@@ -626,16 +627,16 @@ custom_fonts/font = SubResource( 38 )
 text = "Play"
 
 [node name="m" type="MarginContainer" parent="new game"]
-margin_left = 390.0
-margin_top = 103.0
-margin_right = 890.0
-margin_bottom = 616.0
+margin_left = 458.0
+margin_top = 319.0
+margin_right = 822.0
+margin_bottom = 400.0
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
 [node name="v" type="VBoxContainer" parent="new game/m"]
-margin_right = 500.0
-margin_bottom = 513.0
+margin_right = 364.0
+margin_bottom = 81.0
 custom_constants/separation = 20
 alignment = 1
 
@@ -829,6 +830,7 @@ __meta__ = {
 }
 
 [node name="diff" type="MarginContainer" parent="new game/m/v"]
+visible = false
 margin_right = 500.0
 margin_bottom = 412.0
 rect_min_size = Vector2( 500, 0 )
@@ -1288,13 +1290,13 @@ custom_styles/panel = SubResource( 39 )
 
 [node name="Sprite" type="Sprite" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelStorage/h/FuelStorage/icon"]
 position = Vector2( 12, 12 )
-texture = ExtResource( 26 )
+texture = ExtResource( 12 )
 
 [node name="Sprite2" type="Sprite" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelStorage/h/FuelStorage/icon/Sprite"]
 self_modulate = Color( 0, 0, 0, 0.501961 )
 show_behind_parent = true
 position = Vector2( 2, 2 )
-texture = ExtResource( 26 )
+texture = ExtResource( 12 )
 
 [node name="flair" type="Label" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelStorage/h/FuelStorage"]
 margin_left = 28.0
@@ -1801,10 +1803,9 @@ autowrap = true
 
 [node name="prefs" type="MarginContainer" parent="new game/m/v"]
 visible = false
-margin_left = 555.0
-margin_top = 382.0
-margin_right = 725.0
-margin_bottom = 488.0
+margin_left = 97.0
+margin_right = 267.0
+margin_bottom = 106.0
 size_flags_horizontal = 4
 
 [node name="bg" type="Panel" parent="new game/m/v/prefs"]
@@ -1900,14 +1901,13 @@ __meta__ = {
 }
 
 [node name="v" type="VBoxContainer" parent="new game/m/v"]
-margin_top = 432.0
-margin_right = 500.0
-margin_bottom = 513.0
+margin_right = 364.0
+margin_bottom = 81.0
 size_flags_vertical = 8
 alignment = 2
 
 [node name="text" type="Label" parent="new game/m/v/v"]
-margin_right = 500.0
+margin_right = 364.0
 margin_bottom = 17.0
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 49 )
@@ -1916,13 +1916,12 @@ align = 1
 
 [node name="h" type="HBoxContainer" parent="new game/m/v/v"]
 margin_top = 21.0
-margin_right = 500.0
+margin_right = 364.0
 margin_bottom = 81.0
 alignment = 1
 
 [node name="save info" type="MarginContainer" parent="new game/m/v/v/h"]
-margin_left = 68.0
-margin_right = 248.0
+margin_right = 180.0
 margin_bottom = 60.0
 rect_min_size = Vector2( 180, 60 )
 mouse_filter = 2
@@ -2011,8 +2010,8 @@ __meta__ = {
 }
 
 [node name="diff" type="MarginContainer" parent="new game/m/v/v/h"]
-margin_left = 252.0
-margin_right = 432.0
+margin_left = 184.0
+margin_right = 364.0
 margin_bottom = 60.0
 rect_min_size = Vector2( 180, 60 )
 mouse_filter = 2
@@ -3308,13 +3307,12 @@ centered = false
 [node name="tip" type="Node2D" parent="."]
 
 [node name="color" type="HBoxContainer" parent="."]
-margin_left = 1204.0
+margin_left = 872.0
 margin_right = 1280.0
 margin_bottom = 720.0
 size_flags_horizontal = 8
 
 [node name="m" type="MarginContainer" parent="color"]
-visible = false
 margin_top = 101.0
 margin_right = 328.0
 margin_bottom = 619.0
@@ -3350,10 +3348,8 @@ margin_right = 318.0
 margin_bottom = 508.0
 
 [node name="ColorPicker" type="ColorPicker" parent="color/m/m/v"]
-margin_left = 180.0
-margin_top = 180.0
-margin_right = 488.0
-margin_bottom = 642.0
+margin_right = 308.0
+margin_bottom = 462.0
 size_flags_horizontal = 4
 size_flags_vertical = 4
 __meta__ = {
@@ -3487,7 +3483,8 @@ texture = ExtResource( 8 )
 centered = false
 
 [node name="indent" type="Panel" parent="color"]
-margin_right = 76.0
+margin_left = 332.0
+margin_right = 408.0
 margin_bottom = 720.0
 rect_min_size = Vector2( 76, 0 )
 rect_pivot_offset = Vector2( -2, -5 )

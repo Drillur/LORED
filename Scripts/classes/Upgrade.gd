@@ -204,7 +204,7 @@ func time_to_buy():
 	var longest_time = Big.new(0)
 	
 	for c in cost:
-		var time_to_c = gv.time_remaining_including_INF(c, gv.resource[c], cost[c].t) #x
+		var time_to_c = gv.timeUntil(c, cost[c].t)
 		if typeof(time_to_c) != TYPE_INT:
 			return INF
 		if time_to_c.greater(longest_time):
