@@ -1,10 +1,11 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://Fonts/Roboto-MediumItalic.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Fonts/Roboto-Black.ttf" type="DynamicFontData" id=2]
 [ext_resource path="res://Sprites/Shovel.png" type="Texture" id=3]
 [ext_resource path="res://Prefabs/ui/Progress Bar.tscn" type="PackedScene" id=4]
 [ext_resource path="res://Prefabs/lored/Manual Labor.gd" type="Script" id=5]
+[ext_resource path="res://Sprites/Menu/drain rate.png" type="Texture" id=6]
 
 [sub_resource type="DynamicFont" id=5]
 size = 12
@@ -61,8 +62,8 @@ script = ExtResource( 5 )
 
 [node name="button" type="Button" parent="."]
 self_modulate = Color( 0.380392, 0.380392, 0.380392, 1 )
-margin_right = 153.0
-margin_bottom = 72.0
+margin_right = 138.0
+margin_bottom = 102.0
 rect_min_size = Vector2( 60, 32 )
 focus_mode = 0
 mouse_default_cursor_shape = 2
@@ -76,34 +77,34 @@ __meta__ = {
 }
 
 [node name="m" type="MarginContainer" parent="."]
-margin_right = 153.0
-margin_bottom = 72.0
+margin_right = 138.0
+margin_bottom = 102.0
 mouse_filter = 2
-custom_constants/margin_right = 15
-custom_constants/margin_top = 10
-custom_constants/margin_left = 15
-custom_constants/margin_bottom = 10
+custom_constants/margin_right = 10
+custom_constants/margin_top = 5
+custom_constants/margin_left = 10
+custom_constants/margin_bottom = 5
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="v" type="VBoxContainer" parent="m"]
-margin_left = 15.0
-margin_top = 10.0
-margin_right = 138.0
-margin_bottom = 62.0
+margin_left = 10.0
+margin_top = 5.0
+margin_right = 128.0
+margin_bottom = 97.0
 mouse_filter = 2
 alignment = 1
 
 [node name="h" type="HBoxContainer" parent="m/v"]
-margin_right = 123.0
+margin_right = 118.0
 margin_bottom = 24.0
 mouse_filter = 2
 alignment = 1
 
 [node name="flair" type="Panel" parent="m/v/h"]
-margin_left = 5.0
-margin_right = 29.0
+margin_left = 2.0
+margin_right = 26.0
 margin_bottom = 24.0
 rect_min_size = Vector2( 24, 24 )
 mouse_filter = 2
@@ -116,43 +117,72 @@ position = Vector2( 12, 12 )
 texture = ExtResource( 3 )
 
 [node name="text" type="Label" parent="m/v/h"]
-margin_left = 33.0
+margin_left = 30.0
 margin_top = 3.0
-margin_right = 118.0
+margin_right = 115.0
 margin_bottom = 20.0
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 9 )
 text = "Manual Labor"
 align = 1
 
-[node name="h2" type="HBoxContainer" parent="m/v"]
+[node name="h2" type="VBoxContainer" parent="m/v"]
 margin_top = 28.0
-margin_right = 123.0
-margin_bottom = 43.0
+margin_right = 118.0
+margin_bottom = 67.0
 mouse_filter = 2
-custom_constants/separation = 10
+custom_constants/separation = 0
 
-[node name="output" type="Label" parent="m/v/h2"]
-margin_right = 46.0
-margin_bottom = 15.0
+[node name="HBoxContainer" type="HBoxContainer" parent="m/v/h2"]
+margin_right = 118.0
+margin_bottom = 24.0
+mouse_filter = 2
+custom_constants/separation = 0
+
+[node name="flair2" type="Panel" parent="m/v/h2/HBoxContainer"]
+margin_right = 24.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 24, 24 )
+mouse_filter = 2
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 2 )
+
+[node name="Sprite" type="Sprite" parent="m/v/h2/HBoxContainer/flair2"]
+self_modulate = Color( 0.7, 0, 1, 1 )
+position = Vector2( 12, 12 )
+texture = ExtResource( 6 )
+
+[node name="Sprite2" type="Sprite" parent="m/v/h2/HBoxContainer/flair2/Sprite"]
+modulate = Color( 0, 0, 0, 1 )
+show_behind_parent = true
+position = Vector2( 1, 1 )
+texture = ExtResource( 6 )
+
+[node name="output" type="Label" parent="m/v/h2/HBoxContainer"]
+unique_name_in_owner = true
+margin_left = 24.0
+margin_top = 4.0
+margin_right = 97.0
+margin_bottom = 19.0
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 4 )
-text = "+14 coal"
+text = "+14 Coal Fuel"
 align = 1
 
 [node name="flair" type="Label" parent="m/v/h2"]
-margin_left = 56.0
-margin_right = 123.0
-margin_bottom = 15.0
+margin_top = 24.0
+margin_right = 118.0
+margin_bottom = 39.0
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 4 )
 text = "-1 will to live"
 align = 1
 
 [node name="Progress Bar" parent="m/v" instance=ExtResource( 4 )]
-margin_top = 47.0
-margin_right = 123.0
-margin_bottom = 52.0
-mouse_filter = 2
+unique_name_in_owner = true
+margin_top = 71.0
+margin_right = 118.0
+margin_bottom = 92.0
+size_flags_horizontal = 1
 
 [connection signal="pressed" from="button" to="." method="_on_button_pressed"]

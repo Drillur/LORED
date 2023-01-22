@@ -17,7 +17,6 @@ var working := false
 var halt := false
 var hold := false 
 var sync_queued := true
-var off_sim := false
 
 
 var b := {} # burn (ingredients burned per task)
@@ -784,7 +783,7 @@ func w_get_losing() -> float:
 
 func autobuy() -> bool:
 	
-	if not autobuy or off_sim:
+	if not autobuy:
 		return false
 	
 	if not active:
@@ -854,22 +853,6 @@ func autobuy_upgrade_check() -> bool:
 				return true
 	
 	return false
-
-func off_go(div: float) -> void:
-	
-	# divide speed by div
-	
-	speed.off_m *= div
-	speed.sync()
-	
-	off_sim = true
-
-func off_stop(div: float) -> void:
-	
-	speed.off_m /= div
-	speed.sync()
-	
-	off_sim = false
 
 func reset():
 	

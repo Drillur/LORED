@@ -57,13 +57,13 @@ size_flags_horizontal = 3
 alignment = 1
 
 [node name="Fuel Progress" parent="basicLORED/storage/h" instance=ExtResource( 7 )]
-margin_left = 30.0
-margin_right = 54.0
+margin_left = 37.0
+margin_right = 47.0
 
 [node name="flair" type="Label" parent="basicLORED/storage/h"]
-margin_left = 58.0
+margin_left = 51.0
 margin_top = 4.0
-margin_right = 99.0
+margin_right = 92.0
 margin_bottom = 19.0
 mouse_filter = 1
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )

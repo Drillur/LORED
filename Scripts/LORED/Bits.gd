@@ -72,6 +72,16 @@ func setValue_inferValueByLOREDType(folder: int, lored: int):
 func changeBase(val: Big):
 	base = val
 
+
+func reset():
+	for f in bits:
+		if f in [lv.Num.ADD, lv.Num.ADD_FUEL, lv.Num.SUBTRACT]:
+			for g in bits[f]:
+				bits[f][g] = Big.new(0)
+		else:
+			for g in bits[f]:
+				bits[f][g] = Big.new(1)
+
 func report():
 	for folder in bits:
 		for item in bits[folder]:

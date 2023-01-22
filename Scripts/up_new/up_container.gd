@@ -1,6 +1,7 @@
 extends MarginContainer
 
 onready var rt = get_node("/root/Root")
+onready var confirmReset = get_node("%confirmReset")
 
 
 
@@ -57,16 +58,15 @@ func _ready():
 	gv.connect("upgrade_purchased", self, "upgrade_purchased")
 	
 	set_physics_process(false)
+	set_process(false)
 
 func procedure():
 	
-	while not confirmed and gv.up["PROCEDURE"].active() and visible and gv.open_tab == gv.Tab.MALIGNANT:
+	# called at the bottom of the func that positions every upgrade
+	
+	while shouldDisplayResetResource() and visible:
 		
-		if gv.resource[gv.Resource.MALIGNANCY].greater_equal(gv.up["ROUTINE"].cost["malig"].t):
-			
-			var routine = rt.get_node(rt.gnupcon).cont["ROUTINE"].get_routine_info()[0].toString()
-			
-			reset_t.text = "Metastasize (+" + routine + " Tumors)"
+		setResetResourceText()
 		
 		var t = Timer.new()
 		add_child(t)
@@ -81,6 +81,44 @@ func procedure():
 	t.queue_free()
 	
 	procedure()
+
+func shouldDisplayResetResource() -> bool:
+	if gv.open_tab == gv.Tab.MALIGNANT:
+		if not gv.up["PROCEDURE"].active():
+			return false
+		if gv.resource[gv.Resource.MALIGNANCY].less(gv.up["ROUTINE"].cost["malig"].t):
+			return false
+	
+	return true
+
+func setupResetResource():
+	
+	var color: Color
+	var resource: int
+	
+	if gv.open_tab == gv.Tab.MALIGNANT:
+		resource = gv.Resource.TUMORS
+	
+	color = gv.COLORS[gv.shorthandByResource[resource]]
+	
+	get_node("%resetResource/amount").self_modulate = color
+	get_node("%resetResource/name").self_modulate = color
+	
+	get_node("%resetResource/name").text = gv.resourceName[resource]
+	
+	get_node("%resetResource/icon/Sprite").texture = gv.sprite[gv.shorthandByResource[resource]]
+	get_node("%resetResource/icon/Sprite/shadow").texture = get_node("%resetResource/icon/Sprite").texture
+	
+	setResetResourceText()
+	
+	get_node("%resetResource").show()
+
+func setResetResourceText():
+	match gv.open_tab:
+		gv.Tab.MALIGNANT:
+			var routine = rt.get_node(rt.gnupcon).cont["ROUTINE"].get_routine_info()[0].toString()
+			get_node("%resetResource/amount").text = "(" + routine
+
 
 
 func init() -> void:
@@ -561,9 +599,18 @@ func _on_reset_mouse_entered() -> void:
 	if gv.open_tab == -1:
 		return
 	
-	var reset_name := get_reset_name().to_upper()
+	var reset_name := get_reset_name().to_upper() 
 	
 	rt.get_node("global_tip")._call("buy upgrade " + reset_name)
+
+func get_reset_name() -> String:
+	
+	if gv.open_tab == gv.Tab.MALIGNANT:
+		return "Metastasize"
+	if gv.open_tab == gv.Tab.RADIATIVE:
+		return "Chemotherapy"
+	
+	return "oops"
 
 
 var confirmed := false
@@ -583,11 +630,11 @@ func _on_reset_pressed() -> void:
 		return
 	
 	confirmed = true
-	reset_t.text = "Confirm"
+	confirmReset.show()
 	
 	var t = Timer.new()
 	add_child(t)
-	t.start(2)
+	t.start(1)
 	yield(t, "timeout")
 	t.queue_free()
 	
@@ -611,31 +658,26 @@ func r_setup_setup():
 	set_gnreset()
 	
 	get_node("v/reset").show()
+	
+	if shouldDisplayResetResource():
+		setupResetResource()
+	else:
+		get_node("%resetResource").hide()
 
 func set_gnreset():
 	
+	confirmReset.hide()
 	
 	var mod_color: Color
-	var reset_name := get_reset_name()
 	
 	if gv.open_tab == gv.Tab.MALIGNANT:
-		mod_color = gv.g["malig"].color
+		mod_color = gv.COLORS["malig"]
 	elif gv.open_tab == gv.Tab.RADIATIVE:
-		mod_color = gv.g["tum"].color
+		mod_color = gv.COLORS["tum"]
 	
-	get_node("v/reset/bg").self_modulate = mod_color
-	reset_b.self_modulate = mod_color
-	reset_t.text = reset_name
+	get_node("%reset/Button").modulate = mod_color
+	get_node("%resetIcon").modulate = mod_color
 
-func get_reset_name() -> String:
-	
-	if gv.open_tab == gv.Tab.MALIGNANT:
-		return "Metastasize"
-	if gv.open_tab == gv.Tab.RADIATIVE:
-		return "Chemotherapy"
-	
-	print_debug("get_reset_name() in up_container.gd should not have been called at this point, pls fix")
-	return "oops"
 
 
 func col_time(node: String) -> void:
@@ -765,7 +807,7 @@ func upgrade_purchased(key: String, routine := []):
 	if key == "ROUTINE" and gv.up["PROCEDURE"].active():
 		
 		cont_flying_texts["(upgrade purchased flying text)" + str(i)] = rt.prefab["dtext"].instance()
-		cont_flying_texts["(upgrade purchased flying text)" + str(i)].init(false, -50, "+ " + routine[0].toString(), gv.sprite["tum"], gv.g["tum"].color)
+		cont_flying_texts["(upgrade purchased flying text)" + str(i)].init(false, -50, "+ " + routine[0].toString(), gv.sprite["tum"], gv.COLORS["tum"])
 		cont_flying_texts["(upgrade purchased flying text)" + str(i)].rect_position = Vector2(
 			rollx, 
 			rolly
@@ -785,7 +827,6 @@ func upgrade_purchased(key: String, routine := []):
 		if key == "ROUTINE":
 			_text = "- " + routine[1].toString()
 		
-		#on the line below: invalid get index '2' (on base; dictionary). my guess is the sprite fucked up. but also gv.g needs to be fixed.
 		var icon = gv.sprite[gv.shorthandByResource[x]]
 		
 		cont_flying_texts["(upgrade purchased flying text)" + str(i)].init({"text": _text, "icon": icon, "color": gv.resourceColor[x], "life": 20})

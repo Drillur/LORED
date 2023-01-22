@@ -1,8 +1,8 @@
 extends MarginContainer
 
 
-onready var outputText = get_node("m/v/h2/output")
-onready var progress = get_node("m/v/Progress Bar")
+onready var outputText = get_node("%output")
+onready var progress = get_node("%Progress Bar")
 
 var output: Big
 var willToLive = 100
@@ -27,16 +27,16 @@ func update():
 		updateOutput()
 		updateTexts()
 		
-		t.start(5)
+		t.start(1)
 		yield(t, "timeout")
 	
 	t.queue_free()
 
 func updateOutput():
-	output = Big.new(lv.lored[lv.Type.COAL].output)
+	output = Big.new(lv.lored[lv.Type.COAL].output).d(10)
 
 func updateTexts():
-	outputText.text = "+" + output.toString() + " coal"
+	outputText.text = "+" + output.toString() + " Coal Fuel"
 
 func updateProgress():
 	progress.value = float(willToLive) / 100
@@ -44,8 +44,9 @@ func updateProgress():
 
 
 func _on_button_pressed() -> void:
-	gv.resource[gv.Resource.COAL].a(output)
-	taq.increaseProgress(gv.Objective.RESOURCES_PRODUCED, "coal", output)
+	lv.lored[lv.Type.COAL].lored.currentFuel.a(output)
+	#gv.addToResource(gv.Resource.COAL, output)
+	#taq.increaseProgress(gv.Objective.RESOURCES_PRODUCED, "coal", output)
 	willToLive -= 1
 	updateProgress()
 	dieCheck()

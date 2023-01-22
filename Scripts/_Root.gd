@@ -2,15 +2,13 @@ class_name _root
 extends Node2D
 
 
-
 const prefab := {
 	"dtext": preload("res://Prefabs/dtext.tscn"),
-	"confirmation popup": preload("res://Prefabs/lored_buy.tscn"),
 }
 
-onready var menu = get_node("m/Menu")
+onready var menu = get_node("%Menu Hub")
 
-var saved_vars := ["emote_events"]
+var saved_vars := ["emote_events", "tabsExpanded"]
 
 var content := {}
 var instances := {}
@@ -64,9 +62,16 @@ func _ready():
 		textTimer = Timer.new()
 		textTimer.one_shot = true
 		add_child(textTimer)
+		$"%s1tab/m/h/production".self_modulate = gv.COLORS[str(gv.Tab.S1)]
+		$"%s1tab/Button".self_modulate = gv.COLORS[str(gv.Tab.S1)]
+		$"%s2tab/m/h/production".self_modulate = gv.COLORS[str(gv.Tab.S2)]
+		$"%s2tab/Button".self_modulate = gv.COLORS[str(gv.Tab.S2)]
+		$"%s3tab/m/h/production".self_modulate = gv.COLORS[str(gv.Tab.S3)]
+		$"%s3tab/Button".self_modulate = gv.COLORS[str(gv.Tab.S3)]
+		$"%s4tab/m/h/production".self_modulate = gv.COLORS[str(gv.Tab.S4)]
+		$"%s4tab/Button".self_modulate = gv.COLORS[str(gv.Tab.S4)]
 	
 	game_start(SaveManager.load())
-	
 
 func game_start(successful_load: bool) -> void:
 	
@@ -74,6 +79,7 @@ func game_start(successful_load: bool) -> void:
 	lv.lored[lv.Type.COAL].unlock()
 	
 	if not successful_load:
+		LogManager.enableAllOptions()
 		newGame()
 	
 	else:
@@ -82,6 +88,7 @@ func game_start(successful_load: bool) -> void:
 				continue
 			if lv.lored[type].purchased:
 				lv.lored[type].unlock()
+				lv.lored[type].unlockJobResources()
 				lv.lored[type].enterActive()
 		
 		getOfflineEarnings(gv.cur_clock - gv.save_slot_clock - 30)
@@ -105,8 +112,6 @@ func game_start(successful_load: bool) -> void:
 			
 			gv.up["ROUTINE"].have = false
 		
-		updateCurSession()
-		
 		routineLOREDsync()
 		
 		watch_stage1and2resourcesAreUnlocked()
@@ -121,11 +126,11 @@ func game_start(successful_load: bool) -> void:
 		# menu and tab shit
 		if true:
 			
-			menu.setup()
+			#menu.setup()
 
 			if patched:
 				get_node("m/v/top/h/menu_button/patched_alert").show()
-				menu.patched_alert.show()
+				#menu.patched_alert.show() #gaya
 				patched = false
 		
 		# b_upgrade_tab
@@ -147,15 +152,14 @@ func game_start(successful_load: bool) -> void:
 					
 					get_node(gnupcon).cont[x].upgrade_effects(true)
 					get_node(gnupcon).cont[x].r_update()
-		
-		# map
-		$map.init()
+	
+	gv.emit_signal("gameStarted")
 	
 	# hax
 	if true:
 		
 		if gv.dev_mode:
-			$Button.show()
+			$"%devButton".show()
 	
 	var t = Timer.new()
 	add_child(t)
@@ -180,19 +184,6 @@ func newGame():
 
 
 
-func updateCurSession():
-	
-	var t = Timer.new()
-	add_child(t)
-	
-	while true:
-		
-		t.start(1)
-		yield(t, "timeout")
-		
-		menu.update_cur_session(gv.cur_session)
-	
-	t.queue_free()
 
 func _input(ev):
 	
@@ -201,6 +192,11 @@ func _input(ev):
 	
 	if ev.is_action_pressed("ui_cancel"):
 		b_tabkey(KEY_ESCAPE)
+		return
+	
+	if ev.is_action_pressed("CTRLS"):
+		hideAllMenus()
+		get_node("%SaveMenu").show()
 		return
 	
 	if Input.is_key_pressed(KEY_1):
@@ -297,13 +293,16 @@ func _notification(ev):
 	elif ev == MainLoop.NOTIFICATION_WM_FOCUS_OUT:
 		gv.last_clock = OS.get_unix_time()
 
+func hideAllMenus():
+	get_node("%SaveMenu").hide()
+	get_node("%OptionsMenu").hide()
+	get_node("%Earnings Report").hide()
+	if get_node(gnupcon).get_node("v").visible:
+		get_node(gnupcon).go_back()
+	get_node(gnupcon).hide()
+	menu.hide()
 
 
-
-func _on_menu_pressed() -> void:
-	b_tabkey(KEY_ESCAPE)
-func _on_main_menu_pressed() -> void:
-	exitToMainMenu()
 
 func exitToMainMenu():
 	close()
@@ -392,7 +391,8 @@ func getOfflineEarnings(timeOffline: int):
 #	the button to hide it should say "Log Report and Close"
 #	escape should hide the report
 	
-	earningsReport.setup(timeOffline)
+	if timeOffline > 60:
+		earningsReport.setup(timeOffline)
 
 func w_total_per_sec(clock_dif : float) -> void:
 	return
@@ -665,13 +665,13 @@ func r_window_size_changed() -> void:
 	var win :Vector2= get_viewport_rect().size
 	var node = 0
 	
-	
 	#print(-INF)
 	if win.y == -INF:
 		#print("Vector2().y == ", win.y, "; what in tarnation?")
 		return
 	
 	get_node("m").rect_size = Vector2(win.x / scale.x, win.y / scale.y)
+	get_node(gnLOREDs).rect_size = get_node("m").rect_size
 	
 	get_node(gnupcon).get_node("v/upgrades").scroll_vertical = 0
 
@@ -693,6 +693,8 @@ func reset(reset_type: int, manual := true) -> void:
 	taq.reset(reset_type)
 	reset_limit_break(reset_type)
 	
+	gv.durationSinceLastReset = 0
+	
 	# ref
 	if true:
 		
@@ -702,9 +704,6 @@ func reset(reset_type: int, manual := true) -> void:
 		
 		if reset_type >= 2:
 			unlock_tab(gv.Tab.EXTRA_NORMAL, false)
-		
-		for x in gv.g:
-			get_node(gnLOREDs).cont[x].r_autobuy()
 	
 	if manual:
 		b_tabkey(KEY_1)
@@ -713,6 +712,21 @@ func reset(reset_type: int, manual := true) -> void:
 	
 	if reset_type == -1:
 		get_tree().reload_current_scene()
+	else:
+		var t = Timer.new()
+		add_child(t)
+		t.start(0.25)
+		yield(t,"timeout")
+		
+		lv.syncLOREDs()
+		
+		lv.lored[lv.Type.STONE].forcePurchase()
+		
+		if gv.up["aw <3"].active():
+			lv.lored[lv.Type.COAL].forcePurchase()
+		
+		for x in lv.Type.values():
+			lv.lored[x].autoWatch()
 	
 
 func reset_stats(reset_type: int):
@@ -724,10 +738,10 @@ func reset_stats(reset_type: int):
 	
 	if reset_type == gv.highest_run:
 		
-		var reset_key = gv.highestResetKey()
+		var reset_key: int = gv.highestResetKey()
 		
-		if gv.most_resources_gained.less(gv.resource[reset_key]): #z
-			gv.most_resources_gained = Big.new(gv.resource[reset_key]) #z
+		if gv.most_resources_gained.less(gv.resource[reset_key]):
+			gv.most_resources_gained = Big.new(gv.resource[reset_key])
 	
 	gv.run1 = gv.run1 + 1
 	if reset_type >= 2:
@@ -832,48 +846,47 @@ func reset_resources(reset_type: int):
 	
 	var lb = Big.new(gv.up["Limit Break"].effects[0].effect.t)
 	
-	# s1
-	if reset_type >= 1:
-		
-		if (reset_type == 1 and not gv.up["CONDUCT"].active()) or reset_type != 1:
-			
-			for x in gv.list.lored[gv.Tab.S1]:
-				
-				if x == "malig" and reset_type == 1:
-					continue
-				
-				gv.resource[x] = Big.new(0) #z
-		
-		gv.resource[gv.Resource.STONE].a(Big.new(lb).m(5.0))
-		gv.resource[gv.Resource.IRON].a(Big.new(lb).m(10.0))
-		gv.resource[gv.Resource.COPPER].a(Big.new(lb).m(10.0))
-		gv.resource[gv.Resource.MALIGNANCY] = Big.new(Big.max(gv.resource[gv.Resource.MALIGNANCY], 10))
-		if gv.up["FOOD TRUCKS"].active(true):
-			gv.resource[gv.Resource.COPPER].a(Big.new(lb).m(100.0))
-			gv.resource[gv.Resource.IRON].a(Big.new(lb).m(100.0))
+	var resetApproved := true
 	
-	# s2
-	if reset_type >= 2:
-		
-		for x in gv.list.lored[gv.Tab.S2]:
+	if reset_type == 1 and gv.up["CONDUCT"].active():
+		resetApproved = false
+	
+	
+	if resetApproved:
+		for reset in reset_type:
 			
-			if x == "tum" and reset_type == 2:
-				continue
+			reset += 1
 			
-			gv.resource[x] = Big.new(0) #Z
-		
-		gv.resource[gv.Resource.WOOD] = Big.new(lb).m(200)
-		gv.resource[gv.Resource.SOIL] = Big.new(lb).m(50)
-		gv.resource[gv.Resource.TREES] = Big.new(lb).m(5)
-		gv.resource[gv.Resource.STEEL] = Big.new(lb).m(200)
-		gv.resource[gv.Resource.HARDWOOD] = Big.new(lb).m(200)
-		gv.resource[gv.Resource.WIRE] = Big.new(lb).m(200)
-		gv.resource[gv.Resource.GLASS] = Big.new(lb).m(500)
-		gv.resource[gv.Resource.AXES] = Big.new(lb).m(50)
+			for resource in gv.list["stage " + str(reset) + " resources"]:
+				if reset_type == 1 and resource == gv.Resource.MALIGNANCY:
+					continue
+				elif reset_type == 2 and resource == gv.Resource.TUMORS:
+					continue
+				gv.setResource(resource, Big.new(0))
+			
+			if reset == 1:
+				gv.addToResource(gv.Resource.STONE, Big.new(lb).m(5.0))
+				gv.addToResource(gv.Resource.IRON, Big.new(lb).m(10.0))
+				gv.addToResource(gv.Resource.COPPER, Big.new(lb).m(10.0))
+				gv.addToResource(gv.Resource.MALIGNANCY, Big.new(Big.max(gv.resource[gv.Resource.MALIGNANCY], 10)))
+				if gv.up["FOOD TRUCKS"].active(true):
+					gv.addToResource(gv.Resource.COPPER, Big.new(lb).m(100.0))
+					gv.addToResource(gv.Resource.IRON, Big.new(lb).m(100.0))
+			
+			if reset == 2:
+				gv.setResource(gv.Resource.WOOD, Big.new(lb).m(200))
+				gv.setResource(gv.Resource.SOIL, Big.new(lb).m(50))
+				gv.setResource(gv.Resource.TREES, Big.new(lb).m(5))
+				gv.setResource(gv.Resource.STEEL, Big.new(lb).m(200))
+				gv.setResource(gv.Resource.HARDWOOD, Big.new(lb).m(200))
+				gv.setResource(gv.Resource.WIRE, Big.new(lb).m(200))
+				gv.setResource(gv.Resource.GLASS, Big.new(lb).m(500))
+				gv.setResource(gv.Resource.AXES, Big.new(lb).m(50))
 
 func reset_loreds(reset_type: int):
 	
 	if reset_type == -1:
+		# must be kept for BROWSER version. Ugh!!!!
 		for x in gv.g:
 			gv.g[x].reset()
 			if not gv.g[x].unlocked:
@@ -884,30 +897,11 @@ func reset_loreds(reset_type: int):
 		if reset_type == 1:
 			return
 	
-	for x in gv.g:
-		
-		if int(gv.g[x].type[1]) > reset_type:
+	for x in lv.lored:
+		if lv.lored[x].stage > reset_type:
 			continue
 		
-		get_node(gnLOREDs).cont[x].gn_frames.animation = "ww"
-		get_node(gnLOREDs).cont[x].gn_frames.playing = true
-		
-		if x == "coal" and gv.up["aw <3"].active():
-			
-			gv.g[x].partial_reset()
-			
-			gv.g[x].manager.buy()
-			
-			gv.resource[gv.Resource.STONE].a(5)
-			
-			continue
-		
-		gv.g[x].partial_reset()
-		
-		get_node(gnLOREDs).cont[x].update_net(true)
-	
-	gv.list.lored["active"] = ["stone"]
-	gv.list.lored["unlocked resources"] = ["stone"]
+		lv.lored[x].reset()
 
 func activate_refundable_upgrades(reset_type: int):
 	
@@ -958,6 +952,9 @@ func _clear_content():
 		content[x].queue_free()
 	content.clear()
 
+func _on_menuButton_pressed() -> void:
+	b_tabkey(KEY_ESCAPE)
+
 
 
 
@@ -965,9 +962,15 @@ func b_tabkey(key):
 	
 	$global_tip._call("no")
 	
+	if earningsReport.visible:
+		earningsReport.close()
+		if key == KEY_ESCAPE:
+			return
+	
 	match key:
 		
 		KEY_ESCAPE:
+			
 			if get_node(gnupcon).visible:
 				
 				if get_node(gnupcon).get_node("v").visible:
@@ -975,6 +978,14 @@ func b_tabkey(key):
 				
 				get_node(gnupcon).hide()
 				
+				return
+			
+			if get_node("%SaveMenu").visible:
+				get_node("%SaveMenu").hide()
+				return
+			
+			if get_node("%OptionsMenu").visible:
+				get_node("%OptionsMenu").hide()
 				return
 			
 			# open the menu
@@ -1047,13 +1058,14 @@ func open_up_tab(tab: int):
 	if not tab in gv.unlocked_tabs:
 		return
 	
+	hideAllMenus()
+	
 	if tab == gv.open_tab:
 		b_tabkey(KEY_ESCAPE)
 		return
 	
 	get_node(gnupcon).col_time(str(tab))
 	
-	menu.hide()
 	get_node("global_tip")._call("no")
 
 func b_move_map(x, y):
@@ -1071,17 +1083,16 @@ func unlock_tab(tab: int, add := true):
 	
 	match tab:
 		gv.Tab.NORMAL:
-			get_node("misc/tabs/v/upgrades").visible = add
-			continue
+			get_node("%upgradesTab").visible = add
 		gv.Tab.S2:
-			get_node("misc/tabs/v/" + str(tab - gv.Tab.S1)).visible = add
+			$"%s1tab".visible = add
 			if add:
 				gv.unlocked_tabs.append(gv.Tab.S1)
 			else:
 				gv.unlocked_tabs.erase(gv.Tab.S1)
 			continue
 		gv.Tab.S2, gv.Tab.S3, gv.Tab.S4:
-			get_node("misc/tabs/v/" + str(tab - gv.Tab.S1 + 1)).visible = add
+			get_node("%s" + str(tab - gv.Tab.S1 + 1) + "tab").visible = add
 		_:
 			get_node(gnupcon + "/top/" + str(tab)).visible = add
 
@@ -1121,6 +1132,7 @@ func save() -> String:
 		else:
 			data[x] = var2str(get(x))
 	
+	data["options"] = get_node("%OptionsMenu").save()
 	
 	data["loreds"] = lv.save()
 	
@@ -1146,8 +1158,12 @@ func _load(data: Dictionary):
 	var loadedVars = SaveManager.loadSavedVars(saved_vars_dict, data)
 	
 	for x in saved_vars:
+		if not x in loadedVars:
+			continue
 		set(x, loadedVars[x])
 	#*
+	
+	get_node("%OptionsMenu").load(str2var(data["options"]))
 	
 	lv.load(str2var(data["loreds"]))
 	
@@ -1180,13 +1196,23 @@ func _load(data: Dictionary):
 	activate_lb_effects()
 
 func _on_Button_pressed() -> void:
-	gv.addToResource(gv.Resource.COAL, 100)
 	gv.addToResource(gv.Resource.STONE, 100)
-	gv.addToResource(gv.Resource.IRON, 100)
-	gv.addToResource(gv.Resource.COPPER, 100)
-	#lv.reportNet(gv.Resource.IRON_ORE)
-	#lv.lored[lv.Type.COAL].lored.currentFuel.s(1)
-	gv.reportOfflineEarnings()
 	pass
 
 
+
+
+
+
+
+func _on_openSaveMenu() -> void:
+	get_node("%Menu Hub").hide()
+	get_node("%SaveMenu").show()
+
+func _on_openOptionsMenu() -> void:
+	get_node("%Menu Hub").hide()
+	get_node("%OptionsMenu").show()
+
+
+func _on_exitToMainMenu_pressed() -> void:
+	exitToMainMenu()

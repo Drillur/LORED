@@ -65,11 +65,6 @@ _global_script_classes=[ {
 "path": "res://Scripts/LORED/LORED Vars.gd"
 }, {
 "base": "Reference",
-"class": "Log",
-"language": "GDScript",
-"path": "res://Scripts/Log/Log.gd"
-}, {
-"base": "Reference",
 "class": "Ob",
 "language": "GDScript",
 "path": "res://Scripts/classes/Object.gd"
@@ -126,7 +121,6 @@ _global_script_class_icons={
 "LORED": "",
 "LOREDManager": "",
 "LOREDVars": "",
-"Log": "",
 "Ob": "",
 "Purchasable": "",
 "Upgrade": "",
@@ -412,6 +406,11 @@ SHV={
 SHB={
 "deadzone": 0.5,
 "events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":true,"control":false,"meta":false,"command":false,"pressed":false,"scancode":66,"physical_scancode":0,"unicode":0,"echo":false,"script":null)
+ ]
+}
+CTRLS={
+"deadzone": 0.5,
+"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":true,"meta":false,"command":true,"pressed":false,"scancode":83,"physical_scancode":0,"unicode":0,"echo":false,"script":null)
  ]
 }
 

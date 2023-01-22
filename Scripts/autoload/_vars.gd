@@ -229,7 +229,7 @@ const PATCH_NOTES := {
 var saved_vars := [
 	"run1", "run2", "run3", "run4",
 	"cur_clock", "time_played", "wishes_completed", "times_game_loaded", "highest_run",
-	"most_resources_gained", "option",
+	"most_resources_gained",
 	"lb_xp",
 ]
 
@@ -295,6 +295,8 @@ func _ready():
 		gv.resourceText[r] = ""
 	
 	setResourceColors()
+	
+	connect("startGame", self, "gameStarted")
 
 func setupFonts():
 	font.buttonNormal.font_data = load("res://Fonts/Roboto-Light.ttf")
@@ -312,16 +314,17 @@ func init_menu_and_stats():
 	
 	# menu
 	
-	option["FPS"] = 0
-	option["notation_type"] = 0
-	option["status_color"] = false
-	option["flying_numbers"] = true
-	option["crits_only"] = false
+	option["FPS"] = 0 # 
+	option["notation_type"] = 0 #
+	option["animations"] = true
+	option["loredOutputNumbers"] = true #
+	option["loredFuel"] = true #
+	option["tipSleep"] = true # 
+	option["autosave"] = true # 
+	option["loredCritsOnly"] = false #
+	#option["status_color"] = false
 	option["chit chat"] = true
 	option["consolidate_numbers"] = false
-	option["animations"] = true
-	option["tooltip_halt"] = true
-	option["tooltip_hold"] = true
 	option["tooltip_autobuyer"] = true
 	option["tooltip_cost_only"] = false
 	option["tooltipAdvancedInfo"] = false
@@ -346,8 +349,6 @@ func init_menu_and_stats():
 
 var loreds_required_for_s2_autoup_upgrades_to_begin_purchasing: Array
 var s2_upgrades_may_be_autobought := false
-
-var fresh_run := true
 
 func check_for_the_s2_shit():
 	if s2_upgrades_may_be_autobought:
@@ -390,7 +391,6 @@ const SRC := {
 	"labels/medium label": preload("res://Prefabs/Labels/Medium Label.tscn"),
 	
 	"label": preload("res://Prefabs/template/Label.tscn"),
-	"job label": preload("res://Prefabs/template/job label.tscn"),
 	"button label": preload("res://Prefabs/template/Button Label.tscn"),
 	
 	"flying text": preload("res://Prefabs/dtext.tscn"),
@@ -504,6 +504,8 @@ var sprite := {
 	# menu
 	"fuel": preload("res://Sprites/Menu/fuel.png"),
 	"fuel full": preload("res://Sprites/Menu/Fuel Full.png"),
+	"view": preload("res://Sprites/Menu/View.png"),
+	"viewHide": preload("res://Sprites/Menu/ViewHide.png"),
 	
 	"coal" : preload("res://Sprites/resources/coal.png"),
 	"stone" : preload("res://Sprites/resources/stone.png"),
@@ -1151,7 +1153,48 @@ func resetList():
 			"active": [lv.Type.STONE], "active " + str(Tab.S1): [lv.Type.STONE], "active " + str(Tab.S2): [], "active " + str(Tab.S3): [], "active " + str(Tab.S4): [],
 			"unlocked and inactive": [],
 		},
+		"stage 1 resources": [
+			Resource.COAL,
+			Resource.STONE,
+			Resource.IRON_ORE,
+			Resource.COPPER_ORE,
+			Resource.IRON,
+			Resource.COPPER,
+			Resource.GROWTH,
+			Resource.JOULES,
+			Resource.CONCRETE,
+			Resource.OIL,
+			Resource.TARBALLS,
+			Resource.MALIGNANCY
+		],
+		"stage 2 resources": [
+			Resource.WATER,
+			Resource.HUMUS,
+			Resource.SEEDS,
+			Resource.TREES,
+			Resource.SOIL,
+			Resource.AXES,
+			Resource.WOOD,
+			Resource.HARDWOOD,
+			Resource.LIQUID_IRON,
+			Resource.STEEL,
+			Resource.SAND,
+			Resource.GLASS,
+			Resource.DRAW_PLATE,
+			Resource.WIRE,
+			Resource.GALENA,
+			Resource.LEAD,
+			Resource.PETROLEUM,
+			Resource.WOOD_PULP,
+			Resource.PAPER,
+			Resource.PLASTIC,
+			Resource.TOBACCO,
+			Resource.CIGARETTES,
+			Resource.CARCINOGENS,
+			Resource.TUMORS
+		],
 		"unlocked resources": [Resource.STONE], #note stage 3 resources need to be manually added
+		"matured resources": [],
 		"fuel resource": [],
 		"resource producer": {},
 	}
@@ -1220,12 +1263,12 @@ enum WishReward {
 	LORED_FUNCTIONALITY,
 }
 
-func highestResetKey() -> String:
+func highestResetKey() -> int:
 	match highest_run:
-		1: return "malig"
-		2: return "tum"
-		3: return "spirit"
-	return "oops" #s4
+		1: return gv.Resource.MALIGNANCY
+		2: return gv.Resource.TUMORS
+		#3: return gv.Resource.SPIRIT #s3
+	return -1 #s4
 
 func xIsNearlyY(x: float, y: float) -> bool:
 	return x > y * 0.98 and x < y * 1.02
@@ -1301,16 +1344,19 @@ var wishes_completed := 0
 var highest_run := 1
 var most_resources_gained := Big.new(0)
 var times_game_loaded := 0
+var durationSinceLastReset := 0
 
 var tab_vertical := [0, 0, 0, 0]
 var option := {}
+
+var lastSaveClock = OS.get_unix_time()
 
 func update_clock():
 	
 	var t = Timer.new()
 	add_child(t)
 	
-	while true:
+	while not is_queued_for_deletion():
 		
 		cur_clock = OS.get_unix_time()
 		
@@ -1320,6 +1366,10 @@ func update_clock():
 		if active_scene == Scene.ROOT:
 			cur_session += 1
 			time_played += 1
+			durationSinceLastReset += 1
+			if option["autosave"]:
+				if cur_clock - lastSaveClock >= 30:
+					SaveManager.save()
 		else:
 			cur_session = 0
 	
@@ -1376,3 +1426,8 @@ func changeScene(newScene: int):
 
 signal manualLabor
 var manualLaborActive := false
+
+var gameStarted := false
+signal startGame
+func gameStarted():
+	gameStarted = true

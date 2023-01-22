@@ -210,17 +210,16 @@ custom_styles/panel = SubResource( 8 )
 
 [node name="sub_LOW_FUEL" type="HBoxContainer" parent="m/v/v/sub"]
 unique_name_in_owner = true
-visible = false
 margin_right = 60.0
-margin_bottom = 24.0
 custom_constants/separation = 20
 alignment = 1
 
 [node name="Fuel Progress" parent="m/v/v/sub/sub_LOW_FUEL" instance=ExtResource( 7 )]
 unique_name_in_owner = true
-margin_left = 130.0
+visible = false
+margin_left = 65.0
 margin_top = 4.0
-margin_right = 140.0
+margin_right = 75.0
 margin_bottom = 28.0
 
 [node name="sub_ASLEEP" type="HBoxContainer" parent="m/v/v/sub"]
@@ -233,14 +232,13 @@ alignment = 1
 
 [node name="production" type="Label" parent="m/v/v/sub/sub_ASLEEP"]
 unique_name_in_owner = true
-margin_left = 65.0
-margin_right = 205.0
+margin_right = 140.0
 margin_bottom = 33.0
 rect_min_size = Vector2( 140, 0 )
 mouse_filter = 1
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 16 )
-text = "You put this LORED to sleep 10+ seconds ago."
+text = "You put this LORED to sleep 30+ seconds ago."
 align = 1
 autowrap = true
 
@@ -258,33 +256,32 @@ unique_name_in_owner = true
 visible = false
 margin_top = 10.0
 margin_right = 136.0
-margin_bottom = 177.0
+margin_bottom = 213.0
 custom_constants/separation = 8
 
 [node name="info" type="Label" parent="m/v/bot/LOW_FUEL"]
-margin_right = 319.0
-margin_bottom = 51.0
+margin_right = 136.0
+margin_bottom = 87.0
 size_flags_horizontal = 3
 custom_fonts/font = ExtResource( 11 )
-text = "This LORED has low fuel. LOREDs must draw fuel from their own fuel storage in order to work. They will automatically fill their fuel storage by pulling from available resources."
+text = "Insufficient fuel in storage for normal jobs. Awaiting resources to be able to perform the Refuel job."
 valign = 1
 autowrap = true
 
 [node name="v" type="VBoxContainer" parent="m/v/bot/LOW_FUEL"]
-margin_top = 59.0
-margin_right = 319.0
-margin_bottom = 167.0
+margin_top = 95.0
+margin_right = 136.0
+margin_bottom = 203.0
 custom_constants/separation = 0
 
 [node name="h" type="HBoxContainer" parent="m/v/bot/LOW_FUEL/v"]
-margin_right = 319.0
+margin_right = 136.0
 margin_bottom = 36.0
 custom_constants/separation = 8
 alignment = 1
 
 [node name="icon" type="Panel" parent="m/v/bot/LOW_FUEL/v/h"]
-margin_left = 91.0
-margin_right = 109.0
+margin_right = 18.0
 margin_bottom = 36.0
 rect_min_size = Vector2( 18, 36 )
 size_flags_horizontal = 0
@@ -305,8 +302,8 @@ position = Vector2( 2, 2 )
 texture = ExtResource( 5 )
 
 [node name="type" type="HBoxContainer" parent="m/v/bot/LOW_FUEL/v/h"]
-margin_left = 117.0
-margin_right = 227.0
+margin_left = 26.0
+margin_right = 136.0
 margin_bottom = 36.0
 
 [node name="text" type="Label" parent="m/v/bot/LOW_FUEL/v/h/type"]
@@ -333,14 +330,14 @@ valign = 1
 
 [node name="h2" type="HBoxContainer" parent="m/v/bot/LOW_FUEL/v"]
 margin_top = 36.0
-margin_right = 319.0
+margin_right = 136.0
 margin_bottom = 72.0
 custom_constants/separation = 8
 alignment = 1
 
 [node name="icon" type="Panel" parent="m/v/bot/LOW_FUEL/v/h2"]
-margin_left = 105.0
-margin_right = 123.0
+margin_left = 14.0
+margin_right = 32.0
 margin_bottom = 36.0
 rect_min_size = Vector2( 18, 36 )
 size_flags_horizontal = 0
@@ -361,9 +358,9 @@ position = Vector2( 2, 2 )
 texture = ExtResource( 9 )
 
 [node name="text" type="Label" parent="m/v/bot/LOW_FUEL/v/h2"]
-margin_left = 131.0
+margin_left = 40.0
 margin_top = 10.0
-margin_right = 185.0
+margin_right = 94.0
 margin_bottom = 25.0
 size_flags_horizontal = 4
 custom_fonts/font = SubResource( 11 )
@@ -372,9 +369,9 @@ valign = 1
 
 [node name="fuelCost" type="Label" parent="m/v/bot/LOW_FUEL/v/h2"]
 unique_name_in_owner = true
-margin_left = 193.0
+margin_left = 102.0
 margin_top = 9.0
-margin_right = 213.0
+margin_right = 122.0
 margin_bottom = 26.0
 mouse_filter = 1
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
@@ -385,14 +382,14 @@ valign = 1
 
 [node name="h3" type="HBoxContainer" parent="m/v/bot/LOW_FUEL/v"]
 margin_top = 72.0
-margin_right = 319.0
+margin_right = 136.0
 margin_bottom = 108.0
 custom_constants/separation = 8
 alignment = 1
 
 [node name="icon" type="Panel" parent="m/v/bot/LOW_FUEL/v/h3"]
-margin_left = 100.0
-margin_right = 118.0
+margin_left = 8.0
+margin_right = 26.0
 margin_bottom = 36.0
 rect_min_size = Vector2( 18, 36 )
 size_flags_horizontal = 0
@@ -413,9 +410,9 @@ position = Vector2( 2, 2 )
 texture = ExtResource( 8 )
 
 [node name="text" type="Label" parent="m/v/bot/LOW_FUEL/v/h3"]
-margin_left = 126.0
+margin_left = 34.0
 margin_top = 10.0
-margin_right = 190.0
+margin_right = 98.0
 margin_bottom = 25.0
 size_flags_horizontal = 4
 custom_fonts/font = SubResource( 11 )
@@ -424,9 +421,9 @@ valign = 1
 
 [node name="fuel" type="Label" parent="m/v/bot/LOW_FUEL/v/h3"]
 unique_name_in_owner = true
-margin_left = 198.0
+margin_left = 106.0
 margin_top = 9.0
-margin_right = 219.0
+margin_right = 127.0
 margin_bottom = 26.0
 mouse_filter = 1
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
@@ -440,7 +437,7 @@ unique_name_in_owner = true
 visible = false
 margin_top = 10.0
 margin_right = 60.0
-margin_bottom = 61.0
+margin_bottom = 241.0
 custom_constants/separation = 8
 
 [node name="info" type="Label" parent="m/v/bot/ASLEEP"]
@@ -455,19 +452,19 @@ valign = 1
 autowrap = true
 
 [node name="v" type="VBoxContainer" parent="m/v/bot/ASLEEP"]
-margin_right = 178.0
-margin_bottom = 51.0
+margin_right = 60.0
+margin_bottom = 231.0
 custom_constants/separation = 0
 
 [node name="h" type="HBoxContainer" parent="m/v/bot/ASLEEP/v"]
-margin_right = 178.0
-margin_bottom = 51.0
+margin_right = 60.0
+margin_bottom = 231.0
 custom_constants/separation = 8
 
 [node name="icon" type="Panel" parent="m/v/bot/ASLEEP/v/h"]
-margin_top = 7.0
+margin_top = 97.0
 margin_right = 18.0
-margin_bottom = 43.0
+margin_bottom = 133.0
 rect_min_size = Vector2( 18, 36 )
 size_flags_horizontal = 0
 size_flags_vertical = 4
@@ -488,8 +485,8 @@ texture = ExtResource( 5 )
 
 [node name="text" type="Label" parent="m/v/bot/ASLEEP/v/h"]
 margin_left = 26.0
-margin_right = 178.0
-margin_bottom = 51.0
+margin_right = 60.0
+margin_bottom = 231.0
 size_flags_horizontal = 7
 custom_fonts/font = ExtResource( 11 )
 text = "You can disable this and other types of alerts in the options menu."

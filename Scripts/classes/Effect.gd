@@ -5,7 +5,7 @@ extends "res://Scripts/classes/Object.gd"
 var saved_vars := ["effect", ]
 
 var type: String
-var other: String # other useful key words. ex: for a cost upgrade, need to know which resource is being reduced
+var other = "" # other useful key words. ex: for a cost upgrade, need to know which resource is being reduced
 
 var beneficiaries: Array # will be something like ["coal"] or every single string in list.lored[gv.Tab.S1]
 
@@ -22,7 +22,7 @@ func _init(
 		_type: String,
 		_beneficiaries: Array,
 		_effect := 1.0,
-		_other := "",
+		_other = "",
 		_multiplicative := true
 	):
 	
@@ -41,9 +41,6 @@ func _init(
 	multiplicative = _multiplicative
 
 func apply(upgrade_name: String):
-	
-	# possibly, in the future, add a "sync_lored" parameter that defaults to false
-	# if specified as true, then sync each lored in beneficiaries[]
 	
 	effect.sync()
 	applied = true
@@ -94,21 +91,17 @@ func apply(upgrade_name: String):
 		"crit":
 			# crit cannot be multiplicative, that's just weird. so don't even account for it
 			for b in beneficiaries:
-				gv.g[b].crit.ua += effect.t.toFloat()
-				gv.g[b].crit.sync()
+				lv.lored[b].editValue(lv.Attribute.CRIT, lv.Num.ADD, lv.Num.FROM_UPGRADES, effect.t.toFloat())
 		"input":
 			for b in beneficiaries:
 				if other == "all":
-					for x in gv.g[b].b:
-						gv.g[b].b[x].um.m(effect.t)
-						gv.g[b].b[x].sync()
+					lv.lored[b].editValue(lv.Attribute.INPUT, lv.Num.MULTIPLY, lv.Num.FROM_UPGRADES, effect.t.toFloat())
 				else:
-					gv.g[b].b[other].um.m(effect.t)
-					gv.g[b].b[other].sync()
+					lv.lored[b].editValue(lv.Attribute.INPUT, lv.Num.MULTIPLY, lv.Num.FROM_UPGRADES, effect.t.toFloat(), int(other))
 		"cost":
 			for b in beneficiaries:
-				if other == "all":
-					for c in gv.g[b].cost:
+				if other is String:
+					for c in lv.lored[b].cost:
 						lv.lored[b].editValue(lv.Attribute.COST, lv.Num.MULTIPLY, lv.Num.FROM_UPGRADES, effect.t.toFloat(), c)
 				else:
 					lv.lored[b].editValue(lv.Attribute.COST, lv.Num.MULTIPLY, lv.Num.FROM_UPGRADES, effect.t.toFloat(), other)
@@ -131,8 +124,7 @@ func apply(upgrade_name: String):
 					lv.lored[b].editValue(lv.Attribute.OUTPUT, lv.Num.ADD, lv.Num.FROM_UPGRADES, effect.t.toFloat())
 		"autob":
 			for b in beneficiaries:
-				gv.g[b].autobuy = true
-				gv.emit_signal("autobuyer_purchased", b)
+				lv.lored[b].autobuying = true
 		"autoup":
 			for b in beneficiaries:
 				gv.up[b].autobuy = true
@@ -200,15 +192,12 @@ func remove(upgrade_name: String):
 		"input":
 			for b in beneficiaries:
 				if other == "all":
-					for x in gv.g[b].b:
-						gv.g[b].b[x].um.d(effect.t)
-						gv.g[b].b[x].sync()
+					lv.lored[b].editValue(lv.Attribute.INPUT, lv.Num.DIVIDE, lv.Num.FROM_UPGRADES, effect.t.toFloat())
 				else:
-					gv.g[b].b[other].um.d(effect.t)
-					gv.g[b].b[other].sync()
+					lv.lored[b].editValue(lv.Attribute.INPUT, lv.Num.DIVIDE, lv.Num.FROM_UPGRADES, effect.t.toFloat(), int(other))
 		"cost":
 			for b in beneficiaries:
-				if other == "all":
+				if other is String:
 					for c in gv.g[b].cost:
 						lv.lored[b].editValue(lv.Attribute.COST, lv.Num.DIVIDE, lv.Num.FROM_UPGRADES, effect.t.toFloat(), c)
 				else:
@@ -232,8 +221,7 @@ func remove(upgrade_name: String):
 					lv.lored[b].editValue(lv.Attribute.OUTPUT, lv.Num.SUBTRACT, lv.Num.FROM_UPGRADES, effect.t.toFloat())
 		"autob":
 			for b in beneficiaries:
-				gv.g[b].autobuy = false
-				gv.emit_signal("autobuyer_purchased", b)
+				lv.lored[b].autobuying = false
 		"autoup":
 			for b in beneficiaries:
 				gv.up[b].autobuy = false

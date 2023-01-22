@@ -5,11 +5,11 @@ func _ready() -> void:
 
 var rate = 0.05
 
-func slowFlash(color := Color(1, 0, 0)):
+func slowFlash(color := Color(1, 0, 0), stickinAround := false):
 	rate = 0.08
-	flash(color)
+	flash(color, stickinAround)
 
-func flash(color := Color(1, 0, 0)) -> void:
+func flash(color := Color(1, 0, 0), stickinAround := false) -> void:
 	
 	show()
 	
@@ -32,6 +32,10 @@ func flash(color := Color(1, 0, 0)) -> void:
 			0.15:
 				alpha = 0.07
 			0.07:
-				queue_free()
+				if stickinAround:
+					hide()
+					break
+				else:
+					queue_free()
 	
 	t.queue_free()

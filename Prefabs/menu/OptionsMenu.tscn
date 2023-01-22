@@ -1,0 +1,762 @@
+[gd_scene load_steps=27 format=2]
+
+[ext_resource path="res://Fonts/Roboto-Medium.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://Fonts/Roboto-Black.ttf" type="DynamicFontData" id=2]
+[ext_resource path="res://Styles/Master Theme.tres" type="Theme" id=3]
+[ext_resource path="res://Sprites/Menu/View.png" type="Texture" id=4]
+[ext_resource path="res://Sprites/tab/savedelete.png" type="Texture" id=5]
+[ext_resource path="res://Prefabs/menu/OptionsMenu.gd" type="Script" id=6]
+
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 0.0980392, 0.0980392, 0.0980392, 1 )
+border_color = Color( 1, 0, 0.380392, 1 )
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+shadow_color = Color( 0, 0, 0, 1 )
+shadow_size = 10
+
+[sub_resource type="StyleBoxFlat" id=2]
+bg_color = Color( 0.0980392, 0.0980392, 0.0980392, 1 )
+draw_center = false
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color( 1, 1, 1, 0.462745 )
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+shadow_size = 3
+
+[sub_resource type="StyleBoxFlat" id=18]
+bg_color = Color( 0.148438, 0.148438, 0.148438, 1 )
+border_color = Color( 1, 0, 0.380392, 1 )
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+shadow_color = Color( 0, 0, 0, 1 )
+
+[sub_resource type="StyleBoxFlat" id=14]
+draw_center = false
+
+[sub_resource type="DynamicFontData" id=4]
+font_path = "res://Fonts/Roboto-Black.ttf"
+
+[sub_resource type="DynamicFont" id=5]
+size = 12
+font_data = SubResource( 4 )
+
+[sub_resource type="StyleBoxFlat" id=15]
+bg_color = Color( 1, 1, 1, 0.08 )
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id=16]
+bg_color = Color( 1, 1, 1, 0.04 )
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id=17]
+bg_color = Color( 1, 1, 1, 0.0392157 )
+draw_center = false
+
+[sub_resource type="DynamicFont" id=19]
+size = 12
+font_data = ExtResource( 1 )
+
+[sub_resource type="StyleBoxFlat" id=11]
+bg_color = Color( 0.6, 0.6, 0.6, 0.0509804 )
+
+[sub_resource type="StyleBoxFlat" id=12]
+draw_center = false
+
+[sub_resource type="StyleBoxFlat" id=20]
+bg_color = Color( 0.6, 0.6, 0.6, 0.0509804 )
+
+[sub_resource type="StyleBoxFlat" id=21]
+draw_center = false
+
+[sub_resource type="StyleBoxFlat" id=28]
+bg_color = Color( 0.352941, 0, 0, 1 )
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+shadow_size = 3
+
+[sub_resource type="StyleBoxFlat" id=23]
+draw_center = false
+
+[sub_resource type="DynamicFont" id=24]
+size = 12
+font_data = ExtResource( 2 )
+
+[sub_resource type="StyleBoxFlat" id=25]
+bg_color = Color( 1, 1, 1, 0.08 )
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id=26]
+bg_color = Color( 1, 1, 1, 0.04 )
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id=27]
+bg_color = Color( 1, 1, 1, 0.0392157 )
+draw_center = false
+
+[node name="OptionsMenu" type="MarginContainer"]
+margin_right = 226.0
+margin_bottom = 100.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+script = ExtResource( 6 )
+
+[node name="bg" type="Panel" parent="."]
+margin_right = 320.0
+margin_bottom = 543.0
+custom_styles/panel = SubResource( 1 )
+
+[node name="border" type="Panel" parent="."]
+modulate = Color( 0.137255, 0.698039, 0.552941, 1 )
+margin_right = 320.0
+margin_bottom = 543.0
+rect_clip_content = true
+custom_styles/panel = SubResource( 2 )
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+margin_right = 320.0
+margin_bottom = 543.0
+custom_constants/margin_right = 8
+custom_constants/margin_top = 8
+custom_constants/margin_left = 8
+custom_constants/margin_bottom = 8
+
+[node name="VBoxContainer" type="GridContainer" parent="MarginContainer"]
+margin_left = 8.0
+margin_top = 8.0
+margin_right = 312.0
+margin_bottom = 535.0
+rect_pivot_offset = Vector2( -8, -8 )
+custom_constants/vseparation = 8
+custom_constants/hseparation = 8
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer"]
+margin_right = 304.0
+margin_bottom = 108.0
+
+[node name="bg" type="Panel" parent="MarginContainer/VBoxContainer/MarginContainer"]
+margin_right = 304.0
+margin_bottom = 108.0
+custom_styles/panel = SubResource( 18 )
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/MarginContainer"]
+margin_right = 304.0
+margin_bottom = 108.0
+custom_constants/margin_right = 4
+custom_constants/margin_top = 4
+custom_constants/margin_left = 4
+custom_constants/margin_bottom = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/MarginContainer/MarginContainer"]
+margin_left = 4.0
+margin_top = 4.0
+margin_right = 300.0
+margin_bottom = 104.0
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/MarginContainer/MarginContainer/VBoxContainer"]
+margin_right = 296.0
+margin_bottom = 28.0
+mouse_filter = 2
+size_flags_vertical = 4
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/MarginContainer/MarginContainer/VBoxContainer/MarginContainer"]
+margin_right = 296.0
+margin_bottom = 28.0
+custom_constants/margin_right = 4
+custom_constants/margin_top = 2
+custom_constants/margin_left = 2
+custom_constants/margin_bottom = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/MarginContainer/MarginContainer/VBoxContainer/MarginContainer/MarginContainer"]
+margin_left = 2.0
+margin_top = 2.0
+margin_right = 292.0
+margin_bottom = 26.0
+
+[node name="Panel" type="Panel" parent="MarginContainer/VBoxContainer/MarginContainer/MarginContainer/VBoxContainer/MarginContainer/MarginContainer/HBoxContainer"]
+margin_right = 24.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 24, 24 )
+mouse_filter = 2
+size_flags_vertical = 5
+custom_styles/panel = SubResource( 14 )
+
+[node name="hideIconVisual" type="Sprite" parent="MarginContainer/VBoxContainer/MarginContainer/MarginContainer/VBoxContainer/MarginContainer/MarginContainer/HBoxContainer/Panel"]
+unique_name_in_owner = true
+texture = ExtResource( 4 )
+centered = false
+
+[node name="shadow" type="Sprite" parent="MarginContainer/VBoxContainer/MarginContainer/MarginContainer/VBoxContainer/MarginContainer/MarginContainer/HBoxContainer/Panel/hideIconVisual"]
+self_modulate = Color( 0, 0, 0, 1 )
+show_behind_parent = true
+position = Vector2( 2, 2 )
+texture = ExtResource( 4 )
+centered = false
+
+[node name="title" type="Label" parent="MarginContainer/VBoxContainer/MarginContainer/MarginContainer/VBoxContainer/MarginContainer/MarginContainer/HBoxContainer"]
+margin_left = 28.0
+margin_top = 4.0
+margin_right = 106.0
+margin_bottom = 19.0
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 5 )
+text = "Visual Options"
+
+[node name="Button" type="Button" parent="MarginContainer/VBoxContainer/MarginContainer/MarginContainer/VBoxContainer/MarginContainer"]
+margin_right = 296.0
+margin_bottom = 28.0
+focus_mode = 0
+mouse_default_cursor_shape = 2
+custom_styles/hover = SubResource( 15 )
+custom_styles/pressed = SubResource( 16 )
+custom_styles/normal = SubResource( 17 )
+
+[node name="contentVisual" type="MarginContainer" parent="MarginContainer/VBoxContainer/MarginContainer/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+margin_top = 32.0
+margin_right = 296.0
+margin_bottom = 100.0
+custom_constants/margin_right = 10
+custom_constants/margin_left = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/MarginContainer/MarginContainer/VBoxContainer/contentVisual"]
+margin_left = 20.0
+margin_right = 286.0
+margin_bottom = 68.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/MarginContainer/MarginContainer/VBoxContainer/contentVisual/VBoxContainer"]
+margin_right = 266.0
+margin_bottom = 32.0
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/MarginContainer/MarginContainer/VBoxContainer/contentVisual/VBoxContainer/HBoxContainer"]
+margin_top = 8.0
+margin_right = 25.0
+margin_bottom = 23.0
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 19 )
+text = "FPS:"
+
+[node name="fps dropdown" type="OptionButton" parent="MarginContainer/VBoxContainer/MarginContainer/MarginContainer/VBoxContainer/contentVisual/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+margin_left = 29.0
+margin_right = 266.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 100, 32 )
+size_flags_horizontal = 3
+theme = ExtResource( 3 )
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/VBoxContainer/MarginContainer/MarginContainer/VBoxContainer/contentVisual/VBoxContainer"]
+margin_top = 36.0
+margin_right = 266.0
+margin_bottom = 68.0
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/MarginContainer/MarginContainer/VBoxContainer/contentVisual/VBoxContainer/HBoxContainer2"]
+margin_top = 8.0
+margin_right = 51.0
+margin_bottom = 23.0
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 19 )
+text = "Notation:"
+
+[node name="notationDropdown" type="OptionButton" parent="MarginContainer/VBoxContainer/MarginContainer/MarginContainer/VBoxContainer/contentVisual/VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
+margin_left = 55.0
+margin_right = 266.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 0, 32 )
+size_flags_horizontal = 3
+theme = ExtResource( 3 )
+
+[node name="MarginContainer2" type="MarginContainer" parent="MarginContainer/VBoxContainer"]
+margin_top = 116.0
+margin_right = 304.0
+margin_bottom = 368.0
+
+[node name="bg" type="Panel" parent="MarginContainer/VBoxContainer/MarginContainer2"]
+margin_right = 304.0
+margin_bottom = 252.0
+custom_styles/panel = SubResource( 18 )
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/MarginContainer2"]
+margin_right = 304.0
+margin_bottom = 252.0
+custom_constants/margin_right = 4
+custom_constants/margin_top = 4
+custom_constants/margin_left = 4
+custom_constants/margin_bottom = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/MarginContainer2/MarginContainer"]
+margin_left = 4.0
+margin_top = 4.0
+margin_right = 300.0
+margin_bottom = 248.0
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/MarginContainer2/MarginContainer/VBoxContainer"]
+margin_right = 296.0
+margin_bottom = 28.0
+mouse_filter = 2
+size_flags_vertical = 4
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/MarginContainer2/MarginContainer/VBoxContainer/MarginContainer"]
+margin_right = 296.0
+margin_bottom = 28.0
+custom_constants/margin_right = 4
+custom_constants/margin_top = 2
+custom_constants/margin_left = 2
+custom_constants/margin_bottom = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/MarginContainer2/MarginContainer/VBoxContainer/MarginContainer/MarginContainer"]
+margin_left = 2.0
+margin_top = 2.0
+margin_right = 292.0
+margin_bottom = 26.0
+
+[node name="Panel" type="Panel" parent="MarginContainer/VBoxContainer/MarginContainer2/MarginContainer/VBoxContainer/MarginContainer/MarginContainer/HBoxContainer"]
+margin_right = 24.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 24, 24 )
+mouse_filter = 2
+size_flags_vertical = 5
+custom_styles/panel = SubResource( 14 )
+
+[node name="hideIconLORED" type="Sprite" parent="MarginContainer/VBoxContainer/MarginContainer2/MarginContainer/VBoxContainer/MarginContainer/MarginContainer/HBoxContainer/Panel"]
+unique_name_in_owner = true
+texture = ExtResource( 4 )
+centered = false
+
+[node name="shadow" type="Sprite" parent="MarginContainer/VBoxContainer/MarginContainer2/MarginContainer/VBoxContainer/MarginContainer/MarginContainer/HBoxContainer/Panel/hideIconLORED"]
+self_modulate = Color( 0, 0, 0, 1 )
+show_behind_parent = true
+position = Vector2( 2, 2 )
+texture = ExtResource( 4 )
+centered = false
+
+[node name="title" type="Label" parent="MarginContainer/VBoxContainer/MarginContainer2/MarginContainer/VBoxContainer/MarginContainer/MarginContainer/HBoxContainer"]
+margin_left = 28.0
+margin_top = 4.0
+margin_right = 111.0
+margin_bottom = 19.0
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 5 )
+text = "LORED Options"
+
+[node name="Button" type="Button" parent="MarginContainer/VBoxContainer/MarginContainer2/MarginContainer/VBoxContainer/MarginContainer"]
+margin_right = 296.0
+margin_bottom = 28.0
+focus_mode = 0
+mouse_default_cursor_shape = 2
+custom_styles/hover = SubResource( 15 )
+custom_styles/pressed = SubResource( 16 )
+custom_styles/normal = SubResource( 17 )
+
+[node name="contentLORED" type="MarginContainer" parent="MarginContainer/VBoxContainer/MarginContainer2/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+margin_top = 32.0
+margin_right = 296.0
+margin_bottom = 244.0
+custom_constants/margin_right = 10
+custom_constants/margin_left = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/MarginContainer2/MarginContainer/VBoxContainer/contentLORED"]
+margin_left = 20.0
+margin_right = 286.0
+margin_bottom = 212.0
+rect_pivot_offset = Vector2( -349, 68 )
+
+[node name="animations" type="CheckButton" parent="MarginContainer/VBoxContainer/MarginContainer2/MarginContainer/VBoxContainer/contentLORED/VBoxContainer"]
+unique_name_in_owner = true
+margin_right = 266.0
+margin_bottom = 32.0
+mouse_default_cursor_shape = 2
+size_flags_horizontal = 3
+theme = ExtResource( 3 )
+pressed = true
+text = "Play animations"
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="highlight" type="Button" parent="MarginContainer/VBoxContainer/MarginContainer2/MarginContainer/VBoxContainer/contentLORED/VBoxContainer/animations"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 1
+custom_styles/hover = SubResource( 11 )
+custom_styles/pressed = SubResource( 12 )
+custom_styles/focus = SubResource( 12 )
+custom_styles/normal = SubResource( 12 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="loredOutputNumbers" type="CheckButton" parent="MarginContainer/VBoxContainer/MarginContainer2/MarginContainer/VBoxContainer/contentLORED/VBoxContainer"]
+unique_name_in_owner = true
+margin_top = 36.0
+margin_right = 266.0
+margin_bottom = 68.0
+mouse_default_cursor_shape = 2
+size_flags_horizontal = 3
+theme = ExtResource( 3 )
+pressed = true
+text = "Display output numbers"
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="highlight" type="Button" parent="MarginContainer/VBoxContainer/MarginContainer2/MarginContainer/VBoxContainer/contentLORED/VBoxContainer/loredOutputNumbers"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 1
+custom_styles/hover = SubResource( 11 )
+custom_styles/pressed = SubResource( 12 )
+custom_styles/focus = SubResource( 12 )
+custom_styles/normal = SubResource( 12 )
+
+[node name="loredChitChat" type="CheckButton" parent="MarginContainer/VBoxContainer/MarginContainer2/MarginContainer/VBoxContainer/contentLORED/VBoxContainer"]
+unique_name_in_owner = true
+margin_top = 72.0
+margin_right = 266.0
+margin_bottom = 104.0
+mouse_default_cursor_shape = 2
+size_flags_horizontal = 3
+theme = ExtResource( 3 )
+pressed = true
+text = "Display LORED chit-chat"
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="highlight" type="Button" parent="MarginContainer/VBoxContainer/MarginContainer2/MarginContainer/VBoxContainer/contentLORED/VBoxContainer/loredChitChat"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 1
+custom_styles/hover = SubResource( 11 )
+custom_styles/pressed = SubResource( 12 )
+custom_styles/focus = SubResource( 12 )
+custom_styles/normal = SubResource( 12 )
+
+[node name="loredFuel" type="CheckButton" parent="MarginContainer/VBoxContainer/MarginContainer2/MarginContainer/VBoxContainer/contentLORED/VBoxContainer"]
+unique_name_in_owner = true
+margin_top = 108.0
+margin_right = 266.0
+margin_bottom = 140.0
+mouse_default_cursor_shape = 2
+size_flags_horizontal = 3
+theme = ExtResource( 3 )
+pressed = true
+text = "Display fuel on bottom bar"
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="highlight" type="Button" parent="MarginContainer/VBoxContainer/MarginContainer2/MarginContainer/VBoxContainer/contentLORED/VBoxContainer/loredFuel"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 1
+custom_styles/hover = SubResource( 11 )
+custom_styles/pressed = SubResource( 12 )
+custom_styles/focus = SubResource( 12 )
+custom_styles/normal = SubResource( 12 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="tipSleep" type="CheckButton" parent="MarginContainer/VBoxContainer/MarginContainer2/MarginContainer/VBoxContainer/contentLORED/VBoxContainer"]
+unique_name_in_owner = true
+margin_top = 144.0
+margin_right = 266.0
+margin_bottom = 176.0
+mouse_default_cursor_shape = 2
+size_flags_horizontal = 3
+theme = ExtResource( 3 )
+pressed = true
+text = "Display LORED sleep tooltip"
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="highlight" type="Button" parent="MarginContainer/VBoxContainer/MarginContainer2/MarginContainer/VBoxContainer/contentLORED/VBoxContainer/tipSleep"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 1
+custom_styles/hover = SubResource( 11 )
+custom_styles/pressed = SubResource( 12 )
+custom_styles/focus = SubResource( 12 )
+custom_styles/normal = SubResource( 12 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="loredCritsOnly" type="CheckButton" parent="MarginContainer/VBoxContainer/MarginContainer2/MarginContainer/VBoxContainer/contentLORED/VBoxContainer"]
+unique_name_in_owner = true
+margin_top = 180.0
+margin_right = 266.0
+margin_bottom = 212.0
+rect_pivot_offset = Vector2( -32, -332 )
+mouse_default_cursor_shape = 2
+size_flags_horizontal = 3
+theme = ExtResource( 3 )
+text = "Only display critical flying numbers"
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="highlight" type="Button" parent="MarginContainer/VBoxContainer/MarginContainer2/MarginContainer/VBoxContainer/contentLORED/VBoxContainer/loredCritsOnly"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 5.0
+margin_right = 5.0
+mouse_filter = 1
+custom_styles/hover = SubResource( 11 )
+custom_styles/pressed = SubResource( 12 )
+custom_styles/focus = SubResource( 12 )
+custom_styles/normal = SubResource( 12 )
+
+[node name="MarginContainer3" type="MarginContainer" parent="MarginContainer/VBoxContainer"]
+margin_top = 376.0
+margin_right = 304.0
+margin_bottom = 527.0
+
+[node name="bg" type="Panel" parent="MarginContainer/VBoxContainer/MarginContainer3"]
+margin_right = 304.0
+margin_bottom = 151.0
+custom_styles/panel = SubResource( 18 )
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/MarginContainer3"]
+margin_right = 304.0
+margin_bottom = 151.0
+custom_constants/margin_right = 4
+custom_constants/margin_top = 4
+custom_constants/margin_left = 4
+custom_constants/margin_bottom = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/MarginContainer3/MarginContainer"]
+margin_left = 4.0
+margin_top = 4.0
+margin_right = 300.0
+margin_bottom = 147.0
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/MarginContainer3/MarginContainer/VBoxContainer"]
+margin_right = 296.0
+margin_bottom = 28.0
+mouse_filter = 2
+size_flags_vertical = 4
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/MarginContainer3/MarginContainer/VBoxContainer/MarginContainer"]
+margin_right = 296.0
+margin_bottom = 28.0
+custom_constants/margin_right = 4
+custom_constants/margin_top = 2
+custom_constants/margin_left = 2
+custom_constants/margin_bottom = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/MarginContainer3/MarginContainer/VBoxContainer/MarginContainer/MarginContainer"]
+margin_left = 2.0
+margin_top = 2.0
+margin_right = 292.0
+margin_bottom = 26.0
+
+[node name="Panel" type="Panel" parent="MarginContainer/VBoxContainer/MarginContainer3/MarginContainer/VBoxContainer/MarginContainer/MarginContainer/HBoxContainer"]
+margin_right = 24.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 24, 24 )
+mouse_filter = 2
+size_flags_vertical = 5
+custom_styles/panel = SubResource( 14 )
+
+[node name="hideIconSave" type="Sprite" parent="MarginContainer/VBoxContainer/MarginContainer3/MarginContainer/VBoxContainer/MarginContainer/MarginContainer/HBoxContainer/Panel"]
+unique_name_in_owner = true
+texture = ExtResource( 4 )
+centered = false
+
+[node name="shadow" type="Sprite" parent="MarginContainer/VBoxContainer/MarginContainer3/MarginContainer/VBoxContainer/MarginContainer/MarginContainer/HBoxContainer/Panel/hideIconSave"]
+self_modulate = Color( 0, 0, 0, 1 )
+show_behind_parent = true
+position = Vector2( 2, 2 )
+texture = ExtResource( 4 )
+centered = false
+
+[node name="title" type="Label" parent="MarginContainer/VBoxContainer/MarginContainer3/MarginContainer/VBoxContainer/MarginContainer/MarginContainer/HBoxContainer"]
+margin_left = 28.0
+margin_top = 4.0
+margin_right = 100.0
+margin_bottom = 19.0
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 5 )
+text = "Save Options"
+
+[node name="Button" type="Button" parent="MarginContainer/VBoxContainer/MarginContainer3/MarginContainer/VBoxContainer/MarginContainer"]
+margin_right = 296.0
+margin_bottom = 28.0
+focus_mode = 0
+mouse_default_cursor_shape = 2
+custom_styles/hover = SubResource( 15 )
+custom_styles/pressed = SubResource( 16 )
+custom_styles/normal = SubResource( 17 )
+
+[node name="contentSave" type="MarginContainer" parent="MarginContainer/VBoxContainer/MarginContainer3/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+margin_top = 32.0
+margin_right = 296.0
+margin_bottom = 143.0
+custom_constants/margin_right = 10
+custom_constants/margin_left = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/MarginContainer3/MarginContainer/VBoxContainer/contentSave"]
+margin_left = 20.0
+margin_right = 286.0
+margin_bottom = 111.0
+
+[node name="autosave" type="CheckButton" parent="MarginContainer/VBoxContainer/MarginContainer3/MarginContainer/VBoxContainer/contentSave/VBoxContainer"]
+unique_name_in_owner = true
+margin_right = 266.0
+margin_bottom = 32.0
+mouse_default_cursor_shape = 2
+size_flags_horizontal = 3
+theme = ExtResource( 3 )
+pressed = true
+text = "Autosave"
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="highlight" type="Button" parent="MarginContainer/VBoxContainer/MarginContainer3/MarginContainer/VBoxContainer/contentSave/VBoxContainer/autosave"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 1
+custom_styles/hover = SubResource( 20 )
+custom_styles/pressed = SubResource( 21 )
+custom_styles/focus = SubResource( 21 )
+custom_styles/normal = SubResource( 21 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="halt2" type="CheckButton" parent="MarginContainer/VBoxContainer/MarginContainer3/MarginContainer/VBoxContainer/contentSave/VBoxContainer"]
+margin_top = 36.0
+margin_right = 266.0
+margin_bottom = 68.0
+mouse_default_cursor_shape = 2
+size_flags_horizontal = 3
+theme = ExtResource( 3 )
+text = "Save LORED sleep status"
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="highlight" type="Button" parent="MarginContainer/VBoxContainer/MarginContainer3/MarginContainer/VBoxContainer/contentSave/VBoxContainer/halt2"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 1
+custom_styles/hover = SubResource( 20 )
+custom_styles/pressed = SubResource( 21 )
+custom_styles/focus = SubResource( 21 )
+custom_styles/normal = SubResource( 21 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="0" type="MarginContainer" parent="MarginContainer/VBoxContainer/MarginContainer3/MarginContainer/VBoxContainer/contentSave/VBoxContainer"]
+margin_left = 81.0
+margin_top = 72.0
+margin_right = 185.0
+margin_bottom = 111.0
+size_flags_horizontal = 4
+
+[node name="bg" type="Panel" parent="MarginContainer/VBoxContainer/MarginContainer3/MarginContainer/VBoxContainer/contentSave/VBoxContainer/0"]
+margin_right = 104.0
+margin_bottom = 39.0
+rect_min_size = Vector2( 32, 32 )
+custom_styles/panel = SubResource( 28 )
+
+[node name="m" type="MarginContainer" parent="MarginContainer/VBoxContainer/MarginContainer3/MarginContainer/VBoxContainer/contentSave/VBoxContainer/0"]
+margin_right = 104.0
+margin_bottom = 39.0
+custom_constants/margin_right = 5
+custom_constants/margin_top = 5
+custom_constants/margin_left = 5
+custom_constants/margin_bottom = 5
+
+[node name="h" type="HBoxContainer" parent="MarginContainer/VBoxContainer/MarginContainer3/MarginContainer/VBoxContainer/contentSave/VBoxContainer/0/m"]
+margin_left = 5.0
+margin_top = 5.0
+margin_right = 99.0
+margin_bottom = 34.0
+alignment = 1
+
+[node name="icon" type="Panel" parent="MarginContainer/VBoxContainer/MarginContainer3/MarginContainer/VBoxContainer/contentSave/VBoxContainer/0/m/h"]
+margin_right = 24.0
+margin_bottom = 29.0
+rect_min_size = Vector2( 24, 29 )
+size_flags_horizontal = 4
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 23 )
+
+[node name="Sprite" type="Sprite" parent="MarginContainer/VBoxContainer/MarginContainer3/MarginContainer/VBoxContainer/contentSave/VBoxContainer/0/m/h/icon"]
+position = Vector2( 10, 12 )
+texture = ExtResource( 5 )
+
+[node name="shadow" type="Sprite" parent="MarginContainer/VBoxContainer/MarginContainer3/MarginContainer/VBoxContainer/contentSave/VBoxContainer/0/m/h/icon/Sprite"]
+self_modulate = Color( 0, 0, 0, 0.501961 )
+show_behind_parent = true
+position = Vector2( 1, 1 )
+texture = ExtResource( 5 )
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/MarginContainer3/MarginContainer/VBoxContainer/contentSave/VBoxContainer/0/m/h"]
+margin_left = 28.0
+margin_top = 7.0
+margin_right = 94.0
+margin_bottom = 22.0
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 24 )
+text = "Delete Save"
+
+[node name="Button" type="Button" parent="MarginContainer/VBoxContainer/MarginContainer3/MarginContainer/VBoxContainer/contentSave/VBoxContainer/0"]
+margin_right = 104.0
+margin_bottom = 39.0
+rect_min_size = Vector2( 36, 36 )
+mouse_default_cursor_shape = 2
+custom_styles/hover = SubResource( 25 )
+custom_styles/pressed = SubResource( 26 )
+custom_styles/normal = SubResource( 27 )
+
+[connection signal="pressed" from="MarginContainer/VBoxContainer/MarginContainer/MarginContainer/VBoxContainer/MarginContainer/Button" to="." method="_on_visualHide_pressed"]
+[connection signal="item_selected" from="MarginContainer/VBoxContainer/MarginContainer/MarginContainer/VBoxContainer/contentVisual/VBoxContainer/HBoxContainer/fps dropdown" to="." method="_on_fps_dropdown_item_selected"]
+[connection signal="item_selected" from="MarginContainer/VBoxContainer/MarginContainer/MarginContainer/VBoxContainer/contentVisual/VBoxContainer/HBoxContainer2/notationDropdown" to="." method="_on_notationDropdown_item_selected"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/MarginContainer2/MarginContainer/VBoxContainer/MarginContainer/Button" to="." method="_on_LOREDHide_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/MarginContainer2/MarginContainer/VBoxContainer/contentLORED/VBoxContainer/animations" to="." method="selectOption" binds= [ "animations" ]]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/MarginContainer2/MarginContainer/VBoxContainer/contentLORED/VBoxContainer/loredOutputNumbers" to="." method="selectOption" binds= [ "loredOutputNumbers" ]]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/MarginContainer2/MarginContainer/VBoxContainer/contentLORED/VBoxContainer/loredChitChat" to="." method="selectOption" binds= [ "loredChitChat" ]]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/MarginContainer2/MarginContainer/VBoxContainer/contentLORED/VBoxContainer/loredFuel" to="." method="selectOption" binds= [ "loredFuel" ]]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/MarginContainer2/MarginContainer/VBoxContainer/contentLORED/VBoxContainer/tipSleep" to="." method="selectOption" binds= [ "tipSleep" ]]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/MarginContainer2/MarginContainer/VBoxContainer/contentLORED/VBoxContainer/loredCritsOnly" to="." method="selectOption" binds= [ "loredCritsOnly" ]]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/MarginContainer3/MarginContainer/VBoxContainer/MarginContainer/Button" to="." method="_on_saveHide_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/MarginContainer3/MarginContainer/VBoxContainer/contentSave/VBoxContainer/autosave" to="." method="selectOption" binds= [ "autosave" ]]

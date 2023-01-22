@@ -2,7 +2,7 @@ extends Area2D
 
 onready var rt = get_owner()
 
-onready var earningsReport = get_node("/root/Root/m/Earnings Report")
+onready var earningsReport = rt.get_node("%Earnings Report")
 
 var status = "no"
 var offset := Vector2()
@@ -15,26 +15,9 @@ var scroll_speed := 80
 
 var mouse_in := "no"
 
-var pos := {}
-var size := {}
-
 
 func _ready() -> void:
 	set_physics_process(false)
-
-
-func init():
-	
-	var bla = rt.get_node("misc/tabs/v/menu")
-	pos["menu button"] = bla.rect_global_position
-	size["menu button"] = bla.rect_size
-	
-	pos["upgrade button"] = rt.get_node("misc/tabs/v/upgrades").rect_global_position# + rt.get_node("misc/tabs/v").rect_position + rt.get_node("misc/tabs").rect_position
-	size["upgrade button"] = rt.get_node("misc/tabs/v/upgrades").rect_size
-	
-	bla = rt.get_node("m/Earnings Report")
-	pos["earnings report"] = bla.rect_global_position
-	size["earnings report"] = bla.rect_size
 
 func _input(ev):
 	
@@ -48,16 +31,26 @@ func _input(ev):
 		mpos = get_global_mouse_position()
 		
 		# menu
-		if rt.menu.visible and mouse_out(pos["menu button"], size["menu button"]) and mouse_out(rt.menu.rect_position, rt.menu.rect_size):
+		if rt.menu.visible and mouse_out(rt.get_node("%menuButton").rect_global_position, rt.get_node("%menuButton").rect_size) and mouse_out(rt.menu.rect_position, rt.menu.rect_size):
 			rt.menu.hide()
 		
+		# upgrades
 		var upcon = rt.get_node(rt.gnupcon)
-		if rt.get_node(rt.gnupcon).visible and mouse_out(pos["upgrade button"], size["upgrade button"]) and mouse_out(upcon.rect_global_position, upcon.rect_size * rt.scale):
+		if rt.get_node(rt.gnupcon).visible and mouse_out(rt.get_node("%upgradesTab").rect_global_position, rt.get_node("%upgradesTab").rect_size) and mouse_out(upcon.rect_global_position, upcon.rect_size * rt.scale):
 			rt.get_node(rt.gnupcon).hide()
 			rt.get_node(rt.gnupcon).go_back()
 		
-		if earningsReport.visible and mouse_out(pos["earnings report"], size["earnings report"]):
+		 # earnings report
+		if earningsReport.visible and mouse_out(earningsReport.rect_global_position, earningsReport.rect_size):
 			earningsReport.close()
+		
+		# save menu
+		if rt.get_node("%SaveMenu").visible and mouse_out(rt.get_node("%SaveMenu").rect_global_position, rt.get_node("%SaveMenu").rect_size):
+			rt.get_node("%SaveMenu").hide()
+		
+		# options menu
+		if rt.get_node("%OptionsMenu").visible and mouse_out(rt.get_node("%OptionsMenu").rect_global_position, rt.get_node("%OptionsMenu").rect_size):
+			rt.get_node("%OptionsMenu").hide()
 		
 		status = "no"
 

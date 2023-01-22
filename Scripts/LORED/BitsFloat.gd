@@ -58,3 +58,14 @@ func subtractFromValue(folder: int, item: int, amount):
 
 func setValue(folder: int, item: int, amount):
 	bits[folder][item] = amount
+
+func reset():
+	for f in bits:
+		if f in [lv.Num.ADD, lv.Num.ADD_FUEL, lv.Num.SUBTRACT]:
+			for g in bits[f]:
+				bits[f][g] = 0.0
+		else:
+			for g in bits[f]:
+				bits[f][g] = 1.0
+	total = base
+	totalUpdated = true

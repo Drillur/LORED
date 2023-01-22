@@ -579,10 +579,9 @@ alignment = 1
 
 [node name="TextEdit" type="TextEdit" parent="v/actions/textEdit/v"]
 margin_left = 14.0
-margin_top = 4.0
 margin_right = 164.0
-margin_bottom = 28.0
-rect_min_size = Vector2( 150, 24 )
+margin_bottom = 32.0
+rect_min_size = Vector2( 150, 32 )
 size_flags_horizontal = 4
 size_flags_vertical = 4
 custom_fonts/font = SubResource( 20 )

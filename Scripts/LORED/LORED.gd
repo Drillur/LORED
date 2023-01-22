@@ -471,7 +471,7 @@ func queue(that: int):
 
 # - - - Handy
 
-func editValue(attribute: int, typeOfEdit: int, item: int, amount, index = 0):
+func editValue(attribute: int, typeOfEdit: int, item: int, amount, index = -1):
 	
 	var callFunc: String
 	var folder: int
@@ -497,9 +497,18 @@ func editValue(attribute: int, typeOfEdit: int, item: int, amount, index = 0):
 		lv.Attribute.HASTE:
 			hasteBits.call(callFunc, folder, item, amount)
 			queue(lv.Queue.HASTE)
+		lv.Attribute.INPUT:
+			if index == -1:
+				inputBits.call(callFunc, folder, item, amount)
+			else:
+				jobs.values()[0].requiredResourcesBits[index].call(callFunc, folder, item, amount)
+			queue(lv.Queue.INPUT)
 		lv.Attribute.COST:
 			costBits[index].call(callFunc, folder, item, amount)
 			queue(lv.Queue.COST)
+		lv.Attribute.CRIT:
+			critBits.call(callFunc, folder, item, amount)
+			queue(lv.Queue.CRIT)
 
 
 
@@ -541,6 +550,9 @@ func setProducedResources():
 		for p in poop:
 			producedResources.append(p)
 
+func resetOutput():
+	outputBits.reset()
+
 
 
 # - - - Input
@@ -578,6 +590,9 @@ func setUsedResources():
 		for p in poop:
 			usedResources.append(p)
 
+func resetInput():
+	inputBits.reset()
+
 
 
 # - - - Cost
@@ -592,10 +607,8 @@ func addCost(key: int, base: float):
 	baseCost[key] = base
 	costBits[key] = Bits.new({
 		lv.Num.BASE: base,
-		lv.Num.DIVIDE: {
-			lv.Num.FROM_UPGRADES: Big.new(1),
-		},
 		lv.Num.MULTIPLY: {
+			lv.Num.FROM_UPGRADES: Big.new(1),
 			lv.Num.FROM_LEVELS: Big.new(1),
 		},
 	})
@@ -633,6 +646,10 @@ func syncCostModifier():
 	if gv.up["upgrade_description"].active():
 		costModifier *= 0.9
 
+func resetCost():
+	for r in costBits:
+		costBits[r].reset()
+
 
 
 # - - - Fuel Cost
@@ -660,6 +677,9 @@ func increaseFuelCost(folder: int, item: int, amount):
 	fuelCostBits.multiplyValue(folder, item, amount)
 	queue(lv.Queue.FUEL_COST)
 
+func resetFuelCost():
+	fuelCostBits.reset()
+
 
 
 # - - - Fuel Storage
@@ -679,9 +699,6 @@ var fuelStorageBits := Bits.new({
 func syncFuelStorage():
 	fuelStorage = fuelStorageBits.total
 	refuelJob.requiredResourcesBits[fuelResource].setValue(lv.Num.MULTIPLY, lv.Num.BY_LORED_FUEL_STORAGE, fuelStorage)
-	var minimum = Big.new(fuelCost).m(refuelJob.duration)
-	if currentFuel.less(minimum):
-		currentFuel = minimum
 
 func getFuelStorageText() -> String:
 	return fuelStorageBits.totalText
@@ -711,6 +728,9 @@ func setQuarterTankText():
 	quarterTankUpdated = false
 	quarterTankText = quarterTank.toString()
 
+func resetFuelStorage():
+	fuelStorageBits.reset()
+
 
 
 # - - - Crit
@@ -721,9 +741,6 @@ var critBits := BitsFloat.new({
 	lv.Num.BASE: 0.0,
 	lv.Num.ADD: {
 		lv.Num.FROM_UPGRADES: 0.0,
-	},
-	lv.Num.MULTIPLY: {
-		lv.Num.FROM_UPGRADES: 1.0,
 	},
 })
 
@@ -736,6 +753,9 @@ func getCritText() -> String:
 func increaseCrit(folder: int, item: int, amount):
 	critBits.multiplyValue(folder, item, amount)
 	queue(lv.Queue.CRIT)
+
+func resetCrit():
+	critBits.reset()
 
 
 
@@ -767,6 +787,9 @@ func setHasteValue(folder: int, item: int, amount):
 
 func getBaseHaste() -> float:
 	return hasteBits.base
+
+func resetHaste():
+	hasteBits.reset()
 
 
 
@@ -825,6 +848,8 @@ func levelUp():
 	
 	level += 1
 	
+	logLevelUp()
+	
 	increaseFuelCost(lv.Num.MULTIPLY, lv.Num.FROM_LEVELS, 2)
 	increaseFuelStorage(lv.Num.MULTIPLY, lv.Num.FROM_LEVELS, 2)
 	increaseCost(lv.Num.MULTIPLY, lv.Num.FROM_LEVELS, costModifier)
@@ -835,6 +860,18 @@ func levelUp():
 	queue.erase(lv.Queue.COST)
 	
 	
+
+func logLevelUp():
+	
+	if not LogManager.typeAllowed(LogManager.Type.LEVEL_UP):
+		return
+	
+	var icon: Texture = gv.sprite[shorthandKey]
+	var data := {}
+	data["icon"] = icon
+	data["level"] = level
+	data["color"] = color
+	LogManager.log(LogManager.Type.LEVEL_UP, var2str(data))
 
 func firstPurchaseOfTheRun():
 	
@@ -883,6 +920,7 @@ func jobStarted(job: Job):
 	lastJob = job.type
 	if job.type == lv.Job.REFUEL:
 		return
+	job.unlockResources()
 	if queue.has(lv.Queue.UPDATE_PRODUCTION):
 		queue.erase(lv.Queue.UPDATE_PRODUCTION)
 	updateGain_working(job)
@@ -982,6 +1020,19 @@ func getOfflineEarnings(timeOffline: int):
 
 
 # - - - Actions
+
+func reset():
+	level = 1
+	fuelCostBits.setValue(lv.Num.MULTIPLY, lv.Num.FROM_LEVELS, Big.new(1))
+	fuelStorageBits.setValue(lv.Num.MULTIPLY, lv.Num.FROM_LEVELS, Big.new(1))
+	outputBits.setValue(lv.Num.MULTIPLY, lv.Num.FROM_LEVELS, Big.new(1))
+	inputBits.setValue(lv.Num.MULTIPLY, lv.Num.FROM_LEVELS, Big.new(1))
+	for c in cost:
+		costBits[c].setValue(lv.Num.MULTIPLY, lv.Num.FROM_LEVELS, Big.new(1))
+	purchased = false
+#	unlocked = true if key in ["stone", "coal"] else false
+#
+#	halfway_reset_stuff()
 
 
 

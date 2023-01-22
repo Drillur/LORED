@@ -18,9 +18,6 @@ onready var afford = get_node("afford")
 onready var shadow = get_node("unowned shadow")
 onready var color_blind = get_node("color blind")
 
-var src := {
-	cannot_deactivate_prefab = preload("res://Prefabs/lored_buy.tscn"),
-}
 var cont := {}
 
 var routine := []

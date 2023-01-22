@@ -114,7 +114,7 @@ func _on_edit_color_pressed() -> void:
 
 func _on_dupe_pressed() -> void:
 	
-	SaveManager.duplicateSave(getSa)
+	SaveManager.duplicateSave(file_name)
 	mainMenu.refreshAllSaves()
 	mainMenu.setupMostRecentSave()
 

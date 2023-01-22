@@ -293,7 +293,7 @@ position = Vector2( 34, 34 )
 scale = Vector2( 2, 2 )
 frames = ExtResource( 1 )
 animation = "ff"
-frame = 31
+frame = 3
 playing = true
 script = ExtResource( 16 )
 
@@ -639,7 +639,7 @@ __meta__ = {
 position = Vector2( 7, 7 )
 scale = Vector2( 0.6, 0.6 )
 frames = ExtResource( 15 )
-frame = 12
+frame = 2
 playing = true
 
 [node name="hold" type="Button" parent="v/m/v/interactables/lored/h"]

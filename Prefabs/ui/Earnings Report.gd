@@ -102,7 +102,7 @@ func addResource(resource: int, timeOffline: int):
 	if _sign == 0:
 		yieldText = ""
 	elif _sign == -1:
-		yieldText = "-1"
+		yieldText = "-"
 	yieldText += _yield.toString()
 	
 	var yieldNode = gv.SRC["labels/medium label"].instance()

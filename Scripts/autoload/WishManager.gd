@@ -105,6 +105,7 @@ func reset(reset_type: int):
 		
 		for w in wish:
 			w.die(false)
+			#wishDied(w) #note might not be needed
 		wish.clear()
 		updateWishCount()
 		
@@ -121,6 +122,23 @@ func reset(reset_type: int):
 		t.queue_free()
 		
 		seekNewWish()
+		
+		return
+	
+	var i = 0
+	while true:
+		
+		if wish.size() - 1 < i:
+			break
+		
+		var _wish = wish[i]
+		
+		if not _wish.random:
+			i += 1
+			continue
+		
+		_wish.die(false)
+		wishDied(_wish)
 
 
 func close():
@@ -358,7 +376,7 @@ func getSelectedWish() -> String:
 			checkpoint = 1
 			return "r"
 	
-	if gv.resource[gv.Resource.COAL].less(Big.new(lv.lored[lv.Type.COAL].output).m(2)):
+	if gv.resource[gv.Resource.COAL].less(Big.new(lv.lored[lv.Type.COAL].output).m(10)):
 		if not "veryLowCoal" in active_wish_keys and not gv.manualLaborActive:
 			var duration = lv.lored[lv.Type.COAL].getJobDuration(0)
 			var minimum_fuel = Big.new(duration).m(lv.lored[lv.Type.COAL].fuelCost).m(1.1)

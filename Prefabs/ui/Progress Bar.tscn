@@ -22,6 +22,7 @@ font_data = ExtResource( 2 )
 margin_right = 155.0
 margin_bottom = 21.0
 rect_min_size = Vector2( 0, 10 )
+mouse_filter = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 script = ExtResource( 1 )
@@ -63,8 +64,10 @@ size_flags_vertical = 0
 custom_styles/panel = SubResource( 3 )
 
 [node name="Text" type="MarginContainer" parent="."]
+visible = false
 margin_right = 155.0
 margin_bottom = 21.0
+mouse_filter = 2
 custom_constants/margin_right = 5
 custom_constants/margin_top = 2
 custom_constants/margin_left = 5
@@ -75,7 +78,6 @@ margin_left = 5.0
 margin_top = 2.0
 margin_right = 150.0
 margin_bottom = 19.0
-mouse_filter = 1
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 5 )
 text = "+123e123"

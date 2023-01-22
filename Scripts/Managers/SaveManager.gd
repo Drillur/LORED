@@ -20,6 +20,7 @@ var save_file_color: Color
 
 var patched := false
 
+signal gameSaved
 
 
 
@@ -74,6 +75,9 @@ func save(path := save_path, type := "normal"):
 			save_file.open(path, File.WRITE)
 			save_file.store_line(save_text)
 			save_file.close()
+	
+	emit_signal("gameSaved")
+	gv.lastSaveClock = OS.get_unix_time()
 
 func load(path := save_path) -> bool:
 	

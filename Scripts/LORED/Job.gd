@@ -4,11 +4,12 @@ extends Reference
 
 
 var locked := true
+var resourcesUnlocked := false
 
 var type: int
 var lored: int
 
-var canText: String
+var name: String
 var vicoText: String
 #var considerBabyhood := false
 
@@ -33,197 +34,197 @@ func addResourceProducers():
 func construct_REFUEL():
 	setDuration(4)
 	setVicoText("Refueling!")
-	#canText = ""
+	name = "Refuel"
 func construct_COAL():
 	setDuration(3.25)
 	addProducedResource(gv.Resource.COAL, 1)
-	canText = "dig for"
+	name = "Dig"
 func construct_STONE():
 	setDuration(2.5)
 	addProducedResource(gv.Resource.STONE, 1)
-	canText = "pick up"
+	name = "Pick Up"
 func construct_IRON_ORE():
 	setDuration(4.0)
 	addProducedResource(gv.Resource.IRON_ORE, 1)
-	canText = "shoot"
+	name = "Shoot"
 func construct_COPPER_ORE():
 	setDuration(4.0)
 	addProducedResource(gv.Resource.COPPER_ORE, 1)
-	canText = "mine"
+	name = "Mine"
 func construct_IRON():
 	setDuration(5.0)
 	addProducedResource(gv.Resource.IRON, 1)
 	addRequiredResource(gv.Resource.IRON_ORE, 1)
-	canText = "toast"
+	name = "Toast"
 func construct_COPPER():
 	setDuration(5.0)
 	addProducedResource(gv.Resource.COPPER, 1)
 	addRequiredResource(gv.Resource.COPPER_ORE, 1)
-	canText = "cook"
+	name = "Cook"
 func construct_CONCRETE():
 	setDuration(10.0)
 	addProducedResource(gv.Resource.CONCRETE, 1)
 	addRequiredResource(gv.Resource.STONE, 1)
-	canText = "mash"
+	name = "Mash"
 func construct_GROWTH():
 	setDuration(6.5)
 	addProducedResource(gv.Resource.GROWTH, 1)
 	addRequiredResource(gv.Resource.IRON, 1)
 	addRequiredResource(gv.Resource.COPPER, 1)
-	canText = "pinch off"
+	name = "Pop"
 func construct_JOULES():
 	setDuration(8.25)
 	addProducedResource(gv.Resource.JOULES, 1)
 	addRequiredResource(gv.Resource.COAL, 1)
-	canText = "redirect"
+	name = "Redirect"
 func construct_OIL():
-	setDuration(4)
+	setDuration(0.5)
 	addProducedResource(gv.Resource.OIL, 0.075)
-	canText = "Can succ "
+	name = "Succ"
 func construct_TARBALLS():
 	setDuration(4)
 	addProducedResource(gv.Resource.TARBALLS, 1)
 	addRequiredResource(gv.Resource.OIL, 1)
-	canText = "mutate"
+	name = "Mutate"
 func construct_MALIGNANCY():
 	setDuration(5)
 	addProducedResource(gv.Resource.MALIGNANCY, 1)
 	addRequiredResource(gv.Resource.TARBALLS, 1)
 	addRequiredResource(gv.Resource.GROWTH, 1)
-	canText = "manifest"
+	name = "Manifest"
 func construct_WATER():
 	setDuration(3.25)
 	addProducedResource(gv.Resource.WATER, 1)
-	canText = "splish-splash"
+	name = "Splish-Splash"
 func construct_HUMUS():
 	setDuration(4.575)
 	addProducedResource(gv.Resource.HUMUS, 1)
 	addRequiredResource(gv.Resource.GROWTH, 0.5)
 	addRequiredResource(gv.Resource.WATER, 1)
-	canText = "shit"
+	name = "Shit"
 func construct_TREES():
 	setDuration(20)
 	addProducedResource(gv.Resource.TREES, 1)
 	addRequiredResource(gv.Resource.WATER, 6)
 	addRequiredResource(gv.Resource.SEEDS, 1)
-	canText = "grow"
+	name = "Grow"
 func construct_SEEDS():
 	setDuration(5)
 	addProducedResource(gv.Resource.SEEDS, 1)
 	addRequiredResource(gv.Resource.WATER, 1.5)
-	canText = "pollenate"
+	name = "Pollenate"
 func construct_SOIL():
 	setDuration(5)
 	addProducedResource(gv.Resource.SOIL, 1)
 	addRequiredResource(gv.Resource.HUMUS, 1.5)
-	canText = "pollenate"
+	name = "Pollenate"
 func construct_AXES():
 	setDuration(7)
 	addProducedResource(gv.Resource.AXES, 1)
 	addRequiredResource(gv.Resource.HARDWOOD, 0.8)
 	addRequiredResource(gv.Resource.STEEL, 0.25)
-	canText = "construct"
+	name = "Construct"
 func construct_WOOD():
 	setDuration(5)
 	addProducedResource(gv.Resource.WOOD, 25)
 	addRequiredResource(gv.Resource.AXES, 5) #note verify that this is correct
 	addRequiredResource(gv.Resource.TREES, 1)
-	canText = "obliterate"
+	name = "Obliterate"
 func construct_HARDWOOD():
 	setDuration(4.58333)
 	addProducedResource(gv.Resource.HARDWOOD, 1)
 	addRequiredResource(gv.Resource.WOOD, 2)
 	addRequiredResource(gv.Resource.CONCRETE, 1)
-	canText = "seduce"
+	name = "Seduce"
 func construct_LIQUID_IRON():
 	setDuration(4)
 	addProducedResource(gv.Resource.LIQUID_IRON, 1)
 	addRequiredResource(gv.Resource.IRON, 10)
-	canText = "stew"
+	name = "Stew"
 func construct_STEEL():
 	setDuration(13.3333333)
 	addProducedResource(gv.Resource.STEEL, 1)
 	addRequiredResource(gv.Resource.LIQUID_IRON, 8)
-	canText = "smelt"
+	name = "Smelt"
 func construct_SAND():
 	setDuration(4)
 	addProducedResource(gv.Resource.SAND, 2.5)
 	addRequiredResource(gv.Resource.HUMUS, 1.5)
-	canText = "not-force pull"
+	name = "Levitate"
 func construct_GLASS():
 	setDuration(5.825)
 	addProducedResource(gv.Resource.GLASS, 1)
 	addRequiredResource(gv.Resource.SAND, 6)
-	canText = "glass"
+	name = "Glass"
 func construct_DRAW_PLATE():
 	setDuration(10)
 	addProducedResource(gv.Resource.DRAW_PLATE, 1)
 	addRequiredResource(gv.Resource.STEEL, 0.5)
-	canText = "doodle"
+	name = "Doodle"
 func construct_WIRE():
 	setDuration(5)
 	addProducedResource(gv.Resource.WIRE, 1)
 	addRequiredResource(gv.Resource.COPPER, 5)
 	addRequiredResource(gv.Resource.DRAW_PLATE, 0.4)
-	canText = "sew"
+	name = "Sew"
 func construct_GALENA():
 	setDuration(4)
 	addProducedResource(gv.Resource.GALENA, 1)
-	canText = "jackhammer"
+	name = "Jackhammer"
 func construct_LEAD():
 	setDuration(5)
 	addProducedResource(gv.Resource.LEAD, 1)
 	addRequiredResource(gv.Resource.GALENA, 1)
-	canText = "filter"
+	name = "Filter"
 func construct_PETROLEUM():
 	setDuration(5)
 	addProducedResource(gv.Resource.PETROLEUM, 1)
 	addRequiredResource(gv.Resource.OIL, 3)
-	canText = "process"
+	name = "Process"
 func construct_WOOD_PULP():
 	setDuration(6.66666666)
 	addProducedResource(gv.Resource.WOOD_PULP, 5)
 	addRequiredResource(gv.Resource.STONE, 10)
 	addRequiredResource(gv.Resource.WOOD, 5)
-	canText = "strip"
+	name = "Strip"
 func construct_PAPER():
 	setDuration(5.33333)
 	addProducedResource(gv.Resource.PAPER, 1)
 	addRequiredResource(gv.Resource.WOOD_PULP, 0.6)
-	canText = "paperify"
+	name = "Paperify"
 func construct_PLASTIC():
 	setDuration(6.25)
 	addProducedResource(gv.Resource.PLASTIC, 1)
 	addRequiredResource(gv.Resource.COAL, 5)
 	addRequiredResource(gv.Resource.PETROLEUM, 1)
-	canText = "pollute"
+	name = "Pollute"
 func construct_TOBACCO():
 	setDuration(8.3333333)
 	addProducedResource(gv.Resource.TOBACCO, 1)
 	addRequiredResource(gv.Resource.WATER, 2)
 	addRequiredResource(gv.Resource.SEEDS, 1)
-	canText = "smoke"
+	name = "Smoke"
 func construct_CIGARETTES():
 	setDuration(2.583333)
 	addProducedResource(gv.Resource.CIGARETTES, 1)
 	addRequiredResource(gv.Resource.TARBALLS, 4)
 	addRequiredResource(gv.Resource.TOBACCO, 1)
 	addRequiredResource(gv.Resource.PAPER, 0.25)
-	canText = "smoke"
+	name = "Smoke"
 func construct_CARCINOGENS():
 	setDuration(7.5)
 	addProducedResource(gv.Resource.CARCINOGENS, 1)
 	addRequiredResource(gv.Resource.MALIGNANCY, 3)
 	addRequiredResource(gv.Resource.CIGARETTES, 6)
 	addRequiredResource(gv.Resource.PLASTIC, 5)
-	canText = "somehow make"
+	name = "Somehow Create"
 func construct_TUMORS():
 	setDuration(16.666666)
 	addProducedResource(gv.Resource.TUMORS, 1)
 	addRequiredResource(gv.Resource.GROWTH, 10)
 	addRequiredResource(gv.Resource.MALIGNANCY, 5)
 	addRequiredResource(gv.Resource.CARCINOGENS, 3)
-	canText = "grow"
+	name = "Grow"
 
 func setVicoText(text: String):
 	vicoText = text
@@ -287,7 +288,6 @@ func syncProducedResources():
 		producedResourcesBits[c].setValue(lv.Num.MULTIPLY, lv.Num.BY_LORED_OUTPUT, lv.lored[lored].output)
 		producedResources[c] = producedResourcesBits[c].total
 	producedResourcesBitsUpdated = true
-	producedOrRequiredResourcesUpdated = true
 	updateGain = true
 	updateOfflineNet = true
 
@@ -326,7 +326,6 @@ func syncRequiredResources():
 		requiredResourcesBits[c].setValue_inferValueByLOREDType(lv.Num.MULTIPLY, lored)
 		requiredResources[c] = requiredResourcesBits[c].total
 	requiredResourcesBitsUpdated = true
-	producedOrRequiredResourcesUpdated = true
 	updateDrain = true
 
 func getRequiredResourcesText() -> Dictionary:
@@ -393,8 +392,37 @@ func setPrimaryResource():
 
 func unlock():
 	locked = false
-	for resource in producedResourcesBits.keys():
-		gv.unlockResource(resource)
+	unlockResources()
+
+func unlockResources():
+	if resourcesUnlocked:
+		return
+	if canUnlockResources():
+		resourcesUnlocked = true
+		for resource in producedResourcesBits.keys():
+			gv.unlockResource(resource)
+
+func canUnlockResources() -> bool:
+	
+	if type == lv.Job.REFUEL or lored == lv.Type.COAL:
+		return true
+	
+	if not lv.lored[lored].fuelResource in gv.list["unlocked resources"]:
+		return false
+	
+	for resource in requiredResourcesBits.keys():
+		
+		var atLeastOne := false
+		
+		for producer in gv.list["resource producer"][resource]:
+			if lv.lored[producer].purchased:
+				atLeastOne = true
+				break
+		
+		if atLeastOne:
+			return true
+	
+	return false
 
 
 
@@ -411,72 +439,6 @@ func haveAndCanUseRequiredResources() -> bool:
 				return false
 	return true
 
-var jobText: String setget , getJobText
-var producedOrRequiredResourcesUpdated := true
-func getJobText() -> String:
-	if producedOrRequiredResourcesUpdated:
-		setJobText()
-	return jobText
-func setJobText():
-	
-	producedOrRequiredResourcesUpdated = false
-	
-	if type == lv.Job.REFUEL:
-		setRefuelJobText()
-		return
-	
-	if not producesResource:
-		return
-	
-	jobText = "[center]Can " + canText + " "
-	
-	var producedResourceText = getProducedResourcesText()
-	var formattedProducedResources := []
-	var size = producedResourceText.size()
-	for resource in producedResourceText:
-		var icon = gv.sprite[gv.shorthandByResource[resource]].get_path()
-		var resourceName = gv.resourceName[resource]
-		formattedProducedResources.append(
-			producedResourceText[resource] + " [img=<16>]" + icon + "[/img] " + resourceName
-		)
-	jobText += formattedProducedResources[0]
-	if size > 1:
-		if size == 2:
-			jobText += " and " + formattedProducedResources[1]
-		elif size == 3:
-			jobText += ", " + formattedProducedResources[1] + ", and " +  + formattedProducedResources[2]
-	
-	
-	if not requiresResource:
-		jobText += "!"
-		return
-	
-	jobText += " with "
-	
-	var requiredResourcesText = getRequiredResourcesText()
-	var formattedRequiredResources := []
-	size = requiredResourcesText.size()
-	for resource in requiredResourcesText:
-		var icon = gv.sprite[gv.shorthandByResource[resource]].get_path()
-		var resourceName = gv.resourceName[resource]
-		formattedRequiredResources.append(
-			requiredResourcesText[resource] + " [img=<16>]" + icon + "[/img] " + resourceName
-		)
-	jobText += formattedRequiredResources[0]
-	if size > 1:
-		if size == 2:
-			jobText += " and " + formattedRequiredResources[1]
-		elif size == 3:
-			jobText += ", " + formattedRequiredResources[1] + ", and " +  + formattedRequiredResources[2]
-	jobText += "!"
-
-func setRefuelJobText():
-	var requiredResources = getRequiredResourcesText()
-	var amount = requiredResources.values()[0]
-	var resource = requiredResources.keys()[0]
-	var resourceName = gv.resourceName[resource]
-	var icon = gv.sprite[gv.shorthandByResource[resource]].get_path()
-	jobText = "[center]May take " + amount + " [img=<16>]" + icon + "[/img] " + resourceName + " to refuel."
 
 
 

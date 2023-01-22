@@ -156,17 +156,17 @@ class Objective:
 			gv.Objective.RESOURCES_PRODUCED:
 				return "Collect " + gv.resourceName[int(key)]
 			gv.Objective.LORED_UPGRADED:
-				return "Upgrade " + lv.lored[int(key)].name
+				return "Level up " + lv.lored[int(key)].name
 			gv.Objective.UPGRADE_PURCHASED:
 				return "Purchase " + gv.up[key].name
 			gv.Objective.MAXED_FUEL_STORAGE:
 				return lv.lored[int(key)].name + " at 75% fuel"
 			gv.Objective.BREAK:
-				return "Relax"
+				return "Sleep"
 		
 		print_debug("Wish parseObjective() fail. Type: ", type)
 		return "Oops!"
-
+	
 	func complete():
 		complete = true
 
@@ -771,7 +771,7 @@ func construct_grinder():
 
 func construct_upgrades():
 	giver = str(lv.Type.COPPER_ORE)
-	help_text = "Ey, boss, I see you workin hard, real hard, I like that. But, lemme tell ya--you could be gettin this done a lot easier if you just did it with actual Upgrades. No, not upgrades like y'been doin--[i]Upgrades[/i], boss, [i]Upgrades[/i]! Whataya say to passin me a couple Stone--say, 40--and I tell ya all about Upgrades?"
+	help_text = "Ey, boss, I see you workin hard, real hard, I like that. But, lemme tell ya--you could be gettin this done a lot easier if you just did it with [i]Upgrades![/i] Whataya say to passin me a couple Stone--say, 40--and I tell ya all about Upgrades?"
 	thank_text = "That's sweet, boss, that's real sweet. Thanks for the dough, I'm gonna put this to real good use, you'll see. Catch ya later, boss, catch ya later. Oh! Upgrades, right. Just press Q, boss, you can handle it."
 	obj = Objective.new(gv.Objective.RESOURCES_PRODUCED, str(gv.Resource.STONE), "40")
 	rew.append(Reward.new(gv.WishReward.TAB, str(gv.Tab.NORMAL)))
@@ -960,7 +960,7 @@ func get_possible_types() -> Dictionary:
 		if notAnotherOngoingWishOfThisType("random_max_fuel"):
 			for x in gv.list.lored["active"]:
 				if lv.lored[x].currentFuelPercent < 0.25:
-					possible_types["random_max_fuel:" + x] = 100
+					possible_types["random_max_fuel:" + str(x)] = 100
 					break
 	
 	# joy_or_grief 20
@@ -1098,7 +1098,7 @@ func generateRandomRewards(reward_mod := 0.0):
 		var resource = randomResource()
 		if not gv.everyStage2LOREDunlocked():
 			while resource in gv.list.lored[gv.Tab.S2]:
-				resource = str(randomResource())
+				resource = randomResource() #note deleted the str() that surrounded this func 1/10/2023
 		var amount: Big
 		
 		if resource <= 35:

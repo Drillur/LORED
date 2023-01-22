@@ -1,4 +1,4 @@
-[gd_scene load_steps=36 format=2]
+[gd_scene load_steps=37 format=2]
 
 [ext_resource path="res://Sprites/animations/steel.tres" type="SpriteFrames" id=1]
 [ext_resource path="res://Scripts/oldLORED/AnimatedSprite.gd" type="Script" id=2]
@@ -10,12 +10,13 @@
 [ext_resource path="res://Fonts/Roboto-BlackItalic.ttf" type="DynamicFontData" id=8]
 [ext_resource path="res://Prefabs/FuelBar.tscn" type="PackedScene" id=9]
 [ext_resource path="res://Sprites/Menu/Halt.png" type="Texture" id=10]
+[ext_resource path="res://Sprites/animations/autobuyer.tres" type="SpriteFrames" id=11]
 [ext_resource path="res://Sprites/resources/axe.png" type="Texture" id=12]
 [ext_resource path="res://Styles/Labels/Num.tres" type="DynamicFont" id=13]
 [ext_resource path="res://Sprites/Menu/Check.png" type="Texture" id=14]
 [ext_resource path="res://Scripts/LORED/LORED Vico.gd" type="Script" id=15]
 [ext_resource path="res://Sprites/Menu/Info.png" type="Texture" id=16]
-[ext_resource path="res://Sprites/Menu/View.png" type="Texture" id=17]
+[ext_resource path="res://Sprites/Menu/Jobs.png" type="Texture" id=17]
 [ext_resource path="res://Sprites/Menu/awake.png" type="Texture" id=18]
 [ext_resource path="res://Sprites/Menu/Level.png" type="Texture" id=20]
 
@@ -38,7 +39,7 @@ shadow_size = 10
 anti_aliasing = false
 
 [sub_resource type="StyleBoxFlat" id=19]
-bg_color = Color( 1, 1, 1, 0.02 )
+bg_color = Color( 1, 1, 1, 0.26 )
 border_color = Color( 1, 1, 1, 0.501961 )
 anti_aliasing = false
 
@@ -370,7 +371,7 @@ position = Vector2( 34, 34 )
 scale = Vector2( 0.5, 0.5 )
 frames = ExtResource( 1 )
 animation = "ff"
-frame = 31
+frame = 13
 playing = true
 script = ExtResource( 2 )
 
@@ -403,12 +404,11 @@ alignment = 1
 
 [node name="fuel" type="MarginContainer" parent="m/v/bot/m/h"]
 unique_name_in_owner = true
-visible = false
 margin_left = 10.0
 margin_right = 46.0
 margin_bottom = 36.0
 
-[node name="pinned Fuel Progress" parent="m/v/bot/m/h/fuel" instance=ExtResource( 9 )]
+[node name="pinnedFuel" parent="m/v/bot/m/h/fuel" instance=ExtResource( 9 )]
 unique_name_in_owner = true
 margin_left = 13.0
 margin_top = 6.0
@@ -419,6 +419,7 @@ margin_bottom = 30.0
 margin_right = 36.0
 margin_bottom = 36.0
 rect_min_size = Vector2( 36, 36 )
+focus_mode = 0
 custom_styles/hover = SubResource( 14 )
 custom_styles/pressed = SubResource( 15 )
 custom_styles/normal = SubResource( 16 )
@@ -426,8 +427,8 @@ custom_styles/normal = SubResource( 16 )
 [node name="info" type="MarginContainer" parent="m/v/bot/m/h"]
 unique_name_in_owner = true
 modulate = Color( 1, 0, 0, 1 )
-margin_left = 28.0
-margin_right = 64.0
+margin_left = 46.0
+margin_right = 82.0
 margin_bottom = 36.0
 
 [node name="icon" type="Panel" parent="m/v/bot/m/h/info"]
@@ -462,8 +463,8 @@ custom_styles/normal = SubResource( 16 )
 [node name="jobs" type="MarginContainer" parent="m/v/bot/m/h"]
 unique_name_in_owner = true
 modulate = Color( 1, 0, 0, 1 )
-margin_left = 64.0
-margin_right = 100.0
+margin_left = 82.0
+margin_right = 118.0
 margin_bottom = 36.0
 
 [node name="icon" type="Panel" parent="m/v/bot/m/h/jobs"]
@@ -499,8 +500,8 @@ custom_styles/normal = SubResource( 16 )
 [node name="sleep" type="MarginContainer" parent="m/v/bot/m/h"]
 unique_name_in_owner = true
 modulate = Color( 1, 0, 0, 1 )
-margin_left = 100.0
-margin_right = 136.0
+margin_left = 118.0
+margin_right = 154.0
 margin_bottom = 36.0
 size_flags_horizontal = 0
 
@@ -547,8 +548,8 @@ custom_styles/normal = SubResource( 16 )
 
 [node name="level up" type="MarginContainer" parent="m/v/bot/m/h"]
 unique_name_in_owner = true
-margin_left = 136.0
-margin_right = 172.0
+margin_left = 154.0
+margin_right = 190.0
 margin_bottom = 36.0
 size_flags_horizontal = 0
 
@@ -561,6 +562,14 @@ rect_min_size = Vector2( 24, 24 )
 size_flags_horizontal = 4
 size_flags_vertical = 4
 custom_styles/panel = SubResource( 7 )
+
+[node name="autobuy" type="AnimatedSprite" parent="m/v/bot/m/h/level up/icon"]
+unique_name_in_owner = true
+visible = false
+position = Vector2( 12, 12 )
+frames = ExtResource( 11 )
+frame = 6
+playing = true
 
 [node name="Sprite" type="Sprite" parent="m/v/bot/m/h/level up/icon"]
 modulate = Color( 1, 0, 0, 1 )
@@ -575,7 +584,6 @@ texture = ExtResource( 20 )
 
 [node name="Check" type="Sprite" parent="m/v/bot/m/h/level up/icon"]
 unique_name_in_owner = true
-visible = false
 position = Vector2( 12, 12 )
 texture = ExtResource( 14 )
 __meta__ = {
@@ -583,7 +591,7 @@ __meta__ = {
 }
 
 [node name="shadow" type="Sprite" parent="m/v/bot/m/h/level up/icon/Check"]
-self_modulate = Color( 0, 0, 0, 0.5 )
+self_modulate = Color( 0, 0, 0, 0.85 )
 show_behind_parent = true
 position = Vector2( 1, 1 )
 texture = ExtResource( 14 )

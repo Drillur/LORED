@@ -64,6 +64,8 @@ enum Attribute {
 	HASTE,
 	OUTPUT,
 	COST,
+	INPUT,
+	CRIT,
 }
 
 enum Job {
@@ -232,7 +234,7 @@ func syncStage1and2_costModifier():
 
 func syncLOREDs():
 	for x in lored:
-		lored[x].syncAll()
+		lored[x].syncAllNow()
 
 func setLoredByShorthand():
 	for l in lored:
@@ -435,3 +437,7 @@ func sleepUnlocked():
 func jobsUnlocked():
 	for x in lored.values():
 		x.jobsUnlocked()
+
+func displayLOREDFuelOnBar():
+	for x in lored:
+		lored[x].vico.displayFuel()

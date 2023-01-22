@@ -312,22 +312,22 @@ func init_upgrades():
 			
 			f = "Mudslide"
 			gv.up[f] = Upgrade.new(f, "s2m cost","Humus's Glass cost x{e0}.", "humus")
-			gv.up[f].effects.append(Effect.new("cost", [lv.Type.HUMUS], 0.75, "glass"))
+			gv.up[f].effects.append(Effect.new("cost", [lv.Type.HUMUS], 0.75, gv.Resource.GLASS))
 			gv.up[f].cost[gv.Resource.TUMORS] = Ob.Num.new("1e7")
 			
 			f = "The Great Journey"
 			gv.up[f] = Upgrade.new(f, "s2m cost","Glass's Steel cost x{e0}.", "glass")
-			gv.up[f].effects.append(Effect.new("cost", [lv.Type.GLASS], 0.8, "steel"))
+			gv.up[f].effects.append(Effect.new("cost", [lv.Type.GLASS], 0.8, gv.Resource.STEEL))
 			gv.up[f].cost[gv.Resource.TUMORS] = Ob.Num.new("1e7")
 			
 			f = "BEAVER"
 			gv.up[f] = Upgrade.new(f, "s2m cost","Water's Wood cost x{e0}.", "water")
-			gv.up[f].effects.append(Effect.new("cost", [lv.Type.WATER], 0.8, "wood"))
+			gv.up[f].effects.append(Effect.new("cost", [lv.Type.WATER], 0.8, gv.Resource.WOOD))
 			gv.up[f].cost[gv.Resource.TUMORS] = Ob.Num.new("1e7")
 			
 			f = "mods enabled"
 			gv.up[f] = Upgrade.new(f, "s2m cost","Petroleum's Glass cost x{e0}.", "pet")
-			gv.up[f].effects.append(Effect.new("cost", [lv.Type.PETROLEUM], 0.75, "glass"))
+			gv.up[f].effects.append(Effect.new("cost", [lv.Type.PETROLEUM], 0.75, gv.Resource.GLASS))
 			gv.up[f].cost[gv.Resource.TUMORS] = Ob.Num.new("1e7")
 		
 		# s1m
@@ -341,12 +341,12 @@ func init_upgrades():
 			
 			f = "CON-FRICKIN-CRETE"
 			gv.up[f] = Upgrade.new(f, "s1m cost", "Oil's Concrete cost x{e0}.", "oil")
-			gv.up[f].effects.append(Effect.new("cost", [lv.Type.OIL], 0.5, "conc"))
+			gv.up[f].effects.append(Effect.new("cost", [lv.Type.OIL], 0.5, gv.Resource.CONCRETE))
 			gv.up[f].cost[gv.Resource.MALIGNANCY] = Ob.Num.new(12000.0)
 			
 			f = "COMPULSORY JUICE"
 			gv.up[f] = Upgrade.new(f, "s1m cost", "Iron Ore and Copper Ore's Stone costs x{e0}.", "stone")
-			gv.up[f].effects.append(Effect.new("cost", [lv.Type.IRON_ORE, lv.Type.COPPER_ORE], 0.5, "stone"))
+			gv.up[f].effects.append(Effect.new("cost", [lv.Type.IRON_ORE, lv.Type.COPPER_ORE], 0.5, gv.Resource.STONE))
 			gv.up[f].cost[gv.Resource.MALIGNANCY] = Ob.Num.new(50000.0)
 			gv.up[f].requires.append("AUTOSTONER")
 	
@@ -1320,7 +1320,7 @@ func init_upgrades():
 			
 			f = "STICKYTAR"
 			gv.up[f] = Upgrade.new(f, "s1n burn","Malignancy's Tarball input x{e0}.", "malig")
-			gv.up[f].effects.append(Effect.new("input", [lv.Type.MALIGNANCY], 0.5, "tar"))
+			gv.up[f].effects.append(Effect.new("input", [lv.Type.MALIGNANCY], 0.5, str(gv.Resource.TARBALLS)))
 			gv.up[f].cost[gv.Resource.GROWTH] = Ob.Num.new(1400.0)
 			gv.up[f].cost[gv.Resource.OIL] = Ob.Num.new(75.0)
 			gv.up[f].requires.append("SLIMER")

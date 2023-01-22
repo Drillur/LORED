@@ -59,7 +59,7 @@ func setupElements():
 
 
 func justAppearedForTheFirstTime():
-	syncAll()
+	syncAllNow()
 	lored.syncJobs_all()
 	updatePrimaryResource(getPrimaryResource())
 	enterStandby()
@@ -77,7 +77,7 @@ func updatePrimaryResource(resource: int):
 
 
 
-func syncAll():
+func syncAllNow():
 	lored.syncAll()
 	syncQueue()
 func syncQueue():
@@ -101,6 +101,13 @@ func syncQueue():
 				lored.syncCrit()
 			lv.Queue.HASTE:
 				lored.syncHaste()
+	
+	var minimum = Big.new(lored.fuelCost).m(lored.refuelJob.duration * 2)
+	if lored.currentFuel.less(minimum):
+		lored.currentFuel = Big.new(minimum)
+		if lored.type == lv.Type.COAL:
+			if gv.resource[gv.Resource.COAL].less(minimum):
+				gv.addToResource(gv.Resource.COAL, minimum)
 	
 	var newQueue := []
 	
@@ -346,6 +353,10 @@ func getOfflineEarnings(timeOffline: int):
 func unlock():
 	lored.unlocked = true
 	vico.show()
+func unlockJobResources():
+	# called on load in Root
+	for job in lored.jobs.values():
+		job.unlockResources()
 
 func sleepUnlocked():
 	vico.sleepUnlocked()
@@ -354,17 +365,21 @@ func jobsUnlocked():
 
 func purchase():
 	if canAffordPurchase():
-		lored.prePurchase()
-		lored.purchased()
-		updateVicoCheck()
+		purchased()
 		rt.get_node("global_tip").refresh()
-		vico.levelUpFlash()
-		vico.levelUpText()
 	else:
-		rt.get_node("global_tip").tip.price_flash()
+		if is_instance_valid(rt.get_node("global_tip").tip):
+			rt.get_node("global_tip").tip.price_flash()
 func forcePurchase():
 	lored.purchased()
 	syncQueue()
+
+func purchased():
+	lored.prePurchase()
+	lored.purchased()
+	updateVicoCheck()
+	vico.levelUpFlash()
+	vico.levelUpText()
 
 
 
@@ -384,6 +399,14 @@ func wakeUp():
 
 func flashSleep():
 	vico.flashSleep()
+
+func reset():
+	stopWorking()
+	enterStandby()
+	lored.reset()
+	syncAllNow()
+	cleanUp()
+	lored.currentFuel = Big.new(lored.fuelStorage)
 
 
 
@@ -591,6 +614,7 @@ func enterStandby():
 	# called by Vico when it becomes visible.
 	mode = lv.Mode.STANDBY
 	vico.enterStandby()
+	updateFuelDrain(false)
 	gv.append(gv.list.lored["unlocked and inactive"], type)
 
 func enterActive():
@@ -610,11 +634,20 @@ func enterActive():
 
 
 
+
 # - - - Jobs and work
 
 var jobTimer: Timer
+var stopWorking := false
+func stopWorking():
+	stopWorking = true
+	jobTimer.start(0.01)
+	lored.working = false
 
 func findFirstJob():
+	
+	if stopWorking:
+		stopWorking = false
 	
 	lookForWork()
 	
@@ -630,6 +663,7 @@ func repeatedlyLookForWork():
 	while getWorking() == false:
 		jobTimer.start(1)
 		yield(jobTimer, "timeout")
+		
 		if getAsleep():
 			cleanUpIfAsleep()
 			continue
@@ -685,6 +719,8 @@ func canStartJob(job: Job) -> bool:
 
 func workJob(job: Job):
 	
+	highlightJobInTooltip(job)
+	
 	lored.jobStarted(job)
 	
 	if job.requiresResource:
@@ -706,14 +742,26 @@ func workJob(job: Job):
 	jobTimer.start(job.duration)
 	yield(jobTimer, "timeout")
 	
+	stopHighlightJobInTooltip(job)
+	
+	if stopWorking:
+		if lored.lastJob != lv.Job.REFUEL:
+			lored.updateGain_zero(lored.jobs[lored.lastJob])
+			lored.updateDrain_zero(lored.jobs[lored.lastJob])
+		stopWorking = false
+		return
+	
 	
 	
 	if job.producesResource:
 		var critMultiplier = rollForCrit()
 		var producedResources = getProducedResourcesDictionary(job, critMultiplier)
 		giveProducedResources(producedResources)
-		var outputTextDetails = getOutputTextDetails(producedResources, critMultiplier)
-		vico.throwOutputTexts(outputTextDetails)
+		
+		if gv.option["loredOutputNumbers"]:
+			if not gv.option["loredCritsOnly"] or (gv.option["loredCritsOnly"] and critRoll):
+				var outputTextDetails = getOutputTextDetails(producedResources, critMultiplier)
+				vico.throwOutputTexts(outputTextDetails)
 		
 		resetCritRolls()
 	
@@ -813,8 +861,23 @@ func quitWorkingForNow():
 
 func cleanUpIfAsleep():
 	if getAsleep():
-		vico.hideProduction()
-		updateStatus("")
+		cleanUp()
+func cleanUp():
+	vico.hideProduction()
+	updateStatus("")
+
+func highlightJobInTooltip(job: Job):
+	if rt.get_node("global_tip").tip_filled:
+		if rt.get_node("global_tip").type == "lored jobs":
+			if rt.get_node("global_tip").tip.cont["lored jobs"].lored == type:
+				rt.get_node("global_tip").tip.cont["lored jobs"].highlightJob(job)
+
+func stopHighlightJobInTooltip(job: Job):
+	if rt.get_node("global_tip").tip_filled:
+		if rt.get_node("global_tip").type == "lored jobs":
+			if rt.get_node("global_tip").tip.cont["lored jobs"].lored == type:
+				rt.get_node("global_tip").tip.cont["lored jobs"].stopHighlightJob(job)
+
 
 
 # - - - Status
@@ -829,3 +892,128 @@ func updateStatus(text: String):
 func updateFuelDrain(purchased = getPurchased()):
 	if purchased:
 		lv.updateFuelDrain(getFuelResource(), type, getFuelCost())
+	else:
+		lv.updateFuelDrain(getFuelResource(), type, Big.new(0))
+
+
+
+# - - - Automation
+
+var autobuying := false setget setAutobuying
+func setAutobuying(val):
+	autobuying = val
+	vico.displayAutobuy(autobuying)
+
+func autoWatch():
+	
+	if not autobuying:
+		return
+	
+	var t = Timer.new()
+	add_child(t)
+	
+	while not is_queued_for_deletion() and autobuying:
+		
+		if shouldAutobuy():
+			autoBuy()
+		
+		t.start(0.25)
+		yield(t, "timeout")
+	
+	t.queue_free()
+
+func shouldAutobuy() -> bool:
+	
+	if inFirstTwoSecondsOfRun():
+		return false
+	
+	if not autobuying:
+		return false
+	
+	if not getPurchased():
+		return true
+	
+	if getAsleep():
+		return false
+	
+	if not canAffordPurchase():
+		return false
+	
+	if autobuy_upgrade_check():
+		return true
+	
+	# if any required resource in any job has a negative net, return false
+	for job in lored.jobs.values():
+		
+		for resource in job.requiredResourcesBits.keys():
+			var net = lv.net(resource)
+			if net[1] == -1:
+				return false
+	
+	if lored.keyLORED:
+		return true
+	
+	# if any produced resource has a negative net, return true
+	for job in lored.jobs.values():
+		
+		for resource in job.producedResourcesBits.keys():
+			var net = lv.net(resource)
+			if net[1] == -1:
+				return true
+	
+	return false
+	
+#	# if ingredient LORED per_sec < per_sec, don't buy
+#	for x in b:
+#
+#		if gv.g[x].hold:
+#			return false
+#
+#		var consm = Big.new(b[x].t).m(d.t).d(speed.t).d(jobs[0].base_duration)
+#		# how much this lored consumes from the ingredient lored (x)
+#
+#		if gv.g[x].halt:
+#
+#			var consm2 = Big.new(consm).m(2)
+#			if consm2.less(gv.g[x].net(true)[0]):
+#				if not gv.g[x].cost_check():
+#					return false
+#
+#		else:
+#
+#			var net = gv.g[x].net()
+#
+#			if net[0].less(net[1]):
+#				return false
+#
+#			net = Big.new(net[0]).s(net[1])
+#			if consm.greater(net):
+#				if not gv.g[x].cost_check():
+#					return false
+
+func autobuy_upgrade_check() -> bool:
+	
+	if getStage() == 1 and gv.up["don't take candy from babies"].active() and getLevel() < 5:
+		return true
+	
+	match type:
+		lv.Type.MALIGNANCY, lv.Type.IRON, lv.Type.COPPER:
+			if gv.up["THE WITCH OF LOREDELITH"].active():
+				return true
+		lv.Type.IRON_ORE:
+			if gv.up["I RUN"].active():
+				return true
+		lv.Type.COPPER_ORE:
+			if gv.up["THE THIRD"].active():
+				return true
+		lv.Type.COAL:
+			if gv.up["wait that's not fair"].active():
+				return true
+	
+	return false
+
+func autoBuy():
+	purchased()
+
+func inFirstTwoSecondsOfRun() -> bool:
+	return gv.durationSinceLastReset < 2

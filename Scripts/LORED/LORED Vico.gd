@@ -48,6 +48,9 @@ func setup(type: int):
 	animation.init(type)
 	if type in lv.smallerAnimationList:
 		animation.scale = Vector2(2,2)
+	
+	get_node("%pinnedFuel").setup(type, false)
+	displayFuel()
 
 func setColors(type: int):
 	var loredColor = lv.lored[type].color
@@ -58,10 +61,13 @@ func setColors(type: int):
 	get_node("m/v/bot/m/h/sleep").modulate = fadedLoredColor
 	get_node("%level up/icon/Sprite").modulate = fadedLoredColor
 	get_node("%level up/Button").self_modulate = fadedLoredColor
+	get_node("%autobuy").self_modulate = loredColor
+	get_node("progress/current").self_modulate = loredColor
+	get_node("progress/current").self_modulate.a = 0.25
 	get_node("progress/current/edge").self_modulate = loredColor
 	asleepAlert.modulate = loredColor
 	jobs.modulate = fadedLoredColor
-	#get_node("%fuel/Button").self_modulate = fadedLoredColor
+	get_node("%fuel/Button").self_modulate = fadedLoredColor
 
 
 
@@ -91,7 +97,8 @@ func _on_alert_mouse_entered() -> void:
 func _on_jobs_mouse_entered() -> void:
 	rt.get_node("global_tip")._call("lored jobs", {"lored": manager.type})
 func _on_asleep_mouse_entered() -> void:
-	rt.get_node("global_tip")._call("lored asleep", {"lored": manager.type})
+	if gv.option["tipSleep"]:
+		rt.get_node("global_tip")._call("lored asleep", {"lored": manager.type})
 
 func _on_visibility_changed() -> void:
 	if visible:
@@ -206,6 +213,16 @@ func flashSleep():
 	var flash = gv.SRC["flash"].instance()
 	get_node("%sleep").add_child(flash)
 	flash.flash(Color(1,1,1))
+
+func displayAutobuy(val: bool):
+	get_node("%autobuy").visible = val
+
+func displayFuel():
+	get_node("%fuel").visible = gv.option["loredFuel"]
+	if get_node("%fuel").visible:
+		get_node("%pinnedFuel").update()
+	else:
+		get_node("%pinnedFuel").stop()
 
 
 

@@ -12,6 +12,9 @@ var stopped := false
 
 
 
+func _ready() -> void:
+	gv.connect("startGame", self, "update")
+
 func setup(_type: int, updateAfterSetup = true):
 	
 	type = _type
@@ -30,10 +33,17 @@ func getPercent() -> float:
 	return lv.lored[type].currentFuelPercent
 
 
+var updating = false
 func update():
 	
 	var t = Timer.new()
 	add_child(t)
+	
+	updating = true
+	
+	if gv.cur_session < 2:
+		t.start(2)
+		yield(t,"timeout")
 	
 	while not is_queued_for_deletion() and not stopped:
 		
@@ -75,11 +85,13 @@ func update():
 	
 	t.queue_free()
 	
+	updating = false
 	stopped = false
 
 
 func stop():
-	stopped = true
+	if updating:
+		stopped = true
 	full.show()
 
 

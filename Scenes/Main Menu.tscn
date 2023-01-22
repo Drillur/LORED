@@ -3348,8 +3348,10 @@ margin_right = 318.0
 margin_bottom = 508.0
 
 [node name="ColorPicker" type="ColorPicker" parent="color/m/m/v"]
-margin_right = 308.0
-margin_bottom = 462.0
+margin_left = 24.0
+margin_top = 24.0
+margin_right = 332.0
+margin_bottom = 486.0
 size_flags_horizontal = 4
 size_flags_vertical = 4
 __meta__ = {

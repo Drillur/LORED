@@ -2,20 +2,21 @@
 
 [ext_resource path="res://Scripts/_Root.gd" type="Script" id=1]
 [ext_resource path="res://Scripts/map.gd" type="Script" id=2]
-[ext_resource path="res://Fonts/Roboto-Black.ttf" type="DynamicFontData" id=3]
+[ext_resource path="res://Prefabs/menu/Menu Hub.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Prefabs/ui/Earnings Report.tscn" type="PackedScene" id=4]
 [ext_resource path="res://Scripts/tooltip/tooltip_master.gd" type="Script" id=5]
 [ext_resource path="res://Prefabs/upgrade/upgrade_container.tscn" type="PackedScene" id=6]
 [ext_resource path="res://Prefabs/Limit Break.tscn" type="PackedScene" id=7]
+[ext_resource path="res://Fonts/Roboto-BoldItalic.ttf" type="DynamicFontData" id=8]
 [ext_resource path="res://Prefabs/lored/LORED Manager.tscn" type="PackedScene" id=9]
-[ext_resource path="res://Styles/Master Theme.tres" type="Theme" id=11]
+[ext_resource path="res://Sprites/resources/carc.png" type="Texture" id=10]
+[ext_resource path="res://Prefabs/menu/SaveMenu.tscn" type="PackedScene" id=11]
+[ext_resource path="res://Prefabs/menu/OptionsMenu.tscn" type="PackedScene" id=12]
 [ext_resource path="res://Sprites/tab/s1n.png" type="Texture" id=13]
 [ext_resource path="res://Sprites/tab/t0.png" type="Texture" id=14]
 [ext_resource path="res://Sprites/tab/s2.png" type="Texture" id=15]
-[ext_resource path="res://Fonts/Roboto-BlackItalic.ttf" type="DynamicFontData" id=16]
 [ext_resource path="res://Sprites/resources/liq.png" type="Texture" id=18]
 [ext_resource path="res://Sprites/Menu/Menu.png" type="Texture" id=19]
-[ext_resource path="res://Prefabs/Menu.tscn" type="PackedScene" id=21]
 
 [sub_resource type="StyleBoxFlat" id=1]
 bg_color = Color( 0.0588235, 0.0588235, 0.0588235, 1 )
@@ -41,48 +42,30 @@ expand_margin_right = 10.0
 expand_margin_top = 10.0
 expand_margin_bottom = 10.0
 
-[sub_resource type="DynamicFont" id=11]
-size = 12
-outline_color = Color( 0, 0, 0, 1 )
-font_data = ExtResource( 3 )
-
-[sub_resource type="StyleBoxFlat" id=12]
-bg_color = Color( 0.423529, 0.423529, 0.423529, 1 )
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
-shadow_color = Color( 0.117188, 0.117188, 0.117188, 0.54902 )
-shadow_size = 4
-anti_aliasing = false
-
-[sub_resource type="StyleBoxFlat" id=13]
-bg_color = Color( 0.25098, 0.25098, 0.25098, 1 )
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
-shadow_color = Color( 0.0390625, 0.0390625, 0.0390625, 0.54902 )
-shadow_size = 4
-anti_aliasing = false
-
-[sub_resource type="StyleBoxFlat" id=14]
-bg_color = Color( 0.352941, 0.352941, 0.352941, 1 )
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
-shadow_color = Color( 0.078125, 0.078125, 0.078125, 0.54902 )
-shadow_size = 4
-anti_aliasing = false
-
-[sub_resource type="StyleBoxFlat" id=15]
+[sub_resource type="StyleBoxFlat" id=16]
 draw_center = false
 
-[sub_resource type="DynamicFont" id=10]
-outline_size = 2
-outline_color = Color( 0, 0, 0, 1 )
-font_data = ExtResource( 16 )
+[sub_resource type="StyleBoxFlat" id=20]
+bg_color = Color( 1, 1, 1, 0.08 )
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id=21]
+bg_color = Color( 1, 1, 1, 0.04 )
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id=19]
+bg_color = Color( 1, 1, 1, 0.0392157 )
+draw_center = false
+
+[sub_resource type="DynamicFont" id=22]
+size = 12
+font_data = ExtResource( 8 )
 
 [node name="Root" type="Node2D"]
 script = ExtResource( 1 )
@@ -201,12 +184,29 @@ margin_bottom = 560.0
 size_flags_horizontal = 4
 size_flags_vertical = 6
 
-[node name="Menu" parent="m" instance=ExtResource( 21 )]
+[node name="Menu Hub" parent="m" instance=ExtResource( 3 )]
+unique_name_in_owner = true
 visible = false
-margin_left = 438.0
-margin_top = 210.0
-margin_right = 842.0
-margin_bottom = 510.0
+margin_left = 532.0
+margin_top = 246.0
+margin_right = 748.0
+margin_bottom = 474.0
+
+[node name="SaveMenu" parent="m" instance=ExtResource( 11 )]
+unique_name_in_owner = true
+visible = false
+margin_left = 527.0
+margin_top = 253.0
+margin_right = 753.0
+margin_bottom = 466.0
+
+[node name="OptionsMenu" parent="m" instance=ExtResource( 12 )]
+unique_name_in_owner = true
+visible = false
+margin_left = 480.0
+margin_top = 88.0
+margin_right = 800.0
+margin_bottom = 631.0
 
 [node name="Earnings Report" parent="m" instance=ExtResource( 4 )]
 unique_name_in_owner = true
@@ -216,15 +216,374 @@ margin_top = 210.0
 margin_right = 790.0
 margin_bottom = 510.0
 
-[node name="m2" type="MarginContainer" parent="."]
-visible = false
-margin_right = 1280.0
-margin_bottom = 720.0
-mouse_filter = 2
-custom_constants/margin_right = 30
-custom_constants/margin_top = 20
-custom_constants/margin_left = 20
+[node name="Tabs" type="MarginContainer" parent="m"]
+margin_right = 62.0
+margin_bottom = 172.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+custom_constants/margin_right = 10
+custom_constants/margin_top = 10
+custom_constants/margin_left = 10
 custom_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="m/Tabs"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 52.0
+margin_bottom = 162.0
+
+[node name="devButton" type="Button" parent="m/Tabs/VBoxContainer"]
+unique_name_in_owner = true
+margin_right = 42.0
+margin_bottom = 20.0
+mouse_default_cursor_shape = 16
+
+[node name="menuButton" type="MarginContainer" parent="m/Tabs/VBoxContainer"]
+unique_name_in_owner = true
+modulate = Color( 1, 0, 0.63, 1 )
+margin_top = 24.0
+margin_right = 42.0
+margin_bottom = 60.0
+
+[node name="icon" type="Panel" parent="m/Tabs/VBoxContainer/menuButton"]
+margin_left = 9.0
+margin_top = 6.0
+margin_right = 33.0
+margin_bottom = 30.0
+rect_min_size = Vector2( 24, 24 )
+size_flags_horizontal = 4
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 16 )
+
+[node name="Sprite" type="Sprite" parent="m/Tabs/VBoxContainer/menuButton/icon"]
+position = Vector2( 12, 12 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 19 )
+
+[node name="shadow" type="Sprite" parent="m/Tabs/VBoxContainer/menuButton/icon/Sprite"]
+self_modulate = Color( 0, 0, 0, 0.501961 )
+show_behind_parent = true
+position = Vector2( 2, 2 )
+texture = ExtResource( 19 )
+
+[node name="Button" type="Button" parent="m/Tabs/VBoxContainer/menuButton"]
+margin_right = 42.0
+margin_bottom = 36.0
+rect_min_size = Vector2( 36, 36 )
+focus_mode = 0
+mouse_default_cursor_shape = 2
+custom_styles/hover = SubResource( 20 )
+custom_styles/pressed = SubResource( 21 )
+custom_styles/normal = SubResource( 19 )
+
+[node name="upgradesTab" type="MarginContainer" parent="m/Tabs/VBoxContainer"]
+unique_name_in_owner = true
+margin_top = 64.0
+margin_right = 42.0
+margin_bottom = 106.0
+
+[node name="m" type="MarginContainer" parent="m/Tabs/VBoxContainer/upgradesTab"]
+margin_right = 42.0
+margin_bottom = 42.0
+custom_constants/margin_right = 5
+custom_constants/margin_top = 5
+custom_constants/margin_left = 5
+custom_constants/margin_bottom = 5
+
+[node name="h" type="HBoxContainer" parent="m/Tabs/VBoxContainer/upgradesTab/m"]
+margin_left = 5.0
+margin_top = 5.0
+margin_right = 37.0
+margin_bottom = 37.0
+custom_constants/separation = 8
+alignment = 1
+
+[node name="icon" type="Panel" parent="m/Tabs/VBoxContainer/upgradesTab/m/h"]
+margin_right = 32.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 32, 32 )
+size_flags_horizontal = 4
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 16 )
+
+[node name="Sprite" type="Sprite" parent="m/Tabs/VBoxContainer/upgradesTab/m/h/icon"]
+position = Vector2( 16, 16 )
+texture = ExtResource( 13 )
+
+[node name="shadow" type="Sprite" parent="m/Tabs/VBoxContainer/upgradesTab/m/h/icon/Sprite"]
+self_modulate = Color( 0, 0, 0, 0.501961 )
+show_behind_parent = true
+position = Vector2( 2, 2 )
+texture = ExtResource( 13 )
+
+[node name="production" type="Label" parent="m/Tabs/VBoxContainer/upgradesTab/m/h"]
+unique_name_in_owner = true
+visible = false
+margin_left = 40.0
+margin_top = 8.0
+margin_right = 91.0
+margin_bottom = 23.0
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 22 )
+text = "Upgrades"
+
+[node name="Button" type="Button" parent="m/Tabs/VBoxContainer/upgradesTab"]
+margin_right = 42.0
+margin_bottom = 42.0
+rect_min_size = Vector2( 36, 36 )
+focus_mode = 0
+mouse_default_cursor_shape = 2
+custom_styles/hover = SubResource( 20 )
+custom_styles/pressed = SubResource( 21 )
+custom_styles/normal = SubResource( 19 )
+
+[node name="s1tab" type="MarginContainer" parent="m/Tabs/VBoxContainer"]
+unique_name_in_owner = true
+margin_top = 110.0
+margin_right = 42.0
+margin_bottom = 152.0
+
+[node name="m" type="MarginContainer" parent="m/Tabs/VBoxContainer/s1tab"]
+margin_right = 42.0
+margin_bottom = 42.0
+custom_constants/margin_right = 5
+custom_constants/margin_top = 5
+custom_constants/margin_left = 5
+custom_constants/margin_bottom = 5
+
+[node name="h" type="HBoxContainer" parent="m/Tabs/VBoxContainer/s1tab/m"]
+margin_left = 5.0
+margin_top = 5.0
+margin_right = 37.0
+margin_bottom = 37.0
+custom_constants/separation = 8
+alignment = 1
+
+[node name="icon" type="Panel" parent="m/Tabs/VBoxContainer/s1tab/m/h"]
+margin_right = 32.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 32, 32 )
+size_flags_horizontal = 4
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 16 )
+
+[node name="Sprite" type="Sprite" parent="m/Tabs/VBoxContainer/s1tab/m/h/icon"]
+position = Vector2( 16, 16 )
+texture = ExtResource( 14 )
+
+[node name="shadow" type="Sprite" parent="m/Tabs/VBoxContainer/s1tab/m/h/icon/Sprite"]
+self_modulate = Color( 0, 0, 0, 0.501961 )
+show_behind_parent = true
+position = Vector2( 2, 2 )
+texture = ExtResource( 14 )
+
+[node name="production" type="Label" parent="m/Tabs/VBoxContainer/s1tab/m/h"]
+visible = false
+margin_left = 45.0
+margin_top = 8.0
+margin_right = 85.0
+margin_bottom = 23.0
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 22 )
+text = "Stage 1"
+
+[node name="Button" type="Button" parent="m/Tabs/VBoxContainer/s1tab"]
+margin_right = 42.0
+margin_bottom = 42.0
+rect_min_size = Vector2( 36, 36 )
+focus_mode = 0
+mouse_default_cursor_shape = 2
+custom_styles/hover = SubResource( 20 )
+custom_styles/pressed = SubResource( 21 )
+custom_styles/normal = SubResource( 19 )
+
+[node name="s2tab" type="MarginContainer" parent="m/Tabs/VBoxContainer"]
+unique_name_in_owner = true
+visible = false
+margin_top = 156.0
+margin_right = 101.0
+margin_bottom = 198.0
+
+[node name="m" type="MarginContainer" parent="m/Tabs/VBoxContainer/s2tab"]
+margin_right = 101.0
+margin_bottom = 42.0
+custom_constants/margin_right = 5
+custom_constants/margin_top = 5
+custom_constants/margin_left = 5
+custom_constants/margin_bottom = 5
+
+[node name="h" type="HBoxContainer" parent="m/Tabs/VBoxContainer/s2tab/m"]
+margin_left = 5.0
+margin_top = 5.0
+margin_right = 96.0
+margin_bottom = 37.0
+custom_constants/separation = 8
+alignment = 1
+
+[node name="icon" type="Panel" parent="m/Tabs/VBoxContainer/s2tab/m/h"]
+margin_left = 5.0
+margin_right = 37.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 32, 32 )
+size_flags_horizontal = 4
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 16 )
+
+[node name="Sprite" type="Sprite" parent="m/Tabs/VBoxContainer/s2tab/m/h/icon"]
+position = Vector2( 16, 16 )
+texture = ExtResource( 15 )
+
+[node name="shadow" type="Sprite" parent="m/Tabs/VBoxContainer/s2tab/m/h/icon/Sprite"]
+self_modulate = Color( 0, 0, 0, 0.501961 )
+show_behind_parent = true
+position = Vector2( 2, 2 )
+texture = ExtResource( 15 )
+
+[node name="production" type="Label" parent="m/Tabs/VBoxContainer/s2tab/m/h"]
+margin_left = 45.0
+margin_top = 8.0
+margin_right = 85.0
+margin_bottom = 23.0
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 22 )
+text = "Stage 2"
+
+[node name="Button" type="Button" parent="m/Tabs/VBoxContainer/s2tab"]
+margin_right = 101.0
+margin_bottom = 42.0
+rect_min_size = Vector2( 36, 36 )
+focus_mode = 0
+mouse_default_cursor_shape = 2
+custom_styles/hover = SubResource( 20 )
+custom_styles/pressed = SubResource( 21 )
+custom_styles/normal = SubResource( 19 )
+
+[node name="s3tab" type="MarginContainer" parent="m/Tabs/VBoxContainer"]
+unique_name_in_owner = true
+visible = false
+margin_top = 156.0
+margin_right = 101.0
+margin_bottom = 198.0
+
+[node name="m" type="MarginContainer" parent="m/Tabs/VBoxContainer/s3tab"]
+margin_right = 101.0
+margin_bottom = 42.0
+custom_constants/margin_right = 5
+custom_constants/margin_top = 5
+custom_constants/margin_left = 5
+custom_constants/margin_bottom = 5
+
+[node name="h" type="HBoxContainer" parent="m/Tabs/VBoxContainer/s3tab/m"]
+margin_left = 5.0
+margin_top = 5.0
+margin_right = 96.0
+margin_bottom = 37.0
+custom_constants/separation = 8
+alignment = 1
+
+[node name="icon" type="Panel" parent="m/Tabs/VBoxContainer/s3tab/m/h"]
+margin_left = 5.0
+margin_right = 37.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 32, 32 )
+size_flags_horizontal = 4
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 16 )
+
+[node name="Sprite" type="Sprite" parent="m/Tabs/VBoxContainer/s3tab/m/h/icon"]
+position = Vector2( 16, 16 )
+texture = ExtResource( 18 )
+
+[node name="shadow" type="Sprite" parent="m/Tabs/VBoxContainer/s3tab/m/h/icon/Sprite"]
+self_modulate = Color( 0, 0, 0, 0.501961 )
+show_behind_parent = true
+position = Vector2( 2, 2 )
+texture = ExtResource( 18 )
+
+[node name="production" type="Label" parent="m/Tabs/VBoxContainer/s3tab/m/h"]
+margin_left = 45.0
+margin_top = 8.0
+margin_right = 85.0
+margin_bottom = 23.0
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 22 )
+text = "Stage 3"
+
+[node name="Button" type="Button" parent="m/Tabs/VBoxContainer/s3tab"]
+margin_right = 101.0
+margin_bottom = 42.0
+rect_min_size = Vector2( 36, 36 )
+focus_mode = 0
+mouse_default_cursor_shape = 2
+custom_styles/hover = SubResource( 20 )
+custom_styles/pressed = SubResource( 21 )
+custom_styles/normal = SubResource( 19 )
+
+[node name="s4tab" type="MarginContainer" parent="m/Tabs/VBoxContainer"]
+unique_name_in_owner = true
+visible = false
+margin_top = 248.0
+margin_right = 101.0
+margin_bottom = 290.0
+
+[node name="m" type="MarginContainer" parent="m/Tabs/VBoxContainer/s4tab"]
+margin_right = 101.0
+margin_bottom = 42.0
+custom_constants/margin_right = 5
+custom_constants/margin_top = 5
+custom_constants/margin_left = 5
+custom_constants/margin_bottom = 5
+
+[node name="h" type="HBoxContainer" parent="m/Tabs/VBoxContainer/s4tab/m"]
+margin_left = 5.0
+margin_top = 5.0
+margin_right = 96.0
+margin_bottom = 37.0
+custom_constants/separation = 8
+alignment = 1
+
+[node name="icon" type="Panel" parent="m/Tabs/VBoxContainer/s4tab/m/h"]
+margin_left = 5.0
+margin_right = 37.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 32, 32 )
+size_flags_horizontal = 4
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 16 )
+
+[node name="Sprite" type="Sprite" parent="m/Tabs/VBoxContainer/s4tab/m/h/icon"]
+position = Vector2( 16, 16 )
+texture = ExtResource( 10 )
+
+[node name="shadow" type="Sprite" parent="m/Tabs/VBoxContainer/s4tab/m/h/icon/Sprite"]
+self_modulate = Color( 0, 0, 0, 0.501961 )
+show_behind_parent = true
+position = Vector2( 2, 2 )
+texture = ExtResource( 10 )
+
+[node name="production" type="Label" parent="m/Tabs/VBoxContainer/s4tab/m/h"]
+margin_left = 45.0
+margin_top = 8.0
+margin_right = 85.0
+margin_bottom = 23.0
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 22 )
+text = "Stage 4"
+
+[node name="Button" type="Button" parent="m/Tabs/VBoxContainer/s4tab"]
+margin_right = 101.0
+margin_bottom = 42.0
+rect_min_size = Vector2( 36, 36 )
+focus_mode = 0
+mouse_default_cursor_shape = 2
+custom_styles/hover = SubResource( 20 )
+custom_styles/pressed = SubResource( 21 )
+custom_styles/normal = SubResource( 19 )
 
 [node name="misc" type="Node2D" parent="."]
 __meta__ = {
@@ -237,204 +596,6 @@ margin_left = 1111.0
 margin_top = 10.0
 margin_right = 1246.0
 margin_bottom = 64.0
-
-[node name="tabs" type="MarginContainer" parent="misc"]
-margin_right = 73.0
-margin_bottom = 160.0
-custom_constants/margin_right = 10
-custom_constants/margin_top = 10
-custom_constants/margin_left = 10
-custom_constants/margin_bottom = 10
-
-[node name="v" type="VBoxContainer" parent="misc/tabs"]
-margin_left = 10.0
-margin_top = 10.0
-margin_right = 63.0
-margin_bottom = 150.0
-custom_constants/separation = 10
-
-[node name="menu" type="MarginContainer" parent="misc/tabs/v"]
-margin_right = 53.0
-margin_bottom = 32.0
-size_flags_vertical = 4
-custom_constants/margin_right = 0
-custom_constants/margin_top = 0
-custom_constants/margin_left = 0
-custom_constants/margin_bottom = 0
-
-[node name="button" type="Button" parent="misc/tabs/v/menu"]
-self_modulate = Color( 0.333333, 0.333333, 0.333333, 1 )
-margin_right = 53.0
-margin_bottom = 32.0
-focus_mode = 0
-mouse_default_cursor_shape = 2
-custom_fonts/font = SubResource( 11 )
-custom_styles/hover = SubResource( 12 )
-custom_styles/pressed = SubResource( 13 )
-custom_styles/normal = SubResource( 14 )
-enabled_focus_mode = 0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="m" type="MarginContainer" parent="misc/tabs/v/menu"]
-margin_left = 10.0
-margin_right = 42.0
-margin_bottom = 32.0
-mouse_filter = 2
-size_flags_horizontal = 4
-custom_constants/margin_right = 4
-custom_constants/margin_top = 4
-custom_constants/margin_left = 4
-custom_constants/margin_bottom = 4
-
-[node name="icon" type="Panel" parent="misc/tabs/v/menu/m"]
-margin_left = 4.0
-margin_top = 4.0
-margin_right = 28.0
-margin_bottom = 28.0
-rect_min_size = Vector2( 24, 24 )
-mouse_filter = 2
-custom_styles/panel = SubResource( 15 )
-
-[node name="Sprite" type="Sprite" parent="misc/tabs/v/menu/m/icon"]
-self_modulate = Color( 1, 0, 0.631373, 0.501961 )
-scale = Vector2( 0.5, 0.5 )
-texture = ExtResource( 19 )
-centered = false
-
-[node name="shadow" type="Sprite" parent="misc/tabs/v/menu/m/icon/Sprite"]
-self_modulate = Color( 0, 0, 0, 0.501961 )
-show_behind_parent = true
-position = Vector2( 2, 2 )
-texture = ExtResource( 19 )
-centered = false
-
-[node name="upgrades" type="Button" parent="misc/tabs/v"]
-margin_top = 42.0
-margin_right = 53.0
-margin_bottom = 82.0
-rect_min_size = Vector2( 0, 40 )
-focus_mode = 0
-mouse_default_cursor_shape = 2
-theme = ExtResource( 11 )
-
-[node name="Sprite" type="Sprite" parent="misc/tabs/v/upgrades"]
-position = Vector2( 26, 20 )
-texture = ExtResource( 13 )
-
-[node name="1" type="Button" parent="misc/tabs/v"]
-margin_top = 92.0
-margin_right = 53.0
-margin_bottom = 132.0
-rect_min_size = Vector2( 0, 40 )
-focus_mode = 0
-mouse_default_cursor_shape = 2
-theme = ExtResource( 11 )
-__meta__ = {
-"_edit_group_": true
-}
-
-[node name="Sprite" type="Sprite" parent="misc/tabs/v/1"]
-position = Vector2( 26, 20 )
-texture = ExtResource( 14 )
-
-[node name="Label" type="Label" parent="misc/tabs/v/1"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-custom_colors/font_color = Color( 0.804688, 0.804688, 0.804688, 1 )
-custom_fonts/font = SubResource( 10 )
-text = "1"
-align = 1
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="2" type="Button" parent="misc/tabs/v"]
-visible = false
-margin_top = 50.0
-margin_right = 53.0
-margin_bottom = 90.0
-rect_min_size = Vector2( 0, 40 )
-focus_mode = 0
-mouse_default_cursor_shape = 2
-theme = ExtResource( 11 )
-__meta__ = {
-"_edit_group_": true
-}
-
-[node name="Sprite" type="Sprite" parent="misc/tabs/v/2"]
-position = Vector2( 26, 20 )
-texture = ExtResource( 15 )
-
-[node name="Label" type="Label" parent="misc/tabs/v/2"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-custom_colors/font_color = Color( 0.804688, 0.804688, 0.804688, 1 )
-custom_fonts/font = SubResource( 10 )
-text = "2"
-align = 1
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="3" type="Button" parent="misc/tabs/v"]
-visible = false
-margin_top = 50.0
-margin_right = 53.0
-margin_bottom = 90.0
-rect_min_size = Vector2( 0, 40 )
-focus_mode = 0
-mouse_default_cursor_shape = 2
-theme = ExtResource( 11 )
-__meta__ = {
-"_edit_group_": true
-}
-
-[node name="Sprite" type="Sprite" parent="misc/tabs/v/3"]
-position = Vector2( 26, 20 )
-texture = ExtResource( 18 )
-
-[node name="Label" type="Label" parent="misc/tabs/v/3"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-custom_colors/font_color = Color( 0.804688, 0.804688, 0.804688, 1 )
-custom_fonts/font = SubResource( 10 )
-text = "3"
-align = 1
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="4" type="Button" parent="misc/tabs/v"]
-visible = false
-margin_right = 53.0
-margin_bottom = 40.0
-rect_min_size = Vector2( 0, 40 )
-mouse_default_cursor_shape = 2
-theme = ExtResource( 11 )
-__meta__ = {
-"_edit_group_": true
-}
-
-[node name="Sprite" type="Sprite" parent="misc/tabs/v/4"]
-position = Vector2( 26, 20 )
-texture = ExtResource( 18 )
-
-[node name="Label" type="Label" parent="misc/tabs/v/4"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-custom_colors/font_color = Color( 0.804688, 0.804688, 0.804688, 1 )
-custom_fonts/font = SubResource( 10 )
-text = "2"
-align = 1
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Off" type="Timer" parent="misc"]
 one_shot = true
@@ -474,15 +635,10 @@ size_flags_horizontal = 3
 [node name="global_tip" type="Node2D" parent="."]
 script = ExtResource( 5 )
 
-[node name="Button" type="Button" parent="."]
-margin_right = 25.0
-margin_bottom = 27.0
-mouse_default_cursor_shape = 16
+[connection signal="pressed" from="m/Menu Hub/MarginContainer/VBoxContainer/GridContainer/0/Button" to="." method="_on_openSaveMenu"]
+[connection signal="pressed" from="m/Menu Hub/MarginContainer/VBoxContainer/GridContainer/1/Button" to="." method="_on_openOptionsMenu"]
+[connection signal="pressed" from="m/Menu Hub/MarginContainer/VBoxContainer/4/Button" to="." method="_on_exitToMainMenu_pressed"]
+[connection signal="pressed" from="m/Tabs/VBoxContainer/devButton" to="." method="_on_Button_pressed"]
+[connection signal="pressed" from="m/Tabs/VBoxContainer/menuButton/Button" to="." method="_on_menuButton_pressed"]
 
-[connection signal="pressed" from="misc/tabs/v/menu/button" to="." method="_on_menu_pressed"]
-[connection signal="pressed" from="misc/tabs/v/upgrades" to="." method="_on_upgrades_pressed"]
-[connection signal="pressed" from="misc/tabs/v/1" to="." method="_on_s1_pressed"]
-[connection signal="pressed" from="misc/tabs/v/2" to="." method="_on_s2_pressed"]
-[connection signal="pressed" from="misc/tabs/v/3" to="." method="_on_s3_pressed"]
-[connection signal="pressed" from="misc/tabs/v/4" to="." method="_on_s2_pressed"]
-[connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]
+[editable path="m/Menu Hub"]

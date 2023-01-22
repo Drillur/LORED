@@ -75,10 +75,13 @@ func type_check(n):
 			
 			return n
 
+func reset():
+	mantissa == 0.0
+	exponent = 0
+
 func resetToZero_ifNegative() -> void:
 	if mantissa < 0:
-		mantissa = 0.0
-		exponent = 0
+		reset()
 
 func calc(big = self):
 	
@@ -375,9 +378,9 @@ func toString() -> String:
 	
 	match gv.option["notation_type"]:
 		0:
-			return toEngineering()
-		1:
 			return toScientific()
+		1:
+			return toEngineering()
 		2:
 			return toLog()
 	

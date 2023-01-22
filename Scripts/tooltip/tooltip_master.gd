@@ -2,7 +2,6 @@ extends Node2D
 
 var prefab := {
 	"dtext" : preload("res://Prefabs/dtext.tscn"),
-	"task complete" : preload("res://Prefabs/lored_buy.tscn"),
 	"tooltip" : preload("res://Prefabs/tooltip/tooltip.tscn"),
 }
 onready var rt = get_owner() 
