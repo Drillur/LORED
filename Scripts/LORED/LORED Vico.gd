@@ -50,7 +50,6 @@ func setup(type: int):
 		animation.scale = Vector2(2,2)
 	
 	get_node("%pinnedFuel").setup(type, false)
-	displayFuel()
 
 func setColors(type: int):
 	var loredColor = lv.lored[type].color
@@ -115,6 +114,7 @@ func enterStandby():
 	get_node("%info").hide()
 	get_node("%sleep").hide()
 	jobs.hide()
+	displayFuel()
 
 func enterActive():
 	get_node("%info").show()
@@ -136,6 +136,9 @@ func jobStarted(duration: float, startTime: int):
 	currentProgress.show()
 	
 	animation.start(duration, startTime)
+	
+	gv.stats["AnimationsPlayed"][manager.type] += 1
+	gv.emit_signal("AnimationsPlayed", manager.type)
 	
 	duration *= 1000
 	var i = get_i(startTime)

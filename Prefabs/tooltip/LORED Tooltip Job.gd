@@ -60,7 +60,6 @@ func jobRequiresResources(job: Job) -> bool:
 
 func setText(job: Job, index: int, inputOrOutput: String):
 	
-	var requiredResources: String
 	var amount: Big
 	var amountText: String
 	var resource: int
@@ -70,13 +69,11 @@ func setText(job: Job, index: int, inputOrOutput: String):
 	var node: String = "%" + inputOrOutput + str(index)
 	
 	if inputOrOutput == "input":
-		requiredResources = job.requiredResourcesText.values()[index]
 		amount = Big.new(job.requiredResources.values()[index])
 		resource = job.requiredResources.keys()[index]
 		if job.type == lv.Job.REFUEL:
 			amount.a(job.requiredFuel)
 	else:
-		requiredResources = job.producedResourcesText.values()[index]
 		amount = Big.new(job.producedResources.values()[index])
 		resource = job.producedResources.keys()[index]
 	

@@ -410,6 +410,9 @@ func canUnlockResources() -> bool:
 	if not lv.lored[lored].fuelResource in gv.list["unlocked resources"]:
 		return false
 	
+	if requiredResourcesBits.size() == 0:
+		return true
+	
 	for resource in requiredResourcesBits.keys():
 		
 		var atLeastOne := false
@@ -509,7 +512,7 @@ func setOfflineNet():
 			offlineNet[resource] = [Big.new(0), 0]
 			continue
 		
-		var drainRate = Big.new(lv.drainRate(resource))
+		var _drainRate = Big.new(lv.drainRate(resource))
 		
 		var fuelRatio = 1
 		var loredFuelResource = lv.lored[lored].getFuelResource()
@@ -518,12 +521,12 @@ func setOfflineNet():
 		
 		var gain: Big = Big.new(rawGain[resource]).m(fuelRatio)
 		
-		if gain.greater_equal(drainRate):
-			gain.s(drainRate)
+		if gain.greater_equal(_drainRate):
+			gain.s(_drainRate)
 			offlineNet[resource] = [gain, 1]
 		else:
-			drainRate.s(gain)
-			offlineNet[resource] = [drainRate, -1]
+			_drainRate.s(gain)
+			offlineNet[resource] = [_drainRate, -1]
 
 
 func eligibleForOfflineEarnings() -> bool:

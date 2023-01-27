@@ -24,8 +24,6 @@ onready var earningsReport = get_node("%Earnings Report")
 
 var task_awaiting := "no"
 
-var patched := false # true if in save.data the version is < current version
-
 
 
 
@@ -36,18 +34,12 @@ func _ready():
 	gv.active_scene = gv.Scene.ROOT
 	SaveManager.setRT()
 	
+	gv.setupStats()
+	get_node("%StatsMenu").setup()
 	OS.set_low_processor_usage_mode(true)
 	set_physics_process(false)
 	
 	gv.connect("wishReward", self, "wishReward")
-	
-	# menu and stats
-	if true:
-		
-		if "pc" in gv.PLATFORM:
-			gv.option["FPS"] = 2
-		else:
-			gv.option["FPS"] = 1
 	
 	get_node(gnLOREDs).setup()
 	
@@ -119,19 +111,12 @@ func game_start(successful_load: bool) -> void:
 	# ref
 	if true:
 		
-		# lored
 		emote_ville()
 		gv.updateResources()
+		get_node("%StatsMenu").updateAll()
 		
-		# menu and tab shit
-		if true:
-			
-			#menu.setup()
-
-			if patched:
-				get_node("m/v/top/h/menu_button/patched_alert").show()
-				#menu.patched_alert.show() #gaya
-				patched = false
+		if gv.version_older_than(SaveManager.game_version, ProjectSettings.get_setting("application/config/Version")):
+			get_node("%Menu Hub").get_node("%notice_patchNotes").show()
 		
 		# b_upgrade_tab
 		if true:
@@ -146,7 +131,6 @@ func game_start(successful_load: bool) -> void:
 					gv.up[x].refundable = false
 					gv.up[x].have = true
 					gv.up[x].active = true
-					gv.up[x].times_purchased += 1
 					
 					gv.up[x].apply()
 					
@@ -297,6 +281,7 @@ func hideAllMenus():
 	get_node("%SaveMenu").hide()
 	get_node("%OptionsMenu").hide()
 	get_node("%Earnings Report").hide()
+	get_node("%StatsMenu").hide()
 	if get_node(gnupcon).get_node("v").visible:
 		get_node(gnupcon).go_back()
 	get_node(gnupcon).hide()
@@ -679,6 +664,8 @@ func r_window_size_changed() -> void:
 
 func reset(reset_type: int, manual := true) -> void:
 	
+	gv.emit_signal("Reset", reset_type)
+	
 	if reset_type != -1:
 		# reset_type, unless -1, is the value of gv.Tab.S1, gv.Tab.S2, gv.Tab.S3, or gv.Tab.S4
 		# this reduces reset_type to be 1, 2, 3, or 4.
@@ -918,7 +905,9 @@ func activate_refundable_upgrades(reset_type: int):
 		gv.up[x].refundable = false
 		gv.up[x].have = true
 		gv.up[x].active = true
-		gv.up[x].times_purchased += 1
+		
+		gv.stats["UpgradesPurchased"][gv.up[x].tab] += 1
+		gv.emit_signal("UpgradesPurchased", gv.up[x].tab)
 		
 		gv.up[x].apply()
 		
@@ -954,6 +943,26 @@ func _clear_content():
 
 func _on_menuButton_pressed() -> void:
 	b_tabkey(KEY_ESCAPE)
+func _on_openSaveMenu() -> void:
+	get_node("%Menu Hub").hide()
+	get_node("%SaveMenu").show()
+func _on_openOptionsMenu() -> void:
+	get_node("%Menu Hub").hide()
+	get_node("%OptionsMenu").show()
+func _on_openStatsMenu() -> void:
+	get_node("%Menu Hub").hide()
+	get_node("%StatsMenu").show()
+func _on_openPatchNotesMenu() -> void:
+	get_node("%Menu Hub").hide()
+	get_node("%PatchNotesMenu").show()
+	get_node("%Menu Hub").get_node("%notice_patchNotes").hide()
+func _on_openLogContainer() -> void:
+	get_node("%Menu Hub").hide()
+	get_node("%LogContainer").show()
+
+
+func _on_exitToMainMenu_pressed() -> void:
+	exitToMainMenu()
 
 
 
@@ -986,6 +995,18 @@ func b_tabkey(key):
 			
 			if get_node("%OptionsMenu").visible:
 				get_node("%OptionsMenu").hide()
+				return
+			
+			if get_node("%StatsMenu").visible:
+				get_node("%StatsMenu").hide()
+				return
+			
+			if get_node("%PatchNotesMenu").visible:
+				get_node("%PatchNotesMenu").hide()
+				return
+			
+			if get_node("%LogContainer").visible:
+				get_node("%LogContainer").hide()
 				return
 			
 			# open the menu
@@ -1084,7 +1105,11 @@ func unlock_tab(tab: int, add := true):
 	match tab:
 		gv.Tab.NORMAL:
 			get_node("%upgradesTab").visible = add
+			continue
+		gv.Tab.NORMAL, gv.Tab.MALIGNANT, gv.Tab.EXTRA_NORMAL, gv.Tab.RADIATIVE, gv.Tab.RUNED_DIAL, gv.Tab.SPIRIT, gv.Tab.s4n, gv.Tab.s4m:
+			gv.emit_signal("stats_unlockTab", tab)
 		gv.Tab.S2:
+			gv.emit_signal("stats_unlockRuns")
 			$"%s1tab".visible = add
 			if add:
 				gv.unlocked_tabs.append(gv.Tab.S1)
@@ -1205,14 +1230,8 @@ func _on_Button_pressed() -> void:
 
 
 
-func _on_openSaveMenu() -> void:
-	get_node("%Menu Hub").hide()
-	get_node("%SaveMenu").show()
-
-func _on_openOptionsMenu() -> void:
-	get_node("%Menu Hub").hide()
-	get_node("%OptionsMenu").show()
 
 
-func _on_exitToMainMenu_pressed() -> void:
-	exitToMainMenu()
+
+
+

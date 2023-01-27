@@ -348,16 +348,6 @@ show_behind_parent = true
 position = Vector2( 2, 2 )
 texture = ExtResource( 4 )
 
-[node name="Notice" type="Sprite" parent="MarginContainer/VBoxContainer/GridContainer/1/m/h/icon"]
-position = Vector2( 20, 4 )
-texture = ExtResource( 10 )
-
-[node name="shadow" type="Sprite" parent="MarginContainer/VBoxContainer/GridContainer/1/m/h/icon/Notice"]
-modulate = Color( 0, 0, 0, 1 )
-show_behind_parent = true
-position = Vector2( -1, 1 )
-texture = ExtResource( 10 )
-
 [node name="Label" type="Label" parent="MarginContainer/VBoxContainer/GridContainer/1/m/h"]
 margin_left = 40.0
 margin_top = 5.0
@@ -423,16 +413,6 @@ self_modulate = Color( 0, 0, 0, 0.501961 )
 show_behind_parent = true
 position = Vector2( 2, 2 )
 texture = ExtResource( 3 )
-
-[node name="Notice" type="Sprite" parent="MarginContainer/VBoxContainer/GridContainer/2/m/h/icon"]
-position = Vector2( 20, 4 )
-texture = ExtResource( 10 )
-
-[node name="shadow" type="Sprite" parent="MarginContainer/VBoxContainer/GridContainer/2/m/h/icon/Notice"]
-modulate = Color( 0, 0, 0, 1 )
-show_behind_parent = true
-position = Vector2( -1, 1 )
-texture = ExtResource( 10 )
 
 [node name="Label" type="Label" parent="MarginContainer/VBoxContainer/GridContainer/2/m/h"]
 margin_left = 28.0
@@ -501,11 +481,13 @@ show_behind_parent = true
 position = Vector2( 2, 2 )
 texture = ExtResource( 5 )
 
-[node name="Notice" type="Sprite" parent="MarginContainer/VBoxContainer/GridContainer/3/m/h/icon"]
+[node name="notice_patchNotes" type="Sprite" parent="MarginContainer/VBoxContainer/GridContainer/3/m/h/icon"]
+unique_name_in_owner = true
+visible = false
 position = Vector2( 20, 4 )
 texture = ExtResource( 10 )
 
-[node name="shadow" type="Sprite" parent="MarginContainer/VBoxContainer/GridContainer/3/m/h/icon/Notice"]
+[node name="shadow" type="Sprite" parent="MarginContainer/VBoxContainer/GridContainer/3/m/h/icon/notice_patchNotes"]
 modulate = Color( 0, 0, 0, 1 )
 show_behind_parent = true
 position = Vector2( -1, 1 )
@@ -578,11 +560,12 @@ show_behind_parent = true
 position = Vector2( 2, 2 )
 texture = ExtResource( 6 )
 
-[node name="Notice" type="Sprite" parent="MarginContainer/VBoxContainer/GridContainer/4/m/h/icon"]
+[node name="notice_log" type="Sprite" parent="MarginContainer/VBoxContainer/GridContainer/4/m/h/icon"]
+unique_name_in_owner = true
 position = Vector2( 20, 4 )
 texture = ExtResource( 10 )
 
-[node name="shadow" type="Sprite" parent="MarginContainer/VBoxContainer/GridContainer/4/m/h/icon/Notice"]
+[node name="shadow" type="Sprite" parent="MarginContainer/VBoxContainer/GridContainer/4/m/h/icon/notice_log"]
 modulate = Color( 0, 0, 0, 1 )
 show_behind_parent = true
 position = Vector2( -1, 1 )
@@ -656,11 +639,12 @@ show_behind_parent = true
 position = Vector2( 2, 2 )
 texture = ExtResource( 7 )
 
-[node name="Notice" type="Sprite" parent="MarginContainer/VBoxContainer/GridContainer/5/m/h/icon"]
+[node name="notice_help" type="Sprite" parent="MarginContainer/VBoxContainer/GridContainer/5/m/h/icon"]
+unique_name_in_owner = true
 position = Vector2( 20, 4 )
 texture = ExtResource( 10 )
 
-[node name="shadow" type="Sprite" parent="MarginContainer/VBoxContainer/GridContainer/5/m/h/icon/Notice"]
+[node name="shadow" type="Sprite" parent="MarginContainer/VBoxContainer/GridContainer/5/m/h/icon/notice_help"]
 modulate = Color( 0, 0, 0, 1 )
 show_behind_parent = true
 position = Vector2( -1, 1 )

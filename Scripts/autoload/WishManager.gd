@@ -454,4 +454,27 @@ func breakManager(wish: Wish):
 
 func updateWishCount():
 	wishes = wish.size()
+
+
+# - - - Handy
+
+func getWishStat(objectiveType: int, key = "") -> String:
+	match objectiveType:
+		gv.Objective.RESOURCES_PRODUCED:
+			if key == str(gv.Resource.JOY):
+				return "Joy Collection"
+			elif key == str(gv.Resource.GRIEF):
+				return "Grief Collection"
+			else:
+				return "Random Resource"
+		gv.Objective.LORED_UPGRADED:
+			return "Level Up"
+		gv.Objective.UPGRADE_PURCHASED:
+			return "Buy Upgrade"
+		gv.Objective.MAXED_FUEL_STORAGE:
+			return "Refuel"
+		gv.Objective.BREAK:
+			return "Sleep"
 	
+	print_debug("fail: getWishStat() in WishManager")
+	return "oops!"

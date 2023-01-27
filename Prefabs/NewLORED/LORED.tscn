@@ -371,7 +371,7 @@ position = Vector2( 34, 34 )
 scale = Vector2( 0.5, 0.5 )
 frames = ExtResource( 1 )
 animation = "ff"
-frame = 13
+frame = 41
 playing = true
 script = ExtResource( 2 )
 
@@ -568,7 +568,7 @@ unique_name_in_owner = true
 visible = false
 position = Vector2( 12, 12 )
 frames = ExtResource( 11 )
-frame = 6
+frame = 4
 playing = true
 
 [node name="Sprite" type="Sprite" parent="m/v/bot/m/h/level up/icon"]

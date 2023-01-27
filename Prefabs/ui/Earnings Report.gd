@@ -22,6 +22,10 @@ func setup(timeOffline: int):
 	gnIcon.modulate = SaveManager.save_file_color
 	
 	unlockedResources = gv.list["unlocked resources"]
+	
+	if unlockedResources.size() < 6:
+		return
+	
 	setupFuelRatios(timeOffline)
 	setupResourceProduction(timeOffline)
 	gnTimeOffline.text = "Time offline: " + gv.parse_time(timeOffline)

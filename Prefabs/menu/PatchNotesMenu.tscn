@@ -1,0 +1,119 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://Fonts/Roboto-Medium.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://Prefabs/menu/PatchNotesMenu.gd" type="Script" id=2]
+
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 0.0980392, 0.0980392, 0.0980392, 1 )
+border_color = Color( 1, 0, 0.380392, 1 )
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+shadow_color = Color( 0, 0, 0, 1 )
+shadow_size = 10
+
+[sub_resource type="StyleBoxFlat" id=2]
+bg_color = Color( 0.0980392, 0.0980392, 0.0980392, 1 )
+draw_center = false
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color( 1, 1, 1, 0.462745 )
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+shadow_size = 3
+
+[sub_resource type="DynamicFont" id=5]
+size = 12
+font_data = ExtResource( 1 )
+
+[sub_resource type="DynamicFontData" id=4]
+font_path = "res://Fonts/Roboto-Black.ttf"
+
+[sub_resource type="DynamicFont" id=6]
+size = 12
+font_data = SubResource( 4 )
+
+[node name="PatchNotesMenu" type="MarginContainer"]
+margin_right = 324.0
+margin_bottom = 300.0
+rect_min_size = Vector2( 324, 300 )
+size_flags_horizontal = 4
+size_flags_vertical = 4
+script = ExtResource( 2 )
+
+[node name="bg" type="Panel" parent="."]
+margin_right = 324.0
+margin_bottom = 300.0
+custom_styles/panel = SubResource( 1 )
+
+[node name="border" type="Panel" parent="."]
+modulate = Color( 0.996078, 0.443137, 0.172549, 1 )
+margin_right = 324.0
+margin_bottom = 300.0
+rect_clip_content = true
+custom_styles/panel = SubResource( 2 )
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+margin_right = 324.0
+margin_bottom = 300.0
+custom_constants/margin_right = 8
+custom_constants/margin_top = 8
+custom_constants/margin_bottom = 8
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer"]
+margin_top = 8.0
+margin_right = 316.0
+margin_bottom = 292.0
+scroll_horizontal_enabled = false
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/ScrollContainer"]
+margin_right = 143.0
+margin_bottom = 35.0
+custom_constants/margin_right = 8
+custom_constants/margin_top = 0
+custom_constants/margin_left = 8
+custom_constants/margin_bottom = 0
+
+[node name="entries" type="VBoxContainer" parent="MarginContainer/ScrollContainer/MarginContainer"]
+unique_name_in_owner = true
+margin_left = 8.0
+margin_right = 135.0
+margin_bottom = 35.0
+rect_pivot_offset = Vector2( -8, -8 )
+custom_constants/separation = 8
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/ScrollContainer/MarginContainer/entries"]
+margin_right = 127.0
+margin_bottom = 35.0
+custom_constants/margin_top = 10
+custom_constants/margin_bottom = 10
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/ScrollContainer/MarginContainer/entries/MarginContainer"]
+margin_top = 10.0
+margin_right = 127.0
+margin_bottom = 25.0
+alignment = 1
+
+[node name="title" type="Label" parent="MarginContainer/ScrollContainer/MarginContainer/entries/MarginContainer/HBoxContainer"]
+margin_right = 87.0
+margin_bottom = 15.0
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 5 )
+text = "Current Version:"
+
+[node name="version" type="Label" parent="MarginContainer/ScrollContainer/MarginContainer/entries/MarginContainer/HBoxContainer"]
+unique_name_in_owner = true
+margin_left = 91.0
+margin_right = 127.0
+margin_bottom = 15.0
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 6 )
+text = "2.2.28"
+align = 1

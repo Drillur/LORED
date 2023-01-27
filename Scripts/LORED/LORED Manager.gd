@@ -353,6 +353,7 @@ func getOfflineEarnings(timeOffline: int):
 func unlock():
 	lored.unlocked = true
 	vico.show()
+	gv.emit_signal("stats_unlockLOREDStats", type)
 func unlockJobResources():
 	# called on load in Root
 	for job in lored.jobs.values():
@@ -366,6 +367,8 @@ func jobsUnlocked():
 func purchase():
 	if canAffordPurchase():
 		purchased()
+		gv.stats["TimesLeveledUp"]["manual"][type] += 1
+		gv.emit_signal("TimesLeveledUp", "manual", type)
 		rt.get_node("global_tip").refresh()
 	else:
 		if is_instance_valid(rt.get_node("global_tip").tip):
@@ -477,6 +480,8 @@ func watchSleepTime():
 			break
 		
 		sleepTime += 1
+		gv.stats["TimeAsleep"][type] += 1
+		gv.emit_signal("TimeAsleep", type)
 		
 		if sleepTime >= 30:
 			newAlert(lv.AlertType.ASLEEP)
@@ -673,7 +678,6 @@ func repeatedlyLookForWork():
 			lookForWork()
 
 func lookForWork():
-	# mama kicked me outta da house
 	for job in lored.jobs.values():
 		if canStartJob(job):
 			workJob(job)
@@ -732,8 +736,12 @@ func workJob(job: Job):
 	
 	updatePrimaryResource(job.primaryResource)
 	if job.type == lv.Job.REFUEL:
+		gv.stats["TimesRefueled"][type] += 1
+		gv.emit_signal("TimesRefueled", type)
 		vico.hideProduction()
 	else:
+		gv.stats["OtherJobs"][type] += 1
+		gv.emit_signal("OtherJobs", type)
 		vico.updateProduction()
 	updateStatus(job.vicoText)
 	
@@ -801,6 +809,9 @@ func takeRequiredFuelFromStorage(requiredFuel: Big):
 func takeRequiredResources(_requiredResources: Dictionary):
 	for resource in _requiredResources:
 		gv.subtractFromResource(resource, _requiredResources[resource])
+		
+		gv.stats["ResourceStats"]["used"][resource].a(_requiredResources[resource])
+		gv.emit_signal("resourceChanged", resource)
 
 func giveProducedResources(_producedResources: Dictionary):
 	for resource in _producedResources:
@@ -817,6 +828,8 @@ func getOutputTextDetails(producedResources: Dictionary, critMultiplier: float) 
 		
 		var text: String = "+" + producedResources[resource].toString()
 		if critRoll:
+			gv.stats["Crits"][type] += 1
+			gv.emit_signal("Crits", type)
 			text += " (x" + str(stepify(critMultiplier, 0.1)) + ")"
 		
 		f["life"] = 10
@@ -924,7 +937,7 @@ func autoWatch():
 
 func shouldAutobuy() -> bool:
 	
-	if inFirstTwoSecondsOfRun():
+	if gv.inFirstTwoSecondsOfRun():
 		return false
 	
 	if not autobuying:
@@ -1013,7 +1026,6 @@ func autobuy_upgrade_check() -> bool:
 	return false
 
 func autoBuy():
+	gv.stats["TimesLeveledUp"]["automated"][type] += 1
+	gv.emit_signal("TimesLeveledUp", "automated", type)
 	purchased()
-
-func inFirstTwoSecondsOfRun() -> bool:
-	return gv.durationSinceLastReset < 2

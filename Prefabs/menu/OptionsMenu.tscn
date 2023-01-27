@@ -33,7 +33,8 @@ shadow_size = 3
 
 [sub_resource type="StyleBoxFlat" id=18]
 bg_color = Color( 0.148438, 0.148438, 0.148438, 1 )
-border_color = Color( 1, 0, 0.380392, 1 )
+border_width_bottom = 2
+border_color = Color( 0.137255, 0.698039, 0.552941, 1 )
 corner_radius_top_left = 3
 corner_radius_top_right = 3
 corner_radius_bottom_right = 3
@@ -43,12 +44,12 @@ shadow_color = Color( 0, 0, 0, 1 )
 [sub_resource type="StyleBoxFlat" id=14]
 draw_center = false
 
-[sub_resource type="DynamicFontData" id=4]
+[sub_resource type="DynamicFontData" id=29]
 font_path = "res://Fonts/Roboto-Black.ttf"
 
 [sub_resource type="DynamicFont" id=5]
 size = 12
-font_data = SubResource( 4 )
+font_data = SubResource( 29 )
 
 [sub_resource type="StyleBoxFlat" id=15]
 bg_color = Color( 1, 1, 1, 0.08 )
@@ -125,20 +126,20 @@ size_flags_vertical = 4
 script = ExtResource( 6 )
 
 [node name="bg" type="Panel" parent="."]
-margin_right = 320.0
-margin_bottom = 543.0
+margin_right = 298.0
+margin_bottom = 611.0
 custom_styles/panel = SubResource( 1 )
 
 [node name="border" type="Panel" parent="."]
 modulate = Color( 0.137255, 0.698039, 0.552941, 1 )
-margin_right = 320.0
-margin_bottom = 543.0
+margin_right = 298.0
+margin_bottom = 611.0
 rect_clip_content = true
 custom_styles/panel = SubResource( 2 )
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
-margin_right = 320.0
-margin_bottom = 543.0
+margin_right = 298.0
+margin_bottom = 611.0
 custom_constants/margin_right = 8
 custom_constants/margin_top = 8
 custom_constants/margin_left = 8
@@ -147,57 +148,60 @@ custom_constants/margin_bottom = 8
 [node name="VBoxContainer" type="GridContainer" parent="MarginContainer"]
 margin_left = 8.0
 margin_top = 8.0
-margin_right = 312.0
-margin_bottom = 535.0
+margin_right = 290.0
+margin_bottom = 603.0
 rect_pivot_offset = Vector2( -8, -8 )
 custom_constants/vseparation = 8
 custom_constants/hseparation = 8
 
 [node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer"]
-margin_right = 304.0
-margin_bottom = 108.0
+margin_right = 282.0
+margin_bottom = 168.0
 
 [node name="bg" type="Panel" parent="MarginContainer/VBoxContainer/MarginContainer"]
-margin_right = 304.0
-margin_bottom = 108.0
+margin_right = 282.0
+margin_bottom = 168.0
 custom_styles/panel = SubResource( 18 )
 
 [node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/MarginContainer"]
-margin_right = 304.0
-margin_bottom = 108.0
-custom_constants/margin_right = 4
-custom_constants/margin_top = 4
-custom_constants/margin_left = 4
-custom_constants/margin_bottom = 4
+margin_right = 282.0
+margin_bottom = 168.0
+custom_constants/margin_right = 8
+custom_constants/margin_top = 8
+custom_constants/margin_left = 8
+custom_constants/margin_bottom = 8
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/MarginContainer/MarginContainer"]
-margin_left = 4.0
-margin_top = 4.0
-margin_right = 300.0
-margin_bottom = 104.0
+margin_left = 8.0
+margin_top = 8.0
+margin_right = 274.0
+margin_bottom = 160.0
+custom_constants/separation = 8
 
 [node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/MarginContainer/MarginContainer/VBoxContainer"]
-margin_right = 296.0
-margin_bottom = 28.0
+margin_right = 266.0
+margin_bottom = 40.0
 mouse_filter = 2
 size_flags_vertical = 4
 
 [node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/MarginContainer/MarginContainer/VBoxContainer/MarginContainer"]
-margin_right = 296.0
-margin_bottom = 28.0
-custom_constants/margin_right = 4
-custom_constants/margin_top = 2
-custom_constants/margin_left = 2
-custom_constants/margin_bottom = 2
+margin_right = 266.0
+margin_bottom = 40.0
+custom_constants/margin_right = 8
+custom_constants/margin_top = 8
+custom_constants/margin_left = 8
+custom_constants/margin_bottom = 8
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/MarginContainer/MarginContainer/VBoxContainer/MarginContainer/MarginContainer"]
-margin_left = 2.0
-margin_top = 2.0
-margin_right = 292.0
-margin_bottom = 26.0
+margin_left = 8.0
+margin_top = 8.0
+margin_right = 258.0
+margin_bottom = 32.0
+alignment = 1
 
 [node name="Panel" type="Panel" parent="MarginContainer/VBoxContainer/MarginContainer/MarginContainer/VBoxContainer/MarginContainer/MarginContainer/HBoxContainer"]
-margin_right = 24.0
+margin_left = 72.0
+margin_right = 96.0
 margin_bottom = 24.0
 rect_min_size = Vector2( 24, 24 )
 mouse_filter = 2
@@ -217,9 +221,9 @@ texture = ExtResource( 4 )
 centered = false
 
 [node name="title" type="Label" parent="MarginContainer/VBoxContainer/MarginContainer/MarginContainer/VBoxContainer/MarginContainer/MarginContainer/HBoxContainer"]
-margin_left = 28.0
+margin_left = 100.0
 margin_top = 4.0
-margin_right = 106.0
+margin_right = 178.0
 margin_bottom = 19.0
 mouse_filter = 1
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
@@ -227,8 +231,8 @@ custom_fonts/font = SubResource( 5 )
 text = "Visual Options"
 
 [node name="Button" type="Button" parent="MarginContainer/VBoxContainer/MarginContainer/MarginContainer/VBoxContainer/MarginContainer"]
-margin_right = 296.0
-margin_bottom = 28.0
+margin_right = 266.0
+margin_bottom = 40.0
 focus_mode = 0
 mouse_default_cursor_shape = 2
 custom_styles/hover = SubResource( 15 )
@@ -237,16 +241,15 @@ custom_styles/normal = SubResource( 17 )
 
 [node name="contentVisual" type="MarginContainer" parent="MarginContainer/VBoxContainer/MarginContainer/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
-margin_top = 32.0
-margin_right = 296.0
-margin_bottom = 100.0
-custom_constants/margin_right = 10
-custom_constants/margin_left = 20
+margin_top = 48.0
+margin_right = 266.0
+margin_bottom = 152.0
+custom_constants/margin_right = 0
+custom_constants/margin_left = 0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/MarginContainer/MarginContainer/VBoxContainer/contentVisual"]
-margin_left = 20.0
-margin_right = 286.0
-margin_bottom = 68.0
+margin_right = 266.0
+margin_bottom = 104.0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/MarginContainer/MarginContainer/VBoxContainer/contentVisual/VBoxContainer"]
 margin_right = 266.0
@@ -293,52 +296,78 @@ rect_min_size = Vector2( 0, 32 )
 size_flags_horizontal = 3
 theme = ExtResource( 3 )
 
+[node name="flying_numbers" type="CheckButton" parent="MarginContainer/VBoxContainer/MarginContainer/MarginContainer/VBoxContainer/contentVisual/VBoxContainer"]
+unique_name_in_owner = true
+margin_top = 72.0
+margin_right = 266.0
+margin_bottom = 104.0
+mouse_default_cursor_shape = 2
+size_flags_horizontal = 3
+theme = ExtResource( 3 )
+pressed = true
+text = "Display general flying numbers"
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="highlight" type="Button" parent="MarginContainer/VBoxContainer/MarginContainer/MarginContainer/VBoxContainer/contentVisual/VBoxContainer/flying_numbers"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 1
+custom_styles/hover = SubResource( 11 )
+custom_styles/pressed = SubResource( 12 )
+custom_styles/focus = SubResource( 12 )
+custom_styles/normal = SubResource( 12 )
+
 [node name="MarginContainer2" type="MarginContainer" parent="MarginContainer/VBoxContainer"]
-margin_top = 116.0
-margin_right = 304.0
-margin_bottom = 368.0
+margin_top = 176.0
+margin_right = 282.0
+margin_bottom = 452.0
 
 [node name="bg" type="Panel" parent="MarginContainer/VBoxContainer/MarginContainer2"]
-margin_right = 304.0
-margin_bottom = 252.0
+margin_right = 282.0
+margin_bottom = 276.0
 custom_styles/panel = SubResource( 18 )
 
 [node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/MarginContainer2"]
-margin_right = 304.0
-margin_bottom = 252.0
-custom_constants/margin_right = 4
-custom_constants/margin_top = 4
-custom_constants/margin_left = 4
-custom_constants/margin_bottom = 4
+margin_right = 282.0
+margin_bottom = 276.0
+custom_constants/margin_right = 8
+custom_constants/margin_top = 8
+custom_constants/margin_left = 8
+custom_constants/margin_bottom = 8
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/MarginContainer2/MarginContainer"]
-margin_left = 4.0
-margin_top = 4.0
-margin_right = 300.0
-margin_bottom = 248.0
+margin_left = 8.0
+margin_top = 8.0
+margin_right = 274.0
+margin_bottom = 268.0
+custom_constants/separation = 8
 
 [node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/MarginContainer2/MarginContainer/VBoxContainer"]
-margin_right = 296.0
-margin_bottom = 28.0
+margin_right = 266.0
+margin_bottom = 40.0
 mouse_filter = 2
 size_flags_vertical = 4
 
 [node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/MarginContainer2/MarginContainer/VBoxContainer/MarginContainer"]
-margin_right = 296.0
-margin_bottom = 28.0
-custom_constants/margin_right = 4
-custom_constants/margin_top = 2
-custom_constants/margin_left = 2
-custom_constants/margin_bottom = 2
+margin_right = 266.0
+margin_bottom = 40.0
+custom_constants/margin_right = 8
+custom_constants/margin_top = 8
+custom_constants/margin_left = 8
+custom_constants/margin_bottom = 8
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/MarginContainer2/MarginContainer/VBoxContainer/MarginContainer/MarginContainer"]
-margin_left = 2.0
-margin_top = 2.0
-margin_right = 292.0
-margin_bottom = 26.0
+margin_left = 8.0
+margin_top = 8.0
+margin_right = 258.0
+margin_bottom = 32.0
+alignment = 1
 
 [node name="Panel" type="Panel" parent="MarginContainer/VBoxContainer/MarginContainer2/MarginContainer/VBoxContainer/MarginContainer/MarginContainer/HBoxContainer"]
-margin_right = 24.0
+margin_left = 69.0
+margin_right = 93.0
 margin_bottom = 24.0
 rect_min_size = Vector2( 24, 24 )
 mouse_filter = 2
@@ -358,9 +387,9 @@ texture = ExtResource( 4 )
 centered = false
 
 [node name="title" type="Label" parent="MarginContainer/VBoxContainer/MarginContainer2/MarginContainer/VBoxContainer/MarginContainer/MarginContainer/HBoxContainer"]
-margin_left = 28.0
+margin_left = 97.0
 margin_top = 4.0
-margin_right = 111.0
+margin_right = 180.0
 margin_bottom = 19.0
 mouse_filter = 1
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
@@ -368,8 +397,8 @@ custom_fonts/font = SubResource( 5 )
 text = "LORED Options"
 
 [node name="Button" type="Button" parent="MarginContainer/VBoxContainer/MarginContainer2/MarginContainer/VBoxContainer/MarginContainer"]
-margin_right = 296.0
-margin_bottom = 28.0
+margin_right = 266.0
+margin_bottom = 40.0
 focus_mode = 0
 mouse_default_cursor_shape = 2
 custom_styles/hover = SubResource( 15 )
@@ -378,15 +407,14 @@ custom_styles/normal = SubResource( 17 )
 
 [node name="contentLORED" type="MarginContainer" parent="MarginContainer/VBoxContainer/MarginContainer2/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
-margin_top = 32.0
-margin_right = 296.0
-margin_bottom = 244.0
-custom_constants/margin_right = 10
-custom_constants/margin_left = 20
+margin_top = 48.0
+margin_right = 266.0
+margin_bottom = 260.0
+custom_constants/margin_right = 0
+custom_constants/margin_left = 0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/MarginContainer2/MarginContainer/VBoxContainer/contentLORED"]
-margin_left = 20.0
-margin_right = 286.0
+margin_right = 266.0
 margin_bottom = 212.0
 rect_pivot_offset = Vector2( -349, 68 )
 
@@ -539,51 +567,53 @@ custom_styles/focus = SubResource( 12 )
 custom_styles/normal = SubResource( 12 )
 
 [node name="MarginContainer3" type="MarginContainer" parent="MarginContainer/VBoxContainer"]
-margin_top = 376.0
-margin_right = 304.0
-margin_bottom = 527.0
+margin_top = 460.0
+margin_right = 282.0
+margin_bottom = 595.0
 
 [node name="bg" type="Panel" parent="MarginContainer/VBoxContainer/MarginContainer3"]
-margin_right = 304.0
-margin_bottom = 151.0
+margin_right = 282.0
+margin_bottom = 135.0
 custom_styles/panel = SubResource( 18 )
 
 [node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/MarginContainer3"]
-margin_right = 304.0
-margin_bottom = 151.0
-custom_constants/margin_right = 4
-custom_constants/margin_top = 4
-custom_constants/margin_left = 4
-custom_constants/margin_bottom = 4
+margin_right = 282.0
+margin_bottom = 135.0
+custom_constants/margin_right = 8
+custom_constants/margin_top = 8
+custom_constants/margin_left = 8
+custom_constants/margin_bottom = 8
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/MarginContainer3/MarginContainer"]
-margin_left = 4.0
-margin_top = 4.0
-margin_right = 300.0
-margin_bottom = 147.0
+margin_left = 8.0
+margin_top = 8.0
+margin_right = 274.0
+margin_bottom = 127.0
 
 [node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/MarginContainer3/MarginContainer/VBoxContainer"]
-margin_right = 296.0
-margin_bottom = 28.0
+margin_right = 266.0
+margin_bottom = 40.0
 mouse_filter = 2
 size_flags_vertical = 4
 
 [node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/MarginContainer3/MarginContainer/VBoxContainer/MarginContainer"]
-margin_right = 296.0
-margin_bottom = 28.0
-custom_constants/margin_right = 4
-custom_constants/margin_top = 2
-custom_constants/margin_left = 2
-custom_constants/margin_bottom = 2
+margin_right = 266.0
+margin_bottom = 40.0
+custom_constants/margin_right = 8
+custom_constants/margin_top = 8
+custom_constants/margin_left = 8
+custom_constants/margin_bottom = 8
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/MarginContainer3/MarginContainer/VBoxContainer/MarginContainer/MarginContainer"]
-margin_left = 2.0
-margin_top = 2.0
-margin_right = 292.0
-margin_bottom = 26.0
+margin_left = 8.0
+margin_top = 8.0
+margin_right = 258.0
+margin_bottom = 32.0
+alignment = 1
 
 [node name="Panel" type="Panel" parent="MarginContainer/VBoxContainer/MarginContainer3/MarginContainer/VBoxContainer/MarginContainer/MarginContainer/HBoxContainer"]
-margin_right = 24.0
+margin_left = 75.0
+margin_right = 99.0
 margin_bottom = 24.0
 rect_min_size = Vector2( 24, 24 )
 mouse_filter = 2
@@ -603,9 +633,9 @@ texture = ExtResource( 4 )
 centered = false
 
 [node name="title" type="Label" parent="MarginContainer/VBoxContainer/MarginContainer3/MarginContainer/VBoxContainer/MarginContainer/MarginContainer/HBoxContainer"]
-margin_left = 28.0
+margin_left = 103.0
 margin_top = 4.0
-margin_right = 100.0
+margin_right = 175.0
 margin_bottom = 19.0
 mouse_filter = 1
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
@@ -613,8 +643,8 @@ custom_fonts/font = SubResource( 5 )
 text = "Save Options"
 
 [node name="Button" type="Button" parent="MarginContainer/VBoxContainer/MarginContainer3/MarginContainer/VBoxContainer/MarginContainer"]
-margin_right = 296.0
-margin_bottom = 28.0
+margin_right = 266.0
+margin_bottom = 40.0
 focus_mode = 0
 mouse_default_cursor_shape = 2
 custom_styles/hover = SubResource( 15 )
@@ -623,16 +653,15 @@ custom_styles/normal = SubResource( 17 )
 
 [node name="contentSave" type="MarginContainer" parent="MarginContainer/VBoxContainer/MarginContainer3/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
-margin_top = 32.0
-margin_right = 296.0
-margin_bottom = 143.0
-custom_constants/margin_right = 10
-custom_constants/margin_left = 20
+margin_top = 44.0
+margin_right = 266.0
+margin_bottom = 119.0
+custom_constants/margin_right = 0
+custom_constants/margin_left = 0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/MarginContainer3/MarginContainer/VBoxContainer/contentSave"]
-margin_left = 20.0
-margin_right = 286.0
-margin_bottom = 111.0
+margin_right = 266.0
+margin_bottom = 75.0
 
 [node name="autosave" type="CheckButton" parent="MarginContainer/VBoxContainer/MarginContainer3/MarginContainer/VBoxContainer/contentSave/VBoxContainer"]
 unique_name_in_owner = true
@@ -659,35 +688,11 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="halt2" type="CheckButton" parent="MarginContainer/VBoxContainer/MarginContainer3/MarginContainer/VBoxContainer/contentSave/VBoxContainer"]
-margin_top = 36.0
-margin_right = 266.0
-margin_bottom = 68.0
-mouse_default_cursor_shape = 2
-size_flags_horizontal = 3
-theme = ExtResource( 3 )
-text = "Save LORED sleep status"
-__meta__ = {
-"_edit_group_": true
-}
-
-[node name="highlight" type="Button" parent="MarginContainer/VBoxContainer/MarginContainer3/MarginContainer/VBoxContainer/contentSave/VBoxContainer/halt2"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-mouse_filter = 1
-custom_styles/hover = SubResource( 20 )
-custom_styles/pressed = SubResource( 21 )
-custom_styles/focus = SubResource( 21 )
-custom_styles/normal = SubResource( 21 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
 [node name="0" type="MarginContainer" parent="MarginContainer/VBoxContainer/MarginContainer3/MarginContainer/VBoxContainer/contentSave/VBoxContainer"]
 margin_left = 81.0
-margin_top = 72.0
+margin_top = 36.0
 margin_right = 185.0
-margin_bottom = 111.0
+margin_bottom = 75.0
 size_flags_horizontal = 4
 
 [node name="bg" type="Panel" parent="MarginContainer/VBoxContainer/MarginContainer3/MarginContainer/VBoxContainer/contentSave/VBoxContainer/0"]
@@ -751,6 +756,7 @@ custom_styles/normal = SubResource( 27 )
 [connection signal="pressed" from="MarginContainer/VBoxContainer/MarginContainer/MarginContainer/VBoxContainer/MarginContainer/Button" to="." method="_on_visualHide_pressed"]
 [connection signal="item_selected" from="MarginContainer/VBoxContainer/MarginContainer/MarginContainer/VBoxContainer/contentVisual/VBoxContainer/HBoxContainer/fps dropdown" to="." method="_on_fps_dropdown_item_selected"]
 [connection signal="item_selected" from="MarginContainer/VBoxContainer/MarginContainer/MarginContainer/VBoxContainer/contentVisual/VBoxContainer/HBoxContainer2/notationDropdown" to="." method="_on_notationDropdown_item_selected"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/MarginContainer/MarginContainer/VBoxContainer/contentVisual/VBoxContainer/flying_numbers" to="." method="selectOption" binds= [ "flying_numbers" ]]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/MarginContainer2/MarginContainer/VBoxContainer/MarginContainer/Button" to="." method="_on_LOREDHide_pressed"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/MarginContainer2/MarginContainer/VBoxContainer/contentLORED/VBoxContainer/animations" to="." method="selectOption" binds= [ "animations" ]]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/MarginContainer2/MarginContainer/VBoxContainer/contentLORED/VBoxContainer/loredOutputNumbers" to="." method="selectOption" binds= [ "loredOutputNumbers" ]]

@@ -1,6 +1,7 @@
 extends Node
 
 
+onready var logContainer = get_node("/root/Root/m/LogContainer")
 
 enum Type {
 	OFFLINE_EARNINGS,
@@ -13,8 +14,8 @@ var logs := []
 var saved_vars := ["options"]
 
 var options := {
-	"LEVEL_UP": false,
-	"UPGRADE_PURCHASED": false,
+	"LEVEL_UP": true,
+	"UPGRADE_PURCHASED": true,
 	"OFFLINE_EARNINGS": true,
 }
 
@@ -26,13 +27,21 @@ func enableAllOptions():
 
 
 
+# - Handy
+
 func typeAllowed(type: int) -> bool:
+	if gv.inFirstTwoSecondsOfRun():
+		if type != Type.OFFLINE_EARNINGS:
+			return false
 	return options[Type.keys()[type]]
 
 
 
+# - Actions
+
 func log(type: int, info: String):
 	if typeAllowed(type):
-		logs.append([type, info])
+		get_node("/root/Root/m/LogContainer").log(type, info)
+		#logs.append([type, info])
 		print(Type.keys()[type], " entry logged. Info: ", info)
 

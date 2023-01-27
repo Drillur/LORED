@@ -459,8 +459,22 @@ func turnIn():
 	
 	taq.wishCompleted(self)
 	
-	gv.resource[gv.Resource.JOY].a(1)
+	gv.addToResource(gv.Resource.JOY, 1)
 	taq.increaseProgress(gv.Objective.RESOURCES_PRODUCED, str(gv.Resource.JOY))
+	
+	if not random:
+		gv.stats["WishMain"] += 1
+		gv.emit_signal("statChanged", "WishMain")
+	
+	gv.stats["WishGranted"] += 1
+	gv.emit_signal("statChanged", "WishGranted")
+	
+	var _stat: String = taq.getWishStat(obj.type, obj.key)
+	gv.stats["WishStats"][_stat]["granted"] += 1
+	gv.emit_signal("statChanged2", _stat, "granted")
+	
+	gv.stats["LOREDGranted"][int(giver)] += 1
+	gv.emit_signal("LOREDGranted", int(giver))
 	
 	die()
 
@@ -1052,7 +1066,6 @@ func construct_random_max_fuel():
 	generateRandomRewards(0)
 
 func construct_random_joy_or_grief():
-	print("JOY_OR_GRIEF")
 	
 	setRandomGiver()
 	
@@ -1178,7 +1191,7 @@ func generateHelpAndThankText():
 							match roll:
 								0: help_text = "Used to it, boss, used to it."
 								1: help_text = "If you want Grief, just talk to the women and children left behind by our lost workers."
-								2: help_text = "Oh, sure, boss, we can fix you up with some Grief, no problem, no problem at all. See, just hang around a minute, boss, maybe two, and another of us will turn up dead. You wait and see, just you wait and see, there, bossy boss, I'll mark my job on it. Er.. actually, boss, scratch that last comment from the record."
+								2: help_text = "Oh, sure, boss, we can fix you up with some Grief, no problem, no problem at all. See, just hang around a minute, boss, maybe two, and another of us will turn up dead. You wait and see, just you wait and see, there, bossy boss, I'll mark my job on it. Oh! Heh, hey, boss, uh, I, I--scratch that last comment from the record. Ahem."
 							thank_text = "Oh, look, boss, more Grief. What a surprise."
 						lv.Type.IRON_ORE:
 							match roll:

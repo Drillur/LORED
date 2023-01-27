@@ -95,7 +95,7 @@ func _ready():
 	
 	save_bar.rect_size.x = 0
 	
-	hint_html.visible = true if gv.PLATFORM == "browser" else false
+	hint_html.visible = true if gv.PLATFORM == gv.Platform.BROWSER else false
 	
 	hide()
 
@@ -124,9 +124,7 @@ func setup():
 	tip_autobuyer.pressed = gv.option["tooltip_autobuyer"]
 	_on_tip_autobuyer_pressed()
 	
-	save_halt.pressed = gv.option["on_save_halt"]
 	_on_save_halt_pressed()
-	save_hold.pressed = gv.option["on_save_hold"]
 	_on_save_hold_pressed()
 	
 	#quest_max_tasks.text = "Max tasks +" + str(taq.max_tasks)
@@ -300,7 +298,7 @@ func _on_save_halt_pressed() -> void:
 func _on_save_hold_pressed() -> void:
 	gv.option["on_save_hold"] = save_hold.pressed
 func _on_export_pressed() -> void:
-	if gv.PLATFORM == "pc":
+	if gv.PLATFORM == gv.Platform.PC:
 		$export.popup()
 	else:
 		rt.e_save("print to console")

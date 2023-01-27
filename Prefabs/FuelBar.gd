@@ -41,8 +41,8 @@ func update():
 	
 	updating = true
 	
-	if gv.cur_session < 2:
-		t.start(2)
+	if gv.cur_session < 1:
+		t.start(1)
 		yield(t,"timeout")
 	
 	while not is_queued_for_deletion() and not stopped:

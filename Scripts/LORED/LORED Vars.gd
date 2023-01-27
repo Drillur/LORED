@@ -353,13 +353,13 @@ func getOfflineEarnings(timeOffline: int):
 	gv.clearOfflineEarnings()
 	for f in lored.values():
 		f.getOfflineEarnings(timeOffline)
-	logOfflineEarnings()
+	logOfflineEarnings(timeOffline)
 
-func logOfflineEarnings():
-	var data := {}
+func logOfflineEarnings(timeOffline: int):
+	var data := {"time offline": timeOffline, "resources": {}}
 	for resource in gv.offlineEarnings:
 		var text = "+" if gv.offlineEarnings[resource][1] == 1 else "-"
-		data[resource] = text + gv.offlineEarnings[resource][0].toString()
+		data["resources"][resource] = text + gv.offlineEarnings[resource][0].toString()
 	LogManager.log(LogManager.Type.OFFLINE_EARNINGS, var2str(data))
 
 #var offlineEarnings: Dictionary setget , getOfflineEarnings

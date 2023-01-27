@@ -4,7 +4,7 @@ extends Reference
 
 
 
-const saved_vars := ["purchased", "keyLORED", "asleep", "timesPurchased", "level", "currentFuel"]
+const saved_vars := ["purchased", "keyLORED", "timesPurchased", "level", "currentFuel"]
 
 var manager: Node2D
 func assignManager(_manager: Node2D):
@@ -70,10 +70,9 @@ func load(data: Dictionary) -> void:
 	
 	jobs.values()[0].unlock()
 	
-	if not gv.option["on_save_halt"]:
-		asleep = false
-	
-	gv.list.lored["active " + str(tab)].append(type)
+	if purchased:
+		gv.list.lored["active " + str(tab)].append(type)
+		gv.list.lored["active"].append(type)
 	
 	#if type != lv.Type.STONE:
 	increaseCost(lv.Num.MULTIPLY, lv.Num.FROM_LEVELS, costModifier)
@@ -633,6 +632,9 @@ func getCostText() -> Dictionary:
 func takeawayCost():
 	for c in cost:
 		gv.subtractFromResource(c, cost[c])
+		
+		gv.stats["ResourceStats"]["spent"][c].a(cost[c])
+		gv.emit_signal("ResourceSpent", c)
 func increaseCost(folder: int, item: int, amount):
 	for c in costBits:
 		costBits[c].multiplyValue(folder, item, amount)
@@ -866,9 +868,9 @@ func logLevelUp():
 	if not LogManager.typeAllowed(LogManager.Type.LEVEL_UP):
 		return
 	
-	var icon: Texture = gv.sprite[shorthandKey]
+	var _icon: Texture = gv.sprite[shorthandKey]
 	var data := {}
-	data["icon"] = icon
+	data["icon"] = _icon
 	data["level"] = level
 	data["color"] = color
 	LogManager.log(LogManager.Type.LEVEL_UP, var2str(data))

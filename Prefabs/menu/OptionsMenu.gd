@@ -1,7 +1,7 @@
 extends MarginContainer
 
 
-var saved_vars := ["fps", "notation", "animations", "loredOutputNumbers", "loredChitChat", "loredFuel", "tipSleep", "loredCritsOnly", "autosave", "contentVisual", "contentLORED", "contentSave"]
+var saved_vars := ["fps", "notation", "animations", "loredOutputNumbers", "loredChitChat", "loredFuel", "tipSleep", "loredCritsOnly", "autosave", "flying_numbers", "contentVisual", "contentLORED", "contentSave"]
 
 var animations := true
 var loredOutputNumbers := true
@@ -10,6 +10,7 @@ var loredFuel := true
 var tipSleep := true
 var loredCritsOnly := false
 var autosave := true
+var flying_numbers := true
 
 var contentVisual := true
 var contentLORED := true
@@ -54,6 +55,11 @@ func load(data: Dictionary) -> void:
 func _ready() -> void:
 	setupFPS()
 	setupNotation()
+	
+	if gv.PLATFORM == gv.Platform.PC:
+		selectFPS(2)
+	else:
+		selectFPS(0)
 
 
 
@@ -97,23 +103,29 @@ func selectOption(option: String):
 
 # - - - Buttons
 
+func switchContent(which: String):
+	get_node("%content" + which).visible = not get_node("%content" + which).visible
+	get_node("%hideIcon" + which).texture = gv.sprite["view"] if get_node("%content" + which).visible else gv.sprite["viewHide"]
+	get_node("%hideIcon" + which + "/shadow").texture = get_node("%hideIcon" + which).texture
+	set("content" + which, get_node("%content" + which).visible)
+
+func closeAllContentExcept(which: String):
+	for x in ["Visual", "LORED", "Save"]:
+		if x == which:
+			if not get_node("%content" + x).visible:
+				switchContent(x)
+			continue
+		if get("content" + x):
+			switchContent(x)
+
 func _on_visualHide_pressed() -> void:
-	get_node("%contentVisual").visible = not get_node("%contentVisual").visible
-	get_node("%hideIconVisual").texture = gv.sprite["view"] if get_node("%contentVisual").visible else gv.sprite["viewHide"]
-	get_node("%hideIconVisual/shadow").texture = get_node("%hideIconVisual").texture
-	contentVisual = get_node("%contentVisual").visible
+	switchContent("Visual")
 
 func _on_LOREDHide_pressed() -> void:
-	get_node("%contentLORED").visible = not get_node("%contentLORED").visible
-	get_node("%hideIconLORED").texture = gv.sprite["view"] if get_node("%contentLORED").visible else gv.sprite["viewHide"]
-	get_node("%hideIconLORED/shadow").texture = get_node("%hideIconLORED").texture
-	contentLORED = get_node("%contentLORED").visible
+	switchContent("LORED")
 
 func _on_saveHide_pressed() -> void:
-	get_node("%contentSave").visible = not get_node("%contentSave").visible
-	get_node("%hideIconSave").texture = gv.sprite["view"] if get_node("%contentSave").visible else gv.sprite["viewHide"]
-	get_node("%hideIconSave/shadow").texture = get_node("%hideIconSave").texture
-	contentSave = get_node("%contentSave").visible
+	switchContent("Save")
 
 func _on_fps_dropdown_item_selected(index: int) -> void:
 	selectFPS(index)

@@ -135,13 +135,13 @@ func ingredient_net() -> bool:
 		
 		else:
 			
-			var net = gv.g[x].net()
+			var _net = gv.g[x].net()
 			
-			if net[0].less(net[1]):
+			if _net[0].less(_net[1]):
 				return false
 			
-			net = Big.new(net[0]).s(net[1])
-			if consm.greater(net):
+			_net = Big.new(_net[0]).s(_net[1])
+			if consm.greater(_net):
 				if not gv.g[x].cost_check():
 					return false
 	

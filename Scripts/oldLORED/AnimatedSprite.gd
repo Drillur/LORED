@@ -58,7 +58,7 @@ func start(threshold: float, start_time: int):
 			first_loop = false
 		else:
 			first_loop = true
-			start_time -= threshold
+			start_time -= int(threshold)
 	
 	var i = get_i(start_time)
 	

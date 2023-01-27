@@ -6,18 +6,29 @@ extends Node
 
 const hax_pow := 1.0 # 1.0 for normal
 var fps: float = 0.0666 # default (15 fps) - [0.0666, 0.0333, 0.0166] # 15, 30, 60
-const PLATFORM := "pc" # keep lower-case # "browser", "pc"
+const PLATFORM := 1 # see line 12
 const dev_mode := true
 
-const PATCH_NOTES := {
+enum Platform {
+	BROWSER, # 0
+	PC, # 1
+}
 
-#	 "3.0.0": [
-#		"Added a main menu with save management (desktop-only).",
-#		"Added difficulty options.",
-#		"Merged quests and tasks into Wishes."
-#		"LOREDs now think out-loud and may speak to each other.",
-#		"New UI.",
-#	],
+const PATCH_NOTES := {
+	
+	 "3.0.0": [
+		"Added a main menu with save management (desktop-only).",
+		"Added difficulty options.",
+		"Merged quests and tasks into Wishes.",
+		"LOREDs now think out-loud and may speak to each other.",
+		"New LORED UI and tooltips.",
+		"Completely re-wrote the LORED and Quest/Task classes and separated resources from LOREDs in the code.",
+		"LOREDs no longer automatically refill their fuel. They must refuel manually.",
+		"Every main and random Wish has dialogue.",
+		"Added the Steel animation.",
+		"Added and removed some options.",
+		"Added the Log (hotkey: L), a hub that contains a history of recent events.",
+	],
 	
 	"2.2.28": [
 		"[Possibly] fixed a bug allowing locked LOREDs/resources to be requirements for random tasks.",
@@ -228,8 +239,9 @@ const PATCH_NOTES := {
 
 var saved_vars := [
 	"run1", "run2", "run3", "run4",
-	"cur_clock", "time_played", "wishes_completed", "times_game_loaded", "highest_run",
-	"most_resources_gained",
+	"run1duration", "run2duration", "run3duration", "run4duration", 
+	"cur_clock", "time_played", "times_game_loaded", "highest_run",
+	"most_resources_gained", "stats",
 	"lb_xp",
 ]
 
@@ -262,6 +274,8 @@ func load(data: Dictionary):
 	var loadedVars = SaveManager.loadSavedVars(saved_vars_dict, data)
 	
 	for x in saved_vars:
+		if not x in loadedVars:
+			continue
 		if get(x) is Ob.Num or get(x) is Big:
 			get(x).load(data[x])
 		else:
@@ -275,6 +289,8 @@ func load(data: Dictionary):
 	
 	save_slot_clock = cur_clock
 	cur_clock = OS.get_unix_time() # set to the same time as cur_clock in the save data (8 lines up)
+	
+	times_game_loaded += 1
 
 
 
@@ -297,6 +313,7 @@ func _ready():
 	setResourceColors()
 	
 	connect("startGame", self, "gameStarted")
+	connect("Reset", self, "runReset")
 
 func setupFonts():
 	font.buttonNormal.font_data = load("res://Fonts/Roboto-Light.ttf")
@@ -322,14 +339,13 @@ func init_menu_and_stats():
 	option["tipSleep"] = true # 
 	option["autosave"] = true # 
 	option["loredCritsOnly"] = false #
+	option["flying_numbers"] = true #
 	#option["status_color"] = false
 	option["chit chat"] = true
 	option["consolidate_numbers"] = false
 	option["tooltip_autobuyer"] = true
 	option["tooltip_cost_only"] = false
 	option["tooltipAdvancedInfo"] = false
-	option["on_save_halt"] = false
-	option["on_save_hold"] = false
 	option["im_ss_show_hint"] = true
 	option["task auto"] = false
 	option["performance"] = true
@@ -337,8 +353,6 @@ func init_menu_and_stats():
 	option["deaf"] = false
 	option["patch alert"] = true
 	option["tutorial alert"] = true
-	
-	# stats
 	
 	for x in Tab:
 		
@@ -370,8 +384,7 @@ const SRC := {
 	"manual labor": preload("res://Prefabs/lored/Manual Labor.tscn"),
 	"LORED": preload("res://Prefabs/NewLORED/LORED.tscn"),
 	
-	"patch version": preload("res://Prefabs/Patch/version.tscn"),
-	"patch entry": preload("res://Prefabs/Patch/entry.tscn"),
+	"PatchEntry": preload("res://Prefabs/menu/PatchEntry.tscn"),
 	
 	"price": preload("res://Prefabs/tooltip/price.tscn"),
 	
@@ -386,6 +399,9 @@ const SRC := {
 	"tooltip/lored job": preload("res://Prefabs/tooltip/LORED Tooltip Job.tscn"),
 	"tooltip/lored asleep": preload("res://Prefabs/tooltip/Asleep.tscn"),
 	"tooltip/lored export": preload("res://Prefabs/tooltip/LORED Tooltip Export.tscn"),
+	"tooltip/log": preload("res://Prefabs/menu/LogTooltip.tscn"),
+	
+	"logEntry": preload("res://Prefabs/Log/LogEntry.tscn"),
 	
 	"earnings report/resource": preload("res://Prefabs/ui/Earnings Report Resource.tscn"),
 	"labels/medium label": preload("res://Prefabs/Labels/Medium Label.tscn"),
@@ -557,6 +573,8 @@ var sprite := {
 	str(Tab.RADIATIVE) : preload("res://Sprites/tab/s2m.png"),
 	str(Tab.RUNED_DIAL) : preload("res://Sprites/tab/s2n.png"),
 	str(Tab.SPIRIT) : preload("res://Sprites/tab/s2m.png"),
+	str(Tab.s4n) : preload("res://Sprites/tab/s2m.png"),
+	str(Tab.s4m) : preload("res://Sprites/tab/s2m.png"),
 	"s4n" : preload("res://Sprites/tab/s2n.png"),
 	"s4m" : preload("res://Sprites/tab/s2m.png"),
 	
@@ -721,6 +739,10 @@ var COLORS := {
 	str(Tab.MALIGNANT): Color(0.878431, 0.121569, 0.34902),
 	str(Tab.EXTRA_NORMAL): Color(0.47451, 0.870588, 0.694118),
 	str(Tab.RADIATIVE): Color(1, 0.541176, 0.541176),
+	str(Tab.SPIRIT): Color(1, 0.541176, 0.541176),
+	str(Tab.RUNED_DIAL): Color(1, 0.541176, 0.541176),
+	str(Tab.s4n): Color(1, 0.541176, 0.541176),
+	str(Tab.s4m): Color(1, 0.541176, 0.541176),
 	str(Tab.S1): Color(0.878431, 0.121569, 0.34902),
 	str(Tab.S2): Color(1, 0.541176, 0.541176),
 	str(Tab.S3): Color(0.8, 0.8, 0.8),
@@ -770,19 +792,19 @@ func time_remaining_including_INF(
 	
 	return Big.new(delta).s(incoming_amount).d(net)
 
-func timeUntil(resource: int, threshold: Big):
+func timeUntil(_resource: int, threshold: Big):
 	
-	if gv.resource[resource].greater_equal(threshold):
+	if gv.resource[_resource].greater_equal(threshold):
 		return Big.new(0)
 	
-	var rawNet = lv.net(resource)
+	var rawNet = lv.net(_resource)
 	var net = rawNet[0]
 	var _sign = rawNet[1]
 	
 	if _sign < 1:
 		return INF
 	
-	var amountRemaining = Big.new(threshold).s(gv.resource[resource])
+	var amountRemaining = Big.new(threshold).s(gv.resource[_resource])
 	
 	return Big.new(amountRemaining).d(net)
 
@@ -1013,6 +1035,8 @@ var resourceColor := {}
 func addToResource(key: int, val):
 	resource[key].a(val)
 	emit_signal("resourceChanged", key)
+	stats["ResourceStats"]["collected"][key].a(val)
+	emit_signal("ResourceCollected", key)
 func subtractFromResource(key: int, val):
 	if val.greater(resource[key]):
 		resource[key] = Big.new(0)
@@ -1026,60 +1050,60 @@ func updateResources():
 	for r in resource:
 		emit_signal("resourceChanged", r)
 var resourcesNotBeingExported := []
-func exportBlocked(resource: int):
-	if resource in resourcesNotBeingExported:
+func exportBlocked(_resource: int):
+	if _resource in resourcesNotBeingExported:
 		return
-	resourcesNotBeingExported.append(resource)
+	resourcesNotBeingExported.append(_resource)
 	emit_signal("exportChanged")
-func exportResumed(resource: int):
-	if not resource in resourcesNotBeingExported:
+func exportResumed(_resource: int):
+	if not _resource in resourcesNotBeingExported:
 		return
-	resourcesNotBeingExported.erase(resource)
+	resourcesNotBeingExported.erase(_resource)
 	emit_signal("exportChanged")
 
 
 var offlineEarnings := {}
-func logOfflineEarnings(resource: int, amount: Big, _sign: int):
-	if not resource in offlineEarnings:
-		offlineEarnings[resource] = [Big.new(amount), _sign]
+func logOfflineEarnings(_resource: int, amount: Big, _sign: int):
+	if not _resource in offlineEarnings:
+		offlineEarnings[_resource] = [Big.new(amount), _sign]
 		return
 	
 	if _sign == 1:
-		if offlineEarnings[resource][1] == 1:
-			offlineEarnings[resource][0].a(amount)
+		if offlineEarnings[_resource][1] == 1:
+			offlineEarnings[_resource][0].a(amount)
 		else:
-			if amount.greater_equal(offlineEarnings[resource][0]):
-				amount.s(offlineEarnings[resource][0])
-				offlineEarnings[resource][0] = Big.new(amount)
-				offlineEarnings[resource][1] = 1
+			if amount.greater_equal(offlineEarnings[_resource][0]):
+				amount.s(offlineEarnings[_resource][0])
+				offlineEarnings[_resource][0] = Big.new(amount)
+				offlineEarnings[_resource][1] = 1
 			else:
-				offlineEarnings[resource][0].s(amount)
+				offlineEarnings[_resource][0].s(amount)
 	else:
-		if offlineEarnings[resource][1] == 1:
-			if offlineEarnings[resource][0].greater_equal(amount):
-				offlineEarnings[resource][0].s(amount)
+		if offlineEarnings[_resource][1] == 1:
+			if offlineEarnings[_resource][0].greater_equal(amount):
+				offlineEarnings[_resource][0].s(amount)
 			else:
-				amount.s(offlineEarnings[resource][0])
-				offlineEarnings[resource][0] = Big.new(amount)
-				offlineEarnings[resource][1] = -1
+				amount.s(offlineEarnings[_resource][0])
+				offlineEarnings[_resource][0] = Big.new(amount)
+				offlineEarnings[_resource][1] = -1
 		else:
-			offlineEarnings[resource][0].a(amount)
+			offlineEarnings[_resource][0].a(amount)
 
 func reportOfflineEarnings():
-	for resource in offlineEarnings:
-		if offlineEarnings[resource][1] == 1:
-			print("+", offlineEarnings[resource][0].toString(), " ", resourceName[resource])
+	for _resource in offlineEarnings:
+		if offlineEarnings[_resource][1] == 1:
+			print("+", offlineEarnings[_resource][0].toString(), " ", resourceName[_resource])
 		else:
-			print("-", offlineEarnings[resource][0].toString(), " ", resourceName[resource])
+			print("-", offlineEarnings[_resource][0].toString(), " ", resourceName[_resource])
 
 func clearOfflineEarnings():
 	offlineEarnings.clear()
 
 func setResourceColors():
-	for resource in Resource.values():
-		resourceColor[resource] = COLORS[shorthandByResource[resource]]
+	for _resource in Resource.values():
+		resourceColor[_resource] = COLORS[shorthandByResource[_resource]]
 
-signal exportChanged(resource) # lored manager -> exportBlockedhere -> lored manager
+signal exportChanged(_resource) # lored manager -> exportBlockedhere -> lored manager
 
 signal resourceChanged(key)
 
@@ -1219,6 +1243,7 @@ func everyStage2LOREDunlocked() -> bool:
 func unlockResource(resource: int):
 	if not resource in list["unlocked resources"]:
 		list["unlocked resources"].append(resource)
+	emit_signal("stats_unlockResource", resource)
 
 func addResourceProducer(resource: int, lored: int):
 	if not resource in list["resource producer"]:
@@ -1340,11 +1365,112 @@ var run2 := 1
 var run3 := 1
 var run4 := 1
 var time_played := 0
-var wishes_completed := 0
 var highest_run := 1
 var most_resources_gained := Big.new(0)
 var times_game_loaded := 0
 var durationSinceLastReset := 0
+var run1duration := 0
+var run2duration := 0
+var run3duration := 0
+var run4duration := 0
+
+signal TimesLeveledUp(lored, manual)
+signal AnimationsPlayed(lored)
+signal TimesRefueled(lored)
+signal OtherJobs(lored)
+signal TimeAsleep(lored)
+signal Crits(lored)
+signal statChanged(stat)
+signal statChanged2(stat, type)
+signal LOREDGranted(lored)
+signal LOREDDenied(lored)
+signal UpgradesPurchased(tier)
+signal ResourceCollected(resource)
+signal ResourceUsed(resource)
+signal ResourceSpent(resource)
+signal Reset(stage)
+signal stats_unlockLOREDStats(lored)
+signal stats_unlockResource(resource)
+signal stats_unlockRuns
+signal stats_unlockTab(tab)
+
+var stats := {
+	"WishMain": 0,
+	"WishGranted": 0,
+	"WishDenied": 0,
+	"AnimationsPlayed": {},
+	"TimesRefueled": {},
+	"OtherJobs": {},
+	"TimeAsleep": {},
+	"Crits": {},
+	"TimesLeveledUp": {"manual": {}, "automated": {}},
+	"LOREDGranted": {},
+	"LOREDDenied": {},
+	"WishStats": {
+		"Level Up": {"granted": 0, "denied": 0,},
+		"Random Resource": {"granted": 0, "denied": 0,},
+		"Sleep": {"granted": 0, "denied": 0,},
+		"Buy Upgrade": {"granted": 0, "denied": 0,},
+		"Refuel": {"granted": 0, "denied": 0,},
+		"Joy Collection": {"granted": 0, "denied": 0,},
+		"Grief Collection": {"granted": 0, "denied": 0,},
+	},
+	"UpgradesPurchased": {},
+	"ResourceStats": {"collected": {}, "used": {}, "spent": {}},
+	"Run": {
+		Tab.S1: {"quickest": 1000000000000, "longest": 0},
+		Tab.S2: {"quickest": 1000000000000, "longest": 0},
+		Tab.S3: {"quickest": 1000000000000, "longest": 0},
+		Tab.S4: {"quickest": 1000000000000, "longest": 0},
+	}
+}
+func setupStats():
+	for x in lv.lored:
+		stats["AnimationsPlayed"][x] = 0
+		stats["TimesRefueled"][x] = 0
+		stats["OtherJobs"][x] = 0
+		stats["TimeAsleep"][x] = 0
+		stats["Crits"][x] = 0
+		stats["TimesLeveledUp"]["manual"][x] = 0
+		stats["TimesLeveledUp"]["automated"][x] = 0
+		stats["LOREDGranted"][x] = 0
+		stats["LOREDDenied"][x] = 0
+	for x in Tab.values():
+		if x == Tab.S1:
+			break
+		stats["UpgradesPurchased"][x] = 0
+	for x in Resource.values():
+		stats["ResourceStats"]["used"][x] = Big.new(0)
+		stats["ResourceStats"]["collected"][x] = Big.new(0)
+		stats["ResourceStats"]["spent"][x] = Big.new(0)
+
+func runReset(stage: int):
+	match stage:
+		Tab.S1:
+			if run1duration < stats["Run"][Tab.S1]["quickest"]:
+				stats["Run"][Tab.S1]["quickest"] = max(run1duration, 1)
+			if run1duration > stats["Run"][Tab.S1]["longest"]:
+				stats["Run"][Tab.S1]["longest"] = max(run1duration, 1)
+			run1duration = 0
+		Tab.S2:
+			if run2duration < stats["Run"][Tab.S2]["quickest"]:
+				stats["Run"][Tab.S2]["quickest"] = max(run2duration, 1)
+			if run2duration > stats["Run"][Tab.S2]["longest"]:
+				stats["Run"][Tab.S2]["longest"] = max(run2duration, 1)
+			run2duration = 0
+		Tab.S3:
+			if run3duration < stats["Run"][Tab.S3]["quickest"]:
+				stats["Run"][Tab.S3]["quickest"] = max(run3duration, 1)
+			if run3duration > stats["Run"][Tab.S3]["longest"]:
+				stats["Run"][Tab.S3]["longest"] = max(run3duration, 1)
+			run3duration = 0
+		Tab.S4:
+			if run4duration < stats["Run"][Tab.S4]["quickest"]:
+				stats["Run"][Tab.S4]["quickest"] = max(run4duration, 1)
+			if run4duration > stats["Run"][Tab.S4]["longest"]:
+				stats["Run"][Tab.S4]["longest"] = max(run4duration, 1)
+			run4duration = 0
+
 
 var tab_vertical := [0, 0, 0, 0]
 var option := {}
@@ -1366,6 +1492,10 @@ func update_clock():
 		if active_scene == Scene.ROOT:
 			cur_session += 1
 			time_played += 1
+			run1duration += 1
+			run2duration += 1
+			run3duration += 1
+			run4duration += 1
 			durationSinceLastReset += 1
 			if option["autosave"]:
 				if cur_clock - lastSaveClock >= 30:
@@ -1431,3 +1561,21 @@ var gameStarted := false
 signal startGame
 func gameStarted():
 	gameStarted = true
+
+func upgradeTierByTab(tab: int) -> String:
+	return Tab.keys()[tab].replace("_", "-").capitalize()
+
+func tabByShorthand(shorthand: String) -> int:
+	match shorthand:
+		"s1m":
+			return Tab.MALIGNANT
+		"s2n":
+			return Tab.EXTRA_NORMAL
+		"s2m":
+			return Tab.RADIATIVE
+	return Tab.NORMAL
+
+
+func inFirstTwoSecondsOfRun() -> bool:
+	return durationSinceLastReset < 2
+

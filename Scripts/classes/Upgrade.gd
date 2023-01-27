@@ -3,7 +3,7 @@ extends "res://Scripts/classes/Purchasable.gd"
 
 
 
-var saved_vars = ["refundable", "unlocked", "times_purchased", "have", "active", "effects"]
+var saved_vars = ["refundable", "unlocked", "have", "active", "effects"]
 
 var desc := Description.new("description")
 
@@ -22,7 +22,6 @@ var stage_key: int
 var tab: int
 var color: Color
 var unlocked := false
-var times_purchased := 0
 
 var manager: MarginContainer
 var active_tooltip: MarginContainer
@@ -86,7 +85,9 @@ func purchased():
 	
 	have = true
 	active = true
-	times_purchased += 1
+	
+	gv.stats["UpgradesPurchased"][tab] += 1
+	gv.emit_signal("UpgradesPurchased", tab)
 	
 	takeaway_price()
 	apply()
@@ -137,7 +138,11 @@ func takeaway_price():
 		return
 	
 	for c in cost:
-		gv.resource[c].s(cost[c].t)
+		
+		gv.subtractFromResource(c, cost[c].t)
+		
+		gv.stats["ResourceStats"]["spent"][c].a(cost[c].t)
+		gv.emit_signal("ResourceSpent", c)
 
 func sync():
 	

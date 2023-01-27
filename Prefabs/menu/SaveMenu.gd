@@ -3,6 +3,8 @@ extends MarginContainer
 
 func _ready() -> void:
 	SaveManager.connect("gameSaved", self, "update")
+	if gv.PLATFORM == gv.Platform.PC:
+		get_node("%browser").hide()
 
 
 func loop():
@@ -39,3 +41,9 @@ func _on_displayHelp_pressed() -> void:
 	get_node("%help").visible = not get_node("%help").visible
 	get_node("%helpIcon").texture = gv.sprite["view"] if get_node("%help").visible else gv.sprite["viewHide"]
 	get_node("%helpIcon/shadow").texture = get_node("%helpIcon").texture
+
+
+func _on_saveOptions_pressed() -> void:
+	hide()
+	get_node("/root/Root/%OptionsMenu").show()
+	get_node("/root/Root/%OptionsMenu").closeAllContentExcept("Save")

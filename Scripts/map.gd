@@ -52,6 +52,18 @@ func _input(ev):
 		if rt.get_node("%OptionsMenu").visible and mouse_out(rt.get_node("%OptionsMenu").rect_global_position, rt.get_node("%OptionsMenu").rect_size):
 			rt.get_node("%OptionsMenu").hide()
 		
+		# stats menu
+		if rt.get_node("%StatsMenu").visible and mouse_out(rt.get_node("%StatsMenu").rect_global_position, rt.get_node("%StatsMenu").rect_size):
+			rt.get_node("%StatsMenu").hide()
+		
+		# PatchNotesMenu
+		if rt.get_node("%PatchNotesMenu").visible and mouse_out(rt.get_node("%PatchNotesMenu").rect_global_position, rt.get_node("%PatchNotesMenu").rect_size):
+			rt.get_node("%PatchNotesMenu").hide()
+		
+		# LogContainer
+		if rt.get_node("%LogContainer").visible and mouse_out(rt.get_node("%LogContainer").rect_global_position, rt.get_node("%LogContainer").rect_size):
+			rt.get_node("%LogContainer").hide()
+		
 		status = "no"
 
 func mouse_out(_pos:Vector2, _size:Vector2) -> bool:

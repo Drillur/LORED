@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=2]
+[gd_scene load_steps=28 format=2]
 
 [ext_resource path="res://Scripts/_Root.gd" type="Script" id=1]
 [ext_resource path="res://Scripts/map.gd" type="Script" id=2]
@@ -15,8 +15,11 @@
 [ext_resource path="res://Sprites/tab/s1n.png" type="Texture" id=13]
 [ext_resource path="res://Sprites/tab/t0.png" type="Texture" id=14]
 [ext_resource path="res://Sprites/tab/s2.png" type="Texture" id=15]
+[ext_resource path="res://Prefabs/menu/StatsMenu.tscn" type="PackedScene" id=16]
+[ext_resource path="res://Prefabs/menu/PatchNotesMenu.tscn" type="PackedScene" id=17]
 [ext_resource path="res://Sprites/resources/liq.png" type="Texture" id=18]
 [ext_resource path="res://Sprites/Menu/Menu.png" type="Texture" id=19]
+[ext_resource path="res://Prefabs/Log/LogContainer.tscn" type="PackedScene" id=20]
 
 [sub_resource type="StyleBoxFlat" id=1]
 bg_color = Color( 0.0588235, 0.0588235, 0.0588235, 1 )
@@ -195,18 +198,26 @@ margin_bottom = 474.0
 [node name="SaveMenu" parent="m" instance=ExtResource( 11 )]
 unique_name_in_owner = true
 visible = false
-margin_left = 527.0
+margin_left = 529.0
 margin_top = 253.0
-margin_right = 753.0
+margin_right = 751.0
 margin_bottom = 466.0
 
 [node name="OptionsMenu" parent="m" instance=ExtResource( 12 )]
 unique_name_in_owner = true
 visible = false
-margin_left = 480.0
-margin_top = 88.0
-margin_right = 800.0
-margin_bottom = 631.0
+margin_left = 491.0
+margin_top = 54.0
+margin_right = 789.0
+margin_bottom = 665.0
+
+[node name="StatsMenu" parent="m" instance=ExtResource( 16 )]
+unique_name_in_owner = true
+visible = false
+margin_left = 390.0
+margin_top = 60.0
+margin_right = 890.0
+margin_bottom = 660.0
 
 [node name="Earnings Report" parent="m" instance=ExtResource( 4 )]
 unique_name_in_owner = true
@@ -215,6 +226,22 @@ margin_left = 490.0
 margin_top = 210.0
 margin_right = 790.0
 margin_bottom = 510.0
+
+[node name="PatchNotesMenu" parent="m" instance=ExtResource( 17 )]
+unique_name_in_owner = true
+visible = false
+margin_left = 478.0
+margin_top = 210.0
+margin_right = 802.0
+margin_bottom = 510.0
+
+[node name="LogContainer" parent="m" instance=ExtResource( 20 )]
+unique_name_in_owner = true
+visible = false
+margin_left = 490.0
+margin_top = 225.0
+margin_right = 789.0
+margin_bottom = 495.0
 
 [node name="Tabs" type="MarginContainer" parent="m"]
 margin_right = 62.0
@@ -637,6 +664,9 @@ script = ExtResource( 5 )
 
 [connection signal="pressed" from="m/Menu Hub/MarginContainer/VBoxContainer/GridContainer/0/Button" to="." method="_on_openSaveMenu"]
 [connection signal="pressed" from="m/Menu Hub/MarginContainer/VBoxContainer/GridContainer/1/Button" to="." method="_on_openOptionsMenu"]
+[connection signal="pressed" from="m/Menu Hub/MarginContainer/VBoxContainer/GridContainer/2/Button" to="." method="_on_openStatsMenu"]
+[connection signal="pressed" from="m/Menu Hub/MarginContainer/VBoxContainer/GridContainer/3/Button" to="." method="_on_openPatchNotesMenu"]
+[connection signal="pressed" from="m/Menu Hub/MarginContainer/VBoxContainer/GridContainer/4/Button" to="." method="_on_openLogContainer"]
 [connection signal="pressed" from="m/Menu Hub/MarginContainer/VBoxContainer/4/Button" to="." method="_on_exitToMainMenu_pressed"]
 [connection signal="pressed" from="m/Tabs/VBoxContainer/devButton" to="." method="_on_Button_pressed"]
 [connection signal="pressed" from="m/Tabs/VBoxContainer/menuButton/Button" to="." method="_on_menuButton_pressed"]

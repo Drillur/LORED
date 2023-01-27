@@ -11,5 +11,6 @@ font_data = ExtResource( 1 )
 margin_top = 1.0
 margin_right = 55.0
 margin_bottom = 16.0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 1 )
 text = "+123e123"

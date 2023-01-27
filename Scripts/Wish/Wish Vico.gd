@@ -123,8 +123,18 @@ func discard():
 	
 	wish.die()
 	
-	gv.resource[gv.Resource.GRIEF].a(1)
+	gv.addToResource(gv.Resource.GRIEF, 1)
 	taq.increaseProgress(gv.Objective.RESOURCES_PRODUCED, str(gv.Resource.GRIEF))
+	
+	gv.stats["WishDenied"] += 1
+	gv.emit_signal("statChanged", "WishDenied")
+	
+	var _stat: String = taq.getWishStat(wish.obj.type, wish.obj.key)
+	gv.stats["WishStats"][_stat]["denied"] += 1
+	gv.emit_signal("statChanged2", _stat, "denied")
+	
+	gv.stats["LOREDDenied"][int(wish.giver)] += 1
+	gv.emit_signal("LOREDDenied", int(wish.giver))
 
 func turnedInOrDiscarded():
 	complete = true
@@ -133,6 +143,9 @@ func turnedInOrDiscarded():
 
 var flyingTextPosition = Vector2(rect_size.x / 2 + 10, get_global_mouse_position().y - rect_size.y - 10)
 func flyingTextIfComplete():
+	
+	if not gv.option["flying_numbers"]:
+		return
 	
 	var texts := []
 	
@@ -161,6 +174,10 @@ func flyingTextIfComplete():
 	rt.throwTexts(texts)
 
 func flyingTextIfDiscarded():
+	
+	if not gv.option["flying_numbers"]:
+		return
+	
 	throwText("+1", gv.sprite["grief"], gv.COLORS["grief"])
 
 func throwText(amount: String, icon: Texture, color: Color):

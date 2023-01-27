@@ -76,7 +76,7 @@ func type_check(n):
 			return n
 
 func reset():
-	mantissa == 0.0
+	mantissa = 0.0
 	exponent = 0
 
 func resetToZero_ifNegative() -> void:

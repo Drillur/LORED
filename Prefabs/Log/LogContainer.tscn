@@ -1,15 +1,38 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://Fonts/Roboto-BlackItalic.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Sprites/Menu/Log.png" type="Texture" id=2]
-
-[sub_resource type="StyleBoxFlat" id=1]
-bg_color = Color( 1, 1, 1, 0.0313726 )
-border_color = Color( 1, 1, 1, 0.65098 )
+[ext_resource path="res://Prefabs/Log/LogContainer.gd" type="Script" id=3]
 
 [sub_resource type="StyleBoxFlat" id=4]
+bg_color = Color( 0.0980392, 0.0980392, 0.0980392, 1 )
+border_color = Color( 1, 0, 0.380392, 1 )
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+shadow_color = Color( 0, 0, 0, 1 )
+shadow_size = 10
+
+[sub_resource type="StyleBoxFlat" id=5]
+bg_color = Color( 0.0980392, 0.0980392, 0.0980392, 1 )
+draw_center = false
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color( 1, 1, 1, 0.462745 )
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+shadow_size = 3
+
+[sub_resource type="StyleBoxFlat" id=6]
 bg_color = Color( 1, 1, 1, 0.0509804 )
 border_color = Color( 1, 1, 1, 0.65 )
+corner_radius_top_left = 3
+corner_radius_top_right = 3
 expand_margin_left = 10.0
 expand_margin_right = 10.0
 expand_margin_top = 10.0
@@ -25,18 +48,27 @@ outline_color = Color( 0, 0, 0, 1 )
 font_data = ExtResource( 1 )
 
 [node name="LogContainer" type="MarginContainer"]
-margin_right = 155.0
+margin_right = 299.0
 margin_bottom = 270.0
-rect_min_size = Vector2( 0, 270 )
+rect_min_size = Vector2( 299, 270 )
+size_flags_horizontal = 4
+size_flags_vertical = 4
+script = ExtResource( 3 )
 
 [node name="bg" type="Panel" parent="."]
-unique_name_in_owner = true
-margin_right = 155.0
+margin_right = 299.0
 margin_bottom = 270.0
-custom_styles/panel = SubResource( 1 )
+custom_styles/panel = SubResource( 4 )
+
+[node name="border" type="Panel" parent="."]
+modulate = Color( 0.341176, 0.619608, 0.980392, 1 )
+margin_right = 299.0
+margin_bottom = 270.0
+rect_clip_content = true
+custom_styles/panel = SubResource( 5 )
 
 [node name="m" type="MarginContainer" parent="."]
-margin_right = 155.0
+margin_right = 299.0
 margin_bottom = 270.0
 custom_constants/margin_right = 10
 custom_constants/margin_top = 10
@@ -46,27 +78,27 @@ custom_constants/margin_bottom = 10
 [node name="v" type="VBoxContainer" parent="m"]
 margin_left = 10.0
 margin_top = 10.0
-margin_right = 145.0
+margin_right = 289.0
 margin_bottom = 260.0
 custom_constants/separation = 20
 
 [node name="top" type="MarginContainer" parent="m/v"]
-margin_right = 135.0
+margin_right = 279.0
 margin_bottom = 36.0
 
 [node name="bg" type="Panel" parent="m/v/top"]
-margin_right = 135.0
+margin_right = 279.0
 margin_bottom = 36.0
-custom_styles/panel = SubResource( 4 )
+custom_styles/panel = SubResource( 6 )
 
 [node name="h" type="HBoxContainer" parent="m/v/top"]
-margin_right = 135.0
+margin_right = 279.0
 margin_bottom = 36.0
 alignment = 1
 
 [node name="Panel" type="Panel" parent="m/v/top/h"]
-margin_left = 33.0
-margin_right = 69.0
+margin_left = 105.0
+margin_right = 141.0
 margin_bottom = 36.0
 rect_min_size = Vector2( 36, 36 )
 size_flags_vertical = 4
@@ -84,9 +116,9 @@ position = Vector2( 1, 1 )
 texture = ExtResource( 2 )
 
 [node name="Label" type="Label" parent="m/v/top/h"]
-margin_left = 73.0
+margin_left = 145.0
 margin_top = 7.0
-margin_right = 101.0
+margin_right = 173.0
 margin_bottom = 28.0
 size_flags_horizontal = 0
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
@@ -96,20 +128,25 @@ valign = 1
 
 [node name="ScrollContainer" type="ScrollContainer" parent="m/v"]
 margin_top = 56.0
-margin_right = 135.0
+margin_right = 279.0
 margin_bottom = 250.0
 size_flags_vertical = 3
 scroll_horizontal_enabled = false
 
 [node name="m" type="MarginContainer" parent="m/v/ScrollContainer"]
-margin_right = 13.0
-margin_bottom = 6.0
+margin_left = 133.0
+margin_top = 94.0
+margin_right = 146.0
+margin_bottom = 100.0
+size_flags_horizontal = 6
+size_flags_vertical = 6
 custom_constants/margin_right = 10
 custom_constants/margin_top = 3
 custom_constants/margin_left = 3
 custom_constants/margin_bottom = 3
 
-[node name="v" type="GridContainer" parent="m/v/ScrollContainer/m"]
+[node name="list" type="GridContainer" parent="m/v/ScrollContainer/m"]
+unique_name_in_owner = true
 margin_left = 3.0
 margin_top = 3.0
 margin_right = 3.0

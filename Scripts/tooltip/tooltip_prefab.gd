@@ -46,6 +46,14 @@ func _call(source : String, other: Dictionary) -> void:
 			temp["lored"] = other["lored"]
 			$bg.self_modulate = other["color"]
 		
+		elif "tooltip/log" == type:
+			
+			cont[type] = gv.SRC[type].instance()
+			cont[type].setup(other["type"], other["info"])
+			add_child(cont[type])
+			
+			$bg.self_modulate = other["color"]
+		
 		elif "lored export" == type:
 			
 			cont[type] = gv.SRC["tooltip/lored export"].instance()
@@ -275,6 +283,12 @@ func r_tip(move_tip := false) -> void:
 				rect_position.y = win.y - rect_size.y - rt.get_node("m/v/bot").rect_size.y - 10
 			
 			return
+		
+		elif "tooltip/log" == type:
+			rect_position = Vector2(
+				rt.get_node("%LogContainer").rect_position.x - rect_size.x - 10,
+				rt.get_node("%LogContainer").rect_position.y
+			)
 		
 		elif "wish tooltip" == type:
 			

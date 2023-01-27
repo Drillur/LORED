@@ -43,7 +43,7 @@ func setup(_lored: int, alert: int):
 			return
 		lv.AlertType.LOW_FUEL:
 			
-			rect_min_size.x = 268
+			rect_min_size.x = 216
 			var resourceColor = gv.COLORS[gv.shorthandByResource[lv.lored[lored].fuelResource]]
 			get_node("%sub_" + key).show()
 			
