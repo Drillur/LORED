@@ -21,14 +21,6 @@ func setup(_lored: int):
 	
 	yield(self, "ready")
 	setupCost()
-	setupLevelQueued()
-
-func setupLevelQueued():
-	if lv.lored[lored].queue.size() == 0:
-		return
-	if lv.lored[lored].queue.size() == 1 and lv.lored[lored].queue[0] in [lv.Queue.UPDATE_PRODUCTION, lv.Queue.HASTE]:
-		return
-	get_node("%queue").show()
 
 func preFirstPurchase():
 	
@@ -53,6 +45,10 @@ func preFirstPurchase():
 
 
 func setTexts():
+	
+	if not gv.option["levelUpDetails"]:
+		get_node("%bot").hide()
+		return
 	
 	var loredLevel = lv.lored[lored].level
 	get_node("m/v/bot/h/current/Label").text = str(loredLevel)

@@ -541,9 +541,8 @@ margin_bottom = 31.0
 alignment = 1
 
 [node name="icon" type="Panel" parent="MarginContainer/VBoxContainer/GridContainer/4/m/h"]
-margin_left = 14.0
 margin_top = 1.0
-margin_right = 38.0
+margin_right = 24.0
 margin_bottom = 25.0
 rect_min_size = Vector2( 24, 24 )
 size_flags_horizontal = 4
@@ -572,14 +571,14 @@ position = Vector2( -1, 1 )
 texture = ExtResource( 10 )
 
 [node name="Label" type="Label" parent="MarginContainer/VBoxContainer/GridContainer/4/m/h"]
-margin_left = 42.0
+margin_left = 28.0
 margin_top = 5.0
-margin_right = 63.0
+margin_right = 78.0
 margin_bottom = 20.0
 mouse_filter = 1
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 8 )
-text = "Log"
+text = "Wish Log"
 
 [node name="Button" type="Button" parent="MarginContainer/VBoxContainer/GridContainer/4"]
 margin_right = 88.0

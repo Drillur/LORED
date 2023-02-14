@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=2]
+[gd_scene load_steps=27 format=2]
 
 [ext_resource path="res://Fonts/Roboto-BlackItalic.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Fonts/Roboto-Medium.ttf" type="DynamicFontData" id=2]
@@ -63,21 +63,6 @@ font_data = ExtResource( 2 )
 size = 14
 outline_color = Color( 0, 0, 0, 1 )
 font_data = ExtResource( 3 )
-
-[sub_resource type="StyleBoxFlat" id=10]
-bg_color = Color( 0, 0, 0, 0.82 )
-border_color = Color( 1, 1, 1, 0.65 )
-expand_margin_left = 10.0
-expand_margin_right = 10.0
-
-[sub_resource type="StyleBoxFlat" id=11]
-bg_color = Color( 0, 0, 0, 0.25 )
-draw_center = false
-
-[sub_resource type="DynamicFont" id=12]
-size = 12
-outline_color = Color( 0, 0, 0, 1 )
-font_data = ExtResource( 2 )
 
 [node name="LORED Tooltip Info" type="MarginContainer"]
 margin_right = 40.0
@@ -1972,52 +1957,5 @@ mouse_filter = 1
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 6 )
 text = "Coal"
-align = 1
-valign = 1
-
-[node name="queue" type="MarginContainer" parent="m/v/bot"]
-unique_name_in_owner = true
-visible = false
-margin_right = 252.0
-margin_bottom = 117.0
-
-[node name="bg" type="Panel" parent="m/v/bot/queue"]
-margin_right = 252.0
-margin_bottom = 117.0
-custom_styles/panel = SubResource( 10 )
-
-[node name="h" type="HBoxContainer" parent="m/v/bot/queue"]
-margin_right = 252.0
-margin_bottom = 117.0
-alignment = 1
-
-[node name="Panel" type="Panel" parent="m/v/bot/queue/h"]
-margin_left = 63.0
-margin_top = 49.0
-margin_right = 81.0
-margin_bottom = 67.0
-rect_min_size = Vector2( 18, 18 )
-size_flags_vertical = 4
-custom_styles/panel = SubResource( 11 )
-
-[node name="Sprite" type="Sprite" parent="m/v/bot/queue/h/Panel"]
-position = Vector2( 9, 9 )
-scale = Vector2( 0.5, 0.5 )
-texture = ExtResource( 11 )
-
-[node name="shadow" type="Sprite" parent="m/v/bot/queue/h/Panel/Sprite"]
-self_modulate = Color( 0, 0, 0, 1 )
-show_behind_parent = true
-position = Vector2( 1, 1 )
-texture = ExtResource( 11 )
-
-[node name="text" type="Label" parent="m/v/bot/queue/h"]
-margin_left = 85.0
-margin_top = 51.0
-margin_right = 189.0
-margin_bottom = 66.0
-size_flags_horizontal = 4
-custom_fonts/font = SubResource( 12 )
-text = "Changes pending..."
 align = 1
 valign = 1

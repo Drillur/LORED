@@ -1,9 +1,9 @@
-[gd_scene load_steps=37 format=2]
+[gd_scene load_steps=38 format=2]
 
-[ext_resource path="res://Sprites/animations/steel.tres" type="SpriteFrames" id=1]
+[ext_resource path="res://Sprites/animations/draw.tres" type="SpriteFrames" id=1]
 [ext_resource path="res://Scripts/oldLORED/AnimatedSprite.gd" type="Script" id=2]
 [ext_resource path="res://Sprites/Menu/Alarm.png" type="Texture" id=3]
-[ext_resource path="res://Sprites/reactions/Bubble.png" type="Texture" id=4]
+[ext_resource path="res://Sprites/emote/Bubble.png" type="Texture" id=4]
 [ext_resource path="res://Styles/Master Theme.tres" type="Theme" id=5]
 [ext_resource path="res://Fonts/Roboto-MediumItalic.ttf" type="DynamicFontData" id=6]
 [ext_resource path="res://Fonts/Roboto-BoldItalic.ttf" type="DynamicFontData" id=7]
@@ -128,6 +128,9 @@ corner_radius_top_right = 16
 corner_radius_bottom_right = 16
 corner_radius_bottom_left = 16
 
+[sub_resource type="StyleBoxFlat" id=27]
+bg_color = Color( 1, 1, 1, 1 )
+
 [node name="LORED" type="MarginContainer"]
 margin_right = 201.0
 margin_bottom = 125.0
@@ -156,7 +159,7 @@ custom_styles/panel = SubResource( 11 )
 [node name="progress" type="Node2D" parent="."]
 
 [node name="current" type="Panel" parent="progress"]
-margin_right = 87.0
+margin_right = 24.0
 margin_bottom = 121.0
 rect_min_size = Vector2( 2, 0 )
 rect_clip_content = true
@@ -370,12 +373,19 @@ __meta__ = {
 position = Vector2( 34, 34 )
 scale = Vector2( 0.5, 0.5 )
 frames = ExtResource( 1 )
-animation = "ff"
-frame = 41
+animation = "ww"
 playing = true
 script = ExtResource( 2 )
 
 [node name="Timer" type="Timer" parent="m/v/top/v/mid/animation/AnimatedSprite"]
+
+[node name="DRAW_PLATE throw" type="AnimatedSprite" parent="m/v/top/v/mid/animation"]
+visible = false
+position = Vector2( 34, 34 )
+scale = Vector2( 0.5, 0.5 )
+frames = ExtResource( 1 )
+animation = "ww"
+playing = true
 
 [node name="bot" type="MarginContainer" parent="m/v"]
 margin_top = 88.0
@@ -568,7 +578,7 @@ unique_name_in_owner = true
 visible = false
 position = Vector2( 12, 12 )
 frames = ExtResource( 11 )
-frame = 4
+frame = 11
 playing = true
 
 [node name="Sprite" type="Sprite" parent="m/v/bot/m/h/level up/icon"]
@@ -665,7 +675,25 @@ custom_styles/normal = SubResource( 26 )
 
 [node name="misc" type="Node2D" parent="."]
 
-[node name="Node2D" type="Node2D" parent="."]
+[node name="emote" type="Node2D" parent="."]
+position = Vector2( 96, -37 )
+
+[node name="emote" type="MarginContainer" parent="emote"]
+unique_name_in_owner = true
+margin_left = -201.0
+margin_top = -41.0
+margin_right = 84.0
+margin_bottom = 43.0
+grow_horizontal = 0
+grow_vertical = 0
+mouse_filter = 2
+
+[node name="Panel" type="Panel" parent="."]
+visible = false
+modulate = Color( 0.137255, 0.305882, 0.4, 1 )
+margin_right = 201.0
+margin_bottom = 125.0
+custom_styles/panel = SubResource( 27 )
 
 [connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]
 [connection signal="mouse_entered" from="m/v/bot/m/h/fuel/Button" to="." method="_on_info_mouse_entered"]

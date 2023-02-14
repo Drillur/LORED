@@ -29,11 +29,6 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://Scripts/classes/Effect.gd"
 }, {
-"base": "Reference",
-"class": "Emote",
-"language": "GDScript",
-"path": "res://Scripts/classes/Emote.gd"
-}, {
 "base": "Node",
 "class": "FormatValue",
 "language": "GDScript",
@@ -114,7 +109,6 @@ _global_script_class_icons={
 "Bits": "",
 "BitsFloat": "",
 "Effect": "",
-"Emote": "",
 "FormatValue": "",
 "GlobalVariables": "",
 "Job": "",
@@ -146,7 +140,8 @@ config/Version="3.0.0"
 gv="*res://Scripts/autoload/_vars.gd"
 taq="*res://Scripts/autoload/WishManager.gd"
 fval="*res://Scripts/autoload/format_value.gd"
-LogManager="*res://Scripts/Log/LogManager.gd"
+WishLogManager="*res://Scripts/Log/WishLogManager.gd"
+EmoteManager="*res://Scripts/LORED/EmoteManager.gd"
 lv="*res://Scripts/LORED/LORED Vars.gd"
 diff="*res://Scripts/Managers/Difficulty.gd"
 SaveManager="*res://Scripts/Managers/SaveManager.gd"
@@ -411,6 +406,11 @@ SHB={
 CTRLS={
 "deadzone": 0.5,
 "events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":true,"meta":false,"command":true,"pressed":false,"scancode":83,"physical_scancode":0,"unicode":0,"echo":false,"script":null)
+ ]
+}
+WishLog={
+"deadzone": 0.5,
+"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":0,"physical_scancode":76,"unicode":0,"echo":false,"script":null)
  ]
 }
 

@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=2]
+[gd_scene load_steps=21 format=2]
 
 [ext_resource path="res://Fonts/Roboto-BlackItalic.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Sprites/Menu/Level.png" type="Texture" id=2]
@@ -12,7 +12,6 @@
 [ext_resource path="res://Sprites/Menu/Cost.png" type="Texture" id=10]
 [ext_resource path="res://Fonts/Roboto-BoldItalic.ttf" type="DynamicFontData" id=11]
 [ext_resource path="res://Prefabs/tooltip/PriceContainer.tscn" type="PackedScene" id=12]
-[ext_resource path="res://Sprites/Menu/Time.png" type="Texture" id=13]
 
 [sub_resource type="StyleBoxFlat" id=7]
 bg_color = Color( 1, 1, 1, 0.0313726 )
@@ -55,16 +54,6 @@ font_data = ExtResource( 4 )
 size = 14
 outline_color = Color( 0, 0, 0, 1 )
 font_data = ExtResource( 3 )
-
-[sub_resource type="StyleBoxFlat" id=11]
-bg_color = Color( 0, 0, 0, 0.82 )
-border_color = Color( 1, 1, 1, 0.65 )
-expand_margin_left = 10.0
-expand_margin_right = 10.0
-
-[sub_resource type="StyleBoxFlat" id=12]
-bg_color = Color( 0, 0, 0, 0.25 )
-draw_center = false
 
 [node name="Tooltip Level Up" type="MarginContainer"]
 margin_right = 118.0
@@ -221,6 +210,7 @@ unique_name_in_owner = true
 margin_right = 155.0
 
 [node name="bot" type="MarginContainer" parent="m/v"]
+unique_name_in_owner = true
 margin_top = 112.0
 margin_right = 155.0
 margin_bottom = 283.0
@@ -666,52 +656,5 @@ mouse_filter = 1
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 5 )
 text = "8"
-align = 1
-valign = 1
-
-[node name="queue" type="MarginContainer" parent="m/v/bot"]
-unique_name_in_owner = true
-visible = false
-margin_right = 155.0
-margin_bottom = 181.0
-
-[node name="bg" type="Panel" parent="m/v/bot/queue"]
-margin_right = 155.0
-margin_bottom = 181.0
-custom_styles/panel = SubResource( 11 )
-
-[node name="HBoxContainer" type="HBoxContainer" parent="m/v/bot/queue"]
-margin_right = 155.0
-margin_bottom = 181.0
-alignment = 1
-
-[node name="Panel" type="Panel" parent="m/v/bot/queue/HBoxContainer"]
-margin_left = 14.0
-margin_top = 81.0
-margin_right = 32.0
-margin_bottom = 99.0
-rect_min_size = Vector2( 18, 18 )
-size_flags_vertical = 4
-custom_styles/panel = SubResource( 12 )
-
-[node name="Sprite" type="Sprite" parent="m/v/bot/queue/HBoxContainer/Panel"]
-position = Vector2( 9, 9 )
-scale = Vector2( 0.5, 0.5 )
-texture = ExtResource( 13 )
-
-[node name="shadow" type="Sprite" parent="m/v/bot/queue/HBoxContainer/Panel/Sprite"]
-self_modulate = Color( 0, 0, 0, 1 )
-show_behind_parent = true
-position = Vector2( 1, 1 )
-texture = ExtResource( 13 )
-
-[node name="text" type="Label" parent="m/v/bot/queue/HBoxContainer"]
-margin_left = 36.0
-margin_top = 83.0
-margin_right = 140.0
-margin_bottom = 98.0
-size_flags_horizontal = 4
-custom_fonts/font = SubResource( 4 )
-text = "Changes pending..."
 align = 1
 valign = 1

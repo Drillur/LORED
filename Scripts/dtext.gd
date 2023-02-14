@@ -14,9 +14,12 @@ func _ready():
 func init(data: Dictionary = {}):
 	
 	text = data["text"]
+	if data["text"] == "":
+		get_node("bg").hide()
 	self_modulate = data["color"]
 	if "icon" in data.keys():
 		get_node("icon").texture = data["icon"]
+		get_node("icon/shadow").texture = data["icon"]
 	else:
 		get_node("icon").hide()
 	
@@ -27,6 +30,9 @@ func init(data: Dictionary = {}):
 	
 	if "life" in dkeys:
 		life = randi() % data["life"] + 50 - (data["life"] / 2)
+	
+	if "texture modulate" in dkeys:
+		get_node("icon").modulate = data["texture modulate"]
 
 
 func _on_Timer_timeout() -> void:

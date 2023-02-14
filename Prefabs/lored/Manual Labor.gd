@@ -36,7 +36,7 @@ func updateOutput():
 	output = Big.new(lv.lored[lv.Type.COAL].output).d(10)
 
 func updateTexts():
-	outputText.text = "+" + output.toString() + " Coal Fuel"
+	outputText.text = "+" + output.toString() + " Coal fuel"
 
 func updateProgress():
 	progress.value = float(willToLive) / 100

@@ -7,7 +7,7 @@ extends Node
 const hax_pow := 1.0 # 1.0 for normal
 var fps: float = 0.0666 # default (15 fps) - [0.0666, 0.0333, 0.0166] # 15, 30, 60
 const PLATFORM := 1 # see line 12
-const dev_mode := true
+const dev_mode := false
 
 enum Platform {
 	BROWSER, # 0
@@ -16,7 +16,7 @@ enum Platform {
 
 const PATCH_NOTES := {
 	
-	 "3.0.0": [
+	"3.0.0": [
 		"Added a main menu with save management (desktop-only).",
 		"Added difficulty options.",
 		"Merged quests and tasks into Wishes.",
@@ -301,7 +301,7 @@ func _ready():
 	setShorthandByResource()
 	resetList()
 	
-	init_menu_and_stats()
+	setupOptions()
 	update_clock()
 	
 	setupFonts()
@@ -327,37 +327,19 @@ func setupFonts():
 #    dynamic_font.size = 120
 #    dynamic_font.use_filter = true
 
-func init_menu_and_stats():
+func setupOptions():
 	
-	# menu
-	
-	option["FPS"] = 0 # 
-	option["notation_type"] = 0 #
+	option["FPS"] = 0
+	option["notation_type"] = 0
 	option["animations"] = true
-	option["loredOutputNumbers"] = true #
-	option["loredFuel"] = true #
-	option["tipSleep"] = true # 
-	option["autosave"] = true # 
-	option["loredCritsOnly"] = false #
-	option["flying_numbers"] = true #
-	#option["status_color"] = false
-	option["chit chat"] = true
-	option["consolidate_numbers"] = false
-	option["tooltip_autobuyer"] = true
-	option["tooltip_cost_only"] = false
-	option["tooltipAdvancedInfo"] = false
-	option["im_ss_show_hint"] = true
-	option["task auto"] = false
-	option["performance"] = true
-	option["color blind"] = false
-	option["deaf"] = false
-	option["patch alert"] = true
-	option["tutorial alert"] = true
-	
-	for x in Tab:
-		
-		if Tab[x] == Tab.S1:
-			break
+	option["loredOutputNumbers"] = true
+	option["loredFuel"] = true
+	option["tipSleep"] = true
+	option["autosave"] = true
+	option["loredCritsOnly"] = false
+	option["flying_numbers"] = true
+	option["levelUpDetails"] = true
+	option["wishVicosOnMainScreen"] = true
 
 
 
@@ -373,10 +355,8 @@ func check_for_the_s2_shit():
 	s2_upgrades_may_be_autobought = true
 
 const SRC := {
-	"alert": preload("res://Prefabs/alert.tscn"),
-	"emote": preload("res://Prefabs/lored/Emote.tscn"),
+	"emote": preload("res://Prefabs/NewLORED/Emote.tscn"),
 	"flash": preload("res://Prefabs/Flash.tscn"),
-	"lored level up": preload("res://Prefabs/lored/LevelUp.tscn"),
 	
 	"wish vico": preload("res://Prefabs/Wish/Wish Vico.tscn"),
 	"task entry": preload("res://Prefabs/tooltip/tip_lored_task_entry.tscn"),
@@ -399,9 +379,6 @@ const SRC := {
 	"tooltip/lored job": preload("res://Prefabs/tooltip/LORED Tooltip Job.tscn"),
 	"tooltip/lored asleep": preload("res://Prefabs/tooltip/Asleep.tscn"),
 	"tooltip/lored export": preload("res://Prefabs/tooltip/LORED Tooltip Export.tscn"),
-	"tooltip/log": preload("res://Prefabs/menu/LogTooltip.tscn"),
-	
-	"logEntry": preload("res://Prefabs/Log/LogEntry.tscn"),
 	
 	"earnings report/resource": preload("res://Prefabs/ui/Earnings Report Resource.tscn"),
 	"labels/medium label": preload("res://Prefabs/Labels/Medium Label.tscn"),
@@ -522,6 +499,9 @@ var sprite := {
 	"fuel full": preload("res://Sprites/Menu/Fuel Full.png"),
 	"view": preload("res://Sprites/Menu/View.png"),
 	"viewHide": preload("res://Sprites/Menu/ViewHide.png"),
+	"fuelCost": preload("res://Sprites/Menu/drain rate.png"),
+	"level": preload("res://Sprites/Menu/Level.png"),
+	"log": preload("res://Sprites/Menu/Log.png"),
 	
 	"coal" : preload("res://Sprites/resources/coal.png"),
 	"stone" : preload("res://Sprites/resources/stone.png"),
@@ -577,6 +557,7 @@ var sprite := {
 	str(Tab.s4m) : preload("res://Sprites/tab/s2m.png"),
 	"s4n" : preload("res://Sprites/tab/s2n.png"),
 	"s4m" : preload("res://Sprites/tab/s2m.png"),
+	
 	
 	# misc
 	"hold_true" : preload("res://Sprites/misc/hold_true.png"),
@@ -1142,7 +1123,7 @@ var latest_unholy_body: int # key
 var ub_count := 0
 signal new_unholy_body(amount) # -> Unholy Body Manager.gd
 
-var animationless = ["hard", "draw", "carc", "tum", "axe", "wire", "soil", "pet", "paper", "lead", "steel", "plast", "pulp"]
+var animationless = ["hard", "draw", "carc", "tum", "axe", "wire", "pet", "paper", "lead", "plast", "pulp"]
 var max_frame = {
 	"humus":  9,
 	"gale":  22,
@@ -1167,6 +1148,8 @@ var max_frame = {
 	"malig":  36,
 	"tar":  29,
 	"oil":  8,
+	"steel":  58,
+	"soil":  42,
 }
 var list := {}
 func resetList():
@@ -1286,6 +1269,7 @@ enum WishReward {
 	WISH_TURNIN,
 	EASIER,
 	LORED_FUNCTIONALITY,
+	ENABLE_RANDOM_EMOTES,
 }
 
 func highestResetKey() -> int:
@@ -1514,6 +1498,7 @@ var active_scene: int
 func close():
 	# Root closed
 	resetList()
+	setupOptions()
 	
 	time_played = 0
 	
@@ -1579,3 +1564,7 @@ func tabByShorthand(shorthand: String) -> int:
 func inFirstTwoSecondsOfRun() -> bool:
 	return durationSinceLastReset < 2
 
+
+
+func randomLORED() -> int:
+	return list.lored["active"][randi() % list.lored["active"].size()]

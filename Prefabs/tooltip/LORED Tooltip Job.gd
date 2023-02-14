@@ -24,7 +24,6 @@ func setup(job: Job):
 	if jobProducesResources(job):
 		
 		get_node("%output").show()
-		get_node("%outputFlair").show()
 		
 		
 		for x in job.producedResourcesBits.size():
@@ -33,25 +32,23 @@ func setup(job: Job):
 	
 	if jobRequiresResources(job):
 		
-		get_node("%inputFlair").text = "Input and Fuel Consumption:"
-		
 		for x in job.requiredResourcesBits.size():
 			setText(job, x, "input")
 			get_node("%input" + str(x)).show()
 	
-	if job.type != lv.Job.REFUEL:
-		setFuelConsumptionText(job)
+	#if job.type != lv.Job.REFUEL:
+	setFuelConsumptionText(job)
 	
 	get_node("%glow").self_modulate = loredColor
+	get_node("%separator0").self_modulate = loredColor
+	get_node("%separator1").self_modulate = loredColor
 	loop(job)
 
 func hideNodes():
 	for x in 3:
 		get_node("%output" + str(x)).hide()
 		get_node("%input" + str(x)).hide()
-	get_node("%outputFlair").hide()
 	get_node("%effects").hide()
-	get_node("%effectFlair").hide()
 
 func jobProducesResources(job: Job) -> bool:
 	return job.producedResourcesBits.size() > 0
@@ -92,11 +89,9 @@ func setFuelConsumptionText(job: Job):
 	
 	var node: String = "%fuel"
 	
+	get_node(node + "/icon").modulate = gv.COLORS[gv.shorthandByResource[lv.lored[job.lored].fuelResource]]
 	get_node(node + "/amount").text = "-" + job.getRequiredFuelText()
-	get_node(node + "/icon/Sprite").texture = gv.sprite[gv.shorthandByResource[lv.lored[job.lored].fuelResource]]
-	get_node(node + "/icon/Sprite/shadow").texture = get_node(node + "/icon/Sprite").texture
-	get_node(node + "/resource").text = gv.resourceName[lv.lored[job.lored].fuelResource]
-	get_node(node + "/rate").text = "(" + Big.new(job.getRequiredFuel()).d(job.duration).toString() + "/s)"
+	get_node(node + "/percent").text = "(-" + fval.f(job.getRequiredFuel().percent(lv.lored[job.lored].fuelStorage) * 100) + "%)"
 	
 	get_node(node).show()
 
@@ -109,7 +104,6 @@ func jobEffects(job: Job):
 		return
 	
 	get_node("%effects").show()
-	get_node("%effectFlair").show()
 
 
 func loop(job: Job):

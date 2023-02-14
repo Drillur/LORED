@@ -738,8 +738,10 @@ visible = false
 margin_right = 372.0
 margin_bottom = 293.0
 size_flags_vertical = 3
+custom_constants/margin_top = 5
 
 [node name="v" type="VBoxContainer" parent="v/upgrades/v/0"]
+margin_top = 5.0
 margin_right = 372.0
 margin_bottom = 293.0
 custom_constants/separation = 10
@@ -750,8 +752,10 @@ margin_top = 148.0
 margin_right = 372.0
 margin_bottom = 293.0
 size_flags_vertical = 3
+custom_constants/margin_top = 5
 
 [node name="v" type="VBoxContainer" parent="v/upgrades/v/1"]
+margin_top = 5.0
 margin_right = 372.0
 margin_bottom = 145.0
 size_flags_horizontal = 3
@@ -763,8 +767,10 @@ margin_top = 198.0
 margin_right = 372.0
 margin_bottom = 293.0
 size_flags_vertical = 3
+custom_constants/margin_top = 5
 
 [node name="v" type="VBoxContainer" parent="v/upgrades/v/2"]
+margin_top = 5.0
 margin_right = 372.0
 margin_bottom = 95.0
 size_flags_horizontal = 3
@@ -776,8 +782,10 @@ margin_top = 148.0
 margin_right = 372.0
 margin_bottom = 293.0
 size_flags_vertical = 3
+custom_constants/margin_top = 5
 
 [node name="v" type="VBoxContainer" parent="v/upgrades/v/3"]
+margin_top = 5.0
 margin_right = 372.0
 margin_bottom = 145.0
 size_flags_horizontal = 3
@@ -789,8 +797,10 @@ margin_top = 148.0
 margin_right = 372.0
 margin_bottom = 293.0
 size_flags_vertical = 3
+custom_constants/margin_top = 5
 
 [node name="v" type="VBoxContainer" parent="v/upgrades/v/4"]
+margin_top = 5.0
 margin_right = 372.0
 margin_bottom = 145.0
 size_flags_horizontal = 3
@@ -801,8 +811,10 @@ visible = false
 margin_right = 455.0
 margin_bottom = 330.0
 size_flags_vertical = 3
+custom_constants/margin_top = 5
 
 [node name="v" type="VBoxContainer" parent="v/upgrades/v/5"]
+margin_top = 5.0
 margin_right = 455.0
 margin_bottom = 330.0
 size_flags_horizontal = 3
@@ -813,8 +825,10 @@ visible = false
 margin_right = 455.0
 margin_bottom = 330.0
 size_flags_vertical = 3
+custom_constants/margin_top = 5
 
 [node name="v" type="VBoxContainer" parent="v/upgrades/v/6"]
+margin_top = 5.0
 margin_right = 455.0
 margin_bottom = 330.0
 size_flags_horizontal = 3
@@ -825,8 +839,10 @@ visible = false
 margin_right = 455.0
 margin_bottom = 330.0
 size_flags_vertical = 3
+custom_constants/margin_top = 5
 
 [node name="v" type="VBoxContainer" parent="v/upgrades/v/7"]
+margin_top = 5.0
 margin_right = 455.0
 margin_bottom = 330.0
 size_flags_horizontal = 3

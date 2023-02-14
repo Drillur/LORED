@@ -68,8 +68,9 @@ outline_color = Color( 0, 0, 0, 1 )
 font_data = ExtResource( 2 )
 
 [node name="Tooltip Level Up" type="MarginContainer"]
-margin_right = 117.0
+margin_right = 245.0
 margin_bottom = 94.0
+rect_min_size = Vector2( 245, 0 )
 custom_constants/margin_right = 2
 custom_constants/margin_top = 2
 custom_constants/margin_left = 2
@@ -79,7 +80,7 @@ script = ExtResource( 8 )
 [node name="m" type="MarginContainer" parent="."]
 margin_left = 2.0
 margin_top = 2.0
-margin_right = 115.0
+margin_right = 243.0
 margin_bottom = 92.0
 custom_constants/margin_right = 10
 custom_constants/margin_top = 10
@@ -89,30 +90,30 @@ custom_constants/margin_bottom = 10
 [node name="v" type="VBoxContainer" parent="m"]
 margin_left = 10.0
 margin_top = 10.0
-margin_right = 103.0
+margin_right = 231.0
 margin_bottom = 80.0
 custom_constants/separation = 10
 
 [node name="v" type="VBoxContainer" parent="m/v"]
-margin_right = 93.0
+margin_right = 221.0
 margin_bottom = 32.0
 custom_constants/separation = 20
 
 [node name="top" type="MarginContainer" parent="m/v/v"]
-margin_right = 93.0
+margin_right = 221.0
 margin_bottom = 32.0
 
 [node name="bg" type="Panel" parent="m/v/v/top"]
-margin_right = 93.0
+margin_right = 221.0
 margin_bottom = 32.0
 custom_styles/panel = SubResource( 8 )
 
 [node name="v" type="VBoxContainer" parent="m/v/v/top"]
-margin_right = 93.0
+margin_right = 221.0
 margin_bottom = 32.0
 
 [node name="m" type="MarginContainer" parent="m/v/v/top/v"]
-margin_right = 93.0
+margin_right = 221.0
 margin_bottom = 32.0
 custom_constants/margin_right = 0
 custom_constants/margin_top = 0
@@ -120,28 +121,27 @@ custom_constants/margin_left = 0
 custom_constants/margin_bottom = 0
 
 [node name="h" type="HBoxContainer" parent="m/v/v/top/v/m"]
-margin_right = 93.0
+margin_right = 221.0
 margin_bottom = 32.0
 custom_constants/separation = 8
 alignment = 1
 
 [node name="icon" parent="m/v/v/top/v/m/h" instance=ExtResource( 5 )]
 unique_name_in_owner = true
-margin_left = 11.0
-margin_right = 43.0
 size_flags_vertical = 4
 
 [node name="upgradeName" type="Label" parent="m/v/v/top/v/m/h"]
 unique_name_in_owner = true
-margin_left = 51.0
+margin_left = 40.0
 margin_top = 5.0
-margin_right = 81.0
+margin_right = 221.0
 margin_bottom = 26.0
-size_flags_horizontal = 4
+size_flags_horizontal = 3
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 3 )
-text = "test"
+text = "a"
 valign = 1
+autowrap = true
 
 [node name="sub" type="MarginContainer" parent="m/v/v"]
 unique_name_in_owner = true
@@ -221,7 +221,7 @@ margin_right = 93.0
 
 [node name="bot" type="MarginContainer" parent="m/v"]
 margin_top = 42.0
-margin_right = 93.0
+margin_right = 221.0
 margin_bottom = 70.0
 custom_constants/margin_right = 0
 custom_constants/margin_top = 10
@@ -231,7 +231,7 @@ custom_constants/margin_bottom = 0
 [node name="desc" type="RichTextLabel" parent="m/v/bot"]
 unique_name_in_owner = true
 margin_top = 10.0
-margin_right = 93.0
+margin_right = 221.0
 margin_bottom = 28.0
 size_flags_horizontal = 3
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
@@ -246,26 +246,26 @@ fit_content_height = true
 [node name="req" type="MarginContainer" parent="m/v"]
 unique_name_in_owner = true
 visible = false
-margin_top = 80.0
-margin_right = 147.0
-margin_bottom = 239.0
+margin_top = 141.0
+margin_right = 221.0
+margin_bottom = 240.0
 custom_constants/margin_top = 10
 
 [node name="bg" type="Panel" parent="m/v/req"]
 margin_top = 10.0
-margin_right = 147.0
-margin_bottom = 159.0
+margin_right = 221.0
+margin_bottom = 99.0
 custom_styles/panel = SubResource( 13 )
 
 [node name="v" type="VBoxContainer" parent="m/v/req"]
 margin_top = 10.0
-margin_right = 147.0
-margin_bottom = 159.0
+margin_right = 221.0
+margin_bottom = 99.0
 custom_constants/separation = 8
 alignment = 1
 
 [node name="h2" type="HBoxContainer" parent="m/v/req/v"]
-margin_right = 147.0
+margin_right = 221.0
 margin_bottom = 24.0
 
 [node name="Panel" type="Panel" parent="m/v/req/v/h2"]
@@ -297,20 +297,20 @@ align = 1
 
 [node name="h" type="HBoxContainer" parent="m/v/req/v"]
 margin_top = 32.0
-margin_right = 147.0
-margin_bottom = 149.0
+margin_right = 221.0
+margin_bottom = 89.0
 custom_constants/separation = 3
 alignment = 1
 
 [node name="reqIcon" parent="m/v/req/v/h" instance=ExtResource( 5 )]
 unique_name_in_owner = true
-margin_bottom = 117.0
+margin_bottom = 57.0
 
 [node name="reqName" type="Label" parent="m/v/req/v/h"]
 unique_name_in_owner = true
 margin_left = 35.0
-margin_right = 147.0
-margin_bottom = 117.0
+margin_right = 221.0
+margin_bottom = 57.0
 size_flags_horizontal = 3
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 14 )

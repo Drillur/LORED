@@ -89,7 +89,8 @@ func r_update():
 	icon.update()
 	afford()
 	
-	color_blind.visible = gv.option["color blind"] and not gv.up[key].have and not gv.up[key].refundable and not icon.lock.visible
+	#frickers
+	#color_blind.visible = gv.option["color blind"] and not gv.up[key].have and not gv.up[key].refundable and not icon.lock.visible
 	
 	if gv.up[key].refundable:
 		shadow.hide()

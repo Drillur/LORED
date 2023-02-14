@@ -537,8 +537,9 @@ text = "Normal Upgrade menu - Hotkey: Q"
 
 [node name="max_random_wishes" type="MarginContainer" parent="m/v/rewards/h/v"]
 visible = false
+margin_top = 20.0
 margin_right = 198.0
-margin_bottom = 21.0
+margin_bottom = 41.0
 custom_constants/margin_right = 5
 custom_constants/margin_top = 3
 custom_constants/margin_left = 5
@@ -575,8 +576,9 @@ text = "(Current: 0)"
 
 [node name="automated halt&hold" type="MarginContainer" parent="m/v/rewards/h/v"]
 visible = false
-margin_right = 205.0
-margin_bottom = 21.0
+margin_top = 20.0
+margin_right = 199.0
+margin_bottom = 41.0
 custom_constants/margin_right = 5
 custom_constants/margin_top = 3
 custom_constants/margin_left = 5
@@ -585,11 +587,11 @@ custom_constants/margin_bottom = 3
 [node name="flair" type="Label" parent="m/v/rewards/h/v/automated halt&hold"]
 margin_left = 5.0
 margin_top = 3.0
-margin_right = 200.0
+margin_right = 194.0
 margin_bottom = 18.0
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 6 )
-text = "Automated halt and hold for Wishes"
+text = "Automated sleep for Sleepy Wishes"
 
 [node name="easier" type="MarginContainer" parent="m/v/rewards/h/v"]
 visible = false
@@ -650,9 +652,9 @@ text = "You can view LOREDs' Job lists!"
 
 [node name="automated turnin" type="MarginContainer" parent="m/v/rewards/h/v"]
 visible = false
-margin_top = 21.0
+margin_top = 20.0
 margin_right = 163.0
-margin_bottom = 42.0
+margin_bottom = 41.0
 custom_constants/margin_right = 5
 custom_constants/margin_top = 3
 custom_constants/margin_left = 5

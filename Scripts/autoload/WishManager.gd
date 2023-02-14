@@ -50,7 +50,7 @@ var seeking := false
 var recently_reset := false
 
 var easier := false # set in Wish.reward
-var automatedHaltAndHold := false # set in Wish.reward
+var automatedSleep := false # set in Wish.reward
 var automatedCompletion := false # set in Wish.reward
 
 
@@ -140,7 +140,6 @@ func reset(reset_type: int):
 		_wish.die(false)
 		wishDied(_wish)
 
-
 func close():
 	# scene changed. #002
 	wish.clear()
@@ -149,12 +148,13 @@ func close():
 	completed_wishes.clear()
 	checkpoint = 0
 	max_random_wishes = 0
+	automatedSleep = false
 
 
 func setupGNNodes():
 	# called from Root #001
-	gn_main_wishes = get_node("/root/Root/WishAnchor/m/v/main")
-	gn_random_wishes = get_node("/root/Root/WishAnchor/m/v/random")
+	gn_main_wishes = get_node("/root/Root/%mainWish")
+	gn_random_wishes = get_node("/root/Root/%randomWish")
 
 
 func increaseProgress(type: int, key: String, amount = 1):
@@ -169,7 +169,8 @@ func newWish(key: String, data: Dictionary = {}):
 	wish.append(Wish.new(key, data))
 	updateWishCount()
 	
-	instanceWishVico(wish[i])
+	WishLogManager.log(wish[i])
+	#instanceWishVico(wish[i])
 	
 	active_wish_keys.append(wish[i].key)
 	
@@ -180,11 +181,11 @@ func newWish(key: String, data: Dictionary = {}):
 		gv.Objective.MAXED_FUEL_STORAGE:
 			maxedFuelStorageManager(wish[i])
 		gv.Objective.BREAK:
-			breakManager(wish[i])
+			sleepManager(wish[i])
 
 func instanceWishVico(_wish: Wish):
 	var manager = gv.SRC["wish vico"].instance()
-	manager.setup(_wish)
+	manager.setup(_wish, false)
 	if _wish.random:
 		gn_random_wishes.add_child(manager)
 		gn_random_wishes.move_child(manager, 0)
@@ -194,11 +195,11 @@ func instanceWishVico(_wish: Wish):
 	hideOrDisplayMainWishes()
 
 func wishCompleted(_wish: Wish):
+	emoteEvent(_wish)
 	completed_wishes.append(_wish.key)
 	adjustCheckpointBasedOnCompletedQuest(_wish.key)
 
 func wishDied(_wish: Wish):
-	_wish.vico.queue_free()
 	wish.erase(_wish)
 	updateWishCount()
 	active_wish_keys.erase(_wish.key)
@@ -374,6 +375,8 @@ func getSelectedWish() -> String:
 			if not lv.lored[lv.Type.COAL].purchased:
 				return "stuff"
 			checkpoint = 1
+			gv.stats["WishMain"] += 1
+			gv.emit_signal("statChanged", "WishMain")
 			return "r"
 	
 	if gv.resource[gv.Resource.COAL].less(Big.new(lv.lored[lv.Type.COAL].output).m(10)):
@@ -400,6 +403,12 @@ func wishCompleteOrAlreadyActive(key: String) -> bool:
 	return false
 
 
+func emoteEvent(_wish: Wish):
+	match _wish.key:
+		"fuel":
+			EmoteManager.emote(EmoteManager.Type.STONE_HAPPY)
+
+
 func maxedFuelStorageManager(wish: Wish):
 	
 	var t = Timer.new()
@@ -420,12 +429,12 @@ func maxedFuelStorageManager(wish: Wish):
 	
 	t.queue_free()
 
-func breakManager(wish: Wish):
+func sleepManager(wish: Wish):
 	
 	var lored: LOREDManager = lv.lored[wish.objKey()]
 	var was_already_halted: bool = lored.asleep
 	
-	if automatedHaltAndHold:
+	if automatedSleep:
 		lored.putToSleep()
 	
 	while not wish.ready:
@@ -435,7 +444,7 @@ func breakManager(wish: Wish):
 		
 		var lored_key = int(wish.obj.key)
 		
-		if not lored.working:
+		if not lored.working and lored.asleep:
 			wish.setCount(Big.new(wish.obj.current_count).a(1))
 		
 		if wish.ready or not wish.exists:
@@ -478,3 +487,18 @@ func getWishStat(objectiveType: int, key = "") -> String:
 	
 	print_debug("fail: getWishStat() in WishManager")
 	return "oops!"
+
+func populateMainScreenVicos():
+	for w in wish:
+		instanceWishVico(w)
+
+func deleteMainScreenVicos():
+	for w in wish:
+		var i = -1
+		for v in w.vico:
+			i += 1
+			if v.inLog:
+				continue
+			v.queue_free()
+			break
+		w.vico.remove(i)

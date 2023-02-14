@@ -1,7 +1,8 @@
 extends MarginContainer
 
 
-var saved_vars := ["fps", "notation", "animations", "loredOutputNumbers", "loredChitChat", "loredFuel", "tipSleep", "loredCritsOnly", "autosave", "flying_numbers", "contentVisual", "contentLORED", "contentSave"]
+var saved_vars := ["fps", "notation", "animations", "loredOutputNumbers", "loredChitChat", "loredFuel", "tipSleep", "loredCritsOnly", "autosave", "flying_numbers", "contentVisual", "contentLORED", "contentSave",
+"levelUpDetails", "wishVicosOnMainScreen"]
 
 var animations := true
 var loredOutputNumbers := true
@@ -11,10 +12,13 @@ var tipSleep := true
 var loredCritsOnly := false
 var autosave := true
 var flying_numbers := true
+var levelUpDetails := true
+var wishVicosOnMainScreen := true
 
 var contentVisual := true
 var contentLORED := true
 var contentSave := true
+
 
 func save() -> String:
 	
@@ -97,6 +101,12 @@ func selectOption(option: String):
 			lv.displayLOREDFuelOnBar()
 		"autosave":
 			get_node("/root/Root").get_node("%SaveMenu").autosaveOptionChanged()
+		"wishVicosOnMainScreen":
+			if gv.option[option]:
+				taq.populateMainScreenVicos()
+			else:
+				taq.deleteMainScreenVicos()
+				get_node("/root/Root").clearWishNotice()
 
 
 
@@ -126,9 +136,13 @@ func _on_LOREDHide_pressed() -> void:
 
 func _on_saveHide_pressed() -> void:
 	switchContent("Save")
+func _on_wishHide_pressed() -> void:
+	switchContent("Wish")
+
 
 func _on_fps_dropdown_item_selected(index: int) -> void:
 	selectFPS(index)
 
 func _on_notationDropdown_item_selected(index: int) -> void:
 	selectNotation(index)
+

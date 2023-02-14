@@ -13,10 +13,6 @@ var type: int
 
 
 
-func save() -> String:
-	return lored.save()
-func load(data: Dictionary):
-	lored.load(data)
 
 
 func _init(_type: int):
@@ -27,6 +23,9 @@ func _init(_type: int):
 	lored.assignManager(self)
 	
 	name = lored.name
+	
+	if type == lv.Type.COPPER_ORE:
+		nextEmote = EmoteManager.Type.COPPER_ORE0
 
 
 
@@ -39,7 +38,7 @@ func assignVico(_vico: MarginContainer):
 	setupSignals()
 	setupElements()
 	watchCost()
-	
+	autoWatch()
 
 func setupVico():
 	vico.setup(type)
@@ -55,6 +54,9 @@ func setupElements():
 	jobTimer = Timer.new()
 	jobTimer.one_shot = true
 	add_child(jobTimer)
+	
+	emoteTimer = Timer.new()
+	add_child(emoteTimer)
 
 
 
@@ -86,21 +88,9 @@ func syncQueue():
 		return
 	
 	for q in lored.queue:
-		match q:
-			lv.Queue.OUTPUT:
-				lored.syncOutput()
-			lv.Queue.INPUT:
-				lored.syncInput()
-			lv.Queue.COST:
-				lored.syncCost()
-			lv.Queue.FUEL_STORAGE:
-				lored.syncFuelStorage()
-			lv.Queue.FUEL_COST:
-				lored.syncFuelCost()
-			lv.Queue.CRIT:
-				lored.syncCrit()
-			lv.Queue.HASTE:
-				lored.syncHaste()
+		if q == lv.Queue.UPDATE_PRODUCTION:
+			continue
+		lored.call("sync_" + lv.Queue.keys()[q])
 	
 	var minimum = Big.new(lored.fuelCost).m(lored.refuelJob.duration * 2)
 	if lored.currentFuel.less(minimum):
@@ -126,7 +116,9 @@ func syncQueue():
 	for item in newQueue:
 		lored.queue(item)
 	
-	rt.get_node("global_tip").refresh()
+	if rt.get_node("global_tip").tip_filled:
+		if rt.get_node("global_tip").type in ["lored level up", "lored info"]:
+			rt.get_node("global_tip").refresh()
 
 
 
@@ -326,6 +318,14 @@ func getQueue() -> Array:
 
 # - - - Duplicate functions
 
+func save() -> String:
+	return lored.save()
+func load(data: Dictionary):
+	lored.load(data)
+
+func updateMaxDrain():
+	lored.updateMaxDrain()
+
 func editValue(attribute: int, typeOfEdit: int, item: int, amount, index = 0):
 	lored.editValue(attribute, typeOfEdit, item, amount, index)
 
@@ -346,6 +346,13 @@ func updateOfflineNet(resource: int):
 func getOfflineEarnings(timeOffline: int):
 	lored.getOfflineEarnings(timeOffline)
 
+func applyDynamicUpgrade(key: String, effectIndex: int, folder: String):
+	lored.applyDynamicUpgrade(key, effectIndex, folder)
+func removeDynamicUpgrade(key: String, folder: String):
+	lored.removeDynamicUpgrade(key, folder)
+
+func emote(emote: MarginContainer):
+	vico.emote(emote)
 
 
 # - - - Actions
@@ -366,9 +373,9 @@ func jobsUnlocked():
 
 func purchase():
 	if canAffordPurchase():
-		purchased()
 		gv.stats["TimesLeveledUp"]["manual"][type] += 1
 		gv.emit_signal("TimesLeveledUp", "manual", type)
+		purchased()
 		rt.get_node("global_tip").refresh()
 	else:
 		if is_instance_valid(rt.get_node("global_tip").tip):
@@ -383,6 +390,7 @@ func purchased():
 	updateVicoCheck()
 	vico.levelUpFlash()
 	vico.levelUpText()
+	emoteEvent()
 
 
 
@@ -396,9 +404,10 @@ func asleepClicked(manual := false):
 		rt.get_node("global_tip").refresh("lored asleep")
 func putToSleep():
 	lored.asleep = true
+	vico.updateSleepButton()
 func wakeUp():
 	lored.asleep = false
-
+	vico.updateSleepButton()
 
 func flashSleep():
 	vico.flashSleep()
@@ -410,6 +419,14 @@ func reset():
 	syncAllNow()
 	cleanUp()
 	lored.currentFuel = Big.new(lored.fuelStorage)
+
+func emoteEvent():
+	match type:
+		lv.Type.COAL:
+			if gv.stats["TimesLeveledUp"]["manual"][type] == 2:
+				EmoteManager.emote(EmoteManager.Type.COAL_WHOA)
+			elif gv.stats["TimesLeveledUp"]["manual"][type] == 1:
+				EmoteManager.emote(EmoteManager.Type.COAL_GREET)
 
 
 
@@ -621,6 +638,7 @@ func enterStandby():
 	vico.enterStandby()
 	updateFuelDrain(false)
 	gv.append(gv.list.lored["unlocked and inactive"], type)
+	stopEmoting = true
 
 func enterActive():
 	gv.list.lored["unlocked and inactive"].erase(type)
@@ -629,6 +647,7 @@ func enterActive():
 	watchCurrentFuel()
 	updateFuelDrain(true)
 	findFirstJob()
+	emoteLoop()
 
 
 
@@ -690,6 +709,7 @@ func canStartJob(job: Job) -> bool:
 			if job.type != lv.Job.REFUEL:
 				reasonWhyCannotStartJob = lv.ReasonCannotBeginJob.LOW_FUEL
 				return false
+				return false
 	
 	if job.type == lv.Job.REFUEL:
 		if getFuelResource() == gv.Resource.COAL:
@@ -739,6 +759,7 @@ func workJob(job: Job):
 		gv.stats["TimesRefueled"][type] += 1
 		gv.emit_signal("TimesRefueled", type)
 		vico.hideProduction()
+		drinkingAMilkshake()
 	else:
 		gv.stats["OtherJobs"][type] += 1
 		gv.emit_signal("OtherJobs", type)
@@ -762,6 +783,7 @@ func workJob(job: Job):
 	
 	
 	if job.producesResource:
+		
 		var critMultiplier = rollForCrit()
 		var producedResources = getProducedResourcesDictionary(job, critMultiplier)
 		giveProducedResources(producedResources)
@@ -815,8 +837,69 @@ func takeRequiredResources(_requiredResources: Dictionary):
 
 func giveProducedResources(_producedResources: Dictionary):
 	for resource in _producedResources:
-		gv.addToResource(resource, _producedResources[resource])
-		taq.increaseProgress(gv.Objective.RESOURCES_PRODUCED, str(resource), _producedResources[resource])
+		
+		var amount = Big.new(_producedResources[resource])
+		
+		gv.addToResource(resource, amount)
+		gv.increase_lb_xp(amount)
+		taq.increaseProgress(gv.Objective.RESOURCES_PRODUCED, str(resource), amount)
+		
+		if resource == gv.Resource.GROWTH:
+			call("giveBonusResources_" + gv.Resource.keys()[resource])
+			return
+		
+		if resource in [gv.Resource.COPPER_ORE, gv.Resource.IRON_ORE, gv.Resource.COAL]:
+			if call("canGiveBonusResources_" + gv.Resource.keys()[resource]):
+				if resource == gv.Resource.COAL:
+					amount.m(10)
+				gv.addToResource(resource, amount)
+				gv.increase_lb_xp(amount)
+				taq.increaseProgress(gv.Objective.RESOURCES_PRODUCED, str(resource), amount)
+
+func canGiveBonusResources_IRON_ORE() -> bool:
+	return gv.up["I RUN"].active()
+func canGiveBonusResources_COPPER_ORE() -> bool:
+	return gv.up["THE THIRD"].active()
+func canGiveBonusResources_COAL() -> bool:
+	return gv.up["wait that's not fair"].active()
+func giveBonusResources_GROWTH():
+	
+	if not gv.up["IT'S GROWIN ON ME"].active():
+		return
+	
+	var buff = 0.1 * lv.lored[lv.Type.GROWTH].level
+	
+	if not gv.up["IT'S SPREADIN ON ME"].active():
+		var roll = randi()%2
+		match roll:
+			0:
+				gv.up["IT'S GROWIN ON ME"].effects[0].effect.a.a(buff)
+				lv.lored[lv.Type.IRON].lored.queue(lv.Queue.OUTPUT)
+				gv.up["IT'S GROWIN ON ME"].effects[2].effect.a.a(buff)
+				lv.lored[lv.Type.IRON].lored.queue(lv.Queue.INPUT)
+			1:
+				gv.up["IT'S GROWIN ON ME"].effects[1].effect.a.a(buff)
+				lv.lored[lv.Type.COPPER].lored.queue(lv.Queue.OUTPUT)
+				gv.up["IT'S GROWIN ON ME"].effects[3].effect.a.a(buff)
+				lv.lored[lv.Type.COPPER].lored.queue(lv.Queue.INPUT)
+	else:
+		gv.up["IT'S GROWIN ON ME"].effects[0].effect.a.a(buff)
+		gv.up["IT'S GROWIN ON ME"].effects[1].effect.a.a(buff)
+		gv.up["IT'S SPREADIN ON ME"].effects[0].effect.a.a(buff)
+		gv.up["IT'S SPREADIN ON ME"].effects[1].effect.a.a(buff)
+		lv.lored[lv.Type.IRON].lored.queue(lv.Queue.OUTPUT)
+		lv.lored[lv.Type.COPPER].lored.queue(lv.Queue.OUTPUT)
+		lv.lored[lv.Type.IRON_ORE].lored.queue(lv.Queue.OUTPUT)
+		lv.lored[lv.Type.COPPER_ORE].lored.queue(lv.Queue.OUTPUT)
+
+func drinkingAMilkshake():
+	if not getFuelResource() == gv.Resource.COAL:
+		return
+	if not gv.up["I DRINK YOUR MILKSHAKE"].active():
+		return
+	var buff = float(getLevel()) / 100
+	gv.up["I DRINK YOUR MILKSHAKE"].effects[0].effect.a.a(buff)
+	lv.lored[lv.Type.COAL].lored.queue(lv.Queue.OUTPUT)
 
 func getOutputTextDetails(producedResources: Dictionary, critMultiplier: float) -> Array:
 	
@@ -827,6 +910,7 @@ func getOutputTextDetails(producedResources: Dictionary, critMultiplier: float) 
 		var f := {}
 		
 		var text: String = "+" + producedResources[resource].toString()
+		
 		if critRoll:
 			gv.stats["Crits"][type] += 1
 			gv.emit_signal("Crits", type)
@@ -882,14 +966,14 @@ func cleanUp():
 func highlightJobInTooltip(job: Job):
 	if rt.get_node("global_tip").tip_filled:
 		if rt.get_node("global_tip").type == "lored jobs":
-			if rt.get_node("global_tip").tip.cont["lored jobs"].lored == type:
-				rt.get_node("global_tip").tip.cont["lored jobs"].highlightJob(job)
+			if rt.get_node("global_tip").tip.cont.lored == type:
+				rt.get_node("global_tip").tip.cont.highlightJob(job)
 
 func stopHighlightJobInTooltip(job: Job):
 	if rt.get_node("global_tip").tip_filled:
 		if rt.get_node("global_tip").type == "lored jobs":
-			if rt.get_node("global_tip").tip.cont["lored jobs"].lored == type:
-				rt.get_node("global_tip").tip.cont["lored jobs"].stopHighlightJob(job)
+			if rt.get_node("global_tip").tip.cont.lored == type:
+				rt.get_node("global_tip").tip.cont.stopHighlightJob(job)
 
 
 
@@ -919,13 +1003,15 @@ func setAutobuying(val):
 
 func autoWatch():
 	
-	if not autobuying:
-		return
-	
 	var t = Timer.new()
 	add_child(t)
 	
-	while not is_queued_for_deletion() and autobuying:
+	while true:# not is_queued_for_deletion():
+		
+		if not autobuying:
+			t.start(5)
+			yield(t, "timeout")
+			continue
 		
 		if shouldAutobuy():
 			autoBuy()
@@ -949,17 +1035,24 @@ func shouldAutobuy() -> bool:
 	if getAsleep():
 		return false
 	
+	if lored.queue.size() > 0:
+		return false
+	
 	if not canAffordPurchase():
 		return false
 	
 	if autobuy_upgrade_check():
 		return true
 	
+	if getWorking():
+		if lored.lastJob == lv.Job.REFUEL:
+			return false
+	
 	# if any required resource in any job has a negative net, return false
 	for job in lored.jobs.values():
 		
 		for resource in job.requiredResourcesBits.keys():
-			var net = lv.net(resource)
+			var net = lv.maxNet(resource)
 			if net[1] == -1:
 				return false
 	
@@ -970,39 +1063,11 @@ func shouldAutobuy() -> bool:
 	for job in lored.jobs.values():
 		
 		for resource in job.producedResourcesBits.keys():
-			var net = lv.net(resource)
+			var net = lv.maxNet(resource)
 			if net[1] == -1:
 				return true
 	
 	return false
-	
-#	# if ingredient LORED per_sec < per_sec, don't buy
-#	for x in b:
-#
-#		if gv.g[x].hold:
-#			return false
-#
-#		var consm = Big.new(b[x].t).m(d.t).d(speed.t).d(jobs[0].base_duration)
-#		# how much this lored consumes from the ingredient lored (x)
-#
-#		if gv.g[x].halt:
-#
-#			var consm2 = Big.new(consm).m(2)
-#			if consm2.less(gv.g[x].net(true)[0]):
-#				if not gv.g[x].cost_check():
-#					return false
-#
-#		else:
-#
-#			var net = gv.g[x].net()
-#
-#			if net[0].less(net[1]):
-#				return false
-#
-#			net = Big.new(net[0]).s(net[1])
-#			if consm.greater(net):
-#				if not gv.g[x].cost_check():
-#					return false
 
 func autobuy_upgrade_check() -> bool:
 	
@@ -1029,3 +1094,51 @@ func autoBuy():
 	gv.stats["TimesLeveledUp"]["automated"][type] += 1
 	gv.emit_signal("TimesLeveledUp", "automated", type)
 	purchased()
+
+
+
+# - Emote / dialogue
+
+var emotePassword: int
+var stopEmoting := false
+var emoteTimer: Timer
+func emoteLoop():
+	
+	if lored.emotePool.size() == 0:
+		return
+	
+	stopEmoting = false
+	emotePassword = OS.get_ticks_msec()
+	var myPass: int = emotePassword
+	
+	var timeOfNextEmote = OS.get_unix_time() + 1#(randi() % 60) + 60
+	
+	while not is_queued_for_deletion():
+		
+		emoteTimer.start(1)
+		yield(emoteTimer, "timeout")
+		
+		if stopEmoting:
+			break
+		if myPass != emotePassword:
+			break
+		if OS.get_unix_time() < timeOfNextEmote:
+			continue
+		
+		EmoteManager.emote(randomEmote())
+		
+		if type == lv.Type.COPPER_ORE:
+			nextEmote += 1
+			if nextEmote > EmoteManager.Type.COPPER_ORE12:
+				nextEmote = EmoteManager.Type.COPPER_ORE0
+		
+		break
+	
+	emoteLoop()
+
+var nextEmote: int = -1
+func randomEmote() -> int:
+	if nextEmote == -1:
+		return lored.emotePool[randi() % lored.emotePool.size()]
+	else:
+		return nextEmote

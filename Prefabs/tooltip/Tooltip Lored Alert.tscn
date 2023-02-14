@@ -80,6 +80,8 @@ font_data = ExtResource( 10 )
 margin_right = 84.0
 margin_bottom = 85.0
 rect_min_size = Vector2( 50, 0 )
+size_flags_horizontal = 0
+size_flags_vertical = 0
 custom_constants/margin_right = 2
 custom_constants/margin_top = 2
 custom_constants/margin_left = 2
@@ -218,8 +220,8 @@ alignment = 1
 
 [node name="Fuel Progress" parent="m/v/v/sub/sub_LOW_FUEL" instance=ExtResource( 7 )]
 unique_name_in_owner = true
-margin_left = 91.0
-margin_right = 101.0
+margin_left = 25.0
+margin_right = 35.0
 
 [node name="sub_ASLEEP" type="HBoxContainer" parent="m/v/v/sub"]
 unique_name_in_owner = true

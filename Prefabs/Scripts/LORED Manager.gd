@@ -12,7 +12,7 @@ var LOREDKeys: Array = lv.Type.keys()
 #var g_keys = gv.g.keys()
 
 func _ready():
-	get_node("sc/v/3").hide()
+	get_node("%3").hide()
 	
 	gv.connect("autobuyer_purchased", self, "autobuyer_purchased")
 	gv.connect("manualLabor", self, "instanceManualLabor")
@@ -23,8 +23,8 @@ func _ready():
 
 func setup():
 	
-	assignChildren(get_node("sc/v/1"))
-	assignChildren(get_node("sc/v/2"))
+	assignChildren(get_node("%1"))
+	assignChildren(get_node("%2"))
 
 
 func assignChildren(motherNode):
@@ -71,3 +71,10 @@ func instanceManualLabor():
 	var stinky = gv.SRC["manual labor"].instance()
 	get_node("sc/v/1").add_child(stinky)
 	gv.manualLaborActive = true
+
+func switchTab(tab: String):
+	for x in ["%1", "%2", "%3", "%4"]:
+		if x == "%" + tab:
+			get_node(x).show()
+		else:
+			get_node(x).hide()

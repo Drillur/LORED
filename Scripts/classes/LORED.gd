@@ -211,7 +211,7 @@ func setStartingCurrentFuel() -> void:
 	f.f = Big.new(f.t).m(diff.FuelStorage)
 
 func populate_emote_pool() -> void:
-
+	
 	match key:
 		"malig":
 			emote_pool.append(Emote.new("Hiya. I just coalesced out of sticky, oily stuff and cancer juice. How's your day going?"))

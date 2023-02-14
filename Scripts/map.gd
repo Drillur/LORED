@@ -60,9 +60,9 @@ func _input(ev):
 		if rt.get_node("%PatchNotesMenu").visible and mouse_out(rt.get_node("%PatchNotesMenu").rect_global_position, rt.get_node("%PatchNotesMenu").rect_size):
 			rt.get_node("%PatchNotesMenu").hide()
 		
-		# LogContainer
-		if rt.get_node("%LogContainer").visible and mouse_out(rt.get_node("%LogContainer").rect_global_position, rt.get_node("%LogContainer").rect_size):
-			rt.get_node("%LogContainer").hide()
+		# WishLog
+		if rt.get_node("%WishLog").visible and mouse_out(rt.get_node("%WishLogButton").rect_global_position, rt.get_node("%WishLogButton").rect_size) and mouse_out(rt.get_node("%WishLog").rect_global_position, rt.get_node("%WishLog").rect_size):
+			rt.get_node("%WishLog").hide()
 		
 		status = "no"
 

@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=2]
+[gd_scene load_steps=31 format=2]
 
 [ext_resource path="res://Scripts/_Root.gd" type="Script" id=1]
 [ext_resource path="res://Scripts/map.gd" type="Script" id=2]
@@ -19,7 +19,10 @@
 [ext_resource path="res://Prefabs/menu/PatchNotesMenu.tscn" type="PackedScene" id=17]
 [ext_resource path="res://Sprites/resources/liq.png" type="Texture" id=18]
 [ext_resource path="res://Sprites/Menu/Menu.png" type="Texture" id=19]
-[ext_resource path="res://Prefabs/Log/LogContainer.tscn" type="PackedScene" id=20]
+[ext_resource path="res://Prefabs/Log/WishLog.tscn" type="PackedScene" id=20]
+[ext_resource path="res://Sprites/Menu/Log.png" type="Texture" id=21]
+[ext_resource path="res://Styles/Master Theme.tres" type="Theme" id=22]
+[ext_resource path="res://Sprites/Menu/Notice.png" type="Texture" id=25]
 
 [sub_resource type="StyleBoxFlat" id=1]
 bg_color = Color( 0.0588235, 0.0588235, 0.0588235, 1 )
@@ -48,6 +51,10 @@ expand_margin_bottom = 10.0
 [sub_resource type="StyleBoxFlat" id=16]
 draw_center = false
 
+[sub_resource type="DynamicFont" id=22]
+size = 12
+font_data = ExtResource( 8 )
+
 [sub_resource type="StyleBoxFlat" id=20]
 bg_color = Color( 1, 1, 1, 0.08 )
 corner_radius_top_left = 3
@@ -66,10 +73,6 @@ corner_radius_bottom_left = 3
 bg_color = Color( 1, 1, 1, 0.0392157 )
 draw_center = false
 
-[sub_resource type="DynamicFont" id=22]
-size = 12
-font_data = ExtResource( 8 )
-
 [node name="Root" type="Node2D"]
 script = ExtResource( 1 )
 __meta__ = {
@@ -81,8 +84,6 @@ __meta__ = {
 script = ExtResource( 2 )
 
 [node name="LORED Manager" parent="." instance=ExtResource( 9 )]
-margin_right = 1280.0
-margin_bottom = 720.0
 rect_pivot_offset = Vector2( 0, -73 )
 size_flags_vertical = 3
 
@@ -206,10 +207,10 @@ margin_bottom = 466.0
 [node name="OptionsMenu" parent="m" instance=ExtResource( 12 )]
 unique_name_in_owner = true
 visible = false
-margin_left = 491.0
-margin_top = 54.0
-margin_right = 789.0
-margin_bottom = 665.0
+margin_left = 482.0
+margin_top = 90.0
+margin_right = 797.0
+margin_bottom = 630.0
 
 [node name="StatsMenu" parent="m" instance=ExtResource( 16 )]
 unique_name_in_owner = true
@@ -235,17 +236,17 @@ margin_top = 210.0
 margin_right = 802.0
 margin_bottom = 510.0
 
-[node name="LogContainer" parent="m" instance=ExtResource( 20 )]
+[node name="WishLog" parent="m" instance=ExtResource( 20 )]
 unique_name_in_owner = true
 visible = false
-margin_left = 490.0
-margin_top = 225.0
-margin_right = 789.0
-margin_bottom = 495.0
+margin_left = 465.0
+margin_top = 193.0
+margin_right = 815.0
+margin_bottom = 526.0
 
 [node name="Tabs" type="MarginContainer" parent="m"]
-margin_right = 62.0
-margin_bottom = 172.0
+margin_right = 82.0
+margin_bottom = 80.0
 size_flags_horizontal = 0
 size_flags_vertical = 0
 custom_constants/margin_right = 10
@@ -256,12 +257,12 @@ custom_constants/margin_bottom = 10
 [node name="VBoxContainer" type="VBoxContainer" parent="m/Tabs"]
 margin_left = 10.0
 margin_top = 10.0
-margin_right = 52.0
-margin_bottom = 162.0
+margin_right = 72.0
+margin_bottom = 70.0
 
 [node name="devButton" type="Button" parent="m/Tabs/VBoxContainer"]
 unique_name_in_owner = true
-margin_right = 42.0
+margin_right = 62.0
 margin_bottom = 20.0
 mouse_default_cursor_shape = 16
 
@@ -269,32 +270,50 @@ mouse_default_cursor_shape = 16
 unique_name_in_owner = true
 modulate = Color( 1, 0, 0.63, 1 )
 margin_top = 24.0
-margin_right = 42.0
+margin_right = 62.0
 margin_bottom = 60.0
 
-[node name="icon" type="Panel" parent="m/Tabs/VBoxContainer/menuButton"]
-margin_left = 9.0
+[node name="h" type="HBoxContainer" parent="m/Tabs/VBoxContainer/menuButton"]
+margin_right = 62.0
+margin_bottom = 36.0
+custom_constants/separation = 8
+alignment = 1
+
+[node name="icon" type="Panel" parent="m/Tabs/VBoxContainer/menuButton/h"]
 margin_top = 6.0
-margin_right = 33.0
+margin_right = 24.0
 margin_bottom = 30.0
 rect_min_size = Vector2( 24, 24 )
 size_flags_horizontal = 4
 size_flags_vertical = 4
 custom_styles/panel = SubResource( 16 )
 
-[node name="Sprite" type="Sprite" parent="m/Tabs/VBoxContainer/menuButton/icon"]
+[node name="Sprite" type="Sprite" parent="m/Tabs/VBoxContainer/menuButton/h/icon"]
 position = Vector2( 12, 12 )
-scale = Vector2( 0.5, 0.5 )
+scale = Vector2( 0.667, 0.667 )
 texture = ExtResource( 19 )
+__meta__ = {
+"_editor_description_": "		"
+}
 
-[node name="shadow" type="Sprite" parent="m/Tabs/VBoxContainer/menuButton/icon/Sprite"]
+[node name="shadow" type="Sprite" parent="m/Tabs/VBoxContainer/menuButton/h/icon/Sprite"]
 self_modulate = Color( 0, 0, 0, 0.501961 )
 show_behind_parent = true
 position = Vector2( 2, 2 )
 texture = ExtResource( 19 )
 
+[node name="production" type="Label" parent="m/Tabs/VBoxContainer/menuButton/h"]
+margin_left = 32.0
+margin_top = 10.0
+margin_right = 62.0
+margin_bottom = 25.0
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 22 )
+text = "Menu"
+
 [node name="Button" type="Button" parent="m/Tabs/VBoxContainer/menuButton"]
-margin_right = 42.0
+margin_right = 62.0
 margin_bottom = 36.0
 rect_min_size = Vector2( 36, 36 )
 focus_mode = 0
@@ -303,14 +322,92 @@ custom_styles/hover = SubResource( 20 )
 custom_styles/pressed = SubResource( 21 )
 custom_styles/normal = SubResource( 19 )
 
+[node name="WishLogButton" type="MarginContainer" parent="m/Tabs/VBoxContainer"]
+unique_name_in_owner = true
+visible = false
+modulate = Color( 0.341176, 0.619608, 0.980392, 1 )
+margin_top = 64.0
+margin_right = 91.0
+margin_bottom = 100.0
+
+[node name="m" type="MarginContainer" parent="m/Tabs/VBoxContainer/WishLogButton"]
+margin_right = 91.0
+margin_bottom = 36.0
+size_flags_horizontal = 4
+custom_constants/margin_right = 5
+custom_constants/margin_top = 5
+custom_constants/margin_left = 5
+custom_constants/margin_bottom = 5
+
+[node name="h" type="HBoxContainer" parent="m/Tabs/VBoxContainer/WishLogButton/m"]
+margin_left = 5.0
+margin_top = 5.0
+margin_right = 86.0
+margin_bottom = 31.0
+custom_constants/separation = 8
+alignment = 1
+
+[node name="icon" type="Panel" parent="m/Tabs/VBoxContainer/WishLogButton/m/h"]
+margin_top = 1.0
+margin_right = 24.0
+margin_bottom = 25.0
+rect_min_size = Vector2( 24, 24 )
+size_flags_horizontal = 4
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 16 )
+
+[node name="Sprite" type="Sprite" parent="m/Tabs/VBoxContainer/WishLogButton/m/h/icon"]
+position = Vector2( 11, 11 )
+scale = Vector2( 1.333, 1.333 )
+texture = ExtResource( 21 )
+
+[node name="shadow" type="Sprite" parent="m/Tabs/VBoxContainer/WishLogButton/m/h/icon/Sprite"]
+self_modulate = Color( 0, 0, 0, 1 )
+show_behind_parent = true
+position = Vector2( 2, 2 )
+texture = ExtResource( 21 )
+
+[node name="wishNotice" type="Sprite" parent="m/Tabs/VBoxContainer/WishLogButton/m/h/icon"]
+unique_name_in_owner = true
+visible = false
+position = Vector2( 22, 0 )
+texture = ExtResource( 25 )
+
+[node name="shadow2" type="Sprite" parent="m/Tabs/VBoxContainer/WishLogButton/m/h/icon/wishNotice"]
+self_modulate = Color( 0, 0, 0, 1 )
+show_behind_parent = true
+position = Vector2( -1, 1 )
+texture = ExtResource( 25 )
+
+[node name="production" type="Label" parent="m/Tabs/VBoxContainer/WishLogButton/m/h"]
+margin_left = 32.0
+margin_top = 5.0
+margin_right = 81.0
+margin_bottom = 20.0
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 22 )
+text = "Wish Log"
+
+[node name="Button" type="Button" parent="m/Tabs/VBoxContainer/WishLogButton"]
+margin_right = 91.0
+margin_bottom = 36.0
+rect_min_size = Vector2( 36, 36 )
+mouse_default_cursor_shape = 2
+theme = ExtResource( 22 )
+custom_styles/hover = SubResource( 20 )
+custom_styles/pressed = SubResource( 21 )
+custom_styles/normal = SubResource( 19 )
+
 [node name="upgradesTab" type="MarginContainer" parent="m/Tabs/VBoxContainer"]
 unique_name_in_owner = true
-margin_top = 64.0
-margin_right = 42.0
-margin_bottom = 106.0
+visible = false
+margin_top = 80.0
+margin_right = 101.0
+margin_bottom = 122.0
 
 [node name="m" type="MarginContainer" parent="m/Tabs/VBoxContainer/upgradesTab"]
-margin_right = 42.0
+margin_right = 101.0
 margin_bottom = 42.0
 custom_constants/margin_right = 5
 custom_constants/margin_top = 5
@@ -320,7 +417,7 @@ custom_constants/margin_bottom = 5
 [node name="h" type="HBoxContainer" parent="m/Tabs/VBoxContainer/upgradesTab/m"]
 margin_left = 5.0
 margin_top = 5.0
-margin_right = 37.0
+margin_right = 96.0
 margin_bottom = 37.0
 custom_constants/separation = 8
 alignment = 1
@@ -345,7 +442,6 @@ texture = ExtResource( 13 )
 
 [node name="production" type="Label" parent="m/Tabs/VBoxContainer/upgradesTab/m/h"]
 unique_name_in_owner = true
-visible = false
 margin_left = 40.0
 margin_top = 8.0
 margin_right = 91.0
@@ -356,7 +452,7 @@ custom_fonts/font = SubResource( 22 )
 text = "Upgrades"
 
 [node name="Button" type="Button" parent="m/Tabs/VBoxContainer/upgradesTab"]
-margin_right = 42.0
+margin_right = 101.0
 margin_bottom = 42.0
 rect_min_size = Vector2( 36, 36 )
 focus_mode = 0
@@ -367,12 +463,13 @@ custom_styles/normal = SubResource( 19 )
 
 [node name="s1tab" type="MarginContainer" parent="m/Tabs/VBoxContainer"]
 unique_name_in_owner = true
-margin_top = 110.0
-margin_right = 42.0
-margin_bottom = 152.0
+visible = false
+margin_top = 156.0
+margin_right = 101.0
+margin_bottom = 198.0
 
 [node name="m" type="MarginContainer" parent="m/Tabs/VBoxContainer/s1tab"]
-margin_right = 42.0
+margin_right = 101.0
 margin_bottom = 42.0
 custom_constants/margin_right = 5
 custom_constants/margin_top = 5
@@ -382,13 +479,14 @@ custom_constants/margin_bottom = 5
 [node name="h" type="HBoxContainer" parent="m/Tabs/VBoxContainer/s1tab/m"]
 margin_left = 5.0
 margin_top = 5.0
-margin_right = 37.0
+margin_right = 96.0
 margin_bottom = 37.0
 custom_constants/separation = 8
 alignment = 1
 
 [node name="icon" type="Panel" parent="m/Tabs/VBoxContainer/s1tab/m/h"]
-margin_right = 32.0
+margin_left = 5.0
+margin_right = 37.0
 margin_bottom = 32.0
 rect_min_size = Vector2( 32, 32 )
 size_flags_horizontal = 4
@@ -406,7 +504,6 @@ position = Vector2( 2, 2 )
 texture = ExtResource( 14 )
 
 [node name="production" type="Label" parent="m/Tabs/VBoxContainer/s1tab/m/h"]
-visible = false
 margin_left = 45.0
 margin_top = 8.0
 margin_right = 85.0
@@ -417,7 +514,7 @@ custom_fonts/font = SubResource( 22 )
 text = "Stage 1"
 
 [node name="Button" type="Button" parent="m/Tabs/VBoxContainer/s1tab"]
-margin_right = 42.0
+margin_right = 101.0
 margin_bottom = 42.0
 rect_min_size = Vector2( 36, 36 )
 focus_mode = 0
@@ -429,9 +526,9 @@ custom_styles/normal = SubResource( 19 )
 [node name="s2tab" type="MarginContainer" parent="m/Tabs/VBoxContainer"]
 unique_name_in_owner = true
 visible = false
-margin_top = 156.0
+margin_top = 202.0
 margin_right = 101.0
-margin_bottom = 198.0
+margin_bottom = 244.0
 
 [node name="m" type="MarginContainer" parent="m/Tabs/VBoxContainer/s2tab"]
 margin_right = 101.0
@@ -491,9 +588,9 @@ custom_styles/normal = SubResource( 19 )
 [node name="s3tab" type="MarginContainer" parent="m/Tabs/VBoxContainer"]
 unique_name_in_owner = true
 visible = false
-margin_top = 156.0
+margin_top = 248.0
 margin_right = 101.0
-margin_bottom = 198.0
+margin_bottom = 290.0
 
 [node name="m" type="MarginContainer" parent="m/Tabs/VBoxContainer/s3tab"]
 margin_right = 101.0
@@ -553,9 +650,9 @@ custom_styles/normal = SubResource( 19 )
 [node name="s4tab" type="MarginContainer" parent="m/Tabs/VBoxContainer"]
 unique_name_in_owner = true
 visible = false
-margin_top = 248.0
+margin_top = 294.0
 margin_right = 101.0
-margin_bottom = 290.0
+margin_bottom = 336.0
 
 [node name="m" type="MarginContainer" parent="m/Tabs/VBoxContainer/s4tab"]
 margin_right = 101.0
@@ -646,12 +743,14 @@ margin_right = 109.0
 margin_bottom = 34.0
 alignment = 2
 
-[node name="random" type="VBoxContainer" parent="WishAnchor/m/v"]
+[node name="randomWish" type="VBoxContainer" parent="WishAnchor/m/v"]
+unique_name_in_owner = true
 margin_top = 25.0
 margin_right = 104.0
 margin_bottom = 25.0
 
-[node name="main" type="VBoxContainer" parent="WishAnchor/m/v"]
+[node name="mainWish" type="VBoxContainer" parent="WishAnchor/m/v"]
+unique_name_in_owner = true
 margin_top = 29.0
 margin_right = 104.0
 margin_bottom = 29.0
@@ -670,5 +769,6 @@ script = ExtResource( 5 )
 [connection signal="pressed" from="m/Menu Hub/MarginContainer/VBoxContainer/4/Button" to="." method="_on_exitToMainMenu_pressed"]
 [connection signal="pressed" from="m/Tabs/VBoxContainer/devButton" to="." method="_on_Button_pressed"]
 [connection signal="pressed" from="m/Tabs/VBoxContainer/menuButton/Button" to="." method="_on_menuButton_pressed"]
+[connection signal="pressed" from="m/Tabs/VBoxContainer/WishLogButton/Button" to="." method="openWishLog"]
 
 [editable path="m/Menu Hub"]

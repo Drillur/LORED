@@ -83,7 +83,6 @@ func _on_level_pressed() -> void:
 	manager.purchase()
 func _on_asleep_pressed() -> void:
 	manager.asleepClicked(true)
-	updateSleepButton()
 
 func _on_mouse_exited() -> void:
 	rt.get_node("global_tip")._call("no")
@@ -99,8 +98,12 @@ func _on_asleep_mouse_entered() -> void:
 	if gv.option["tipSleep"]:
 		rt.get_node("global_tip")._call("lored asleep", {"lored": manager.type})
 
+var appearedOnce := false
 func _on_visibility_changed() -> void:
+	if appearedOnce:
+		return
 	if visible:
+		appearedOnce = true
 		manager.justAppearedForTheFirstTime()
 
 
@@ -114,7 +117,7 @@ func enterStandby():
 	get_node("%info").hide()
 	get_node("%sleep").hide()
 	jobs.hide()
-	displayFuel()
+	get_node("%fuel").hide()
 
 func enterActive():
 	get_node("%info").show()
@@ -122,6 +125,7 @@ func enterActive():
 		get_node("%sleep").show()
 	if "jobs" in taq.completed_wishes:
 		jobs.show()
+	displayFuel()
 
 
 
@@ -157,7 +161,7 @@ func jobStarted(duration: float, startTime: int):
 
 func updateProduction(resource: int = primaryResource):
 	production.show()
-	production.text = lv.netText(resource) + "/s"
+	production.text = lv.maxNetText(resource) + "/s"
 
 func hideProduction():
 	production.hide()
@@ -227,6 +231,11 @@ func displayFuel():
 	else:
 		get_node("%pinnedFuel").stop()
 
+func emote(emote: MarginContainer):
+	get_node("%emote").add_child(emote)
+	emote.rect_position = Vector2(-emote.rect_size.x + 28, -emote.rect_size.y + 10)
+	emote.go()
+
 
 
 # - - - Visual Flair shit?
@@ -238,10 +247,13 @@ func levelUpFlash():
 	flash.flash(manager.color)
 
 func levelUpText():
-	var text = gv.SRC["lored level up"].instance()
-	misc.add_child(text)
-	text.rect_position = Vector2(rect_size.x / 2 - text.rect_size.x / 2, -text.rect_size.y - 10)
-	text.go(manager.level)
+	newOutputText({
+		"text": fval.f(manager.level) if manager.level > 1 else "",
+		"icon": gv.sprite["level"],
+		"color": manager.color,
+		"texture modulate": manager.color,
+		"levelup": true
+	})
 
 var outputTextTimer: Timer
 func throwOutputTexts(allTexts: Array):
@@ -254,8 +266,11 @@ func newOutputText(details: Dictionary):
 	var outputText = gv.SRC["flying text"].instance()
 	outputText.init(details)
 	#outputText.rect_position = Vector2(rect_size.x * 0.825 - (outputText.rect_size.x / 2), 0) 
-	outputText.rect_position = Vector2(-rect_global_position.x + animation.global_position.x - (outputText.rect_size.x / 2), 0) 
-	get_node("Node2D").add_child(outputText)
+	outputText.rect_position = Vector2(-rect_global_position.x + animation.global_position.x - (outputText.rect_size.x / 2), 0)
+	if "levelup" in details.keys():
+		details["life"] = 200
+		outputText.rect_position.x = (rect_size.x / 2) - (outputText.rect_size.x / 2)
+	get_node("misc").add_child(outputText)
 
 
 

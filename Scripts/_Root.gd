@@ -8,11 +8,13 @@ const prefab := {
 
 onready var menu = get_node("%Menu Hub")
 
-var saved_vars := ["emote_events", "tabsExpanded"]
+var saved_vars := ["tabsExpanded", "WishLogButtonVisible"]
 
 var content := {}
 var instances := {}
 var upgrade_dtexts := {}
+
+var WishLogButtonVisible := false
 
 
 const gnLOREDs = "LORED Manager"
@@ -27,7 +29,83 @@ var task_awaiting := "no"
 
 
 
-var hax = 1 # 1 for normal
+
+
+func save() -> String:
+	
+	var data := {}
+	
+	for x in saved_vars:
+		if get(x) is Big:
+			data[x] = get(x).save()
+		else:
+			data[x] = var2str(get(x))
+	
+	data["options"] = get_node("%OptionsMenu").save()
+	data["EmoteManager"] = EmoteManager.save()
+	data["loreds"] = lv.save()
+	
+	
+	data["upgrades"] = {}
+	for x in gv.up:
+		
+		data["upgrades"][x] = gv.up[x].save()
+	
+	
+	data["wish"] = taq.save()
+	
+	return var2str(data)
+
+func _load(data: Dictionary):
+	
+	#*
+	var saved_vars_dict := {}
+	
+	for x in saved_vars:
+		saved_vars_dict[x] = get(x)
+	
+	var loadedVars = SaveManager.loadSavedVars(saved_vars_dict, data)
+	
+	for x in saved_vars:
+		if not x in loadedVars:
+			continue
+		set(x, loadedVars[x])
+	#*
+	
+	get_node("%OptionsMenu").load(str2var(data["options"]))
+	EmoteManager.load(str2var(data["EmoteManager"]))
+	lv.load(str2var(data["loreds"]))
+	
+	for x in gv.up:
+		if not x in data["upgrades"].keys():
+			continue
+		gv.up[x].load(str2var(data["upgrades"][x]))
+		
+		if gv.up[x].refundable:
+			gv.up[x].refund()
+		else:
+			if gv.up[x].active():
+				gv.up[x].apply()
+		
+		if not gv.up[x].have:
+			continue
+		
+		if x == "ROUTINE":
+			continue
+		
+		if not x in gv.list.upgrade["owned " + str(gv.up[x].tab)]:
+			gv.list.upgrade["owned " + str(gv.up[x].tab)].append(x)
+		
+		gv.up[x].sync()
+	
+	
+	taq.load(str2var(data["wish"]))
+	
+	
+	activate_lb_effects()
+
+
+
 
 func _ready():
 	
@@ -71,7 +149,6 @@ func game_start(successful_load: bool) -> void:
 	lv.lored[lv.Type.COAL].unlock()
 	
 	if not successful_load:
-		LogManager.enableAllOptions()
 		newGame()
 	
 	else:
@@ -82,8 +159,15 @@ func game_start(successful_load: bool) -> void:
 				lv.lored[type].unlock()
 				lv.lored[type].unlockJobResources()
 				lv.lored[type].enterActive()
+				lv.lored[type].updateMaxDrain()
 		
 		getOfflineEarnings(gv.cur_clock - gv.save_slot_clock - 30)
+		
+		if gv.version_older_than(SaveManager.game_version, ProjectSettings.get_setting("application/config/Version")):
+			get_node("%Menu Hub").get_node("%notice_patchNotes").show()
+		
+		if WishLogButtonVisible:
+			get_node("%WishLogButton").show()
 	
 	taq.seekNewWish()
 	
@@ -111,12 +195,8 @@ func game_start(successful_load: bool) -> void:
 	# ref
 	if true:
 		
-		emote_ville()
 		gv.updateResources()
 		get_node("%StatsMenu").updateAll()
-		
-		if gv.version_older_than(SaveManager.game_version, ProjectSettings.get_setting("application/config/Version")):
-			get_node("%Menu Hub").get_node("%notice_patchNotes").show()
 		
 		# b_upgrade_tab
 		if true:
@@ -139,7 +219,6 @@ func game_start(successful_load: bool) -> void:
 	
 	gv.emit_signal("gameStarted")
 	
-	# hax
 	if true:
 		
 		if gv.dev_mode:
@@ -282,6 +361,8 @@ func hideAllMenus():
 	get_node("%OptionsMenu").hide()
 	get_node("%Earnings Report").hide()
 	get_node("%StatsMenu").hide()
+	get_node("%WishLog").hide()
+	get_node("%PatchNotesMenu").hide()
 	if get_node(gnupcon).get_node("v").visible:
 		get_node(gnupcon).go_back()
 	get_node(gnupcon).hide()
@@ -295,6 +376,7 @@ func exitToMainMenu():
 func close():
 	taq.close() #002
 	gv.close()
+	EmoteManager.close()
 
 func _on_upgrades_pressed() -> void:
 	
@@ -560,51 +642,8 @@ func w_total_per_sec(clock_dif : float) -> void:
 	for r in gv.resource:
 		if gv.resource[r].less(0):
 			gv.resource[r] = Big.new(0)
-	
-	# upgrade-only stuff
-	if true:
-		
-		if gv.up["I DRINK YOUR MILKSHAKE"].active():
-			var num_of_burner_loreds := 0
-			for x in gv.g:
-				if not gv.g[x].active: continue
-				if not "bur " in gv.g[x].type: continue
-				num_of_burner_loreds += 1
-			var gay = Big.new(num_of_burner_loreds).m(clock_dif).m(0.0001)
-			gv.up["I DRINK YOUR MILKSHAKE"].effects[0].effect.a.a(gay)
 
 
-
-var emote_events := {
-	"whoa!": false,
-	"i'm so glad Coal is back": false,
-}
-func emote_ville():
-	
-	#emoteville
-	return
-	while true:
-		
-		var t = Timer.new()
-		add_child(t)
-		t.start(2)
-		yield(t, "timeout")
-		t.queue_free()
-		
-		for x in emote_events:
-			if emote_events[x] == true:
-				for v in emote_events:
-					if v == x:
-						break
-					emote_events[v] = true
-				break
-			
-			match x:
-				"i'm so glad Coal is back":
-					if lv.lored[lv.Type.STONE].currentFuel.greater(2) and taq.checkpoint < 2:
-						gv.g["stone"].manager.speak("i'm so glad to have Coal back again")
-						gv.g["coal"].manager.reply("thank you :)")
-						emote_events[x] = true
 
 
 
@@ -711,9 +750,6 @@ func reset(reset_type: int, manual := true) -> void:
 		
 		if gv.up["aw <3"].active():
 			lv.lored[lv.Type.COAL].forcePurchase()
-		
-		for x in lv.Type.values():
-			lv.lored[x].autoWatch()
 	
 
 func reset_stats(reset_type: int):
@@ -958,7 +994,9 @@ func _on_openPatchNotesMenu() -> void:
 	get_node("%Menu Hub").get_node("%notice_patchNotes").hide()
 func _on_openLogContainer() -> void:
 	get_node("%Menu Hub").hide()
-	get_node("%LogContainer").show()
+	get_node("%WishLog").show()
+func openWishLog():
+	get_node("%WishLog").visible = not get_node("%WishLog").visible
 
 
 func _on_exitToMainMenu_pressed() -> void:
@@ -1005,8 +1043,8 @@ func b_tabkey(key):
 				get_node("%PatchNotesMenu").hide()
 				return
 			
-			if get_node("%LogContainer").visible:
-				get_node("%LogContainer").hide()
+			if get_node("%WishLog").visible:
+				get_node("%WishLog").hide()
 				return
 			
 			# open the menu
@@ -1050,19 +1088,19 @@ func switch_tabs(target: int):
 		return
 	
 	menu.hide()
+	get_node("%SaveMenu").hide()
+	get_node("%WishLog").hide()
+	get_node("%OptionsMenu").hide()
+	get_node("%StatsMenu").hide()
+	get_node("%PatchNotesMenu").hide()
 	
 	# stored page vertical
-	gv.tab_vertical[gv.page - gv.Tab.S1] = get_node(gnLOREDs + "/sc").scroll_vertical
+	gv.tab_vertical[gv.page - gv.Tab.S1] = get_node(gnLOREDs + "/%sc").scroll_vertical
 	
-	gv.page = target # gv.Tab.S2
-	get_node("m/v/top/h/resources").switch_tabs(target)
+	gv.page = target
 	get_node(gnupcon).hide()
 	
-	for x in get_node(gnLOREDs + "/sc/v").get_children():
-		if x.name == str(target - gv.Tab.S1 + 1) or "indent" in x.name:
-			x.show()
-		else:
-			x.hide()
+	get_node(gnLOREDs).switchTab(str(target - gv.Tab.S1 + 1))
 	
 	var t = Timer.new()
 	t.set_wait_time(0.005)
@@ -1072,7 +1110,7 @@ func switch_tabs(target: int):
 	yield(t, "timeout")
 	t.queue_free()
 	
-	get_node(gnLOREDs + "/sc").scroll_vertical = gv.tab_vertical[gv.page - gv.Tab.S1]
+	get_node(gnLOREDs + "/%sc").scroll_vertical = gv.tab_vertical[gv.page - gv.Tab.S1]
 
 func open_up_tab(tab: int):
 	
@@ -1140,88 +1178,26 @@ func throwText(details: Dictionary):
 	
 	ft.init(details)
 	
-	ft.rect_position = details["position"]
+	ft.rect_position = Vector2(details["position"].x, details["position"].y - get_node("WishAnchor").position.y)
 	
 	get_node("WishAnchor").add_child(ft)
 
+func wishNotice():
+	if not gv.option["wishVicosOnMainScreen"]:
+		if not get_node("%WishLog").visible:
+			get_node("%wishNotice").show()
+func clearWishNotice():
+	if not gv.option["wishVicosOnMainScreen"]:
+		get_node("%wishNotice").hide()
 
 
 
-func save() -> String:
-	
-	var data := {}
-	
-	for x in saved_vars:
-		if get(x) is Big:
-			data[x] = get(x).save()
-		else:
-			data[x] = var2str(get(x))
-	
-	data["options"] = get_node("%OptionsMenu").save()
-	
-	data["loreds"] = lv.save()
-	
-	
-	data["upgrades"] = {}
-	for x in gv.up:
-		
-		data["upgrades"][x] = gv.up[x].save()
-	
-	
-	data["wish"] = taq.save()
-	
-	return var2str(data)
-
-func _load(data: Dictionary):
-	
-	#*
-	var saved_vars_dict := {}
-	
-	for x in saved_vars:
-		saved_vars_dict[x] = get(x)
-	
-	var loadedVars = SaveManager.loadSavedVars(saved_vars_dict, data)
-	
-	for x in saved_vars:
-		if not x in loadedVars:
-			continue
-		set(x, loadedVars[x])
-	#*
-	
-	get_node("%OptionsMenu").load(str2var(data["options"]))
-	
-	lv.load(str2var(data["loreds"]))
-	
-	for x in gv.up:
-		if not x in data["upgrades"].keys():
-			continue
-		gv.up[x].load(str2var(data["upgrades"][x]))
-		
-		if gv.up[x].refundable:
-			gv.up[x].refund()
-		else:
-			if gv.up[x].active():
-				gv.up[x].apply()
-		
-		if not gv.up[x].have:
-			continue
-		
-		if x == "ROUTINE":
-			continue
-		
-		if not x in gv.list.upgrade["owned " + str(gv.up[x].tab)]:
-			gv.list.upgrade["owned " + str(gv.up[x].tab)].append(x)
-		
-		gv.up[x].sync()
-	
-	
-	taq.load(str2var(data["wish"]))
-	
-	
-	activate_lb_effects()
 
 func _on_Button_pressed() -> void:
-	gv.addToResource(gv.Resource.STONE, 100)
+	gv.addToResource(gv.Resource.STONE, 1000)
+	#EmoteManager.emote(EmoteManager.Type.COPPER7)
+#	lv.lored[lv.Type.IRON].lored.outputBits.fullReport()
+#	lv.lored[lv.Type.IRON].lored.inputBits.fullReport()
 	pass
 
 

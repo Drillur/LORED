@@ -9,9 +9,6 @@ rect_min_size = Vector2( 5, 5 )
 size_flags_horizontal = 0
 size_flags_vertical = 0
 script = ExtResource( 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="bg" type="Panel" parent="."]
 margin_right = 5.0

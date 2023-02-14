@@ -8,19 +8,21 @@ var bits := {}
 var base: Big
 var total: Big setget , getTotal
 
+var name: String
 var totalText: String setget , getTotalText
 
 var totalUpdated := false
 
 
 
-func _init(_bits: Dictionary):
+func _init(_bits: Dictionary, _name := ""):
 	if lv.Num.BASE in _bits:
 		base = Big.new(_bits[lv.Num.BASE])
 		_bits.erase(lv.Num.BASE)
 	else:
 		base = Big.new(0)
 	bits = _bits
+	name = _name
 
 
 
@@ -36,6 +38,15 @@ func getTotal() -> Big:
 		elif f == lv.Num.MULTIPLY:
 			for g in bits[f]:
 				total.m(bits[f][g])
+	
+	for x in dynamic:
+		gv.up[x].sync_effects()
+		var effectIndex: int = dynamic[x]
+		total.m(gv.up[x].effects[effectIndex].effect.t)
+	
+	if name == "output":
+		total.m(gv.hax_pow)
+	
 	totalUpdated = true
 	return total
 
@@ -85,4 +96,29 @@ func reset():
 func report():
 	for folder in bits:
 		for item in bits[folder]:
-			print(lv.Num.keys()[folder], "//", lv.Type.keys()[item], ": ", bits[folder][item].toString())
+			#print(lv.Num.keys()[folder], "//", lv.Type.keys()[item], ": ", bits[folder][item].toString())
+			print(lv.Num.keys()[folder], "//", lv.Num.keys()[item], ": ", bits[folder][item].toString())
+
+func fullReport():
+	
+	total = Big.new(base)
+	print("* * * FULL REPORT * * *\n!Don't use unless debugging. Restart game after use.!\n - Base: ", total.toString())
+	for f in bits:
+		if f == lv.Num.ADD or f == lv.Num.ADD_FUEL:
+			for g in bits[f]:
+				total.a(bits[f][g])
+				print(lv.Num.keys()[f], "//", lv.Num.keys()[g])
+		elif f == lv.Num.DIVIDE:
+			for g in bits[f]:
+				total.d(bits[f][g])
+				print(lv.Num.keys()[f], "//", lv.Num.keys()[g])
+		elif f == lv.Num.MULTIPLY:
+			for g in bits[f]:
+				total.m(bits[f][g])
+				print(lv.Num.keys()[f], "//", lv.Num.keys()[g])
+		print(" - Total: ", total.toString())
+	
+
+var dynamic := {}
+func updateDynamic(_dynamic: Dictionary):
+	dynamic = _dynamic

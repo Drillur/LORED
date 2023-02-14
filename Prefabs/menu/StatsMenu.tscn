@@ -90,7 +90,7 @@ size = 12
 font_data = ExtResource( 1 )
 
 [node name="StatsMenu" type="MarginContainer"]
-margin_right = 500.0
+margin_right = 512.0
 margin_bottom = 600.0
 rect_min_size = Vector2( 0, 600 )
 size_flags_horizontal = 4

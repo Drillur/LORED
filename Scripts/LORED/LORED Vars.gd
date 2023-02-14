@@ -50,8 +50,8 @@ enum Num {
 	MULTIPLY,
 	DIVIDE,
 	ADD,
-	ADD_FUEL,
 	SUBTRACT,
+	ADD_FUEL,
 	FROM_LEVELS,
 	FROM_UPGRADES,
 	BY_LORED_OUTPUT,
@@ -66,6 +66,8 @@ enum Attribute {
 	COST,
 	INPUT,
 	CRIT,
+	FUEL_COST,
+	FUEL_STORAGE,
 }
 
 enum Job {
@@ -157,7 +159,7 @@ enum ReasonCannotBeginJob {
 
 
 
-var DEFAULT_KEY_LOREDS := [Type.STONE, Type.CONCRETE, Type.MALIGNANCY, Type.WATER, Type.LEAD, Type.TREES, Type.SOIL, Type.STEEL, Type.WIRE, Type.GLASS, Type.TUMORS, Type.WOOD]
+var DEFAULT_KEY_LOREDS := [Type.STONE, Type.CONCRETE, Type.MALIGNANCY, Type.WATER, Type.LEAD, Type.TREES, Type.SOIL, Type.STEEL, Type.WIRE, Type.GLASS, Type.TUMORS, Type.WOOD, Type.IRON, Type.COPPER, Type.COAL, Type.JOULES]
 var loreds_required_for_s2_autoup_upgrades_to_begin_purchasing := [Type.SEEDS, Type.TREES, Type.WATER, Type.SOIL, Type.HUMUS, Type.SAND, Type.GLASS, Type.LIQUID_IRON, Type.STEEL, Type.HARDWOOD, Type.AXES, Type.WOOD, Type.DRAW_PLATE, Type.WIRE]
 const smallerAnimationList := [
 	Type.STONE,
@@ -178,7 +180,6 @@ const smallerAnimationList := [
 	Type.SEEDS,
 	Type.TREES,
 	Type.WOOD,
-	Type.HARDWOOD,
 	Type.LIQUID_IRON,
 	Type.SAND,
 	Type.GLASS,
@@ -202,12 +203,13 @@ func open():
 	
 	initGain()
 	initDrain()
+	initMaxDrain()
 	setLoredByShorthand()
 	
 	gv.loreds_required_for_s2_autoup_upgrades_to_begin_purchasing = loreds_required_for_s2_autoup_upgrades_to_begin_purchasing
 
 func close():
-	for x in ["lored", "gain", "gainUpdated", "gainBits", "drain", "drainUpdated", "drainBits", "net", "drainOrGainUpdated"]:
+	for x in ["lored", "gain", "gainUpdated", "gainBits", "maxDrain", "maxDrainBits", "drain", "drainUpdated", "drainBits", "net", "drainOrGainUpdated"]:
 		set(x, {})
 
 
@@ -223,6 +225,8 @@ func save() -> String:
 func load(data: Dictionary) -> void:
 	for x in data:
 		lored[x].load(str2var(data[x]))
+	for x in lored.keys():
+		lored[x].syncAllNow()
 
 
 func syncStage1and2_costModifier():
@@ -294,6 +298,8 @@ func updateDrain(resource: int, lored: int, val: Big):
 	drainOrGainUpdated[resource] = true
 func updateFuelDrain(resource: int, lored: int, val: Big):
 	drainBits[resource].setValue(Num.ADD_FUEL, lored, val)
+	maxDrainBits[resource].setValue(Num.ADD_FUEL, lored, val)
+	maxDrainUpdated[resource] = true
 	drainUpdated[resource] = true
 	drainOrGainUpdated[resource] = true
 
@@ -306,8 +312,33 @@ func drainRate(resource: int) -> Big:
 func reportDrain(resource: int):
 	print("---- ", gv.Resource.keys()[resource], " DRAIN REPORT ----")
 	print(" * Total: ", drainRate(resource).toString(), " *")
-	#this goddamn shit does not work in the slightest. fucking fuck.
 	drainBits[resource].report()
+
+
+var maxDrain := {}
+var maxDrainBits := {}
+var maxDrainUpdated := {}
+func initMaxDrain():
+	for resource in gv.Resource.values():
+		maxDrainBits[resource] = Bits.new({
+			Num.ADD: {}, # typical use goes here
+			Num.ADD_FUEL: {}, # fuel use only goes here
+		})
+		maxDrainUpdated[resource] = true
+func updateMaxDrain(resource: int, lored: int, val: Big):
+	maxDrainBits[resource].setValue(Num.ADD, lored, val)
+	maxDrainUpdated[resource] = true
+func maxDrainRate(resource: int) -> Big:
+	if maxDrainUpdated[resource]:
+		maxDrain[resource] = maxDrainBits[resource].total
+		maxDrainUpdated[resource] = false
+	return maxDrain[resource]
+
+func reportMaxDrain(resource: int):
+	print("---- ", gv.Resource.keys()[resource], " MAX REPORT ----")
+	print(" * Total: ", maxDrainRate(resource).toString(), " *")
+	maxDrainBits[resource].report()
+
 
 
 var net := {} # text only.
@@ -318,6 +349,12 @@ func recalculateNet(resource: int):
 	drainOrGainUpdated[resource] = false
 	var gain: Big = Big.new(gainRate(resource))
 	var drain: Big = Big.new(drainRate(resource))
+	var maxDrain: Big = Big.new(maxDrainRate(resource))
+	
+	if gain.greater_equal(maxDrain):
+		maxNet[resource] = Big.new(gain).s(maxDrain).toString()
+	else:
+		maxNet[resource] = "-" + maxDrain.s(gain).toString()
 	
 	if gain.greater_equal(drain):
 		net[resource] = gain.s(drain).toString()
@@ -348,6 +385,22 @@ func reportNet(resource: int):
 	reportGain(resource)
 	reportDrain(resource)
 
+var maxNet := {}
+func maxNet(resource: int) -> Array:
+	
+	var gain: Big = Big.new(gainRate(resource))
+	var drain: Big = Big.new(maxDrainRate(resource))
+	
+	if gain.greater(drain):
+		return [gain.s(drain), 1]
+	if gain.equal(drain):
+		return [Big.new(0), 0]
+	return [drain.s(gain), -1]
+func maxNetText(resource: int) -> String:
+	if drainOrGainUpdated[resource]:
+		recalculateNet(resource)
+	return maxNet[resource]
+
 
 func getOfflineEarnings(timeOffline: int):
 	gv.clearOfflineEarnings()
@@ -360,7 +413,6 @@ func logOfflineEarnings(timeOffline: int):
 	for resource in gv.offlineEarnings:
 		var text = "+" if gv.offlineEarnings[resource][1] == 1 else "-"
 		data["resources"][resource] = text + gv.offlineEarnings[resource][0].toString()
-	LogManager.log(LogManager.Type.OFFLINE_EARNINGS, var2str(data))
 
 #var offlineEarnings: Dictionary setget , getOfflineEarnings
 #func getOfflineEarnings() -> Dictionary:
@@ -425,6 +477,8 @@ func getFadedColor(type: int) -> Color:
 		_:
 			var loredColor = lv.lored[type].color
 			return Color((1 - loredColor.r) / 2 + loredColor.r, (1 - loredColor.g) / 2 + loredColor.g, (1 - loredColor.b) / 2 + loredColor.b)
+
+
 
 
 

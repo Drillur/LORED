@@ -301,14 +301,14 @@ func _on_halt_pressed():
 	halt()
 	
 	if is_instance_valid(rt.get_node("global_tip").tip):
-		rt.get_node("global_tip").tip.cont["halt"].r_update()
+		rt.get_node("global_tip").tip.cont.r_update()
 
 func _on_hold_pressed():
 	
 	hold()
 	
 	if is_instance_valid(rt.get_node("global_tip").tip):
-		rt.get_node("global_tip").tip.cont["hold"].r_update()
+		rt.get_node("global_tip").tip.cont.r_update()
 
 
 func autobuy():
@@ -590,8 +590,8 @@ func w_bonus_output(_key : String, inhand : Big) -> void:
 				gv.increase_lb_xp(bla)
 				taq.increaseProgress(gv.Objective.RESOURCES_PRODUCED, "stone", bla)
 		"irono":
-			if gv.up["I RUN"].active():
 				gv.resource[gv.Resource.IRON].a(inhand)
+			if gv.up["I RUN"].active():
 				gv.increase_lb_xp(inhand)
 				taq.increaseProgress(gv.Objective.RESOURCES_PRODUCED, "iron", inhand)
 		"copo":

@@ -33,9 +33,8 @@ var obj: Objective # objective
 var rew: Array # rewards
 var key_rew: Array
 
-var vico: MarginContainer
+var vico: Array
 var vico_set := false
-signal vico_just_set
 var tooltip: MarginContainer
 var tooltip_active := false
 
@@ -256,7 +255,7 @@ class Reward:
 				taq.max_random_wishes += amount.toFloat()
 			gv.WishReward.AUTOMATED:
 				if key == str(gv.WishReward.HALT_AND_HOLD):
-					taq.automatedHaltAndHold = true
+					taq.automatedSleep = true
 				elif key == str(gv.WishReward.WISH_TURNIN):
 					taq.automatedCompletion = true
 			gv.WishReward.EASIER:
@@ -267,6 +266,8 @@ class Reward:
 						lv.sleepUnlocked()
 					"jobs":
 						lv.jobsUnlocked()
+			gv.WishReward.ENABLE_RANDOM_EMOTES:
+				EmoteManager.randomEmotesAllowed = true
 
 
 
@@ -329,8 +330,7 @@ func _init(_key: String, data: Dictionary = {}):
 		
 		random = key == "random"
 		
-		var construct_method = "construct_" + key
-		call(construct_method)
+		call("construct_" + key)
 		
 		assumeName()
 		assumeColor()
@@ -389,18 +389,19 @@ func clearTooltip():
 	tooltip_active = false
 
 func setVico(_vico: MarginContainer):
-	vico = _vico
-	vico.wish = self
+	vico.append(_vico)
+	_vico.wish = self
 	vico_set = true
-	emit_signal("vico_just_set")
 
 
 
 func die(inform_taq := true):
-	vico.hide()
 	exists = false
-	if tooltip_active:
-		vico._on_Button_mouse_exited()
+	for x in vico:
+		x.hide()
+		x.queue_free()
+		if tooltip_active:
+			x._on_Button_mouse_exited()
 	if random:
 		taq.random_wishes -= 1
 	if inform_taq:
@@ -426,18 +427,19 @@ func checkIfReady():
 	if obj.complete:
 		ready()
 	else:
-		if is_instance_valid(vico):
-			vico.update()
+		for x in vico:
+			if is_instance_valid(x):
+				x.update()
 	
 
 func ready():
 	
-	#print("---------------ready called")
-	if not is_instance_valid(vico):
-		return
-	
 	ready = true
-	vico.ready()
+	
+	for x in vico:
+		if not is_instance_valid(x):
+			continue
+		x.ready()
 	
 	if taq.automatedCompletion:
 		# don't care about the tooltip. it's gonna go away anyway
@@ -520,7 +522,7 @@ func construct_easier():
 
 func construct_ciorany():
 	giver = str(lv.Type.WATER)
-	help_text = "I'm actually in [i]shock[/i] at how many you were able to gather!!! And it didn't take you [i]UNDEFINED[/i] years, like it took Seeds and Trees and I!!!"
+	help_text = "I'm actually in [i]shock[/i] at how many you were able to gather!!! And it didn't take you [i]UNDEFINED[/i] years, like it took Maybe and Trees and I!!!"
 	thank_text = "I'm so happy :')"
 	obj = Objective.new(gv.Objective.UPGRADE_PURCHASED, "Cioran")
 	rew.append(Reward.new(gv.WishReward.RESOURCE, str(gv.Resource.TUMORS), "1000"))
@@ -586,7 +588,7 @@ func construct_horsey():
 	giver = str(lv.Type.HUMUS)
 	help_text = "Neigh!"
 	thank_text = "Whinny."
-	obj = Objective.new(gv.Objective.LORED_UPGRADED, "humus")
+	obj = Objective.new(gv.Objective.LORED_UPGRADED, str(lv.Type.HUMUS))
 	rew.append(Reward.new(gv.WishReward.RESOURCE, str(gv.Resource.WATER), "500"))
 	rew.append(Reward.new(gv.WishReward.RESOURCE, str(gv.Resource.WOOD), "500"))
 	rew.append(Reward.new(gv.WishReward.RESOURCE, str(gv.Resource.LIQUID_IRON), "500"))
@@ -604,8 +606,8 @@ func construct_steely():
 	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.GALENA)))
 func construct_joy3():
 	giver = str(lv.Type.IRON)
-	help_text = "Our new friends are so cool! I'm glad we can all come together and have fun. Let's get some more joy!\n\nWhat's automated halt and hold? I don't know. Is there a time where you have to manually click on halt or hold?"
-	thank_text = "Yay! Automatic halty hold! Whatever that is!"
+	help_text = "Our new friends are so cool! I'm glad we can all come together and have fun. Let's get some more joy!\n\nWhat's automated sleepy sleep? I don't know. Is there a time where you have to manually click on Sleep?"
+	thank_text = "Yay! Let's go to sleep."
 	obj = Objective.new(gv.Objective.RESOURCES_PRODUCED, str(gv.Resource.JOY), "10")
 	rew.append(Reward.new(gv.WishReward.RESOURCE, str(gv.Resource.WATER), "500"))
 	rew.append(Reward.new(gv.WishReward.RESOURCE, str(gv.Resource.WOOD), "500"))
@@ -629,8 +631,8 @@ func construct_treey():
 
 func construct_axy():
 	giver = str(lv.Type.AXES)
-	help_text = "I require 0.8 Hardwood and 0.25 Steel per cycle. Satisy these requirements and I will assemble 1.0 axes. If you require further assistance, you can find help in the Help section of your Alaxa app."
-	thank_text = "Job complete."
+	help_text = "I require 0.8 Hardwood and 0.25 Steel per cycle. Satisfy these requirements and I will assemble 1.0 axes. If you require further assistance, you can find help in the Help section of your Alaxa app."
+	thank_text = "Task complete."
 	obj = Objective.new(gv.Objective.RESOURCES_PRODUCED, str(gv.Resource.HARDWOOD), "20")
 	rew.append(Reward.new(gv.WishReward.RESOURCE, str(gv.Resource.WOOD), "150"))
 	rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.HUMUS)))
@@ -665,10 +667,10 @@ func construct_gramma():
 	rew.append(Reward.new(gv.WishReward.RESOURCE, str(gv.Resource.AXES), "5"))
 	rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.AXES)))
 	rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.WOOD)))
-	rew.append(Reward.new(gv.gv.WishReward.NEW_LORED, str(lv.Type.HARDWOOD)))
+	rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.HARDWOOD)))
 	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.AXES)))
 	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.WOOD)))
-	key_rew.append(Reward.new(gv.gv.WishReward.NEW_LORED, str(lv.Type.HARDWOOD)))
+	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.HARDWOOD)))
 
 func construct_liqy():
 	giver = str(lv.Type.LIQUID_IRON)
@@ -684,7 +686,7 @@ func construct_liqy():
 
 func construct_waterbuddy():
 	giver = str(lv.Type.WATER)
-	help_text = "Okay, lemme show you around my pool. Check it out!\n\nAlso, in case you were curious, I can help you figure out the relationship Seeds and Trees and I have. It's pretty simple: Trees grows seeds to trees using seeds. I mean trees. Or--oh, wait, did I say it right the first time?\n\nHuh? Anyway, I don't know. I'm still just so stoked to have you here!!"
+	help_text = "Okay, lemme show you around my pool. Check it out!\n\nHuh? You wanted help figuring out how to make trees? Oh... well, I think that, possibly, Maybe grows trees out of water and--oh, no! No, he--maybe Maybe gives Trees seeds for trees. To make trees. But, using water. No, okay. Wait, yeah. I said it right.\n\nAnyway, I don't know. I'm still just so stoked to have you here!!"
 	thank_text = "You did it! Man, I can tell that we are gonna be friends."
 	obj = Objective.new(gv.Objective.LORED_UPGRADED, str(lv.Type.SEEDS))
 	rew.append(Reward.new(gv.WishReward.RESOURCE, str(gv.Resource.HARDWOOD), "95"))
@@ -696,8 +698,8 @@ func construct_waterbuddy():
 
 func construct_a_new_leaf():
 	giver = str(lv.Type.WATER)
-	help_text = "Whoa!\n\nSeeds, Trees, look! There's others out there! :0 There are so many of them! Whoooooooooooa! Whaaaaat?! !!!!"
-	thank_text = "It's really great to meet you!! I'm Water.\n\nHey, come here! Let me show you my pool!"
+	help_text = "Whoa!\n\nMaybe, Trees, look! There's others out there! :0 There are so many of them! Whoooooooooooa! Whaaaaat?! !!!!"
+	thank_text = "It's really great to meet you!! I'm Water.\n\nHey, come here! I want to show you my pool!"
 	obj = Objective.new(gv.Objective.UPGRADE_PURCHASED, "upgrade_name")
 	rew.append(Reward.new(gv.WishReward.RESOURCE, str(gv.Resource.SEEDS), "2"))
 	rew.append(Reward.new(gv.WishReward.RESOURCE, str(gv.Resource.SOIL), "25"))
@@ -825,10 +827,12 @@ func construct_collection():
 	rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.COPPER_ORE)))
 	rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.IRON)))
 	rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.COPPER)))
+	rew.append(Reward.new(gv.WishReward.ENABLE_RANDOM_EMOTES, ""))
 	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.IRON_ORE)))
 	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.COPPER_ORE)))
 	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.IRON)))
 	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.COPPER)))
+	key_rew.append(Reward.new(gv.WishReward.ENABLE_RANDOM_EMOTES, ""))
 
 func construct_fuel():
 	giver = str(lv.Type.COAL)
@@ -840,7 +844,7 @@ func construct_fuel():
 
 func construct_stuff():
 	giver = str(lv.Type.STONE)
-	help_text = "I want to pick up rocks, but I'm out of [i]stuff[/i]. Help!"
+	help_text = "I want to pick up rocks, but I'm out of [img=<16>]" + gv.sprite["fuelCost"].get_path() + "[/img] [i]fuel[/i]. Help!\n\nClicking on Coal's [img=<16>]" + gv.sprite["level"].get_path() + "[/img] Level Up button for the first time will get him to become active."
 	thank_text = "That's the stuff. Thanks!"
 	obj = Objective.new(gv.Objective.LORED_UPGRADED, str(lv.Type.COAL))
 
@@ -997,7 +1001,7 @@ func construct_random_upgrade_lored():
 	
 	setRandomGiver()
 	
-	obj = Objective.new(gv.Objective.LORED_UPGRADED, str(randomLORED()))
+	obj = Objective.new(gv.Objective.LORED_UPGRADED, str(gv.randomLORED()))
 	
 	generateRandomRewards(30)
 
@@ -1089,9 +1093,6 @@ func fixKeyAndGetSurplus() -> String:
 func setRandomGiver():
 	giver = str(gv.list.lored["active"][randi() % gv.list.lored["active"].size()])
 
-func randomLORED() -> int:
-	return gv.list.lored["active"][randi() % gv.list.lored["active"].size()]
-
 func randomResource() -> int:
 	return gv.list["unlocked resources"][randi() % gv.list["unlocked resources"].size()]
 
@@ -1115,7 +1116,7 @@ func generateRandomRewards(reward_mod := 0.0):
 		var amount: Big
 		
 		if resource <= 35:
-			var gain = lv.gainRate(resource)
+			var gain = Big.new(lv.gainRate(resource)).m(0.75)
 			amount = Big.max(Big.new(reward_mod).m(rand_range(0.5,1.5)).m(Big.max(gain, 1)), 1.0)
 		
 		amount.roundDown()

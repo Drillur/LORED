@@ -818,13 +818,15 @@ func init_upgrades():
 				gv.up[f].requires.append("THE WITCH OF LOREDELITH")
 				
 				f = "MECHANICAL"
-				gv.up[f] = Upgrade.new(f, "s2m output","Stage 1 output x{e0}.")
+				gv.up[f] = Upgrade.new(f, "s2m output","Stage 1 output and input x{e0}.")
 				gv.up[f].effects.append(Effect.new("output", gv.list.lored[gv.Tab.S1], 2.0))
+				gv.up[f].effects.append(Effect.new("input", gv.list.lored[gv.Tab.S1], 2.0))
 				gv.up[f].cost[gv.Resource.TUMORS] = Ob.Num.new(250)
 				
 				f = "SPEED-SHOPPER"
-				gv.up[f] = Upgrade.new(f, "s2m output","Stage 1 output x{e0}.")
+				gv.up[f] = Upgrade.new(f, "s2m output","Stage 1 output and input x{e0}.")
 				gv.up[f].effects.append(Effect.new("output", gv.list.lored[gv.Tab.S1], 2.0))
+				gv.up[f].effects.append(Effect.new("input", gv.list.lored[gv.Tab.S1], 2.0))
 				gv.up[f].cost[gv.Resource.TUMORS] = Ob.Num.new("35000")
 				gv.up[f].requires.append("don't take candy from babies")
 		
@@ -839,8 +841,9 @@ func init_upgrades():
 			gv.up[f].requires.append("Toriyama")
 			
 			f = "Ultra Shitstinct"
-			gv.up[f] = Upgrade.new(f, "s2n output","Humus output x{e0}.", "humus")
+			gv.up[f] = Upgrade.new(f, "s2n output","Humus output and input x{e0}.", "humus")
 			gv.up[f].effects.append(Effect.new("output", [lv.Type.HUMUS], 1.35))
+			gv.up[f].effects.append(Effect.new("input", [lv.Type.HUMUS], 1.35))
 			gv.up[f].cost[gv.Resource.WATER] = Ob.Num.new("1e9")
 			gv.up[f].cost[gv.Resource.SEEDS] = Ob.Num.new("25e6")
 			gv.up[f].cost[gv.Resource.CARCINOGENS] = Ob.Num.new("10e6")
@@ -862,31 +865,35 @@ func init_upgrades():
 			gv.up[f].requires.append("SPOOLY")
 			
 			f = "Fingers of Onden"
-			gv.up[f] = Upgrade.new(f, "s2n output","Steel output x{e0}.", "steel")
+			gv.up[f] = Upgrade.new(f, "s2n output","Steel output and input x{e0}.", "steel")
 			gv.up[f].effects.append(Effect.new("output", [lv.Type.STEEL], 1.25))
+			gv.up[f].effects.append(Effect.new("input", [lv.Type.STEEL], 1.25))
 			gv.up[f].cost[gv.Resource.GLASS] = Ob.Num.new("15e9")
 			gv.up[f].cost[gv.Resource.CARCINOGENS] = Ob.Num.new("1e9")
 			gv.up[f].requires.append("Steel Yo Mama")
 			
 			f = "Busy Bee"
-			gv.up[f] = Upgrade.new(f, "s2n output","Seed output x{e0}.", "seed")
+			gv.up[f] = Upgrade.new(f, "s2n output","Seed output and input x{e0}.", "seed")
 			gv.up[f].effects.append(Effect.new("output", [lv.Type.SEEDS], 1.3))
+			gv.up[f].effects.append(Effect.new("input", [lv.Type.SEEDS], 1.3))
 			gv.up[f].cost[gv.Resource.STEEL] = Ob.Num.new("10e6")
 			gv.up[f].cost[gv.Resource.GLASS] = Ob.Num.new("15e6")
 			gv.up[f].cost[gv.Resource.LEAD] = Ob.Num.new("50e6")
 			gv.up[f].requires.append("Le Guin")
 			
 			f = "DINDER MUFFLIN"
-			gv.up[f] = Upgrade.new(f, "s2n output","Paper output x{e0}.", "paper")
+			gv.up[f] = Upgrade.new(f, "s2n output","Paper output and input x{e0}.", "paper")
 			gv.up[f].effects.append(Effect.new("output", [lv.Type.PAPER], 1.25))
+			gv.up[f].effects.append(Effect.new("input", [lv.Type.PAPER], 1.25))
 			gv.up[f].cost[gv.Resource.STEEL] = Ob.Num.new("100e6")
 			gv.up[f].cost[gv.Resource.GLASS] = Ob.Num.new("150e6")
 			gv.up[f].cost[gv.Resource.LEAD] = Ob.Num.new("500e6")
 			gv.up[f].requires.append("Le Guin")
 			
 			f = "MGALEKGOLO"
-			gv.up[f] = Upgrade.new(f, "s2n output","Glass output x{e0}.", "glass")
+			gv.up[f] = Upgrade.new(f, "s2n output","Glass output and input x{e0}.", "glass")
 			gv.up[f].effects.append(Effect.new("output", [lv.Type.GLASS], 1.3))
+			gv.up[f].effects.append(Effect.new("input", [lv.Type.GLASS], 1.3))
 			gv.up[f].cost[gv.Resource.WIRE] = Ob.Num.new("80e6")
 			gv.up[f].cost[gv.Resource.CARCINOGENS] = Ob.Num.new("1e6")
 			gv.up[f].requires.append("They've Always Been Faster")
@@ -899,37 +906,42 @@ func init_upgrades():
 			gv.up[f].requires.append("Le Guin")
 			
 			f = "And this is to go even further beyond!"
-			gv.up[f] = Upgrade.new(f, "s2n output","Wood output x{e0}.", "wood")
+			gv.up[f] = Upgrade.new(f, "s2n output","Wood output and input x{e0}.", "wood")
 			gv.up[f].effects.append(Effect.new("output", [lv.Type.WOOD], 1.25))
+			gv.up[f].effects.append(Effect.new("input", [lv.Type.WOOD], 1.25))
 			gv.up[f].cost[gv.Resource.PAPER] = Ob.Num.new("1e7")
 			gv.up[f].cost[gv.Resource.WOOD_PULP] = Ob.Num.new("3e7")
 			gv.up[f].cost[gv.Resource.WATER] = Ob.Num.new("25e6")
 			gv.up[f].requires.append("Le Guin")
 			
 			f = "ERECTWOOD"
-			gv.up[f] = Upgrade.new(f, "s2n output","Hardwood output x{e0}.", "hard")
+			gv.up[f] = Upgrade.new(f, "s2n output","Hardwood output and input x{e0}.", "hard")
 			gv.up[f].effects.append(Effect.new("output", [lv.Type.HARDWOOD], 1.3))
+			gv.up[f].effects.append(Effect.new("input", [lv.Type.HARDWOOD], 1.3))
 			gv.up[f].cost[gv.Resource.STEEL] = Ob.Num.new("2e7")
 			gv.up[f].cost[gv.Resource.CARCINOGENS] = Ob.Num.new("1e6")
 			gv.up[f].requires.append("Wood Lord")
 			
 			f = "Glitterdelve"
-			gv.up[f] = Upgrade.new(f, "s2n output","Galena output x{e0}.", "gale")
+			gv.up[f] = Upgrade.new(f, "s2n output","Galena output and input x{e0}.", "gale")
 			gv.up[f].effects.append(Effect.new("output", [lv.Type.GALENA], 1.25))
+			gv.up[f].effects.append(Effect.new("input", [lv.Type.GALENA], 1.25))
 			gv.up[f].cost[gv.Resource.LEAD] = Ob.Num.new(100000.0)
 			gv.up[f].cost[gv.Resource.CARCINOGENS] = Ob.Num.new(8000.0)
 			gv.up[f].requires.append("Cioran")
 			
 			f = "Longbottom Leaf"
-			gv.up[f] = Upgrade.new(f, "s2n output","Tobacco output x{e0}.", "toba")
+			gv.up[f] = Upgrade.new(f, "s2n output","Tobacco output and input x{e0}.", "toba")
 			gv.up[f].effects.append(Effect.new("output", [lv.Type.TOBACCO], 1.25))
+			gv.up[f].effects.append(Effect.new("input", [lv.Type.TOBACCO], 1.25))
 			gv.up[f].cost[gv.Resource.WOOD] = Ob.Num.new(500000.0)
 			gv.up[f].cost[gv.Resource.CARCINOGENS] = Ob.Num.new(5000.0)
 			gv.up[f].requires.append("Cioran")
 			
 			f = "Factory Squirts"
-			gv.up[f] = Upgrade.new(f, "s2n output","Petroleum output x{e0}.", "pet")
+			gv.up[f] = Upgrade.new(f, "s2n output","Petroleum output and input x{e0}.", "pet")
 			gv.up[f].effects.append(Effect.new("output", [lv.Type.PETROLEUM], 1.25))
+			gv.up[f].effects.append(Effect.new("input", [lv.Type.PETROLEUM], 1.25))
 			gv.up[f].cost[gv.Resource.GROWTH] = Ob.Num.new("2e8")
 			gv.up[f].cost[gv.Resource.LEAD] = Ob.Num.new(3000.0)
 			gv.up[f].cost[gv.Resource.TUMORS] = Ob.Num.new(500.0)
@@ -941,13 +953,15 @@ func init_upgrades():
 			gv.up[f].cost[gv.Resource.TREES] = Ob.Num.new(10.0)
 			
 			f = "EQUINE"
-			gv.up[f] = Upgrade.new(f, "s2n output","Humus output x{e0}.", "humus")
+			gv.up[f] = Upgrade.new(f, "s2n output","Humus output and input x{e0}.", "humus")
 			gv.up[f].effects.append(Effect.new("output", [lv.Type.HUMUS], 1.3))
+			gv.up[f].effects.append(Effect.new("input", [lv.Type.HUMUS], 1.3))
 			gv.up[f].cost[gv.Resource.GLASS] = Ob.Num.new(90.0)
 			
 			f = "PLASMA BOMBARDMENT"
-			gv.up[f] = Upgrade.new(f, "s2n output","Glass output x{e0}.", "glass")
+			gv.up[f] = Upgrade.new(f, "s2n output","Glass output and input x{e0}.", "glass")
 			gv.up[f].effects.append(Effect.new("output", [lv.Type.GLASS], 1.25))
+			gv.up[f].effects.append(Effect.new("input", [lv.Type.GLASS], 1.25))
 			gv.up[f].cost[gv.Resource.WIRE] = Ob.Num.new(310.0)
 			gv.up[f].requires.append("Carlin")
 			
@@ -966,16 +980,18 @@ func init_upgrades():
 			gv.up[f].requires.append("Double Barrels")
 			
 			f = "Seeing Brown"
-			gv.up[f] = Upgrade.new(f, "s2n output","Axe output x{e0}.", "axe")
+			gv.up[f] = Upgrade.new(f, "s2n output","Axe output and input x{e0}.", "axe")
 			gv.up[f].effects.append(Effect.new("output", [lv.Type.AXES], 1.25))
+			gv.up[f].effects.append(Effect.new("input", [lv.Type.AXES], 1.25))
 			gv.up[f].cost[gv.Resource.GLASS] = Ob.Num.new(300.0)
 			gv.up[f].cost[gv.Resource.WIRE] = Ob.Num.new(300.0)
 			gv.up[f].cost[gv.Resource.TREES] = Ob.Num.new(100.0)
 			gv.up[f].requires.append("Woodthirsty")
 			
 			f = "GIMP"
-			gv.up[f] = Upgrade.new(f, "s2n output","Wire output x{e0}.", "wire")
+			gv.up[f] = Upgrade.new(f, "s2n output","Wire output and input x{e0}.", "wire")
 			gv.up[f].effects.append(Effect.new("output", [lv.Type.WIRE], 1.3))
+			gv.up[f].effects.append(Effect.new("input", [lv.Type.WIRE], 1.3))
 			gv.up[f].cost[gv.Resource.HARDWOOD] = Ob.Num.new(900.0)
 			gv.up[f].cost[gv.Resource.CARCINOGENS] = Ob.Num.new(25.0)
 			gv.up[f].requires.append("Patreon Artist")
@@ -988,15 +1004,17 @@ func init_upgrades():
 			gv.up[f].requires.append("Sagan")
 			
 			f = "Journeyman Iron Worker"
-			gv.up[f] = Upgrade.new(f, "s2n output","Liquid Iron and Steel output x{e0}.", "steel")
+			gv.up[f] = Upgrade.new(f, "s2n output","Liquid Iron and Steel output and input x{e0}.", "steel")
 			gv.up[f].effects.append(Effect.new("output", [lv.Type.LIQUID_IRON, lv.Type.STEEL], 1.3))
+			gv.up[f].effects.append(Effect.new("input", [lv.Type.LIQUID_IRON, lv.Type.STEEL], 1.3))
 			gv.up[f].cost[gv.Resource.AXES] = Ob.Num.new(250.0)
 			gv.up[f].cost[gv.Resource.CARCINOGENS] = Ob.Num.new(50.0)
 			gv.up[f].requires.append("Sagan")
 			
 			f = "Soft and Smooth"
-			gv.up[f] = Upgrade.new(f, "s2n output","Sand output x{e0}", "sand")
+			gv.up[f] = Upgrade.new(f, "s2n output","Sand output and input x{e0}", "sand")
 			gv.up[f].effects.append(Effect.new("output", [lv.Type.SAND], 1.25))
+			gv.up[f].effects.append(Effect.new("input", [lv.Type.SAND], 1.25))
 			gv.up[f].cost[gv.Resource.STEEL] = Ob.Num.new(4500.0)
 			gv.up[f].cost[gv.Resource.CARCINOGENS] = Ob.Num.new(900.0)
 			gv.up[f].requires.append("Unpredictable Weather")
@@ -1005,22 +1023,24 @@ func init_upgrades():
 		if true:
 			
 			f = "I DRINK YOUR MILKSHAKE"
-			gv.up[f] = Upgrade.new(f, "s1m output","Whenever a LORED takes Coal, Coal gets an output boost.", "coal")
-			gv.up[f].effects.append(Effect.new("output", [lv.Type.COAL], 0.0, "", false))
+			gv.up[f] = Upgrade.new(f, "s1m output","Whenever a LORED takes coal, Coal gets an output boost.", "coal")
+			gv.up[f].effects.append(Effect.new("output", [lv.Type.COAL], 1.0, "", false))
 			gv.up[f].effects[0].dynamic = true
 			gv.up[f].cost[gv.Resource.MALIGNANCY] = Ob.Num.new(800000.0)
 			gv.up[f].requires.append("STAY QUENCHED")
 			gv.up[f].saveEffects()
 			
 			f = "SLUGGER"
-			gv.up[f] = Upgrade.new(f, "s1m output","Stage 1 output x{e0}.")
+			gv.up[f] = Upgrade.new(f, "s1m output","Stage 1 output and input x{e0}.")
 			gv.up[f].effects.append(Effect.new("output", gv.list.lored[gv.Tab.S1], 2.0))
+			gv.up[f].effects.append(Effect.new("input", gv.list.lored[gv.Tab.S1], 2.0))
 			gv.up[f].cost[gv.Resource.MALIGNANCY] = Ob.Num.new("1e16")
 			gv.up[f].requires.append("OPPAI GUY")
 			
 			f = "BIG TOUGH BOY"
-			gv.up[f] = Upgrade.new(f, "s1m output","Stage 1 output x{e0}.")
+			gv.up[f] = Upgrade.new(f, "s1m output","Stage 1 output and input x{e0}.")
 			gv.up[f].effects.append(Effect.new("output", gv.list.lored[gv.Tab.S1], 2.0))
+			gv.up[f].effects.append(Effect.new("input", gv.list.lored[gv.Tab.S1], 2.0))
 			gv.up[f].cost[gv.Resource.MALIGNANCY] = Ob.Num.new(175000.0)
 			gv.up[f].requires.append("how is this an RPG anyway?")
 			
@@ -1549,11 +1569,9 @@ func init_upgrades():
 			gv.up[f].requires.append("IT'S SPREADIN ON ME")
 			
 			f = "IT'S SPREADIN ON ME"
-			gv.up[f] = Upgrade.new(f, "s2m output","Malignant upgrade IT'S GROWIN ON ME now always applies its buff to both Iron AND Copper, as well as Iron Ore and Copper Ore.", "growth")
-			gv.up[f].effects.append(Effect.new("output", [lv.Type.IRON_ORE]))
+			gv.up[f] = Upgrade.new(f, "s2m output","Malignant upgrade IT'S GROWIN ON ME now always applies its buff to both Iron AND Copper. This upgrade has the same effect, but on Iron Ore and Copper Ore.", "growth")
+			gv.up[f].effects.append(Effect.new("output", [lv.Type.IRON_ORE, lv.Type.COPPER_ORE]))
 			gv.up[f].effects[0].dynamic = true
-			gv.up[f].effects.append(Effect.new("output", [lv.Type.COPPER_ORE]))
-			gv.up[f].effects[1].dynamic = true
 			gv.up[f].cost[gv.Resource.TUMORS] = Ob.Num.new("8e13") # mil
 			gv.up[f].requires.append("AUTO-PERSIST")
 			gv.up[f].saveEffects()
@@ -1578,7 +1596,7 @@ func init_upgrades():
 				gv.up[f].requires.append("THE WITCH OF LOREDELITH")
 				
 				f = "THE WITCH OF LOREDELITH"
-				gv.up[f] = Upgrade.new(f, "s2m misc","Stage 1 LOREDs gain Circe's powerful boon, which produces 1% of their net output per tick, multiplied by their haste.", "thewitchofloredelith")
+				gv.up[f] = Upgrade.new(f, "s2m misc","Stage 1 LOREDs gain Circe's powerful boon, which produces 1% of their net output per tick, multiplied by their haste. Effects the autobuyer logic of multiple LOREDs.", "thewitchofloredelith")
 				gv.up[f].cost[gv.Resource.TUMORS] = Ob.Num.new("1e12")
 				
 				f = "GRIMOIRE"
@@ -1606,30 +1624,39 @@ func init_upgrades():
 			gv.up[f].requires.append("ENTHUSIASM")
 			
 			f = "THE THIRD"
-			gv.up[f] = Upgrade.new(f, "s1m misc","Whenever Copper Ore produces ore, he will produce an equal amount of Copper.", "copo")
+			gv.up[f] = Upgrade.new(f, "s1m misc","Whenever Copper Ore produces ore, he will produce an equal amount of Copper. Effects the Copper Ore autobuyer logic.", "copo")
 			gv.up[f].cost[gv.Resource.MALIGNANCY] = Ob.Num.new("2e8")
 			gv.up[f].requires.append("pippenpaddle- oppsoCOPolis")
 			
 			f = "I RUN"
-			gv.up[f] = Upgrade.new(f, "s1m misc","Whenever Iron Ore produces ore, he will produce an equal amount of Iron.", "irono")
+			gv.up[f] = Upgrade.new(f, "s1m misc","Whenever Iron Ore produces ore, he will produce an equal amount of Iron. Effects the Iron Ore autobuyer logic.", "irono")
 			gv.up[f].cost[gv.Resource.MALIGNANCY] = Ob.Num.new("25e9")
 			
 			f = "wait that's not fair"
-			gv.up[f] = Upgrade.new(f, "s1m misc","Whenever Coal produces Coal, he will produce ten times as much Stone.", "stone")
+			gv.up[f] = Upgrade.new(f, "s1m misc","Whenever Coal produces Coal, he will produce ten times as much Stone. Effects the Coal autobuyer logic.", "stone")
 			gv.up[f].cost[gv.Resource.MALIGNANCY] = Ob.Num.new("1e18")
 			
 			f = "IT'S GROWIN ON ME"
-			gv.up[f] = Upgrade.new(f, "s1m output","Whenever Growth is spawned, either Iron or Copper will receive an output boost based on Growth's level.", "growth")
-			gv.up[f].effects.append(Effect.new("output", [lv.Type.IRON]))
+			gv.up[f] = Upgrade.new(f, "s1m output","Whenever Growth is spawned, either Iron or Copper will receive an output and input boost based on Growth's level.", "growth")
+			gv.up[f].effects.append(Effect.new("output", [lv.Type.IRON], 1.0))
 			gv.up[f].effects[0].dynamic = true
-			gv.up[f].effects.append(Effect.new("output", [lv.Type.COPPER]))
+			gv.up[f].effects[0].index = 0
+			gv.up[f].effects.append(Effect.new("output", [lv.Type.COPPER], 1.0))
 			gv.up[f].effects[1].dynamic = true
+			gv.up[f].effects[1].index = 1
+			gv.up[f].effects.append(Effect.new("input", [lv.Type.IRON], 1.0))
+			gv.up[f].effects[2].dynamic = true
+			gv.up[f].effects[2].index = 2
+			gv.up[f].effects.append(Effect.new("input", [lv.Type.COPPER], 1.0))
+			gv.up[f].effects[3].dynamic = true
+			gv.up[f].effects[3].index = 3
 			gv.up[f].cost[gv.Resource.MALIGNANCY] = Ob.Num.new(2000.0)
 			gv.up[f].saveEffects()
 			
 			f = "upgrade_name"
-			gv.up[f] = Upgrade.new(f, "s1m misc","Reduces the cost increase of every Stage 1 LORED from x3.0 to x2.75; Coal drain for fuel by Stage 1 LOREDs x{e0}.", gv.Tab.S1)
-			gv.up[f].effects.append(Effect.new("drain", [lv.Type.COAL, lv.Type.IRON_ORE, lv.Type.STONE, lv.Type.COPPER_ORE, lv.Type.IRON, lv.Type.COPPER, lv.Type.CONCRETE, lv.Type.JOULES, lv.Type.OIL], 10.0))
+			gv.up[f] = Upgrade.new(f, "s1m misc","Reduces the cost increase of every Stage 1 LORED from x3.0 to x2.75; Fuel Cost and Fuel Storage for Stage 1 LOREDs x{e0}.", gv.Tab.S1)
+			gv.up[f].effects.append(Effect.new("drain", gv.list.lored[gv.Tab.S1], 10.0))
+			gv.up[f].effects.append(Effect.new("FUEL_STORAGE", gv.list.lored[gv.Tab.S1], 10.0))
 			gv.up[f].cost[gv.Resource.MALIGNANCY] = Ob.Num.new("25e6")
 			gv.up[f].requires.append("ORE LORD")
 

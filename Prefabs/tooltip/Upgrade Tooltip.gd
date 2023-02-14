@@ -58,17 +58,17 @@ func set_desc():
 	match up.key:
 		
 		"I DRINK YOUR MILKSHAKE":
-			desc.bbcode_text += " (+[b][color=#" + gv.COLORS["coal"].to_html() + "]" + up.effects[0].effect.read() + "[/color][/b])"
+			desc.bbcode_text += " ([b][color=#" + gv.COLORS["coal"].to_html() + "]" + up.effects[0].effect.read() + "[/color][/b])"
 		
 		"IT'S GROWIN ON ME", "IT'S SPREADIN ON ME":
 			desc.bbcode_text += " ("
 			if gv.up["IT'S GROWIN ON ME"].active():
-				desc.bbcode_text += " +[b][color=#" + gv.COLORS["iron"].to_html() + "]" + gv.up["IT'S GROWIN ON ME"].effects[0].effect.read() + "[/color][/b],"
-				desc.bbcode_text += " +[b][color=#" + gv.COLORS["cop"].to_html() + "]" + gv.up["IT'S GROWIN ON ME"].effects[1].effect.read() + "[/color][/b]"
+				desc.bbcode_text += " [b][color=#" + gv.COLORS["iron"].to_html() + "]" + gv.up["IT'S GROWIN ON ME"].effects[0].effect.read() + "[/color][/b],"
+				desc.bbcode_text += " [b][color=#" + gv.COLORS["cop"].to_html() + "]" + gv.up["IT'S GROWIN ON ME"].effects[1].effect.read() + "[/color][/b]"
 			
 			if gv.up["IT'S SPREADIN ON ME"].active():
-				desc.bbcode_text += ", +[b][color=#" + gv.COLORS["irono"].to_html() + "]" + gv.up["IT'S SPREADIN ON ME"].effects[0].effect.read() + "[/color][/b],"
-				desc.bbcode_text += " +[b][color=#" + gv.COLORS["copo"].to_html() + "]" + gv.up["IT'S SPREADIN ON ME"].effects[1].effect.read() + "[/color][/b]"
+				desc.bbcode_text += ", [b][color=#" + gv.COLORS["irono"].to_html() + "]" + gv.up["IT'S SPREADIN ON ME"].effects[0].effect.read() + "[/color][/b],"
+				desc.bbcode_text += " [b][color=#" + gv.COLORS["copo"].to_html() + "]" + gv.up["IT'S SPREADIN ON ME"].effects[1].effect.read() + "[/color][/b]"
 			desc.bbcode_text += ")"
 	
 	if desc.rect_size.x > 240:

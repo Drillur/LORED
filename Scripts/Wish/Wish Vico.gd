@@ -21,12 +21,13 @@ var update_queued := false
 var recently_updated := false
 
 var discard_prompted := false
+var inLog: bool
 
 func _ready():
 	set_physics_process(false)
 	hide()
 
-func setup(_wish: Wish) -> void:
+func setup(_wish: Wish, _inLog := true) -> void:
 	
 	yield(self, "ready")
 	
@@ -34,7 +35,10 @@ func setup(_wish: Wish) -> void:
 	
 	wish.setVico(self)
 	
-	gn_progress_f.modulate = wish.color
+	if wish.complete:
+		gn_progress.hide()
+	else:
+		gn_progress_f.modulate = wish.color
 	gn_done.self_modulate = wish.color
 	
 	gn_obj.text = wish.obj.parseObjective()
@@ -42,6 +46,7 @@ func setup(_wish: Wish) -> void:
 		gn_obj.text = "Get Coal on the team! We need his stuff!"
 	
 	gn_icon.set_texture(gv.sprite[wish.obj.icon_key])
+	gn_icon.get_node("shadow").texture = gn_icon.texture
 	
 	reset()
 	
@@ -54,13 +59,21 @@ func setup(_wish: Wish) -> void:
 		gn_main_wish.show()
 		rect_min_size.x = 100
 	
+	if wish.complete:
+		get_node("Button").mouse_default_cursor_shape = Control.CURSOR_ARROW
+	
+	inLog = _inLog
+	
+	if not inLog:
+		size_flags_horizontal = 0
+	
 	show()
 
 func reset():
 	complete = false
 	gn_button.mouse_default_cursor_shape = Control.CURSOR_ARROW
-	gn_progress_f.rect_size.x = 0
 	gn_done.hide()
+	gn_progress_f.rect_size.x = 0
 	gn_progress_flair.show()
 
 func _on_Button_gui_input(event: InputEvent) -> void:
@@ -82,7 +95,7 @@ func _on_Button_mouse_exited() -> void:
 	rt.get_node("global_tip")._call("no")
 
 func _on_Button_mouse_entered() -> void:
-	rt.get_node("global_tip")._call("wish tooltip", {"wish": wish})
+	rt.get_node("global_tip")._call("wish tooltip", {"wish": wish, "inLog": inLog})
 
 
 func turnIn():
@@ -141,13 +154,15 @@ func turnedInOrDiscarded():
 	ready = false
 	hide()
 
-var flyingTextPosition = Vector2(rect_size.x / 2 + 10, get_global_mouse_position().y - rect_size.y - 10)
 func flyingTextIfComplete():
 	
 	if not gv.option["flying_numbers"]:
 		return
 	
 	var texts := []
+	
+	var mpos = get_global_mouse_position()
+	var flyingTextPosition = Vector2(mpos.x + 5, mpos.y - 5)
 	
 	for r in wish.rew:
 		
@@ -160,7 +175,7 @@ func flyingTextIfComplete():
 		details["text"] = "+" + r.amount.toString()
 		details["icon"] = gv.sprite[shorthand]
 		details["color"] = gv.COLORS[shorthand]
-		details["position"] = Vector2(flyingTextPosition)
+		details["position"] = flyingTextPosition
 		
 		texts.append(details)
 	
@@ -177,15 +192,14 @@ func flyingTextIfDiscarded():
 	
 	if not gv.option["flying_numbers"]:
 		return
+	var mpos = get_global_mouse_position()
+	var flyingTextPosition = Vector2(mpos.x + 5, mpos.y - 5)
 	
-	throwText("+1", gv.sprite["grief"], gv.COLORS["grief"])
-
-func throwText(amount: String, icon: Texture, color: Color):
 	rt.throwText({
-		"text": amount,
-		"icon": icon,
-		"color": color,
-		"position": Vector2(flyingTextPosition)
+		"text": "+1",
+		"icon": gv.sprite["grief"],
+		"color": gv.COLORS["grief"],
+		"position": flyingTextPosition
 	})
 
 
@@ -199,10 +213,14 @@ func ready():
 		turnIn()
 		return
 	
+	if inLog:
+		rt.wishNotice()
+	
 	ready = true
 	show_behind_parent = false
 	
-	gn_progress_f.rect_size.x = gn_progress.rect_size.x
+	gn_progress_f.hide()
+	#gn_progress_f.rect_size.x = gn_progress.rect_size.x
 	gn_button.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	gn_count.text = wish.obj.parseCount()
 	
@@ -221,7 +239,7 @@ func update():
 	recently_updated = true
 	update_queued = false
 	
-	gn_progress_f.rect_size.x = min(wish.obj.current_count.percent(wish.obj.required_count) * gn_progress.rect_size.x, gn_progress.rect_size.x)
+	updateProgress()
 	
 	gn_count.text = wish.obj.parseCount()
 	
@@ -235,9 +253,17 @@ func update():
 	if update_queued:
 		update()
 
+func updateProgress():
+	gn_progress_f.rect_size.x = min(wish.obj.current_count.percent(wish.obj.required_count) * gn_progress.rect_size.x, gn_progress.rect_size.x)
+
 
 
 func flashRequirements():
 	if wish.obj.type == gv.Objective.BREAK:
 		var lored = wish.objKey()
 		lv.lored[lored].flashSleep()
+
+
+func _on_Wish_Vico_item_rect_changed() -> void:
+	#updateProgress() doesnt work because who knows, life is unfair
+	update()

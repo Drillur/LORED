@@ -68,7 +68,7 @@ texture = ExtResource( 2 )
 [node name="progress" type="Panel" parent="h/base/not full"]
 unique_name_in_owner = true
 margin_left = 3.0
-margin_top = 8.0
+margin_top = 19.0
 margin_right = 11.0
 margin_bottom = 20.0
 mouse_filter = 2

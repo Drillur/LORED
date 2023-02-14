@@ -9,6 +9,8 @@ var other = "" # other useful key words. ex: for a cost upgrade, need to know wh
 
 var beneficiaries: Array # will be something like ["coal"] or every single string in list.lored[gv.Tab.S1]
 
+var index := 0
+
 var applied: bool
 var dynamic_applied := false
 var dynamic: bool # changes over time and will therefore not be applied to a LORED's .um or .ua vars
@@ -51,7 +53,11 @@ func apply(upgrade_name: String):
 		# loreds that benefit from dynamic upgrades will check for the effect variable's new value every sync()
 		
 		for b in beneficiaries:
-			gv.g[b].dynamics.append(upgrade_name)
+			match type:
+				"output":
+					lv.lored[b].applyDynamicUpgrade(upgrade_name, index, "OUTPUT")
+				"input":
+					lv.lored[b].applyDynamicUpgrade(upgrade_name, index, "INPUT")
 		
 		return
 	
@@ -107,12 +113,10 @@ func apply(upgrade_name: String):
 					lv.lored[b].editValue(lv.Attribute.COST, lv.Num.MULTIPLY, lv.Num.FROM_UPGRADES, effect.t.toFloat(), other)
 		"drain":
 			for b in beneficiaries:
-				if multiplicative:
-					gv.g[b].fc.um.m(effect.t)
-					gv.g[b].fc.sync()
-				else:
-					gv.g[b].fc.ua.a(effect.t)
-					gv.g[b].fc.sync()
+				lv.lored[b].editValue(lv.Attribute.FUEL_COST, lv.Num.MULTIPLY, lv.Num.FROM_UPGRADES, effect.t.toFloat())
+		"FUEL_STORAGE":
+			for b in beneficiaries:
+				lv.lored[b].editValue(lv.Attribute.FUEL_STORAGE, lv.Num.MULTIPLY, lv.Num.FROM_UPGRADES, effect.t.toFloat())
 		"haste":
 			for b in beneficiaries:
 				lv.lored[b].editValue(lv.Attribute.HASTE, lv.Num.MULTIPLY, lv.Num.FROM_UPGRADES, effect.t.toFloat())
@@ -149,8 +153,11 @@ func remove(upgrade_name: String):
 		# loreds that benefit from dynamic upgrades will check for the effect variable's new value every sync()
 		
 		for b in beneficiaries:
-			if upgrade_name + "," + type in gv.g[b].dynamics:
-				gv.g[b].dynamics.erase(upgrade_name + "," + type)
+			match type:
+				"output":
+					lv.lored[b].removeDynamicUpgrade(upgrade_name, "OUTPUT")
+				"input":
+					lv.lored[b].removeDynamicUpgrade(upgrade_name, "INPUT")
 		
 		return
 	
@@ -204,12 +211,10 @@ func remove(upgrade_name: String):
 					lv.lored[b].editValue(lv.Attribute.COST, lv.Num.DIVIDE, lv.Num.FROM_UPGRADES, effect.t.toFloat(), other)
 		"drain":
 			for b in beneficiaries:
-				if multiplicative:
-					gv.g[b].fc.um.d(effect.t)
-					gv.g[b].fc.sync()
-				else:
-					gv.g[b].fc.ua.s(effect.t)
-					gv.g[b].fc.sync()
+				lv.lored[b].editValue(lv.Attribute.FUEL_COST, lv.Num.DIVIDE, lv.Num.FROM_UPGRADES, effect.t.toFloat())
+		"FUEL_STORAGE":
+			for b in beneficiaries:
+				lv.lored[b].editValue(lv.Attribute.FUEL_STORAGE, lv.Num.DIVIDE, lv.Num.FROM_UPGRADES, effect.t.toFloat())
 		"haste":
 			for b in beneficiaries:
 				lv.lored[b].editValue(lv.Attribute.HASTE, lv.Num.DIVIDE, lv.Num.FROM_UPGRADES, effect.t.toFloat())

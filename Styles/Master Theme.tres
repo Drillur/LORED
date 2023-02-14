@@ -1,6 +1,6 @@
-[gd_resource type="Theme" load_steps=30 format=2]
+[gd_resource type="Theme" load_steps=31 format=2]
 
-[ext_resource path="res://Fonts/Roboto-MediumItalic.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://Fonts/Roboto-BoldItalic.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Styles/Buttons/norm.tres" type="StyleBox" id=2]
 [ext_resource path="res://Fonts/Roboto-BlackItalic.ttf" type="DynamicFontData" id=3]
 [ext_resource path="res://Fonts/Roboto-Medium.ttf" type="DynamicFontData" id=4]
@@ -11,6 +11,9 @@ size = 14
 outline_size = 2
 outline_color = Color( 0, 0, 0, 1 )
 font_data = ExtResource( 3 )
+
+[sub_resource type="StyleBoxFlat" id=25]
+draw_center = false
 
 [sub_resource type="StyleBoxFlat" id=2]
 content_margin_left = 10.0
@@ -51,8 +54,7 @@ shadow_color = Color( 0.3, 0.3, 0.3, 0.8 )
 anti_aliasing = false
 
 [sub_resource type="DynamicFont" id=18]
-size = 13
-outline_size = 1
+size = 14
 outline_color = Color( 0, 0, 0, 1 )
 font_data = ExtResource( 1 )
 
@@ -160,13 +162,15 @@ draw_center = false
 content_margin_left = 5.0
 content_margin_right = 5.0
 bg_color = Color( 0.152344, 0.152344, 0.152344, 0.8 )
+skew = Vector2( 0.1, 0 )
 
 [sub_resource type="StyleBoxFlat" id=17]
 content_margin_left = 15.0
 content_margin_right = 15.0
 content_margin_top = 0.0
 content_margin_bottom = 0.0
-bg_color = Color( 0.333333, 0.333333, 0.333333, 0.8 )
+bg_color = Color( 0.235294, 0.235294, 0.235294, 0.8 )
+skew = Vector2( 0.1, 0 )
 expand_margin_top = 5.0
 anti_aliasing = false
 
@@ -191,7 +195,7 @@ Button/colors/font_color_pressed = Color( 1, 1, 1, 1 )
 Button/constants/hseparation = 2
 Button/fonts/font = SubResource( 1 )
 Button/styles/disabled = null
-Button/styles/focus = null
+Button/styles/focus = SubResource( 25 )
 Button/styles/hover = SubResource( 2 )
 Button/styles/normal = ExtResource( 2 )
 Button/styles/pressed = SubResource( 3 )
@@ -270,9 +274,9 @@ PopupMenu/styles/panel_disabled = null
 PopupMenu/styles/separator = null
 TabContainer/colors/font_color_bg = Color( 0.69, 0.69, 0.69, 1 )
 TabContainer/colors/font_color_disabled = Color( 0.9, 0.9, 0.9, 0.2 )
-TabContainer/colors/font_color_fg = Color( 0.941176, 0.941176, 0.941176, 1 )
+TabContainer/colors/font_color_fg = Color( 1, 1, 1, 1 )
 TabContainer/constants/hseparation = 4
-TabContainer/constants/label_valign_bg = 2
+TabContainer/constants/label_valign_bg = 3
 TabContainer/constants/label_valign_fg = 0
 TabContainer/constants/side_margin = 8
 TabContainer/constants/top_margin = 24

@@ -14,7 +14,7 @@ func assignManager(_manager: Node2D):
 var type: int
 var tab: int
 var stage: int
-var level: int = 1
+var level: int = 0
 var timesPurchased := 0
 
 var smart := false
@@ -27,8 +27,9 @@ var purchased := false # purchased at least a single time in the current run
 var name: String
 var shorthandKey: String
 
-var pronoun := ["he", "him", "his"]
+var emotePool: Array
 var unlockedJobs: Array
+var pronoun := ["he", "him", "his"]
 
 var color: Color
 
@@ -74,13 +75,7 @@ func load(data: Dictionary) -> void:
 		gv.list.lored["active " + str(tab)].append(type)
 		gv.list.lored["active"].append(type)
 	
-	#if type != lv.Type.STONE:
-	increaseCost(lv.Num.MULTIPLY, lv.Num.FROM_LEVELS, costModifier)
-	
-	var savedLevel = str2var(data["level"])
-	level = 1
-	for x in savedLevel - 1:
-		levelUp()
+	levelUp(str2var(data["level"]))
 
 
 func _init(_type: int):
@@ -88,10 +83,10 @@ func _init(_type: int):
 	
 	var base_name: String = lv.Type.keys()[type]
 	shorthandKey = base_name.to_lower()
+	name = base_name.capitalize().replace("_", " ")
 	
 	call("construct_" + base_name)
 	
-	name = base_name.capitalize().replace("_", " ")
 	keyLORED = type in lv.DEFAULT_KEY_LOREDS
 	tab = [gv.Tab.S1, gv.Tab.S2, gv.Tab.S3, gv.Tab.S4][stage - 1]
 	fuelResourceLORED = lv.Type.COAL if fuelResource == gv.Resource.COAL else lv.Type.JOULES
@@ -136,6 +131,16 @@ func construct_STONE():
 	color = Color(0.79, 0.79, 0.79)
 	fuelResource = gv.Resource.COAL
 	icon = preload("res://Sprites/resources/stone.png")
+	emotePool = [
+		EmoteManager.Type.STONE0,
+		EmoteManager.Type.STONE1,
+		EmoteManager.Type.STONE2,
+		EmoteManager.Type.STONE3,
+		EmoteManager.Type.STONE4,
+		EmoteManager.Type.STONE5,
+		EmoteManager.Type.STONE6,
+		EmoteManager.Type.STONE7,
+	]
 func construct_COAL():
 	addJob(type)
 	stage = 1
@@ -143,6 +148,16 @@ func construct_COAL():
 	color = Color(0.7, 0, 1)
 	fuelResource = gv.Resource.COAL
 	icon = preload("res://Sprites/resources/coal.png")
+	emotePool = [
+		EmoteManager.Type.COAL0,
+		EmoteManager.Type.COAL1,
+		EmoteManager.Type.COAL2,
+		EmoteManager.Type.COAL3,
+		EmoteManager.Type.COAL4,
+		EmoteManager.Type.COAL5,
+		EmoteManager.Type.COAL6,
+		EmoteManager.Type.COAL7,
+	]
 func construct_IRON_ORE():
 	addJob(type)
 	stage = 1
@@ -151,6 +166,19 @@ func construct_IRON_ORE():
 	color = Color(0, 0.517647, 0.905882)
 	fuelResource = gv.Resource.COAL
 	icon = preload("res://Sprites/resources/irono.png")
+	emotePool = [
+		EmoteManager.Type.IRON_ORE0,
+		EmoteManager.Type.IRON_ORE1,
+		EmoteManager.Type.IRON_ORE2,
+		EmoteManager.Type.IRON_ORE3,
+		EmoteManager.Type.IRON_ORE4,
+		EmoteManager.Type.IRON_ORE5,
+		EmoteManager.Type.IRON_ORE6,
+		EmoteManager.Type.IRON_ORE7,
+		EmoteManager.Type.IRON_ORE8,
+		EmoteManager.Type.IRON_ORE9,
+		EmoteManager.Type.IRON_ORE10,
+	]
 func construct_COPPER_ORE():
 	addJob(type)
 	stage = 1
@@ -159,6 +187,21 @@ func construct_COPPER_ORE():
 	color = Color(0.7, 0.33, 0)
 	fuelResource = gv.Resource.COAL
 	icon = preload("res://Sprites/resources/copo.png")
+	emotePool = [
+		EmoteManager.Type.COPPER_ORE0,
+		EmoteManager.Type.COPPER_ORE1,
+		EmoteManager.Type.COPPER_ORE2,
+		EmoteManager.Type.COPPER_ORE3,
+		EmoteManager.Type.COPPER_ORE4,
+		EmoteManager.Type.COPPER_ORE5,
+		EmoteManager.Type.COPPER_ORE6,
+		EmoteManager.Type.COPPER_ORE7,
+		EmoteManager.Type.COPPER_ORE8,
+		EmoteManager.Type.COPPER_ORE9,
+		EmoteManager.Type.COPPER_ORE10,
+		EmoteManager.Type.COPPER_ORE11,
+		EmoteManager.Type.COPPER_ORE12,
+	]
 func construct_IRON():
 	addJob(type)
 	stage = 1
@@ -167,6 +210,15 @@ func construct_IRON():
 	color = Color(0.07, 0.89, 1)
 	fuelResource = gv.Resource.COAL
 	icon = preload("res://Sprites/resources/iron.png")
+	emotePool = [
+		EmoteManager.Type.IRON0,
+		EmoteManager.Type.IRON1,
+		EmoteManager.Type.IRON2,
+		EmoteManager.Type.IRON4,
+		EmoteManager.Type.IRON5,
+		EmoteManager.Type.IRON6,
+		EmoteManager.Type.IRON7,
+	]
 func construct_COPPER():
 	addJob(type)
 	stage = 1
@@ -176,6 +228,16 @@ func construct_COPPER():
 	color = Color(1, 0.74, 0.05)
 	fuelResource = gv.Resource.COAL
 	icon = preload("res://Sprites/resources/cop.png")
+	emotePool = [
+		EmoteManager.Type.COPPER0,
+		EmoteManager.Type.COPPER1,
+		EmoteManager.Type.COPPER2,
+		EmoteManager.Type.COPPER3,
+		EmoteManager.Type.COPPER4,
+		EmoteManager.Type.COPPER5,
+		EmoteManager.Type.COPPER6,
+		EmoteManager.Type.COPPER7,
+	]
 func construct_JOULES():
 	addJob(type)
 	stage = 1
@@ -184,6 +246,16 @@ func construct_JOULES():
 	color = Color(1, 0.98, 0)
 	fuelResource = gv.Resource.COAL
 	icon = preload("res://Sprites/resources/jo.png")
+	emotePool = [
+		EmoteManager.Type.JOULES0,
+		EmoteManager.Type.JOULES1,
+		EmoteManager.Type.JOULES2,
+		EmoteManager.Type.JOULES3,
+		EmoteManager.Type.JOULES4,
+		EmoteManager.Type.JOULES5,
+		EmoteManager.Type.JOULES6,
+		EmoteManager.Type.JOULES7,
+	]
 func construct_CONCRETE():
 	addJob(type)
 	stage = 1
@@ -193,6 +265,16 @@ func construct_CONCRETE():
 	color = Color(0.35, 0.35, 0.35)
 	fuelResource = gv.Resource.COAL
 	icon = preload("res://Sprites/resources/conc.png")
+	emotePool = [
+		EmoteManager.Type.CONCRETE0,
+		EmoteManager.Type.CONCRETE1,
+		EmoteManager.Type.CONCRETE2,
+		EmoteManager.Type.CONCRETE3,
+		EmoteManager.Type.CONCRETE4,
+		EmoteManager.Type.CONCRETE5,
+		EmoteManager.Type.CONCRETE6,
+		EmoteManager.Type.CONCRETE7,
+	]
 func construct_GROWTH():
 	addJob(type)
 	stage = 1
@@ -200,6 +282,18 @@ func construct_GROWTH():
 	color = Color(0.79, 1, 0.05)
 	fuelResource = gv.Resource.JOULES
 	icon = preload("res://Sprites/resources/growth.png")
+	emotePool = [
+		EmoteManager.Type.GROWTH0,
+		EmoteManager.Type.GROWTH1,
+		EmoteManager.Type.GROWTH2,
+		EmoteManager.Type.GROWTH3,
+		EmoteManager.Type.GROWTH4,
+		EmoteManager.Type.GROWTH5,
+		EmoteManager.Type.GROWTH6,
+		EmoteManager.Type.GROWTH7,
+		EmoteManager.Type.GROWTH8,
+		EmoteManager.Type.GROWTH9,
+	]
 func construct_OIL():
 	addJob(type)
 	stage = 1
@@ -208,6 +302,19 @@ func construct_OIL():
 	color = Color(0.65, 0.3, 0.66)
 	fuelResource = gv.Resource.COAL
 	icon = preload("res://Sprites/resources/oil.png")
+	emotePool = [
+		EmoteManager.Type.OIL0,
+		EmoteManager.Type.OIL1,
+		EmoteManager.Type.OIL2,
+		EmoteManager.Type.OIL3,
+		EmoteManager.Type.OIL4,
+		EmoteManager.Type.OIL5,
+		EmoteManager.Type.OIL6,
+		EmoteManager.Type.OIL7,
+		EmoteManager.Type.OIL8,
+		EmoteManager.Type.OIL9,
+		EmoteManager.Type.OIL10,
+	]
 func construct_TARBALLS():
 	addJob(type)
 	stage = 1
@@ -217,6 +324,17 @@ func construct_TARBALLS():
 	color = Color(0.56, 0.44, 1)
 	fuelResource = gv.Resource.JOULES
 	icon = preload("res://Sprites/resources/tar.png")
+	emotePool = [
+		EmoteManager.Type.TARBALLS0,
+		EmoteManager.Type.TARBALLS1,
+		EmoteManager.Type.TARBALLS2,
+		EmoteManager.Type.TARBALLS3,
+		EmoteManager.Type.TARBALLS4,
+		EmoteManager.Type.TARBALLS5,
+		EmoteManager.Type.TARBALLS6,
+		EmoteManager.Type.TARBALLS7,
+		EmoteManager.Type.TARBALLS8,
+	]
 func construct_MALIGNANCY():
 	addJob(type)
 	stage = 1
@@ -227,6 +345,22 @@ func construct_MALIGNANCY():
 	color = Color(0.88, 0.12, 0.35)
 	fuelResource = gv.Resource.JOULES
 	icon = preload("res://Sprites/resources/malig.png")
+	emotePool = [
+		EmoteManager.Type.MALIGNANCY0,
+		EmoteManager.Type.MALIGNANCY1,
+		EmoteManager.Type.MALIGNANCY2,
+		EmoteManager.Type.MALIGNANCY3,
+		EmoteManager.Type.MALIGNANCY4,
+		EmoteManager.Type.MALIGNANCY5,
+		EmoteManager.Type.MALIGNANCY6,
+		EmoteManager.Type.MALIGNANCY7,
+		EmoteManager.Type.MALIGNANCY8,
+		EmoteManager.Type.MALIGNANCY9,
+		EmoteManager.Type.MALIGNANCY10,
+		EmoteManager.Type.MALIGNANCY11,
+		EmoteManager.Type.MALIGNANCY12,
+		EmoteManager.Type.MALIGNANCY13,
+	]
 func construct_WATER():
 	addJob(type)
 	stage = 2
@@ -236,6 +370,18 @@ func construct_WATER():
 	color = Color(0, 0.647059, 1)
 	fuelResource = gv.Resource.COAL
 	icon = preload("res://Sprites/resources/water.png")
+	emotePool = [
+		EmoteManager.Type.WATER0,
+		EmoteManager.Type.WATER1,
+		EmoteManager.Type.WATER2,
+		EmoteManager.Type.WATER3,
+		EmoteManager.Type.WATER4,
+		EmoteManager.Type.WATER5,
+		EmoteManager.Type.WATER6,
+		EmoteManager.Type.WATER7,
+		EmoteManager.Type.WATER8,
+		EmoteManager.Type.WATER9,
+	]
 func construct_HUMUS():
 	addJob(type)
 	stage = 2
@@ -245,6 +391,17 @@ func construct_HUMUS():
 	color = Color(0.458824, 0.25098, 0)
 	fuelResource = gv.Resource.JOULES
 	icon = preload("res://Sprites/resources/humus.png")
+	emotePool = [
+		EmoteManager.Type.HUMUS0,
+		EmoteManager.Type.HUMUS1,
+		EmoteManager.Type.HUMUS2,
+		EmoteManager.Type.HUMUS3,
+		EmoteManager.Type.HUMUS4,
+		EmoteManager.Type.HUMUS5,
+		EmoteManager.Type.HUMUS6,
+		EmoteManager.Type.HUMUS7,
+		EmoteManager.Type.HUMUS8,
+	]
 func construct_SOIL():
 	addJob(type)
 	stage = 2
@@ -253,6 +410,16 @@ func construct_SOIL():
 	color = Color(0.737255, 0.447059, 0)
 	fuelResource = gv.Resource.COAL
 	icon = preload("res://Sprites/resources/soil.png")
+	emotePool = [
+		EmoteManager.Type.SOIL0,
+		EmoteManager.Type.SOIL1,
+		EmoteManager.Type.SOIL2,
+		EmoteManager.Type.SOIL3,
+		EmoteManager.Type.SOIL4,
+		EmoteManager.Type.SOIL5,
+		EmoteManager.Type.SOIL6,
+		EmoteManager.Type.SOIL7,
+	]
 func construct_TREES():
 	addJob(type)
 	stage = 2
@@ -262,8 +429,20 @@ func construct_TREES():
 	color = Color(0.772549, 1, 0.247059)
 	fuelResource = gv.Resource.JOULES
 	icon = preload("res://Sprites/resources/tree.png")
+	emotePool = [
+		EmoteManager.Type.TREES0,
+		EmoteManager.Type.TREES1,
+		EmoteManager.Type.TREES2,
+		EmoteManager.Type.TREES3,
+		EmoteManager.Type.TREES4,
+		EmoteManager.Type.TREES5,
+		EmoteManager.Type.TREES6,
+		EmoteManager.Type.TREES7,
+		EmoteManager.Type.TREES8,
+	]
 func construct_SEEDS():
 	addJob(type)
+	name = "Maybe"
 	stage = 2
 	shorthandKey = "seed"
 	addCost(gv.Resource.COPPER, 800)
@@ -271,6 +450,17 @@ func construct_SEEDS():
 	color = Color(1, 0.878431, 0.431373)
 	fuelResource = gv.Resource.COAL
 	icon = preload("res://Sprites/resources/seed.png")
+	emotePool = [
+		EmoteManager.Type.SEEDS0,
+		EmoteManager.Type.SEEDS1,
+		EmoteManager.Type.SEEDS2,
+		EmoteManager.Type.SEEDS3,
+		EmoteManager.Type.SEEDS4,
+		EmoteManager.Type.SEEDS5,
+		EmoteManager.Type.SEEDS6,
+		EmoteManager.Type.SEEDS7,
+		EmoteManager.Type.SEEDS8,
+	]
 func construct_GALENA():
 	addJob(type)
 	stage = 2
@@ -493,6 +683,12 @@ func editValue(attribute: int, typeOfEdit: int, item: int, amount, index = -1):
 		lv.Attribute.OUTPUT:
 			outputBits.call(callFunc, folder, item, amount)
 			queue(lv.Queue.OUTPUT)
+		lv.Attribute.FUEL_COST:
+			fuelCostBits.call(callFunc, folder, item, amount)
+			queue(lv.Queue.FUEL_COST)
+		lv.Attribute.FUEL_STORAGE:
+			fuelStorageBits.call(callFunc, folder, item, amount)
+			queue(lv.Queue.FUEL_STORAGE)
 		lv.Attribute.HASTE:
 			hasteBits.call(callFunc, folder, item, amount)
 			queue(lv.Queue.HASTE)
@@ -500,7 +696,8 @@ func editValue(attribute: int, typeOfEdit: int, item: int, amount, index = -1):
 			if index == -1:
 				inputBits.call(callFunc, folder, item, amount)
 			else:
-				jobs.values()[0].requiredResourcesBits[index].call(callFunc, folder, item, amount)
+				if index in jobs.values()[0].requiredResourcesBits.keys():
+					jobs.values()[0].requiredResourcesBits[index].call(callFunc, folder, item, amount)
 			queue(lv.Queue.INPUT)
 		lv.Attribute.COST:
 			costBits[index].call(callFunc, folder, item, amount)
@@ -525,9 +722,10 @@ var outputBits := Bits.new({
 		lv.Num.FROM_UPGRADES: Big.new(1),
 		lv.Num.BY_LIMIT_BREAK: Big.new(1),
 	},
-})
+}, "output")
 
-func syncOutput():
+func sync_OUTPUT():
+	outputBits.updateDynamic(dynamic_OUTPUT)
 	output = outputBits.total
 	syncJobs_producedResources()
 	updateOfflineNet = true
@@ -535,8 +733,9 @@ func syncOutput():
 func getOutputText() -> String:
 	return outputBits.totalText
 
-func increaseOutput(folder: int, item: int, amount):
-	outputBits.multiplyValue(folder, item, amount)
+func updateOutput():
+	var modifier: Big = Big.new(2).power(level - 1)
+	outputBits.setValue(lv.Num.MULTIPLY, lv.Num.FROM_LEVELS, modifier)
 	queue(lv.Queue.OUTPUT)
 func setOutputValue(folder: int, item: int, amount):
 	outputBits.setValue(folder, item, amount)
@@ -567,17 +766,21 @@ var inputBits := Bits.new({
 		lv.Num.FROM_LEVELS: Big.new(1),
 		lv.Num.FROM_UPGRADES: Big.new(1),
 	},
-})
+}, "input")
 
-func syncInput():
+func sync_INPUT():
+	inputBits.updateDynamic(dynamic_INPUT)
 	input = inputBits.total
 	syncJobs_requiredResources()
+	if not gv.inFirstTwoSecondsOfRun():
+		updateMaxDrain()
 
 func getInputText() -> String:
 	return inputBits.totalText
 
-func increaseInput(folder: int, item: int, amount):
-	inputBits.multiplyValue(folder, item, amount)
+func updateInput():
+	var modifier: Big = Big.new(2).power(level - 1)
+	inputBits.setValue(lv.Num.MULTIPLY, lv.Num.FROM_LEVELS, modifier)
 	queue(lv.Queue.INPUT)
 
 
@@ -616,7 +819,7 @@ func removeCost(key: int):
 		return
 	costBits.erase(key)
 	cost.erase(key)
-func syncCost():
+func sync_COST():
 	for c in costBits:
 		cost[c] = costBits[c].total
 	costBitsUpdated = true
@@ -635,10 +838,11 @@ func takeawayCost():
 		
 		gv.stats["ResourceStats"]["spent"][c].a(cost[c])
 		gv.emit_signal("ResourceSpent", c)
-func increaseCost(folder: int, item: int, amount):
+func updateCost():
 	for c in costBits:
-		costBits[c].multiplyValue(folder, item, amount)
-	queue(lv.Queue.COST)
+		var modifier: Big = Big.new(costModifier).power(level)
+		costBits[c].setValue(lv.Num.MULTIPLY, lv.Num.FROM_LEVELS, modifier)
+	sync_COST()
 
 func syncCostModifier():
 	costModifier = 3.0
@@ -647,6 +851,7 @@ func syncCostModifier():
 			costModifier = 2.75
 	if gv.up["upgrade_description"].active():
 		costModifier *= 0.9
+	updateCost()
 
 func resetCost():
 	for r in costBits:
@@ -669,14 +874,15 @@ var fuelCostBits := Bits.new({
 	},
 })
 
-func syncFuelCost():
+func sync_FUEL_COST():
 	fuelCost = fuelCostBits.total
 
 func getFuelCostText() -> String:
 	return fuelCostBits.totalText
 
-func increaseFuelCost(folder: int, item: int, amount):
-	fuelCostBits.multiplyValue(folder, item, amount)
+func updateFuelCost():
+	var modifier: Big = Big.new(2).power(level - 1)
+	fuelCostBits.setValue(lv.Num.MULTIPLY, lv.Num.FROM_LEVELS, modifier)
 	queue(lv.Queue.FUEL_COST)
 
 func resetFuelCost():
@@ -698,7 +904,7 @@ var fuelStorageBits := Bits.new({
 	},
 })
 
-func syncFuelStorage():
+func sync_FUEL_STORAGE():
 	fuelStorage = fuelStorageBits.total
 	refuelJob.requiredResourcesBits[fuelResource].setValue(lv.Num.MULTIPLY, lv.Num.BY_LORED_FUEL_STORAGE, fuelStorage)
 
@@ -711,8 +917,9 @@ var currentFuelPercent setget , getCurrentFuelPercent
 func getCurrentFuelPercent() -> float:
 	return currentFuel.percent(fuelStorage)
 
-func increaseFuelStorage(folder: int, item: int, amount):
-	fuelStorageBits.multiplyValue(folder, item, amount)
+func updateFuelStorage():
+	var modifier: Big = Big.new(2).power(level - 1)
+	fuelStorageBits.setValue(lv.Num.MULTIPLY, lv.Num.FROM_LEVELS, modifier)
 	queue(lv.Queue.FUEL_STORAGE)
 
 
@@ -746,7 +953,7 @@ var critBits := BitsFloat.new({
 	},
 })
 
-func syncCrit():
+func sync_CRIT():
 	crit = critBits.total
 
 func getCritText() -> String:
@@ -772,9 +979,9 @@ var hasteBits := BitsFloat.new({
 		lv.Num.FROM_UPGRADES: 1.0,
 		lv.Num.BY_LIMIT_BREAK: 1.0,
 	},
-})
+}, "haste")
 
-func syncHaste():
+func sync_HASTE():
 	haste = hasteBits.total
 	syncJobs_duration()
 	updateTotalJobTime = true
@@ -792,6 +999,22 @@ func getBaseHaste() -> float:
 
 func resetHaste():
 	hasteBits.reset()
+
+
+
+# - Dynamic Upgrades
+
+var dynamic_OUTPUT: Dictionary
+var dynamic_INPUT: Dictionary
+
+func applyDynamicUpgrade(key: String, effectIndex: int, folder: String):
+	folder = "dynamic_" + folder
+	if key in get(folder).keys():
+		return
+	get(folder)[key] = effectIndex
+func removeDynamicUpgrade(key: String, folder: String):
+	if key in get(folder).keys():
+		get(folder).erase(key)
 
 
 
@@ -846,43 +1069,23 @@ func purchased():
 	if currentFuel.less(tenPercentFuel):
 		currentFuel = tenPercentFuel
 
-func levelUp():
+func levelUp(newLevel := level + 1):
 	
-	level += 1
+	level = newLevel
 	
-	logLevelUp()
-	
-	increaseFuelCost(lv.Num.MULTIPLY, lv.Num.FROM_LEVELS, 2)
-	increaseFuelStorage(lv.Num.MULTIPLY, lv.Num.FROM_LEVELS, 2)
-	increaseCost(lv.Num.MULTIPLY, lv.Num.FROM_LEVELS, costModifier)
-	increaseOutput(lv.Num.MULTIPLY, lv.Num.FROM_LEVELS, 2)
-	increaseInput(lv.Num.MULTIPLY, lv.Num.FROM_LEVELS, 2)
-	
-	syncCost()
-	queue.erase(lv.Queue.COST)
-	
-	
-
-func logLevelUp():
-	
-	if not LogManager.typeAllowed(LogManager.Type.LEVEL_UP):
-		return
-	
-	var _icon: Texture = gv.sprite[shorthandKey]
-	var data := {}
-	data["icon"] = _icon
-	data["level"] = level
-	data["color"] = color
-	LogManager.log(LogManager.Type.LEVEL_UP, var2str(data))
+	updateFuelCost()
+	updateFuelStorage()
+	updateCost()
+	updateOutput()
+	updateInput()
 
 func firstPurchaseOfTheRun():
 	
 	purchased = true
 	
-	increaseCost(lv.Num.MULTIPLY, lv.Num.FROM_LEVELS, costModifier)
+	level += 1
 	
-	syncCost()
-	queue.erase(lv.Queue.COST)
+	updateCost()
 	
 	if type != lv.Type.STONE:
 		setFuelToMax()
@@ -940,10 +1143,17 @@ func updateDrain_working(job: Job):
 	var baseDrainRate: Dictionary = job.drainRate
 	for r in baseDrainRate:
 		lv.updateDrain(r, type, baseDrainRate[r])
+func updateMaxDrain():
+	for job in jobs.values():
+		if not job.requiresResource:
+			continue
+		var baseDrainRate: Dictionary = job.drainRate
+		for r in baseDrainRate:
+			lv.updateMaxDrain(r, type, baseDrainRate[r])
 
 
 func finishedWorkingForNow():
-	if lastJob == lv.Job.REFUEL:
+	if lastJob in [-1, lv.Job.REFUEL]:
 		return
 	updateGain_zero(jobs[lastJob])
 	updateDrain_zero(jobs[lastJob])
@@ -1024,7 +1234,7 @@ func getOfflineEarnings(timeOffline: int):
 # - - - Actions
 
 func reset():
-	level = 1
+	level = 0
 	fuelCostBits.setValue(lv.Num.MULTIPLY, lv.Num.FROM_LEVELS, Big.new(1))
 	fuelStorageBits.setValue(lv.Num.MULTIPLY, lv.Num.FROM_LEVELS, Big.new(1))
 	outputBits.setValue(lv.Num.MULTIPLY, lv.Num.FROM_LEVELS, Big.new(1))
