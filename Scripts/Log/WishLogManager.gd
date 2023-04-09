@@ -15,9 +15,10 @@ func log(wish: Wish):
 	emoteEvent(wish.key)
 
 func emoteEvent(key: String):
-	if key == "upgrade_stone":
-		EmoteManager.emote(EmoteManager.Type.IRON_WISH_LOG)
-		# in case the game is closed before the meta is clicked:
-		get_node("/root/Root").WishLogButtonVisible = true
+	pass
+#	if key == "upgrade_stone":
+#		EmoteManager.emote(EmoteManager.Type.IRON_WISH_LOG)
+#		# in case the game is closed before the meta is clicked:
+#		get_node("/root/Root").WishLogButtonVisible = true
 
 

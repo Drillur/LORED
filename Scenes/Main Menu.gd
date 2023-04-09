@@ -28,8 +28,8 @@ onready var customize_Crit_text = get_node("new game/m/v/diff/m/v/v/custom/m/v/l
 onready var customize_Crit_slider = get_node("new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/Crit/h/HSlider")
 onready var customize_FuelStorage_text = get_node("new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelStorage/TextEdit")
 onready var customize_FuelStorage_slider = get_node("new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelStorage/h/HSlider")
-onready var customize_FuelConsumption_text = get_node("new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelConsumption/TextEdit")
-onready var customize_FuelConsumption_slider = get_node("new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelConsumption/h/HSlider")
+onready var customize_FuelCost_text = get_node("new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelCost/TextEdit")
+onready var customize_FuelCost_slider = get_node("new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelCost/h/HSlider")
 
 
 onready var _Output = get_node("new game/m/v/diff/m/v/v/values/m/v/lored/m/v/Output/text")
@@ -37,7 +37,7 @@ onready var _Input = get_node("new game/m/v/diff/m/v/v/values/m/v/lored/m/v/Inpu
 onready var _Haste = get_node("new game/m/v/diff/m/v/v/values/m/v/lored/m/v/Haste/text")
 onready var _Crit = get_node("new game/m/v/diff/m/v/v/values/m/v/lored/m/v/Crit/text")
 onready var _FuelStorage = get_node("new game/m/v/diff/m/v/v/values/m/v/lored/m/v/FuelStorage/text")
-onready var _FuelConsumption = get_node("new game/m/v/diff/m/v/v/values/m/v/lored/m/v/FuelConsumption/text")
+onready var _FuelCost = get_node("new game/m/v/diff/m/v/v/values/m/v/lored/m/v/FuelCost/text")
 
 var no_saves_found := false
 
@@ -52,7 +52,7 @@ const DEFAULT_VALUES := {
 	"Haste": 1.0,
 	"Crit": 0.0,
 	"FuelStorage": 1.0,
-	"FuelConsumption": 1.0,
+	"FuelCost": 1.0,
 }
 const MAX_VALUES := {
 	"Output": 10.0,
@@ -60,7 +60,7 @@ const MAX_VALUES := {
 	"Haste": 10.0,
 	"Crit": 100.0,
 	"FuelStorage": 10.0,
-	"FuelConsumption": 10.0,
+	"FuelCost": 10.0,
 }
 const MIN_VALUES := {
 	"Output": 0.1,
@@ -68,7 +68,7 @@ const MIN_VALUES := {
 	"Haste": 0.1,
 	"Crit": -100.0,
 	"FuelStorage": 0.1,
-	"FuelConsumption": 0.1,
+	"FuelCost": 0.1,
 }
 const COLORS := {
 	"hardest": Color(1, 0, 0),
@@ -249,7 +249,7 @@ func getOptionColor(option: String, val: float) -> Color:
 				return COLORS["hardest"]
 			if val <= 0.5:
 				return COLORS["hard"]
-		"Input", "FuelStorage", "FuelConsumption":
+		"Input", "FuelStorage", "FuelCost":
 			if val <= 0.5:
 				return COLORS["easy"]
 			if val >= 4:

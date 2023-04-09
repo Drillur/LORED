@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://Fonts/Roboto-BlackItalic.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Sprites/Menu/Log.png" type="Texture" id=2]
@@ -48,32 +48,29 @@ size = 17
 outline_color = Color( 0, 0, 0, 1 )
 font_data = ExtResource( 1 )
 
-[sub_resource type="StyleBoxFlat" id=7]
-draw_center = false
-
 [node name="WishLog" type="MarginContainer"]
 margin_right = 350.0
-margin_bottom = 333.0
-rect_min_size = Vector2( 350, 333 )
+margin_bottom = 336.0
+rect_min_size = Vector2( 350, 336 )
 size_flags_horizontal = 4
 size_flags_vertical = 4
 script = ExtResource( 3 )
 
 [node name="bg" type="Panel" parent="."]
 margin_right = 350.0
-margin_bottom = 333.0
+margin_bottom = 336.0
 custom_styles/panel = SubResource( 4 )
 
 [node name="border" type="Panel" parent="."]
 modulate = Color( 0.341176, 0.619608, 0.980392, 1 )
 margin_right = 350.0
-margin_bottom = 333.0
+margin_bottom = 336.0
 rect_clip_content = true
 custom_styles/panel = SubResource( 5 )
 
 [node name="m" type="MarginContainer" parent="."]
 margin_right = 350.0
-margin_bottom = 333.0
+margin_bottom = 336.0
 custom_constants/margin_right = 10
 custom_constants/margin_top = 10
 custom_constants/margin_left = 10
@@ -83,7 +80,7 @@ custom_constants/margin_bottom = 10
 margin_left = 10.0
 margin_top = 10.0
 margin_right = 340.0
-margin_bottom = 323.0
+margin_bottom = 326.0
 custom_constants/separation = 20
 
 [node name="top" type="MarginContainer" parent="m/v"]
@@ -96,6 +93,7 @@ margin_bottom = 36.0
 custom_styles/panel = SubResource( 6 )
 
 [node name="h" type="HBoxContainer" parent="m/v/top"]
+modulate = Color( 0.341176, 0.619608, 0.980392, 1 )
 margin_right = 330.0
 margin_bottom = 36.0
 alignment = 1
@@ -133,73 +131,67 @@ valign = 1
 [node name="ScrollContainer" type="ScrollContainer" parent="m/v"]
 margin_top = 56.0
 margin_right = 330.0
-margin_bottom = 313.0
+margin_bottom = 316.0
 size_flags_vertical = 3
 scroll_horizontal_enabled = false
 
-[node name="tab edition" type="MarginContainer" parent="m/v/ScrollContainer"]
+[node name="TabContainer" type="TabContainer" parent="m/v/ScrollContainer"]
+self_modulate = Color( 0.341176, 0.619608, 0.980392, 1 )
 margin_right = 318.0
-margin_bottom = 49.0
+margin_bottom = 46.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-custom_constants/margin_right = 10
-custom_constants/margin_top = 5
-custom_constants/margin_left = 3
-custom_constants/margin_bottom = 3
-
-[node name="TabContainer" type="TabContainer" parent="m/v/ScrollContainer/tab edition"]
-margin_left = 3.0
-margin_top = 5.0
-margin_right = 320.0
-margin_bottom = 254.0
 theme = ExtResource( 5 )
-custom_colors/font_color_fg = Color( 0, 0.588235, 0.980392, 1 )
-custom_styles/panel = SubResource( 7 )
 
-[node name="Current" type="MarginContainer" parent="m/v/ScrollContainer/tab edition/TabContainer"]
+[node name="Current" type="MarginContainer" parent="m/v/ScrollContainer/TabContainer"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_top = 27.0
-custom_constants/margin_top = 10
+custom_constants/margin_right = 0
+custom_constants/margin_top = 15
+custom_constants/margin_left = 0
+custom_constants/margin_bottom = 0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="m/v/ScrollContainer/tab edition/TabContainer/Current"]
-margin_top = 10.0
-margin_right = 317.0
-margin_bottom = 222.0
+[node name="VBoxContainer" type="VBoxContainer" parent="m/v/ScrollContainer/TabContainer/Current"]
+margin_top = 15.0
+margin_right = 330.0
+margin_bottom = 233.0
 
-[node name="currentMain" type="VBoxContainer" parent="m/v/ScrollContainer/tab edition/TabContainer/Current/VBoxContainer"]
+[node name="currentMain" type="VBoxContainer" parent="m/v/ScrollContainer/TabContainer/Current/VBoxContainer"]
+unique_name_in_owner = true
+margin_right = 330.0
+
+[node name="currentRandom" type="GridContainer" parent="m/v/ScrollContainer/TabContainer/Current/VBoxContainer"]
+unique_name_in_owner = true
+margin_top = 4.0
+margin_right = 330.0
+margin_bottom = 4.0
+columns = 2
+
+[node name="Granted" type="MarginContainer" parent="m/v/ScrollContainer/TabContainer"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = 33.0
+custom_constants/margin_right = 0
+custom_constants/margin_top = 15
+custom_constants/margin_left = 0
+custom_constants/margin_bottom = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="m/v/ScrollContainer/TabContainer/Granted"]
+margin_top = 15.0
+margin_right = 330.0
+margin_bottom = 227.0
+
+[node name="grantedMain" type="VBoxContainer" parent="m/v/ScrollContainer/TabContainer/Granted/VBoxContainer"]
 unique_name_in_owner = true
 margin_right = 317.0
 
-[node name="currentRandom" type="GridContainer" parent="m/v/ScrollContainer/tab edition/TabContainer/Current/VBoxContainer"]
+[node name="grantedRandom" type="GridContainer" parent="m/v/ScrollContainer/TabContainer/Granted/VBoxContainer"]
 unique_name_in_owner = true
 margin_top = 4.0
 margin_right = 317.0
 margin_bottom = 4.0
-columns = 2
-
-[node name="Granted" type="MarginContainer" parent="m/v/ScrollContainer/tab edition/TabContainer"]
-visible = false
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_top = 27.0
-custom_constants/margin_top = 10
-
-[node name="VBoxContainer" type="VBoxContainer" parent="m/v/ScrollContainer/tab edition/TabContainer/Granted"]
-margin_top = 10.0
-margin_right = 317.0
-margin_bottom = 222.0
-
-[node name="grantedMain" type="VBoxContainer" parent="m/v/ScrollContainer/tab edition/TabContainer/Granted/VBoxContainer"]
-unique_name_in_owner = true
-margin_right = 305.0
-margin_bottom = 158.0
-
-[node name="grantedRandom" type="GridContainer" parent="m/v/ScrollContainer/tab edition/TabContainer/Granted/VBoxContainer"]
-unique_name_in_owner = true
-margin_top = 162.0
-margin_right = 305.0
-margin_bottom = 266.0
 columns = 2
 
 [connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]

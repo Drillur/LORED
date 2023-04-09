@@ -46,4 +46,4 @@ func _on_displayHelp_pressed() -> void:
 func _on_saveOptions_pressed() -> void:
 	hide()
 	get_node("/root/Root/%OptionsMenu").show()
-	get_node("/root/Root/%OptionsMenu").closeAllContentExcept("Save")
+	get_node("/root/Root/%OptionsMenu").select_tab(2)

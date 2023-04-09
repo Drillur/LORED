@@ -17,8 +17,6 @@ func setup(_type: int):
 	
 	yield(self, "ready")
 	
-	fuelProgress.get_node("%text").show()
-	fuelProgress.setup(type)
 	
 	loredIcon.texture = lv.lored[type].icon
 	loredIcon.get_node("shadow").texture = lv.lored[type].icon
@@ -26,6 +24,13 @@ func setup(_type: int):
 	
 	get_node("%Simple").show()
 	get_node("%Advanced").hide()
+	if not "jobs" in taq.completed_wishes:
+		get_node("%bot").hide()
+	if gv.option["loredFuel"]:
+		fuelProgress.hide()
+	else:
+		fuelProgress.get_node("%text").show()
+		fuelProgress.setup(type)
 	
 	loop()
 

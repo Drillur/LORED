@@ -597,6 +597,19 @@ func construct_DRAW_PLATE():
 	color = Color(0.333333, 0.639216, 0.811765)
 	fuelResource = gv.Resource.COAL
 	icon = preload("res://Sprites/resources/draw.png")
+	emotePool = [
+		EmoteManager.Type.DRAW_PLATE0,
+		EmoteManager.Type.DRAW_PLATE1,
+		EmoteManager.Type.DRAW_PLATE2,
+		EmoteManager.Type.DRAW_PLATE3,
+		EmoteManager.Type.DRAW_PLATE4,
+		EmoteManager.Type.DRAW_PLATE5,
+		EmoteManager.Type.DRAW_PLATE6,
+		EmoteManager.Type.DRAW_PLATE7,
+		EmoteManager.Type.DRAW_PLATE8,
+		EmoteManager.Type.DRAW_PLATE9,
+		EmoteManager.Type.DRAW_PLATE10,
+	]
 func construct_AXES():
 	addJob(type)
 	stage = 2
@@ -813,7 +826,7 @@ func addCost(key: int, base: float):
 			lv.Num.FROM_UPGRADES: Big.new(1),
 			lv.Num.FROM_LEVELS: Big.new(1),
 		},
-	})
+	}, "cost")
 func removeCost(key: int):
 	if not key in cost.keys():
 		return
@@ -872,7 +885,7 @@ var fuelCostBits := Bits.new({
 		lv.Num.FROM_LEVELS: Big.new(1),
 		lv.Num.FROM_UPGRADES: Big.new(1),
 	},
-})
+}, "fuelCost")
 
 func sync_FUEL_COST():
 	fuelCost = fuelCostBits.total
@@ -902,7 +915,7 @@ var fuelStorageBits := Bits.new({
 		lv.Num.FROM_LEVELS: Big.new(1),
 		lv.Num.FROM_UPGRADES: Big.new(1),
 	},
-})
+}, "fuelStorage")
 
 func sync_FUEL_STORAGE():
 	fuelStorage = fuelStorageBits.total
@@ -951,7 +964,7 @@ var critBits := BitsFloat.new({
 	lv.Num.ADD: {
 		lv.Num.FROM_UPGRADES: 0.0,
 	},
-})
+}, "crit")
 
 func sync_CRIT():
 	crit = critBits.total
@@ -1144,12 +1157,22 @@ func updateDrain_working(job: Job):
 	for r in baseDrainRate:
 		lv.updateDrain(r, type, baseDrainRate[r])
 func updateMaxDrain():
+	if asleep:
+		updateMaxDrain_zero()
+		return
+	
 	for job in jobs.values():
+		
 		if not job.requiresResource:
 			continue
+		
 		var baseDrainRate: Dictionary = job.drainRate
 		for r in baseDrainRate:
 			lv.updateMaxDrain(r, type, baseDrainRate[r])
+func updateMaxDrain_zero():
+	for job in jobs.values():
+		for r in job.requiredResources:
+			lv.updateMaxDrain(r, type, Big.new(0))
 
 
 func finishedWorkingForNow():

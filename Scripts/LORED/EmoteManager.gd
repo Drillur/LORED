@@ -1,9 +1,8 @@
 extends Node
 
 
-const scriptedEmotes := 7
+const SCRIPTED_EMOTES := 6
 enum Type {
-	IRON_WISH_LOG,
 	STONE_HAPPY,
 	COAL_REPLY_STONE_HAPPY,
 	STONE_REPLY_COAL_REPLY_STONE_HAPPY,
@@ -12,6 +11,17 @@ enum Type {
 	COAL_GREET,
 	
 	# RANDOM BELOW
+	DRAW_PLATE0,
+	DRAW_PLATE1,
+	DRAW_PLATE2,
+	DRAW_PLATE3,
+	DRAW_PLATE4,
+	DRAW_PLATE5,
+	DRAW_PLATE6,
+	DRAW_PLATE7,
+	DRAW_PLATE8,
+	DRAW_PLATE9,
+	DRAW_PLATE10,
 	TREES0,
 	TREES0_GROWTH0,
 	TREES0_SOIL0,
@@ -237,9 +247,19 @@ func load(data: Dictionary):
 		set(x, loadedVars[x])
 	#*
 
+func close():
+	completedEmotes.clear()
+	emotingLOREDs.clear()
+	queue.clear()
+	randomEmotesAllowed = false
+	stopEmoting()
+
 
 
 func emote(type: int):
+	
+	if not gv.option["loredChitChat"]:
+		return
 	
 	if Type.keys()[type] in completedEmotes:
 		return
@@ -259,12 +279,12 @@ func emote(type: int):
 		if emote.random:
 			emote.queue_free()
 			return
-		queue(emote)
+		enqueue(emote)
 		return
 	
 	finalizeEmote(emote)
 
-func queue(emote: MarginContainer):
+func enqueue(emote: MarginContainer):
 	if emote.speaker in queue.keys():
 		emote.queue_free()
 		return
@@ -289,13 +309,45 @@ func finalizeEmote(emote: MarginContainer):
 	lv.lored[emote.speaker].emote(emote)
 	emotingLOREDs.append(emote.speaker)
 
+
+
+var emotePassword: int
+
+func startEmoting():
+	emotePassword = OS.get_ticks_msec()
+	emoteLoop()
+
+func stopEmoting():
+	emotePassword = OS.get_ticks_msec()
+
+func emoteLoop():
+	
+	var t = Timer.new()
+	add_child(t)
+	
+	var myPass: int = emotePassword
+	
+	while true:
+		
+		#var nextEmoteDuration = 120 / gv.list.lored["active"].size() * (rand_range(0.75, 1.25))
+		var nextEmoteDuration = randi() % 25 + 5
+		
+		t.start(nextEmoteDuration)
+		yield(t, "timeout")
+		
+		if myPass != emotePassword:
+			print_debug("Clearing duplicate emoteLoop() func.")
+			break
+		
+		emote(getEmote(gv.randomLORED()))
+	
+	t.queue_free()
+
+func getEmote(lored: int) -> int:
+	return lv.lored[lored].randomEmote()
+
+
 func isRandomEmote(type: int) -> bool:
-	return type >= scriptedEmotes
+	return type >= SCRIPTED_EMOTES
 func isScriptedEmote(type: int) -> bool:
 	return not isRandomEmote(type)
-
-func close():
-	completedEmotes.clear()
-	emotingLOREDs.clear()
-	queue.clear()
-	randomEmotesAllowed = false

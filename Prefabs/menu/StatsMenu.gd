@@ -78,49 +78,49 @@ func setupLORED():
 		lored0[x].get_node("%shadow").texture = lored0[x].get_node("%icon").texture
 		lored0[x].get_node("%resource").text = lv.lored[x].name
 		lored0[x].get_node("%resource").self_modulate = lv.lored[x].color
-		get_node("%contentLORED/g").add_child(lored0[x])
+		get_node("%LORED").add_child(lored0[x])
 		
 		TimesLeveledUp["manual"][x] = gv.SRC["labels/medium label"].instance()
 		TimesLeveledUp["manual"][x].self_modulate = lv.lored[x].color
 		TimesLeveledUp["manual"][x].text = "0"
 		TimesLeveledUp["manual"][x].align = Label.ALIGN_CENTER
-		get_node("%contentLORED/g").add_child(TimesLeveledUp["manual"][x])
+		get_node("%LORED").add_child(TimesLeveledUp["manual"][x])
 		
 		TimesLeveledUp["automated"][x] = gv.SRC["labels/medium label"].instance()
 		TimesLeveledUp["automated"][x].self_modulate = lv.lored[x].color
 		TimesLeveledUp["automated"][x].text = "0"
 		TimesLeveledUp["automated"][x].align = Label.ALIGN_CENTER
-		get_node("%contentLORED/g").add_child(TimesLeveledUp["automated"][x])
+		get_node("%LORED").add_child(TimesLeveledUp["automated"][x])
 		
 		TimesRefueled[x] = gv.SRC["labels/medium label"].instance()
 		TimesRefueled[x].self_modulate = lv.lored[x].color
 		TimesRefueled[x].text = "0"
 		TimesRefueled[x].align = Label.ALIGN_CENTER
-		get_node("%contentLORED/g").add_child(TimesRefueled[x])
+		get_node("%LORED").add_child(TimesRefueled[x])
 		
 		OtherJobs[x] = gv.SRC["labels/medium label"].instance()
 		OtherJobs[x].self_modulate = lv.lored[x].color
 		OtherJobs[x].text = "0"
 		OtherJobs[x].align = Label.ALIGN_CENTER
-		get_node("%contentLORED/g").add_child(OtherJobs[x])
+		get_node("%LORED").add_child(OtherJobs[x])
 		
 		AnimationsPlayed[x] = gv.SRC["labels/medium label"].instance()
 		AnimationsPlayed[x].self_modulate = lv.lored[x].color
 		AnimationsPlayed[x].text = "0"
 		AnimationsPlayed[x].align = Label.ALIGN_CENTER
-		get_node("%contentLORED/g").add_child(AnimationsPlayed[x])
+		get_node("%LORED").add_child(AnimationsPlayed[x])
 		
 		TimeAsleep[x] = gv.SRC["labels/medium label"].instance()
 		TimeAsleep[x].self_modulate = lv.lored[x].color
 		TimeAsleep[x].text = "0s"
 		TimeAsleep[x].align = Label.ALIGN_CENTER
-		get_node("%contentLORED/g").add_child(TimeAsleep[x])
+		get_node("%LORED").add_child(TimeAsleep[x])
 		
 		Crits[x] = gv.SRC["labels/medium label"].instance()
 		Crits[x].self_modulate = lv.lored[x].color
 		Crits[x].text = "0"
 		Crits[x].align = Label.ALIGN_CENTER
-		get_node("%contentLORED/g").add_child(Crits[x])
+		get_node("%LORED").add_child(Crits[x])
 		
 		lored0[x].hide()
 		TimesLeveledUp["manual"][x].hide()
@@ -173,6 +173,9 @@ func setupStats3():
 		lored1[x].hide()
 		LOREDGranted[x].hide()
 		LOREDDenied[x].hide()
+		
+		updateLOREDGranted(x)
+		updateLOREDDenied(x)
 
 func setupUp0():
 	
@@ -263,12 +266,6 @@ func setupGeneral0():
 
 
 # - - - Buttons
-
-func switchContent(which: String):
-	get_node("%content" + which).visible = not get_node("%content" + which).visible
-	get_node("%hideIcon" + which).texture = gv.sprite["view"] if get_node("%content" + which).visible else gv.sprite["viewHide"]
-	get_node("%hideIcon" + which + "/shadow").texture = get_node("%hideIcon" + which).texture
-	set("content" + which, get_node("%content" + which).visible)
 
 var queue := []
 func queue(a: String, b = -1, c = -1):

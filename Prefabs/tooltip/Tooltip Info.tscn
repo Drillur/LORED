@@ -251,6 +251,7 @@ margin_left = 164.0
 margin_right = 174.0
 
 [node name="bot" type="MarginContainer" parent="m/v"]
+unique_name_in_owner = true
 margin_top = 90.0
 margin_right = 252.0
 margin_bottom = 197.0

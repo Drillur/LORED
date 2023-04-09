@@ -350,7 +350,6 @@ func getRandomSaveFileName() -> String:
 		"Dread Dude",
 		"Blood4All",
 		"Pizza",
-		"Pizza",
 		"PacBrad",
 		"Univenon",
 	]

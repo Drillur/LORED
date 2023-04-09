@@ -14,6 +14,7 @@ onready var currentProgress = get_node("progress/current")
 onready var fuelProgress_alarm = get_node("%Fuel Progress")
 onready var icon = get_node("m/v/top/v/mid/v2/resource/icon/Sprite")
 onready var animation = get_node("m/v/top/v/mid/animation/AnimatedSprite")
+onready var draw_plate_throw = get_node("%DRAW_PLATE throw")
 onready var gnResourceText = get_node("m/v/top/v/mid/v2/resource/v/amount")
 onready var iconShadow = get_node("m/v/top/v/mid/v2/resource/icon/Sprite/shadow")
 
@@ -24,6 +25,8 @@ var manager: Node2D
 
 
 func _ready() -> void:
+	
+	set_physics_process(false)
 	
 	alert.hide()
 	asleepAlert.hide()
@@ -40,22 +43,23 @@ func _ready() -> void:
 	gv.connect("resourceChanged", self, "queueResourceTextUpdate")
 	queueResourceTextUpdate(primaryResource)
 
+
 func setup(type: int):
 	setColors(type)
 	#setIcon(type)
 	fuelProgress_alarm.setup(type, false)
 	
 	animation.init(type)
-	if type in lv.smallerAnimationList:
-		animation.scale = Vector2(2,2)
 	
 	get_node("%pinnedFuel").setup(type, false)
+
 
 func setColors(type: int):
 	var loredColor = lv.lored[type].color
 	var fadedLoredColor = lv.getFadedColor(type)
 	get_node("bg_color").self_modulate = loredColor
-	get_node("m/v/top/v/mid/animation").modulate = fadedLoredColor
+	if not type in [lv.Type.WIRE]:
+		get_node("m/v/top/v/mid/animation").modulate = fadedLoredColor
 	get_node("%info").modulate = fadedLoredColor
 	get_node("m/v/bot/m/h/sleep").modulate = fadedLoredColor
 	get_node("%level up/icon/Sprite").modulate = fadedLoredColor
@@ -73,8 +77,10 @@ func setColors(type: int):
 func assignManager(_manager: Node2D):
 	manager = _manager
 
+
 func getCheck():
 	return check
+
 
 
 # - - - Signals
@@ -131,37 +137,62 @@ func enterActive():
 
 # - - - Progress and Animation
 
+var start_time: int
+var animation_duration: float
+func _physics_process(delta: float) -> void:
+	var i = get_i(start_time)
+	if i > animation_duration:
+		setProgress(0)
+		set_physics_process(false)
+		return
+	setProgress(i / animation_duration)
+
 var progress: float setget setProgress
 func setProgress(val: float):
 	currentProgress.rect_size.x = min(val * rect_size.x, rect_size.x)
 
-func jobStarted(duration: float, startTime: int):
+var last_job: int = -1
+func jobStarted(duration: float, _start_time: int, job: int):
 	
 	currentProgress.show()
 	
-	animation.start(duration, startTime)
+	if job == lv.Job.REFUEL:
+		animation.refuel(duration)
+	else:
+		if last_job == -1:
+			animation.job_started(duration)
+		else:
+			if last_job != job:
+				animation.job_started(duration)
 	
 	gv.stats["AnimationsPlayed"][manager.type] += 1
 	gv.emit_signal("AnimationsPlayed", manager.type)
 	
-	duration *= 1000
-	var i = get_i(startTime)
+	start_time = _start_time
+	animation_duration = duration * 1000
 	
-	while not is_queued_for_deletion():
-		
-		t.start(gv.fps)
-		yield(t, "timeout")
-		
-		i = get_i(startTime)
-		if i >= duration:
-			setProgress(0)
-			break
-		
-		setProgress(i / duration)
+	set_physics_process(true)
+	
+	last_job = job
+	
+#	var i = get_i(startTime)
+#
+#	while not is_queued_for_deletion():
+#
+#		t.start(gv.fps)
+#		yield(t, "timeout")
+#
+#		i = get_i(startTime)
+#		if i >= duration:
+#			setProgress(0)
+#			break
+#
+#		setProgress(i / duration)
 
 func updateProduction(resource: int = primaryResource):
 	production.show()
-	production.text = lv.maxNetText(resource) + "/s"
+	#production.text = lv.netText(resource) + "/s" # LIVE DRAIN
+	production.text = lv.maxNetText(resource) + "/s" # MAX DRAIN
 
 func hideProduction():
 	production.hide()
@@ -175,12 +206,29 @@ func setStatusText(text: String):
 
 func finishedWorkingForNow():
 	hideProduction()
+	animation.sleep()
 
 func stop():
 	t.stop()
 
 func get_i(start_time: int) -> int:
 	return OS.get_ticks_msec() - start_time
+
+
+func throw_draw_plate():
+	animation.hide()
+	draw_plate_throw.show()
+	draw_plate_throw.play("ff")
+	
+	var wire_job_duration = lv.lored[lv.Type.WIRE].lored.jobs.values()[0].duration
+	var wire_animation_length = gv.max_frame["wire"]
+	draw_plate_throw.speed_scale = wire_animation_length / wire_job_duration
+	
+	yield(draw_plate_throw, "animation_finished")
+	
+	draw_plate_throw.stop()
+	draw_plate_throw.hide()
+	animation.show()
 
 
 
@@ -193,7 +241,8 @@ func hideProgress():
 	goToSleep()
 
 func goToSleep():
-	animation.animation = "ww"
+	#animation.animation = "ww"
+	animation.sleep()
 
 
 

@@ -9,6 +9,7 @@ onready var requiredFuelIcon = get_node("%requiredFuelIcon")
 
 var loredColor: Color
 
+
 func setup(job: Job):
 	
 	hideNodes()

@@ -43,11 +43,17 @@ func getTotal() -> float:
 		var effectIndex: int = dynamic[x]
 		total *= gv.up[x].effects[effectIndex].effect.t
 	
-	if name == "haste":
-		total *= gv.hax_pow
+	var bonusEffectsMethod = "bonusEffects_" + name
+	if has_method(bonusEffectsMethod):
+		total *= call(bonusEffectsMethod)
 	
 	totalUpdated = true
 	return total
+
+func bonusEffects_haste() -> float:
+	return gv.hax_pow * diff.Haste
+func bonusEffects_crit() -> float:
+	return diff.Crit
 
 
 func getTotalText() -> String:

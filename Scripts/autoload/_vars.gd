@@ -18,16 +18,15 @@ const PATCH_NOTES := {
 	
 	"3.0.0": [
 		"Added a main menu with save management (desktop-only).",
-		"Added difficulty options.",
+		"Added difficulty options (desktop-only).",
 		"Merged quests and tasks into Wishes.",
 		"LOREDs now think out-loud and may speak to each other.",
 		"New LORED UI and tooltips.",
 		"Completely re-wrote the LORED and Quest/Task classes and separated resources from LOREDs in the code.",
 		"LOREDs no longer automatically refill their fuel. They must refuel manually.",
 		"Every main and random Wish has dialogue.",
-		"Added the Steel animation.",
+		"Added the Steel and Soil animations.",
 		"Added and removed some options.",
-		"Added the Log (hotkey: L), a hub that contains a history of recent events.",
 	],
 	
 	"2.2.28": [
@@ -340,6 +339,7 @@ func setupOptions():
 	option["flying_numbers"] = true
 	option["levelUpDetails"] = true
 	option["wishVicosOnMainScreen"] = true
+	option["loredChitChat"] = true
 
 
 
@@ -616,6 +616,7 @@ func setShorthandByResource():
 		shorthandByResource[r] = rKeys[r].to_lower()
 
 const anim = {
+	"refuel": preload("res://Sprites/animations/Refuel.tres"),
 	"tum": preload("res://Sprites/animations/tum.tres"),
 	"carc": preload("res://Sprites/animations/carc.tres"),
 	"plast": preload("res://Sprites/animations/plast.tres"),
@@ -1123,33 +1124,40 @@ var latest_unholy_body: int # key
 var ub_count := 0
 signal new_unholy_body(amount) # -> Unholy Body Manager.gd
 
-var animationless = ["hard", "draw", "carc", "tum", "axe", "wire", "pet", "paper", "lead", "plast", "pulp"]
+
+var animationless = ["carc", "tum", "axe", "pet", "paper", "plast", "pulp"]
 var max_frame = {
-	"humus":  9,
-	"gale":  22,
-	"ciga":  25,
-	"liq":  22,
-	"sand":  45,
-	"wood":  49,
-	"toba":  73,
-	"glass":  37,
+	"hard": 37,
+	"refuel1": 28,
+	"refuel0": 27,
+	"lead": 11,
+	"wire": 27,
+	"humus": 9,
+	"gale": 22,
+	"ciga": 25,
+	"liq": 22,
+	"sand": 45,
+	"wood": 49,
+	"toba": 73,
+	"glass": 37,
 	"seed": 30,
-	"tree":  77,
+	"tree": 77,
 	"water": 25,
-	"coal":  25,
-	"stone":  27,
-	"irono":  28,
-	"copo":  25,
-	"iron":  47,
-	"cop":  30,
-	"growth":  40,
-	"conc":  57,
-	"jo":  32,
-	"malig":  36,
-	"tar":  29,
-	"oil":  8,
-	"steel":  58,
-	"soil":  42,
+	"coal": 25,
+	"stone": 27,
+	"irono": 28,
+	"copo": 25,
+	"iron": 47,
+	"cop": 30,
+	"growth": 40,
+	"conc": 57,
+	"jo": 32,
+	"malig": 36,
+	"tar": 29,
+	"oil": 8,
+	"steel": 58,
+	"soil": 42,
+	"draw": 33,
 }
 var list := {}
 func resetList():

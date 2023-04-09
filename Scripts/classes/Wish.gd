@@ -844,7 +844,7 @@ func construct_fuel():
 
 func construct_stuff():
 	giver = str(lv.Type.STONE)
-	help_text = "I want to pick up rocks, but I'm out of [img=<16>]" + gv.sprite["fuelCost"].get_path() + "[/img] [i]fuel[/i]. Help!\n\nClicking on Coal's [img=<16>]" + gv.sprite["level"].get_path() + "[/img] Level Up button for the first time will get him to become active."
+	help_text = "I want to pick up rocks, but I'm out of [img=<16>]" + gv.sprite["fuelCost"].get_path() + "[/img] [i]Fuel[/i]. Help!\n\nClicking on Coal's [img=<16>]" + gv.sprite["level"].get_path() + "[/img] Level Up button for the first time will get him to become active."
 	thank_text = "That's the stuff. Thanks!"
 	obj = Objective.new(gv.Objective.LORED_UPGRADED, str(lv.Type.COAL))
 

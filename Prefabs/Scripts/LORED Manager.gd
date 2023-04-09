@@ -69,7 +69,7 @@ func autobuyer_purchased(key):
 
 func instanceManualLabor():
 	var stinky = gv.SRC["manual labor"].instance()
-	get_node("sc/v/1").add_child(stinky)
+	get_node("%1").add_child(stinky)
 	gv.manualLaborActive = true
 
 func switchTab(tab: String):

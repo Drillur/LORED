@@ -627,16 +627,16 @@ custom_fonts/font = SubResource( 38 )
 text = "Play"
 
 [node name="m" type="MarginContainer" parent="new game"]
-margin_left = 458.0
-margin_top = 319.0
-margin_right = 822.0
-margin_bottom = 400.0
+margin_left = 390.0
+margin_top = 25.0
+margin_right = 890.0
+margin_bottom = 695.0
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
 [node name="v" type="VBoxContainer" parent="new game/m"]
-margin_right = 364.0
-margin_bottom = 81.0
+margin_right = 500.0
+margin_bottom = 670.0
 custom_constants/separation = 20
 alignment = 1
 
@@ -830,21 +830,20 @@ __meta__ = {
 }
 
 [node name="diff" type="MarginContainer" parent="new game/m/v"]
-visible = false
 margin_right = 500.0
-margin_bottom = 412.0
+margin_bottom = 569.0
 rect_min_size = Vector2( 500, 0 )
 size_flags_horizontal = 4
 
 [node name="bg" type="Panel" parent="new game/m/v/diff"]
 margin_right = 500.0
-margin_bottom = 412.0
+margin_bottom = 569.0
 mouse_filter = 2
 custom_styles/panel = SubResource( 56 )
 
 [node name="m" type="MarginContainer" parent="new game/m/v/diff"]
 margin_right = 500.0
-margin_bottom = 412.0
+margin_bottom = 569.0
 custom_constants/margin_right = 10
 custom_constants/margin_top = 10
 custom_constants/margin_left = 10
@@ -854,13 +853,13 @@ custom_constants/margin_bottom = 10
 margin_left = 10.0
 margin_top = 10.0
 margin_right = 490.0
-margin_bottom = 402.0
+margin_bottom = 559.0
 rect_pivot_offset = Vector2( -577, 177 )
 custom_constants/separation = 10
 
 [node name="v" type="VBoxContainer" parent="new game/m/v/diff/m/v"]
 margin_right = 480.0
-margin_bottom = 367.0
+margin_bottom = 524.0
 custom_constants/separation = 10
 
 [node name="custom" type="MarginContainer" parent="new game/m/v/diff/m/v/v"]
@@ -1197,40 +1196,40 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="FuelConsumption" type="HBoxContainer" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v"]
+[node name="FuelCost" type="HBoxContainer" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v"]
 margin_top = 88.0
 margin_right = 218.0
 margin_bottom = 128.0
 
-[node name="h" type="VBoxContainer" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelConsumption"]
+[node name="h" type="VBoxContainer" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelCost"]
 margin_right = 150.0
 margin_bottom = 40.0
 size_flags_horizontal = 3
 custom_constants/separation = 0
 
-[node name="FuelConsumption" type="HBoxContainer" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelConsumption/h"]
+[node name="FuelCost" type="HBoxContainer" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelCost/h"]
 margin_right = 150.0
 margin_bottom = 24.0
 size_flags_horizontal = 3
 
-[node name="icon" type="Panel" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelConsumption/h/FuelConsumption"]
+[node name="icon" type="Panel" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelCost/h/FuelCost"]
 margin_right = 24.0
 margin_bottom = 24.0
 rect_min_size = Vector2( 24, 24 )
 size_flags_vertical = 4
 custom_styles/panel = SubResource( 39 )
 
-[node name="Sprite" type="Sprite" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelConsumption/h/FuelConsumption/icon"]
+[node name="Sprite" type="Sprite" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelCost/h/FuelCost/icon"]
 position = Vector2( 12, 12 )
 texture = ExtResource( 28 )
 
-[node name="Sprite2" type="Sprite" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelConsumption/h/FuelConsumption/icon/Sprite"]
+[node name="Sprite2" type="Sprite" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelCost/h/FuelCost/icon/Sprite"]
 self_modulate = Color( 0, 0, 0, 0.501961 )
 show_behind_parent = true
 position = Vector2( 2, 2 )
 texture = ExtResource( 28 )
 
-[node name="flair" type="Label" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelConsumption/h/FuelConsumption"]
+[node name="flair" type="Label" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelCost/h/FuelCost"]
 margin_left = 28.0
 margin_top = 4.0
 margin_right = 78.0
@@ -1240,7 +1239,7 @@ custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 5 )
 text = "Fuel Cost"
 
-[node name="HSlider" type="HSlider" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelConsumption/h"]
+[node name="HSlider" type="HSlider" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelCost/h"]
 margin_top = 24.0
 margin_right = 150.0
 margin_bottom = 40.0
@@ -1249,7 +1248,7 @@ max_value = 10.0
 step = 0.1
 value = 1.0
 
-[node name="TextEdit" type="TextEdit" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelConsumption"]
+[node name="TextEdit" type="TextEdit" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelCost"]
 margin_left = 154.0
 margin_top = 6.0
 margin_right = 218.0
@@ -1426,9 +1425,9 @@ __meta__ = {
 }
 
 [node name="values" type="MarginContainer" parent="new game/m/v/diff/m/v/v"]
-visible = false
+margin_top = 275.0
 margin_right = 480.0
-margin_bottom = 147.0
+margin_bottom = 422.0
 
 [node name="bg" type="Panel" parent="new game/m/v/diff/m/v/v/values"]
 self_modulate = Color( 0.219608, 0.219608, 0.219608, 1 )
@@ -1654,30 +1653,30 @@ custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 3 )
 text = "+35%"
 
-[node name="FuelConsumption" type="HBoxContainer" parent="new game/m/v/diff/m/v/v/values/m/v/lored/m/v"]
+[node name="FuelCost" type="HBoxContainer" parent="new game/m/v/diff/m/v/v/values/m/v/lored/m/v"]
 margin_top = 56.0
 margin_right = 218.0
 margin_bottom = 80.0
 size_flags_horizontal = 3
 
-[node name="icon" type="Panel" parent="new game/m/v/diff/m/v/v/values/m/v/lored/m/v/FuelConsumption"]
+[node name="icon" type="Panel" parent="new game/m/v/diff/m/v/v/values/m/v/lored/m/v/FuelCost"]
 margin_right = 24.0
 margin_bottom = 24.0
 rect_min_size = Vector2( 24, 24 )
 size_flags_vertical = 4
 custom_styles/panel = SubResource( 39 )
 
-[node name="Sprite" type="Sprite" parent="new game/m/v/diff/m/v/v/values/m/v/lored/m/v/FuelConsumption/icon"]
+[node name="Sprite" type="Sprite" parent="new game/m/v/diff/m/v/v/values/m/v/lored/m/v/FuelCost/icon"]
 position = Vector2( 12, 12 )
 texture = ExtResource( 28 )
 
-[node name="Sprite2" type="Sprite" parent="new game/m/v/diff/m/v/v/values/m/v/lored/m/v/FuelConsumption/icon/Sprite"]
+[node name="Sprite2" type="Sprite" parent="new game/m/v/diff/m/v/v/values/m/v/lored/m/v/FuelCost/icon/Sprite"]
 self_modulate = Color( 0, 0, 0, 0.501961 )
 show_behind_parent = true
 position = Vector2( 2, 2 )
 texture = ExtResource( 28 )
 
-[node name="flair" type="Label" parent="new game/m/v/diff/m/v/v/values/m/v/lored/m/v/FuelConsumption"]
+[node name="flair" type="Label" parent="new game/m/v/diff/m/v/v/values/m/v/lored/m/v/FuelCost"]
 margin_left = 28.0
 margin_top = 4.0
 margin_right = 129.0
@@ -1687,7 +1686,7 @@ custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 5 )
 text = "Fuel Consumption:"
 
-[node name="text" type="Label" parent="new game/m/v/diff/m/v/v/values/m/v/lored/m/v/FuelConsumption"]
+[node name="text" type="Label" parent="new game/m/v/diff/m/v/v/values/m/v/lored/m/v/FuelCost"]
 margin_left = 133.0
 margin_top = 3.0
 margin_right = 168.0
@@ -1740,9 +1739,9 @@ custom_fonts/font = SubResource( 3 )
 text = "10.0x"
 
 [node name="presets" type="MarginContainer" parent="new game/m/v/diff/m/v/v"]
-margin_top = 275.0
+margin_top = 432.0
 margin_right = 480.0
-margin_bottom = 367.0
+margin_bottom = 524.0
 
 [node name="bg" type="Panel" parent="new game/m/v/diff/m/v/v/presets"]
 self_modulate = Color( 0.219608, 0.219608, 0.219608, 1 )
@@ -1791,9 +1790,9 @@ text = "desc aslkjedf ;lkajs df;klja sd;lk fjas;kldf j;lkasjd f;klasj df;lkajs f
 autowrap = true
 
 [node name="flair" type="Label" parent="new game/m/v/diff/m/v"]
-margin_top = 377.0
+margin_top = 534.0
 margin_right = 480.0
-margin_bottom = 392.0
+margin_bottom = 549.0
 mouse_filter = 0
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 5 )
@@ -1901,13 +1900,14 @@ __meta__ = {
 }
 
 [node name="v" type="VBoxContainer" parent="new game/m/v"]
-margin_right = 364.0
-margin_bottom = 81.0
+margin_top = 589.0
+margin_right = 500.0
+margin_bottom = 670.0
 size_flags_vertical = 8
 alignment = 2
 
 [node name="text" type="Label" parent="new game/m/v/v"]
-margin_right = 364.0
+margin_right = 500.0
 margin_bottom = 17.0
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 49 )
@@ -1916,12 +1916,13 @@ align = 1
 
 [node name="h" type="HBoxContainer" parent="new game/m/v/v"]
 margin_top = 21.0
-margin_right = 364.0
+margin_right = 500.0
 margin_bottom = 81.0
 alignment = 1
 
 [node name="save info" type="MarginContainer" parent="new game/m/v/v/h"]
-margin_right = 180.0
+margin_left = 68.0
+margin_right = 248.0
 margin_bottom = 60.0
 rect_min_size = Vector2( 180, 60 )
 mouse_filter = 2
@@ -2010,8 +2011,8 @@ __meta__ = {
 }
 
 [node name="diff" type="MarginContainer" parent="new game/m/v/v/h"]
-margin_left = 184.0
-margin_right = 364.0
+margin_left = 252.0
+margin_right = 432.0
 margin_bottom = 60.0
 rect_min_size = Vector2( 180, 60 )
 mouse_filter = 2
@@ -3794,7 +3795,7 @@ __meta__ = {
 [connection signal="value_changed" from="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/Input/h/HSlider" to="." method="_on_HSlider_value_changed" binds= [ "Input" ]]
 [connection signal="value_changed" from="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/Haste/h/HSlider" to="." method="_on_HSlider_value_changed" binds= [ "Haste" ]]
 [connection signal="value_changed" from="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/Crit/h/HSlider" to="." method="_on_HSlider_value_changed" binds= [ "Crit" ]]
-[connection signal="value_changed" from="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelConsumption/h/HSlider" to="." method="_on_HSlider_value_changed" binds= [ "FuelConsumption" ]]
+[connection signal="value_changed" from="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelCost/h/HSlider" to="." method="_on_HSlider_value_changed" binds= [ "FuelCost" ]]
 [connection signal="value_changed" from="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelStorage/h/HSlider" to="." method="_on_HSlider_value_changed" binds= [ "FuelStorage" ]]
 [connection signal="mouse_entered" from="new game/m/v/diff/m/v/v/custom/m/v/randomize/button" to="." method="_on_custom_randomize_mouse_entered"]
 [connection signal="mouse_exited" from="new game/m/v/diff/m/v/v/custom/m/v/randomize/button" to="." method="_on_custom_randomize_mouse_exited"]

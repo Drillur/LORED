@@ -63,6 +63,7 @@ draw_center = false
 margin_right = 142.0
 margin_bottom = 84.0
 rect_min_size = Vector2( 75, 52 )
+mouse_filter = 2
 size_flags_horizontal = 10
 size_flags_vertical = 10
 script = ExtResource( 6 )
@@ -71,6 +72,7 @@ script = ExtResource( 6 )
 unique_name_in_owner = true
 margin_right = 142.0
 margin_bottom = 84.0
+mouse_filter = 2
 theme = ExtResource( 3 )
 custom_styles/panel = SubResource( 1 )
 
@@ -83,6 +85,7 @@ margin_left = -40.0
 margin_top = -2.0
 margin_right = -36.0
 rect_pivot_offset = Vector2( 1.43617, 1.50656 )
+mouse_filter = 2
 custom_styles/panel = SubResource( 2 )
 
 [node name="Sprite" type="Sprite" parent="bg/bottomBubbleAnchor"]
@@ -95,7 +98,7 @@ texture = ExtResource( 1 )
 [node name="m" type="MarginContainer" parent="."]
 margin_right = 142.0
 margin_bottom = 84.0
-mouse_filter = 1
+mouse_filter = 2
 custom_constants/margin_right = 10
 custom_constants/margin_top = 10
 custom_constants/margin_left = 10
@@ -106,6 +109,7 @@ margin_left = 10.0
 margin_top = 10.0
 margin_right = 132.0
 margin_bottom = 74.0
+mouse_filter = 2
 
 [node name="pose" type="Panel" parent="m/HBoxContainer"]
 unique_name_in_owner = true
@@ -132,12 +136,12 @@ centered = false
 unique_name_in_owner = true
 margin_right = 122.0
 margin_bottom = 64.0
-mouse_filter = 1
+mouse_filter = 2
 size_flags_horizontal = 3
 scroll_horizontal_enabled = false
 
 [node name="m" type="MarginContainer" parent="m/HBoxContainer/ScrollContainer"]
-margin_right = 122.0
+margin_right = 110.0
 margin_bottom = 64.0
 mouse_filter = 2
 size_flags_horizontal = 3
@@ -151,7 +155,7 @@ custom_constants/margin_bottom = 0
 unique_name_in_owner = true
 margin_right = 122.0
 margin_bottom = 64.0
-mouse_filter = 1
+mouse_filter = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )

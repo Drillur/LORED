@@ -68,14 +68,6 @@ func TEST():
 	speaker = lv.Type.COAL
 	dialogue = "Once upon a time, there was a little baby boy who was a stinky. But then, he did something insane! He freaked out! Like, wow. Isn't that crazy? I think so, anyway. Yep! Signing off!"
 
-func IRON_WISH_LOG():
-	speaker = lv.Type.IRON
-	dialogue = "I just made a Wish! Open the\n[url][color=#579efa][img=<16>]" + gv.sprite["log"].get_path() + "[/img] Wish Log[/color][/url]!"
-	duration = -1
-func meta_IRON_WISH_LOG(meta):
-	get_node("/root/Root/%WishLog").show()
-	get_node("/root/Root/%WishLogButton").show()
-
 func STONE_HAPPY():
 	speaker = lv.Type.STONE
 	dialogue = "I'm so glad to have Coal back again."
@@ -216,7 +208,7 @@ func IRON_ORE10():
 
 func COPPER_ORE0():
 	speaker = lv.Type.COPPER_ORE
-	dialogue = "♪ It's a working man I am!"
+	dialogue = "It's a working man I am!"
 func COPPER_ORE1():
 	speaker = lv.Type.COPPER_ORE
 	dialogue = "I've been down underground."
@@ -440,7 +432,7 @@ func OIL3():
 	dialogue = "AHHHHHHH!"
 func OIL4():
 	speaker = lv.Type.OIL
-	dialogue = "AHHHHHHH!"
+	dialogue = "Waaaahhhhh!!!"
 func OIL5():
 	speaker = lv.Type.OIL
 	pose()
@@ -711,6 +703,40 @@ func SOIL7():
 	speaker = lv.Type.SOIL
 	dialogue = "I wish I were at home in a hot bath with fresh coffee and cookies, and a whole lot of soap."
 
+func DRAW_PLATE0():
+	speaker = lv.Type.DRAW_PLATE
+	dialogue = "Next, I'm going to draw a castle!"
+func DRAW_PLATE1():
+	speaker = lv.Type.DRAW_PLATE
+	dialogue = "Who is your favorite superhero?"
+func DRAW_PLATE2():
+	speaker = lv.Type.DRAW_PLATE
+	dialogue = "I wish I could have pizza for dinner every night!"
+func DRAW_PLATE3():
+	speaker = lv.Type.DRAW_PLATE
+	dialogue = "My favorite color is orange. What about you?"
+func DRAW_PLATE4():
+	speaker = lv.Type.DRAW_PLATE
+	dialogue = "Can we go to the park later?"
+func DRAW_PLATE5():
+	speaker = lv.Type.DRAW_PLATE
+	dialogue = "My favorite animal is a panda."
+func DRAW_PLATE6():
+	speaker = lv.Type.DRAW_PLATE
+	dialogue = "I don't want to go to bed early tonight."
+func DRAW_PLATE7():
+	speaker = lv.Type.DRAW_PLATE
+	dialogue = "Can I have some ice cream?"
+func DRAW_PLATE8():
+	speaker = lv.Type.DRAW_PLATE
+	dialogue = "Can I have some ice cream after I finish my drawing?"
+func DRAW_PLATE9():
+	speaker = lv.Type.DRAW_PLATE
+	dialogue = "I don't like doing homework!"
+func DRAW_PLATE10():
+	speaker = lv.Type.DRAW_PLATE
+	dialogue = "Have you ever been to the park? What's your favorite part about the park?"
+
 
 
 # - Signals
@@ -723,15 +749,21 @@ func metaClicked(meta):
 
 func _on_m_mouse_entered() -> void:
 	mouseIn = true
+	#modulate = Color(1,1,1,0.1)
+	#return
 	if not hasURL:
 		get_node("%info").show()
 func _on_m_mouse_exited() -> void:
 	mouseIn = false
+	#modulate = Color(1,1,1,1)
 
 func _on_Button_pressed() -> void:
 	queue_free()
 func _on_Button_mouse_entered() -> void:
 	mouseIn = true
+
+func _on_progress_value_changed(value: float) -> void:
+	get_node("%progress/shadow").value = value
 
 
 
@@ -808,5 +840,3 @@ func allDialogueDisplayed():
 
 
 
-func _on_progress_value_changed(value: float) -> void:
-	get_node("%progress/shadow").value = value

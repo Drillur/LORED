@@ -168,6 +168,8 @@ func game_start(successful_load: bool) -> void:
 		
 		if WishLogButtonVisible:
 			get_node("%WishLogButton").show()
+		
+		EmoteManager.startEmoting()
 	
 	taq.seekNewWish()
 	
@@ -395,14 +397,16 @@ func _on_mouse_exited() -> void:
 	get_node("global_tip")._call("no")
 
 
-func _on_s1_pressed() -> void:
+
+func _on_s1tab_pressed() -> void:
 	b_tabkey(KEY_1)
-
-func _on_s2_pressed() -> void:
+func _on_s2tab_pressed() -> void:
 	b_tabkey(KEY_2)
-
-func _on_s3_pressed() -> void:
+func _on_s3tab_pressed() -> void:
 	b_tabkey(KEY_3)
+func _on_s4tab_pressed() -> void:
+	b_tabkey(KEY_4)
+
 
 
 func watch_stage1and2resourcesAreUnlocked():
@@ -1199,6 +1203,9 @@ func _on_Button_pressed() -> void:
 #	lv.lored[lv.Type.IRON].lored.outputBits.fullReport()
 #	lv.lored[lv.Type.IRON].lored.inputBits.fullReport()
 	pass
+
+
+
 
 
 

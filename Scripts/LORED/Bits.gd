@@ -44,11 +44,21 @@ func getTotal() -> Big:
 		var effectIndex: int = dynamic[x]
 		total.m(gv.up[x].effects[effectIndex].effect.t)
 	
-	if name == "output":
-		total.m(gv.hax_pow)
+	var bonusEffectsMethod = "bonusEffects_" + name
+	if has_method(bonusEffectsMethod):
+		total.m(call(bonusEffectsMethod))
 	
 	totalUpdated = true
 	return total
+
+func bonusEffects_output() -> float:
+	return gv.hax_pow * diff.Output
+func bonusEffects_input() -> float:
+	return diff.Input
+func bonusEffects_fuelCost() -> float:
+	return diff.FuelCost
+func bonusEffects_fuelStorage() -> float:
+	return diff.FuelStorage
 
 
 func getTotalText() -> String:

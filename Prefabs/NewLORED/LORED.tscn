@@ -1,7 +1,7 @@
-[gd_scene load_steps=38 format=2]
+[gd_scene load_steps=57 format=2]
 
-[ext_resource path="res://Sprites/animations/draw.tres" type="SpriteFrames" id=1]
-[ext_resource path="res://Scripts/oldLORED/AnimatedSprite.gd" type="Script" id=2]
+[ext_resource path="res://Sprites/animations/hard.tres" type="SpriteFrames" id=1]
+[ext_resource path="res://Sprites/animations/draw throw/ff0002.png" type="Texture" id=2]
 [ext_resource path="res://Sprites/Menu/Alarm.png" type="Texture" id=3]
 [ext_resource path="res://Sprites/emote/Bubble.png" type="Texture" id=4]
 [ext_resource path="res://Styles/Master Theme.tres" type="Theme" id=5]
@@ -18,7 +18,25 @@
 [ext_resource path="res://Sprites/Menu/Info.png" type="Texture" id=16]
 [ext_resource path="res://Sprites/Menu/Jobs.png" type="Texture" id=17]
 [ext_resource path="res://Sprites/Menu/awake.png" type="Texture" id=18]
+[ext_resource path="res://Sprites/animations/draw throw/ff0003.png" type="Texture" id=19]
 [ext_resource path="res://Sprites/Menu/Level.png" type="Texture" id=20]
+[ext_resource path="res://Sprites/animations/draw throw/ff0005.png" type="Texture" id=21]
+[ext_resource path="res://Prefabs/NewLORED/animation.gd" type="Script" id=22]
+[ext_resource path="res://Sprites/animations/draw throw/ff0008.png" type="Texture" id=23]
+[ext_resource path="res://Sprites/animations/draw throw/ff0009.png" type="Texture" id=24]
+[ext_resource path="res://Sprites/animations/draw throw/ff0001.png" type="Texture" id=25]
+[ext_resource path="res://Sprites/animations/draw throw/ff0006.png" type="Texture" id=26]
+[ext_resource path="res://Sprites/animations/draw throw/ff0010.png" type="Texture" id=27]
+[ext_resource path="res://Sprites/animations/draw throw/ff0004.png" type="Texture" id=28]
+[ext_resource path="res://Sprites/animations/draw throw/ff0007.png" type="Texture" id=29]
+[ext_resource path="res://Sprites/animations/draw throw/ff0011.png" type="Texture" id=30]
+[ext_resource path="res://Sprites/animations/draw throw/ff0014.png" type="Texture" id=31]
+[ext_resource path="res://Sprites/animations/draw throw/ff0016.png" type="Texture" id=32]
+[ext_resource path="res://Sprites/animations/draw throw/ff0017.png" type="Texture" id=33]
+[ext_resource path="res://Sprites/animations/draw throw/ff0013.png" type="Texture" id=34]
+[ext_resource path="res://Sprites/animations/draw throw/ff0015.png" type="Texture" id=35]
+[ext_resource path="res://Sprites/animations/draw throw/ff0012.png" type="Texture" id=36]
+[ext_resource path="res://Sprites/resources/hard.png" type="Texture" id=37]
 
 [sub_resource type="StyleBoxFlat" id=10]
 bg_color = Color( 0.0823529, 0.0823529, 0.0823529, 1 )
@@ -93,6 +111,14 @@ expand_margin_right = 5.0
 expand_margin_top = 5.0
 expand_margin_bottom = 5.0
 
+[sub_resource type="SpriteFrames" id=28]
+animations = [ {
+"frames": [ ExtResource( 25 ), ExtResource( 2 ), ExtResource( 19 ), ExtResource( 28 ), ExtResource( 21 ), ExtResource( 26 ), ExtResource( 29 ), ExtResource( 23 ), ExtResource( 24 ), ExtResource( 27 ), ExtResource( 30 ), ExtResource( 36 ), ExtResource( 34 ), ExtResource( 31 ), ExtResource( 35 ), ExtResource( 32 ), ExtResource( 33 ) ],
+"loop": true,
+"name": "ff",
+"speed": 1.0
+} ]
+
 [sub_resource type="StyleBoxFlat" id=13]
 bg_color = Color( 0.152941, 0.152941, 0.152941, 1 )
 border_color = Color( 0, 0, 0, 1 )
@@ -131,7 +157,7 @@ corner_radius_bottom_left = 16
 [sub_resource type="StyleBoxFlat" id=27]
 bg_color = Color( 1, 1, 1, 1 )
 
-[node name="LORED" type="MarginContainer"]
+[node name="LORED Vico" type="MarginContainer"]
 margin_right = 201.0
 margin_bottom = 125.0
 rect_min_size = Vector2( 201, 0 )
@@ -244,7 +270,7 @@ __meta__ = {
 
 [node name="Sprite" type="Sprite" parent="m/v/top/v/mid/v2/resource/icon"]
 position = Vector2( 18, 18 )
-texture = ExtResource( 12 )
+texture = ExtResource( 37 )
 
 [node name="shadow" type="Sprite" parent="m/v/top/v/mid/v2/resource/icon/Sprite"]
 self_modulate = Color( 0, 0, 0, 1 )
@@ -370,22 +396,24 @@ __meta__ = {
 }
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="m/v/top/v/mid/animation"]
-position = Vector2( 34, 34 )
+position = Vector2( 2, 2 )
 scale = Vector2( 0.5, 0.5 )
 frames = ExtResource( 1 )
-animation = "ww"
+animation = "ff"
+frame = 24
+speed_scale = 8.0
 playing = true
-script = ExtResource( 2 )
-
-[node name="Timer" type="Timer" parent="m/v/top/v/mid/animation/AnimatedSprite"]
+centered = false
+script = ExtResource( 22 )
 
 [node name="DRAW_PLATE throw" type="AnimatedSprite" parent="m/v/top/v/mid/animation"]
+unique_name_in_owner = true
 visible = false
 position = Vector2( 34, 34 )
 scale = Vector2( 0.5, 0.5 )
-frames = ExtResource( 1 )
-animation = "ww"
-playing = true
+frames = SubResource( 28 )
+animation = "ff"
+frame = 4
 
 [node name="bot" type="MarginContainer" parent="m/v"]
 margin_top = 88.0
@@ -578,7 +606,7 @@ unique_name_in_owner = true
 visible = false
 position = Vector2( 12, 12 )
 frames = ExtResource( 11 )
-frame = 11
+frame = 4
 playing = true
 
 [node name="Sprite" type="Sprite" parent="m/v/bot/m/h/level up/icon"]

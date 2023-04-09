@@ -1,14 +1,14 @@
 extends Node
 
 
-var saved_vars := ["active_difficulty", "Output", "Input", "Haste", "Crit", "FuelConsumption", "FuelStorage",]
+var saved_vars := ["active_difficulty", "Output", "Input", "Haste", "Crit", "FuelCost", "FuelStorage",]
 
 
 var Output := 1.0 setget setOutput
 var Input := 1.0 setget setInput
 var Haste := 1.0 setget setHaste
 var Crit := 0.0 setget setCrit
-var FuelConsumption := 1.0 setget setFuelConsumption
+var FuelCost := 1.0 setget setFuelCost
 var FuelStorage := 1.0 setget setFuelStorage
 
 var unlockedUpgrades := [] setget setUnlockedUpgrades
@@ -66,8 +66,8 @@ func setHaste(val: float):
 	Haste = val
 func setCrit(val: float):
 	Crit = val
-func setFuelConsumption(val: float):
-	FuelConsumption = val
+func setFuelCost(val: float):
+	FuelCost = val
 func setFuelStorage(val: float):
 	FuelStorage = val
 func setUnlockedUpgrades(val: Array):
@@ -80,7 +80,7 @@ func resetAll():
 	setInput(1)
 	setHaste(1)
 	setCrit(0)
-	setFuelConsumption(1)
+	setFuelCost(1)
 	setFuelStorage(1)
 	setUnlockedUpgrades([])
 
@@ -96,7 +96,7 @@ func changeDifficulty(new_diff: int):
 			setOutput(0.5)
 			setInput(2)
 			setFuelStorage(2)
-			setFuelConsumption(2)
+			setFuelCost(2)
 			setCrit(-100)
 		
 		Difficulty.TORTOISE:
@@ -108,12 +108,12 @@ func changeDifficulty(new_diff: int):
 		Difficulty.HARD:
 			setHaste(0.75)
 			setOutput(0.75)
-			setFuelConsumption(2)
+			setFuelCost(2)
 			setCrit(-5)
 		
 		Difficulty.EASY:
 			setHaste(1.25)
-			setFuelConsumption(0.5)
+			setFuelCost(0.5)
 		
 		Difficulty.SONIC:
 			#setHaste(0.1)

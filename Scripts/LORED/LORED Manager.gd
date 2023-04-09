@@ -54,9 +54,6 @@ func setupElements():
 	jobTimer = Timer.new()
 	jobTimer.one_shot = true
 	add_child(jobTimer)
-	
-	emoteTimer = Timer.new()
-	add_child(emoteTimer)
 
 
 
@@ -399,6 +396,7 @@ func asleepClicked(manual := false):
 		wakeUp()
 	else:
 		putToSleep()
+		updateMaxDrain()
 		watchSleepTime()
 	if manual:
 		rt.get_node("global_tip").refresh("lored asleep")
@@ -638,7 +636,6 @@ func enterStandby():
 	vico.enterStandby()
 	updateFuelDrain(false)
 	gv.append(gv.list.lored["unlocked and inactive"], type)
-	stopEmoting = true
 
 func enterActive():
 	gv.list.lored["unlocked and inactive"].erase(type)
@@ -647,7 +644,6 @@ func enterActive():
 	watchCurrentFuel()
 	updateFuelDrain(true)
 	findFirstJob()
-	emoteLoop()
 
 
 
@@ -741,6 +737,7 @@ func canStartJob(job: Job) -> bool:
 	lored.working = true
 	return true
 
+
 func workJob(job: Job):
 	
 	highlightJobInTooltip(job)
@@ -752,7 +749,7 @@ func workJob(job: Job):
 	takeRequiredFuelFromStorage(job.requiredFuel)
 	
 	var currentTime = OS.get_ticks_msec()
-	vico.jobStarted(job.duration, currentTime)
+	vico.jobStarted(job.duration, currentTime, job.type)
 	
 	updatePrimaryResource(job.primaryResource)
 	if job.type == lv.Job.REFUEL:
@@ -765,6 +762,9 @@ func workJob(job: Job):
 		gv.emit_signal("OtherJobs", type)
 		vico.updateProduction()
 	updateStatus(job.vicoText)
+	
+	if job.type == lv.Job.WIRE:
+		lv.lored[lv.Type.DRAW_PLATE].throw_draw_plate()
 	
 	
 	
@@ -976,6 +976,10 @@ func stopHighlightJobInTooltip(job: Job):
 				rt.get_node("global_tip").tip.cont.stopHighlightJob(job)
 
 
+func throw_draw_plate():
+	vico.throw_draw_plate()
+
+
 
 # - - - Status
 
@@ -1099,46 +1103,16 @@ func autoBuy():
 
 # - Emote / dialogue
 
-var emotePassword: int
-var stopEmoting := false
-var emoteTimer: Timer
-func emoteLoop():
-	
-	if lored.emotePool.size() == 0:
-		return
-	
-	stopEmoting = false
-	emotePassword = OS.get_ticks_msec()
-	var myPass: int = emotePassword
-	
-	var timeOfNextEmote = OS.get_unix_time() + 1#(randi() % 60) + 60
-	
-	while not is_queued_for_deletion():
-		
-		emoteTimer.start(1)
-		yield(emoteTimer, "timeout")
-		
-		if stopEmoting:
-			break
-		if myPass != emotePassword:
-			break
-		if OS.get_unix_time() < timeOfNextEmote:
-			continue
-		
-		EmoteManager.emote(randomEmote())
-		
-		if type == lv.Type.COPPER_ORE:
-			nextEmote += 1
-			if nextEmote > EmoteManager.Type.COPPER_ORE12:
-				nextEmote = EmoteManager.Type.COPPER_ORE0
-		
-		break
-	
-	emoteLoop()
-
 var nextEmote: int = -1
 func randomEmote() -> int:
+	
+	if type == lv.Type.COPPER_ORE:
+		nextEmote += 1
+		if nextEmote > EmoteManager.Type.COPPER_ORE12:
+			nextEmote = EmoteManager.Type.COPPER_ORE0
 	if nextEmote == -1:
+		if lored.emotePool.size() == 0:
+			return EmoteManager.Type.CONCRETE0
 		return lored.emotePool[randi() % lored.emotePool.size()]
 	else:
 		return nextEmote
