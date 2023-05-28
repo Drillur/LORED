@@ -1,12 +1,13 @@
+class_name LimitBreak
 extends MarginContainer
 
 
+onready var current_xp = get_node("%current xp")
+onready var total_xp = get_node("%total xp")
+onready var value = get_node("%value")
+onready var current_progress = get_node("%current")
+#onready var progress_edge = get_node("%edge")
 
-const gnxpf := "v/xp/f"
-const gnxpt := "v/xp/t"
-const gnct := "v/ct xp"
-const gncf := "v/ct xp/c"
-const gnd := "v/h/d"
 
 
 func _ready():
@@ -25,12 +26,12 @@ func update():
 		
 		var percent = clamp(gv.lb_xp.f.percent(gv.lb_xp.t), 0, 1)
 		
-		get_node(gncf).rect_size.x = min(percent * get_node(gnct).rect_size.x, get_node(gnct).rect_size.x)
+		current_progress.rect_size.x = min(percent * rect_size.x, rect_size.x)
 		
-		get_node(gnxpf).text = gv.lb_xp.f.toString()
-		get_node(gnxpt).text = gv.lb_xp.t.toString()
+		current_xp.text = gv.lb_xp.f.toString()
+		total_xp.text = gv.lb_xp.t.toString()
 		
-		get_node(gnd).text = gv.up["Limit Break"].effects[0].effect.t.toString() + "x"
+		value.text = gv.up["Limit Break"].effects[0].effect.t.toString() + "x"
 		
 		
 		
@@ -53,12 +54,12 @@ func setColors():
 	
 	var color = get_color_by_key(floor(gv.up["Limit Break"].effects[0].effect.t.toFloat()))
 	
-	get_node(gncf).modulate = color
-	get_node(gnd).self_modulate = color
-	get_node(gnxpf).self_modulate = color
-	get_node(gnxpt).self_modulate = get_color_by_key(floor(gv.up["Limit Break"].effects[0].effect.t.toFloat() + 1))
+	current_progress.modulate = color
+	value.self_modulate = color
+	current_xp.self_modulate = color
+	total_xp.self_modulate = get_color_by_key(floor(gv.up["Limit Break"].effects[0].effect.t.toFloat() + 1))
 
-func get_color_by_key(key: int) -> Color:
+static func get_color_by_key(key: int) -> Color:
 	
 	if key == -1:
 		key += 15

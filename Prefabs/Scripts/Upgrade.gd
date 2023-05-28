@@ -89,8 +89,7 @@ func r_update():
 	icon.update()
 	afford()
 	
-	#frickers
-	#color_blind.visible = gv.option["color blind"] and not gv.up[key].have and not gv.up[key].refundable and not icon.lock.visible
+	color_blind.visible = not gv.up[key].have and not gv.up[key].refundable and not icon.lock.visible
 	
 	if gv.up[key].refundable:
 		shadow.hide()
@@ -216,15 +215,12 @@ func autobuy():
 
 
 
-func ______________():
-	pass
 
 func upgrade_bought(manual: bool, red_necro := false):
 	
 	if gv.up[key].normal or red_necro:
 		
 		taq.increaseProgress(gv.Objective.UPGRADE_PURCHASED, key)
-		#taq.increaseProgress(gv.Objective.UPGRADES_PURCHASED, gv.up[key].tab) #note
 		
 		gv.up[key].purchased()
 		
@@ -363,103 +359,14 @@ func cannot_afford(manual: bool) -> bool:
 	
 	if not gv.up[key].cost_check():
 		if manual:
-			if gv.up[key].active_tooltip_exists:
-				rt.get_node("global_tip").tip.price_flash()
+			if rt.get_node("global_tip").tip_filled:
+				if "buy upgrade" in rt.get_node("global_tip").type:
+					rt.get_node("global_tip").tip.price_flash()
 		return true
 	
 	
 	return false
 
-
-#func owned_correct_menu_and_type() -> bool:
-#
-#	if "cremover" in gv.up[key].type:
-#		return false
-#
-#	if "no" in gv.menuf:
-#		if gv.up[key].normal:
-#			return false
-#
-#	elif "ye" in gv.menuf:
-#
-#		if key in ["upgrade_name", "upgrade_description", "RED NECROMANCY"]:
-#
-#			cont["nah"] = src.cannot_deactivate_prefab.instance()
-#			cont["nah"].text = get_no_message()
-#			cont["nah"].rect_position = Vector2(cont["nah"].rect_position.x, cont["nah"].rect_position.y - 20)
-#			add_child(cont["nah"])
-#
-#			return false
-#
-#	return true
-
-#func get_no_message() -> String:
-#
-#	var roll : int = randi() % 30
-#
-#	match roll:
-#		0:
-#			return "Nah."
-#		1:
-#			return "No."
-#		2:
-#			return "Nope."
-#		3:
-#			return "Don't think so."
-#		4:
-#			return "Stop."
-#		5:
-#			return "Yeah, right."
-#		6:
-#			return "Get out of here."
-#		7:
-#			return "Nice try."
-#		8:
-#			return "You think I wouldn't have thought of that?"
-#		9:
-#			return "I see right through your tricks, punk."
-#		10:
-#			return "What are you trying to pull?"
-#		11:
-#			return "Oh, trying to be CLEVER, I see."
-#		12:
-#			return "Yeah, real smart. Look at the brain on this guy."
-#		13:
-#			return "Frick outta here."
-#		14:
-#			return "You little whippersnapper, I oughta beat your mother for this."
-#		15:
-#			return "I thought I raised you better."
-#		16:
-#			return "You frickin fricks!!!"
-#		17:
-#			return "When will you learn that your actions have consequences?"
-#		18:
-#			return "Shiver me freakin timbers, get out of here."
-#		19:
-#			return "Talk to the ALT-F4."
-#		20:
-#			return "You want I should smack ye right in the gob?"
-#		21:
-#			return "Profane, let alone abhorrent."
-#		22:
-#			return "*Chuckles.* I knew you'd try this. *Smirks.* So predictable."
-#		23:
-#			return "Turn around."
-#		24:
-#			return "You fucking piece of shit."
-#		25:
-#			return "Nah, bro, scedaddle on out of here."
-#		26:
-#			return "Why don't you just stop right there?"
-#		27:
-#			return "STOP. YOU'VE VIOLATED THE LAW."
-#		28:
-#			return "I will turn this car around."
-#		29:
-#			return "I thought your mother raised you better than this."
-#		_:
-#			return "You better not."
 
 func upgrade_effects(active: bool):
 	
@@ -496,7 +403,7 @@ func routine_shit() -> void:
 	routine = get_routine_info()
 	
 	gv.resource[gv.Resource.TUMORS].a(routine[0]) # d
-	taq.increaseProgress(gv.Objective.RESOURCES_PRODUCED, "tum", routine[0])
+	taq.increaseProgress(gv.Objective.RESOURCES_PRODUCED, str(gv.Resource.TUMORS), routine[0])
 	gv.resource[gv.Resource.MALIGNANCY].s(routine[1]) # c
 	
 
@@ -506,15 +413,15 @@ func get_routine_info() -> Array:
 	if gv.up["CAPITAL PUNISHMENT"].active():
 		base.m(gv.run1)
 	var routine_d: Big = Big.new(base)
-	var routine_c: Big = Big.new(gv.up["ROUTINE"].cost["malig"].t)
+	var routine_c: Big = Big.new(gv.up["ROUTINE"].cost[gv.Resource.MALIGNANCY].t)
 	
 	if gv.resource[gv.Resource.MALIGNANCY].greater(Big.new(routine_c).m(2)):
 		
-		var _c: Big = Big.new(gv.resource[gv.Resource.MALIGNANCY]).d(gv.up["ROUTINE"].cost["malig"].t).roundDown().s(1)
+		var _c: Big = Big.new(gv.resource[gv.Resource.MALIGNANCY]).d(gv.up["ROUTINE"].cost[gv.Resource.MALIGNANCY].t).roundDown().s(1)
 		_c.m(routine_c)
 		routine_c.a(_c)
 		
-		var relative: Big = Big.new(routine_c).d(gv.up["ROUTINE"].cost["malig"].t).roundDown().s(1)
+		var relative: Big = Big.new(routine_c).d(gv.up["ROUTINE"].cost[gv.Resource.MALIGNANCY].t).roundDown().s(1)
 		relative.m(base)
 		routine_d.a(relative)
 	

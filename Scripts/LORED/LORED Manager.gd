@@ -13,6 +13,10 @@ var type: int
 
 
 
+func _ready() -> void:
+	gv.connect("limit_break_leveled_up", self, "limit_break_level_up")
+
+
 
 
 func _init(_type: int):
@@ -26,9 +30,6 @@ func _init(_type: int):
 	
 	if type == lv.Type.COPPER_ORE:
 		nextEmote = EmoteManager.Type.COPPER_ORE0
-
-
-
 
 
 
@@ -115,7 +116,8 @@ func syncQueue():
 	
 	if rt.get_node("global_tip").tip_filled:
 		if rt.get_node("global_tip").type in ["lored level up", "lored info"]:
-			rt.get_node("global_tip").refresh()
+			if rt.get_node("global_tip").tip.temp["lored"] == type:
+				rt.get_node("global_tip").refresh()
 
 
 
@@ -126,7 +128,7 @@ func syncQueue():
 var level: int setget , getLevel
 var levelText: String setget , getLevelText
 func getLevel() -> int:
-	return lored.level
+	return lored.stats.level
 func getLevelText() -> String:
 	return str(getLevel())
 var smart: bool setget , getSmart
@@ -143,7 +145,7 @@ func getUnlocked() -> bool:
 	return lored.unlocked
 var purchased: bool setget , getPurchased
 func getPurchased() -> bool:
-	return lored.purchased
+	return lored.stats.purchased
 
 var tab: int setget , getTab
 func getTab() -> int:
@@ -311,6 +313,10 @@ var queue: Array setget , getQueue
 func getQueue() -> Array:
 	return lored.queue
 
+var jobs: Dictionary setget , getJobs
+func getJobs() -> Dictionary:
+	return lored.jobs
+
 
 
 # - - - Duplicate functions
@@ -351,6 +357,9 @@ func removeDynamicUpgrade(key: String, folder: String):
 func emote(emote: MarginContainer):
 	vico.emote(emote)
 
+func removeCost(resource: int):
+	lored.removeCost(resource)
+
 
 # - - - Actions
 
@@ -375,8 +384,9 @@ func purchase():
 		purchased()
 		rt.get_node("global_tip").refresh()
 	else:
-		if is_instance_valid(rt.get_node("global_tip").tip):
-			rt.get_node("global_tip").tip.price_flash()
+		if rt.get_node("global_tip").tip_filled:
+			if rt.get_node("global_tip").type == "lored level up":
+				rt.get_node("global_tip").tip.price_flash()
 func forcePurchase():
 	lored.purchased()
 	syncQueue()
@@ -411,12 +421,14 @@ func flashSleep():
 	vico.flashSleep()
 
 func reset():
+	remove_all_buffs()
 	stopWorking()
 	enterStandby()
 	lored.reset()
 	syncAllNow()
 	cleanUp()
 	lored.currentFuel = Big.new(lored.fuelStorage)
+	vico.last_job = -1
 
 func emoteEvent():
 	match type:
@@ -505,6 +517,13 @@ func watchSleepTime():
 	watchingSleepTime = false
 	t.queue_free()
 
+
+func limit_break_level_up():
+	if diff.active_difficulty == diff.Difficulty.SONIC:
+		lored.queue(lv.Queue.HASTE)
+	else:
+		lored.queue(lv.Queue.OUTPUT)
+		lored.queue(lv.Queue.INPUT)
 
 
 
@@ -638,6 +657,7 @@ func enterStandby():
 	gv.append(gv.list.lored["unlocked and inactive"], type)
 
 func enterActive():
+	syncQueue()
 	gv.list.lored["unlocked and inactive"].erase(type)
 	mode = lv.Mode.ACTIVE
 	vico.enterActive()
@@ -774,7 +794,7 @@ func workJob(job: Job):
 	stopHighlightJobInTooltip(job)
 	
 	if stopWorking:
-		if lored.lastJob != lv.Job.REFUEL:
+		if not lored.lastJob in [lv.Job.REFUEL, -1]:
 			lored.updateGain_zero(lored.jobs[lored.lastJob])
 			lored.updateDrain_zero(lored.jobs[lored.lastJob])
 		stopWorking = false
@@ -852,6 +872,11 @@ func giveProducedResources(_producedResources: Dictionary):
 			if call("canGiveBonusResources_" + gv.Resource.keys()[resource]):
 				if resource == gv.Resource.COAL:
 					amount.m(10)
+					resource = gv.Resource.STONE
+				if resource == gv.Resource.IRON_ORE:
+					resource = gv.Resource.IRON
+				if resource == gv.Resource.COPPER_ORE:
+					resource = gv.Resource.COPPER
 				gv.addToResource(resource, amount)
 				gv.increase_lb_xp(amount)
 				taq.increaseProgress(gv.Objective.RESOURCES_PRODUCED, str(resource), amount)
@@ -1018,7 +1043,7 @@ func autoWatch():
 			continue
 		
 		if shouldAutobuy():
-			autoBuy()
+			autobuy()
 		
 		t.start(0.25)
 		yield(t, "timeout")
@@ -1033,16 +1058,23 @@ func shouldAutobuy() -> bool:
 	if not autobuying:
 		return false
 	
+	if not canAffordPurchase():
+		return false
+	
+	if has_method("autobuy_" + lv.Type.keys()[type]):
+		if not call("autobuy_" + lv.Type.keys()[type]):
+			return false
+	
+	if not is_a_lored_required_for_extra_normal_upgrade_menu_unlock():
+		return false
+	
 	if not getPurchased():
 		return true
-	
-	if getAsleep():
-		return false
 	
 	if lored.queue.size() > 0:
 		return false
 	
-	if not canAffordPurchase():
+	if getAsleep():
 		return false
 	
 	if autobuy_upgrade_check():
@@ -1094,10 +1126,23 @@ func autobuy_upgrade_check() -> bool:
 	
 	return false
 
-func autoBuy():
+func autobuy():
 	gv.stats["TimesLeveledUp"]["automated"][type] += 1
 	gv.emit_signal("TimesLeveledUp", "automated", type)
 	purchased()
+
+func is_a_lored_required_for_extra_normal_upgrade_menu_unlock() -> bool:
+	if getStage() == 1:
+		return true
+	if gv.s2_upgrades_may_be_autobought:
+		return true
+	return type in lv.loreds_required_for_s2_autoup_upgrades_to_begin_purchasing
+
+func autobuy_GALENA() -> bool:
+	return lv.lored[lv.Type.DRAW_PLATE].purchased
+
+func autobuy_WOOD() -> bool:
+	return lv.lored[lv.Type.SEEDS].purchased
 
 
 
@@ -1116,3 +1161,108 @@ func randomEmote() -> int:
 		return lored.emotePool[randi() % lored.emotePool.size()]
 	else:
 		return nextEmote
+
+
+
+# - Buffs
+
+var active_buffs: Dictionary
+
+
+func apply_buff(buff: Buff):
+	
+	if buff_already_applied(buff.type):
+		if buff_is_queued_for_removal(buff.type):
+			print_debug("I thought this line would never be reached!")
+		else:
+			active_buffs[buff.type].add_instance()
+			active_buffs[buff.type].reset_ticks()
+			return
+	
+	active_buffs[buff.type] = buff
+	
+	vico.display_active_buffs()
+	
+	process_buff(buff)
+
+
+func process_buff(buff: Buff):
+	
+	var timer = Timer.new()
+	add_child(timer)
+	
+	while not is_queued_for_deletion():
+		
+		if buff.queued_for_removal:
+			break
+		
+		timer.start(buff.tick_rate)
+		yield(timer, "timeout")
+		
+		if buff.queued_for_removal:
+			break
+		
+		buff.tick()
+		
+		if has_method("buff_tick_" + buff.key):
+			call("buff_tick_" + buff.key)
+		
+		if buff.max_ticks != -1:
+			if buff.ticks >= buff.max_ticks:
+				remove_buff(buff.type)
+
+
+func buff_tick_WITCH():
+	
+	if not rt.get_node("global_tip").tip_filled:
+		return
+	if rt.get_node("global_tip").type != "lored active buffs":
+		return
+	
+	var witch: Dictionary = active_buffs[BuffManager.Type.WITCH].witch
+	var output_texts: Array
+	
+	for resource in witch:
+		output_texts.append({
+			"text": "+" + witch[resource].toString(),
+			"icon": gv.sprite[gv.shorthandByResource[resource]],
+			"color": gv.COLORS[gv.shorthandByResource[resource]],
+			#"direction": randi() % 100, #int(rand_range(10, 100)),
+		})
+	
+	if rt.get_node("global_tip").tip.cont.lored == type:
+		var parent_node = rt.get_node("global_tip").tip.cont.buff_ui[BuffManager.Type.WITCH].get_node("%texts")
+		gv.throwOutputTexts(output_texts, parent_node)
+
+
+func remove_all_buffs():
+	for buff in active_buffs:
+		remove_buff(buff)
+
+
+func remove_buff(buff_type: int):
+	
+	if buff_is_not_present(buff_type):
+		return
+	
+	if buff_is_queued_for_removal(buff_type):
+		return
+	
+	active_buffs[buff_type].queue_removal()
+	if has_method("buff_removed_" + active_buffs[buff_type].key):
+		call("buff_removed_" + active_buffs[buff_type].key)
+	
+	active_buffs.erase(buff_type)
+	
+	if active_buffs.empty():
+		vico.hide_active_buffs()
+
+
+func buff_is_not_present(buff_type: int) -> bool:
+	return not buff_already_applied(buff_type)
+
+func buff_already_applied(buff_type: int) -> bool:
+	return buff_type in active_buffs.keys()
+
+func buff_is_queued_for_removal(buff_type: int) -> bool:
+	return active_buffs[buff_type].queued_for_removal

@@ -63,44 +63,16 @@ func apply(upgrade_name: String):
 	
 	match type:
 		
-		"task":
-			for b in beneficiaries:
-				gv.g[b].task_list.append(other)
 		"cremover":
 			for b in beneficiaries:
 				lv.lored[b].lored.removeCost(other)
-		"buff haste":
-			for x in gv.list.upgrade[type.split(" ")[1] + " buff"]:
-				for c in gv.up[x].effects:
-					if c.effect.b.less_equal(1.1) and c.type == type.split(" ")[1]:
-						if multiplicative:
-							c.effect.um.m(effect.t)
-						else:
-							c.effect.ua.a(effect.t)
-						gv.up[x].refresh()
-		"buff output":
-			for x in gv.list.upgrade[type.split(" ")[1] + " buff"]:
-				for c in gv.up[x].effects:
-					if c.effect.b.equal(1) and c.type == type.split(" ")[1]:
-						if multiplicative:
-							c.effect.um.m(effect.t)
-						else:
-							c.effect.ua.a(effect.t)
-						gv.up[x].refresh()
-		"buff crit":
-			for x in gv.list.upgrade[type.split(" ")[1] + " buff"]:
-				for c in gv.up[x].effects:
-					if c.effect.b.equal(1) and c.type == type.split(" ")[1]:
-						# crit cannot be multiplicative, that's just weird. so don't even account for it
-						c.effect.ua.a(effect.t)
-						gv.up[x].refresh()
 		"crit":
 			# crit cannot be multiplicative, that's just weird. so don't even account for it
 			for b in beneficiaries:
 				lv.lored[b].editValue(lv.Attribute.CRIT, lv.Num.ADD, lv.Num.FROM_UPGRADES, effect.t.toFloat())
 		"input":
 			for b in beneficiaries:
-				if other == "all":
+				if other == "":
 					lv.lored[b].editValue(lv.Attribute.INPUT, lv.Num.MULTIPLY, lv.Num.FROM_UPGRADES, effect.t.toFloat())
 				else:
 					lv.lored[b].editValue(lv.Attribute.INPUT, lv.Num.MULTIPLY, lv.Num.FROM_UPGRADES, effect.t.toFloat(), int(other))
@@ -166,36 +138,10 @@ func remove(upgrade_name: String):
 		"cremover":
 			for b in beneficiaries:
 				lv.lored[b].lored.addCost(other, effect.t)
-		"buff haste":
-			for x in gv.list.upgrade[type.split(" ")[1] + " buff"]:
-				for c in gv.up[x].effects:
-					if c.effect.b.less_equal(1.1) and c.type == type.split(" ")[1]:
-						if multiplicative:
-							c.effect.um.d(effect.t)
-						else:
-							c.effect.ua.s(effect.t)
-						gv.up[x].refresh()
-		"buff output":
-			for x in gv.list.upgrade[type.split(" ")[1] + " buff"]:
-				for c in gv.up[x].effects:
-					if c.effect.b.equal(1) and c.type == type.split(" ")[1]:
-						if multiplicative:
-							c.effect.um.d(effect.t)
-						else:
-							c.effect.ua.s(effect.t)
-						gv.up[x].refresh()
-		"buff crit":
-			for x in gv.list.upgrade[type.split(" ")[1] + " buff"]:
-				for c in gv.up[x].effects:
-					if c.effect.b.equal(1) and c.type == type.split(" ")[1]:
-						# crit cannot be multiplicative, that's just weird. so don't even account for it
-						c.effect.ua.s(effect.t)
-						gv.up[x].refresh()
 		"crit":
 			# crit cannot be multiplicative, that's just weird. so don't even account for it
 			for b in beneficiaries:
-				gv.g[b].crit.ua -= effect.t.toFloat()
-				gv.g[b].crit.sync()
+				lv.lored[b].editValue(lv.Attribute.CRIT, lv.Num.SUBTRACT, lv.Num.FROM_UPGRADES, effect.t.toFloat())
 		"input":
 			for b in beneficiaries:
 				if other == "all":
@@ -205,7 +151,7 @@ func remove(upgrade_name: String):
 		"cost":
 			for b in beneficiaries:
 				if other is String:
-					for c in gv.g[b].cost:
+					for c in lv.lored[b].cost:
 						lv.lored[b].editValue(lv.Attribute.COST, lv.Num.DIVIDE, lv.Num.FROM_UPGRADES, effect.t.toFloat(), c)
 				else:
 					lv.lored[b].editValue(lv.Attribute.COST, lv.Num.DIVIDE, lv.Num.FROM_UPGRADES, effect.t.toFloat(), other)

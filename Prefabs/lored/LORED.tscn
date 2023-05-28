@@ -293,7 +293,7 @@ position = Vector2( 34, 34 )
 scale = Vector2( 2, 2 )
 frames = ExtResource( 1 )
 animation = "ff"
-frame = 3
+frame = 5
 playing = true
 script = ExtResource( 16 )
 
@@ -639,7 +639,7 @@ __meta__ = {
 position = Vector2( 7, 7 )
 scale = Vector2( 0.6, 0.6 )
 frames = ExtResource( 15 )
-frame = 2
+frame = 15
 playing = true
 
 [node name="hold" type="Button" parent="v/m/v/interactables/lored/h"]
@@ -679,6 +679,9 @@ size_flags_vertical = 0
 [node name="n" type="Node2D" parent="lv"]
 
 [node name="texts" type="Node2D" parent="."]
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 0.001
 
 [connection signal="mouse_entered" from="v/m/v/h/animation" to="." method="_on_animation_mouse_entered"]
 [connection signal="mouse_exited" from="v/m/v/h/animation" to="." method="_on_mouse_exited"]

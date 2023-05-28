@@ -39,7 +39,7 @@
 animations = [ {
 "frames": [ ExtResource( 3 ), ExtResource( 8 ), ExtResource( 6 ), ExtResource( 10 ), ExtResource( 2 ), ExtResource( 5 ), ExtResource( 11 ), ExtResource( 4 ), ExtResource( 7 ), ExtResource( 9 ), ExtResource( 12 ), ExtResource( 18 ), ExtResource( 14 ), ExtResource( 17 ), ExtResource( 23 ), ExtResource( 24 ), ExtResource( 19 ), ExtResource( 30 ), ExtResource( 22 ), ExtResource( 29 ), ExtResource( 20 ), ExtResource( 27 ), ExtResource( 21 ), ExtResource( 15 ), ExtResource( 25 ), ExtResource( 13 ), ExtResource( 28 ), ExtResource( 26 ), ExtResource( 16 ), ExtResource( 31 ), ExtResource( 32 ), ExtResource( 33 ), ExtResource( 34 ) ],
 "loop": true,
-"name": "ff",
+"name": "DRAW_PLATE",
 "speed": 1.0
 }, {
 "frames": [ ExtResource( 1 ) ],

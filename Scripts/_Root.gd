@@ -26,7 +26,7 @@ onready var earningsReport = get_node("%Earnings Report")
 
 var task_awaiting := "no"
 
-
+var ready := false
 
 
 
@@ -103,6 +103,10 @@ func _load(data: Dictionary):
 	
 	
 	activate_lb_effects()
+	
+	SaveManager.save = Save.new()
+	for lored in lv.lored:
+		SaveManager.save.lored_data[lored] = lv.lored[lored].lored.stats
 
 
 
@@ -142,6 +146,10 @@ func _ready():
 		$"%s4tab/Button".self_modulate = gv.COLORS[str(gv.Tab.S4)]
 	
 	game_start(SaveManager.load())
+	
+	taq.turn_in_all_wishes_automatically() #superstinkyitchy
+	
+	ready = true
 
 func game_start(successful_load: bool) -> void:
 	
@@ -160,6 +168,8 @@ func game_start(successful_load: bool) -> void:
 				lv.lored[type].unlockJobResources()
 				lv.lored[type].enterActive()
 				lv.lored[type].updateMaxDrain()
+		
+		BuffManager.apply_queued_buffs()
 		
 		getOfflineEarnings(gv.cur_clock - gv.save_slot_clock - 30)
 		
@@ -380,9 +390,7 @@ func close():
 	gv.close()
 	EmoteManager.close()
 
-func _on_upgrades_pressed() -> void:
-	
-	# duplicate code, also found under _input -> ui_upgrades or whatever
+func _on_Upgrades_pressed() -> void:
 	
 	if get_node(gnupcon).visible:
 		
@@ -714,16 +722,18 @@ func reset(reset_type: int, manual := true) -> void:
 		# this reduces reset_type to be 1, 2, 3, or 4.
 		reset_type = 1 + reset_type - gv.Tab.S1
 	
+	gv.durationSinceLastReset = 0
+	
 	reset_stats(reset_type)
 	
+	activate_refundable_upgrades(reset_type) # used to be after the next 3 reset_ lines
 	reset_upgrades(reset_type, manual)
 	reset_resources(reset_type)
 	reset_loreds(reset_type)
-	activate_refundable_upgrades(reset_type)
 	taq.reset(reset_type)
 	reset_limit_break(reset_type)
 	
-	gv.durationSinceLastReset = 0
+	BuffManager.apply_queued_buffs()
 	
 	# ref
 	if true:
@@ -750,10 +760,12 @@ func reset(reset_type: int, manual := true) -> void:
 		
 		lv.syncLOREDs()
 		
-		lv.lored[lv.Type.STONE].forcePurchase()
-		
-		if gv.up["aw <3"].active():
-			lv.lored[lv.Type.COAL].forcePurchase()
+		if (gv.up["dust"].active() and reset_type > 1) or not gv.up["dust"].active():
+			
+			lv.lored[lv.Type.STONE].forcePurchase()
+			
+			if gv.up["aw <3"].active():
+				lv.lored[lv.Type.COAL].forcePurchase()
 	
 
 func reset_stats(reset_type: int):
@@ -793,6 +805,7 @@ func reset_upgrades(reset_type: int, manual: bool):
 	# full reset
 	if reset_type == -1:
 		
+		unlock_tab(gv.Tab.EXTRA_NORMAL, false)
 		gv.s2_upgrades_may_be_autobought = false
 		
 		for x in gv.up:
@@ -815,6 +828,7 @@ func reset_upgrades(reset_type: int, manual: bool):
 	# routine reset; don't reset every upgrade
 	for r in range(reset_type, 0, -1):
 		if r == 2:
+			unlock_tab(gv.Tab.EXTRA_NORMAL, false)
 			gv.s2_upgrades_may_be_autobought = false
 		for x in gv.list.upgrade[ str(r + gv.Tab.S1 - 1)]:
 			reset_upgrade(x, reset_type, manual)
@@ -822,7 +836,7 @@ func reset_upgrades(reset_type: int, manual: bool):
 	for x in gv.up:
 		if not x in get_node(gnupcon).cont.keys():
 			continue
-		gv.up[x].manager.icon.update()
+		get_node(gnupcon).cont[x].r_update()
 
 func reset_upgrade(x: String, reset_type: int, manual: bool):
 	
@@ -856,7 +870,6 @@ func reset_upgrade(x: String, reset_type: int, manual: bool):
 	# if another upgrade has caused the upgrade in question (x) to perist through reset, it will return here immediately
 	if up.reset(reset_type):
 		
-		get_node(gnupcon).cont[x].r_update()
 		get_node(gnupcon).cont[x].upgrade_effects(false)
 		
 		# ref
@@ -914,10 +927,8 @@ func reset_loreds(reset_type: int):
 	
 	if reset_type == -1:
 		# must be kept for BROWSER version. Ugh!!!!
-		for x in gv.g:
-			gv.g[x].reset()
-			if not gv.g[x].unlocked:
-				gv.g[x].manager.hide()
+		for x in lv.lored:
+			lv.lored[x].reset()
 		return
 	
 	if gv.up["dust"].active():
@@ -1150,6 +1161,7 @@ func unlock_tab(tab: int, add := true):
 			continue
 		gv.Tab.NORMAL, gv.Tab.MALIGNANT, gv.Tab.EXTRA_NORMAL, gv.Tab.RADIATIVE, gv.Tab.RUNED_DIAL, gv.Tab.SPIRIT, gv.Tab.s4n, gv.Tab.s4m:
 			gv.emit_signal("stats_unlockTab", tab)
+			get_node(gnupcon + "/top/" + str(tab)).visible = add
 		gv.Tab.S2:
 			gv.emit_signal("stats_unlockRuns")
 			$"%s1tab".visible = add
@@ -1160,8 +1172,6 @@ func unlock_tab(tab: int, add := true):
 			continue
 		gv.Tab.S2, gv.Tab.S3, gv.Tab.S4:
 			get_node("%s" + str(tab - gv.Tab.S1 + 1) + "tab").visible = add
-		_:
-			get_node(gnupcon + "/top/" + str(tab)).visible = add
 
 
 # - - - Handy
@@ -1198,11 +1208,11 @@ func clearWishNotice():
 
 
 func _on_Button_pressed() -> void:
-	gv.addToResource(gv.Resource.STONE, 1000)
-	#EmoteManager.emote(EmoteManager.Type.COPPER7)
-#	lv.lored[lv.Type.IRON].lored.outputBits.fullReport()
-#	lv.lored[lv.Type.IRON].lored.inputBits.fullReport()
-	pass
+	#BuffManager.apply_buff(BuffManager.Type.WITCH, lv.Type.STONE)
+	SaveManager.save.write_savegame("test.tres")
+	
+	print(
+	ResourceSaver.save("user://test2.tres", lv.lored[lv.Type.COAL].lored.stats))
 
 
 

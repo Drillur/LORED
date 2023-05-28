@@ -11,6 +11,8 @@ var lored: int
 
 var name: String
 var vicoText: String
+var animation: String
+
 #var considerBabyhood := false
 
 
@@ -20,6 +22,8 @@ func _init(_type: int, _lored: int):
 	lored = _lored
 	
 	var base_name: String = lv.Job.keys()[type]
+	
+	animation = lv.Type.keys()[lored]
 	
 	call("construct_" + base_name)
 	
@@ -31,10 +35,18 @@ func addResourceProducers():
 		gv.addResourceProducer(resource, lored)
 
 
+func construct_SIFT_SEEDS():
+	setDuration(8)
+	setVicoText("Sifting seeds.")
+	addProducedResource(gv.Resource.RANDOM_SEED, 5)
+	addRequiredResource(gv.Resource.SEEDS, 5)
+	name = "Sift Seeds"
+
 func construct_REFUEL():
 	setDuration(4)
 	setVicoText("Refueling!")
 	name = "Refuel"
+
 func construct_COAL():
 	setDuration(3.25)
 	addProducedResource(gv.Resource.COAL, 1)
@@ -431,6 +443,12 @@ func canUnlockResources() -> bool:
 
 # - - - Handy
 
+func eligibleForOfflineEarnings() -> bool:
+	for resource in requiredResourcesBits.keys():
+		if not gv.resourceBeingProduced(resource):
+			return false
+	return true
+
 func haveAndCanUseRequiredResources() -> bool:
 	if requiresResource:
 		for resource in requiredResources:
@@ -450,6 +468,8 @@ func haveAndCanUseRequiredResources() -> bool:
 var updateGain := true
 var gainRate: Dictionary setget , getGain
 func getGain() -> Dictionary:
+	if not producesResource:
+		return {}
 	if updateGain:
 		setGain()
 	return gainRate
@@ -460,6 +480,7 @@ func setGain():
 	var jobDurationRatio = duration / lv.lored[lored].totalJobTime
 	for f in producedResources:
 		gainRate[f] = Big.new(producedResources[f]).d(duration).m(jobDurationRatio)
+	update_witch()
 
 var updateGainText: bool
 var gainText: Dictionary setget , getGainText
@@ -499,6 +520,7 @@ func getOfflineNet() -> Dictionary:
 	return offlineNet
 func setOfflineNet():
 	
+	#asdf
 	updateOfflineNet = false
 	
 	var rawGain = getGain()
@@ -529,10 +551,9 @@ func setOfflineNet():
 			offlineNet[resource] = [_drainRate, -1]
 
 
-func eligibleForOfflineEarnings() -> bool:
-	for resource in requiredResourcesBits.keys():
-		if not gv.resourceBeingProduced(resource):
-			return false
-	return true
-
-
+func update_witch():
+	
+	if lv.lored[lored].buff_is_not_present(BuffManager.Type.WITCH):
+		return
+	
+	lv.lored[lored].active_buffs[BuffManager.Type.WITCH].update_WITCH()

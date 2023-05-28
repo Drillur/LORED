@@ -6,11 +6,11 @@
 animations = [ {
 "frames": [  ],
 "loop": true,
-"name": "ff",
-"speed": 14.0
+"name": "PETROLEUM",
+"speed": 1.0
 }, {
 "frames": [ ExtResource( 1 ) ],
 "loop": true,
 "name": "ww",
-"speed": 5.0
+"speed": 1.0
 } ]

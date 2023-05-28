@@ -25,6 +25,7 @@ func setup():
 	
 	assignChildren(get_node("%1"))
 	assignChildren(get_node("%2"))
+	assignChildren(get_node("%3"))
 
 
 func assignChildren(motherNode):
@@ -36,16 +37,7 @@ func assignChildren(motherNode):
 			lv.lored[type].assignVico(child)
 		if child.get_child_count() > 0:
 			assignChildren(child)
-	
 
-func setup_s3():
-	return
-	var i = 0
-	
-	i += 1
-	
-	
-	get_node("sc/v/3").move_child(get_node("sc/v/3/v"), get_node("sc/v/3").get_child_count())
 
 func add_stuffs(key: String, i: int):
 	

@@ -85,6 +85,9 @@ func setText(job: Job, index: int, inputOrOutput: String):
 	get_node(node + "/icon/Sprite/shadow").texture = get_node(node + "/icon/Sprite").texture
 	get_node(node + "/resource").text = resourceName
 	get_node(node + "/rate").text = "(" + rate + "/s)"
+	
+	if inputOrOutput == "input":
+		return
 
 func setFuelConsumptionText(job: Job):
 	

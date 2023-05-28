@@ -258,6 +258,8 @@ func close():
 
 func emote(type: int):
 	
+	randomize()
+	
 	if not gv.option["loredChitChat"]:
 		return
 	
@@ -336,7 +338,7 @@ func emoteLoop():
 		yield(t, "timeout")
 		
 		if myPass != emotePassword:
-			print_debug("Clearing duplicate emoteLoop() func.")
+			#print_debug("Clearing duplicate emoteLoop() func.")
 			break
 		
 		emote(getEmote(gv.randomLORED()))

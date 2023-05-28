@@ -4,7 +4,9 @@ extends Reference
 
 
 
-const saved_vars := ["purchased", "keyLORED", "timesPurchased", "level", "currentFuel"]
+const saved_vars := []#["purchased", "timesPurchased", "level", "currentFuel"]
+
+var stats: LORED_Resource
 
 var manager: Node2D
 func assignManager(_manager: Node2D):
@@ -14,15 +16,15 @@ func assignManager(_manager: Node2D):
 var type: int
 var tab: int
 var stage: int
-var level: int = 0
-var timesPurchased := 0
+#var level: int = 0
+#var timesPurchased := 0
 
 var smart := false
 var asleep := false
 var working := false # job in progress
 var keyLORED := false
 var unlocked := false # a wish was completed that unlocked this lored
-var purchased := false # purchased at least a single time in the current run
+#var purchased := false # purchased at least a single time in the current run
 
 var name: String
 var shorthandKey: String
@@ -66,12 +68,12 @@ func load(data: Dictionary) -> void:
 			set(x, loadedVars[x])
 	#*
 	
-	if not purchased:
+	if not stats.purchased:
 		return
 	
 	jobs.values()[0].unlock()
 	
-	if purchased:
+	if stats.purchased:
 		gv.list.lored["active " + str(tab)].append(type)
 		gv.list.lored["active"].append(type)
 	
@@ -79,6 +81,9 @@ func load(data: Dictionary) -> void:
 
 
 func _init(_type: int):
+	
+	stats = LORED_Resource.new()
+	
 	type = _type
 	
 	var base_name: String = lv.Type.keys()[type]
@@ -91,7 +96,8 @@ func _init(_type: int):
 	tab = [gv.Tab.S1, gv.Tab.S2, gv.Tab.S3, gv.Tab.S4][stage - 1]
 	fuelResourceLORED = lv.Type.COAL if fuelResource == gv.Resource.COAL else lv.Type.JOULES
 	fuelResourceShorthand = "coal" if fuelResource == gv.Resource.COAL else "jo"
-	fuelStorageBits.changeBase(Big.new(fuelCostBits.base).m(jobs.values()[0].durationBits.base).m(40))
+	if stage <= 2:
+		fuelStorageBits.changeBase(Big.new(fuelCostBits.base).m(jobs.values()[0].durationBits.base).m(40))
 	setProducedResources()
 	setUsedResources()
 	if usedResources.size() > 0:
@@ -122,6 +128,12 @@ func setupRefuelJob():
 		lv.Type.OIL:
 			refuelJob.changeBaseDuration(1)
 
+
+func construct_WITCH():
+	stage = 3
+	color = gv.COLORS["witch"]
+	fuelResource = gv.Resource.COAL
+	icon = preload("res://Sprites/upgrades/thewitchofloredelith.png")
 
 func construct_STONE():
 	addJob(type)
@@ -547,7 +559,7 @@ func construct_LIQUID_IRON():
 	addJob(type)
 	stage = 2
 	shorthandKey = "liq"
-	addCost(gv.Resource.CONCRETE, 900)
+	addCost(gv.Resource.CONCRETE, 30)
 	addCost(gv.Resource.STEEL, 25)
 	color = Color(0.27, 0.888, .9)
 	fuelResource = gv.Resource.JOULES
@@ -733,7 +745,6 @@ var outputBits := Bits.new({
 	lv.Num.MULTIPLY: {
 		lv.Num.FROM_LEVELS: Big.new(1),
 		lv.Num.FROM_UPGRADES: Big.new(1),
-		lv.Num.BY_LIMIT_BREAK: Big.new(1),
 	},
 }, "output")
 
@@ -747,7 +758,7 @@ func getOutputText() -> String:
 	return outputBits.totalText
 
 func updateOutput():
-	var modifier: Big = Big.new(2).power(level - 1)
+	var modifier: Big = Big.new(2).power(stats.level - 1)
 	outputBits.setValue(lv.Num.MULTIPLY, lv.Num.FROM_LEVELS, modifier)
 	queue(lv.Queue.OUTPUT)
 func setOutputValue(folder: int, item: int, amount):
@@ -792,7 +803,7 @@ func getInputText() -> String:
 	return inputBits.totalText
 
 func updateInput():
-	var modifier: Big = Big.new(2).power(level - 1)
+	var modifier: Big = Big.new(2).power(stats.level - 1)
 	inputBits.setValue(lv.Num.MULTIPLY, lv.Num.FROM_LEVELS, modifier)
 	queue(lv.Queue.INPUT)
 
@@ -827,11 +838,11 @@ func addCost(key: int, base: float):
 			lv.Num.FROM_LEVELS: Big.new(1),
 		},
 	}, "cost")
-func removeCost(key: int):
-	if not key in cost.keys():
+func removeCost(resource: int):
+	if not resource in cost.keys():
 		return
-	costBits.erase(key)
-	cost.erase(key)
+	costBits.erase(resource)
+	cost.erase(resource)
 func sync_COST():
 	for c in costBits:
 		cost[c] = costBits[c].total
@@ -853,7 +864,7 @@ func takeawayCost():
 		gv.emit_signal("ResourceSpent", c)
 func updateCost():
 	for c in costBits:
-		var modifier: Big = Big.new(costModifier).power(level)
+		var modifier: Big = Big.new(costModifier).power(stats.level)
 		costBits[c].setValue(lv.Num.MULTIPLY, lv.Num.FROM_LEVELS, modifier)
 	sync_COST()
 
@@ -894,7 +905,7 @@ func getFuelCostText() -> String:
 	return fuelCostBits.totalText
 
 func updateFuelCost():
-	var modifier: Big = Big.new(2).power(level - 1)
+	var modifier: Big = Big.new(2).power(stats.level - 1)
 	fuelCostBits.setValue(lv.Num.MULTIPLY, lv.Num.FROM_LEVELS, modifier)
 	queue(lv.Queue.FUEL_COST)
 
@@ -931,7 +942,7 @@ func getCurrentFuelPercent() -> float:
 	return currentFuel.percent(fuelStorage)
 
 func updateFuelStorage():
-	var modifier: Big = Big.new(2).power(level - 1)
+	var modifier: Big = Big.new(2).power(stats.level - 1)
 	fuelStorageBits.setValue(lv.Num.MULTIPLY, lv.Num.FROM_LEVELS, modifier)
 	queue(lv.Queue.FUEL_STORAGE)
 
@@ -968,6 +979,7 @@ var critBits := BitsFloat.new({
 
 func sync_CRIT():
 	crit = critBits.total
+	#critBits.report()
 
 func getCritText() -> String:
 	return critBits.totalText + "%"
@@ -990,7 +1002,6 @@ var hasteBits := BitsFloat.new({
 	lv.Num.BASE: 1.0,
 	lv.Num.MULTIPLY: {
 		lv.Num.FROM_UPGRADES: 1.0,
-		lv.Num.BY_LIMIT_BREAK: 1.0,
 	},
 }, "haste")
 
@@ -1026,6 +1037,7 @@ func applyDynamicUpgrade(key: String, effectIndex: int, folder: String):
 		return
 	get(folder)[key] = effectIndex
 func removeDynamicUpgrade(key: String, folder: String):
+	folder = "dynamic_" + folder
 	if key in get(folder).keys():
 		get(folder).erase(key)
 
@@ -1062,7 +1074,7 @@ func getJobDuration(index: int) -> float:
 
 func prePurchase():
 	
-	timesPurchased += 1
+	stats.times_purchased += 1
 	
 	takeawayCost()
 	
@@ -1073,18 +1085,17 @@ func purchased():
 	if not type in gv.list.lored["active " + str(tab)]:
 		gv.list.lored["active " + str(tab)].append(type)
 	
-	if not purchased:
+	if not stats.purchased:
 		firstPurchaseOfTheRun()
 		return
 	
 	levelUp()
-	var tenPercentFuel = Big.new(fuelStorage).d(10)
-	if currentFuel.less(tenPercentFuel):
-		currentFuel = tenPercentFuel
+	currentFuel.a(Big.new(fuelStorageBits.total).d(2))
+	stats.current_fuel = getCurrentFuelText()
 
-func levelUp(newLevel := level + 1):
+func levelUp(newLevel := stats.level + 1):
 	
-	level = newLevel
+	stats.level = newLevel
 	
 	updateFuelCost()
 	updateFuelStorage()
@@ -1094,9 +1105,9 @@ func levelUp(newLevel := level + 1):
 
 func firstPurchaseOfTheRun():
 	
-	purchased = true
+	stats.purchased = true
 	
-	level += 1
+	stats.level += 1
 	
 	updateCost()
 	
@@ -1115,11 +1126,15 @@ func firstPurchaseOfTheRun():
 	
 	jobs.values()[0].unlock()
 	
+	if gv.up["THE WITCH OF LOREDELITH"].active():
+		if stage == 1:
+			BuffManager.apply_buff(BuffManager.Type.WITCH, type, {"max_ticks": -1})
+	
 	if not gv.s2_upgrades_may_be_autobought:
-		if type in gv.loreds_required_for_s2_autoup_upgrades_to_begin_purchasing:
-			gv.check_for_the_s2_shit()
+		gv.check_for_the_s2_shit()
 func setFuelToMax():
 	currentFuel = Big.new(fuelStorage)
+	stats.current_fuel = getCurrentFuelText()
 
 
 
@@ -1228,7 +1243,7 @@ func getOfflineEarnings(timeOffline: int):
 	
 	var offNet = getOfflineNet()
 	
-	if not purchased:
+	if not stats.purchased:
 		return
 	
 	for job in offNet:
@@ -1257,14 +1272,14 @@ func getOfflineEarnings(timeOffline: int):
 # - - - Actions
 
 func reset():
-	level = 0
+	stats.level = 0
 	fuelCostBits.setValue(lv.Num.MULTIPLY, lv.Num.FROM_LEVELS, Big.new(1))
 	fuelStorageBits.setValue(lv.Num.MULTIPLY, lv.Num.FROM_LEVELS, Big.new(1))
 	outputBits.setValue(lv.Num.MULTIPLY, lv.Num.FROM_LEVELS, Big.new(1))
 	inputBits.setValue(lv.Num.MULTIPLY, lv.Num.FROM_LEVELS, Big.new(1))
 	for c in cost:
 		costBits[c].setValue(lv.Num.MULTIPLY, lv.Num.FROM_LEVELS, Big.new(1))
-	purchased = false
+	stats.purchased = false
 #	unlocked = true if key in ["stone", "coal"] else false
 #
 #	halfway_reset_stuff()

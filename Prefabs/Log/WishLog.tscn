@@ -137,8 +137,8 @@ scroll_horizontal_enabled = false
 
 [node name="TabContainer" type="TabContainer" parent="m/v/ScrollContainer"]
 self_modulate = Color( 0.341176, 0.619608, 0.980392, 1 )
-margin_right = 318.0
-margin_bottom = 46.0
+margin_right = 330.0
+margin_bottom = 260.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme = ExtResource( 5 )

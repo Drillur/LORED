@@ -133,12 +133,12 @@ margin_bottom = 243.0
 scroll_horizontal_enabled = false
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/TabContainer/Visual/ScrollContainer"]
-margin_right = 283.0
+margin_right = 295.0
 margin_bottom = 104.0
 size_flags_horizontal = 3
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/TabContainer/Visual/ScrollContainer/VBoxContainer"]
-margin_right = 279.0
+margin_right = 295.0
 margin_bottom = 32.0
 
 [node name="Label" type="Label" parent="MarginContainer/TabContainer/Visual/ScrollContainer/VBoxContainer/HBoxContainer"]
@@ -153,7 +153,7 @@ text = "FPS:"
 [node name="fps dropdown" type="OptionButton" parent="MarginContainer/TabContainer/Visual/ScrollContainer/VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
 margin_left = 29.0
-margin_right = 279.0
+margin_right = 295.0
 margin_bottom = 32.0
 rect_min_size = Vector2( 100, 32 )
 size_flags_horizontal = 3
@@ -161,7 +161,7 @@ theme = ExtResource( 3 )
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/TabContainer/Visual/ScrollContainer/VBoxContainer"]
 margin_top = 36.0
-margin_right = 279.0
+margin_right = 295.0
 margin_bottom = 68.0
 
 [node name="Label" type="Label" parent="MarginContainer/TabContainer/Visual/ScrollContainer/VBoxContainer/HBoxContainer2"]
@@ -176,7 +176,7 @@ text = "Notation:"
 [node name="notationDropdown" type="OptionButton" parent="MarginContainer/TabContainer/Visual/ScrollContainer/VBoxContainer/HBoxContainer2"]
 unique_name_in_owner = true
 margin_left = 55.0
-margin_right = 279.0
+margin_right = 295.0
 margin_bottom = 32.0
 rect_min_size = Vector2( 0, 32 )
 size_flags_horizontal = 3
@@ -185,7 +185,7 @@ theme = ExtResource( 3 )
 [node name="flying_numbers" type="CheckButton" parent="MarginContainer/TabContainer/Visual/ScrollContainer/VBoxContainer"]
 unique_name_in_owner = true
 margin_top = 72.0
-margin_right = 279.0
+margin_right = 295.0
 margin_bottom = 104.0
 mouse_default_cursor_shape = 2
 size_flags_horizontal = 3
@@ -229,7 +229,7 @@ size_flags_horizontal = 3
 
 [node name="animations" type="CheckButton" parent="MarginContainer/TabContainer/LORED/ScrollContainer/VBoxContainer"]
 unique_name_in_owner = true
-margin_right = 279.0
+margin_right = 283.0
 margin_bottom = 32.0
 mouse_default_cursor_shape = 2
 size_flags_horizontal = 3
@@ -255,7 +255,7 @@ __meta__ = {
 [node name="loredOutputNumbers" type="CheckButton" parent="MarginContainer/TabContainer/LORED/ScrollContainer/VBoxContainer"]
 unique_name_in_owner = true
 margin_top = 36.0
-margin_right = 279.0
+margin_right = 283.0
 margin_bottom = 68.0
 mouse_default_cursor_shape = 2
 size_flags_horizontal = 3
@@ -278,7 +278,7 @@ custom_styles/normal = SubResource( 12 )
 [node name="loredChitChat" type="CheckButton" parent="MarginContainer/TabContainer/LORED/ScrollContainer/VBoxContainer"]
 unique_name_in_owner = true
 margin_top = 72.0
-margin_right = 279.0
+margin_right = 283.0
 margin_bottom = 104.0
 mouse_default_cursor_shape = 2
 size_flags_horizontal = 3
@@ -301,7 +301,7 @@ custom_styles/normal = SubResource( 12 )
 [node name="loredFuel" type="CheckButton" parent="MarginContainer/TabContainer/LORED/ScrollContainer/VBoxContainer"]
 unique_name_in_owner = true
 margin_top = 108.0
-margin_right = 279.0
+margin_right = 283.0
 margin_bottom = 140.0
 mouse_default_cursor_shape = 2
 size_flags_horizontal = 3
@@ -327,7 +327,7 @@ __meta__ = {
 [node name="tipSleep" type="CheckButton" parent="MarginContainer/TabContainer/LORED/ScrollContainer/VBoxContainer"]
 unique_name_in_owner = true
 margin_top = 144.0
-margin_right = 279.0
+margin_right = 283.0
 margin_bottom = 176.0
 mouse_default_cursor_shape = 2
 size_flags_horizontal = 3
@@ -350,7 +350,7 @@ custom_styles/normal = SubResource( 12 )
 [node name="levelUpDetails" type="CheckButton" parent="MarginContainer/TabContainer/LORED/ScrollContainer/VBoxContainer"]
 unique_name_in_owner = true
 margin_top = 180.0
-margin_right = 279.0
+margin_right = 283.0
 margin_bottom = 212.0
 mouse_default_cursor_shape = 2
 size_flags_horizontal = 3
@@ -376,13 +376,13 @@ __meta__ = {
 [node name="loredCritsOnly" type="CheckButton" parent="MarginContainer/TabContainer/LORED/ScrollContainer/VBoxContainer"]
 unique_name_in_owner = true
 margin_top = 216.0
-margin_right = 279.0
+margin_right = 283.0
 margin_bottom = 248.0
 rect_pivot_offset = Vector2( -32, -332 )
 mouse_default_cursor_shape = 2
 size_flags_horizontal = 3
 theme = ExtResource( 3 )
-text = "Only display critical flying numbers"
+text = "Only display critical output numbers"
 __meta__ = {
 "_edit_group_": true
 }

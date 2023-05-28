@@ -208,9 +208,9 @@ margin_bottom = 466.0
 unique_name_in_owner = true
 visible = false
 margin_left = 482.0
-margin_top = 90.0
+margin_top = 210.0
 margin_right = 797.0
-margin_bottom = 630.0
+margin_bottom = 510.0
 
 [node name="StatsMenu" parent="m" instance=ExtResource( 16 )]
 unique_name_in_owner = true
@@ -245,8 +245,8 @@ margin_right = 815.0
 margin_bottom = 528.0
 
 [node name="Tabs" type="MarginContainer" parent="m"]
-margin_right = 121.0
-margin_bottom = 246.0
+margin_right = 124.0
+margin_bottom = 270.0
 size_flags_horizontal = 0
 size_flags_vertical = 0
 custom_constants/margin_right = 10
@@ -257,28 +257,28 @@ custom_constants/margin_bottom = 10
 [node name="VBoxContainer" type="VBoxContainer" parent="m/Tabs"]
 margin_left = 10.0
 margin_top = 10.0
-margin_right = 111.0
-margin_bottom = 236.0
+margin_right = 114.0
+margin_bottom = 260.0
 
 [node name="devButton" type="Button" parent="m/Tabs/VBoxContainer"]
 unique_name_in_owner = true
-visible = false
-margin_right = 62.0
+margin_right = 104.0
 margin_bottom = 20.0
 mouse_default_cursor_shape = 16
 
 [node name="menuButton" type="MarginContainer" parent="m/Tabs/VBoxContainer"]
 unique_name_in_owner = true
 modulate = Color( 1, 0, 0.63, 1 )
-margin_right = 80.0
-margin_bottom = 42.0
+margin_top = 24.0
+margin_right = 83.0
+margin_bottom = 66.0
 size_flags_horizontal = 0
 
 [node name="m" type="MarginContainer" parent="m/Tabs/VBoxContainer/menuButton"]
-margin_right = 80.0
+margin_right = 83.0
 margin_bottom = 42.0
 size_flags_horizontal = 0
-custom_constants/margin_right = 5
+custom_constants/margin_right = 8
 custom_constants/margin_top = 5
 custom_constants/margin_left = 5
 custom_constants/margin_bottom = 5
@@ -323,7 +323,7 @@ custom_fonts/font = SubResource( 22 )
 text = "Menu"
 
 [node name="Button" type="Button" parent="m/Tabs/VBoxContainer/menuButton"]
-margin_right = 80.0
+margin_right = 83.0
 margin_bottom = 42.0
 rect_min_size = Vector2( 36, 36 )
 focus_mode = 0
@@ -335,16 +335,16 @@ custom_styles/normal = SubResource( 19 )
 [node name="WishLogButton" type="MarginContainer" parent="m/Tabs/VBoxContainer"]
 unique_name_in_owner = true
 modulate = Color( 0.341176, 0.619608, 0.980392, 1 )
-margin_top = 46.0
-margin_right = 99.0
-margin_bottom = 88.0
+margin_top = 70.0
+margin_right = 102.0
+margin_bottom = 112.0
 size_flags_horizontal = 0
 
 [node name="m" type="MarginContainer" parent="m/Tabs/VBoxContainer/WishLogButton"]
-margin_right = 99.0
+margin_right = 102.0
 margin_bottom = 42.0
 size_flags_horizontal = 0
-custom_constants/margin_right = 5
+custom_constants/margin_right = 8
 custom_constants/margin_top = 5
 custom_constants/margin_left = 5
 custom_constants/margin_bottom = 5
@@ -398,7 +398,7 @@ custom_fonts/font = SubResource( 22 )
 text = "Wish Log"
 
 [node name="Button" type="Button" parent="m/Tabs/VBoxContainer/WishLogButton"]
-margin_right = 99.0
+margin_right = 102.0
 margin_bottom = 42.0
 rect_min_size = Vector2( 36, 36 )
 mouse_default_cursor_shape = 2
@@ -409,16 +409,16 @@ custom_styles/normal = SubResource( 19 )
 
 [node name="upgradesTab" type="MarginContainer" parent="m/Tabs/VBoxContainer"]
 unique_name_in_owner = true
-margin_top = 92.0
-margin_right = 101.0
-margin_bottom = 134.0
+margin_top = 116.0
+margin_right = 104.0
+margin_bottom = 158.0
 size_flags_horizontal = 0
 
 [node name="m" type="MarginContainer" parent="m/Tabs/VBoxContainer/upgradesTab"]
-margin_right = 101.0
+margin_right = 104.0
 margin_bottom = 42.0
 size_flags_horizontal = 0
-custom_constants/margin_right = 5
+custom_constants/margin_right = 8
 custom_constants/margin_top = 5
 custom_constants/margin_left = 5
 custom_constants/margin_bottom = 5
@@ -460,7 +460,7 @@ custom_fonts/font = SubResource( 22 )
 text = "Upgrades"
 
 [node name="Button" type="Button" parent="m/Tabs/VBoxContainer/upgradesTab"]
-margin_right = 101.0
+margin_right = 104.0
 margin_bottom = 42.0
 rect_min_size = Vector2( 36, 36 )
 focus_mode = 0
@@ -471,16 +471,16 @@ custom_styles/normal = SubResource( 19 )
 
 [node name="s1tab" type="MarginContainer" parent="m/Tabs/VBoxContainer"]
 unique_name_in_owner = true
-margin_top = 138.0
-margin_right = 90.0
-margin_bottom = 180.0
+margin_top = 162.0
+margin_right = 93.0
+margin_bottom = 204.0
 size_flags_horizontal = 0
 
 [node name="m" type="MarginContainer" parent="m/Tabs/VBoxContainer/s1tab"]
-margin_right = 90.0
+margin_right = 93.0
 margin_bottom = 42.0
 size_flags_horizontal = 0
-custom_constants/margin_right = 5
+custom_constants/margin_right = 8
 custom_constants/margin_top = 5
 custom_constants/margin_left = 5
 custom_constants/margin_bottom = 5
@@ -522,7 +522,7 @@ custom_fonts/font = SubResource( 22 )
 text = "Stage 1"
 
 [node name="Button" type="Button" parent="m/Tabs/VBoxContainer/s1tab"]
-margin_right = 90.0
+margin_right = 93.0
 margin_bottom = 42.0
 rect_min_size = Vector2( 36, 36 )
 focus_mode = 0
@@ -533,16 +533,16 @@ custom_styles/normal = SubResource( 19 )
 
 [node name="s2tab" type="MarginContainer" parent="m/Tabs/VBoxContainer"]
 unique_name_in_owner = true
-margin_top = 184.0
-margin_right = 90.0
-margin_bottom = 226.0
+margin_top = 208.0
+margin_right = 93.0
+margin_bottom = 250.0
 size_flags_horizontal = 0
 
 [node name="m" type="MarginContainer" parent="m/Tabs/VBoxContainer/s2tab"]
-margin_right = 90.0
+margin_right = 93.0
 margin_bottom = 42.0
 size_flags_horizontal = 0
-custom_constants/margin_right = 5
+custom_constants/margin_right = 8
 custom_constants/margin_top = 5
 custom_constants/margin_left = 5
 custom_constants/margin_bottom = 5
@@ -584,7 +584,7 @@ custom_fonts/font = SubResource( 22 )
 text = "Stage 2"
 
 [node name="Button" type="Button" parent="m/Tabs/VBoxContainer/s2tab"]
-margin_right = 90.0
+margin_right = 93.0
 margin_bottom = 42.0
 rect_min_size = Vector2( 36, 36 )
 focus_mode = 0
@@ -727,7 +727,7 @@ anchor_right = 0.0
 margin_left = 1111.0
 margin_top = 10.0
 margin_right = 1246.0
-margin_bottom = 64.0
+margin_bottom = 54.0
 
 [node name="Off" type="Timer" parent="misc"]
 one_shot = true
@@ -778,6 +778,7 @@ script = ExtResource( 5 )
 [connection signal="pressed" from="m/Tabs/VBoxContainer/devButton" to="." method="_on_Button_pressed"]
 [connection signal="pressed" from="m/Tabs/VBoxContainer/menuButton/Button" to="." method="_on_menuButton_pressed"]
 [connection signal="pressed" from="m/Tabs/VBoxContainer/WishLogButton/Button" to="." method="openWishLog"]
+[connection signal="pressed" from="m/Tabs/VBoxContainer/upgradesTab/Button" to="." method="_on_Upgrades_pressed"]
 [connection signal="pressed" from="m/Tabs/VBoxContainer/s1tab/Button" to="." method="_on_s1tab_pressed"]
 [connection signal="pressed" from="m/Tabs/VBoxContainer/s2tab/Button" to="." method="_on_s2tab_pressed"]
 [connection signal="pressed" from="m/Tabs/VBoxContainer/s3tab/Button" to="." method="_on_s3tab_pressed"]

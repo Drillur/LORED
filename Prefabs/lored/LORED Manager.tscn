@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://Prefabs/Scripts/LORED Manager.gd" type="Script" id=1]
 [ext_resource path="res://Prefabs/NewLORED/LORED.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Prefabs/NewLORED/WITCH.tscn" type="PackedScene" id=3]
 
 [sub_resource type="StyleBoxFlat" id=1]
 bg_color = Color( 0.054902, 0.054902, 0.054902, 1 )
@@ -44,7 +45,7 @@ position = Vector2( -10, -10 )
 
 [node name="MarginContainer" type="MarginContainer" parent="MarginContainer/sc"]
 margin_right = 1248.0
-margin_bottom = 1245.0
+margin_bottom = 1265.0
 size_flags_horizontal = 3
 custom_constants/margin_top = 250
 custom_constants/margin_bottom = 250
@@ -52,7 +53,7 @@ custom_constants/margin_bottom = 250
 [node name="v" type="VBoxContainer" parent="MarginContainer/sc/MarginContainer"]
 margin_top = 250.0
 margin_right = 1248.0
-margin_bottom = 995.0
+margin_bottom = 1015.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_constants/separation = 20
@@ -61,288 +62,291 @@ alignment = 1
 [node name="1" type="VBoxContainer" parent="MarginContainer/sc/MarginContainer/v"]
 unique_name_in_owner = true
 margin_right = 1248.0
-margin_bottom = 745.0
+margin_bottom = 765.0
 size_flags_horizontal = 3
 custom_constants/separation = 30
 alignment = 1
 
 [node name="MALIGNANCY" parent="MarginContainer/sc/MarginContainer/v/1" instance=ExtResource( 2 )]
-margin_left = 523.0
-margin_right = 724.0
+margin_left = 516.0
+margin_right = 732.0
 
 [node name="h5" type="HBoxContainer" parent="MarginContainer/sc/MarginContainer/v/1"]
-margin_top = 155.0
+margin_top = 159.0
 margin_right = 1248.0
-margin_bottom = 280.0
+margin_bottom = 288.0
 custom_constants/separation = 30
 alignment = 1
 
 [node name="TARBALLS" parent="MarginContainer/sc/MarginContainer/v/1/h5" instance=ExtResource( 2 )]
-margin_left = 408.0
+margin_left = 393.0
 margin_right = 609.0
 
 [node name="GROWTH" parent="MarginContainer/sc/MarginContainer/v/1/h5" instance=ExtResource( 2 )]
 margin_left = 639.0
-margin_right = 840.0
+margin_right = 855.0
 
 [node name="h4" type="HBoxContainer" parent="MarginContainer/sc/MarginContainer/v/1"]
-margin_top = 310.0
+margin_top = 318.0
 margin_right = 1248.0
-margin_bottom = 745.0
+margin_bottom = 765.0
 custom_constants/separation = 50
 alignment = 1
 
 [node name="v" type="VBoxContainer" parent="MarginContainer/sc/MarginContainer/v/1/h4"]
-margin_left = 282.0
-margin_right = 483.0
-margin_bottom = 435.0
+margin_left = 260.0
+margin_right = 476.0
+margin_bottom = 447.0
 custom_constants/separation = 30
 alignment = 1
 
 [node name="CONCRETE" parent="MarginContainer/sc/MarginContainer/v/1/h4/v" instance=ExtResource( 2 )]
 
 [node name="OIL" parent="MarginContainer/sc/MarginContainer/v/1/h4/v" instance=ExtResource( 2 )]
-margin_top = 155.0
-margin_bottom = 280.0
+margin_top = 159.0
+margin_bottom = 288.0
 
 [node name="JOULES" parent="MarginContainer/sc/MarginContainer/v/1/h4/v" instance=ExtResource( 2 )]
-margin_top = 310.0
-margin_bottom = 435.0
+margin_top = 318.0
+margin_bottom = 447.0
 size_flags_vertical = 10
 
 [node name="v2" type="VBoxContainer" parent="MarginContainer/sc/MarginContainer/v/1/h4"]
-margin_left = 533.0
-margin_right = 965.0
-margin_bottom = 435.0
+margin_left = 526.0
+margin_right = 988.0
+margin_bottom = 447.0
 custom_constants/separation = 30
 
 [node name="h2" type="HBoxContainer" parent="MarginContainer/sc/MarginContainer/v/1/h4/v2"]
-margin_right = 432.0
-margin_bottom = 125.0
+margin_right = 462.0
+margin_bottom = 129.0
 custom_constants/separation = 30
 alignment = 1
 
 [node name="IRON" parent="MarginContainer/sc/MarginContainer/v/1/h4/v2/h2" instance=ExtResource( 2 )]
 
 [node name="COPPER" parent="MarginContainer/sc/MarginContainer/v/1/h4/v2/h2" instance=ExtResource( 2 )]
-margin_left = 231.0
-margin_right = 432.0
+margin_left = 246.0
+margin_right = 462.0
 
 [node name="h3" type="HBoxContainer" parent="MarginContainer/sc/MarginContainer/v/1/h4/v2"]
-margin_top = 155.0
-margin_right = 432.0
-margin_bottom = 280.0
+margin_top = 159.0
+margin_right = 462.0
+margin_bottom = 288.0
 custom_constants/separation = 30
 alignment = 1
 
 [node name="IRON_ORE" parent="MarginContainer/sc/MarginContainer/v/1/h4/v2/h3" instance=ExtResource( 2 )]
 
 [node name="COPPER_ORE" parent="MarginContainer/sc/MarginContainer/v/1/h4/v2/h3" instance=ExtResource( 2 )]
-margin_left = 231.0
-margin_right = 432.0
+margin_left = 246.0
+margin_right = 462.0
 
 [node name="h" type="HBoxContainer" parent="MarginContainer/sc/MarginContainer/v/1/h4/v2"]
-margin_top = 310.0
-margin_right = 432.0
-margin_bottom = 435.0
+margin_top = 318.0
+margin_right = 462.0
+margin_bottom = 447.0
 custom_constants/separation = 30
 alignment = 1
 
 [node name="COAL" parent="MarginContainer/sc/MarginContainer/v/1/h4/v2/h" instance=ExtResource( 2 )]
 
 [node name="STONE" parent="MarginContainer/sc/MarginContainer/v/1/h4/v2/h" instance=ExtResource( 2 )]
-margin_left = 231.0
-margin_right = 432.0
+margin_left = 246.0
+margin_right = 462.0
 
 [node name="2" type="VBoxContainer" parent="MarginContainer/sc/MarginContainer/v"]
 unique_name_in_owner = true
 visible = false
 margin_right = 1248.0
-margin_bottom = 1520.0
+margin_bottom = 1560.0
 size_flags_horizontal = 3
 custom_constants/separation = 20
 alignment = 1
 
 [node name="v" type="VBoxContainer" parent="MarginContainer/sc/MarginContainer/v/2"]
 margin_right = 1248.0
-margin_bottom = 1520.0
+margin_bottom = 1560.0
 custom_constants/separation = 30
 alignment = 1
 
 [node name="h" type="HBoxContainer" parent="MarginContainer/sc/MarginContainer/v/2/v"]
 margin_right = 1248.0
-margin_bottom = 125.0
+margin_bottom = 129.0
 custom_constants/separation = 30
 alignment = 1
 
 [node name="CARCINOGENS" parent="MarginContainer/sc/MarginContainer/v/2/v/h" instance=ExtResource( 2 )]
-margin_left = 408.0
+margin_left = 393.0
 margin_right = 609.0
 
 [node name="TUMORS" parent="MarginContainer/sc/MarginContainer/v/2/v/h" instance=ExtResource( 2 )]
 margin_left = 639.0
-margin_right = 840.0
+margin_right = 855.0
 
 [node name="h2" type="HBoxContainer" parent="MarginContainer/sc/MarginContainer/v/2/v"]
-margin_top = 155.0
+margin_top = 159.0
 margin_right = 1248.0
-margin_bottom = 280.0
+margin_bottom = 288.0
 custom_constants/separation = 30
 alignment = 1
 
 [node name="PLASTIC" parent="MarginContainer/sc/MarginContainer/v/2/v/h2" instance=ExtResource( 2 )]
-margin_left = 292.0
-margin_right = 493.0
+margin_left = 270.0
+margin_right = 486.0
 
 [node name="TOBACCO" parent="MarginContainer/sc/MarginContainer/v/2/v/h2" instance=ExtResource( 2 )]
-margin_left = 523.0
-margin_right = 724.0
+margin_left = 516.0
+margin_right = 732.0
 
 [node name="CIGARETTES" parent="MarginContainer/sc/MarginContainer/v/2/v/h2" instance=ExtResource( 2 )]
-margin_left = 754.0
-margin_right = 955.0
+margin_left = 762.0
+margin_right = 978.0
 
 [node name="h3" type="HBoxContainer" parent="MarginContainer/sc/MarginContainer/v/2/v"]
-margin_top = 310.0
+margin_top = 318.0
 margin_right = 1248.0
-margin_bottom = 435.0
+margin_bottom = 447.0
 custom_constants/separation = 30
 alignment = 1
 
 [node name="PETROLEUM" parent="MarginContainer/sc/MarginContainer/v/2/v/h3" instance=ExtResource( 2 )]
-margin_left = 292.0
-margin_right = 493.0
+margin_left = 270.0
+margin_right = 486.0
 
 [node name="WOOD_PULP" parent="MarginContainer/sc/MarginContainer/v/2/v/h3" instance=ExtResource( 2 )]
-margin_left = 523.0
-margin_right = 724.0
+margin_left = 516.0
+margin_right = 732.0
 
 [node name="PAPER" parent="MarginContainer/sc/MarginContainer/v/2/v/h3" instance=ExtResource( 2 )]
-margin_left = 754.0
-margin_right = 955.0
+margin_left = 762.0
+margin_right = 978.0
 
 [node name="h4" type="HBoxContainer" parent="MarginContainer/sc/MarginContainer/v/2/v"]
-margin_top = 465.0
+margin_top = 477.0
 margin_right = 1248.0
-margin_bottom = 590.0
+margin_bottom = 606.0
 custom_constants/separation = 30
 alignment = 1
 
 [node name="GALENA" parent="MarginContainer/sc/MarginContainer/v/2/v/h4" instance=ExtResource( 2 )]
-margin_left = 408.0
+margin_left = 393.0
 margin_right = 609.0
 
 [node name="LEAD" parent="MarginContainer/sc/MarginContainer/v/2/v/h4" instance=ExtResource( 2 )]
 margin_left = 639.0
-margin_right = 840.0
+margin_right = 855.0
 
 [node name="h5" type="HBoxContainer" parent="MarginContainer/sc/MarginContainer/v/2/v"]
-margin_top = 620.0
+margin_top = 636.0
 margin_right = 1248.0
-margin_bottom = 745.0
+margin_bottom = 765.0
 custom_constants/separation = 30
 alignment = 1
 
 [node name="DRAW_PLATE" parent="MarginContainer/sc/MarginContainer/v/2/v/h5" instance=ExtResource( 2 )]
-margin_left = 408.0
+margin_left = 393.0
 margin_right = 609.0
 
 [node name="WIRE" parent="MarginContainer/sc/MarginContainer/v/2/v/h5" instance=ExtResource( 2 )]
 margin_left = 639.0
-margin_right = 840.0
+margin_right = 855.0
 
 [node name="h6" type="HBoxContainer" parent="MarginContainer/sc/MarginContainer/v/2/v"]
-margin_top = 775.0
+margin_top = 795.0
 margin_right = 1248.0
-margin_bottom = 900.0
+margin_bottom = 924.0
 custom_constants/separation = 30
 alignment = 1
 
 [node name="SAND" parent="MarginContainer/sc/MarginContainer/v/2/v/h6" instance=ExtResource( 2 )]
-margin_left = 408.0
+margin_left = 393.0
 margin_right = 609.0
 
 [node name="GLASS" parent="MarginContainer/sc/MarginContainer/v/2/v/h6" instance=ExtResource( 2 )]
 margin_left = 639.0
-margin_right = 840.0
+margin_right = 855.0
 
 [node name="h7" type="HBoxContainer" parent="MarginContainer/sc/MarginContainer/v/2/v"]
-margin_top = 930.0
+margin_top = 954.0
 margin_right = 1248.0
-margin_bottom = 1055.0
+margin_bottom = 1083.0
 custom_constants/separation = 30
 alignment = 1
 
 [node name="LIQUID_IRON" parent="MarginContainer/sc/MarginContainer/v/2/v/h7" instance=ExtResource( 2 )]
-margin_left = 408.0
+margin_left = 393.0
 margin_right = 609.0
 
 [node name="STEEL" parent="MarginContainer/sc/MarginContainer/v/2/v/h7" instance=ExtResource( 2 )]
 margin_left = 639.0
-margin_right = 840.0
+margin_right = 855.0
 
 [node name="h8" type="HBoxContainer" parent="MarginContainer/sc/MarginContainer/v/2/v"]
-margin_top = 1085.0
+margin_top = 1113.0
 margin_right = 1248.0
-margin_bottom = 1210.0
+margin_bottom = 1242.0
 custom_constants/separation = 30
 alignment = 1
 
 [node name="AXES" parent="MarginContainer/sc/MarginContainer/v/2/v/h8" instance=ExtResource( 2 )]
-margin_left = 292.0
-margin_right = 493.0
+margin_left = 270.0
+margin_right = 486.0
 
 [node name="WOOD" parent="MarginContainer/sc/MarginContainer/v/2/v/h8" instance=ExtResource( 2 )]
-margin_left = 523.0
-margin_right = 724.0
+margin_left = 516.0
+margin_right = 732.0
 
 [node name="HARDWOOD" parent="MarginContainer/sc/MarginContainer/v/2/v/h8" instance=ExtResource( 2 )]
-margin_left = 754.0
-margin_right = 955.0
+margin_left = 762.0
+margin_right = 978.0
 
 [node name="h9" type="HBoxContainer" parent="MarginContainer/sc/MarginContainer/v/2/v"]
-margin_top = 1240.0
+margin_top = 1272.0
 margin_right = 1248.0
-margin_bottom = 1365.0
+margin_bottom = 1401.0
 custom_constants/separation = 30
 alignment = 1
 
 [node name="SEEDS" parent="MarginContainer/sc/MarginContainer/v/2/v/h9" instance=ExtResource( 2 )]
-margin_left = 292.0
-margin_right = 493.0
+margin_left = 270.0
+margin_right = 486.0
 
 [node name="TREES" parent="MarginContainer/sc/MarginContainer/v/2/v/h9" instance=ExtResource( 2 )]
-margin_left = 523.0
-margin_right = 724.0
+margin_left = 516.0
+margin_right = 732.0
 
 [node name="SOIL" parent="MarginContainer/sc/MarginContainer/v/2/v/h9" instance=ExtResource( 2 )]
-margin_left = 754.0
-margin_right = 955.0
+margin_left = 762.0
+margin_right = 978.0
 
 [node name="h10" type="HBoxContainer" parent="MarginContainer/sc/MarginContainer/v/2/v"]
-margin_top = 1395.0
+margin_top = 1431.0
 margin_right = 1248.0
-margin_bottom = 1520.0
+margin_bottom = 1560.0
 custom_constants/separation = 30
 alignment = 1
 
 [node name="WATER" parent="MarginContainer/sc/MarginContainer/v/2/v/h10" instance=ExtResource( 2 )]
-margin_left = 408.0
+margin_left = 393.0
 margin_right = 609.0
 
 [node name="HUMUS" parent="MarginContainer/sc/MarginContainer/v/2/v/h10" instance=ExtResource( 2 )]
 margin_left = 639.0
-margin_right = 840.0
+margin_right = 855.0
 
 [node name="3" type="VBoxContainer" parent="MarginContainer/sc/MarginContainer/v"]
 unique_name_in_owner = true
 visible = false
-margin_top = 280.0
-margin_right = 1002.0
-margin_bottom = 280.0
+margin_right = 1260.0
+margin_bottom = 129.0
 size_flags_horizontal = 3
 custom_constants/separation = 20
 alignment = 1
+
+[node name="Witch and Garden" parent="MarginContainer/sc/MarginContainer/v/3" instance=ExtResource( 3 )]
+margin_right = 1260.0
+margin_bottom = 129.0
 
 [node name="4" type="VBoxContainer" parent="MarginContainer/sc/MarginContainer/v"]
 unique_name_in_owner = true

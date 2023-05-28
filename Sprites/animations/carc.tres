@@ -6,7 +6,7 @@
 animations = [ {
 "frames": [  ],
 "loop": true,
-"name": "ff",
+"name": "CARCINOGENS",
 "speed": 14.0
 }, {
 "frames": [ ExtResource( 1 ) ],

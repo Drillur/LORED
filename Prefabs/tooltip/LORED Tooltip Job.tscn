@@ -44,7 +44,7 @@ script = ExtResource( 4 )
 
 [node name="v" type="VBoxContainer" parent="."]
 margin_right = 76.0
-margin_bottom = 69.0
+margin_bottom = 73.0
 
 [node name="jobName" type="Label" parent="v"]
 unique_name_in_owner = true
@@ -58,7 +58,7 @@ align = 1
 [node name="MarginContainer" type="MarginContainer" parent="v"]
 margin_top = 21.0
 margin_right = 76.0
-margin_bottom = 69.0
+margin_bottom = 73.0
 size_flags_horizontal = 0
 custom_constants/margin_right = 0
 custom_constants/margin_top = 0
@@ -67,19 +67,19 @@ custom_constants/margin_bottom = 0
 
 [node name="bg" type="Panel" parent="v/MarginContainer"]
 margin_right = 76.0
-margin_bottom = 48.0
+margin_bottom = 52.0
 custom_styles/panel = SubResource( 13 )
 
 [node name="glow" type="Panel" parent="v/MarginContainer"]
 unique_name_in_owner = true
 visible = false
 margin_right = 76.0
-margin_bottom = 48.0
+margin_bottom = 52.0
 custom_styles/panel = SubResource( 20 )
 
 [node name="MarginContainer" type="MarginContainer" parent="v/MarginContainer"]
 margin_right = 76.0
-margin_bottom = 48.0
+margin_bottom = 52.0
 custom_constants/margin_right = 5
 custom_constants/margin_top = 5
 custom_constants/margin_left = 5
@@ -89,18 +89,16 @@ custom_constants/margin_bottom = 5
 margin_left = 5.0
 margin_top = 5.0
 margin_right = 71.0
-margin_bottom = 43.0
+margin_bottom = 47.0
 
 [node name="effects" type="MarginContainer" parent="v/MarginContainer/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
 visible = false
-margin_right = 102.0
-margin_bottom = 15.0
+margin_right = 66.0
 custom_constants/margin_left = 0
 
 [node name="v" type="VBoxContainer" parent="v/MarginContainer/MarginContainer/VBoxContainer/effects"]
-margin_right = 102.0
-margin_bottom = 15.0
+margin_right = 66.0
 
 [node name="effectRefuel" type="HBoxContainer" parent="v/MarginContainer/MarginContainer/VBoxContainer/effects/v"]
 unique_name_in_owner = true
@@ -146,14 +144,11 @@ text = "Fuel (+25%)"
 
 [node name="output" type="MarginContainer" parent="v/MarginContainer/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
-visible = false
-margin_right = 177.0
-margin_bottom = 16.0
+margin_right = 66.0
 custom_constants/margin_left = 0
 
 [node name="v" type="VBoxContainer" parent="v/MarginContainer/MarginContainer/VBoxContainer/output"]
-margin_right = 177.0
-margin_bottom = 16.0
+margin_right = 66.0
 
 [node name="output0" type="HBoxContainer" parent="v/MarginContainer/MarginContainer/VBoxContainer/output/v"]
 unique_name_in_owner = true
@@ -207,8 +202,9 @@ text = "(+123e123/s)"
 [node name="output1" type="HBoxContainer" parent="v/MarginContainer/MarginContainer/VBoxContainer/output/v"]
 unique_name_in_owner = true
 visible = false
+margin_top = 20.0
 margin_right = 177.0
-margin_bottom = 16.0
+margin_bottom = 36.0
 alignment = 1
 
 [node name="amount" type="Label" parent="v/MarginContainer/MarginContainer/VBoxContainer/output/v/output1"]
@@ -256,9 +252,9 @@ text = "(+123e123/s)"
 [node name="output2" type="HBoxContainer" parent="v/MarginContainer/MarginContainer/VBoxContainer/output/v"]
 unique_name_in_owner = true
 visible = false
-margin_top = 20.0
+margin_top = 40.0
 margin_right = 177.0
-margin_bottom = 36.0
+margin_bottom = 56.0
 alignment = 1
 
 [node name="amount" type="Label" parent="v/MarginContainer/MarginContainer/VBoxContainer/output/v/output2"]
@@ -305,16 +301,17 @@ text = "(+123e123/s)"
 
 [node name="separator0" type="Panel" parent="v/MarginContainer/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
+margin_top = 4.0
 margin_right = 66.0
-margin_bottom = 1.0
+margin_bottom = 5.0
 rect_min_size = Vector2( 0, 1 )
 custom_styles/panel = SubResource( 21 )
 
 [node name="input" type="MarginContainer" parent="v/MarginContainer/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
-margin_top = 5.0
+margin_top = 9.0
 margin_right = 66.0
-margin_bottom = 5.0
+margin_bottom = 9.0
 custom_constants/margin_left = 0
 
 [node name="v" type="VBoxContainer" parent="v/MarginContainer/MarginContainer/VBoxContainer/input"]
@@ -520,16 +517,16 @@ text = "(-10%)"
 
 [node name="separator1" type="Panel" parent="v/MarginContainer/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
-margin_top = 9.0
+margin_top = 13.0
 margin_right = 66.0
-margin_bottom = 10.0
+margin_bottom = 14.0
 rect_min_size = Vector2( 0, 1 )
 custom_styles/panel = SubResource( 21 )
 
 [node name="misc" type="VBoxContainer" parent="v/MarginContainer/MarginContainer/VBoxContainer"]
-margin_top = 14.0
+margin_top = 18.0
 margin_right = 66.0
-margin_bottom = 38.0
+margin_bottom = 42.0
 custom_constants/separation = 0
 
 [node name="input1" type="HBoxContainer" parent="v/MarginContainer/MarginContainer/VBoxContainer/misc"]

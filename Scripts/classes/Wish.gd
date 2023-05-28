@@ -128,6 +128,8 @@ class Objective:
 			setIconKey(key)
 		elif type == gv.Objective.UPGRADE_PURCHASED:
 			setIconKey(gv.up[key].icon)
+		elif type == gv.Objective.LIMIT_BREAK_LEVEL:
+			setIconKey(gv.up["Limit Break"].icon)
 	
 	func setIconKey(_icon_key: String):
 		icon_key = _icon_key
@@ -162,8 +164,10 @@ class Objective:
 				return lv.lored[int(key)].name + " at 75% fuel"
 			gv.Objective.BREAK:
 				return "Sleep"
+			gv.Objective.LIMIT_BREAK_LEVEL:
+				return "Limit Break " + required_count.toString()
 		
-		print_debug("Wish parseObjective() fail. Type: ", type)
+		print_debug("Wish parseObjective() fail. Type: ", type, " (", gv.Objective.keys()[type], ")")
 		return "Oops!"
 	
 	func complete():
@@ -196,6 +200,7 @@ class Reward:
 	var type: int
 	
 	var key: String
+	var key2: String
 	
 	var amount: Big = Big.new(0)
 	
@@ -210,7 +215,12 @@ class Reward:
 			return
 		
 		type = _type
-		key = _key
+		if ":" in key:
+			var split_key = _key.split(":")
+			key = split_key[0]
+			key2 = split_key[1]
+		else:
+			key = _key
 		amount = Big.new(_amount)
 	
 	
@@ -268,6 +278,8 @@ class Reward:
 						lv.jobsUnlocked()
 			gv.WishReward.ENABLE_RANDOM_EMOTES:
 				EmoteManager.randomEmotesAllowed = true
+			gv.WishReward.NEW_JOB:
+				lv.lored[int(key)].lored.addJob(key2)
 
 
 
@@ -398,6 +410,8 @@ func setVico(_vico: MarginContainer):
 func die(inform_taq := true):
 	exists = false
 	for x in vico:
+		if not is_instance_valid(x):
+			break
 		x.hide()
 		x.queue_free()
 		if tooltip_active:
@@ -412,6 +426,9 @@ func die(inform_taq := true):
 func increaseCount(_type: int, _key: String, amount):
 	
 	if not exists:
+		return
+	
+	if ready:
 		return
 	
 	if obj.match(_type, _key):
@@ -442,8 +459,9 @@ func ready():
 		x.ready()
 	
 	if taq.automatedCompletion:
-		# don't care about the tooltip. it's gonna go away anyway
-		return
+		if random:
+			turnIn()
+			return
 	
 	if tooltip_active:
 		if not is_instance_valid(tooltip):
@@ -502,8 +520,19 @@ func turnIn():
 
 
 
+func construct_garden1():
+	giver = str(lv.Type.WITCH)
+	help_text = "Do you want to look at my garden?"
+	thank_text = "Heck yeah! Come by anytime!"
+	obj = Objective.new(gv.Objective.HAVE_COMPANY, "WITCH")
+	rew.append(Reward.new(gv.WishReward.NEW_JOB, str(lv.Type.WITCH) + ":SIFT_SEEDS"))
 
-
+func construct_to_da_limit():
+	giver = str(lv.Type.AXES)
+	help_text = "I'm an advanced general intelligence unit, and not only have you never once requested my input, but you have tasked me with creating axes, an act which requires putting a rock on a stick.\n\nIt appears that you are approaching the limit of what is possible given our current personnel and environment. We will soon be forced to search for new friends and abilities.\n\nIn the meantime, I recommend pursuing perfection."
+	thank_text = "The diminishing returns of Limit Break are beginning to show in earnest. Let's get the heck out of here."
+	obj = Objective.new(gv.Objective.LIMIT_BREAK_LEVEL, "", "1000")
+	rew.append(Reward.new(gv.WishReward.RESOURCE, str(gv.Resource.MALIGNANCY), "1e100"))
 
 func construct_autocomplete():
 	giver = str(lv.Type.OIL)
@@ -522,7 +551,7 @@ func construct_easier():
 
 func construct_ciorany():
 	giver = str(lv.Type.WATER)
-	help_text = "I'm actually in [i]shock[/i] at how many you were able to gather!!! And it didn't take you [i]UNDEFINED[/i] years, like it took Maybe and Trees and I!!!"
+	help_text = "I'm in [i]shock[/i] at how many LOREDs you were able to gather!!! And it didn't take you [i]UNDEFINED[/i] years, like it took Maybe and Trees and I!!!"
 	thank_text = "I'm so happy :')"
 	obj = Objective.new(gv.Objective.UPGRADE_PURCHASED, "Cioran")
 	rew.append(Reward.new(gv.WishReward.RESOURCE, str(gv.Resource.TUMORS), "1000"))
@@ -560,7 +589,7 @@ func construct_plasty():
 	key_rew.append(Reward.new(gv.WishReward.NEW_LORED, str(lv.Type.CARCINOGENS)))
 func construct_papey():
 	giver = str(lv.Type.PAPER)
-	help_text = "Well, hey, there! I'm Paper Boy. Your local neighborhood Paper Boy! Hahah! Just kiddin. Who am I, Spider-man? Haha! Just kiddin. If anything, I'd be Spider-boy. Haha! Just kiddin. But, anyway, yeah, so, like I was sayin, hi there!\n\nIf you need any help figuring out how we work together up here, ask me anytime! Also, try checkin the hold button, on account that it shows who else is using their stuff. Like, look at Pulp! It'll say I use his stuff. That's on account of the fact that I do use his stuff! Haha! Just kiddin. I mean, I do actually, but the way I said it was weird, so I was just kiddin about that part. Haha. Just kiddin. I mean, not really. Okay, yeah, so, anyway. Cya around!"
+	help_text = "Well, hey, there! I'm Paper Boy. Your local neighborhood Paper Boy! Hahah! Just kiddin. Who am I, Spider-man? Haha! Just kiddin. If anything, I'd be Spider-boy. Haha! Just kiddin. But, anyway, yeah, so, like I was sayin, hi there!\n\nIf you need any help figuring out how we work together up here, ask me anytime! Also, try checkin our jobs, on account of the fact that it shows what resources we need! Like, look at mine! It'll say I use Wood Pulp. That's on account of the fact that I do! Haha! Just kiddin. I mean, I do, but the way I said it was weird, so I was just kiddin about that part. Haha. Just kiddin. I mean, not really. Okay, yeah, so, anyway. Cya around!"
 	thank_text = "Thanks bunches, pal! Haha."
 	obj = Objective.new(gv.Objective.RESOURCES_PRODUCED, str(gv.Resource.PAPER), "100")
 	rew.append(Reward.new(gv.WishReward.RESOURCE, str(gv.Resource.AXES), "1000"))
@@ -922,9 +951,7 @@ func construct_random():
 		var shuffled_possible_types: Array = possible_types.keys()
 		shuffled_possible_types.shuffle()
 		
-		#print("total points: ", total_points)
 		for i in shuffled_possible_types.size():
-			#print("roll ", i, ": ", roll, "; rolling against ", possible_types[shuffled_possible_types[i]])
 			if roll < possible_types[shuffled_possible_types[i]]:
 				selected_type = shuffled_possible_types[i]
 				break
@@ -1061,7 +1088,6 @@ func construct_random_buy_upgrade():
 
 func construct_random_max_fuel():
 	
-	print("RANDOM_MAX_FUEL")
 	var selected_lored = fixKeyAndGetSurplus()
 	giver = selected_lored
 	
@@ -1087,7 +1113,6 @@ func fixKeyAndGetSurplus() -> String:
 	var split = key.split(":")
 	var surplus = split[1]
 	key = split[0]
-	#print_debug("surplus: ", surplus, "; key: ", key)
 	return surplus
 
 func setRandomGiver():
@@ -1122,7 +1147,6 @@ func generateRandomRewards(reward_mod := 0.0):
 		amount.roundDown()
 		
 		if i == 1 and str(resource) == rew[0].key:
-			#print("doubling up on rewards; combining")
 			rew[0].amount.a(amount)
 		else:
 			rew.append(Reward.new(gv.WishReward.RESOURCE, str(resource), amount.toScientific()))

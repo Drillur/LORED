@@ -735,15 +735,15 @@ size_flags_vertical = 3
 
 [node name="0" type="MarginContainer" parent="v/upgrades/v"]
 visible = false
-margin_right = 372.0
-margin_bottom = 293.0
+margin_right = 455.0
+margin_bottom = 284.0
 size_flags_vertical = 3
 custom_constants/margin_top = 5
 
 [node name="v" type="VBoxContainer" parent="v/upgrades/v/0"]
 margin_top = 5.0
-margin_right = 372.0
-margin_bottom = 293.0
+margin_right = 455.0
+margin_bottom = 284.0
 custom_constants/separation = 10
 
 [node name="1" type="MarginContainer" parent="v/upgrades/v"]

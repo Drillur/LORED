@@ -46,6 +46,15 @@ func _call(source : String, other: Dictionary) -> void:
 			temp["lored"] = other["lored"]
 			$bg.self_modulate = other["color"]
 		
+		elif "lored active buffs" == type:
+			
+			cont = gv.SRC["tooltip/active buffs"].instance()
+			cont.setup(other["lored"])
+			add_child(cont)
+			
+			temp["lored"] = other["lored"]
+			$bg.self_modulate = lv.lored[other["lored"]].color
+		
 		elif "lored export" == type:
 			
 			cont = gv.SRC["tooltip/lored export"].instance()
@@ -204,7 +213,7 @@ func r_tip(move_tip := false) -> void:
 			
 			return
 		
-		elif type in ["lored export", "lored level up", "lored info", "lored alert", "lored jobs", "lored asleep"]:
+		elif type in ["lored export", "lored level up", "lored info", "lored alert", "lored jobs", "lored asleep", "lored active buffs"]:
 			
 			var f = temp["lored"]
 			
@@ -281,7 +290,7 @@ func price_flash() -> void:
 	
 	var cost_dict := {}
 	
-	if "lored level up" == type:
+	if "lored level up" == type or "buy upgrade" in type:
 		cont.flash()
 
 func item_tip(key: String):

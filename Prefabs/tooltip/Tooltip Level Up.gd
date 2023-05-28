@@ -46,13 +46,22 @@ func preFirstPurchase():
 
 func setTexts():
 	
-	if not gv.option["levelUpDetails"]:
-		get_node("%bot").hide()
-		return
-	
 	var loredLevel = lv.lored[lored].level
 	get_node("m/v/bot/h/current/Label").text = str(loredLevel)
 	get_node("m/v/bot/h/result/Label").text = str(loredLevel + 1)
+	
+	if not gv.option["levelUpDetails"]:
+		get_node("%Output").hide()
+		get_node("%Input").hide()
+		get_node("%FuelCost").hide()
+		get_node("%FuelStorage").hide()
+		get_node("%Cost").hide()
+		for i in range(2, 6):
+			get_node("%current/Label" + str(i)).hide()
+			get_node("%increase/Label" + str(i)).hide()
+			get_node("%increase/Label6").hide()
+			get_node("%result/Label" + str(i)).hide()
+		return
 	
 	var loredOutput = Big.new(lv.lored[lored].output)
 	get_node("m/v/bot/h/current/Label2").text = loredOutput.toString()

@@ -56,6 +56,13 @@ var automatedCompletion := false # set in Wish.reward
 
 
 
+func turn_in_all_wishes_automatically():
+	if automatedCompletion:
+		for w in wish:
+			if w.random:
+				if w.ready:
+					w.turnIn()
+
 func save() -> String:
 	
 	var data := {}
@@ -214,6 +221,8 @@ func hideOrDisplayMainWishes():
 
 func adjustCheckpointBasedOnCompletedQuest(key: String):
 	match key:
+		"to_da_limit":
+			checkpoint = 26
 		"easier", "autocomplete":
 			if "easier" in completed_wishes and "autocomplete" in completed_wishes:
 				checkpoint = 25
@@ -311,6 +320,8 @@ func getSelectedWish() -> String:
 	
 	var try := []
 	match checkpoint:
+		25:
+			try.append("to_da_limit")
 		24:
 			try.append("easier")
 			try.append("autocomplete")
@@ -484,6 +495,8 @@ func getWishStat(objectiveType: int, key = "") -> String:
 			return "Refuel"
 		gv.Objective.BREAK:
 			return "Sleep"
+		gv.Objective.LIMIT_BREAK_LEVEL:
+			return "Limit Break"
 	
 	print_debug("fail: getWishStat() in WishManager")
 	return "oops!"

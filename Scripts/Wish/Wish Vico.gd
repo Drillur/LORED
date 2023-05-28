@@ -50,6 +50,10 @@ func setup(_wish: Wish, _inLog := true) -> void:
 	
 	reset()
 	
+	if wish.obj.type == gv.Objective.LIMIT_BREAK_LEVEL:
+		gv.connect("limit_break_leveled_up", self, "update_LIMIT_BREAK_LEVEL")
+		update_LIMIT_BREAK_LEVEL()
+	
 	if not wish.obj.complete:
 		update()
 	
@@ -210,8 +214,9 @@ func ready():
 		return
 	
 	if taq.automatedCompletion:
-		turnIn()
-		return
+		if wish.random:
+			turnIn()
+			return
 	
 	if inLog:
 		rt.wishNotice()
@@ -267,3 +272,8 @@ func flashRequirements():
 func _on_Wish_Vico_item_rect_changed() -> void:
 	#updateProgress() doesnt work because who knows, life is unfair
 	update()
+
+
+func update_LIMIT_BREAK_LEVEL():
+	wish.setCount(gv.up["Limit Break"].effects[0].effect.t)
+

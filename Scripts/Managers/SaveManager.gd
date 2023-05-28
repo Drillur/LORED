@@ -24,14 +24,7 @@ signal gameSaved
 
 
 
-
-
-
-# find out when to actually LOAD.
-#on boot?
-#after boot done?
-#at the end of _ready in Root?
-#probly that last one
+var save: Save
 
 
 
@@ -352,6 +345,8 @@ func getRandomSaveFileName() -> String:
 		"Pizza",
 		"PacBrad",
 		"Univenon",
+		"Wintermaul Wars",
+		"SSJ10",
 	]
 	
 	var baseFilename = filenamePool[randi() % filenamePool.size()]
@@ -391,7 +386,7 @@ func loadSavedVars(saved_vars: Dictionary, save_data: Dictionary) -> Dictionary:
 		
 		if not x in save_data.keys():
 			continue
-		
+		ResourceSaver
 		if saved_vars[x] is Big:
 			loadedVars[x] = Big.new(save_data[x])
 			continue

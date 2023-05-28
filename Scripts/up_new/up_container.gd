@@ -64,18 +64,16 @@ func procedure():
 	
 	# called at the bottom of the func that positions every upgrade
 	
+	var t = Timer.new()
+	add_child(t)
+	
 	while shouldDisplayResetResource() and visible:
 		
 		setResetResourceText()
 		
-		var t = Timer.new()
-		add_child(t)
 		t.start(1)
 		yield(t, "timeout")
-		t.queue_free()
 	
-	var t = Timer.new()
-	add_child(t)
 	t.start(1)
 	yield(t, "timeout")
 	t.queue_free()
@@ -86,10 +84,11 @@ func shouldDisplayResetResource() -> bool:
 	if gv.open_tab == gv.Tab.MALIGNANT:
 		if not gv.up["PROCEDURE"].active():
 			return false
-		if gv.resource[gv.Resource.MALIGNANCY].less(gv.up["ROUTINE"].cost["malig"].t):
+		if gv.resource[gv.Resource.MALIGNANCY].less(gv.up["ROUTINE"].cost[gv.Resource.MALIGNANCY].t):
 			return false
+		return true
 	
-	return true
+	return false
 
 func setupResetResource():
 	
@@ -104,7 +103,7 @@ func setupResetResource():
 	get_node("%resetResource/amount").self_modulate = color
 	get_node("%resetResource/name").self_modulate = color
 	
-	get_node("%resetResource/name").text = gv.resourceName[resource]
+	get_node("%resetResource/name").text = gv.resourceName[resource] + ")"
 	
 	get_node("%resetResource/icon/Sprite").texture = gv.sprite[gv.shorthandByResource[resource]]
 	get_node("%resetResource/icon/Sprite/shadow").texture = get_node("%resetResource/icon/Sprite").texture
@@ -117,7 +116,7 @@ func setResetResourceText():
 	match gv.open_tab:
 		gv.Tab.MALIGNANT:
 			var routine = rt.get_node(rt.gnupcon).cont["ROUTINE"].get_routine_info()[0].toString()
-			get_node("%resetResource/amount").text = "(" + routine
+			get_node("%resetResource/amount").text = "(+" + routine
 
 
 
@@ -872,4 +871,9 @@ func flash_reset_button():
 	var test = gv.SRC["flash"].instance()
 	reset_t.add_child(test)
 	test.flash()
+
+
+func tab_unlocked(tab: int):
+	
+	print("tab unlocked")
 

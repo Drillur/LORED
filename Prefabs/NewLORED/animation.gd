@@ -3,29 +3,29 @@ extends AnimatedSprite
 
 
 var type: int
-var key: String # equivalent to frames
-var long_anim := false
-var first_loop: bool
+var two_part_animation := false
+var part_one_played := false
+var key: String
+var previous_animation: String
 
 
 
 func init(_type: int) -> void:
 	
 	type = _type
-	key = lv.lored[_type].shorthandKey
+	key = lv.Type.keys()[type]
 	
 	reset()
 	
-	if key in ["water", "seed"]:
-		long_anim = true
-		first_loop = true
+	if key in ["WATER", "SEEDS"]:
+		two_part_animation = true
 	
 	play("ww")
 
 
 func reset():
 	
-	if key in ["irono", "copo", "iron", "jo", "liq", "hard"]:
+	if key in ["IRON_ORE", "COPPER_ORE", "IRON", "JOULES", "LIQUID_IRON", "HARDWOOD"]:
 		flip_h = true
 	
 	if key in gv.anim.keys():
@@ -37,24 +37,31 @@ func reset():
 		scale = Vector2(0.5, 0.5)
 
 
-func job_started(duration: float, animation: String = "ff") -> void:
+func play_animation(duration: float, animation: String) -> void:
+	
+	if animation == previous_animation:
+		pass
 	
 	if not frames == gv.anim[key]:
 		frames = gv.anim[key]
 	
 	if key in gv.animationless:
+		#animationless - remove this section when done animating
 		return
 	
-	var animation_length: int
-	if animation == "ff":
-		animation_length = gv.max_frame[key]
-	else:
-		animation_length = gv.max_frame[animation]
+	previous_animation = animation
 	
-	if key in ["wire"]:
-		modulate = Color(1, 1, 1)
-	
+	var animation_length = gv.max_frame[animation]
 	speed_scale = min(25, animation_length / duration)
+	
+	if two_part_animation:
+		if part_one_played:
+			play(animation + "2")
+			part_one_played = false
+			return
+		else:
+			part_one_played = true
+	
 	play(animation)
 
 
@@ -63,20 +70,19 @@ func sleep() -> void:
 	play("ww")
 
 
-func refuel(duration: float):
+func pick_a_refuel_animation(duration: float):
 	
 	flip_h = false
 	scale = Vector2(0.5, 0.5)
 	
 	frames = gv.anim["refuel"]
 	
-	var animation = str(int(rand_range(0,2)))
+	var animation = str(int(rand_range(0, 2)))
 	var _animation_length = gv.max_frame["refuel" + animation]
 	
-	if key in ["wire"]:
-		modulate = lv.lored[type].color
-	
 	speed_scale = _animation_length / duration
+	
+	previous_animation = "refuel" + animation
 	
 	play(animation)
 	

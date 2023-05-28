@@ -17,6 +17,7 @@ onready var animation = get_node("m/v/top/v/mid/animation/AnimatedSprite")
 onready var draw_plate_throw = get_node("%DRAW_PLATE throw")
 onready var gnResourceText = get_node("m/v/top/v/mid/v2/resource/v/amount")
 onready var iconShadow = get_node("m/v/top/v/mid/v2/resource/icon/Sprite/shadow")
+onready var active_buffs = get_node("%active buffs")
 
 onready var rt = get_node("/root/Root")
 
@@ -70,8 +71,8 @@ func setColors(type: int):
 	get_node("progress/current/edge").self_modulate = loredColor
 	asleepAlert.modulate = loredColor
 	jobs.modulate = fadedLoredColor
+	active_buffs.modulate = fadedLoredColor
 	get_node("%fuel/Button").self_modulate = fadedLoredColor
-
 
 
 func assignManager(_manager: Node2D):
@@ -103,6 +104,8 @@ func _on_jobs_mouse_entered() -> void:
 func _on_asleep_mouse_entered() -> void:
 	if gv.option["tipSleep"]:
 		rt.get_node("global_tip")._call("lored asleep", {"lored": manager.type})
+func _on_active_buffs_mouse_entered() -> void:
+	rt.get_node("global_tip")._call("lored active buffs", {"lored": manager.type})
 
 var appearedOnce := false
 func _on_visibility_changed() -> void:
@@ -118,12 +121,15 @@ func _on_visibility_changed() -> void:
 
 func enterStandby():
 	
+	animation.stop()
 	hideProduction()
 	hideProgress()
 	get_node("%info").hide()
 	get_node("%sleep").hide()
 	jobs.hide()
 	get_node("%fuel").hide()
+	active_buffs.hide()
+	get_node("%view special").hide()
 
 func enterActive():
 	get_node("%info").show()
@@ -132,6 +138,9 @@ func enterActive():
 	if "jobs" in taq.completed_wishes:
 		jobs.show()
 	displayFuel()
+	var loreds_with_special_areas := [lv.Type.WITCH]
+	if manager.type in loreds_with_special_areas:
+		get_node("%view special").show()
 
 
 
@@ -151,22 +160,18 @@ var progress: float setget setProgress
 func setProgress(val: float):
 	currentProgress.rect_size.x = min(val * rect_size.x, rect_size.x)
 
+
+var just_waited := false
+func set_just_waited():
+	just_waited = true
+
+
 var last_job: int = -1
 func jobStarted(duration: float, _start_time: int, job: int):
 	
 	currentProgress.show()
 	
-	if job == lv.Job.REFUEL:
-		animation.refuel(duration)
-	else:
-		if last_job == -1:
-			animation.job_started(duration)
-		else:
-			if last_job != job:
-				animation.job_started(duration)
-	
-	gv.stats["AnimationsPlayed"][manager.type] += 1
-	gv.emit_signal("AnimationsPlayed", manager.type)
+	play_animation(duration, job)
 	
 	start_time = _start_time
 	animation_duration = duration * 1000
@@ -174,20 +179,21 @@ func jobStarted(duration: float, _start_time: int, job: int):
 	set_physics_process(true)
 	
 	last_job = job
+
+
+func play_animation(duration: float, job: int):
 	
-#	var i = get_i(startTime)
-#
-#	while not is_queued_for_deletion():
-#
-#		t.start(gv.fps)
-#		yield(t, "timeout")
-#
-#		i = get_i(startTime)
-#		if i >= duration:
-#			setProgress(0)
-#			break
-#
-#		setProgress(i / duration)
+	gv.stats["AnimationsPlayed"][manager.type] += 1
+	gv.emit_signal("AnimationsPlayed", manager.type)
+	
+	if job == lv.Job.REFUEL:
+		animation.pick_a_refuel_animation(duration)
+		return
+	
+	var job_animation = lv.lored[manager.type].jobs[job].animation
+	
+	animation.play_animation(duration, job_animation)
+
 
 func updateProduction(resource: int = primaryResource):
 	production.show()
@@ -221,7 +227,7 @@ func throw_draw_plate():
 	draw_plate_throw.play("ff")
 	
 	var wire_job_duration = lv.lored[lv.Type.WIRE].lored.jobs.values()[0].duration
-	var wire_animation_length = gv.max_frame["wire"]
+	var wire_animation_length = gv.max_frame["WIRE"]
 	draw_plate_throw.speed_scale = wire_animation_length / wire_job_duration
 	
 	yield(draw_plate_throw, "animation_finished")
@@ -285,6 +291,12 @@ func emote(emote: MarginContainer):
 	emote.rect_position = Vector2(-emote.rect_size.x + 28, -emote.rect_size.y + 10)
 	emote.go()
 
+func display_active_buffs():
+	active_buffs.show()
+
+func hide_active_buffs():
+	active_buffs.hide()
+
 
 
 # - - - Visual Flair shit?
@@ -292,6 +304,7 @@ func emote(emote: MarginContainer):
 func levelUpFlash():
 	var flash = gv.SRC["flash"].instance()
 	add_child(flash)
+	move_child(get_node("emote"), get_child_count())
 	#flash.flash(getFadedColor(manager.type))
 	flash.flash(manager.color)
 
@@ -305,20 +318,26 @@ func levelUpText():
 	})
 
 var outputTextTimer: Timer
+
+
 func throwOutputTexts(allTexts: Array):
 	for textDetails in allTexts:
 		newOutputText(textDetails)
-		
 		outputTextTimer.start(0.1)
 		yield(outputTextTimer, "timeout")
+
+
 func newOutputText(details: Dictionary):
+	
 	var outputText = gv.SRC["flying text"].instance()
 	outputText.init(details)
-	#outputText.rect_position = Vector2(rect_size.x * 0.825 - (outputText.rect_size.x / 2), 0) 
-	outputText.rect_position = Vector2(-rect_global_position.x + animation.global_position.x - (outputText.rect_size.x / 2), 0)
+	
+	outputText.rect_position = Vector2(-rect_global_position.x + animation.global_position.x - (outputText.rect_size.x / 2) + 10, 0)
+	
 	if "levelup" in details.keys():
 		details["life"] = 200
 		outputText.rect_position.x = (rect_size.x / 2) - (outputText.rect_size.x / 2)
+	
 	get_node("misc").add_child(outputText)
 
 
@@ -380,6 +399,8 @@ func alert_asleep():
 	asleepAlert.show()
 func alert_asleep_stop():
 	asleepAlert.hide()
+
+
 
 
 

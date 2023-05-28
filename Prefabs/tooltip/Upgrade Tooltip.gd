@@ -100,8 +100,11 @@ func price_stuff() -> void:
 
 func random_desc() -> String:
 	
-	var roll : int = 42#randi() % 41
+	var roll : int = randi() % 44
 	match roll:
+		43: return "Sends curry chicken ramen directly to your door, for free!"
+		42:
+			return "Nintendo accepts their fans for who they are and release all of their first party games on PC with Steam Workshop and mod support."
 		41:
 			return "Your favorite candy is now the healthiest food in the world for humans to consume. However, mega corps purchase the rights to selling it, and, aware of the levels of demand, boost the price to unreasonable levels. Finally united against the greed of mega corps around the world, every country fights to destroy all mega corps. Country leaders, backed by the mega corps, step down honorably. Power returns to the people. Chaos ensues. Walmart shelves are empty. Toilet paper castles appear in backyards. Best Buy goes completely unaffected. Nintendo still hasn't revealed the N64 2. But, in the end, your food becomes affordable, so congratulations."
 		40:
@@ -188,3 +191,6 @@ func random_desc() -> String:
 			return "You have now spent 10x the amount of time with your parents and grandparents, for free."
 		_:
 			return "Who the frick knows what this upgrade does?"
+
+func flash():
+	cost.flash()

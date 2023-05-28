@@ -43,6 +43,8 @@ enum Type {
 	CARCINOGENS,
 	TUMORS,
 	
+	WITCH,
+	
 }
 enum Num {
 	BASE,
@@ -56,7 +58,6 @@ enum Num {
 	FROM_UPGRADES,
 	BY_LORED_OUTPUT,
 	BY_LORED_INPUT,
-	BY_LIMIT_BREAK,
 	BY_LORED_HASTE,
 	BY_LORED_FUEL_STORAGE,
 }
@@ -188,7 +189,7 @@ const smallerAnimationList := [
 	Type.CIGARETTES,
 ]
 
-var lored := {}
+export var lored := {}
 var loredByShorthand := {}
 
 
@@ -209,6 +210,7 @@ func open():
 	gv.loreds_required_for_s2_autoup_upgrades_to_begin_purchasing = loreds_required_for_s2_autoup_upgrades_to_begin_purchasing
 
 func close():
+	#stop_witch(gv.list.lored[gv.Tab.S1])
 	for x in ["lored", "gain", "gainUpdated", "gainBits", "maxDrain", "maxDrainBits", "drain", "drainUpdated", "drainBits", "net", "drainOrGainUpdated"]:
 		set(x, {})
 
@@ -275,7 +277,6 @@ func gainRate(resource: int) -> Big:
 func reportGain(resource: int):
 	print("---- ", gv.Resource.keys()[resource], " GAIN REPORT ----")
 	print(" * Total: ", gainRate(resource).toString(), " *")
-	#this goddamn shit does not work in the slightest. fucking fuck.
 	gainBits[resource].report()
 
 

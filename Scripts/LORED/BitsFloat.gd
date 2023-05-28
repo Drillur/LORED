@@ -43,17 +43,14 @@ func getTotal() -> float:
 		var effectIndex: int = dynamic[x]
 		total *= gv.up[x].effects[effectIndex].effect.t
 	
-	var bonusEffectsMethod = "bonusEffects_" + name
-	if has_method(bonusEffectsMethod):
-		total *= call(bonusEffectsMethod)
+	match name:
+		"haste":
+			total *= gv.hax_pow * diff.Haste
+		"crit":
+			total += diff.Crit
 	
 	totalUpdated = true
 	return total
-
-func bonusEffects_haste() -> float:
-	return gv.hax_pow * diff.Haste
-func bonusEffects_crit() -> float:
-	return diff.Crit
 
 
 func getTotalText() -> String:
@@ -90,3 +87,30 @@ func reset():
 var dynamic := {}
 func updateDynamic(_dynamic: Dictionary):
 	dynamic = _dynamic
+
+
+func report():
+	for f in bits:
+		print("Bits ", lv.Num.keys()[f], " (base: ", base, "):")
+		for g in bits[f]:
+			print(bits[f][g])
+
+
+func fullReport():
+	
+	total = base
+	print("* * * FULL REPORT * * *\n!Don't use unless debugging. Restart game after use.!\n - Base: ", total)
+	for f in bits:
+		if f == lv.Num.ADD or f == lv.Num.ADD_FUEL:
+			for g in bits[f]:
+				total += bits[f][g]
+				print(lv.Num.keys()[f], "//", lv.Num.keys()[g])
+		elif f == lv.Num.DIVIDE:
+			for g in bits[f]:
+				total /= bits[f][g]
+				print(lv.Num.keys()[f], "//", lv.Num.keys()[g])
+		elif f == lv.Num.MULTIPLY:
+			for g in bits[f]:
+				total *= bits[f][g]
+				print(lv.Num.keys()[f], "//", lv.Num.keys()[g])
+		print(" - Total: ", total)

@@ -1,10 +1,9 @@
-[gd_scene load_steps=27 format=2]
+[gd_scene load_steps=26 format=2]
 
 [ext_resource path="res://Fonts/Roboto-BlackItalic.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Fonts/Roboto-Medium.ttf" type="DynamicFontData" id=2]
 [ext_resource path="res://Fonts/Roboto-Black.ttf" type="DynamicFontData" id=3]
 [ext_resource path="res://Sprites/Menu/Level.png" type="Texture" id=4]
-[ext_resource path="res://Sprites/Menu/fuel.png" type="Texture" id=5]
 [ext_resource path="res://Sprites/Menu/drain rate.png" type="Texture" id=6]
 [ext_resource path="res://Sprites/Menu/input.png" type="Texture" id=7]
 [ext_resource path="res://Sprites/Menu/Cost.png" type="Texture" id=8]
@@ -260,1293 +259,7 @@ custom_constants/margin_top = 0
 custom_constants/margin_left = 0
 custom_constants/margin_bottom = -10
 
-[node name="HBoxContainer" type="HBoxContainer" parent="m/v/bot"]
-margin_right = 252.0
-margin_bottom = 117.0
-
-[node name="Advanced" type="GridContainer" parent="m/v/bot/HBoxContainer"]
-unique_name_in_owner = true
-visible = false
-margin_right = 346.0
-margin_bottom = 376.0
-custom_constants/hseparation = 20
-columns = 2
-
-[node name="Output" type="VBoxContainer" parent="m/v/bot/HBoxContainer/Advanced"]
-margin_right = 156.0
-margin_bottom = 133.0
-custom_constants/separation = -4
-
-[node name="total" type="HBoxContainer" parent="m/v/bot/HBoxContainer/Advanced/Output"]
-margin_right = 156.0
-margin_bottom = 36.0
-custom_constants/separation = 8
-
-[node name="icon" type="Panel" parent="m/v/bot/HBoxContainer/Advanced/Output/total"]
-margin_right = 18.0
-margin_bottom = 36.0
-rect_min_size = Vector2( 18, 36 )
-size_flags_horizontal = 0
-size_flags_vertical = 4
-custom_styles/panel = SubResource( 4 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Sprite" type="Sprite" parent="m/v/bot/HBoxContainer/Advanced/Output/total/icon"]
-position = Vector2( 9, 18 )
-texture = ExtResource( 9 )
-
-[node name="shadow" type="Sprite" parent="m/v/bot/HBoxContainer/Advanced/Output/total/icon/Sprite"]
-self_modulate = Color( 0, 0, 0, 1 )
-show_behind_parent = true
-position = Vector2( 2, 2 )
-texture = ExtResource( 9 )
-
-[node name="text" type="Label" parent="m/v/bot/HBoxContainer/Advanced/Output/total"]
-margin_left = 26.0
-margin_top = 10.0
-margin_right = 66.0
-margin_bottom = 25.0
-size_flags_horizontal = 4
-custom_fonts/font = SubResource( 5 )
-text = "Output:"
-valign = 1
-
-[node name="loredOutputAdvanced" type="Label" parent="m/v/bot/HBoxContainer/Advanced/Output/total"]
-unique_name_in_owner = true
-margin_left = 74.0
-margin_top = 9.0
-margin_right = 137.0
-margin_bottom = 26.0
-mouse_filter = 1
-custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-custom_fonts/font = SubResource( 6 )
-text = "123e123x"
-align = 1
-valign = 1
-
-[node name="v" type="VBoxContainer" parent="m/v/bot/HBoxContainer/Advanced/Output"]
-margin_top = 32.0
-margin_right = 156.0
-margin_bottom = 133.0
-
-[node name="base" type="HBoxContainer" parent="m/v/bot/HBoxContainer/Advanced/Output/v"]
-margin_right = 156.0
-margin_bottom = 17.0
-
-[node name="indent" type="Label" parent="m/v/bot/HBoxContainer/Advanced/Output/v/base"]
-margin_top = 1.0
-margin_right = 12.0
-margin_bottom = 16.0
-size_flags_horizontal = 4
-custom_fonts/font = SubResource( 5 )
-text = "    "
-valign = 1
-
-[node name="text" type="Label" parent="m/v/bot/HBoxContainer/Advanced/Output/v/base"]
-margin_left = 16.0
-margin_top = 1.0
-margin_right = 46.0
-margin_bottom = 16.0
-size_flags_horizontal = 4
-custom_fonts/font = SubResource( 5 )
-text = "Base:"
-valign = 1
-
-[node name="Level" type="Label" parent="m/v/bot/HBoxContainer/Advanced/Output/v/base"]
-margin_left = 50.0
-margin_right = 58.0
-margin_bottom = 17.0
-mouse_filter = 1
-custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-custom_fonts/font = SubResource( 6 )
-text = "1"
-align = 1
-valign = 1
-
-[node name="upgrades add" type="HBoxContainer" parent="m/v/bot/HBoxContainer/Advanced/Output/v"]
-margin_top = 21.0
-margin_right = 156.0
-margin_bottom = 38.0
-
-[node name="indent" type="Label" parent="m/v/bot/HBoxContainer/Advanced/Output/v/upgrades add"]
-margin_top = 1.0
-margin_right = 12.0
-margin_bottom = 16.0
-size_flags_horizontal = 4
-custom_fonts/font = SubResource( 5 )
-text = "    "
-valign = 1
-
-[node name="text" type="Label" parent="m/v/bot/HBoxContainer/Advanced/Output/v/upgrades add"]
-margin_left = 16.0
-margin_top = 1.0
-margin_right = 71.0
-margin_bottom = 16.0
-size_flags_horizontal = 4
-custom_fonts/font = SubResource( 5 )
-text = "Upgrades:"
-valign = 1
-
-[node name="Level" type="Label" parent="m/v/bot/HBoxContainer/Advanced/Output/v/upgrades add"]
-margin_left = 75.0
-margin_right = 90.0
-margin_bottom = 17.0
-mouse_filter = 1
-custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-custom_fonts/font = SubResource( 6 )
-text = "+1"
-align = 1
-valign = 1
-
-[node name="upgrades" type="HBoxContainer" parent="m/v/bot/HBoxContainer/Advanced/Output/v"]
-margin_top = 42.0
-margin_right = 156.0
-margin_bottom = 59.0
-
-[node name="indent" type="Label" parent="m/v/bot/HBoxContainer/Advanced/Output/v/upgrades"]
-margin_top = 1.0
-margin_right = 12.0
-margin_bottom = 16.0
-size_flags_horizontal = 4
-custom_fonts/font = SubResource( 5 )
-text = "    "
-valign = 1
-
-[node name="text" type="Label" parent="m/v/bot/HBoxContainer/Advanced/Output/v/upgrades"]
-margin_left = 16.0
-margin_top = 1.0
-margin_right = 71.0
-margin_bottom = 16.0
-size_flags_horizontal = 4
-custom_fonts/font = SubResource( 5 )
-text = "Upgrades:"
-valign = 1
-
-[node name="Level" type="Label" parent="m/v/bot/HBoxContainer/Advanced/Output/v/upgrades"]
-margin_left = 75.0
-margin_right = 90.0
-margin_bottom = 17.0
-mouse_filter = 1
-custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-custom_fonts/font = SubResource( 6 )
-text = "2x"
-align = 1
-valign = 1
-
-[node name="levels" type="HBoxContainer" parent="m/v/bot/HBoxContainer/Advanced/Output/v"]
-margin_top = 63.0
-margin_right = 156.0
-margin_bottom = 80.0
-
-[node name="indent" type="Label" parent="m/v/bot/HBoxContainer/Advanced/Output/v/levels"]
-margin_top = 1.0
-margin_right = 12.0
-margin_bottom = 16.0
-size_flags_horizontal = 4
-custom_fonts/font = SubResource( 5 )
-text = "    "
-valign = 1
-
-[node name="text" type="Label" parent="m/v/bot/HBoxContainer/Advanced/Output/v/levels"]
-margin_left = 16.0
-margin_top = 1.0
-margin_right = 53.0
-margin_bottom = 16.0
-size_flags_horizontal = 4
-custom_fonts/font = SubResource( 5 )
-text = "Levels:"
-valign = 1
-
-[node name="Level" type="Label" parent="m/v/bot/HBoxContainer/Advanced/Output/v/levels"]
-margin_left = 57.0
-margin_right = 72.0
-margin_bottom = 17.0
-mouse_filter = 1
-custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-custom_fonts/font = SubResource( 6 )
-text = "8x"
-align = 1
-valign = 1
-
-[node name="diff" type="HBoxContainer" parent="m/v/bot/HBoxContainer/Advanced/Output/v"]
-margin_top = 84.0
-margin_right = 156.0
-margin_bottom = 101.0
-
-[node name="indent" type="Label" parent="m/v/bot/HBoxContainer/Advanced/Output/v/diff"]
-margin_top = 1.0
-margin_right = 12.0
-margin_bottom = 16.0
-size_flags_horizontal = 4
-custom_fonts/font = SubResource( 5 )
-text = "    "
-valign = 1
-
-[node name="text" type="Label" parent="m/v/bot/HBoxContainer/Advanced/Output/v/diff"]
-margin_left = 16.0
-margin_top = 1.0
-margin_right = 67.0
-margin_bottom = 16.0
-size_flags_horizontal = 4
-custom_fonts/font = SubResource( 5 )
-text = "Difficulty:"
-valign = 1
-
-[node name="Level" type="Label" parent="m/v/bot/HBoxContainer/Advanced/Output/v/diff"]
-margin_left = 71.0
-margin_right = 98.0
-margin_bottom = 17.0
-mouse_filter = 1
-custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-custom_fonts/font = SubResource( 6 )
-text = "0.5x"
-align = 1
-valign = 1
-
-[node name="Input" type="VBoxContainer" parent="m/v/bot/HBoxContainer/Advanced"]
-margin_left = 176.0
-margin_right = 346.0
-margin_bottom = 133.0
-custom_constants/separation = -4
-
-[node name="total" type="HBoxContainer" parent="m/v/bot/HBoxContainer/Advanced/Input"]
-margin_right = 170.0
-margin_bottom = 36.0
-custom_constants/separation = 8
-
-[node name="icon" type="Panel" parent="m/v/bot/HBoxContainer/Advanced/Input/total"]
-margin_right = 18.0
-margin_bottom = 36.0
-rect_min_size = Vector2( 18, 36 )
-size_flags_horizontal = 0
-size_flags_vertical = 4
-custom_styles/panel = SubResource( 4 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Sprite" type="Sprite" parent="m/v/bot/HBoxContainer/Advanced/Input/total/icon"]
-position = Vector2( 9, 18 )
-texture = ExtResource( 7 )
-
-[node name="shadow" type="Sprite" parent="m/v/bot/HBoxContainer/Advanced/Input/total/icon/Sprite"]
-self_modulate = Color( 0, 0, 0, 1 )
-show_behind_parent = true
-position = Vector2( 2, 2 )
-texture = ExtResource( 7 )
-
-[node name="text" type="Label" parent="m/v/bot/HBoxContainer/Advanced/Input/total"]
-margin_left = 26.0
-margin_top = 10.0
-margin_right = 57.0
-margin_bottom = 25.0
-size_flags_horizontal = 4
-custom_fonts/font = SubResource( 5 )
-text = "Input:"
-valign = 1
-
-[node name="loredInputAdvanced" type="Label" parent="m/v/bot/HBoxContainer/Advanced/Input/total"]
-unique_name_in_owner = true
-margin_left = 65.0
-margin_top = 9.0
-margin_right = 80.0
-margin_bottom = 26.0
-mouse_filter = 1
-custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-custom_fonts/font = SubResource( 6 )
-text = "8x"
-align = 1
-valign = 1
-
-[node name="v" type="VBoxContainer" parent="m/v/bot/HBoxContainer/Advanced/Input"]
-margin_top = 32.0
-margin_right = 170.0
-margin_bottom = 112.0
-
-[node name="base" type="HBoxContainer" parent="m/v/bot/HBoxContainer/Advanced/Input/v"]
-margin_right = 170.0
-margin_bottom = 17.0
-
-[node name="indent" type="Label" parent="m/v/bot/HBoxContainer/Advanced/Input/v/base"]
-margin_top = 1.0
-margin_right = 12.0
-margin_bottom = 16.0
-size_flags_horizontal = 4
-custom_fonts/font = SubResource( 5 )
-text = "    "
-valign = 1
-
-[node name="text" type="Label" parent="m/v/bot/HBoxContainer/Advanced/Input/v/base"]
-margin_left = 16.0
-margin_top = 1.0
-margin_right = 46.0
-margin_bottom = 16.0
-size_flags_horizontal = 4
-custom_fonts/font = SubResource( 5 )
-text = "Base:"
-valign = 1
-
-[node name="Level" type="Label" parent="m/v/bot/HBoxContainer/Advanced/Input/v/base"]
-margin_left = 50.0
-margin_right = 58.0
-margin_bottom = 17.0
-mouse_filter = 1
-custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-custom_fonts/font = SubResource( 6 )
-text = "1"
-align = 1
-valign = 1
-
-[node name="upgrades" type="HBoxContainer" parent="m/v/bot/HBoxContainer/Advanced/Input/v"]
-margin_top = 21.0
-margin_right = 170.0
-margin_bottom = 38.0
-
-[node name="indent" type="Label" parent="m/v/bot/HBoxContainer/Advanced/Input/v/upgrades"]
-margin_top = 1.0
-margin_right = 12.0
-margin_bottom = 16.0
-size_flags_horizontal = 4
-custom_fonts/font = SubResource( 5 )
-text = "    "
-valign = 1
-
-[node name="text" type="Label" parent="m/v/bot/HBoxContainer/Advanced/Input/v/upgrades"]
-margin_left = 16.0
-margin_top = 1.0
-margin_right = 71.0
-margin_bottom = 16.0
-size_flags_horizontal = 4
-custom_fonts/font = SubResource( 5 )
-text = "Upgrades:"
-valign = 1
-
-[node name="Level" type="Label" parent="m/v/bot/HBoxContainer/Advanced/Input/v/upgrades"]
-margin_left = 75.0
-margin_right = 102.0
-margin_bottom = 17.0
-mouse_filter = 1
-custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-custom_fonts/font = SubResource( 6 )
-text = "0.5x"
-align = 1
-valign = 1
-
-[node name="levels" type="HBoxContainer" parent="m/v/bot/HBoxContainer/Advanced/Input/v"]
-margin_top = 42.0
-margin_right = 170.0
-margin_bottom = 59.0
-
-[node name="indent" type="Label" parent="m/v/bot/HBoxContainer/Advanced/Input/v/levels"]
-margin_top = 1.0
-margin_right = 12.0
-margin_bottom = 16.0
-size_flags_horizontal = 4
-custom_fonts/font = SubResource( 5 )
-text = "    "
-valign = 1
-
-[node name="text" type="Label" parent="m/v/bot/HBoxContainer/Advanced/Input/v/levels"]
-margin_left = 16.0
-margin_top = 1.0
-margin_right = 53.0
-margin_bottom = 16.0
-size_flags_horizontal = 4
-custom_fonts/font = SubResource( 5 )
-text = "Levels:"
-valign = 1
-
-[node name="Level" type="Label" parent="m/v/bot/HBoxContainer/Advanced/Input/v/levels"]
-margin_left = 57.0
-margin_right = 72.0
-margin_bottom = 17.0
-mouse_filter = 1
-custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-custom_fonts/font = SubResource( 6 )
-text = "8x"
-align = 1
-valign = 1
-
-[node name="diff" type="HBoxContainer" parent="m/v/bot/HBoxContainer/Advanced/Input/v"]
-margin_top = 63.0
-margin_right = 170.0
-margin_bottom = 80.0
-
-[node name="indent" type="Label" parent="m/v/bot/HBoxContainer/Advanced/Input/v/diff"]
-margin_top = 1.0
-margin_right = 12.0
-margin_bottom = 16.0
-size_flags_horizontal = 4
-custom_fonts/font = SubResource( 5 )
-text = "    "
-valign = 1
-
-[node name="text" type="Label" parent="m/v/bot/HBoxContainer/Advanced/Input/v/diff"]
-margin_left = 16.0
-margin_top = 1.0
-margin_right = 67.0
-margin_bottom = 16.0
-size_flags_horizontal = 4
-custom_fonts/font = SubResource( 5 )
-text = "Difficulty:"
-valign = 1
-
-[node name="Level" type="Label" parent="m/v/bot/HBoxContainer/Advanced/Input/v/diff"]
-margin_left = 71.0
-margin_right = 86.0
-margin_bottom = 17.0
-mouse_filter = 1
-custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-custom_fonts/font = SubResource( 6 )
-text = "2x"
-align = 1
-valign = 1
-
-[node name="Haste" type="VBoxContainer" parent="m/v/bot/HBoxContainer/Advanced"]
-margin_top = 137.0
-margin_right = 156.0
-margin_bottom = 207.0
-custom_constants/separation = -4
-
-[node name="total" type="HBoxContainer" parent="m/v/bot/HBoxContainer/Advanced/Haste"]
-margin_right = 156.0
-margin_bottom = 36.0
-custom_constants/separation = 8
-
-[node name="icon" type="Panel" parent="m/v/bot/HBoxContainer/Advanced/Haste/total"]
-margin_right = 18.0
-margin_bottom = 36.0
-rect_min_size = Vector2( 18, 36 )
-size_flags_horizontal = 0
-size_flags_vertical = 4
-custom_styles/panel = SubResource( 4 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Sprite" type="Sprite" parent="m/v/bot/HBoxContainer/Advanced/Haste/total/icon"]
-position = Vector2( 9, 18 )
-scale = Vector2( 0.5, 0.5 )
-texture = ExtResource( 11 )
-
-[node name="shadow" type="Sprite" parent="m/v/bot/HBoxContainer/Advanced/Haste/total/icon/Sprite"]
-self_modulate = Color( 0, 0, 0, 1 )
-show_behind_parent = true
-position = Vector2( 2, 2 )
-texture = ExtResource( 11 )
-
-[node name="text" type="Label" parent="m/v/bot/HBoxContainer/Advanced/Haste/total"]
-margin_left = 26.0
-margin_top = 10.0
-margin_right = 61.0
-margin_bottom = 25.0
-size_flags_horizontal = 4
-custom_fonts/font = SubResource( 5 )
-text = "Haste:"
-valign = 1
-
-[node name="loredHasteAdvanced" type="Label" parent="m/v/bot/HBoxContainer/Advanced/Haste/total"]
-unique_name_in_owner = true
-margin_left = 69.0
-margin_top = 9.0
-margin_right = 92.0
-margin_bottom = 26.0
-mouse_filter = 1
-custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-custom_fonts/font = SubResource( 6 )
-text = "40x"
-align = 1
-valign = 1
-
-[node name="v" type="VBoxContainer" parent="m/v/bot/HBoxContainer/Advanced/Haste"]
-margin_top = 32.0
-margin_right = 156.0
-margin_bottom = 70.0
-
-[node name="upgrades" type="HBoxContainer" parent="m/v/bot/HBoxContainer/Advanced/Haste/v"]
-margin_right = 156.0
-margin_bottom = 17.0
-
-[node name="indent" type="Label" parent="m/v/bot/HBoxContainer/Advanced/Haste/v/upgrades"]
-margin_top = 1.0
-margin_right = 12.0
-margin_bottom = 16.0
-size_flags_horizontal = 4
-custom_fonts/font = SubResource( 5 )
-text = "    "
-valign = 1
-
-[node name="text" type="Label" parent="m/v/bot/HBoxContainer/Advanced/Haste/v/upgrades"]
-margin_left = 16.0
-margin_top = 1.0
-margin_right = 71.0
-margin_bottom = 16.0
-size_flags_horizontal = 4
-custom_fonts/font = SubResource( 5 )
-text = "Upgrades:"
-valign = 1
-
-[node name="Level" type="Label" parent="m/v/bot/HBoxContainer/Advanced/Haste/v/upgrades"]
-margin_left = 75.0
-margin_right = 90.0
-margin_bottom = 17.0
-mouse_filter = 1
-custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-custom_fonts/font = SubResource( 6 )
-text = "4x"
-align = 1
-valign = 1
-
-[node name="diff" type="HBoxContainer" parent="m/v/bot/HBoxContainer/Advanced/Haste/v"]
-margin_top = 21.0
-margin_right = 156.0
-margin_bottom = 38.0
-
-[node name="indent" type="Label" parent="m/v/bot/HBoxContainer/Advanced/Haste/v/diff"]
-margin_top = 1.0
-margin_right = 12.0
-margin_bottom = 16.0
-size_flags_horizontal = 4
-custom_fonts/font = SubResource( 5 )
-text = "    "
-valign = 1
-
-[node name="text" type="Label" parent="m/v/bot/HBoxContainer/Advanced/Haste/v/diff"]
-margin_left = 16.0
-margin_top = 1.0
-margin_right = 67.0
-margin_bottom = 16.0
-size_flags_horizontal = 4
-custom_fonts/font = SubResource( 5 )
-text = "Difficulty:"
-valign = 1
-
-[node name="Level" type="Label" parent="m/v/bot/HBoxContainer/Advanced/Haste/v/diff"]
-margin_left = 71.0
-margin_right = 94.0
-margin_bottom = 17.0
-mouse_filter = 1
-custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-custom_fonts/font = SubResource( 6 )
-text = "10x"
-align = 1
-valign = 1
-
-[node name="Crit" type="VBoxContainer" parent="m/v/bot/HBoxContainer/Advanced"]
-margin_left = 176.0
-margin_top = 137.0
-margin_right = 346.0
-margin_bottom = 207.0
-custom_constants/separation = -4
-
-[node name="total" type="HBoxContainer" parent="m/v/bot/HBoxContainer/Advanced/Crit"]
-margin_right = 170.0
-margin_bottom = 36.0
-custom_constants/separation = 8
-
-[node name="icon" type="Panel" parent="m/v/bot/HBoxContainer/Advanced/Crit/total"]
-margin_right = 18.0
-margin_bottom = 36.0
-rect_min_size = Vector2( 18, 36 )
-size_flags_horizontal = 0
-size_flags_vertical = 4
-custom_styles/panel = SubResource( 4 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Sprite" type="Sprite" parent="m/v/bot/HBoxContainer/Advanced/Crit/total/icon"]
-position = Vector2( 9, 18 )
-texture = ExtResource( 12 )
-
-[node name="shadow" type="Sprite" parent="m/v/bot/HBoxContainer/Advanced/Crit/total/icon/Sprite"]
-self_modulate = Color( 0, 0, 0, 1 )
-show_behind_parent = true
-position = Vector2( 2, 2 )
-texture = ExtResource( 12 )
-
-[node name="text" type="Label" parent="m/v/bot/HBoxContainer/Advanced/Crit/total"]
-margin_left = 26.0
-margin_top = 10.0
-margin_right = 92.0
-margin_bottom = 25.0
-size_flags_horizontal = 4
-custom_fonts/font = SubResource( 5 )
-text = "Crit Chance:"
-valign = 1
-
-[node name="loredCritAdvanced" type="Label" parent="m/v/bot/HBoxContainer/Advanced/Crit/total"]
-unique_name_in_owner = true
-margin_left = 100.0
-margin_top = 9.0
-margin_right = 126.0
-margin_bottom = 26.0
-mouse_filter = 1
-custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-custom_fonts/font = SubResource( 6 )
-text = "30%"
-align = 1
-valign = 1
-
-[node name="v" type="VBoxContainer" parent="m/v/bot/HBoxContainer/Advanced/Crit"]
-margin_top = 32.0
-margin_right = 170.0
-margin_bottom = 70.0
-
-[node name="upgrades add" type="HBoxContainer" parent="m/v/bot/HBoxContainer/Advanced/Crit/v"]
-margin_right = 170.0
-margin_bottom = 17.0
-
-[node name="indent" type="Label" parent="m/v/bot/HBoxContainer/Advanced/Crit/v/upgrades add"]
-margin_top = 1.0
-margin_right = 12.0
-margin_bottom = 16.0
-size_flags_horizontal = 4
-custom_fonts/font = SubResource( 5 )
-text = "    "
-valign = 1
-
-[node name="text" type="Label" parent="m/v/bot/HBoxContainer/Advanced/Crit/v/upgrades add"]
-margin_left = 16.0
-margin_top = 1.0
-margin_right = 71.0
-margin_bottom = 16.0
-size_flags_horizontal = 4
-custom_fonts/font = SubResource( 5 )
-text = "Upgrades:"
-valign = 1
-
-[node name="Level" type="Label" parent="m/v/bot/HBoxContainer/Advanced/Crit/v/upgrades add"]
-margin_left = 75.0
-margin_right = 108.0
-margin_bottom = 17.0
-mouse_filter = 1
-custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-custom_fonts/font = SubResource( 6 )
-text = "+10%"
-align = 1
-valign = 1
-
-[node name="diff" type="HBoxContainer" parent="m/v/bot/HBoxContainer/Advanced/Crit/v"]
-margin_top = 21.0
-margin_right = 170.0
-margin_bottom = 38.0
-
-[node name="indent" type="Label" parent="m/v/bot/HBoxContainer/Advanced/Crit/v/diff"]
-margin_top = 1.0
-margin_right = 12.0
-margin_bottom = 16.0
-size_flags_horizontal = 4
-custom_fonts/font = SubResource( 5 )
-text = "    "
-valign = 1
-
-[node name="text" type="Label" parent="m/v/bot/HBoxContainer/Advanced/Crit/v/diff"]
-margin_left = 16.0
-margin_top = 1.0
-margin_right = 67.0
-margin_bottom = 16.0
-size_flags_horizontal = 4
-custom_fonts/font = SubResource( 5 )
-text = "Difficulty:"
-valign = 1
-
-[node name="Level" type="Label" parent="m/v/bot/HBoxContainer/Advanced/Crit/v/diff"]
-margin_left = 71.0
-margin_right = 103.0
-margin_bottom = 17.0
-mouse_filter = 1
-custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-custom_fonts/font = SubResource( 6 )
-text = "-10%"
-align = 1
-valign = 1
-
-[node name="FuelCost" type="VBoxContainer" parent="m/v/bot/HBoxContainer/Advanced"]
-margin_top = 211.0
-margin_right = 156.0
-margin_bottom = 302.0
-custom_constants/separation = -4
-
-[node name="total" type="HBoxContainer" parent="m/v/bot/HBoxContainer/Advanced/FuelCost"]
-margin_right = 156.0
-margin_bottom = 36.0
-custom_constants/separation = 8
-
-[node name="icon" type="Panel" parent="m/v/bot/HBoxContainer/Advanced/FuelCost/total"]
-margin_right = 18.0
-margin_bottom = 36.0
-rect_min_size = Vector2( 18, 36 )
-size_flags_horizontal = 0
-size_flags_vertical = 4
-custom_styles/panel = SubResource( 4 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Sprite" type="Sprite" parent="m/v/bot/HBoxContainer/Advanced/FuelCost/total/icon"]
-position = Vector2( 9, 18 )
-texture = ExtResource( 6 )
-
-[node name="shadow" type="Sprite" parent="m/v/bot/HBoxContainer/Advanced/FuelCost/total/icon/Sprite"]
-self_modulate = Color( 0, 0, 0, 1 )
-show_behind_parent = true
-position = Vector2( 2, 2 )
-texture = ExtResource( 6 )
-
-[node name="text" type="Label" parent="m/v/bot/HBoxContainer/Advanced/FuelCost/total"]
-margin_left = 26.0
-margin_top = 10.0
-margin_right = 80.0
-margin_bottom = 25.0
-size_flags_horizontal = 4
-custom_fonts/font = SubResource( 5 )
-text = "Fuel Cost:"
-valign = 1
-
-[node name="loredFuelCostAdvanced" type="Label" parent="m/v/bot/HBoxContainer/Advanced/FuelCost/total"]
-unique_name_in_owner = true
-margin_left = 88.0
-margin_top = 9.0
-margin_right = 156.0
-margin_bottom = 26.0
-mouse_filter = 1
-custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-custom_fonts/font = SubResource( 6 )
-text = "123e123/s"
-align = 1
-valign = 1
-
-[node name="v" type="VBoxContainer" parent="m/v/bot/HBoxContainer/Advanced/FuelCost"]
-margin_top = 32.0
-margin_right = 156.0
-margin_bottom = 91.0
-
-[node name="base" type="HBoxContainer" parent="m/v/bot/HBoxContainer/Advanced/FuelCost/v"]
-margin_right = 156.0
-margin_bottom = 17.0
-
-[node name="indent" type="Label" parent="m/v/bot/HBoxContainer/Advanced/FuelCost/v/base"]
-margin_top = 1.0
-margin_right = 12.0
-margin_bottom = 16.0
-size_flags_horizontal = 4
-custom_fonts/font = SubResource( 5 )
-text = "    "
-valign = 1
-
-[node name="text" type="Label" parent="m/v/bot/HBoxContainer/Advanced/FuelCost/v/base"]
-margin_left = 16.0
-margin_top = 1.0
-margin_right = 46.0
-margin_bottom = 16.0
-size_flags_horizontal = 4
-custom_fonts/font = SubResource( 5 )
-text = "Base:"
-valign = 1
-
-[node name="Level" type="Label" parent="m/v/bot/HBoxContainer/Advanced/FuelCost/v/base"]
-margin_left = 50.0
-margin_right = 82.0
-margin_bottom = 17.0
-mouse_filter = 1
-custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-custom_fonts/font = SubResource( 6 )
-text = "0.3/s"
-align = 1
-valign = 1
-
-[node name="upgrades" type="HBoxContainer" parent="m/v/bot/HBoxContainer/Advanced/FuelCost/v"]
-margin_top = 21.0
-margin_right = 156.0
-margin_bottom = 38.0
-
-[node name="indent" type="Label" parent="m/v/bot/HBoxContainer/Advanced/FuelCost/v/upgrades"]
-margin_top = 1.0
-margin_right = 12.0
-margin_bottom = 16.0
-size_flags_horizontal = 4
-custom_fonts/font = SubResource( 5 )
-text = "    "
-valign = 1
-
-[node name="text" type="Label" parent="m/v/bot/HBoxContainer/Advanced/FuelCost/v/upgrades"]
-margin_left = 16.0
-margin_top = 1.0
-margin_right = 71.0
-margin_bottom = 16.0
-size_flags_horizontal = 4
-custom_fonts/font = SubResource( 5 )
-text = "Upgrades:"
-valign = 1
-
-[node name="Level" type="Label" parent="m/v/bot/HBoxContainer/Advanced/FuelCost/v/upgrades"]
-margin_left = 75.0
-margin_right = 102.0
-margin_bottom = 17.0
-mouse_filter = 1
-custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-custom_fonts/font = SubResource( 6 )
-text = "0.5x"
-align = 1
-valign = 1
-
-[node name="diff" type="HBoxContainer" parent="m/v/bot/HBoxContainer/Advanced/FuelCost/v"]
-margin_top = 42.0
-margin_right = 156.0
-margin_bottom = 59.0
-
-[node name="indent" type="Label" parent="m/v/bot/HBoxContainer/Advanced/FuelCost/v/diff"]
-margin_top = 1.0
-margin_right = 12.0
-margin_bottom = 16.0
-size_flags_horizontal = 4
-custom_fonts/font = SubResource( 5 )
-text = "    "
-valign = 1
-
-[node name="text" type="Label" parent="m/v/bot/HBoxContainer/Advanced/FuelCost/v/diff"]
-margin_left = 16.0
-margin_top = 1.0
-margin_right = 67.0
-margin_bottom = 16.0
-size_flags_horizontal = 4
-custom_fonts/font = SubResource( 5 )
-text = "Difficulty:"
-valign = 1
-
-[node name="Level" type="Label" parent="m/v/bot/HBoxContainer/Advanced/FuelCost/v/diff"]
-margin_left = 71.0
-margin_right = 86.0
-margin_bottom = 17.0
-mouse_filter = 1
-custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-custom_fonts/font = SubResource( 6 )
-text = "4x"
-align = 1
-valign = 1
-
-[node name="VBoxContainer" type="VBoxContainer" parent="m/v/bot/HBoxContainer/Advanced/FuelCost"]
-margin_top = 87.0
-margin_right = 156.0
-margin_bottom = 87.0
-custom_constants/separation = 0
-
-[node name="FuelStorage" type="VBoxContainer" parent="m/v/bot/HBoxContainer/Advanced"]
-margin_left = 176.0
-margin_top = 211.0
-margin_right = 346.0
-margin_bottom = 302.0
-custom_constants/separation = -4
-
-[node name="total" type="HBoxContainer" parent="m/v/bot/HBoxContainer/Advanced/FuelStorage"]
-margin_right = 170.0
-margin_bottom = 36.0
-custom_constants/separation = 8
-
-[node name="icon" type="Panel" parent="m/v/bot/HBoxContainer/Advanced/FuelStorage/total"]
-margin_right = 18.0
-margin_bottom = 36.0
-rect_min_size = Vector2( 18, 36 )
-size_flags_horizontal = 0
-size_flags_vertical = 4
-custom_styles/panel = SubResource( 4 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Sprite" type="Sprite" parent="m/v/bot/HBoxContainer/Advanced/FuelStorage/total/icon"]
-position = Vector2( 9, 18 )
-texture = ExtResource( 5 )
-
-[node name="shadow" type="Sprite" parent="m/v/bot/HBoxContainer/Advanced/FuelStorage/total/icon/Sprite"]
-self_modulate = Color( 0, 0, 0, 1 )
-show_behind_parent = true
-position = Vector2( 2, 2 )
-texture = ExtResource( 5 )
-
-[node name="text" type="Label" parent="m/v/bot/HBoxContainer/Advanced/FuelStorage/total"]
-margin_left = 26.0
-margin_top = 10.0
-margin_right = 97.0
-margin_bottom = 25.0
-size_flags_horizontal = 4
-custom_fonts/font = SubResource( 5 )
-text = "Fuel Storage:"
-valign = 1
-
-[node name="loredFuelStorageAdvanced" type="Label" parent="m/v/bot/HBoxContainer/Advanced/FuelStorage/total"]
-unique_name_in_owner = true
-margin_left = 105.0
-margin_top = 9.0
-margin_right = 161.0
-margin_bottom = 26.0
-mouse_filter = 1
-custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-custom_fonts/font = SubResource( 6 )
-text = "123e123"
-align = 1
-valign = 1
-
-[node name="v" type="VBoxContainer" parent="m/v/bot/HBoxContainer/Advanced/FuelStorage"]
-margin_top = 32.0
-margin_right = 170.0
-margin_bottom = 91.0
-
-[node name="base" type="HBoxContainer" parent="m/v/bot/HBoxContainer/Advanced/FuelStorage/v"]
-margin_right = 170.0
-margin_bottom = 17.0
-
-[node name="indent" type="Label" parent="m/v/bot/HBoxContainer/Advanced/FuelStorage/v/base"]
-margin_top = 1.0
-margin_right = 12.0
-margin_bottom = 16.0
-size_flags_horizontal = 4
-custom_fonts/font = SubResource( 5 )
-text = "    "
-valign = 1
-
-[node name="text" type="Label" parent="m/v/bot/HBoxContainer/Advanced/FuelStorage/v/base"]
-margin_left = 16.0
-margin_top = 1.0
-margin_right = 46.0
-margin_bottom = 16.0
-size_flags_horizontal = 4
-custom_fonts/font = SubResource( 5 )
-text = "Base:"
-valign = 1
-
-[node name="Level" type="Label" parent="m/v/bot/HBoxContainer/Advanced/FuelStorage/v/base"]
-margin_left = 50.0
-margin_right = 58.0
-margin_bottom = 17.0
-mouse_filter = 1
-custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-custom_fonts/font = SubResource( 6 )
-text = "3"
-align = 1
-valign = 1
-
-[node name="upgrades" type="HBoxContainer" parent="m/v/bot/HBoxContainer/Advanced/FuelStorage/v"]
-margin_top = 21.0
-margin_right = 170.0
-margin_bottom = 38.0
-
-[node name="indent" type="Label" parent="m/v/bot/HBoxContainer/Advanced/FuelStorage/v/upgrades"]
-margin_top = 1.0
-margin_right = 12.0
-margin_bottom = 16.0
-size_flags_horizontal = 4
-custom_fonts/font = SubResource( 5 )
-text = "    "
-valign = 1
-
-[node name="text" type="Label" parent="m/v/bot/HBoxContainer/Advanced/FuelStorage/v/upgrades"]
-margin_left = 16.0
-margin_top = 1.0
-margin_right = 71.0
-margin_bottom = 16.0
-size_flags_horizontal = 4
-custom_fonts/font = SubResource( 5 )
-text = "Upgrades:"
-valign = 1
-
-[node name="Level" type="Label" parent="m/v/bot/HBoxContainer/Advanced/FuelStorage/v/upgrades"]
-margin_left = 75.0
-margin_right = 90.0
-margin_bottom = 17.0
-mouse_filter = 1
-custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-custom_fonts/font = SubResource( 6 )
-text = "2x"
-align = 1
-valign = 1
-
-[node name="diff" type="HBoxContainer" parent="m/v/bot/HBoxContainer/Advanced/FuelStorage/v"]
-margin_top = 42.0
-margin_right = 170.0
-margin_bottom = 59.0
-
-[node name="indent" type="Label" parent="m/v/bot/HBoxContainer/Advanced/FuelStorage/v/diff"]
-margin_top = 1.0
-margin_right = 12.0
-margin_bottom = 16.0
-size_flags_horizontal = 4
-custom_fonts/font = SubResource( 5 )
-text = "    "
-valign = 1
-
-[node name="text" type="Label" parent="m/v/bot/HBoxContainer/Advanced/FuelStorage/v/diff"]
-margin_left = 16.0
-margin_top = 1.0
-margin_right = 67.0
-margin_bottom = 16.0
-size_flags_horizontal = 4
-custom_fonts/font = SubResource( 5 )
-text = "Difficulty:"
-valign = 1
-
-[node name="Level" type="Label" parent="m/v/bot/HBoxContainer/Advanced/FuelStorage/v/diff"]
-margin_left = 71.0
-margin_right = 86.0
-margin_bottom = 17.0
-mouse_filter = 1
-custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-custom_fonts/font = SubResource( 6 )
-text = "2x"
-align = 1
-valign = 1
-
-[node name="Cost" type="VBoxContainer" parent="m/v/bot/HBoxContainer/Advanced"]
-margin_top = 306.0
-margin_right = 156.0
-margin_bottom = 376.0
-custom_constants/separation = -4
-
-[node name="total" type="HBoxContainer" parent="m/v/bot/HBoxContainer/Advanced/Cost"]
-margin_right = 156.0
-margin_bottom = 36.0
-custom_constants/separation = 8
-
-[node name="icon" type="Panel" parent="m/v/bot/HBoxContainer/Advanced/Cost/total"]
-margin_right = 18.0
-margin_bottom = 36.0
-rect_min_size = Vector2( 18, 36 )
-size_flags_horizontal = 0
-size_flags_vertical = 4
-custom_styles/panel = SubResource( 4 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Sprite" type="Sprite" parent="m/v/bot/HBoxContainer/Advanced/Cost/total/icon"]
-position = Vector2( 9, 18 )
-texture = ExtResource( 8 )
-
-[node name="shadow" type="Sprite" parent="m/v/bot/HBoxContainer/Advanced/Cost/total/icon/Sprite"]
-self_modulate = Color( 0, 0, 0, 1 )
-show_behind_parent = true
-position = Vector2( 2, 2 )
-texture = ExtResource( 8 )
-
-[node name="text" type="Label" parent="m/v/bot/HBoxContainer/Advanced/Cost/total"]
-margin_left = 26.0
-margin_top = 10.0
-margin_right = 54.0
-margin_bottom = 25.0
-size_flags_horizontal = 4
-custom_fonts/font = SubResource( 5 )
-text = "Cost:"
-valign = 1
-
-[node name="loredCostModifierAdvanced" type="Label" parent="m/v/bot/HBoxContainer/Advanced/Cost/total"]
-unique_name_in_owner = true
-margin_left = 62.0
-margin_top = 9.0
-margin_right = 125.0
-margin_bottom = 26.0
-mouse_filter = 1
-custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-custom_fonts/font = SubResource( 6 )
-text = "123e123x"
-align = 1
-valign = 1
-
-[node name="v" type="VBoxContainer" parent="m/v/bot/HBoxContainer/Advanced/Cost"]
-margin_top = 32.0
-margin_right = 156.0
-margin_bottom = 70.0
-
-[node name="upgrades" type="HBoxContainer" parent="m/v/bot/HBoxContainer/Advanced/Cost/v"]
-margin_right = 156.0
-margin_bottom = 17.0
-
-[node name="indent" type="Label" parent="m/v/bot/HBoxContainer/Advanced/Cost/v/upgrades"]
-margin_top = 1.0
-margin_right = 12.0
-margin_bottom = 16.0
-size_flags_horizontal = 4
-custom_fonts/font = SubResource( 5 )
-text = "    "
-valign = 1
-
-[node name="text" type="Label" parent="m/v/bot/HBoxContainer/Advanced/Cost/v/upgrades"]
-margin_left = 16.0
-margin_top = 1.0
-margin_right = 71.0
-margin_bottom = 16.0
-size_flags_horizontal = 4
-custom_fonts/font = SubResource( 5 )
-text = "Upgrades:"
-valign = 1
-
-[node name="Level" type="Label" parent="m/v/bot/HBoxContainer/Advanced/Cost/v/upgrades"]
-margin_left = 75.0
-margin_right = 102.0
-margin_bottom = 17.0
-mouse_filter = 1
-custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-custom_fonts/font = SubResource( 6 )
-text = "0.5x"
-align = 1
-valign = 1
-
-[node name="diff" type="HBoxContainer" parent="m/v/bot/HBoxContainer/Advanced/Cost/v"]
-margin_top = 21.0
-margin_right = 156.0
-margin_bottom = 38.0
-
-[node name="indent" type="Label" parent="m/v/bot/HBoxContainer/Advanced/Cost/v/diff"]
-margin_top = 1.0
-margin_right = 12.0
-margin_bottom = 16.0
-size_flags_horizontal = 4
-custom_fonts/font = SubResource( 5 )
-text = "    "
-valign = 1
-
-[node name="text" type="Label" parent="m/v/bot/HBoxContainer/Advanced/Cost/v/diff"]
-margin_left = 16.0
-margin_top = 1.0
-margin_right = 67.0
-margin_bottom = 16.0
-size_flags_horizontal = 4
-custom_fonts/font = SubResource( 5 )
-text = "Difficulty:"
-valign = 1
-
-[node name="Level" type="Label" parent="m/v/bot/HBoxContainer/Advanced/Cost/v/diff"]
-margin_left = 71.0
-margin_right = 86.0
-margin_bottom = 17.0
-mouse_filter = 1
-custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-custom_fonts/font = SubResource( 6 )
-text = "2x"
-align = 1
-valign = 1
-
-[node name="misc" type="VBoxContainer" parent="m/v/bot/HBoxContainer/Advanced"]
-margin_left = 176.0
-margin_top = 306.0
-margin_right = 346.0
-margin_bottom = 376.0
-custom_constants/separation = -4
-
-[node name="total" type="HBoxContainer" parent="m/v/bot/HBoxContainer/Advanced/misc"]
-margin_right = 170.0
-margin_bottom = 36.0
-custom_constants/separation = 8
-
-[node name="icon" type="Panel" parent="m/v/bot/HBoxContainer/Advanced/misc/total"]
-margin_right = 18.0
-margin_bottom = 36.0
-rect_min_size = Vector2( 18, 36 )
-size_flags_horizontal = 0
-size_flags_vertical = 4
-custom_styles/panel = SubResource( 4 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Sprite" type="Sprite" parent="m/v/bot/HBoxContainer/Advanced/misc/total/icon"]
-position = Vector2( 9, 18 )
-texture = ExtResource( 13 )
-
-[node name="shadow" type="Sprite" parent="m/v/bot/HBoxContainer/Advanced/misc/total/icon/Sprite"]
-self_modulate = Color( 0, 0, 0, 1 )
-show_behind_parent = true
-position = Vector2( 2, 2 )
-texture = ExtResource( 13 )
-
-[node name="text" type="Label" parent="m/v/bot/HBoxContainer/Advanced/misc/total"]
-margin_left = 26.0
-margin_top = 10.0
-margin_right = 52.0
-margin_bottom = 25.0
-size_flags_horizontal = 4
-custom_fonts/font = SubResource( 5 )
-text = "Misc"
-valign = 1
-
-[node name="v" type="VBoxContainer" parent="m/v/bot/HBoxContainer/Advanced/misc"]
-margin_top = 32.0
-margin_right = 170.0
-margin_bottom = 70.0
-
-[node name="type" type="HBoxContainer" parent="m/v/bot/HBoxContainer/Advanced/misc/v"]
-margin_right = 170.0
-margin_bottom = 17.0
-
-[node name="indent" type="Label" parent="m/v/bot/HBoxContainer/Advanced/misc/v/type"]
-margin_top = 1.0
-margin_right = 12.0
-margin_bottom = 16.0
-size_flags_horizontal = 4
-custom_fonts/font = SubResource( 5 )
-text = "    "
-valign = 1
-
-[node name="text" type="Label" parent="m/v/bot/HBoxContainer/Advanced/misc/v/type"]
-margin_left = 16.0
-margin_top = 1.0
-margin_right = 94.0
-margin_bottom = 16.0
-size_flags_horizontal = 4
-custom_fonts/font = SubResource( 5 )
-text = "Fuel Resource:"
-valign = 1
-
-[node name="loredFuelResourceAdvanced" type="Label" parent="m/v/bot/HBoxContainer/Advanced/misc/v/type"]
-unique_name_in_owner = true
-margin_left = 98.0
-margin_right = 126.0
-margin_bottom = 17.0
-mouse_filter = 1
-custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-custom_fonts/font = SubResource( 6 )
-text = "Coal"
-align = 1
-valign = 1
-
-[node name="upgrades" type="HBoxContainer" parent="m/v/bot/HBoxContainer/Advanced/misc/v"]
-margin_top = 21.0
-margin_right = 170.0
-margin_bottom = 38.0
-
-[node name="indent" type="Label" parent="m/v/bot/HBoxContainer/Advanced/misc/v/upgrades"]
-margin_top = 1.0
-margin_right = 12.0
-margin_bottom = 16.0
-size_flags_horizontal = 4
-custom_fonts/font = SubResource( 5 )
-text = "    "
-valign = 1
-
-[node name="text" type="Label" parent="m/v/bot/HBoxContainer/Advanced/misc/v/upgrades"]
-margin_left = 16.0
-margin_top = 1.0
-margin_right = 47.0
-margin_bottom = 16.0
-size_flags_horizontal = 4
-custom_fonts/font = SubResource( 5 )
-text = "Likes:"
-valign = 1
-
-[node name="Level" type="Label" parent="m/v/bot/HBoxContainer/Advanced/misc/v/upgrades"]
-margin_left = 51.0
-margin_right = 170.0
-margin_bottom = 17.0
-mouse_filter = 1
-custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-custom_fonts/font = SubResource( 6 )
-text = "Sand, High Ground"
-align = 1
-valign = 1
-
-[node name="Simple" type="GridContainer" parent="m/v/bot/HBoxContainer"]
+[node name="Simple" type="GridContainer" parent="m/v/bot"]
 unique_name_in_owner = true
 margin_right = 252.0
 margin_bottom = 117.0
@@ -1554,12 +267,12 @@ custom_constants/vseparation = -9
 custom_constants/hseparation = 20
 columns = 2
 
-[node name="Output" type="HBoxContainer" parent="m/v/bot/HBoxContainer/Simple"]
+[node name="Output" type="HBoxContainer" parent="m/v/bot/Simple"]
 margin_right = 96.0
 margin_bottom = 36.0
 custom_constants/separation = 8
 
-[node name="icon" type="Panel" parent="m/v/bot/HBoxContainer/Simple/Output"]
+[node name="icon" type="Panel" parent="m/v/bot/Simple/Output"]
 margin_right = 18.0
 margin_bottom = 36.0
 rect_min_size = Vector2( 18, 36 )
@@ -1570,17 +283,17 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Sprite" type="Sprite" parent="m/v/bot/HBoxContainer/Simple/Output/icon"]
+[node name="Sprite" type="Sprite" parent="m/v/bot/Simple/Output/icon"]
 position = Vector2( 9, 18 )
 texture = ExtResource( 9 )
 
-[node name="shadow" type="Sprite" parent="m/v/bot/HBoxContainer/Simple/Output/icon/Sprite"]
+[node name="shadow" type="Sprite" parent="m/v/bot/Simple/Output/icon/Sprite"]
 self_modulate = Color( 0, 0, 0, 1 )
 show_behind_parent = true
 position = Vector2( 2, 2 )
 texture = ExtResource( 9 )
 
-[node name="text" type="Label" parent="m/v/bot/HBoxContainer/Simple/Output"]
+[node name="text" type="Label" parent="m/v/bot/Simple/Output"]
 margin_left = 26.0
 margin_top = 10.0
 margin_right = 66.0
@@ -1590,7 +303,7 @@ custom_fonts/font = SubResource( 5 )
 text = "Output:"
 valign = 1
 
-[node name="loredOutputSimple" type="Label" parent="m/v/bot/HBoxContainer/Simple/Output"]
+[node name="loredOutputSimple" type="Label" parent="m/v/bot/Simple/Output"]
 unique_name_in_owner = true
 margin_left = 74.0
 margin_top = 9.0
@@ -1603,13 +316,13 @@ text = "1"
 align = 1
 valign = 1
 
-[node name="Input" type="HBoxContainer" parent="m/v/bot/HBoxContainer/Simple"]
+[node name="Input" type="HBoxContainer" parent="m/v/bot/Simple"]
 margin_left = 116.0
 margin_right = 252.0
 margin_bottom = 36.0
 custom_constants/separation = 8
 
-[node name="icon" type="Panel" parent="m/v/bot/HBoxContainer/Simple/Input"]
+[node name="icon" type="Panel" parent="m/v/bot/Simple/Input"]
 margin_right = 18.0
 margin_bottom = 36.0
 rect_min_size = Vector2( 18, 36 )
@@ -1620,17 +333,17 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Sprite" type="Sprite" parent="m/v/bot/HBoxContainer/Simple/Input/icon"]
+[node name="Sprite" type="Sprite" parent="m/v/bot/Simple/Input/icon"]
 position = Vector2( 9, 18 )
 texture = ExtResource( 7 )
 
-[node name="shadow" type="Sprite" parent="m/v/bot/HBoxContainer/Simple/Input/icon/Sprite"]
+[node name="shadow" type="Sprite" parent="m/v/bot/Simple/Input/icon/Sprite"]
 self_modulate = Color( 0, 0, 0, 1 )
 show_behind_parent = true
 position = Vector2( 2, 2 )
 texture = ExtResource( 7 )
 
-[node name="text" type="Label" parent="m/v/bot/HBoxContainer/Simple/Input"]
+[node name="text" type="Label" parent="m/v/bot/Simple/Input"]
 margin_left = 26.0
 margin_top = 10.0
 margin_right = 57.0
@@ -1640,7 +353,7 @@ custom_fonts/font = SubResource( 5 )
 text = "Input:"
 valign = 1
 
-[node name="loredInputSimple" type="Label" parent="m/v/bot/HBoxContainer/Simple/Input"]
+[node name="loredInputSimple" type="Label" parent="m/v/bot/Simple/Input"]
 unique_name_in_owner = true
 margin_left = 65.0
 margin_top = 9.0
@@ -1653,13 +366,13 @@ text = "8x"
 align = 1
 valign = 1
 
-[node name="Haste" type="HBoxContainer" parent="m/v/bot/HBoxContainer/Simple"]
+[node name="Haste" type="HBoxContainer" parent="m/v/bot/Simple"]
 margin_top = 27.0
 margin_right = 96.0
 margin_bottom = 63.0
 custom_constants/separation = 8
 
-[node name="icon" type="Panel" parent="m/v/bot/HBoxContainer/Simple/Haste"]
+[node name="icon" type="Panel" parent="m/v/bot/Simple/Haste"]
 margin_right = 18.0
 margin_bottom = 36.0
 rect_min_size = Vector2( 18, 36 )
@@ -1670,18 +383,18 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Sprite" type="Sprite" parent="m/v/bot/HBoxContainer/Simple/Haste/icon"]
+[node name="Sprite" type="Sprite" parent="m/v/bot/Simple/Haste/icon"]
 position = Vector2( 9, 18 )
 scale = Vector2( 0.5, 0.5 )
 texture = ExtResource( 11 )
 
-[node name="shadow" type="Sprite" parent="m/v/bot/HBoxContainer/Simple/Haste/icon/Sprite"]
+[node name="shadow" type="Sprite" parent="m/v/bot/Simple/Haste/icon/Sprite"]
 self_modulate = Color( 0, 0, 0, 1 )
 show_behind_parent = true
 position = Vector2( 2, 2 )
 texture = ExtResource( 11 )
 
-[node name="text" type="Label" parent="m/v/bot/HBoxContainer/Simple/Haste"]
+[node name="text" type="Label" parent="m/v/bot/Simple/Haste"]
 margin_left = 26.0
 margin_top = 10.0
 margin_right = 61.0
@@ -1691,7 +404,7 @@ custom_fonts/font = SubResource( 5 )
 text = "Haste:"
 valign = 1
 
-[node name="loredHasteSimple" type="Label" parent="m/v/bot/HBoxContainer/Simple/Haste"]
+[node name="loredHasteSimple" type="Label" parent="m/v/bot/Simple/Haste"]
 unique_name_in_owner = true
 margin_left = 69.0
 margin_top = 9.0
@@ -1704,14 +417,14 @@ text = "40x"
 align = 1
 valign = 1
 
-[node name="Crit" type="HBoxContainer" parent="m/v/bot/HBoxContainer/Simple"]
+[node name="Crit" type="HBoxContainer" parent="m/v/bot/Simple"]
 margin_left = 116.0
 margin_top = 27.0
 margin_right = 252.0
 margin_bottom = 63.0
 custom_constants/separation = 8
 
-[node name="icon" type="Panel" parent="m/v/bot/HBoxContainer/Simple/Crit"]
+[node name="icon" type="Panel" parent="m/v/bot/Simple/Crit"]
 margin_right = 18.0
 margin_bottom = 36.0
 rect_min_size = Vector2( 18, 36 )
@@ -1722,17 +435,17 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Sprite" type="Sprite" parent="m/v/bot/HBoxContainer/Simple/Crit/icon"]
+[node name="Sprite" type="Sprite" parent="m/v/bot/Simple/Crit/icon"]
 position = Vector2( 9, 18 )
 texture = ExtResource( 12 )
 
-[node name="shadow" type="Sprite" parent="m/v/bot/HBoxContainer/Simple/Crit/icon/Sprite"]
+[node name="shadow" type="Sprite" parent="m/v/bot/Simple/Crit/icon/Sprite"]
 self_modulate = Color( 0, 0, 0, 1 )
 show_behind_parent = true
 position = Vector2( 2, 2 )
 texture = ExtResource( 12 )
 
-[node name="text" type="Label" parent="m/v/bot/HBoxContainer/Simple/Crit"]
+[node name="text" type="Label" parent="m/v/bot/Simple/Crit"]
 margin_left = 26.0
 margin_top = 10.0
 margin_right = 92.0
@@ -1742,7 +455,7 @@ custom_fonts/font = SubResource( 5 )
 text = "Crit Chance:"
 valign = 1
 
-[node name="loredCritSimple" type="Label" parent="m/v/bot/HBoxContainer/Simple/Crit"]
+[node name="loredCritSimple" type="Label" parent="m/v/bot/Simple/Crit"]
 unique_name_in_owner = true
 margin_left = 100.0
 margin_top = 9.0
@@ -1755,13 +468,13 @@ text = "30%"
 align = 1
 valign = 1
 
-[node name="FuelCost" type="HBoxContainer" parent="m/v/bot/HBoxContainer/Simple"]
+[node name="FuelCost" type="HBoxContainer" parent="m/v/bot/Simple"]
 margin_top = 54.0
 margin_right = 96.0
 margin_bottom = 90.0
 custom_constants/separation = 8
 
-[node name="icon" type="Panel" parent="m/v/bot/HBoxContainer/Simple/FuelCost"]
+[node name="icon" type="Panel" parent="m/v/bot/Simple/FuelCost"]
 margin_right = 18.0
 margin_bottom = 36.0
 rect_min_size = Vector2( 18, 36 )
@@ -1772,17 +485,17 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Sprite" type="Sprite" parent="m/v/bot/HBoxContainer/Simple/FuelCost/icon"]
+[node name="Sprite" type="Sprite" parent="m/v/bot/Simple/FuelCost/icon"]
 position = Vector2( 9, 18 )
 texture = ExtResource( 6 )
 
-[node name="shadow" type="Sprite" parent="m/v/bot/HBoxContainer/Simple/FuelCost/icon/Sprite"]
+[node name="shadow" type="Sprite" parent="m/v/bot/Simple/FuelCost/icon/Sprite"]
 self_modulate = Color( 0, 0, 0, 1 )
 show_behind_parent = true
 position = Vector2( 2, 2 )
 texture = ExtResource( 6 )
 
-[node name="text" type="Label" parent="m/v/bot/HBoxContainer/Simple/FuelCost"]
+[node name="text" type="Label" parent="m/v/bot/Simple/FuelCost"]
 margin_left = 26.0
 margin_top = 10.0
 margin_right = 80.0
@@ -1792,7 +505,7 @@ custom_fonts/font = SubResource( 5 )
 text = "Fuel Cost:"
 valign = 1
 
-[node name="loredFuelCostSimple" type="Label" parent="m/v/bot/HBoxContainer/Simple/FuelCost"]
+[node name="loredFuelCostSimple" type="Label" parent="m/v/bot/Simple/FuelCost"]
 unique_name_in_owner = true
 margin_left = 88.0
 margin_top = 9.0
@@ -1805,14 +518,14 @@ text = "1"
 align = 1
 valign = 1
 
-[node name="FuelStorage" type="HBoxContainer" parent="m/v/bot/HBoxContainer/Simple"]
+[node name="FuelStorage" type="HBoxContainer" parent="m/v/bot/Simple"]
 margin_left = 116.0
 margin_top = 54.0
 margin_right = 252.0
 margin_bottom = 90.0
 custom_constants/separation = 8
 
-[node name="icon" type="Panel" parent="m/v/bot/HBoxContainer/Simple/FuelStorage"]
+[node name="icon" type="Panel" parent="m/v/bot/Simple/FuelStorage"]
 margin_right = 18.0
 margin_bottom = 36.0
 rect_min_size = Vector2( 18, 36 )
@@ -1823,17 +536,17 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Sprite" type="Sprite" parent="m/v/bot/HBoxContainer/Simple/FuelStorage/icon"]
+[node name="Sprite" type="Sprite" parent="m/v/bot/Simple/FuelStorage/icon"]
 position = Vector2( 9, 18 )
 texture = ExtResource( 17 )
 
-[node name="shadow" type="Sprite" parent="m/v/bot/HBoxContainer/Simple/FuelStorage/icon/Sprite"]
+[node name="shadow" type="Sprite" parent="m/v/bot/Simple/FuelStorage/icon/Sprite"]
 self_modulate = Color( 0, 0, 0, 1 )
 show_behind_parent = true
 position = Vector2( 2, 2 )
 texture = ExtResource( 17 )
 
-[node name="text" type="Label" parent="m/v/bot/HBoxContainer/Simple/FuelStorage"]
+[node name="text" type="Label" parent="m/v/bot/Simple/FuelStorage"]
 margin_left = 26.0
 margin_top = 10.0
 margin_right = 97.0
@@ -1843,7 +556,7 @@ custom_fonts/font = SubResource( 5 )
 text = "Fuel Storage:"
 valign = 1
 
-[node name="loredFuelStorageSimple" type="Label" parent="m/v/bot/HBoxContainer/Simple/FuelStorage"]
+[node name="loredFuelStorageSimple" type="Label" parent="m/v/bot/Simple/FuelStorage"]
 unique_name_in_owner = true
 margin_left = 105.0
 margin_top = 9.0
@@ -1856,13 +569,13 @@ text = "1"
 align = 1
 valign = 1
 
-[node name="Cost" type="HBoxContainer" parent="m/v/bot/HBoxContainer/Simple"]
+[node name="Cost" type="HBoxContainer" parent="m/v/bot/Simple"]
 margin_top = 81.0
 margin_right = 96.0
 margin_bottom = 117.0
 custom_constants/separation = 8
 
-[node name="icon" type="Panel" parent="m/v/bot/HBoxContainer/Simple/Cost"]
+[node name="icon" type="Panel" parent="m/v/bot/Simple/Cost"]
 margin_right = 18.0
 margin_bottom = 36.0
 rect_min_size = Vector2( 18, 36 )
@@ -1873,17 +586,17 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Sprite" type="Sprite" parent="m/v/bot/HBoxContainer/Simple/Cost/icon"]
+[node name="Sprite" type="Sprite" parent="m/v/bot/Simple/Cost/icon"]
 position = Vector2( 9, 18 )
 texture = ExtResource( 8 )
 
-[node name="shadow" type="Sprite" parent="m/v/bot/HBoxContainer/Simple/Cost/icon/Sprite"]
+[node name="shadow" type="Sprite" parent="m/v/bot/Simple/Cost/icon/Sprite"]
 self_modulate = Color( 0, 0, 0, 1 )
 show_behind_parent = true
 position = Vector2( 2, 2 )
 texture = ExtResource( 8 )
 
-[node name="text" type="Label" parent="m/v/bot/HBoxContainer/Simple/Cost"]
+[node name="text" type="Label" parent="m/v/bot/Simple/Cost"]
 margin_left = 26.0
 margin_top = 10.0
 margin_right = 54.0
@@ -1893,7 +606,7 @@ custom_fonts/font = SubResource( 5 )
 text = "Cost:"
 valign = 1
 
-[node name="loredCostModifierSimple" type="Label" parent="m/v/bot/HBoxContainer/Simple/Cost"]
+[node name="loredCostModifierSimple" type="Label" parent="m/v/bot/Simple/Cost"]
 unique_name_in_owner = true
 margin_left = 62.0
 margin_top = 9.0
@@ -1906,14 +619,14 @@ text = "1"
 align = 1
 valign = 1
 
-[node name="misc" type="HBoxContainer" parent="m/v/bot/HBoxContainer/Simple"]
+[node name="misc" type="HBoxContainer" parent="m/v/bot/Simple"]
 margin_left = 116.0
 margin_top = 81.0
 margin_right = 252.0
 margin_bottom = 117.0
 custom_constants/separation = 8
 
-[node name="icon" type="Panel" parent="m/v/bot/HBoxContainer/Simple/misc"]
+[node name="icon" type="Panel" parent="m/v/bot/Simple/misc"]
 margin_right = 18.0
 margin_bottom = 36.0
 rect_min_size = Vector2( 18, 36 )
@@ -1924,22 +637,22 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Sprite" type="Sprite" parent="m/v/bot/HBoxContainer/Simple/misc/icon"]
+[node name="Sprite" type="Sprite" parent="m/v/bot/Simple/misc/icon"]
 position = Vector2( 9, 18 )
 texture = ExtResource( 13 )
 
-[node name="shadow" type="Sprite" parent="m/v/bot/HBoxContainer/Simple/misc/icon/Sprite"]
+[node name="shadow" type="Sprite" parent="m/v/bot/Simple/misc/icon/Sprite"]
 self_modulate = Color( 0, 0, 0, 1 )
 show_behind_parent = true
 position = Vector2( 2, 2 )
 texture = ExtResource( 13 )
 
-[node name="type" type="HBoxContainer" parent="m/v/bot/HBoxContainer/Simple/misc"]
+[node name="type" type="HBoxContainer" parent="m/v/bot/Simple/misc"]
 margin_left = 26.0
 margin_right = 136.0
 margin_bottom = 36.0
 
-[node name="text" type="Label" parent="m/v/bot/HBoxContainer/Simple/misc/type"]
+[node name="text" type="Label" parent="m/v/bot/Simple/misc/type"]
 margin_top = 10.0
 margin_right = 78.0
 margin_bottom = 25.0
@@ -1948,7 +661,7 @@ custom_fonts/font = SubResource( 5 )
 text = "Fuel Resource:"
 valign = 1
 
-[node name="loredFuelResourceSimple" type="Label" parent="m/v/bot/HBoxContainer/Simple/misc/type"]
+[node name="loredFuelResourceSimple" type="Label" parent="m/v/bot/Simple/misc/type"]
 unique_name_in_owner = true
 margin_left = 82.0
 margin_top = 9.0

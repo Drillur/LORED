@@ -137,7 +137,7 @@ func _init(
 	setStartingBaseFuel()
 	setStartingCurrentFuel()
 	
-	populate_emote_pool()
+	#populate_emote_pool()
 
 func initSpeed(_speed: float) -> void:
 	speed = Float.new(_speed)
@@ -210,153 +210,153 @@ func setStartingCurrentFuel() -> void:
 	
 	f.f = Big.new(f.t).m(diff.FuelStorage)
 
-func populate_emote_pool() -> void:
-	
-	match key:
-		"malig":
-			emote_pool.append(Emote.new("Hiya. I just coalesced out of sticky, oily stuff and cancer juice. How's your day going?"))
-			emote_pool.append(Emote.new("Hi. Oh, wow, there are a lot of me."))
-			emote_pool.append(Emote.new("Whoa, hello! I'm Malignancy... Oh, so are all of you?"))
-			emote_pool.append(Emote.new("OH GOd--oh, hello."))
-			emote_pool.append(Emote.new("Oh, hi! Nice to meet y'all!"))
-			emote_pool.append(Emote.new("Wow! So THAT's what being born is like!"))
-			emote_pool.append(Emote.new("Literally 1 second ago I did not exist. Isn't that weird to think about?"))
-			emote_pool.append(Emote.new("Oop--hi! I'm Malignancy. Nice to meet you."))
-			emote_pool.append(Emote.new("Hello!"))
-			emote_pool.append(Emote.new("Hi!"))
-			emote_pool.append(Emote.new("Hey!"))
-			emote_pool.append(Emote.new("What's up?"))
-			emote_pool.append(Emote.new("Hi, guys!"))
-			emote_pool.append(Emote.new("Hey, I guess."))
-		"tar":
-			emote_pool.append(Emote.new("I'm still working on the perfect mixture."))
-			emote_pool.append(Emote.new("That was good, but I can do better."))
-			emote_pool.append(Emote.new("I lost some important notes. I need to be more careful."))
-			emote_pool.append(Emote.new("I'm glad I'm able to work right now. I'm easily distracted."))
-			emote_pool.append(Emote.new("I only live so long. I need to get this right!"))
-			emote_pool.append(Emote.new("Thank you for your un-ending donations, Growth.", "growth", "I'm not donating it! How are you getting it??"))
-			emote_pool.append(Emote.new("I can't wait for the next chapter of One-Punch Man!"))
-			emote_pool.append(Emote.new("I'd like to see you wiggle, wiggle, for sure."))
-			emote_pool.append(Emote.new("This makes me want to dribble, dribble."))
-			
-		"oil":
-			emote_pool.append(Emote.new("but i just a baby"))
-			emote_pool.append(Emote.new("plbdffffffffshh"))
-			emote_pool.append(Emote.new("pow pow pow pow"))
-			emote_pool.append(Emote.new("AHHHHHHHHHHH"))
-			emote_pool.append(Emote.new("*crying*"))
-			emote_pool.append(Emote.new("*pooped a little*"))
-			emote_pool.append(Emote.new("*laughing*"))
-			emote_pool.append(Emote.new("Slurp!!!"))
-			emote_pool.append(Emote.new("Blahshshsjhbloff!"))
-			emote_pool.append(Emote.new("Dada?"))
-			emote_pool.append(Emote.new("Mama?"))
-			emote_pool.append(Emote.new("Succ succ"))
-		"conc":
-			emote_pool.append(Emote.new("Que?"))
-			emote_pool.append(Emote.new("Thank you, Primo!"))
-			emote_pool.append(Emote.new("Quítate, chingada!"))
-			emote_pool.append(Emote.new("Mi casa es su casa, hombre!"))
-			emote_pool.append(Emote.new("Que pasa, jefe?"))
-			emote_pool.append(Emote.new("No hablo Ingles. Can you translate?"))
-			emote_pool.append(Emote.new("What channel is the soccer game on?"))
-			emote_pool.append(Emote.new("Buenas noches, mi amor!"))
-		"jo":
-			emote_pool.append(Emote.new("It took me 12 years to be able to redirect lightning!"))
-			emote_pool.append(Emote.new("My batteries are shock-full!"))
-			emote_pool.append(Emote.new("Anyone's car need a jump-start?"))
-			emote_pool.append(Emote.new("I can offer you parts at a reduced price!"))
-			emote_pool.append(Emote.new("Thanks for the parts again, Coal. Same time, same place?", "coal", "See you next week!"))
-			emote_pool.append(Emote.new("Cars cars cars cars cars cars cars!!!!!!"))
-			emote_pool.append(Emote.new("Anyone need an oil change?", "oil", "Blblblfsh!!"))
-		"growth":
-			emote_pool.append(Emote.new("I think Oil just made a boom-boom.", "oil", "Hahahahaha!!"))
-			emote_pool.append(Emote.new("Oh, your grandma got cancer three times? Must be nice."))
-			emote_pool.append(Emote.new("Does such a thing as a chemotherapy water bed exist?", "tar", "Nope."))
-			emote_pool.append(Emote.new("Call 9-1-1."))
-			emote_pool.append(Emote.new("Send help."))
-			emote_pool.append(Emote.new("The amount of water I need daily would shock anyone.", "jo", "Someone say shock?"))
-			emote_pool.append(Emote.new("I had to go bald, I couldn't take the constant re-grooming."))
-			emote_pool.append(Emote.new("In a way, this is satisfying!"))
-		
-		"iron":
-			emote_pool.append(Emote.new("bread is good,\nbut toast is better!"))
-			emote_pool.append(Emote.new("thanks for working so hard, Stone!", "stone", "i couldn't do it without you, buddy!"))
-			emote_pool.append(Emote.new("Iron Ore's methods may be extreme, but we need him nonetheless!", "irono", "i can hear you, but i'm going to pretend like i can't"))
-			#emote_pool.append(Emote.new("Growth must be so smart to make Growth out of Iron and Copper.", Vector2(160, 59), "growth", "you're too kind! actually, all you do i--AHHHH OH GAWD", Vector2(140, 59)))
-			emote_pool.append(Emote.new("Hardwood, can i borrow your helmet?", "hard", "yes, but actually no", "hard"))
-			emote_pool.append(Emote.new("i shouldn't have left that one in for so long"))
-			emote_pool.append(Emote.new("at this point, i'm going to need more toasters"))
-			emote_pool.append(Emote.new("my arm is getting tired"))
-			emote_pool.append(Emote.new("i think i need a helmet"))
-		
-		"cop":
-			emote_pool.append(Emote.new("this stuff's the knees! bees!"))
-			emote_pool.append(Emote.new(":)"))
-			emote_pool.append(Emote.new("anyone want sm' more?"))
-			emote_pool.append(Emote.new("c'mon 'n rest ya dogs--try one of these bad bad boys"))
-			emote_pool.append(Emote.new("can i get some more firewood?", "wood", "i got you, bro!"))
-			emote_pool.append(Emote.new("stay awhile and listen to the fire"))
-			emote_pool.append(Emote.new("mmmf!"))
-			emote_pool.append(Emote.new("Copper Ore, these puppies are amazing!", "copo", "gee, thanks, pal!"))
-		
-		"copo":
-			
-			emote_pool.append(Emote.new("it's a working man i am!"))
-			emote_pool.append(Emote.new("i've been down underground"))
-			emote_pool.append(Emote.new("i swear to god if i ever see the sun,"))
-			emote_pool.append(Emote.new("or for any length of time, i can hold it in my mind,"))
-			emote_pool.append(Emote.new("i never again will go down underground!"))
-			
-			emote_pool.append(Emote.new("at the age of sixteen years, i quarreled with my peers"))
-			emote_pool.append(Emote.new("i swear there will never be another one"))
-			emote_pool.append(Emote.new("in the dark recess of the mine, where you age before your time"))
-			emote_pool.append(Emote.new("and the coal dust lies heavy on your lungs"))
-			
-			emote_pool.append(Emote.new("it's a working man i am!"))
-			emote_pool.append(Emote.new("i've been down underground"))
-			emote_pool.append(Emote.new("i swear to god if i ever see the sun,"))
-			emote_pool.append(Emote.new("or for any length of time, i can hold it in my mind,"))
-			emote_pool.append(Emote.new("i never again will go down underground!"))
-			
-			emote_pool.append(Emote.new("at the age of sixty-four, if i live that long,"))
-			emote_pool.append(Emote.new("i'll greet you at the door and gently lead you by the arm"))
-			emote_pool.append(Emote.new("in the dark recess of the mine, i can take you back in time"))
-			emote_pool.append(Emote.new("and tell you of the hardships that were there!"))
-		
-		"irono":
-			
-			emote_pool.append(Emote.new("DIE"))
-			emote_pool.append(Emote.new("KILL"))
-			emote_pool.append(Emote.new("GAH!"))
-			emote_pool.append(Emote.new("BAH!"))
-			emote_pool.append(Emote.new("this is what you GET"))
-			emote_pool.append(Emote.new("RAHHugH"))
-			emote_pool.append(Emote.new("MMUHRRaahhHRcK"))
-			emote_pool.append(Emote.new("please die!"))
-			emote_pool.append(Emote.new("can someone pass me some more shells?", "stone", "no, you creep!"))
-			emote_pool.append(Emote.new("so i literally want everyone to die.", "jo", "How shocking!"))
-		
-		"stone":
-			emote_pool.append(Emote.new("this one has a sweet edge!"))
-			emote_pool.append(Emote.new("was that a hacky sack?"))
-			emote_pool.append(Emote.new("my bag is getting heavy :("))
-			emote_pool.append(Emote.new("my back smarts :("))
-			emote_pool.append(Emote.new("hey, i found one you might like!"))
-			emote_pool.append(Emote.new("gotta go fast!"))
-			emote_pool.append(Emote.new("i wonder how much this one is worth."))
-			emote_pool.append(Emote.new("i don't like it when Iron Ore shoots rocks.", "irono", "rather i shoot you?", "irono"))
-			
-		"coal":
-			
-			emote_pool.append(Emote.new("dig, dig!"))
-			emote_pool.append(Emote.new("glad to help!"))
-			emote_pool.append(Emote.new("is this lump yours?\njust kidding!"))
-			emote_pool.append(Emote.new("i hope my posture is good!"))
-			emote_pool.append(Emote.new("i'm grateful for my shovel."))
-			emote_pool.append(Emote.new("if you didn't get enough, go ahead and take some more!", "jo", "don't mind if i do!"))
-			emote_pool.append(Emote.new("i always liked playing support."))
-			emote_pool.append(Emote.new("why is this stuff purple?"))
+#func populate_emote_pool() -> void:
+#
+#	match key:
+#		"malig":
+#			emote_pool.append(Emote.new("Hiya. I just coalesced out of sticky, oily stuff and cancer juice. How's your day going?"))
+#			emote_pool.append(Emote.new("Hi. Oh, wow, there are a lot of me."))
+#			emote_pool.append(Emote.new("Whoa, hello! I'm Malignancy... Oh, so are all of you?"))
+#			emote_pool.append(Emote.new("OH GOd--oh, hello."))
+#			emote_pool.append(Emote.new("Oh, hi! Nice to meet y'all!"))
+#			emote_pool.append(Emote.new("Wow! So THAT's what being born is like!"))
+#			emote_pool.append(Emote.new("Literally 1 second ago I did not exist. Isn't that weird to think about?"))
+#			emote_pool.append(Emote.new("Oop--hi! I'm Malignancy. Nice to meet you."))
+#			emote_pool.append(Emote.new("Hello!"))
+#			emote_pool.append(Emote.new("Hi!"))
+#			emote_pool.append(Emote.new("Hey!"))
+#			emote_pool.append(Emote.new("What's up?"))
+#			emote_pool.append(Emote.new("Hi, guys!"))
+#			emote_pool.append(Emote.new("Hey, I guess."))
+#		"tar":
+#			emote_pool.append(Emote.new("I'm still working on the perfect mixture."))
+#			emote_pool.append(Emote.new("That was good, but I can do better."))
+#			emote_pool.append(Emote.new("I lost some important notes. I need to be more careful."))
+#			emote_pool.append(Emote.new("I'm glad I'm able to work right now. I'm easily distracted."))
+#			emote_pool.append(Emote.new("I only live so long. I need to get this right!"))
+#			emote_pool.append(Emote.new("Thank you for your un-ending donations, Growth.", "growth", "I'm not donating it! How are you getting it??"))
+#			emote_pool.append(Emote.new("I can't wait for the next chapter of One-Punch Man!"))
+#			emote_pool.append(Emote.new("I'd like to see you wiggle, wiggle, for sure."))
+#			emote_pool.append(Emote.new("This makes me want to dribble, dribble."))
+#
+#		"oil":
+#			emote_pool.append(Emote.new("but i just a baby"))
+#			emote_pool.append(Emote.new("plbdffffffffshh"))
+#			emote_pool.append(Emote.new("pow pow pow pow"))
+#			emote_pool.append(Emote.new("AHHHHHHHHHHH"))
+#			emote_pool.append(Emote.new("*crying*"))
+#			emote_pool.append(Emote.new("*pooped a little*"))
+#			emote_pool.append(Emote.new("*laughing*"))
+#			emote_pool.append(Emote.new("Slurp!!!"))
+#			emote_pool.append(Emote.new("Blahshshsjhbloff!"))
+#			emote_pool.append(Emote.new("Dada?"))
+#			emote_pool.append(Emote.new("Mama?"))
+#			emote_pool.append(Emote.new("Succ succ"))
+#		"conc":
+#			emote_pool.append(Emote.new("Que?"))
+#			emote_pool.append(Emote.new("Thank you, Primo!"))
+#			emote_pool.append(Emote.new("Quítate, chingada!"))
+#			emote_pool.append(Emote.new("Mi casa es su casa, hombre!"))
+#			emote_pool.append(Emote.new("Que pasa, jefe?"))
+#			emote_pool.append(Emote.new("No hablo Ingles. Can you translate?"))
+#			emote_pool.append(Emote.new("What channel is the soccer game on?"))
+#			emote_pool.append(Emote.new("Buenas noches, mi amor!"))
+#		"jo":
+#			emote_pool.append(Emote.new("It took me 12 years to be able to redirect lightning!"))
+#			emote_pool.append(Emote.new("My batteries are shock-full!"))
+#			emote_pool.append(Emote.new("Anyone's car need a jump-start?"))
+#			emote_pool.append(Emote.new("I can offer you parts at a reduced price!"))
+#			emote_pool.append(Emote.new("Thanks for the parts again, Coal. Same time, same place?", "coal", "See you next week!"))
+#			emote_pool.append(Emote.new("Cars cars cars cars cars cars cars!!!!!!"))
+#			emote_pool.append(Emote.new("Anyone need an oil change?", "oil", "Blblblfsh!!"))
+#		"growth":
+#			emote_pool.append(Emote.new("I think Oil just made a boom-boom.", "oil", "Hahahahaha!!"))
+#			emote_pool.append(Emote.new("Oh, your grandma got cancer three times? Must be nice."))
+#			emote_pool.append(Emote.new("Does such a thing as a chemotherapy water bed exist?", "tar", "Nope."))
+#			emote_pool.append(Emote.new("Call 9-1-1."))
+#			emote_pool.append(Emote.new("Send help."))
+#			emote_pool.append(Emote.new("The amount of water I need daily would shock anyone.", "jo", "Someone say shock?"))
+#			emote_pool.append(Emote.new("I had to go bald, I couldn't take the constant re-grooming."))
+#			emote_pool.append(Emote.new("In a way, this is satisfying!"))
+#
+#		"iron":
+#			emote_pool.append(Emote.new("bread is good,\nbut toast is better!"))
+#			emote_pool.append(Emote.new("thanks for working so hard, Stone!", "stone", "i couldn't do it without you, buddy!"))
+#			emote_pool.append(Emote.new("Iron Ore's methods may be extreme, but we need him nonetheless!", "irono", "i can hear you, but i'm going to pretend like i can't"))
+#			#emote_pool.append(Emote.new("Growth must be so smart to make Growth out of Iron and Copper.", Vector2(160, 59), "growth", "you're too kind! actually, all you do i--AHHHH OH GAWD", Vector2(140, 59)))
+#			emote_pool.append(Emote.new("Hardwood, can i borrow your helmet?", "hard", "yes, but actually no", "hard"))
+#			emote_pool.append(Emote.new("i shouldn't have left that one in for so long"))
+#			emote_pool.append(Emote.new("at this point, i'm going to need more toasters"))
+#			emote_pool.append(Emote.new("my arm is getting tired"))
+#			emote_pool.append(Emote.new("i think i need a helmet"))
+#
+#		"cop":
+#			emote_pool.append(Emote.new("this stuff's the knees! bees!"))
+#			emote_pool.append(Emote.new(":)"))
+#			emote_pool.append(Emote.new("anyone want sm' more?"))
+#			emote_pool.append(Emote.new("c'mon 'n rest ya dogs--try one of these bad bad boys"))
+#			emote_pool.append(Emote.new("can i get some more firewood?", "wood", "i got you, bro!"))
+#			emote_pool.append(Emote.new("stay awhile and listen to the fire"))
+#			emote_pool.append(Emote.new("mmmf!"))
+#			emote_pool.append(Emote.new("Copper Ore, these puppies are amazing!", "copo", "gee, thanks, pal!"))
+#
+#		"copo":
+#
+#			emote_pool.append(Emote.new("it's a working man i am!"))
+#			emote_pool.append(Emote.new("i've been down underground"))
+#			emote_pool.append(Emote.new("i swear to god if i ever see the sun,"))
+#			emote_pool.append(Emote.new("or for any length of time, i can hold it in my mind,"))
+#			emote_pool.append(Emote.new("i never again will go down underground!"))
+#
+#			emote_pool.append(Emote.new("at the age of sixteen years, i quarreled with my peers"))
+#			emote_pool.append(Emote.new("i swear there will never be another one"))
+#			emote_pool.append(Emote.new("in the dark recess of the mine, where you age before your time"))
+#			emote_pool.append(Emote.new("and the coal dust lies heavy on your lungs"))
+#
+#			emote_pool.append(Emote.new("it's a working man i am!"))
+#			emote_pool.append(Emote.new("i've been down underground"))
+#			emote_pool.append(Emote.new("i swear to god if i ever see the sun,"))
+#			emote_pool.append(Emote.new("or for any length of time, i can hold it in my mind,"))
+#			emote_pool.append(Emote.new("i never again will go down underground!"))
+#
+#			emote_pool.append(Emote.new("at the age of sixty-four, if i live that long,"))
+#			emote_pool.append(Emote.new("i'll greet you at the door and gently lead you by the arm"))
+#			emote_pool.append(Emote.new("in the dark recess of the mine, i can take you back in time"))
+#			emote_pool.append(Emote.new("and tell you of the hardships that were there!"))
+#
+#		"irono":
+#
+#			emote_pool.append(Emote.new("DIE"))
+#			emote_pool.append(Emote.new("KILL"))
+#			emote_pool.append(Emote.new("GAH!"))
+#			emote_pool.append(Emote.new("BAH!"))
+#			emote_pool.append(Emote.new("this is what you GET"))
+#			emote_pool.append(Emote.new("RAHHugH"))
+#			emote_pool.append(Emote.new("MMUHRRaahhHRcK"))
+#			emote_pool.append(Emote.new("please die!"))
+#			emote_pool.append(Emote.new("can someone pass me some more shells?", "stone", "no, you creep!"))
+#			emote_pool.append(Emote.new("so i literally want everyone to die.", "jo", "How shocking!"))
+#
+#		"stone":
+#			emote_pool.append(Emote.new("this one has a sweet edge!"))
+#			emote_pool.append(Emote.new("was that a hacky sack?"))
+#			emote_pool.append(Emote.new("my bag is getting heavy :("))
+#			emote_pool.append(Emote.new("my back smarts :("))
+#			emote_pool.append(Emote.new("hey, i found one you might like!"))
+#			emote_pool.append(Emote.new("gotta go fast!"))
+#			emote_pool.append(Emote.new("i wonder how much this one is worth."))
+#			emote_pool.append(Emote.new("i don't like it when Iron Ore shoots rocks.", "irono", "rather i shoot you?", "irono"))
+#
+#		"coal":
+#
+#			emote_pool.append(Emote.new("dig, dig!"))
+#			emote_pool.append(Emote.new("glad to help!"))
+#			emote_pool.append(Emote.new("is this lump yours?\njust kidding!"))
+#			emote_pool.append(Emote.new("i hope my posture is good!"))
+#			emote_pool.append(Emote.new("i'm grateful for my shovel."))
+#			emote_pool.append(Emote.new("if you didn't get enough, go ahead and take some more!", "jo", "don't mind if i do!"))
+#			emote_pool.append(Emote.new("i always liked playing support."))
+#			emote_pool.append(Emote.new("why is this stuff purple?"))
 
 func setDifficultyValues():
 	

@@ -45,8 +45,6 @@ func updateProgress():
 
 func _on_button_pressed() -> void:
 	lv.lored[lv.Type.COAL].lored.currentFuel.a(output)
-	#gv.addToResource(gv.Resource.COAL, output)
-	#taq.increaseProgress(gv.Objective.RESOURCES_PRODUCED, "coal", output)
 	willToLive -= 1
 	updateProgress()
 	dieCheck()

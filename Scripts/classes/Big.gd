@@ -2,8 +2,8 @@ extends Reference
 
 class_name Big
 
-var mantissa:float = 0.0
-var exponent:int = 1
+export var mantissa:float = 0.0
+export var exponent:int = 1
 
 const MAX_MANTISSA = 1209600
 

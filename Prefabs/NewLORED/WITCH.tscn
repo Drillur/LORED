@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Prefabs/NewLORED/LORED.tscn" type="PackedScene" id=1]
+
+[node name="Witch and Garden" type="MarginContainer"]
+margin_right = 40.0
+margin_bottom = 40.0
+
+[node name="WITCH" parent="." instance=ExtResource( 1 )]
+unique_name_in_owner = true

@@ -108,6 +108,6 @@ func setBarSize(percent := getPercent()):
 	bar.rect_position.y = 20 - bar.rect_size.y
 func setText(percent := getPercent()):
 	if text.visible:
-		text.text = str(round(percent * 100)) + "%"
+		text.text = str(min(round(percent * 100), 100)) + "%"
 
 

@@ -268,6 +268,7 @@ text = "Level"
 valign = 1
 
 [node name="Output" type="HBoxContainer" parent="m/v/bot/h/v"]
+unique_name_in_owner = true
 margin_top = 29.0
 margin_right = 94.0
 margin_bottom = 65.0
@@ -305,6 +306,7 @@ text = "Output"
 valign = 1
 
 [node name="Input" type="HBoxContainer" parent="m/v/bot/h/v"]
+unique_name_in_owner = true
 margin_top = 58.0
 margin_right = 94.0
 margin_bottom = 94.0
@@ -342,6 +344,7 @@ text = "Input"
 valign = 1
 
 [node name="FuelCost" type="HBoxContainer" parent="m/v/bot/h/v"]
+unique_name_in_owner = true
 margin_top = 87.0
 margin_right = 94.0
 margin_bottom = 123.0
@@ -379,6 +382,7 @@ text = "Fuel Cost"
 valign = 1
 
 [node name="FuelStorage" type="HBoxContainer" parent="m/v/bot/h/v"]
+unique_name_in_owner = true
 margin_top = 116.0
 margin_right = 94.0
 margin_bottom = 152.0
@@ -416,6 +420,7 @@ text = "Fuel Storage"
 valign = 1
 
 [node name="Cost" type="HBoxContainer" parent="m/v/bot/h/v"]
+unique_name_in_owner = true
 margin_top = 145.0
 margin_right = 94.0
 margin_bottom = 181.0
@@ -453,6 +458,7 @@ text = "Cost"
 valign = 1
 
 [node name="current" type="VBoxContainer" parent="m/v/bot/h"]
+unique_name_in_owner = true
 margin_left = 104.0
 margin_right = 112.0
 margin_bottom = 181.0
@@ -518,6 +524,7 @@ align = 1
 valign = 1
 
 [node name="increase" type="VBoxContainer" parent="m/v/bot/h"]
+unique_name_in_owner = true
 margin_left = 122.0
 margin_right = 137.0
 margin_bottom = 181.0
@@ -595,6 +602,7 @@ align = 1
 valign = 1
 
 [node name="result" type="VBoxContainer" parent="m/v/bot/h"]
+unique_name_in_owner = true
 margin_left = 147.0
 margin_right = 155.0
 margin_bottom = 181.0

@@ -3,7 +3,7 @@ extends "res://Scripts/classes/Purchasable.gd"
 
 
 
-var saved_vars = ["refundable", "unlocked", "have", "active", "effects"]
+var saved_vars = ["refundable", "unlocked", "have", "active"]
 
 var desc := Description.new("description")
 
@@ -108,6 +108,10 @@ func apply():
 	
 	if key in ["upgrade_name", "upgrade_description"]:
 		lv.syncStage1and2_costModifier()
+	
+	if key == "THE WITCH OF LOREDELITH":
+		for lored in gv.list.lored[gv.Tab.S1]:
+			BuffManager.queue_apply_buff(BuffManager.Type.WITCH, lored, {"max_ticks": -1})
 	
 	applied = true
 

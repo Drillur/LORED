@@ -22,8 +22,6 @@ func setup(_type: int):
 	loredIcon.get_node("shadow").texture = lv.lored[type].icon
 	loredName.text = lv.lored[type].name
 	
-	get_node("%Simple").show()
-	get_node("%Advanced").hide()
 	if not "jobs" in taq.completed_wishes:
 		get_node("%bot").hide()
 	if gv.option["loredFuel"]:

@@ -295,8 +295,6 @@ func load(data: Dictionary):
 
 func _ready():
 	
-	randomize()
-	
 	setShorthandByResource()
 	resetList()
 	
@@ -353,6 +351,7 @@ func check_for_the_s2_shit():
 		if not lv.lored[x].purchased:
 			return
 	s2_upgrades_may_be_autobought = true
+	get_node("/root/Root").unlock_tab(Tab.EXTRA_NORMAL)
 
 const SRC := {
 	"emote": preload("res://Prefabs/NewLORED/Emote.tscn"),
@@ -379,6 +378,8 @@ const SRC := {
 	"tooltip/lored job": preload("res://Prefabs/tooltip/LORED Tooltip Job.tscn"),
 	"tooltip/lored asleep": preload("res://Prefabs/tooltip/Asleep.tscn"),
 	"tooltip/lored export": preload("res://Prefabs/tooltip/LORED Tooltip Export.tscn"),
+	"tooltip/active buffs": preload("res://Prefabs/tooltip/LORED Active Buffs.tscn"),
+	"tooltip/buff tooltip": preload("res://Prefabs/tooltip/LORED Buff Tooltip.tscn"),
 	
 	"earnings report/resource": preload("res://Prefabs/ui/Earnings Report Resource.tscn"),
 	"labels/medium label": preload("res://Prefabs/Labels/Medium Label.tscn"),
@@ -411,7 +412,7 @@ func lb_xp_check():
 		
 		up["Limit Break"].effects[0].effect.a.a(1)
 		
-		var exponent = Big.new(up["Limit Break"].effects[0].effect.a).a(1).square().toFloat() * 1.5
+		var exponent = Big.new(up["Limit Break"].effects[0].effect.a).square().toFloat() * 1.5
 		lb_xp.t = Big.new("1e" + str(exponent))
 		if lb_xp.t.less(Big.new(up["Limit Break"].effects[0].effect.a).m(1000)):
 			lb_xp.t = Big.new(up["Limit Break"].effects[0].effect.a).m(1000)
@@ -420,13 +421,6 @@ func lb_xp_check():
 			break
 	
 	up["Limit Break"].sync_effects()
-	
-	for x in list.lored[Tab.S1] + list.lored[Tab.S2]:
-		var lbVal = up["Limit Break"].effects[0].effect.t
-		if diff.active_difficulty == diff.Difficulty.SONIC:
-			lv.lored[x].setHasteValue(lv.Num.MULTIPLY, lv.Num.BY_LIMIT_BREAK, lbVal.toFloat())
-		else:
-			lv.lored[x].setOutputValue(lv.Num.MULTIPLY, lv.Num.BY_LIMIT_BREAK, lbVal)
 	
 	emit_signal("limit_break_leveled_up")
 
@@ -472,23 +466,16 @@ var resourceSprite := {
 }
 var sprite := {
 	
-	"joy": preload("res://Sprites/resources/Joy.png"),
-	"grief": preload("res://Sprites/resources/Grief.png"),
+	"RANDOM_SEED": preload("res://Sprites/resources/seed.png"),
+	
+	"JOY": preload("res://Sprites/resources/Joy.png"),
+	"GRIEF": preload("res://Sprites/resources/Grief.png"),
 	
 	"angry": preload("res://Sprites/reactions/Angry.png"),
 	"test": preload("res://Sprites/reactions/Test.png"),
 	
 	"mana" : preload("res://Sprites/upgrades/thewitchofloredelith.png"),
 	"embryo" : preload("res://Sprites/resources/carc.png"),
-	"nearly dead" : preload("res://Sprites/resources/carc.png"),
-	"corpse" : preload("res://Sprites/resources/carc.png"),
-	"bone" : preload("res://Sprites/resources/carc.png"),
-	"spirit" : preload("res://Sprites/resources/carc.png"),
-	"bagged beast" : preload("res://Sprites/resources/carc.png"),
-	"beast body" : preload("res://Sprites/resources/carc.png"),
-	"exsanguinated beast" : preload("res://Sprites/resources/carc.png"),
-	"meat" : preload("res://Sprites/resources/carc.png"),
-	"fur" : preload("res://Sprites/resources/carc.png"),
 	
 	"blood" : preload("res://Sprites/resources/carc.png"),
 	"necro" : preload("res://Sprites/resources/carc.png"),
@@ -613,46 +600,46 @@ func setShorthandByResource():
 	for r in Resource.values():
 		if r in shorthandByResource:
 			continue
-		shorthandByResource[r] = rKeys[r].to_lower()
+		shorthandByResource[r] = rKeys[r]
 
 const anim = {
 	"refuel": preload("res://Sprites/animations/Refuel.tres"),
-	"tum": preload("res://Sprites/animations/tum.tres"),
-	"carc": preload("res://Sprites/animations/carc.tres"),
-	"plast": preload("res://Sprites/animations/plast.tres"),
-	"pet": preload("res://Sprites/animations/pet.tres"),
-	"lead": preload("res://Sprites/animations/lead.tres"),
-	"wire": preload("res://Sprites/animations/wire.tres"),
-	"draw": preload("res://Sprites/animations/draw.tres"),
-	"steel": preload("res://Sprites/animations/steel.tres"),
-	"hard": preload("res://Sprites/animations/hard.tres"),
-	"axe": preload("res://Sprites/animations/axe.tres"),
-	"pulp": preload("res://Sprites/animations/pulp.tres"),
-	"soil": preload("res://Sprites/animations/soil.tres"),
-	"paper": preload("res://Sprites/animations/paper.tres"),
-	"coal" : preload("res://Sprites/animations/coal.tres"),
-	"stone" : preload("res://Sprites/animations/stone.tres"),
-	"irono" : preload("res://Sprites/animations/irono.tres"),
-	"copo" : preload("res://Sprites/animations/copo.tres"),
-	"iron" : preload("res://Sprites/animations/iron.tres"),
-	"cop" : preload("res://Sprites/animations/cop.tres"),
-	"growth" : preload("res://Sprites/animations/growth.tres"),
-	"conc" : preload("res://Sprites/animations/conc.tres"),
-	"jo" : preload("res://Sprites/animations/jo.tres"),
-	"malig" : preload("res://Sprites/animations/malig.tres"),
-	"tar" : preload("res://Sprites/animations/tar.tres"),
-	"oil" : preload("res://Sprites/animations/oil.tres"),
-	"water" : preload("res://Sprites/animations/water.tres"),
-	"tree" : preload("res://Sprites/animations/tree.tres"),
-	"seed" : preload("res://Sprites/animations/seed.tres"),
-	"glass" : preload("res://Sprites/animations/glass.tres"),
-	"toba" : preload("res://Sprites/animations/toba.tres"),
-	"wood" : preload("res://Sprites/animations/wood.tres"),
-	"sand" : preload("res://Sprites/animations/sand.tres"),
-	"liq" : preload("res://Sprites/animations/liq.tres"),
-	"ciga" : preload("res://Sprites/animations/ciga.tres"),
-	"gale" : preload("res://Sprites/animations/gale.tres"),
-	"humus" : preload("res://Sprites/animations/humus.tres"),
+	"TUMORS": preload("res://Sprites/animations/tum.tres"),
+	"CARCINOGENS": preload("res://Sprites/animations/carc.tres"),
+	"PLASTIC": preload("res://Sprites/animations/plast.tres"),
+	"PETROLEUM": preload("res://Sprites/animations/pet.tres"),
+	"LEAD": preload("res://Sprites/animations/lead.tres"),
+	"WIRE": preload("res://Sprites/animations/wire.tres"),
+	"DRAW_PLATE": preload("res://Sprites/animations/draw.tres"),
+	"STEEL": preload("res://Sprites/animations/steel.tres"),
+	"HARDWOOD": preload("res://Sprites/animations/hard.tres"),
+	"AXES": preload("res://Sprites/animations/axe.tres"),
+	"WOOD_PULP": preload("res://Sprites/animations/pulp.tres"),
+	"SOIL": preload("res://Sprites/animations/soil.tres"),
+	"PAPER": preload("res://Sprites/animations/paper.tres"),
+	"COAL" : preload("res://Sprites/animations/coal.tres"),
+	"STONE" : preload("res://Sprites/animations/stone.tres"),
+	"IRON_ORE" : preload("res://Sprites/animations/irono.tres"),
+	"COPPER_ORE" : preload("res://Sprites/animations/copo.tres"),
+	"IRON" : preload("res://Sprites/animations/iron.tres"),
+	"COPPER" : preload("res://Sprites/animations/cop.tres"),
+	"GROWTH" : preload("res://Sprites/animations/growth.tres"),
+	"CONCRETE" : preload("res://Sprites/animations/conc.tres"),
+	"JOULES" : preload("res://Sprites/animations/jo.tres"),
+	"MALIGNANCY" : preload("res://Sprites/animations/malig.tres"),
+	"TARBALLS" : preload("res://Sprites/animations/tar.tres"),
+	"OIL" : preload("res://Sprites/animations/oil.tres"),
+	"WATER" : preload("res://Sprites/animations/water.tres"),
+	"TREES" : preload("res://Sprites/animations/tree.tres"),
+	"SEEDS" : preload("res://Sprites/animations/seed.tres"),
+	"GLASS" : preload("res://Sprites/animations/glass.tres"),
+	"TOBACCO" : preload("res://Sprites/animations/toba.tres"),
+	"WOOD" : preload("res://Sprites/animations/wood.tres"),
+	"SAND" : preload("res://Sprites/animations/sand.tres"),
+	"LIQUID_IRON" : preload("res://Sprites/animations/liq.tres"),
+	"CIGARETTES" : preload("res://Sprites/animations/ciga.tres"),
+	"GALENA" : preload("res://Sprites/animations/gale.tres"),
+	"HUMUS" : preload("res://Sprites/animations/humus.tres"),
 }
 
 var autobuy_speed := 0.25
@@ -668,8 +655,8 @@ var COLORS := {
 #	"health": Color(1, 0, 0),
 #	"mana": Color(0, 0.709804, 1),
 #	"overwhelming power": Color(0.721569, 0.34902, 0.901961), #note too close to air?
-	"grief": Color(0.74902, 0.203922, 0.533333),
-	"joy": Color(1, 0.909804, 0),
+	"GRIEF": Color(0.74902, 0.203922, 0.533333),
+	"JOY": Color(1, 0.909804, 0),
 	"ciga": Color(0.929412, 0.584314, 0.298039),
 	"toba": Color(0.639216, 0.454902, 0.235294),
 	"plast": Color(0.85, 0.85, 0.85),
@@ -693,7 +680,10 @@ var COLORS := {
 	"tum": Color(1, .54, .54),
 	"glass": Color(0.81, 0.93, 1.0),
 	"wire": Color(0.9, 0.6, 0.14),
-	"seed": Color(1, 0.878431, 0.431373),
+	
+	"seed": Color(1, 0.878431, 0.431373), # same as RANDOM_SEED v
+	"RANDOM_SEED": Color(1, 0.878431, 0.431373), # same as seed ^
+	
 	"abeewithdaggers": Color(1, 0.878431, 0.431373),
 	"sand": Color(.87, .70, .45),
 	"wood": Color(0.545098, 0.372549, 0.015686),
@@ -1008,6 +998,7 @@ enum Resource {
 	#EMBRYO,
 	#SPIRIT,
 	
+	RANDOM_SEED,
 	#MANA,
 }
 var resource := {}
@@ -1125,39 +1116,47 @@ var ub_count := 0
 signal new_unholy_body(amount) # -> Unholy Body Manager.gd
 
 
-var animationless = ["carc", "tum", "axe", "pet", "paper", "plast", "pulp"]
+var animationless = ["CARCINOGENS", "TUMORS", "PETROLEUM", "PAPER", "PLASTIC", "WOOD_PULP"]
 var max_frame = {
-	"hard": 37,
+	"STONE": 27,
+	"COAL": 25,
+	"IRON_ORE": 28,
+	"COPPER_ORE": 25,
+	"IRON": 47,
+	"COPPER": 30,
+	"GROWTH": 40,
+	"JOULES": 32,
+	"CONCRETE": 57,
+	"MALIGNANCY": 36,
+	"TARBALLS": 29,
+	"OIL": 8,
+
+	"WATER": 12,
+	"HUMUS": 9,
+	"SEEDS": 14,
+	"TREES": 77,
+	"SOIL": 42,
+	"AXES": 2,
+	"WOOD": 49,
+	"HARDWOOD": 37,
+	"LIQUID_IRON": 22,
+	"STEEL": 58,
+	"SAND": 45,
+	"GLASS": 37,
+	"DRAW_PLATE": 33,
+	"WIRE": 27,
+	"GALENA": 22,
+	"LEAD": 11,
+#	"PETROLEUM": ,
+#	"WOOD_PULP": ,
+#	"PAPER": ,
+#	"PLASTIC": ,
+	"TOBACCO": 73,
+	"CIGARETTES": 25,
+#	"CARCINOGENS": ,
+#	"TUMORS": ,
 	"refuel1": 28,
 	"refuel0": 27,
-	"lead": 11,
-	"wire": 27,
-	"humus": 9,
-	"gale": 22,
-	"ciga": 25,
-	"liq": 22,
-	"sand": 45,
-	"wood": 49,
-	"toba": 73,
-	"glass": 37,
-	"seed": 30,
-	"tree": 77,
-	"water": 25,
-	"coal": 25,
-	"stone": 27,
-	"irono": 28,
-	"copo": 25,
-	"iron": 47,
-	"cop": 30,
-	"growth": 40,
-	"conc": 57,
-	"jo": 32,
-	"malig": 36,
-	"tar": 29,
-	"oil": 8,
-	"steel": 58,
-	"soil": 42,
-	"draw": 33,
 }
 var list := {}
 func resetList():
@@ -1262,9 +1261,10 @@ enum Objective {
 	LORED_UPGRADED,
 	UPGRADE_PURCHASED,
 	SPELL_CAST_COUNT,
-	UPGRADES_PURCHASED,
+	LIMIT_BREAK_LEVEL,
 	MAXED_FUEL_STORAGE,
 	BREAK,
+	HAVE_COMPANY,
 }
 enum WishReward {
 	# add new entries at the bottom
@@ -1278,6 +1278,7 @@ enum WishReward {
 	EASIER,
 	LORED_FUNCTIONALITY,
 	ENABLE_RANDOM_EMOTES,
+	NEW_JOB,
 }
 
 func highestResetKey() -> int:
@@ -1406,6 +1407,7 @@ var stats := {
 		"Refuel": {"granted": 0, "denied": 0,},
 		"Joy Collection": {"granted": 0, "denied": 0,},
 		"Grief Collection": {"granted": 0, "denied": 0,},
+		#"Limit Break": {"granted": 0, "denied": 0,},
 	},
 	"UpgradesPurchased": {},
 	"ResourceStats": {"collected": {}, "used": {}, "spent": {}},
@@ -1503,7 +1505,9 @@ enum Scene {
 	ROOT,
 	}
 var active_scene: int
+var closing: bool
 func close():
+	closing = true
 	# Root closed
 	resetList()
 	setupOptions()
@@ -1516,6 +1520,7 @@ func close():
 	for r in resource:
 		gv.resourceChanged[r] = true
 func open():
+	closing = false
 	resetResources()
 
 
@@ -1576,3 +1581,21 @@ func inFirstTwoSecondsOfRun() -> bool:
 
 func randomLORED() -> int:
 	return list.lored["active"][randi() % list.lored["active"].size()]
+
+
+func timer(duration: float):
+	yield(get_tree().create_timer(duration), "timeout")
+
+
+
+func throwOutputTexts(allTexts: Array, parent_node):
+	for textDetails in allTexts:
+		newOutputText(textDetails, parent_node)
+		yield(get_tree().create_timer(0.1), "timeout")
+
+
+func newOutputText(details: Dictionary, parent_node):
+	
+	var outputText = SRC["flying text"].instance()
+	outputText.init(details)
+	parent_node.add_child(outputText)

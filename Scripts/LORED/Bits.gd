@@ -117,17 +117,29 @@ func fullReport():
 		if f == lv.Num.ADD or f == lv.Num.ADD_FUEL:
 			for g in bits[f]:
 				total.a(bits[f][g])
-				print(lv.Num.keys()[f], "//", lv.Num.keys()[g])
+				print(lv.Num.keys()[f], "//", lv.Num.keys()[g], ": ", bits[f][g].toString())
 		elif f == lv.Num.DIVIDE:
 			for g in bits[f]:
 				total.d(bits[f][g])
-				print(lv.Num.keys()[f], "//", lv.Num.keys()[g])
+				print(lv.Num.keys()[f], "//", lv.Num.keys()[g], ": ", bits[f][g].toString())
 		elif f == lv.Num.MULTIPLY:
 			for g in bits[f]:
 				total.m(bits[f][g])
-				print(lv.Num.keys()[f], "//", lv.Num.keys()[g])
+				print(lv.Num.keys()[f], "//", lv.Num.keys()[g], ": ", bits[f][g].toString())
 		print(" - Total: ", total.toString())
 	
+	for x in dynamic:
+		gv.up[x].sync_effects()
+		var effectIndex: int = dynamic[x]
+		total.m(gv.up[x].effects[effectIndex].effect.t)
+		print("DYNAMIC//", x, ": ", gv.up[x].effects[effectIndex].effect.t.toString())
+		print(" - Total: ", total.toString())
+	
+	var bonusEffectsMethod = "bonusEffects_" + name
+	if has_method(bonusEffectsMethod):
+		total.m(call(bonusEffectsMethod))
+		print("BONUS METHOD//", name, ": ", call(bonusEffectsMethod))
+		print(" - Total: ", total.toString())
 
 var dynamic := {}
 func updateDynamic(_dynamic: Dictionary):
