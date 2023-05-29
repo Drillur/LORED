@@ -1,10 +1,10 @@
-[gd_scene load_steps=67 format=2]
+[gd_scene load_steps=72 format=2]
 
 [ext_resource path="res://Fonts/Roboto-Black.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Sprites/Menu/Difficulty.png" type="Texture" id=2]
 [ext_resource path="res://Fonts/Roboto-MediumItalic.ttf" type="DynamicFontData" id=3]
 [ext_resource path="res://Sprites/Menu/Arrow.png" type="Texture" id=4]
-[ext_resource path="res://Sprites/Menu/Options.png" type="Texture" id=5]
+[ext_resource path="res://Fonts/Roboto-BoldItalic.ttf" type="DynamicFontData" id=5]
 [ext_resource path="res://Sprites/Menu/Import.png" type="Texture" id=6]
 [ext_resource path="res://Scenes/Main Menu.gd" type="Script" id=7]
 [ext_resource path="res://Sprites/Menu/Cancel.png" type="Texture" id=8]
@@ -28,6 +28,7 @@
 [ext_resource path="res://Sprites/Menu/fuel.png" type="Texture" id=26]
 [ext_resource path="res://Sprites/Menu/Crit.png" type="Texture" id=27]
 [ext_resource path="res://Sprites/Menu/drain rate.png" type="Texture" id=28]
+[ext_resource path="res://Sprites/Menu/upgrades.png" type="Texture" id=29]
 
 [sub_resource type="StyleBoxFlat" id=7]
 draw_center = false
@@ -135,6 +136,25 @@ font_data = ExtResource( 3 )
 
 [sub_resource type="DynamicFont" id=4]
 size = 14
+font_data = ExtResource( 14 )
+
+[sub_resource type="DynamicFont" id=71]
+size = 12
+font_data = ExtResource( 5 )
+
+[sub_resource type="StyleBoxFlat" id=72]
+bg_color = Color( 0.199219, 0.199219, 0.199219, 1 )
+draw_center = false
+border_width_bottom = 1
+border_color = Color( 0.74902, 0.639216, 0.0352941, 1 )
+shadow_color = Color( 0, 0, 0, 1 )
+
+[sub_resource type="DynamicFont" id=73]
+size = 12
+font_data = ExtResource( 14 )
+
+[sub_resource type="DynamicFont" id=74]
+size = 12
 font_data = ExtResource( 14 )
 
 [sub_resource type="DynamicFont" id=49]
@@ -627,23 +647,24 @@ custom_fonts/font = SubResource( 38 )
 text = "Play"
 
 [node name="m" type="MarginContainer" parent="new game"]
-margin_left = 390.0
-margin_top = 25.0
-margin_right = 890.0
-margin_bottom = 695.0
+margin_left = 366.0
+margin_top = 36.0
+margin_right = 914.0
+margin_bottom = 684.0
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
 [node name="v" type="VBoxContainer" parent="new game/m"]
-margin_right = 500.0
-margin_bottom = 670.0
+margin_right = 548.0
+margin_bottom = 648.0
+size_flags_horizontal = 4
 custom_constants/separation = 20
 alignment = 1
 
 [node name="save info" type="MarginContainer" parent="new game/m/v"]
 visible = false
-margin_left = 97.0
-margin_right = 267.0
+margin_left = 176.0
+margin_right = 346.0
 margin_bottom = 192.0
 size_flags_horizontal = 4
 
@@ -679,7 +700,7 @@ margin_right = 150.0
 margin_bottom = 15.0
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 57 )
-text = "Filename"
+text = "Save Name"
 
 [node name="TextEdit" type="TextEdit" parent="new game/m/v/save info/m/v/filename"]
 margin_top = 19.0
@@ -830,20 +851,21 @@ __meta__ = {
 }
 
 [node name="diff" type="MarginContainer" parent="new game/m/v"]
-margin_right = 500.0
-margin_bottom = 569.0
+margin_left = 13.0
+margin_right = 535.0
+margin_bottom = 547.0
 rect_min_size = Vector2( 500, 0 )
 size_flags_horizontal = 4
 
 [node name="bg" type="Panel" parent="new game/m/v/diff"]
-margin_right = 500.0
-margin_bottom = 569.0
+margin_right = 522.0
+margin_bottom = 547.0
 mouse_filter = 2
 custom_styles/panel = SubResource( 56 )
 
 [node name="m" type="MarginContainer" parent="new game/m/v/diff"]
-margin_right = 500.0
-margin_bottom = 569.0
+margin_right = 522.0
+margin_bottom = 547.0
 custom_constants/margin_right = 10
 custom_constants/margin_top = 10
 custom_constants/margin_left = 10
@@ -852,27 +874,42 @@ custom_constants/margin_bottom = 10
 [node name="v" type="VBoxContainer" parent="new game/m/v/diff/m"]
 margin_left = 10.0
 margin_top = 10.0
-margin_right = 490.0
-margin_bottom = 559.0
+margin_right = 512.0
+margin_bottom = 537.0
 rect_pivot_offset = Vector2( -577, 177 )
 custom_constants/separation = 10
 
 [node name="v" type="VBoxContainer" parent="new game/m/v/diff/m/v"]
-margin_right = 480.0
-margin_bottom = 524.0
+margin_right = 502.0
+margin_bottom = 502.0
 custom_constants/separation = 10
 
-[node name="custom" type="MarginContainer" parent="new game/m/v/diff/m/v/v"]
-margin_right = 480.0
-margin_bottom = 265.0
+[node name="diffCustom" type="ScrollContainer" parent="new game/m/v/diff/m/v/v"]
+unique_name_in_owner = true
+margin_right = 502.0
+margin_bottom = 400.0
+rect_min_size = Vector2( 0, 400 )
+scroll_horizontal_enabled = false
+scroll_vertical = 12
 
-[node name="bg" type="Panel" parent="new game/m/v/diff/m/v/v/custom"]
+[node name="VBoxContainer" type="VBoxContainer" parent="new game/m/v/diff/m/v/v/diffCustom"]
+margin_top = -12.0
+margin_right = 490.0
+margin_bottom = 437.0
+custom_constants/separation = 10
+
+[node name="diffCustom" type="MarginContainer" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer"]
+margin_right = 490.0
+margin_bottom = 265.0
+custom_constants/margin_right = 10
+
+[node name="bg" type="Panel" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom"]
 self_modulate = Color( 0.219608, 0.219608, 0.219608, 1 )
 margin_right = 480.0
 margin_bottom = 265.0
 custom_styles/panel = SubResource( 1 )
 
-[node name="m" type="MarginContainer" parent="new game/m/v/diff/m/v/v/custom"]
+[node name="m" type="MarginContainer" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom"]
 margin_right = 480.0
 margin_bottom = 265.0
 custom_constants/margin_right = 10
@@ -880,32 +917,32 @@ custom_constants/margin_top = 10
 custom_constants/margin_left = 10
 custom_constants/margin_bottom = 10
 
-[node name="v" type="VBoxContainer" parent="new game/m/v/diff/m/v/v/custom/m"]
+[node name="v" type="VBoxContainer" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m"]
 margin_left = 10.0
 margin_top = 10.0
 margin_right = 470.0
 margin_bottom = 255.0
 custom_constants/separation = 10
 
-[node name="text" type="Label" parent="new game/m/v/diff/m/v/v/custom/m/v"]
+[node name="text" type="Label" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v"]
 margin_right = 460.0
 margin_bottom = 17.0
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 3 )
 text = "Custom Values"
 
-[node name="lored" type="MarginContainer" parent="new game/m/v/diff/m/v/v/custom/m/v"]
+[node name="lored" type="MarginContainer" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v"]
 margin_top = 27.0
 margin_right = 460.0
 margin_bottom = 175.0
 
-[node name="bg" type="Panel" parent="new game/m/v/diff/m/v/v/custom/m/v/lored"]
+[node name="bg" type="Panel" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v/lored"]
 self_modulate = Color( 0.219608, 0.219608, 0.219608, 1 )
 margin_right = 460.0
 margin_bottom = 148.0
 custom_styles/panel = SubResource( 1 )
 
-[node name="m" type="MarginContainer" parent="new game/m/v/diff/m/v/v/custom/m/v/lored"]
+[node name="m" type="MarginContainer" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v/lored"]
 margin_right = 460.0
 margin_bottom = 148.0
 custom_constants/margin_right = 10
@@ -913,7 +950,7 @@ custom_constants/margin_top = 10
 custom_constants/margin_left = 10
 custom_constants/margin_bottom = 10
 
-[node name="v" type="GridContainer" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m"]
+[node name="v" type="GridContainer" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v/lored/m"]
 margin_left = 10.0
 margin_top = 10.0
 margin_right = 450.0
@@ -921,39 +958,40 @@ margin_bottom = 138.0
 size_flags_horizontal = 0
 columns = 2
 
-[node name="Output" type="HBoxContainer" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v"]
+[node name="customOutput" type="HBoxContainer" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v/lored/m/v"]
+unique_name_in_owner = true
 margin_right = 218.0
 margin_bottom = 40.0
 
-[node name="h" type="VBoxContainer" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/Output"]
+[node name="h" type="VBoxContainer" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v/lored/m/v/customOutput"]
 margin_right = 150.0
 margin_bottom = 40.0
 size_flags_horizontal = 3
 custom_constants/separation = 0
 
-[node name="Output" type="HBoxContainer" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/Output/h"]
+[node name="Output" type="HBoxContainer" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v/lored/m/v/customOutput/h"]
 margin_right = 150.0
 margin_bottom = 24.0
 size_flags_horizontal = 3
 
-[node name="icon" type="Panel" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/Output/h/Output"]
+[node name="icon" type="Panel" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v/lored/m/v/customOutput/h/Output"]
 margin_right = 24.0
 margin_bottom = 24.0
 rect_min_size = Vector2( 24, 24 )
 size_flags_vertical = 4
 custom_styles/panel = SubResource( 39 )
 
-[node name="Sprite" type="Sprite" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/Output/h/Output/icon"]
+[node name="Sprite" type="Sprite" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v/lored/m/v/customOutput/h/Output/icon"]
 position = Vector2( 12, 12 )
 texture = ExtResource( 25 )
 
-[node name="Sprite2" type="Sprite" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/Output/h/Output/icon/Sprite"]
+[node name="Sprite2" type="Sprite" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v/lored/m/v/customOutput/h/Output/icon/Sprite"]
 self_modulate = Color( 0, 0, 0, 0.501961 )
 show_behind_parent = true
 position = Vector2( 2, 2 )
 texture = ExtResource( 25 )
 
-[node name="flair" type="Label" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/Output/h/Output"]
+[node name="flair" type="Label" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v/lored/m/v/customOutput/h/Output"]
 margin_left = 28.0
 margin_top = 4.0
 margin_right = 65.0
@@ -963,7 +1001,7 @@ custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 5 )
 text = "Output"
 
-[node name="HSlider" type="HSlider" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/Output/h"]
+[node name="HSlider" type="HSlider" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v/lored/m/v/customOutput/h"]
 margin_top = 24.0
 margin_right = 150.0
 margin_bottom = 40.0
@@ -975,7 +1013,7 @@ max_value = 10.0
 step = 0.1
 value = 1.0
 
-[node name="TextEdit" type="TextEdit" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/Output"]
+[node name="TextEdit" type="TextEdit" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v/lored/m/v/customOutput"]
 margin_left = 154.0
 margin_top = 6.0
 margin_right = 218.0
@@ -989,40 +1027,41 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Input" type="HBoxContainer" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v"]
+[node name="customInput" type="HBoxContainer" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v/lored/m/v"]
+unique_name_in_owner = true
 margin_left = 222.0
 margin_right = 440.0
 margin_bottom = 40.0
 
-[node name="h" type="VBoxContainer" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/Input"]
+[node name="h" type="VBoxContainer" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v/lored/m/v/customInput"]
 margin_right = 150.0
 margin_bottom = 40.0
 size_flags_horizontal = 3
 custom_constants/separation = 0
 
-[node name="Input" type="HBoxContainer" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/Input/h"]
+[node name="customInput" type="HBoxContainer" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v/lored/m/v/customInput/h"]
 margin_right = 150.0
 margin_bottom = 24.0
 size_flags_horizontal = 3
 
-[node name="icon" type="Panel" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/Input/h/Input"]
+[node name="icon" type="Panel" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v/lored/m/v/customInput/h/customInput"]
 margin_right = 24.0
 margin_bottom = 24.0
 rect_min_size = Vector2( 24, 24 )
 size_flags_vertical = 4
 custom_styles/panel = SubResource( 39 )
 
-[node name="Sprite" type="Sprite" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/Input/h/Input/icon"]
+[node name="Sprite" type="Sprite" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v/lored/m/v/customInput/h/customInput/icon"]
 position = Vector2( 12, 12 )
 texture = ExtResource( 24 )
 
-[node name="Sprite2" type="Sprite" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/Input/h/Input/icon/Sprite"]
+[node name="Sprite2" type="Sprite" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v/lored/m/v/customInput/h/customInput/icon/Sprite"]
 self_modulate = Color( 0, 0, 0, 0.501961 )
 show_behind_parent = true
 position = Vector2( 2, 2 )
 texture = ExtResource( 24 )
 
-[node name="flair" type="Label" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/Input/h/Input"]
+[node name="flair" type="Label" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v/lored/m/v/customInput/h/customInput"]
 margin_left = 28.0
 margin_top = 4.0
 margin_right = 56.0
@@ -1032,7 +1071,7 @@ custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 5 )
 text = "Input"
 
-[node name="HSlider" type="HSlider" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/Input/h"]
+[node name="HSlider" type="HSlider" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v/lored/m/v/customInput/h"]
 margin_top = 24.0
 margin_right = 150.0
 margin_bottom = 40.0
@@ -1043,7 +1082,7 @@ max_value = 10.0
 step = 0.1
 value = 1.0
 
-[node name="TextEdit" type="TextEdit" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/Input"]
+[node name="TextEdit" type="TextEdit" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v/lored/m/v/customInput"]
 margin_left = 154.0
 margin_top = 6.0
 margin_right = 218.0
@@ -1058,41 +1097,42 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Haste" type="HBoxContainer" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v"]
+[node name="customHaste" type="HBoxContainer" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v/lored/m/v"]
+unique_name_in_owner = true
 margin_top = 44.0
 margin_right = 218.0
 margin_bottom = 84.0
 
-[node name="h" type="VBoxContainer" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/Haste"]
+[node name="h" type="VBoxContainer" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v/lored/m/v/customHaste"]
 margin_right = 150.0
 margin_bottom = 40.0
 size_flags_horizontal = 3
 custom_constants/separation = 0
 
-[node name="Haste" type="HBoxContainer" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/Haste/h"]
+[node name="Haste" type="HBoxContainer" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v/lored/m/v/customHaste/h"]
 margin_right = 150.0
 margin_bottom = 24.0
 size_flags_horizontal = 3
 
-[node name="icon" type="Panel" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/Haste/h/Haste"]
+[node name="icon" type="Panel" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v/lored/m/v/customHaste/h/Haste"]
 margin_right = 24.0
 margin_bottom = 24.0
 rect_min_size = Vector2( 24, 24 )
 size_flags_vertical = 4
 custom_styles/panel = SubResource( 39 )
 
-[node name="Sprite" type="Sprite" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/Haste/h/Haste/icon"]
+[node name="Sprite" type="Sprite" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v/lored/m/v/customHaste/h/Haste/icon"]
 position = Vector2( 12, 12 )
 scale = Vector2( 0.5, 0.5 )
 texture = ExtResource( 23 )
 
-[node name="Sprite2" type="Sprite" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/Haste/h/Haste/icon/Sprite"]
+[node name="Sprite2" type="Sprite" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v/lored/m/v/customHaste/h/Haste/icon/Sprite"]
 self_modulate = Color( 0, 0, 0, 0.501961 )
 show_behind_parent = true
 position = Vector2( 2, 2 )
 texture = ExtResource( 23 )
 
-[node name="flair" type="Label" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/Haste/h/Haste"]
+[node name="flair" type="Label" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v/lored/m/v/customHaste/h/Haste"]
 margin_left = 28.0
 margin_top = 4.0
 margin_right = 58.0
@@ -1102,7 +1142,7 @@ custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 5 )
 text = "Haste"
 
-[node name="HSlider" type="HSlider" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/Haste/h"]
+[node name="HSlider" type="HSlider" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v/lored/m/v/customHaste/h"]
 margin_top = 24.0
 margin_right = 150.0
 margin_bottom = 40.0
@@ -1113,7 +1153,7 @@ max_value = 10.0
 step = 0.1
 value = 1.0
 
-[node name="TextEdit" type="TextEdit" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/Haste"]
+[node name="TextEdit" type="TextEdit" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v/lored/m/v/customHaste"]
 margin_left = 154.0
 margin_top = 6.0
 margin_right = 218.0
@@ -1127,41 +1167,42 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Crit" type="HBoxContainer" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v"]
+[node name="customCrit" type="HBoxContainer" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v/lored/m/v"]
+unique_name_in_owner = true
 margin_left = 222.0
 margin_top = 44.0
 margin_right = 440.0
 margin_bottom = 84.0
 
-[node name="h" type="VBoxContainer" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/Crit"]
+[node name="h" type="VBoxContainer" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v/lored/m/v/customCrit"]
 margin_right = 150.0
 margin_bottom = 40.0
 size_flags_horizontal = 3
 custom_constants/separation = 0
 
-[node name="CritAdd" type="HBoxContainer" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/Crit/h"]
+[node name="Crit" type="HBoxContainer" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v/lored/m/v/customCrit/h"]
 margin_right = 150.0
 margin_bottom = 24.0
 size_flags_horizontal = 3
 
-[node name="icon" type="Panel" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/Crit/h/CritAdd"]
+[node name="icon" type="Panel" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v/lored/m/v/customCrit/h/Crit"]
 margin_right = 24.0
 margin_bottom = 24.0
 rect_min_size = Vector2( 24, 24 )
 size_flags_vertical = 4
 custom_styles/panel = SubResource( 39 )
 
-[node name="Sprite" type="Sprite" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/Crit/h/CritAdd/icon"]
+[node name="Sprite" type="Sprite" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v/lored/m/v/customCrit/h/Crit/icon"]
 position = Vector2( 12, 12 )
 texture = ExtResource( 27 )
 
-[node name="Sprite2" type="Sprite" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/Crit/h/CritAdd/icon/Sprite"]
+[node name="Sprite2" type="Sprite" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v/lored/m/v/customCrit/h/Crit/icon/Sprite"]
 self_modulate = Color( 0, 0, 0, 0.501961 )
 show_behind_parent = true
 position = Vector2( 2, 2 )
 texture = ExtResource( 27 )
 
-[node name="flair" type="Label" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/Crit/h/CritAdd"]
+[node name="flair" type="Label" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v/lored/m/v/customCrit/h/Crit"]
 margin_left = 28.0
 margin_top = 4.0
 margin_right = 90.0
@@ -1172,7 +1213,7 @@ custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 5 )
 text = "Crit Chance"
 
-[node name="HSlider" type="HSlider" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/Crit/h"]
+[node name="HSlider" type="HSlider" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v/lored/m/v/customCrit/h"]
 margin_top = 24.0
 margin_right = 150.0
 margin_bottom = 40.0
@@ -1182,7 +1223,7 @@ min_value = -100.0
 step = 0.1
 value = 1.0
 
-[node name="TextEdit" type="TextEdit" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/Crit"]
+[node name="TextEdit" type="TextEdit" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v/lored/m/v/customCrit"]
 margin_left = 154.0
 margin_top = 6.0
 margin_right = 218.0
@@ -1196,40 +1237,41 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="FuelCost" type="HBoxContainer" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v"]
+[node name="customFuelCost" type="HBoxContainer" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v/lored/m/v"]
+unique_name_in_owner = true
 margin_top = 88.0
 margin_right = 218.0
 margin_bottom = 128.0
 
-[node name="h" type="VBoxContainer" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelCost"]
+[node name="h" type="VBoxContainer" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v/lored/m/v/customFuelCost"]
 margin_right = 150.0
 margin_bottom = 40.0
 size_flags_horizontal = 3
 custom_constants/separation = 0
 
-[node name="FuelCost" type="HBoxContainer" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelCost/h"]
+[node name="FuelCost" type="HBoxContainer" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v/lored/m/v/customFuelCost/h"]
 margin_right = 150.0
 margin_bottom = 24.0
 size_flags_horizontal = 3
 
-[node name="icon" type="Panel" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelCost/h/FuelCost"]
+[node name="icon" type="Panel" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v/lored/m/v/customFuelCost/h/FuelCost"]
 margin_right = 24.0
 margin_bottom = 24.0
 rect_min_size = Vector2( 24, 24 )
 size_flags_vertical = 4
 custom_styles/panel = SubResource( 39 )
 
-[node name="Sprite" type="Sprite" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelCost/h/FuelCost/icon"]
+[node name="Sprite" type="Sprite" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v/lored/m/v/customFuelCost/h/FuelCost/icon"]
 position = Vector2( 12, 12 )
 texture = ExtResource( 28 )
 
-[node name="Sprite2" type="Sprite" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelCost/h/FuelCost/icon/Sprite"]
+[node name="Sprite2" type="Sprite" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v/lored/m/v/customFuelCost/h/FuelCost/icon/Sprite"]
 self_modulate = Color( 0, 0, 0, 0.501961 )
 show_behind_parent = true
 position = Vector2( 2, 2 )
 texture = ExtResource( 28 )
 
-[node name="flair" type="Label" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelCost/h/FuelCost"]
+[node name="flair" type="Label" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v/lored/m/v/customFuelCost/h/FuelCost"]
 margin_left = 28.0
 margin_top = 4.0
 margin_right = 78.0
@@ -1239,7 +1281,7 @@ custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 5 )
 text = "Fuel Cost"
 
-[node name="HSlider" type="HSlider" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelCost/h"]
+[node name="HSlider" type="HSlider" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v/lored/m/v/customFuelCost/h"]
 margin_top = 24.0
 margin_right = 150.0
 margin_bottom = 40.0
@@ -1248,7 +1290,7 @@ max_value = 10.0
 step = 0.1
 value = 1.0
 
-[node name="TextEdit" type="TextEdit" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelCost"]
+[node name="TextEdit" type="TextEdit" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v/lored/m/v/customFuelCost"]
 margin_left = 154.0
 margin_top = 6.0
 margin_right = 218.0
@@ -1263,41 +1305,42 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="FuelStorage" type="HBoxContainer" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v"]
+[node name="customFuelStorage" type="HBoxContainer" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v/lored/m/v"]
+unique_name_in_owner = true
 margin_left = 222.0
 margin_top = 88.0
 margin_right = 440.0
 margin_bottom = 128.0
 
-[node name="h" type="VBoxContainer" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelStorage"]
+[node name="h" type="VBoxContainer" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v/lored/m/v/customFuelStorage"]
 margin_right = 150.0
 margin_bottom = 40.0
 size_flags_horizontal = 3
 custom_constants/separation = 0
 
-[node name="FuelStorage" type="HBoxContainer" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelStorage/h"]
+[node name="FuelStorage" type="HBoxContainer" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v/lored/m/v/customFuelStorage/h"]
 margin_right = 150.0
 margin_bottom = 24.0
 size_flags_horizontal = 3
 
-[node name="icon" type="Panel" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelStorage/h/FuelStorage"]
+[node name="icon" type="Panel" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v/lored/m/v/customFuelStorage/h/FuelStorage"]
 margin_right = 24.0
 margin_bottom = 24.0
 rect_min_size = Vector2( 24, 24 )
 size_flags_vertical = 4
 custom_styles/panel = SubResource( 39 )
 
-[node name="Sprite" type="Sprite" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelStorage/h/FuelStorage/icon"]
+[node name="Sprite" type="Sprite" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v/lored/m/v/customFuelStorage/h/FuelStorage/icon"]
 position = Vector2( 12, 12 )
 texture = ExtResource( 12 )
 
-[node name="Sprite2" type="Sprite" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelStorage/h/FuelStorage/icon/Sprite"]
+[node name="Sprite2" type="Sprite" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v/lored/m/v/customFuelStorage/h/FuelStorage/icon/Sprite"]
 self_modulate = Color( 0, 0, 0, 0.501961 )
 show_behind_parent = true
 position = Vector2( 2, 2 )
 texture = ExtResource( 12 )
 
-[node name="flair" type="Label" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelStorage/h/FuelStorage"]
+[node name="flair" type="Label" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v/lored/m/v/customFuelStorage/h/FuelStorage"]
 margin_left = 28.0
 margin_top = 4.0
 margin_right = 94.0
@@ -1307,7 +1350,7 @@ custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 5 )
 text = "Fuel Storage"
 
-[node name="HSlider" type="HSlider" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelStorage/h"]
+[node name="HSlider" type="HSlider" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v/lored/m/v/customFuelStorage/h"]
 margin_top = 24.0
 margin_right = 150.0
 margin_bottom = 40.0
@@ -1318,7 +1361,7 @@ max_value = 10.0
 step = 0.1
 value = 1.0
 
-[node name="TextEdit" type="TextEdit" parent="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelStorage"]
+[node name="TextEdit" type="TextEdit" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v/lored/m/v/customFuelStorage"]
 margin_left = 154.0
 margin_top = 6.0
 margin_right = 218.0
@@ -1332,7 +1375,1545 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="randomize" type="MarginContainer" parent="new game/m/v/diff/m/v/v/custom/m/v"]
+[node name="randomize" type="MarginContainer" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v"]
+margin_left = 142.0
+margin_top = 185.0
+margin_right = 317.0
+margin_bottom = 245.0
+rect_min_size = Vector2( 175, 60 )
+rect_pivot_offset = Vector2( -400, -343 )
+mouse_filter = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+custom_constants/margin_right = 0
+custom_constants/margin_top = 0
+custom_constants/margin_left = 0
+custom_constants/margin_bottom = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="bg" type="Panel" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v/randomize"]
+margin_right = 175.0
+margin_bottom = 60.0
+mouse_filter = 2
+custom_styles/panel = SubResource( 42 )
+
+[node name="v" type="VBoxContainer" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v/randomize"]
+margin_right = 175.0
+margin_bottom = 60.0
+alignment = 1
+
+[node name="h" type="HBoxContainer" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v/randomize/v"]
+margin_top = 18.0
+margin_right = 175.0
+margin_bottom = 42.0
+alignment = 1
+
+[node name="flair" type="Panel" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v/randomize/v/h"]
+margin_left = 7.0
+margin_right = 31.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 24, 24 )
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 39 )
+
+[node name="Sprite" type="Sprite" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v/randomize/v/h/flair"]
+position = Vector2( 12, 12 )
+texture = ExtResource( 10 )
+
+[node name="Sprite2" type="Sprite" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v/randomize/v/h/flair/Sprite"]
+self_modulate = Color( 0, 0, 0, 0.501961 )
+show_behind_parent = true
+position = Vector2( 2, 2 )
+texture = ExtResource( 10 )
+
+[node name="randomValuesText" type="Label" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v/randomize/v/h"]
+unique_name_in_owner = true
+margin_left = 35.0
+margin_top = 2.0
+margin_right = 167.0
+margin_bottom = 21.0
+size_flags_horizontal = 4
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 38 )
+text = "Randomize Values"
+align = 1
+
+[node name="desc" type="Label" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v/randomize/v"]
+visible = false
+margin_top = 36.0
+margin_right = 180.0
+margin_bottom = 51.0
+hint_tooltip = "Step: 0.1"
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 41 )
+text = "Set the filename and color"
+align = 1
+autowrap = true
+
+[node name="button" type="Button" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v/randomize"]
+margin_right = 175.0
+margin_bottom = 60.0
+rect_min_size = Vector2( 0, 32 )
+focus_mode = 0
+mouse_default_cursor_shape = 2
+custom_fonts/font = SubResource( 34 )
+custom_styles/hover = SubResource( 36 )
+custom_styles/pressed = SubResource( 37 )
+custom_styles/normal = SubResource( 35 )
+enabled_focus_mode = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="diffCustomUpgrades" type="MarginContainer" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer"]
+unique_name_in_owner = true
+margin_top = 275.0
+margin_right = 490.0
+margin_bottom = 449.0
+custom_constants/margin_right = 10
+
+[node name="bg" type="Panel" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustomUpgrades"]
+self_modulate = Color( 0.219608, 0.219608, 0.219608, 1 )
+margin_right = 480.0
+margin_bottom = 174.0
+custom_styles/panel = SubResource( 1 )
+
+[node name="m" type="MarginContainer" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustomUpgrades"]
+margin_right = 480.0
+margin_bottom = 174.0
+custom_constants/margin_right = 10
+custom_constants/margin_top = 10
+custom_constants/margin_left = 10
+custom_constants/margin_bottom = 10
+
+[node name="v" type="VBoxContainer" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustomUpgrades/m"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 470.0
+margin_bottom = 164.0
+custom_constants/separation = 10
+
+[node name="text" type="Label" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustomUpgrades/m/v"]
+margin_right = 460.0
+margin_bottom = 17.0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 3 )
+text = "Custom Upgrades"
+
+[node name="lored" type="MarginContainer" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustomUpgrades/m/v"]
+margin_top = 27.0
+margin_right = 460.0
+margin_bottom = 84.0
+
+[node name="bg" type="Panel" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustomUpgrades/m/v/lored"]
+self_modulate = Color( 0.219608, 0.219608, 0.219608, 1 )
+margin_right = 460.0
+margin_bottom = 57.0
+custom_styles/panel = SubResource( 1 )
+
+[node name="m" type="MarginContainer" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustomUpgrades/m/v/lored"]
+margin_right = 460.0
+margin_bottom = 57.0
+custom_constants/margin_right = 10
+custom_constants/margin_top = 10
+custom_constants/margin_left = 10
+custom_constants/margin_bottom = 10
+
+[node name="TabContainer" type="TabContainer" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustomUpgrades/m/v/lored/m"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 450.0
+margin_bottom = 47.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme = ExtResource( 17 )
+
+[node name="Normal" type="MarginContainer" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustomUpgrades/m/v/lored/m/TabContainer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = 27.0
+custom_constants/margin_right = 0
+custom_constants/margin_top = 10
+custom_constants/margin_left = 0
+custom_constants/margin_bottom = 0
+
+[node name="ScrollContainer" type="ScrollContainer" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustomUpgrades/m/v/lored/m/TabContainer/Normal"]
+margin_top = 10.0
+margin_right = 440.0
+margin_bottom = 10.0
+size_flags_vertical = 3
+scroll_horizontal_enabled = false
+
+[node name="Malignant" type="MarginContainer" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustomUpgrades/m/v/lored/m/TabContainer"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = 27.0
+custom_constants/margin_right = 0
+custom_constants/margin_top = 10
+custom_constants/margin_left = 0
+custom_constants/margin_bottom = 0
+
+[node name="ScrollContainer" type="ScrollContainer" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustomUpgrades/m/v/lored/m/TabContainer/Malignant"]
+margin_top = 10.0
+margin_right = 460.0
+margin_bottom = 10.0
+size_flags_vertical = 3
+scroll_horizontal_enabled = false
+
+[node name="LORED" type="GridContainer" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustomUpgrades/m/v/lored/m/TabContainer/Malignant/ScrollContainer"]
+unique_name_in_owner = true
+margin_right = 460.0
+margin_bottom = 33.0
+size_flags_horizontal = 6
+custom_constants/hseparation = 10
+columns = 8
+
+[node name="title" type="Label" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustomUpgrades/m/v/lored/m/TabContainer/Malignant/ScrollContainer/LORED"]
+margin_top = 9.0
+margin_right = 36.0
+margin_bottom = 24.0
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 71 )
+text = "LORED"
+align = 1
+
+[node name="title5" type="Label" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustomUpgrades/m/v/lored/m/TabContainer/Malignant/ScrollContainer/LORED"]
+margin_left = 46.0
+margin_right = 85.0
+margin_bottom = 33.0
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 71 )
+text = "Manual
+Levels"
+align = 1
+
+[node name="title6" type="Label" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustomUpgrades/m/v/lored/m/TabContainer/Malignant/ScrollContainer/LORED"]
+margin_left = 95.0
+margin_right = 154.0
+margin_bottom = 33.0
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 71 )
+text = "Automated
+Levels"
+align = 1
+
+[node name="title2" type="Label" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustomUpgrades/m/v/lored/m/TabContainer/Malignant/ScrollContainer/LORED"]
+margin_left = 164.0
+margin_top = 9.0
+margin_right = 210.0
+margin_bottom = 24.0
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 71 )
+text = "Refueled"
+align = 1
+
+[node name="title3" type="Label" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustomUpgrades/m/v/lored/m/TabContainer/Malignant/ScrollContainer/LORED"]
+margin_left = 220.0
+margin_top = 9.0
+margin_right = 279.0
+margin_bottom = 24.0
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 71 )
+text = "Other Jobs"
+align = 1
+
+[node name="title4" type="Label" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustomUpgrades/m/v/lored/m/TabContainer/Malignant/ScrollContainer/LORED"]
+margin_left = 289.0
+margin_top = 9.0
+margin_right = 350.0
+margin_bottom = 24.0
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 71 )
+text = "Animations"
+align = 1
+
+[node name="title7" type="Label" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustomUpgrades/m/v/lored/m/TabContainer/Malignant/ScrollContainer/LORED"]
+margin_left = 360.0
+margin_top = 9.0
+margin_right = 425.0
+margin_bottom = 24.0
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 71 )
+text = "Time Asleep"
+align = 1
+
+[node name="title8" type="Label" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustomUpgrades/m/v/lored/m/TabContainer/Malignant/ScrollContainer/LORED"]
+margin_left = 435.0
+margin_top = 9.0
+margin_right = 460.0
+margin_bottom = 24.0
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 71 )
+text = "Crits"
+align = 1
+
+[node name="Extra-normal" type="MarginContainer" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustomUpgrades/m/v/lored/m/TabContainer"]
+unique_name_in_owner = true
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = 27.0
+custom_constants/margin_right = 0
+custom_constants/margin_top = 10
+custom_constants/margin_left = 0
+custom_constants/margin_bottom = 0
+
+[node name="ScrollContainer" type="ScrollContainer" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustomUpgrades/m/v/lored/m/TabContainer/Extra-normal"]
+margin_top = 10.0
+margin_right = 440.0
+margin_bottom = 10.0
+size_flags_vertical = 3
+scroll_horizontal_enabled = false
+
+[node name="VBoxContainer" type="VBoxContainer" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustomUpgrades/m/v/lored/m/TabContainer/Extra-normal/ScrollContainer"]
+margin_left = 87.0
+margin_right = 353.0
+margin_bottom = 163.0
+size_flags_horizontal = 6
+custom_constants/separation = 10
+
+[node name="MarginContainer2" type="MarginContainer" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustomUpgrades/m/v/lored/m/TabContainer/Extra-normal/ScrollContainer/VBoxContainer"]
+margin_left = 34.0
+margin_right = 231.0
+margin_bottom = 73.0
+size_flags_horizontal = 4
+
+[node name="bg" type="Panel" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustomUpgrades/m/v/lored/m/TabContainer/Extra-normal/ScrollContainer/VBoxContainer/MarginContainer2"]
+margin_right = 197.0
+margin_bottom = 73.0
+custom_styles/panel = SubResource( 72 )
+
+[node name="MarginContainer" type="MarginContainer" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustomUpgrades/m/v/lored/m/TabContainer/Extra-normal/ScrollContainer/VBoxContainer/MarginContainer2"]
+margin_right = 197.0
+margin_bottom = 73.0
+custom_constants/margin_right = 10
+custom_constants/margin_top = 10
+custom_constants/margin_left = 10
+custom_constants/margin_bottom = 10
+
+[node name="g0" type="GridContainer" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustomUpgrades/m/v/lored/m/TabContainer/Extra-normal/ScrollContainer/VBoxContainer/MarginContainer2/MarginContainer"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 187.0
+margin_bottom = 63.0
+custom_constants/hseparation = 10
+columns = 2
+
+[node name="title" type="Label" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustomUpgrades/m/v/lored/m/TabContainer/Extra-normal/ScrollContainer/VBoxContainer/MarginContainer2/MarginContainer/g0"]
+margin_right = 119.0
+margin_bottom = 15.0
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 73 )
+text = "Main Wishes Granted:"
+
+[node name="WishMain" type="Label" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustomUpgrades/m/v/lored/m/TabContainer/Extra-normal/ScrollContainer/VBoxContainer/MarginContainer2/MarginContainer/g0"]
+unique_name_in_owner = true
+margin_left = 129.0
+margin_right = 177.0
+margin_bottom = 15.0
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 74 )
+text = "14 (20%)"
+
+[node name="title6" type="Label" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustomUpgrades/m/v/lored/m/TabContainer/Extra-normal/ScrollContainer/VBoxContainer/MarginContainer2/MarginContainer/g0"]
+margin_top = 19.0
+margin_right = 119.0
+margin_bottom = 34.0
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 73 )
+text = "Total Wishes Granted:"
+
+[node name="WishGranted" type="Label" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustomUpgrades/m/v/lored/m/TabContainer/Extra-normal/ScrollContainer/VBoxContainer/MarginContainer2/MarginContainer/g0"]
+unique_name_in_owner = true
+margin_left = 129.0
+margin_top = 19.0
+margin_right = 177.0
+margin_bottom = 34.0
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 74 )
+text = "140"
+
+[node name="title9" type="Label" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustomUpgrades/m/v/lored/m/TabContainer/Extra-normal/ScrollContainer/VBoxContainer/MarginContainer2/MarginContainer/g0"]
+margin_top = 38.0
+margin_right = 119.0
+margin_bottom = 53.0
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 73 )
+text = "Total Wishes Denied:"
+
+[node name="WishDenied" type="Label" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustomUpgrades/m/v/lored/m/TabContainer/Extra-normal/ScrollContainer/VBoxContainer/MarginContainer2/MarginContainer/g0"]
+unique_name_in_owner = true
+margin_left = 129.0
+margin_top = 38.0
+margin_right = 177.0
+margin_bottom = 53.0
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 74 )
+text = "1400"
+
+[node name="MarginContainer3" type="MarginContainer" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustomUpgrades/m/v/lored/m/TabContainer/Extra-normal/ScrollContainer/VBoxContainer"]
+margin_top = 83.0
+margin_right = 266.0
+margin_bottom = 118.0
+size_flags_horizontal = 4
+
+[node name="bg" type="Panel" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustomUpgrades/m/v/lored/m/TabContainer/Extra-normal/ScrollContainer/VBoxContainer/MarginContainer3"]
+margin_right = 266.0
+margin_bottom = 35.0
+custom_styles/panel = SubResource( 72 )
+
+[node name="MarginContainer" type="MarginContainer" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustomUpgrades/m/v/lored/m/TabContainer/Extra-normal/ScrollContainer/VBoxContainer/MarginContainer3"]
+margin_right = 266.0
+margin_bottom = 35.0
+custom_constants/margin_right = 10
+custom_constants/margin_top = 10
+custom_constants/margin_left = 10
+custom_constants/margin_bottom = 10
+
+[node name="stats2" type="GridContainer" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustomUpgrades/m/v/lored/m/TabContainer/Extra-normal/ScrollContainer/VBoxContainer/MarginContainer3/MarginContainer"]
+unique_name_in_owner = true
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 256.0
+margin_bottom = 25.0
+custom_constants/hseparation = 10
+columns = 3
+
+[node name="title" type="Label" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustomUpgrades/m/v/lored/m/TabContainer/Extra-normal/ScrollContainer/VBoxContainer/MarginContainer3/MarginContainer/stats2"]
+margin_right = 55.0
+margin_bottom = 15.0
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 71 )
+text = "Wish Type"
+align = 1
+
+[node name="title2" type="Label" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustomUpgrades/m/v/lored/m/TabContainer/Extra-normal/ScrollContainer/VBoxContainer/MarginContainer3/MarginContainer/stats2"]
+margin_left = 65.0
+margin_right = 153.0
+margin_bottom = 15.0
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 71 )
+text = "Amount Granted"
+align = 1
+
+[node name="title3" type="Label" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustomUpgrades/m/v/lored/m/TabContainer/Extra-normal/ScrollContainer/VBoxContainer/MarginContainer3/MarginContainer/stats2"]
+margin_left = 163.0
+margin_right = 246.0
+margin_bottom = 15.0
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 71 )
+text = "Amount Denied"
+align = 1
+
+[node name="MarginContainer4" type="MarginContainer" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustomUpgrades/m/v/lored/m/TabContainer/Extra-normal/ScrollContainer/VBoxContainer"]
+margin_left = 14.0
+margin_top = 128.0
+margin_right = 251.0
+margin_bottom = 163.0
+size_flags_horizontal = 4
+
+[node name="bg" type="Panel" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustomUpgrades/m/v/lored/m/TabContainer/Extra-normal/ScrollContainer/VBoxContainer/MarginContainer4"]
+margin_right = 237.0
+margin_bottom = 35.0
+custom_styles/panel = SubResource( 72 )
+
+[node name="MarginContainer" type="MarginContainer" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustomUpgrades/m/v/lored/m/TabContainer/Extra-normal/ScrollContainer/VBoxContainer/MarginContainer4"]
+margin_right = 237.0
+margin_bottom = 35.0
+custom_constants/margin_right = 10
+custom_constants/margin_top = 10
+custom_constants/margin_left = 10
+custom_constants/margin_bottom = 10
+
+[node name="stats3" type="GridContainer" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustomUpgrades/m/v/lored/m/TabContainer/Extra-normal/ScrollContainer/VBoxContainer/MarginContainer4/MarginContainer"]
+unique_name_in_owner = true
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 227.0
+margin_bottom = 25.0
+custom_constants/hseparation = 10
+columns = 3
+
+[node name="title" type="Label" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustomUpgrades/m/v/lored/m/TabContainer/Extra-normal/ScrollContainer/VBoxContainer/MarginContainer4/MarginContainer/stats3"]
+margin_right = 36.0
+margin_bottom = 15.0
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 71 )
+text = "LORED"
+align = 1
+
+[node name="title2" type="Label" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustomUpgrades/m/v/lored/m/TabContainer/Extra-normal/ScrollContainer/VBoxContainer/MarginContainer4/MarginContainer/stats3"]
+margin_left = 46.0
+margin_right = 129.0
+margin_bottom = 15.0
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 71 )
+text = "Wishes Granted"
+align = 1
+
+[node name="title3" type="Label" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustomUpgrades/m/v/lored/m/TabContainer/Extra-normal/ScrollContainer/VBoxContainer/MarginContainer4/MarginContainer/stats3"]
+margin_left = 139.0
+margin_right = 217.0
+margin_bottom = 15.0
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 71 )
+text = "Wishes Denied"
+align = 1
+
+[node name="Radiative" type="MarginContainer" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustomUpgrades/m/v/lored/m/TabContainer"]
+unique_name_in_owner = true
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = 27.0
+custom_constants/margin_right = 0
+custom_constants/margin_top = 10
+custom_constants/margin_left = 0
+custom_constants/margin_bottom = 0
+
+[node name="ScrollContainer" type="ScrollContainer" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustomUpgrades/m/v/lored/m/TabContainer/Radiative"]
+margin_top = 10.0
+margin_right = 440.0
+margin_bottom = 10.0
+size_flags_vertical = 3
+scroll_horizontal_enabled = false
+
+[node name="Up0" type="GridContainer" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustomUpgrades/m/v/lored/m/TabContainer/Radiative/ScrollContainer"]
+unique_name_in_owner = true
+margin_left = 176.0
+margin_right = 263.0
+margin_bottom = 15.0
+size_flags_horizontal = 6
+custom_constants/hseparation = 10
+columns = 2
+
+[node name="title" type="Label" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustomUpgrades/m/v/lored/m/TabContainer/Radiative/ScrollContainer/Up0"]
+margin_right = 20.0
+margin_bottom = 15.0
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 71 )
+text = "Tier"
+align = 1
+
+[node name="title2" type="Label" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustomUpgrades/m/v/lored/m/TabContainer/Radiative/ScrollContainer/Up0"]
+margin_left = 30.0
+margin_right = 87.0
+margin_bottom = 15.0
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 71 )
+text = "Purchased"
+align = 1
+
+[node name="randomize" type="MarginContainer" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustomUpgrades/m/v"]
+margin_left = 132.0
+margin_top = 94.0
+margin_right = 327.0
+margin_bottom = 154.0
+rect_min_size = Vector2( 195, 60 )
+rect_pivot_offset = Vector2( -400, -343 )
+mouse_filter = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+custom_constants/margin_right = 0
+custom_constants/margin_top = 0
+custom_constants/margin_left = 0
+custom_constants/margin_bottom = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="bg" type="Panel" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustomUpgrades/m/v/randomize"]
+margin_right = 195.0
+margin_bottom = 60.0
+mouse_filter = 2
+custom_styles/panel = SubResource( 42 )
+
+[node name="v" type="VBoxContainer" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustomUpgrades/m/v/randomize"]
+margin_right = 195.0
+margin_bottom = 60.0
+alignment = 1
+
+[node name="h" type="HBoxContainer" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustomUpgrades/m/v/randomize/v"]
+margin_top = 18.0
+margin_right = 195.0
+margin_bottom = 42.0
+alignment = 1
+
+[node name="flair" type="Panel" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustomUpgrades/m/v/randomize/v/h"]
+margin_left = 7.0
+margin_right = 31.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 24, 24 )
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 39 )
+
+[node name="Sprite" type="Sprite" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustomUpgrades/m/v/randomize/v/h/flair"]
+position = Vector2( 12, 12 )
+texture = ExtResource( 10 )
+
+[node name="Sprite2" type="Sprite" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustomUpgrades/m/v/randomize/v/h/flair/Sprite"]
+self_modulate = Color( 0, 0, 0, 0.501961 )
+show_behind_parent = true
+position = Vector2( 2, 2 )
+texture = ExtResource( 10 )
+
+[node name="text" type="Label" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustomUpgrades/m/v/randomize/v/h"]
+margin_left = 35.0
+margin_top = 2.0
+margin_right = 187.0
+margin_bottom = 21.0
+size_flags_horizontal = 4
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 38 )
+text = "Randomize Upgrades"
+align = 1
+
+[node name="desc" type="Label" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustomUpgrades/m/v/randomize/v"]
+visible = false
+margin_top = 36.0
+margin_right = 180.0
+margin_bottom = 51.0
+hint_tooltip = "Step: 0.1"
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 41 )
+text = "Set the filename and color"
+align = 1
+autowrap = true
+
+[node name="button" type="Button" parent="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustomUpgrades/m/v/randomize"]
+margin_right = 195.0
+margin_bottom = 60.0
+rect_min_size = Vector2( 0, 32 )
+focus_mode = 0
+mouse_default_cursor_shape = 2
+custom_fonts/font = SubResource( 34 )
+custom_styles/hover = SubResource( 36 )
+custom_styles/pressed = SubResource( 37 )
+custom_styles/normal = SubResource( 35 )
+enabled_focus_mode = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="diffValues" type="MarginContainer" parent="new game/m/v/diff/m/v/v"]
+unique_name_in_owner = true
+visible = false
+margin_right = 480.0
+margin_bottom = 147.0
+
+[node name="bg" type="Panel" parent="new game/m/v/diff/m/v/v/diffValues"]
+self_modulate = Color( 0.219608, 0.219608, 0.219608, 1 )
+margin_right = 480.0
+margin_bottom = 147.0
+custom_styles/panel = SubResource( 1 )
+
+[node name="m" type="MarginContainer" parent="new game/m/v/diff/m/v/v/diffValues"]
+margin_right = 480.0
+margin_bottom = 147.0
+custom_constants/margin_right = 10
+custom_constants/margin_top = 10
+custom_constants/margin_left = 10
+custom_constants/margin_bottom = 10
+
+[node name="v" type="VBoxContainer" parent="new game/m/v/diff/m/v/v/diffValues/m"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 470.0
+margin_bottom = 137.0
+custom_constants/separation = 10
+
+[node name="text" type="Label" parent="new game/m/v/diff/m/v/v/diffValues/m/v"]
+margin_right = 460.0
+margin_bottom = 17.0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 3 )
+text = "Values"
+
+[node name="lored" type="MarginContainer" parent="new game/m/v/diff/m/v/v/diffValues/m/v"]
+margin_top = 27.0
+margin_right = 460.0
+margin_bottom = 127.0
+
+[node name="bg" type="Panel" parent="new game/m/v/diff/m/v/v/diffValues/m/v/lored"]
+self_modulate = Color( 0.219608, 0.219608, 0.219608, 1 )
+margin_right = 460.0
+margin_bottom = 100.0
+custom_styles/panel = SubResource( 1 )
+
+[node name="m" type="MarginContainer" parent="new game/m/v/diff/m/v/v/diffValues/m/v/lored"]
+margin_right = 460.0
+margin_bottom = 100.0
+custom_constants/margin_right = 10
+custom_constants/margin_top = 10
+custom_constants/margin_left = 10
+custom_constants/margin_bottom = 10
+
+[node name="v" type="GridContainer" parent="new game/m/v/diff/m/v/v/diffValues/m/v/lored/m"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 450.0
+margin_bottom = 90.0
+columns = 2
+
+[node name="valOutput" type="HBoxContainer" parent="new game/m/v/diff/m/v/v/diffValues/m/v/lored/m/v"]
+unique_name_in_owner = true
+margin_right = 218.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+
+[node name="icon" type="Panel" parent="new game/m/v/diff/m/v/v/diffValues/m/v/lored/m/v/valOutput"]
+margin_right = 24.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 24, 24 )
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 39 )
+
+[node name="Sprite" type="Sprite" parent="new game/m/v/diff/m/v/v/diffValues/m/v/lored/m/v/valOutput/icon"]
+position = Vector2( 12, 12 )
+texture = ExtResource( 25 )
+
+[node name="Sprite2" type="Sprite" parent="new game/m/v/diff/m/v/v/diffValues/m/v/lored/m/v/valOutput/icon/Sprite"]
+self_modulate = Color( 0, 0, 0, 0.501961 )
+show_behind_parent = true
+position = Vector2( 2, 2 )
+texture = ExtResource( 25 )
+
+[node name="flair" type="Label" parent="new game/m/v/diff/m/v/v/diffValues/m/v/lored/m/v/valOutput"]
+margin_left = 28.0
+margin_top = 4.0
+margin_right = 68.0
+margin_bottom = 19.0
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 5 )
+text = "Output:"
+
+[node name="text" type="Label" parent="new game/m/v/diff/m/v/v/diffValues/m/v/lored/m/v/valOutput"]
+margin_left = 72.0
+margin_top = 3.0
+margin_right = 107.0
+margin_bottom = 20.0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 3 )
+text = "10.0x"
+
+[node name="valInput" type="HBoxContainer" parent="new game/m/v/diff/m/v/v/diffValues/m/v/lored/m/v"]
+unique_name_in_owner = true
+margin_left = 222.0
+margin_right = 440.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+
+[node name="icon" type="Panel" parent="new game/m/v/diff/m/v/v/diffValues/m/v/lored/m/v/valInput"]
+margin_right = 24.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 24, 24 )
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 39 )
+
+[node name="Sprite" type="Sprite" parent="new game/m/v/diff/m/v/v/diffValues/m/v/lored/m/v/valInput/icon"]
+position = Vector2( 12, 12 )
+texture = ExtResource( 24 )
+
+[node name="Sprite2" type="Sprite" parent="new game/m/v/diff/m/v/v/diffValues/m/v/lored/m/v/valInput/icon/Sprite"]
+self_modulate = Color( 0, 0, 0, 0.501961 )
+show_behind_parent = true
+position = Vector2( 2, 2 )
+texture = ExtResource( 24 )
+
+[node name="flair" type="Label" parent="new game/m/v/diff/m/v/v/diffValues/m/v/lored/m/v/valInput"]
+margin_left = 28.0
+margin_top = 4.0
+margin_right = 59.0
+margin_bottom = 19.0
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 5 )
+text = "Input:"
+
+[node name="text" type="Label" parent="new game/m/v/diff/m/v/v/diffValues/m/v/lored/m/v/valInput"]
+margin_left = 63.0
+margin_top = 3.0
+margin_right = 98.0
+margin_bottom = 20.0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 3 )
+text = "10.0x"
+
+[node name="valHaste" type="HBoxContainer" parent="new game/m/v/diff/m/v/v/diffValues/m/v/lored/m/v"]
+unique_name_in_owner = true
+margin_top = 28.0
+margin_right = 218.0
+margin_bottom = 52.0
+size_flags_horizontal = 3
+
+[node name="icon" type="Panel" parent="new game/m/v/diff/m/v/v/diffValues/m/v/lored/m/v/valHaste"]
+margin_right = 24.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 24, 24 )
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 39 )
+
+[node name="Sprite" type="Sprite" parent="new game/m/v/diff/m/v/v/diffValues/m/v/lored/m/v/valHaste/icon"]
+position = Vector2( 12, 12 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 23 )
+
+[node name="Sprite2" type="Sprite" parent="new game/m/v/diff/m/v/v/diffValues/m/v/lored/m/v/valHaste/icon/Sprite"]
+self_modulate = Color( 0, 0, 0, 0.501961 )
+show_behind_parent = true
+position = Vector2( 2, 2 )
+texture = ExtResource( 23 )
+
+[node name="flair" type="Label" parent="new game/m/v/diff/m/v/v/diffValues/m/v/lored/m/v/valHaste"]
+margin_left = 28.0
+margin_top = 4.0
+margin_right = 61.0
+margin_bottom = 19.0
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 5 )
+text = "Haste:"
+
+[node name="text" type="Label" parent="new game/m/v/diff/m/v/v/diffValues/m/v/lored/m/v/valHaste"]
+margin_left = 65.0
+margin_top = 3.0
+margin_right = 100.0
+margin_bottom = 20.0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 3 )
+text = "x10.0"
+
+[node name="valCrit" type="HBoxContainer" parent="new game/m/v/diff/m/v/v/diffValues/m/v/lored/m/v"]
+unique_name_in_owner = true
+margin_left = 222.0
+margin_top = 28.0
+margin_right = 440.0
+margin_bottom = 52.0
+size_flags_horizontal = 3
+
+[node name="icon" type="Panel" parent="new game/m/v/diff/m/v/v/diffValues/m/v/lored/m/v/valCrit"]
+margin_right = 24.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 24, 24 )
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 39 )
+
+[node name="Sprite" type="Sprite" parent="new game/m/v/diff/m/v/v/diffValues/m/v/lored/m/v/valCrit/icon"]
+position = Vector2( 12, 12 )
+texture = ExtResource( 27 )
+
+[node name="Sprite2" type="Sprite" parent="new game/m/v/diff/m/v/v/diffValues/m/v/lored/m/v/valCrit/icon/Sprite"]
+self_modulate = Color( 0, 0, 0, 0.501961 )
+show_behind_parent = true
+position = Vector2( 2, 2 )
+texture = ExtResource( 27 )
+
+[node name="flair" type="Label" parent="new game/m/v/diff/m/v/v/diffValues/m/v/lored/m/v/valCrit"]
+margin_left = 28.0
+margin_top = 4.0
+margin_right = 93.0
+margin_bottom = 19.0
+hint_tooltip = "Calculated after Crit Chance (Multiplicative)."
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 5 )
+text = "Crit Chance:"
+
+[node name="text" type="Label" parent="new game/m/v/diff/m/v/v/diffValues/m/v/lored/m/v/valCrit"]
+margin_left = 97.0
+margin_top = 3.0
+margin_right = 130.0
+margin_bottom = 20.0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 3 )
+text = "+35%"
+
+[node name="valFuelCost" type="HBoxContainer" parent="new game/m/v/diff/m/v/v/diffValues/m/v/lored/m/v"]
+unique_name_in_owner = true
+margin_top = 56.0
+margin_right = 218.0
+margin_bottom = 80.0
+size_flags_horizontal = 3
+
+[node name="icon" type="Panel" parent="new game/m/v/diff/m/v/v/diffValues/m/v/lored/m/v/valFuelCost"]
+margin_right = 24.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 24, 24 )
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 39 )
+
+[node name="Sprite" type="Sprite" parent="new game/m/v/diff/m/v/v/diffValues/m/v/lored/m/v/valFuelCost/icon"]
+position = Vector2( 12, 12 )
+texture = ExtResource( 28 )
+
+[node name="Sprite2" type="Sprite" parent="new game/m/v/diff/m/v/v/diffValues/m/v/lored/m/v/valFuelCost/icon/Sprite"]
+self_modulate = Color( 0, 0, 0, 0.501961 )
+show_behind_parent = true
+position = Vector2( 2, 2 )
+texture = ExtResource( 28 )
+
+[node name="flair" type="Label" parent="new game/m/v/diff/m/v/v/diffValues/m/v/lored/m/v/valFuelCost"]
+margin_left = 28.0
+margin_top = 4.0
+margin_right = 129.0
+margin_bottom = 19.0
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 5 )
+text = "Fuel Consumption:"
+
+[node name="text" type="Label" parent="new game/m/v/diff/m/v/v/diffValues/m/v/lored/m/v/valFuelCost"]
+margin_left = 133.0
+margin_top = 3.0
+margin_right = 168.0
+margin_bottom = 20.0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 3 )
+text = "10.0x"
+
+[node name="valFuelStorage" type="HBoxContainer" parent="new game/m/v/diff/m/v/v/diffValues/m/v/lored/m/v"]
+unique_name_in_owner = true
+margin_left = 222.0
+margin_top = 56.0
+margin_right = 440.0
+margin_bottom = 80.0
+size_flags_horizontal = 3
+
+[node name="icon" type="Panel" parent="new game/m/v/diff/m/v/v/diffValues/m/v/lored/m/v/valFuelStorage"]
+margin_right = 24.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 24, 24 )
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 39 )
+
+[node name="Sprite" type="Sprite" parent="new game/m/v/diff/m/v/v/diffValues/m/v/lored/m/v/valFuelStorage/icon"]
+position = Vector2( 12, 12 )
+texture = ExtResource( 26 )
+
+[node name="Sprite2" type="Sprite" parent="new game/m/v/diff/m/v/v/diffValues/m/v/lored/m/v/valFuelStorage/icon/Sprite"]
+self_modulate = Color( 0, 0, 0, 0.501961 )
+show_behind_parent = true
+position = Vector2( 2, 2 )
+texture = ExtResource( 26 )
+
+[node name="flair" type="Label" parent="new game/m/v/diff/m/v/v/diffValues/m/v/lored/m/v/valFuelStorage"]
+margin_left = 28.0
+margin_top = 4.0
+margin_right = 97.0
+margin_bottom = 19.0
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 5 )
+text = "Fuel Storage:"
+
+[node name="text" type="Label" parent="new game/m/v/diff/m/v/v/diffValues/m/v/lored/m/v/valFuelStorage"]
+margin_left = 101.0
+margin_top = 3.0
+margin_right = 136.0
+margin_bottom = 20.0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 3 )
+text = "10.0x"
+
+[node name="presets" type="MarginContainer" parent="new game/m/v/diff/m/v/v"]
+margin_top = 410.0
+margin_right = 502.0
+margin_bottom = 502.0
+
+[node name="bg" type="Panel" parent="new game/m/v/diff/m/v/v/presets"]
+self_modulate = Color( 0.219608, 0.219608, 0.219608, 1 )
+margin_right = 502.0
+margin_bottom = 92.0
+custom_styles/panel = SubResource( 1 )
+
+[node name="m" type="MarginContainer" parent="new game/m/v/diff/m/v/v/presets"]
+margin_right = 502.0
+margin_bottom = 92.0
+custom_constants/margin_right = 10
+custom_constants/margin_top = 10
+custom_constants/margin_left = 10
+custom_constants/margin_bottom = 10
+
+[node name="v" type="VBoxContainer" parent="new game/m/v/diff/m/v/v/presets/m"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 492.0
+margin_bottom = 82.0
+
+[node name="text" type="Label" parent="new game/m/v/diff/m/v/v/presets/m/v"]
+margin_right = 482.0
+margin_bottom = 17.0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 3 )
+text = "Presets"
+
+[node name="difficulty dropdown" type="OptionButton" parent="new game/m/v/diff/m/v/v/presets/m/v"]
+unique_name_in_owner = true
+margin_top = 21.0
+margin_right = 482.0
+margin_bottom = 53.0
+rect_min_size = Vector2( 0, 32 )
+size_flags_horizontal = 3
+theme = ExtResource( 17 )
+text = "Select difficulty"
+
+[node name="diff desc" type="Label" parent="new game/m/v/diff/m/v/v/presets/m/v"]
+unique_name_in_owner = true
+margin_top = 57.0
+margin_right = 482.0
+margin_bottom = 72.0
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 5 )
+text = "desc aslkjedf ;lkajs df;klja sd;lk fjas;kldf j;lkasjd f;klasj df;lkajs f"
+autowrap = true
+
+[node name="flair" type="Label" parent="new game/m/v/diff/m/v"]
+margin_top = 512.0
+margin_right = 502.0
+margin_bottom = 527.0
+mouse_filter = 0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 5 )
+text = "Once you begin the game, the difficulty may not be changed."
+align = 1
+autowrap = true
+
+[node name="upgrades" type="MarginContainer" parent="new game/m/v"]
+visible = false
+margin_left = 24.0
+margin_right = 524.0
+margin_bottom = 294.0
+rect_min_size = Vector2( 500, 0 )
+size_flags_horizontal = 4
+
+[node name="bg" type="Panel" parent="new game/m/v/upgrades"]
+margin_right = 500.0
+margin_bottom = 294.0
+mouse_filter = 2
+custom_styles/panel = SubResource( 56 )
+
+[node name="m" type="MarginContainer" parent="new game/m/v/upgrades"]
+margin_right = 500.0
+margin_bottom = 294.0
+custom_constants/margin_right = 10
+custom_constants/margin_top = 10
+custom_constants/margin_left = 10
+custom_constants/margin_bottom = 10
+
+[node name="v" type="VBoxContainer" parent="new game/m/v/upgrades/m"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 490.0
+margin_bottom = 284.0
+rect_pivot_offset = Vector2( -577, 177 )
+custom_constants/separation = 10
+
+[node name="v" type="VBoxContainer" parent="new game/m/v/upgrades/m/v"]
+margin_right = 480.0
+margin_bottom = 249.0
+custom_constants/separation = 10
+
+[node name="diffCustom" type="MarginContainer" parent="new game/m/v/upgrades/m/v/v"]
+visible = false
+margin_right = 480.0
+margin_bottom = 265.0
+
+[node name="bg" type="Panel" parent="new game/m/v/upgrades/m/v/v/diffCustom"]
+self_modulate = Color( 0.219608, 0.219608, 0.219608, 1 )
+margin_right = 480.0
+margin_bottom = 265.0
+custom_styles/panel = SubResource( 1 )
+
+[node name="m" type="MarginContainer" parent="new game/m/v/upgrades/m/v/v/diffCustom"]
+margin_right = 480.0
+margin_bottom = 265.0
+custom_constants/margin_right = 10
+custom_constants/margin_top = 10
+custom_constants/margin_left = 10
+custom_constants/margin_bottom = 10
+
+[node name="v" type="VBoxContainer" parent="new game/m/v/upgrades/m/v/v/diffCustom/m"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 470.0
+margin_bottom = 255.0
+custom_constants/separation = 10
+
+[node name="text" type="Label" parent="new game/m/v/upgrades/m/v/v/diffCustom/m/v"]
+margin_right = 460.0
+margin_bottom = 17.0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 3 )
+text = "Custom Values"
+
+[node name="lored" type="MarginContainer" parent="new game/m/v/upgrades/m/v/v/diffCustom/m/v"]
+margin_top = 27.0
+margin_right = 460.0
+margin_bottom = 175.0
+
+[node name="bg" type="Panel" parent="new game/m/v/upgrades/m/v/v/diffCustom/m/v/lored"]
+self_modulate = Color( 0.219608, 0.219608, 0.219608, 1 )
+margin_right = 460.0
+margin_bottom = 148.0
+custom_styles/panel = SubResource( 1 )
+
+[node name="m" type="MarginContainer" parent="new game/m/v/upgrades/m/v/v/diffCustom/m/v/lored"]
+margin_right = 460.0
+margin_bottom = 148.0
+custom_constants/margin_right = 10
+custom_constants/margin_top = 10
+custom_constants/margin_left = 10
+custom_constants/margin_bottom = 10
+
+[node name="v" type="GridContainer" parent="new game/m/v/upgrades/m/v/v/diffCustom/m/v/lored/m"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 450.0
+margin_bottom = 138.0
+size_flags_horizontal = 0
+columns = 2
+
+[node name="customOutput" type="HBoxContainer" parent="new game/m/v/upgrades/m/v/v/diffCustom/m/v/lored/m/v"]
+margin_right = 218.0
+margin_bottom = 40.0
+
+[node name="h" type="VBoxContainer" parent="new game/m/v/upgrades/m/v/v/diffCustom/m/v/lored/m/v/customOutput"]
+margin_right = 150.0
+margin_bottom = 40.0
+size_flags_horizontal = 3
+custom_constants/separation = 0
+
+[node name="Output" type="HBoxContainer" parent="new game/m/v/upgrades/m/v/v/diffCustom/m/v/lored/m/v/customOutput/h"]
+margin_right = 150.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+
+[node name="icon" type="Panel" parent="new game/m/v/upgrades/m/v/v/diffCustom/m/v/lored/m/v/customOutput/h/Output"]
+margin_right = 24.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 24, 24 )
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 39 )
+
+[node name="Sprite" type="Sprite" parent="new game/m/v/upgrades/m/v/v/diffCustom/m/v/lored/m/v/customOutput/h/Output/icon"]
+position = Vector2( 12, 12 )
+texture = ExtResource( 25 )
+
+[node name="Sprite2" type="Sprite" parent="new game/m/v/upgrades/m/v/v/diffCustom/m/v/lored/m/v/customOutput/h/Output/icon/Sprite"]
+self_modulate = Color( 0, 0, 0, 0.501961 )
+show_behind_parent = true
+position = Vector2( 2, 2 )
+texture = ExtResource( 25 )
+
+[node name="flair" type="Label" parent="new game/m/v/upgrades/m/v/v/diffCustom/m/v/lored/m/v/customOutput/h/Output"]
+margin_left = 28.0
+margin_top = 4.0
+margin_right = 65.0
+margin_bottom = 19.0
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 5 )
+text = "Output"
+
+[node name="HSlider" type="HSlider" parent="new game/m/v/upgrades/m/v/v/diffCustom/m/v/lored/m/v/customOutput/h"]
+margin_top = 24.0
+margin_right = 150.0
+margin_bottom = 40.0
+rect_min_size = Vector2( 150, 0 )
+size_flags_horizontal = 3
+size_flags_vertical = 4
+min_value = 0.1
+max_value = 10.0
+step = 0.1
+value = 1.0
+
+[node name="TextEdit" type="TextEdit" parent="new game/m/v/upgrades/m/v/v/diffCustom/m/v/lored/m/v/customOutput"]
+margin_left = 154.0
+margin_top = 6.0
+margin_right = 218.0
+margin_bottom = 40.0
+rect_min_size = Vector2( 64, 34 )
+size_flags_vertical = 8
+custom_fonts/font = SubResource( 4 )
+text = "10.0"
+breakpoint_gutter = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="customInput" type="HBoxContainer" parent="new game/m/v/upgrades/m/v/v/diffCustom/m/v/lored/m/v"]
+margin_left = 222.0
+margin_right = 440.0
+margin_bottom = 40.0
+
+[node name="h" type="VBoxContainer" parent="new game/m/v/upgrades/m/v/v/diffCustom/m/v/lored/m/v/customInput"]
+margin_right = 150.0
+margin_bottom = 40.0
+size_flags_horizontal = 3
+custom_constants/separation = 0
+
+[node name="customInput" type="HBoxContainer" parent="new game/m/v/upgrades/m/v/v/diffCustom/m/v/lored/m/v/customInput/h"]
+margin_right = 150.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+
+[node name="icon" type="Panel" parent="new game/m/v/upgrades/m/v/v/diffCustom/m/v/lored/m/v/customInput/h/customInput"]
+margin_right = 24.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 24, 24 )
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 39 )
+
+[node name="Sprite" type="Sprite" parent="new game/m/v/upgrades/m/v/v/diffCustom/m/v/lored/m/v/customInput/h/customInput/icon"]
+position = Vector2( 12, 12 )
+texture = ExtResource( 24 )
+
+[node name="Sprite2" type="Sprite" parent="new game/m/v/upgrades/m/v/v/diffCustom/m/v/lored/m/v/customInput/h/customInput/icon/Sprite"]
+self_modulate = Color( 0, 0, 0, 0.501961 )
+show_behind_parent = true
+position = Vector2( 2, 2 )
+texture = ExtResource( 24 )
+
+[node name="flair" type="Label" parent="new game/m/v/upgrades/m/v/v/diffCustom/m/v/lored/m/v/customInput/h/customInput"]
+margin_left = 28.0
+margin_top = 4.0
+margin_right = 56.0
+margin_bottom = 19.0
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 5 )
+text = "Input"
+
+[node name="HSlider" type="HSlider" parent="new game/m/v/upgrades/m/v/v/diffCustom/m/v/lored/m/v/customInput/h"]
+margin_top = 24.0
+margin_right = 150.0
+margin_bottom = 40.0
+rect_min_size = Vector2( 150, 0 )
+size_flags_horizontal = 3
+size_flags_vertical = 4
+max_value = 10.0
+step = 0.1
+value = 1.0
+
+[node name="TextEdit" type="TextEdit" parent="new game/m/v/upgrades/m/v/v/diffCustom/m/v/lored/m/v/customInput"]
+margin_left = 154.0
+margin_top = 6.0
+margin_right = 218.0
+margin_bottom = 40.0
+rect_min_size = Vector2( 64, 34 )
+rect_pivot_offset = Vector2( -224, -652 )
+size_flags_vertical = 8
+custom_fonts/font = SubResource( 4 )
+text = "8.8"
+breakpoint_gutter = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="customHaste" type="HBoxContainer" parent="new game/m/v/upgrades/m/v/v/diffCustom/m/v/lored/m/v"]
+margin_top = 44.0
+margin_right = 218.0
+margin_bottom = 84.0
+
+[node name="h" type="VBoxContainer" parent="new game/m/v/upgrades/m/v/v/diffCustom/m/v/lored/m/v/customHaste"]
+margin_right = 150.0
+margin_bottom = 40.0
+size_flags_horizontal = 3
+custom_constants/separation = 0
+
+[node name="Haste" type="HBoxContainer" parent="new game/m/v/upgrades/m/v/v/diffCustom/m/v/lored/m/v/customHaste/h"]
+margin_right = 150.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+
+[node name="icon" type="Panel" parent="new game/m/v/upgrades/m/v/v/diffCustom/m/v/lored/m/v/customHaste/h/Haste"]
+margin_right = 24.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 24, 24 )
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 39 )
+
+[node name="Sprite" type="Sprite" parent="new game/m/v/upgrades/m/v/v/diffCustom/m/v/lored/m/v/customHaste/h/Haste/icon"]
+position = Vector2( 12, 12 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 23 )
+
+[node name="Sprite2" type="Sprite" parent="new game/m/v/upgrades/m/v/v/diffCustom/m/v/lored/m/v/customHaste/h/Haste/icon/Sprite"]
+self_modulate = Color( 0, 0, 0, 0.501961 )
+show_behind_parent = true
+position = Vector2( 2, 2 )
+texture = ExtResource( 23 )
+
+[node name="flair" type="Label" parent="new game/m/v/upgrades/m/v/v/diffCustom/m/v/lored/m/v/customHaste/h/Haste"]
+margin_left = 28.0
+margin_top = 4.0
+margin_right = 58.0
+margin_bottom = 19.0
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 5 )
+text = "Haste"
+
+[node name="HSlider" type="HSlider" parent="new game/m/v/upgrades/m/v/v/diffCustom/m/v/lored/m/v/customHaste/h"]
+margin_top = 24.0
+margin_right = 150.0
+margin_bottom = 40.0
+size_flags_horizontal = 3
+size_flags_vertical = 4
+min_value = 0.1
+max_value = 10.0
+step = 0.1
+value = 1.0
+
+[node name="TextEdit" type="TextEdit" parent="new game/m/v/upgrades/m/v/v/diffCustom/m/v/lored/m/v/customHaste"]
+margin_left = 154.0
+margin_top = 6.0
+margin_right = 218.0
+margin_bottom = 40.0
+rect_min_size = Vector2( 64, 34 )
+size_flags_vertical = 8
+custom_fonts/font = SubResource( 4 )
+text = "8.8"
+breakpoint_gutter = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="customCrit" type="HBoxContainer" parent="new game/m/v/upgrades/m/v/v/diffCustom/m/v/lored/m/v"]
+margin_left = 222.0
+margin_top = 44.0
+margin_right = 440.0
+margin_bottom = 84.0
+
+[node name="h" type="VBoxContainer" parent="new game/m/v/upgrades/m/v/v/diffCustom/m/v/lored/m/v/customCrit"]
+margin_right = 150.0
+margin_bottom = 40.0
+size_flags_horizontal = 3
+custom_constants/separation = 0
+
+[node name="Crit" type="HBoxContainer" parent="new game/m/v/upgrades/m/v/v/diffCustom/m/v/lored/m/v/customCrit/h"]
+margin_right = 150.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+
+[node name="icon" type="Panel" parent="new game/m/v/upgrades/m/v/v/diffCustom/m/v/lored/m/v/customCrit/h/Crit"]
+margin_right = 24.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 24, 24 )
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 39 )
+
+[node name="Sprite" type="Sprite" parent="new game/m/v/upgrades/m/v/v/diffCustom/m/v/lored/m/v/customCrit/h/Crit/icon"]
+position = Vector2( 12, 12 )
+texture = ExtResource( 27 )
+
+[node name="Sprite2" type="Sprite" parent="new game/m/v/upgrades/m/v/v/diffCustom/m/v/lored/m/v/customCrit/h/Crit/icon/Sprite"]
+self_modulate = Color( 0, 0, 0, 0.501961 )
+show_behind_parent = true
+position = Vector2( 2, 2 )
+texture = ExtResource( 27 )
+
+[node name="flair" type="Label" parent="new game/m/v/upgrades/m/v/v/diffCustom/m/v/lored/m/v/customCrit/h/Crit"]
+margin_left = 28.0
+margin_top = 4.0
+margin_right = 90.0
+margin_bottom = 19.0
+hint_tooltip = "Calculated after Crit Chance (Multiplicative)."
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 5 )
+text = "Crit Chance"
+
+[node name="HSlider" type="HSlider" parent="new game/m/v/upgrades/m/v/v/diffCustom/m/v/lored/m/v/customCrit/h"]
+margin_top = 24.0
+margin_right = 150.0
+margin_bottom = 40.0
+size_flags_horizontal = 3
+size_flags_vertical = 4
+min_value = -100.0
+step = 0.1
+value = 1.0
+
+[node name="TextEdit" type="TextEdit" parent="new game/m/v/upgrades/m/v/v/diffCustom/m/v/lored/m/v/customCrit"]
+margin_left = 154.0
+margin_top = 6.0
+margin_right = 218.0
+margin_bottom = 40.0
+rect_min_size = Vector2( 64, 34 )
+size_flags_vertical = 8
+custom_fonts/font = SubResource( 4 )
+text = "-100.0"
+breakpoint_gutter = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="customFuelCost" type="HBoxContainer" parent="new game/m/v/upgrades/m/v/v/diffCustom/m/v/lored/m/v"]
+margin_top = 88.0
+margin_right = 218.0
+margin_bottom = 128.0
+
+[node name="h" type="VBoxContainer" parent="new game/m/v/upgrades/m/v/v/diffCustom/m/v/lored/m/v/customFuelCost"]
+margin_right = 150.0
+margin_bottom = 40.0
+size_flags_horizontal = 3
+custom_constants/separation = 0
+
+[node name="FuelCost" type="HBoxContainer" parent="new game/m/v/upgrades/m/v/v/diffCustom/m/v/lored/m/v/customFuelCost/h"]
+margin_right = 150.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+
+[node name="icon" type="Panel" parent="new game/m/v/upgrades/m/v/v/diffCustom/m/v/lored/m/v/customFuelCost/h/FuelCost"]
+margin_right = 24.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 24, 24 )
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 39 )
+
+[node name="Sprite" type="Sprite" parent="new game/m/v/upgrades/m/v/v/diffCustom/m/v/lored/m/v/customFuelCost/h/FuelCost/icon"]
+position = Vector2( 12, 12 )
+texture = ExtResource( 28 )
+
+[node name="Sprite2" type="Sprite" parent="new game/m/v/upgrades/m/v/v/diffCustom/m/v/lored/m/v/customFuelCost/h/FuelCost/icon/Sprite"]
+self_modulate = Color( 0, 0, 0, 0.501961 )
+show_behind_parent = true
+position = Vector2( 2, 2 )
+texture = ExtResource( 28 )
+
+[node name="flair" type="Label" parent="new game/m/v/upgrades/m/v/v/diffCustom/m/v/lored/m/v/customFuelCost/h/FuelCost"]
+margin_left = 28.0
+margin_top = 4.0
+margin_right = 78.0
+margin_bottom = 19.0
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 5 )
+text = "Fuel Cost"
+
+[node name="HSlider" type="HSlider" parent="new game/m/v/upgrades/m/v/v/diffCustom/m/v/lored/m/v/customFuelCost/h"]
+margin_top = 24.0
+margin_right = 150.0
+margin_bottom = 40.0
+size_flags_horizontal = 3
+max_value = 10.0
+step = 0.1
+value = 1.0
+
+[node name="TextEdit" type="TextEdit" parent="new game/m/v/upgrades/m/v/v/diffCustom/m/v/lored/m/v/customFuelCost"]
+margin_left = 154.0
+margin_top = 6.0
+margin_right = 218.0
+margin_bottom = 40.0
+rect_min_size = Vector2( 64, 34 )
+focus_next = NodePath(".")
+size_flags_vertical = 8
+custom_fonts/font = SubResource( 4 )
+text = "8.8"
+breakpoint_gutter = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="customFuelStorage" type="HBoxContainer" parent="new game/m/v/upgrades/m/v/v/diffCustom/m/v/lored/m/v"]
+margin_left = 222.0
+margin_top = 88.0
+margin_right = 440.0
+margin_bottom = 128.0
+
+[node name="h" type="VBoxContainer" parent="new game/m/v/upgrades/m/v/v/diffCustom/m/v/lored/m/v/customFuelStorage"]
+margin_right = 150.0
+margin_bottom = 40.0
+size_flags_horizontal = 3
+custom_constants/separation = 0
+
+[node name="FuelStorage" type="HBoxContainer" parent="new game/m/v/upgrades/m/v/v/diffCustom/m/v/lored/m/v/customFuelStorage/h"]
+margin_right = 150.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+
+[node name="icon" type="Panel" parent="new game/m/v/upgrades/m/v/v/diffCustom/m/v/lored/m/v/customFuelStorage/h/FuelStorage"]
+margin_right = 24.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 24, 24 )
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 39 )
+
+[node name="Sprite" type="Sprite" parent="new game/m/v/upgrades/m/v/v/diffCustom/m/v/lored/m/v/customFuelStorage/h/FuelStorage/icon"]
+position = Vector2( 12, 12 )
+texture = ExtResource( 12 )
+
+[node name="Sprite2" type="Sprite" parent="new game/m/v/upgrades/m/v/v/diffCustom/m/v/lored/m/v/customFuelStorage/h/FuelStorage/icon/Sprite"]
+self_modulate = Color( 0, 0, 0, 0.501961 )
+show_behind_parent = true
+position = Vector2( 2, 2 )
+texture = ExtResource( 12 )
+
+[node name="flair" type="Label" parent="new game/m/v/upgrades/m/v/v/diffCustom/m/v/lored/m/v/customFuelStorage/h/FuelStorage"]
+margin_left = 28.0
+margin_top = 4.0
+margin_right = 94.0
+margin_bottom = 19.0
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 5 )
+text = "Fuel Storage"
+
+[node name="HSlider" type="HSlider" parent="new game/m/v/upgrades/m/v/v/diffCustom/m/v/lored/m/v/customFuelStorage/h"]
+margin_top = 24.0
+margin_right = 150.0
+margin_bottom = 40.0
+size_flags_horizontal = 3
+size_flags_vertical = 4
+min_value = 0.1
+max_value = 10.0
+step = 0.1
+value = 1.0
+
+[node name="TextEdit" type="TextEdit" parent="new game/m/v/upgrades/m/v/v/diffCustom/m/v/lored/m/v/customFuelStorage"]
+margin_left = 154.0
+margin_top = 6.0
+margin_right = 218.0
+margin_bottom = 40.0
+rect_min_size = Vector2( 64, 34 )
+size_flags_vertical = 8
+custom_fonts/font = SubResource( 4 )
+text = "8.8"
+breakpoint_gutter = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="randomize" type="MarginContainer" parent="new game/m/v/upgrades/m/v/v/diffCustom/m/v"]
 margin_left = 160.0
 margin_top = 185.0
 margin_right = 300.0
@@ -1350,24 +2931,24 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="bg" type="Panel" parent="new game/m/v/diff/m/v/v/custom/m/v/randomize"]
+[node name="bg" type="Panel" parent="new game/m/v/upgrades/m/v/v/diffCustom/m/v/randomize"]
 margin_right = 140.0
 margin_bottom = 60.0
 mouse_filter = 2
 custom_styles/panel = SubResource( 42 )
 
-[node name="v" type="VBoxContainer" parent="new game/m/v/diff/m/v/v/custom/m/v/randomize"]
+[node name="v" type="VBoxContainer" parent="new game/m/v/upgrades/m/v/v/diffCustom/m/v/randomize"]
 margin_right = 140.0
 margin_bottom = 60.0
 alignment = 1
 
-[node name="h" type="HBoxContainer" parent="new game/m/v/diff/m/v/v/custom/m/v/randomize/v"]
+[node name="h" type="HBoxContainer" parent="new game/m/v/upgrades/m/v/v/diffCustom/m/v/randomize/v"]
 margin_top = 18.0
 margin_right = 140.0
 margin_bottom = 42.0
 alignment = 1
 
-[node name="flair" type="Panel" parent="new game/m/v/diff/m/v/v/custom/m/v/randomize/v/h"]
+[node name="flair" type="Panel" parent="new game/m/v/upgrades/m/v/v/diffCustom/m/v/randomize/v/h"]
 margin_left = 16.0
 margin_right = 40.0
 margin_bottom = 24.0
@@ -1375,17 +2956,17 @@ rect_min_size = Vector2( 24, 24 )
 size_flags_vertical = 4
 custom_styles/panel = SubResource( 39 )
 
-[node name="Sprite" type="Sprite" parent="new game/m/v/diff/m/v/v/custom/m/v/randomize/v/h/flair"]
+[node name="Sprite" type="Sprite" parent="new game/m/v/upgrades/m/v/v/diffCustom/m/v/randomize/v/h/flair"]
 position = Vector2( 12, 12 )
 texture = ExtResource( 10 )
 
-[node name="Sprite2" type="Sprite" parent="new game/m/v/diff/m/v/v/custom/m/v/randomize/v/h/flair/Sprite"]
+[node name="Sprite2" type="Sprite" parent="new game/m/v/upgrades/m/v/v/diffCustom/m/v/randomize/v/h/flair/Sprite"]
 self_modulate = Color( 0, 0, 0, 0.501961 )
 show_behind_parent = true
 position = Vector2( 2, 2 )
 texture = ExtResource( 10 )
 
-[node name="text" type="Label" parent="new game/m/v/diff/m/v/v/custom/m/v/randomize/v/h"]
+[node name="text" type="Label" parent="new game/m/v/upgrades/m/v/v/diffCustom/m/v/randomize/v/h"]
 margin_left = 44.0
 margin_top = 2.0
 margin_right = 124.0
@@ -1396,7 +2977,7 @@ custom_fonts/font = SubResource( 38 )
 text = "Randomize"
 align = 1
 
-[node name="desc" type="Label" parent="new game/m/v/diff/m/v/v/custom/m/v/randomize/v"]
+[node name="desc" type="Label" parent="new game/m/v/upgrades/m/v/v/diffCustom/m/v/randomize/v"]
 visible = false
 margin_top = 36.0
 margin_right = 180.0
@@ -1409,7 +2990,7 @@ text = "Set the filename and color"
 align = 1
 autowrap = true
 
-[node name="button" type="Button" parent="new game/m/v/diff/m/v/v/custom/m/v/randomize"]
+[node name="button" type="Button" parent="new game/m/v/upgrades/m/v/v/diffCustom/m/v/randomize"]
 margin_right = 140.0
 margin_bottom = 60.0
 rect_min_size = Vector2( 0, 32 )
@@ -1424,18 +3005,17 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="values" type="MarginContainer" parent="new game/m/v/diff/m/v/v"]
-margin_top = 275.0
+[node name="diffValues" type="MarginContainer" parent="new game/m/v/upgrades/m/v/v"]
 margin_right = 480.0
-margin_bottom = 422.0
+margin_bottom = 147.0
 
-[node name="bg" type="Panel" parent="new game/m/v/diff/m/v/v/values"]
+[node name="bg" type="Panel" parent="new game/m/v/upgrades/m/v/v/diffValues"]
 self_modulate = Color( 0.219608, 0.219608, 0.219608, 1 )
 margin_right = 480.0
 margin_bottom = 147.0
 custom_styles/panel = SubResource( 1 )
 
-[node name="m" type="MarginContainer" parent="new game/m/v/diff/m/v/v/values"]
+[node name="m" type="MarginContainer" parent="new game/m/v/upgrades/m/v/v/diffValues"]
 margin_right = 480.0
 margin_bottom = 147.0
 custom_constants/margin_right = 10
@@ -1443,32 +3023,32 @@ custom_constants/margin_top = 10
 custom_constants/margin_left = 10
 custom_constants/margin_bottom = 10
 
-[node name="v" type="VBoxContainer" parent="new game/m/v/diff/m/v/v/values/m"]
+[node name="v" type="VBoxContainer" parent="new game/m/v/upgrades/m/v/v/diffValues/m"]
 margin_left = 10.0
 margin_top = 10.0
 margin_right = 470.0
 margin_bottom = 137.0
 custom_constants/separation = 10
 
-[node name="text" type="Label" parent="new game/m/v/diff/m/v/v/values/m/v"]
+[node name="text" type="Label" parent="new game/m/v/upgrades/m/v/v/diffValues/m/v"]
 margin_right = 460.0
 margin_bottom = 17.0
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 3 )
 text = "Values"
 
-[node name="lored" type="MarginContainer" parent="new game/m/v/diff/m/v/v/values/m/v"]
+[node name="lored" type="MarginContainer" parent="new game/m/v/upgrades/m/v/v/diffValues/m/v"]
 margin_top = 27.0
 margin_right = 460.0
 margin_bottom = 127.0
 
-[node name="bg" type="Panel" parent="new game/m/v/diff/m/v/v/values/m/v/lored"]
+[node name="bg" type="Panel" parent="new game/m/v/upgrades/m/v/v/diffValues/m/v/lored"]
 self_modulate = Color( 0.219608, 0.219608, 0.219608, 1 )
 margin_right = 460.0
 margin_bottom = 100.0
 custom_styles/panel = SubResource( 1 )
 
-[node name="m" type="MarginContainer" parent="new game/m/v/diff/m/v/v/values/m/v/lored"]
+[node name="m" type="MarginContainer" parent="new game/m/v/upgrades/m/v/v/diffValues/m/v/lored"]
 margin_right = 460.0
 margin_bottom = 100.0
 custom_constants/margin_right = 10
@@ -1476,36 +3056,36 @@ custom_constants/margin_top = 10
 custom_constants/margin_left = 10
 custom_constants/margin_bottom = 10
 
-[node name="v" type="GridContainer" parent="new game/m/v/diff/m/v/v/values/m/v/lored/m"]
+[node name="v" type="GridContainer" parent="new game/m/v/upgrades/m/v/v/diffValues/m/v/lored/m"]
 margin_left = 10.0
 margin_top = 10.0
 margin_right = 450.0
 margin_bottom = 90.0
 columns = 2
 
-[node name="Output" type="HBoxContainer" parent="new game/m/v/diff/m/v/v/values/m/v/lored/m/v"]
+[node name="valOutput" type="HBoxContainer" parent="new game/m/v/upgrades/m/v/v/diffValues/m/v/lored/m/v"]
 margin_right = 218.0
 margin_bottom = 24.0
 size_flags_horizontal = 3
 
-[node name="icon" type="Panel" parent="new game/m/v/diff/m/v/v/values/m/v/lored/m/v/Output"]
+[node name="icon" type="Panel" parent="new game/m/v/upgrades/m/v/v/diffValues/m/v/lored/m/v/valOutput"]
 margin_right = 24.0
 margin_bottom = 24.0
 rect_min_size = Vector2( 24, 24 )
 size_flags_vertical = 4
 custom_styles/panel = SubResource( 39 )
 
-[node name="Sprite" type="Sprite" parent="new game/m/v/diff/m/v/v/values/m/v/lored/m/v/Output/icon"]
+[node name="Sprite" type="Sprite" parent="new game/m/v/upgrades/m/v/v/diffValues/m/v/lored/m/v/valOutput/icon"]
 position = Vector2( 12, 12 )
 texture = ExtResource( 25 )
 
-[node name="Sprite2" type="Sprite" parent="new game/m/v/diff/m/v/v/values/m/v/lored/m/v/Output/icon/Sprite"]
+[node name="Sprite2" type="Sprite" parent="new game/m/v/upgrades/m/v/v/diffValues/m/v/lored/m/v/valOutput/icon/Sprite"]
 self_modulate = Color( 0, 0, 0, 0.501961 )
 show_behind_parent = true
 position = Vector2( 2, 2 )
 texture = ExtResource( 25 )
 
-[node name="flair" type="Label" parent="new game/m/v/diff/m/v/v/values/m/v/lored/m/v/Output"]
+[node name="flair" type="Label" parent="new game/m/v/upgrades/m/v/v/diffValues/m/v/lored/m/v/valOutput"]
 margin_left = 28.0
 margin_top = 4.0
 margin_right = 68.0
@@ -1515,7 +3095,7 @@ custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 5 )
 text = "Output:"
 
-[node name="text" type="Label" parent="new game/m/v/diff/m/v/v/values/m/v/lored/m/v/Output"]
+[node name="text" type="Label" parent="new game/m/v/upgrades/m/v/v/diffValues/m/v/lored/m/v/valOutput"]
 margin_left = 72.0
 margin_top = 3.0
 margin_right = 107.0
@@ -1524,30 +3104,30 @@ custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 3 )
 text = "10.0x"
 
-[node name="Input" type="HBoxContainer" parent="new game/m/v/diff/m/v/v/values/m/v/lored/m/v"]
+[node name="valInput" type="HBoxContainer" parent="new game/m/v/upgrades/m/v/v/diffValues/m/v/lored/m/v"]
 margin_left = 222.0
 margin_right = 440.0
 margin_bottom = 24.0
 size_flags_horizontal = 3
 
-[node name="icon" type="Panel" parent="new game/m/v/diff/m/v/v/values/m/v/lored/m/v/Input"]
+[node name="icon" type="Panel" parent="new game/m/v/upgrades/m/v/v/diffValues/m/v/lored/m/v/valInput"]
 margin_right = 24.0
 margin_bottom = 24.0
 rect_min_size = Vector2( 24, 24 )
 size_flags_vertical = 4
 custom_styles/panel = SubResource( 39 )
 
-[node name="Sprite" type="Sprite" parent="new game/m/v/diff/m/v/v/values/m/v/lored/m/v/Input/icon"]
+[node name="Sprite" type="Sprite" parent="new game/m/v/upgrades/m/v/v/diffValues/m/v/lored/m/v/valInput/icon"]
 position = Vector2( 12, 12 )
 texture = ExtResource( 24 )
 
-[node name="Sprite2" type="Sprite" parent="new game/m/v/diff/m/v/v/values/m/v/lored/m/v/Input/icon/Sprite"]
+[node name="Sprite2" type="Sprite" parent="new game/m/v/upgrades/m/v/v/diffValues/m/v/lored/m/v/valInput/icon/Sprite"]
 self_modulate = Color( 0, 0, 0, 0.501961 )
 show_behind_parent = true
 position = Vector2( 2, 2 )
 texture = ExtResource( 24 )
 
-[node name="flair" type="Label" parent="new game/m/v/diff/m/v/v/values/m/v/lored/m/v/Input"]
+[node name="flair" type="Label" parent="new game/m/v/upgrades/m/v/v/diffValues/m/v/lored/m/v/valInput"]
 margin_left = 28.0
 margin_top = 4.0
 margin_right = 59.0
@@ -1557,7 +3137,7 @@ custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 5 )
 text = "Input:"
 
-[node name="text" type="Label" parent="new game/m/v/diff/m/v/v/values/m/v/lored/m/v/Input"]
+[node name="text" type="Label" parent="new game/m/v/upgrades/m/v/v/diffValues/m/v/lored/m/v/valInput"]
 margin_left = 63.0
 margin_top = 3.0
 margin_right = 98.0
@@ -1566,31 +3146,31 @@ custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 3 )
 text = "10.0x"
 
-[node name="Haste" type="HBoxContainer" parent="new game/m/v/diff/m/v/v/values/m/v/lored/m/v"]
+[node name="valHaste" type="HBoxContainer" parent="new game/m/v/upgrades/m/v/v/diffValues/m/v/lored/m/v"]
 margin_top = 28.0
 margin_right = 218.0
 margin_bottom = 52.0
 size_flags_horizontal = 3
 
-[node name="icon" type="Panel" parent="new game/m/v/diff/m/v/v/values/m/v/lored/m/v/Haste"]
+[node name="icon" type="Panel" parent="new game/m/v/upgrades/m/v/v/diffValues/m/v/lored/m/v/valHaste"]
 margin_right = 24.0
 margin_bottom = 24.0
 rect_min_size = Vector2( 24, 24 )
 size_flags_vertical = 4
 custom_styles/panel = SubResource( 39 )
 
-[node name="Sprite" type="Sprite" parent="new game/m/v/diff/m/v/v/values/m/v/lored/m/v/Haste/icon"]
+[node name="Sprite" type="Sprite" parent="new game/m/v/upgrades/m/v/v/diffValues/m/v/lored/m/v/valHaste/icon"]
 position = Vector2( 12, 12 )
 scale = Vector2( 0.5, 0.5 )
 texture = ExtResource( 23 )
 
-[node name="Sprite2" type="Sprite" parent="new game/m/v/diff/m/v/v/values/m/v/lored/m/v/Haste/icon/Sprite"]
+[node name="Sprite2" type="Sprite" parent="new game/m/v/upgrades/m/v/v/diffValues/m/v/lored/m/v/valHaste/icon/Sprite"]
 self_modulate = Color( 0, 0, 0, 0.501961 )
 show_behind_parent = true
 position = Vector2( 2, 2 )
 texture = ExtResource( 23 )
 
-[node name="flair" type="Label" parent="new game/m/v/diff/m/v/v/values/m/v/lored/m/v/Haste"]
+[node name="flair" type="Label" parent="new game/m/v/upgrades/m/v/v/diffValues/m/v/lored/m/v/valHaste"]
 margin_left = 28.0
 margin_top = 4.0
 margin_right = 61.0
@@ -1600,7 +3180,7 @@ custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 5 )
 text = "Haste:"
 
-[node name="text" type="Label" parent="new game/m/v/diff/m/v/v/values/m/v/lored/m/v/Haste"]
+[node name="text" type="Label" parent="new game/m/v/upgrades/m/v/v/diffValues/m/v/lored/m/v/valHaste"]
 margin_left = 65.0
 margin_top = 3.0
 margin_right = 100.0
@@ -1609,31 +3189,31 @@ custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 3 )
 text = "x10.0"
 
-[node name="Crit" type="HBoxContainer" parent="new game/m/v/diff/m/v/v/values/m/v/lored/m/v"]
+[node name="valCrit" type="HBoxContainer" parent="new game/m/v/upgrades/m/v/v/diffValues/m/v/lored/m/v"]
 margin_left = 222.0
 margin_top = 28.0
 margin_right = 440.0
 margin_bottom = 52.0
 size_flags_horizontal = 3
 
-[node name="icon" type="Panel" parent="new game/m/v/diff/m/v/v/values/m/v/lored/m/v/Crit"]
+[node name="icon" type="Panel" parent="new game/m/v/upgrades/m/v/v/diffValues/m/v/lored/m/v/valCrit"]
 margin_right = 24.0
 margin_bottom = 24.0
 rect_min_size = Vector2( 24, 24 )
 size_flags_vertical = 4
 custom_styles/panel = SubResource( 39 )
 
-[node name="Sprite" type="Sprite" parent="new game/m/v/diff/m/v/v/values/m/v/lored/m/v/Crit/icon"]
+[node name="Sprite" type="Sprite" parent="new game/m/v/upgrades/m/v/v/diffValues/m/v/lored/m/v/valCrit/icon"]
 position = Vector2( 12, 12 )
 texture = ExtResource( 27 )
 
-[node name="Sprite2" type="Sprite" parent="new game/m/v/diff/m/v/v/values/m/v/lored/m/v/Crit/icon/Sprite"]
+[node name="Sprite2" type="Sprite" parent="new game/m/v/upgrades/m/v/v/diffValues/m/v/lored/m/v/valCrit/icon/Sprite"]
 self_modulate = Color( 0, 0, 0, 0.501961 )
 show_behind_parent = true
 position = Vector2( 2, 2 )
 texture = ExtResource( 27 )
 
-[node name="flair" type="Label" parent="new game/m/v/diff/m/v/v/values/m/v/lored/m/v/Crit"]
+[node name="flair" type="Label" parent="new game/m/v/upgrades/m/v/v/diffValues/m/v/lored/m/v/valCrit"]
 margin_left = 28.0
 margin_top = 4.0
 margin_right = 93.0
@@ -1644,7 +3224,7 @@ custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 5 )
 text = "Crit Chance:"
 
-[node name="text" type="Label" parent="new game/m/v/diff/m/v/v/values/m/v/lored/m/v/Crit"]
+[node name="text" type="Label" parent="new game/m/v/upgrades/m/v/v/diffValues/m/v/lored/m/v/valCrit"]
 margin_left = 97.0
 margin_top = 3.0
 margin_right = 130.0
@@ -1653,30 +3233,30 @@ custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 3 )
 text = "+35%"
 
-[node name="FuelCost" type="HBoxContainer" parent="new game/m/v/diff/m/v/v/values/m/v/lored/m/v"]
+[node name="valFuelCost" type="HBoxContainer" parent="new game/m/v/upgrades/m/v/v/diffValues/m/v/lored/m/v"]
 margin_top = 56.0
 margin_right = 218.0
 margin_bottom = 80.0
 size_flags_horizontal = 3
 
-[node name="icon" type="Panel" parent="new game/m/v/diff/m/v/v/values/m/v/lored/m/v/FuelCost"]
+[node name="icon" type="Panel" parent="new game/m/v/upgrades/m/v/v/diffValues/m/v/lored/m/v/valFuelCost"]
 margin_right = 24.0
 margin_bottom = 24.0
 rect_min_size = Vector2( 24, 24 )
 size_flags_vertical = 4
 custom_styles/panel = SubResource( 39 )
 
-[node name="Sprite" type="Sprite" parent="new game/m/v/diff/m/v/v/values/m/v/lored/m/v/FuelCost/icon"]
+[node name="Sprite" type="Sprite" parent="new game/m/v/upgrades/m/v/v/diffValues/m/v/lored/m/v/valFuelCost/icon"]
 position = Vector2( 12, 12 )
 texture = ExtResource( 28 )
 
-[node name="Sprite2" type="Sprite" parent="new game/m/v/diff/m/v/v/values/m/v/lored/m/v/FuelCost/icon/Sprite"]
+[node name="Sprite2" type="Sprite" parent="new game/m/v/upgrades/m/v/v/diffValues/m/v/lored/m/v/valFuelCost/icon/Sprite"]
 self_modulate = Color( 0, 0, 0, 0.501961 )
 show_behind_parent = true
 position = Vector2( 2, 2 )
 texture = ExtResource( 28 )
 
-[node name="flair" type="Label" parent="new game/m/v/diff/m/v/v/values/m/v/lored/m/v/FuelCost"]
+[node name="flair" type="Label" parent="new game/m/v/upgrades/m/v/v/diffValues/m/v/lored/m/v/valFuelCost"]
 margin_left = 28.0
 margin_top = 4.0
 margin_right = 129.0
@@ -1686,7 +3266,7 @@ custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 5 )
 text = "Fuel Consumption:"
 
-[node name="text" type="Label" parent="new game/m/v/diff/m/v/v/values/m/v/lored/m/v/FuelCost"]
+[node name="text" type="Label" parent="new game/m/v/upgrades/m/v/v/diffValues/m/v/lored/m/v/valFuelCost"]
 margin_left = 133.0
 margin_top = 3.0
 margin_right = 168.0
@@ -1695,31 +3275,31 @@ custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 3 )
 text = "10.0x"
 
-[node name="FuelStorage" type="HBoxContainer" parent="new game/m/v/diff/m/v/v/values/m/v/lored/m/v"]
+[node name="valFuelStorage" type="HBoxContainer" parent="new game/m/v/upgrades/m/v/v/diffValues/m/v/lored/m/v"]
 margin_left = 222.0
 margin_top = 56.0
 margin_right = 440.0
 margin_bottom = 80.0
 size_flags_horizontal = 3
 
-[node name="icon" type="Panel" parent="new game/m/v/diff/m/v/v/values/m/v/lored/m/v/FuelStorage"]
+[node name="icon" type="Panel" parent="new game/m/v/upgrades/m/v/v/diffValues/m/v/lored/m/v/valFuelStorage"]
 margin_right = 24.0
 margin_bottom = 24.0
 rect_min_size = Vector2( 24, 24 )
 size_flags_vertical = 4
 custom_styles/panel = SubResource( 39 )
 
-[node name="Sprite" type="Sprite" parent="new game/m/v/diff/m/v/v/values/m/v/lored/m/v/FuelStorage/icon"]
+[node name="Sprite" type="Sprite" parent="new game/m/v/upgrades/m/v/v/diffValues/m/v/lored/m/v/valFuelStorage/icon"]
 position = Vector2( 12, 12 )
 texture = ExtResource( 26 )
 
-[node name="Sprite2" type="Sprite" parent="new game/m/v/diff/m/v/v/values/m/v/lored/m/v/FuelStorage/icon/Sprite"]
+[node name="Sprite2" type="Sprite" parent="new game/m/v/upgrades/m/v/v/diffValues/m/v/lored/m/v/valFuelStorage/icon/Sprite"]
 self_modulate = Color( 0, 0, 0, 0.501961 )
 show_behind_parent = true
 position = Vector2( 2, 2 )
 texture = ExtResource( 26 )
 
-[node name="flair" type="Label" parent="new game/m/v/diff/m/v/v/values/m/v/lored/m/v/FuelStorage"]
+[node name="flair" type="Label" parent="new game/m/v/upgrades/m/v/v/diffValues/m/v/lored/m/v/valFuelStorage"]
 margin_left = 28.0
 margin_top = 4.0
 margin_right = 97.0
@@ -1729,7 +3309,7 @@ custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 5 )
 text = "Fuel Storage:"
 
-[node name="text" type="Label" parent="new game/m/v/diff/m/v/v/values/m/v/lored/m/v/FuelStorage"]
+[node name="text" type="Label" parent="new game/m/v/upgrades/m/v/v/diffValues/m/v/lored/m/v/valFuelStorage"]
 margin_left = 101.0
 margin_top = 3.0
 margin_right = 136.0
@@ -1738,18 +3318,18 @@ custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 3 )
 text = "10.0x"
 
-[node name="presets" type="MarginContainer" parent="new game/m/v/diff/m/v/v"]
-margin_top = 432.0
+[node name="presets" type="MarginContainer" parent="new game/m/v/upgrades/m/v/v"]
+margin_top = 157.0
 margin_right = 480.0
-margin_bottom = 524.0
+margin_bottom = 249.0
 
-[node name="bg" type="Panel" parent="new game/m/v/diff/m/v/v/presets"]
+[node name="bg" type="Panel" parent="new game/m/v/upgrades/m/v/v/presets"]
 self_modulate = Color( 0.219608, 0.219608, 0.219608, 1 )
 margin_right = 480.0
 margin_bottom = 92.0
 custom_styles/panel = SubResource( 1 )
 
-[node name="m" type="MarginContainer" parent="new game/m/v/diff/m/v/v/presets"]
+[node name="m" type="MarginContainer" parent="new game/m/v/upgrades/m/v/v/presets"]
 margin_right = 480.0
 margin_bottom = 92.0
 custom_constants/margin_right = 10
@@ -1757,29 +3337,28 @@ custom_constants/margin_top = 10
 custom_constants/margin_left = 10
 custom_constants/margin_bottom = 10
 
-[node name="v" type="VBoxContainer" parent="new game/m/v/diff/m/v/v/presets/m"]
+[node name="v" type="VBoxContainer" parent="new game/m/v/upgrades/m/v/v/presets/m"]
 margin_left = 10.0
 margin_top = 10.0
 margin_right = 470.0
 margin_bottom = 82.0
 
-[node name="text" type="Label" parent="new game/m/v/diff/m/v/v/presets/m/v"]
+[node name="text" type="Label" parent="new game/m/v/upgrades/m/v/v/presets/m/v"]
 margin_right = 460.0
 margin_bottom = 17.0
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 3 )
 text = "Presets"
 
-[node name="select" type="OptionButton" parent="new game/m/v/diff/m/v/v/presets/m/v"]
+[node name="difficulty dropdown" type="OptionButton" parent="new game/m/v/upgrades/m/v/v/presets/m/v"]
 margin_top = 21.0
 margin_right = 460.0
 margin_bottom = 53.0
 rect_min_size = Vector2( 0, 32 )
 size_flags_horizontal = 3
 theme = ExtResource( 17 )
-text = "Select difficulty"
 
-[node name="desc" type="Label" parent="new game/m/v/diff/m/v/v/presets/m/v"]
+[node name="diff desc" type="Label" parent="new game/m/v/upgrades/m/v/v/presets/m/v"]
 margin_top = 57.0
 margin_right = 460.0
 margin_bottom = 72.0
@@ -1789,10 +3368,10 @@ custom_fonts/font = SubResource( 5 )
 text = "desc aslkjedf ;lkajs df;klja sd;lk fjas;kldf j;lkasjd f;klasj df;lkajs f"
 autowrap = true
 
-[node name="flair" type="Label" parent="new game/m/v/diff/m/v"]
-margin_top = 534.0
+[node name="flair" type="Label" parent="new game/m/v/upgrades/m/v"]
+margin_top = 259.0
 margin_right = 480.0
-margin_bottom = 549.0
+margin_bottom = 274.0
 mouse_filter = 0
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 5 )
@@ -1800,114 +3379,15 @@ text = "Once you begin the game, the difficulty may not be changed."
 align = 1
 autowrap = true
 
-[node name="prefs" type="MarginContainer" parent="new game/m/v"]
-visible = false
-margin_left = 97.0
-margin_right = 267.0
-margin_bottom = 106.0
-size_flags_horizontal = 4
-
-[node name="bg" type="Panel" parent="new game/m/v/prefs"]
-margin_right = 170.0
-margin_bottom = 106.0
-mouse_filter = 2
-custom_styles/panel = SubResource( 56 )
-
-[node name="m" type="MarginContainer" parent="new game/m/v/prefs"]
-margin_right = 170.0
-margin_bottom = 106.0
-custom_constants/margin_right = 10
-custom_constants/margin_top = 10
-custom_constants/margin_left = 10
-custom_constants/margin_bottom = 10
-
-[node name="v" type="VBoxContainer" parent="new game/m/v/prefs/m"]
-margin_left = 10.0
-margin_top = 10.0
-margin_right = 160.0
-margin_bottom = 96.0
-
-[node name="filename" type="VBoxContainer" parent="new game/m/v/prefs/m/v"]
-margin_right = 150.0
-margin_bottom = 43.0
-rect_pivot_offset = Vector2( -654, -100 )
-size_flags_horizontal = 3
-
-[node name="flair" type="Label" parent="new game/m/v/prefs/m/v/filename"]
-margin_right = 150.0
-margin_bottom = 15.0
-custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-custom_fonts/font = SubResource( 57 )
-text = "Filename"
-
-[node name="TextEdit" type="TextEdit" parent="new game/m/v/prefs/m/v/filename"]
-margin_top = 19.0
-margin_right = 150.0
-margin_bottom = 43.0
-rect_min_size = Vector2( 150, 24 )
-rect_pivot_offset = Vector2( -566, -326 )
-size_flags_horizontal = 4
-size_flags_vertical = 4
-custom_fonts/font = SubResource( 51 )
-text = "Save.lored"
-breakpoint_gutter = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="v2" type="VBoxContainer" parent="new game/m/v/prefs/m/v"]
-margin_top = 47.0
-margin_right = 150.0
-margin_bottom = 86.0
-custom_constants/separation = 10
-
-[node name="color" type="VBoxContainer" parent="new game/m/v/prefs/m/v/v2"]
-margin_right = 150.0
-margin_bottom = 39.0
-rect_pivot_offset = Vector2( -20, -147 )
-size_flags_horizontal = 3
-
-[node name="flair" type="Label" parent="new game/m/v/prefs/m/v/v2/color"]
-margin_right = 150.0
-margin_bottom = 15.0
-custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-custom_fonts/font = SubResource( 57 )
-text = "Color"
-
-[node name="m" type="MarginContainer" parent="new game/m/v/prefs/m/v/v2/color"]
-margin_top = 19.0
-margin_right = 150.0
-margin_bottom = 39.0
-
-[node name="ColorRect" type="ColorRect" parent="new game/m/v/prefs/m/v/v2/color/m"]
-self_modulate = Color( 0.6, 0.0901961, 0.0901961, 1 )
-margin_right = 150.0
-margin_bottom = 20.0
-rect_min_size = Vector2( 0, 20 )
-rect_pivot_offset = Vector2( -309, 10 )
-script = ExtResource( 18 )
-
-[node name="select" type="Button" parent="new game/m/v/prefs/m/v/v2/color/m"]
-margin_right = 150.0
-margin_bottom = 20.0
-rect_pivot_offset = Vector2( 71, 48 )
-mouse_default_cursor_shape = 2
-custom_styles/hover = SubResource( 58 )
-custom_styles/pressed = SubResource( 59 )
-custom_styles/normal = SubResource( 60 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
 [node name="v" type="VBoxContainer" parent="new game/m/v"]
-margin_top = 589.0
-margin_right = 500.0
-margin_bottom = 670.0
+margin_top = 567.0
+margin_right = 548.0
+margin_bottom = 648.0
 size_flags_vertical = 8
 alignment = 2
 
 [node name="text" type="Label" parent="new game/m/v/v"]
-margin_right = 500.0
+margin_right = 548.0
 margin_bottom = 17.0
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 49 )
@@ -1916,13 +3396,12 @@ align = 1
 
 [node name="h" type="HBoxContainer" parent="new game/m/v/v"]
 margin_top = 21.0
-margin_right = 500.0
+margin_right = 548.0
 margin_bottom = 81.0
 alignment = 1
 
 [node name="save info" type="MarginContainer" parent="new game/m/v/v/h"]
-margin_left = 68.0
-margin_right = 248.0
+margin_right = 180.0
 margin_bottom = 60.0
 rect_min_size = Vector2( 180, 60 )
 mouse_filter = 2
@@ -2011,8 +3490,8 @@ __meta__ = {
 }
 
 [node name="diff" type="MarginContainer" parent="new game/m/v/v/h"]
-margin_left = 252.0
-margin_right = 432.0
+margin_left = 184.0
+margin_right = 364.0
 margin_bottom = 60.0
 rect_min_size = Vector2( 180, 60 )
 mouse_filter = 2
@@ -2101,8 +3580,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="prefs" type="MarginContainer" parent="new game/m/v/v/h"]
-visible = false
+[node name="upgrades" type="MarginContainer" parent="new game/m/v/v/h"]
 margin_left = 368.0
 margin_right = 548.0
 margin_bottom = 60.0
@@ -2118,53 +3596,53 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="bg" type="Panel" parent="new game/m/v/v/h/prefs"]
+[node name="bg" type="Panel" parent="new game/m/v/v/h/upgrades"]
 margin_right = 180.0
 margin_bottom = 60.0
 mouse_filter = 2
 custom_styles/panel = SubResource( 42 )
 
-[node name="v" type="VBoxContainer" parent="new game/m/v/v/h/prefs"]
+[node name="v" type="VBoxContainer" parent="new game/m/v/v/h/upgrades"]
 margin_right = 180.0
 margin_bottom = 60.0
 alignment = 1
 
-[node name="h" type="HBoxContainer" parent="new game/m/v/v/h/prefs/v"]
+[node name="h" type="HBoxContainer" parent="new game/m/v/v/h/upgrades/v"]
 margin_top = 18.0
 margin_right = 180.0
 margin_bottom = 42.0
 alignment = 1
 
-[node name="flair" type="Panel" parent="new game/m/v/v/h/prefs/v/h"]
-margin_left = 35.0
-margin_right = 59.0
+[node name="flair" type="Panel" parent="new game/m/v/v/h/upgrades/v/h"]
+margin_left = 42.0
+margin_right = 66.0
 margin_bottom = 24.0
 rect_min_size = Vector2( 24, 24 )
 size_flags_vertical = 4
 custom_styles/panel = SubResource( 39 )
 
-[node name="Sprite" type="Sprite" parent="new game/m/v/v/h/prefs/v/h/flair"]
+[node name="Sprite" type="Sprite" parent="new game/m/v/v/h/upgrades/v/h/flair"]
 position = Vector2( 12, 12 )
-texture = ExtResource( 5 )
+texture = ExtResource( 29 )
 
-[node name="Sprite2" type="Sprite" parent="new game/m/v/v/h/prefs/v/h/flair/Sprite"]
+[node name="Sprite2" type="Sprite" parent="new game/m/v/v/h/upgrades/v/h/flair/Sprite"]
 self_modulate = Color( 0, 0, 0, 0.501961 )
 show_behind_parent = true
-position = Vector2( 2, 2 )
-texture = ExtResource( 5 )
+position = Vector2( 1, 1 )
+texture = ExtResource( 29 )
 
-[node name="text" type="Label" parent="new game/m/v/v/h/prefs/v/h"]
-margin_left = 63.0
+[node name="text" type="Label" parent="new game/m/v/v/h/upgrades/v/h"]
+margin_left = 70.0
 margin_top = 2.0
-margin_right = 145.0
+margin_right = 138.0
 margin_bottom = 21.0
 size_flags_horizontal = 4
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 38 )
-text = "Preferences"
+text = "Upgrades"
 align = 1
 
-[node name="desc" type="Label" parent="new game/m/v/v/h/prefs/v"]
+[node name="desc" type="Label" parent="new game/m/v/v/h/upgrades/v"]
 visible = false
 margin_top = 36.0
 margin_right = 180.0
@@ -2173,11 +3651,11 @@ hint_tooltip = "Step: 0.1"
 mouse_filter = 1
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 41 )
-text = "Customize your experience"
+text = "Affects your sanity"
 align = 1
 autowrap = true
 
-[node name="button" type="Button" parent="new game/m/v/v/h/prefs"]
+[node name="button" type="Button" parent="new game/m/v/v/h/upgrades"]
 margin_right = 180.0
 margin_bottom = 60.0
 rect_min_size = Vector2( 0, 32 )
@@ -3308,6 +4786,7 @@ centered = false
 [node name="tip" type="Node2D" parent="."]
 
 [node name="color" type="HBoxContainer" parent="."]
+visible = false
 margin_left = 872.0
 margin_right = 1280.0
 margin_bottom = 720.0
@@ -3791,26 +5270,38 @@ __meta__ = {
 [connection signal="mouse_entered" from="new game/m/v/save info/m/v/randomize/button" to="." method="_on_randomize_mouse_entered"]
 [connection signal="mouse_exited" from="new game/m/v/save info/m/v/randomize/button" to="." method="_on_randomize_mouse_exited"]
 [connection signal="pressed" from="new game/m/v/save info/m/v/randomize/button" to="." method="_on_randomize_pressed"]
-[connection signal="value_changed" from="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/Output/h/HSlider" to="." method="_on_HSlider_value_changed" binds= [ "Output" ]]
-[connection signal="value_changed" from="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/Input/h/HSlider" to="." method="_on_HSlider_value_changed" binds= [ "Input" ]]
-[connection signal="value_changed" from="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/Haste/h/HSlider" to="." method="_on_HSlider_value_changed" binds= [ "Haste" ]]
-[connection signal="value_changed" from="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/Crit/h/HSlider" to="." method="_on_HSlider_value_changed" binds= [ "Crit" ]]
-[connection signal="value_changed" from="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelCost/h/HSlider" to="." method="_on_HSlider_value_changed" binds= [ "FuelCost" ]]
-[connection signal="value_changed" from="new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelStorage/h/HSlider" to="." method="_on_HSlider_value_changed" binds= [ "FuelStorage" ]]
-[connection signal="mouse_entered" from="new game/m/v/diff/m/v/v/custom/m/v/randomize/button" to="." method="_on_custom_randomize_mouse_entered"]
-[connection signal="mouse_exited" from="new game/m/v/diff/m/v/v/custom/m/v/randomize/button" to="." method="_on_custom_randomize_mouse_exited"]
-[connection signal="pressed" from="new game/m/v/diff/m/v/v/custom/m/v/randomize/button" to="." method="_on_custom_randomize_pressed"]
-[connection signal="item_selected" from="new game/m/v/diff/m/v/v/presets/m/v/select" to="." method="_on_difficulty_selected"]
-[connection signal="text_changed" from="new game/m/v/prefs/m/v/filename/TextEdit" to="." method="_on_import_byString_savename_text_changed"]
+[connection signal="value_changed" from="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v/lored/m/v/customOutput/h/HSlider" to="." method="_on_HSlider_value_changed" binds= [ "Output" ]]
+[connection signal="value_changed" from="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v/lored/m/v/customInput/h/HSlider" to="." method="_on_HSlider_value_changed" binds= [ "Input" ]]
+[connection signal="value_changed" from="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v/lored/m/v/customHaste/h/HSlider" to="." method="_on_HSlider_value_changed" binds= [ "Haste" ]]
+[connection signal="value_changed" from="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v/lored/m/v/customCrit/h/HSlider" to="." method="_on_HSlider_value_changed" binds= [ "Crit" ]]
+[connection signal="value_changed" from="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v/lored/m/v/customFuelCost/h/HSlider" to="." method="_on_HSlider_value_changed" binds= [ "FuelCost" ]]
+[connection signal="value_changed" from="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v/lored/m/v/customFuelStorage/h/HSlider" to="." method="_on_HSlider_value_changed" binds= [ "FuelStorage" ]]
+[connection signal="mouse_entered" from="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v/randomize/button" to="." method="_on_custom_randomize_mouse_entered"]
+[connection signal="mouse_exited" from="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v/randomize/button" to="." method="_on_custom_randomize_mouse_exited"]
+[connection signal="pressed" from="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustom/m/v/randomize/button" to="." method="_on_custom_randomize_pressed"]
+[connection signal="mouse_entered" from="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustomUpgrades/m/v/randomize/button" to="." method="_on_custom_randomize_mouse_entered"]
+[connection signal="mouse_exited" from="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustomUpgrades/m/v/randomize/button" to="." method="_on_custom_randomize_mouse_exited"]
+[connection signal="pressed" from="new game/m/v/diff/m/v/v/diffCustom/VBoxContainer/diffCustomUpgrades/m/v/randomize/button" to="." method="_on_custom_randomize_pressed"]
+[connection signal="item_selected" from="new game/m/v/diff/m/v/v/presets/m/v/difficulty dropdown" to="." method="_on_difficulty_selected"]
+[connection signal="value_changed" from="new game/m/v/upgrades/m/v/v/diffCustom/m/v/lored/m/v/customOutput/h/HSlider" to="." method="_on_HSlider_value_changed" binds= [ "Output" ]]
+[connection signal="value_changed" from="new game/m/v/upgrades/m/v/v/diffCustom/m/v/lored/m/v/customInput/h/HSlider" to="." method="_on_HSlider_value_changed" binds= [ "Input" ]]
+[connection signal="value_changed" from="new game/m/v/upgrades/m/v/v/diffCustom/m/v/lored/m/v/customHaste/h/HSlider" to="." method="_on_HSlider_value_changed" binds= [ "Haste" ]]
+[connection signal="value_changed" from="new game/m/v/upgrades/m/v/v/diffCustom/m/v/lored/m/v/customCrit/h/HSlider" to="." method="_on_HSlider_value_changed" binds= [ "Crit" ]]
+[connection signal="value_changed" from="new game/m/v/upgrades/m/v/v/diffCustom/m/v/lored/m/v/customFuelCost/h/HSlider" to="." method="_on_HSlider_value_changed" binds= [ "FuelCost" ]]
+[connection signal="value_changed" from="new game/m/v/upgrades/m/v/v/diffCustom/m/v/lored/m/v/customFuelStorage/h/HSlider" to="." method="_on_HSlider_value_changed" binds= [ "FuelStorage" ]]
+[connection signal="mouse_entered" from="new game/m/v/upgrades/m/v/v/diffCustom/m/v/randomize/button" to="." method="_on_custom_randomize_mouse_entered"]
+[connection signal="mouse_exited" from="new game/m/v/upgrades/m/v/v/diffCustom/m/v/randomize/button" to="." method="_on_custom_randomize_mouse_exited"]
+[connection signal="pressed" from="new game/m/v/upgrades/m/v/v/diffCustom/m/v/randomize/button" to="." method="_on_custom_randomize_pressed"]
+[connection signal="item_selected" from="new game/m/v/upgrades/m/v/v/presets/m/v/difficulty dropdown" to="." method="_on_difficulty_selected"]
 [connection signal="mouse_entered" from="new game/m/v/v/h/save info/button" to="." method="_on_new_saveinfo_mouse_entered"]
 [connection signal="mouse_exited" from="new game/m/v/v/h/save info/button" to="." method="_on_new_saveinfo_mouse_exited"]
 [connection signal="pressed" from="new game/m/v/v/h/save info/button" to="." method="_on_new_safeinfo_pressed"]
 [connection signal="mouse_entered" from="new game/m/v/v/h/diff/button" to="." method="_on_new_diff_entered"]
 [connection signal="mouse_exited" from="new game/m/v/v/h/diff/button" to="." method="_on_new_diff_mouse_exited"]
 [connection signal="pressed" from="new game/m/v/v/h/diff/button" to="." method="_on_new_diff_pressed"]
-[connection signal="mouse_entered" from="new game/m/v/v/h/prefs/button" to="." method="_on_new_prefs_mouse_entered"]
-[connection signal="mouse_exited" from="new game/m/v/v/h/prefs/button" to="." method="_on_new_prefs_mouse_exited"]
-[connection signal="pressed" from="new game/m/v/v/h/prefs/button" to="." method="_on_new_prefs_pressed"]
+[connection signal="mouse_entered" from="new game/m/v/v/h/upgrades/button" to="." method="_on_new_upgrades_entered"]
+[connection signal="mouse_exited" from="new game/m/v/v/h/upgrades/button" to="." method="_on_new_upgrades_mouse_exited"]
+[connection signal="pressed" from="new game/m/v/v/h/upgrades/button" to="." method="_on_new_upgrades_pressed"]
 [connection signal="mouse_entered" from="all saves/top/h/v/v/back/m/button" to="." method="_on_all_saves_back_mouse_entered"]
 [connection signal="mouse_exited" from="all saves/top/h/v/v/back/m/button" to="." method="_on_all_saves_back_mouse_exited"]
 [connection signal="pressed" from="all saves/top/h/v/v/back/m/button" to="." method="_on_all_saves_back_pressed"]

@@ -12,7 +12,7 @@
 [ext_resource path="res://Sprites/resources/carc.png" type="Texture" id=10]
 [ext_resource path="res://Prefabs/menu/SaveMenu.tscn" type="PackedScene" id=11]
 [ext_resource path="res://Prefabs/menu/OptionsMenu.tscn" type="PackedScene" id=12]
-[ext_resource path="res://Sprites/tab/s1n.png" type="Texture" id=13]
+[ext_resource path="res://Sprites/Menu/upgrades.png" type="Texture" id=13]
 [ext_resource path="res://Sprites/tab/t0.png" type="Texture" id=14]
 [ext_resource path="res://Sprites/tab/s2.png" type="Texture" id=15]
 [ext_resource path="res://Prefabs/menu/StatsMenu.tscn" type="PackedScene" id=16]
@@ -440,6 +440,7 @@ custom_styles/panel = SubResource( 16 )
 
 [node name="Sprite" type="Sprite" parent="m/Tabs/VBoxContainer/upgradesTab/m/h/icon"]
 position = Vector2( 16, 16 )
+scale = Vector2( 1.25, 1.25 )
 texture = ExtResource( 13 )
 
 [node name="shadow" type="Sprite" parent="m/Tabs/VBoxContainer/upgradesTab/m/h/icon/Sprite"]

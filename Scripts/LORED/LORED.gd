@@ -4,9 +4,8 @@ extends Reference
 
 
 
-const saved_vars := []#["purchased", "timesPurchased", "level", "currentFuel"]
+const saved_vars := ["purchased", "timesPurchased", "level", "currentFuel"]
 
-var stats: LORED_Resource
 
 var manager: Node2D
 func assignManager(_manager: Node2D):
@@ -16,15 +15,15 @@ func assignManager(_manager: Node2D):
 var type: int
 var tab: int
 var stage: int
-#var level: int = 0
-#var timesPurchased := 0
+var level: int = 0
+var timesPurchased := 0
 
 var smart := false
 var asleep := false
 var working := false # job in progress
 var keyLORED := false
 var unlocked := false # a wish was completed that unlocked this lored
-#var purchased := false # purchased at least a single time in the current run
+var purchased := false # purchased at least a single time in the current run
 
 var name: String
 var shorthandKey: String
@@ -68,12 +67,12 @@ func load(data: Dictionary) -> void:
 			set(x, loadedVars[x])
 	#*
 	
-	if not stats.purchased:
+	if not purchased:
 		return
 	
 	jobs.values()[0].unlock()
 	
-	if stats.purchased:
+	if purchased:
 		gv.list.lored["active " + str(tab)].append(type)
 		gv.list.lored["active"].append(type)
 	
@@ -81,8 +80,6 @@ func load(data: Dictionary) -> void:
 
 
 func _init(_type: int):
-	
-	stats = LORED_Resource.new()
 	
 	type = _type
 	
@@ -758,7 +755,7 @@ func getOutputText() -> String:
 	return outputBits.totalText
 
 func updateOutput():
-	var modifier: Big = Big.new(2).power(stats.level - 1)
+	var modifier: Big = Big.new(2).power(level - 1)
 	outputBits.setValue(lv.Num.MULTIPLY, lv.Num.FROM_LEVELS, modifier)
 	queue(lv.Queue.OUTPUT)
 func setOutputValue(folder: int, item: int, amount):
@@ -803,7 +800,7 @@ func getInputText() -> String:
 	return inputBits.totalText
 
 func updateInput():
-	var modifier: Big = Big.new(2).power(stats.level - 1)
+	var modifier: Big = Big.new(2).power(level - 1)
 	inputBits.setValue(lv.Num.MULTIPLY, lv.Num.FROM_LEVELS, modifier)
 	queue(lv.Queue.INPUT)
 
@@ -864,7 +861,7 @@ func takeawayCost():
 		gv.emit_signal("ResourceSpent", c)
 func updateCost():
 	for c in costBits:
-		var modifier: Big = Big.new(costModifier).power(stats.level)
+		var modifier: Big = Big.new(costModifier).power(level)
 		costBits[c].setValue(lv.Num.MULTIPLY, lv.Num.FROM_LEVELS, modifier)
 	sync_COST()
 
@@ -905,7 +902,7 @@ func getFuelCostText() -> String:
 	return fuelCostBits.totalText
 
 func updateFuelCost():
-	var modifier: Big = Big.new(2).power(stats.level - 1)
+	var modifier: Big = Big.new(2).power(level - 1)
 	fuelCostBits.setValue(lv.Num.MULTIPLY, lv.Num.FROM_LEVELS, modifier)
 	queue(lv.Queue.FUEL_COST)
 
@@ -942,7 +939,7 @@ func getCurrentFuelPercent() -> float:
 	return currentFuel.percent(fuelStorage)
 
 func updateFuelStorage():
-	var modifier: Big = Big.new(2).power(stats.level - 1)
+	var modifier: Big = Big.new(2).power(level - 1)
 	fuelStorageBits.setValue(lv.Num.MULTIPLY, lv.Num.FROM_LEVELS, modifier)
 	queue(lv.Queue.FUEL_STORAGE)
 
@@ -1006,6 +1003,7 @@ var hasteBits := BitsFloat.new({
 }, "haste")
 
 func sync_HASTE():
+	hasteBits.updateDynamic(dynamic_HASTE)
 	haste = hasteBits.total
 	syncJobs_duration()
 	updateTotalJobTime = true
@@ -1030,6 +1028,7 @@ func resetHaste():
 
 var dynamic_OUTPUT: Dictionary
 var dynamic_INPUT: Dictionary
+var dynamic_HASTE: Dictionary
 
 func applyDynamicUpgrade(key: String, effectIndex: int, folder: String):
 	folder = "dynamic_" + folder
@@ -1074,7 +1073,7 @@ func getJobDuration(index: int) -> float:
 
 func prePurchase():
 	
-	stats.times_purchased += 1
+	timesPurchased += 1
 	
 	takeawayCost()
 	
@@ -1085,17 +1084,16 @@ func purchased():
 	if not type in gv.list.lored["active " + str(tab)]:
 		gv.list.lored["active " + str(tab)].append(type)
 	
-	if not stats.purchased:
+	if not purchased:
 		firstPurchaseOfTheRun()
 		return
 	
 	levelUp()
 	currentFuel.a(Big.new(fuelStorageBits.total).d(2))
-	stats.current_fuel = getCurrentFuelText()
 
-func levelUp(newLevel := stats.level + 1):
+func levelUp(newLevel := level + 1):
 	
-	stats.level = newLevel
+	level = newLevel
 	
 	updateFuelCost()
 	updateFuelStorage()
@@ -1105,9 +1103,9 @@ func levelUp(newLevel := stats.level + 1):
 
 func firstPurchaseOfTheRun():
 	
-	stats.purchased = true
+	purchased = true
 	
-	stats.level += 1
+	level += 1
 	
 	updateCost()
 	
@@ -1134,7 +1132,6 @@ func firstPurchaseOfTheRun():
 		gv.check_for_the_s2_shit()
 func setFuelToMax():
 	currentFuel = Big.new(fuelStorage)
-	stats.current_fuel = getCurrentFuelText()
 
 
 
@@ -1243,7 +1240,7 @@ func getOfflineEarnings(timeOffline: int):
 	
 	var offNet = getOfflineNet()
 	
-	if not stats.purchased:
+	if not purchased:
 		return
 	
 	for job in offNet:
@@ -1272,14 +1269,14 @@ func getOfflineEarnings(timeOffline: int):
 # - - - Actions
 
 func reset():
-	stats.level = 0
+	level = 0
 	fuelCostBits.setValue(lv.Num.MULTIPLY, lv.Num.FROM_LEVELS, Big.new(1))
 	fuelStorageBits.setValue(lv.Num.MULTIPLY, lv.Num.FROM_LEVELS, Big.new(1))
 	outputBits.setValue(lv.Num.MULTIPLY, lv.Num.FROM_LEVELS, Big.new(1))
 	inputBits.setValue(lv.Num.MULTIPLY, lv.Num.FROM_LEVELS, Big.new(1))
 	for c in cost:
 		costBits[c].setValue(lv.Num.MULTIPLY, lv.Num.FROM_LEVELS, Big.new(1))
-	stats.purchased = false
+	purchased = false
 #	unlocked = true if key in ["stone", "coal"] else false
 #
 #	halfway_reset_stuff()

@@ -7,7 +7,7 @@ extends Node
 const hax_pow := 1.0 # 1.0 for normal
 var fps: float = 0.0666 # default (15 fps) - [0.0666, 0.0333, 0.0166] # 15, 30, 60
 const PLATFORM := 1 # see line 12
-const dev_mode := false
+const dev_mode := true
 
 enum Platform {
 	BROWSER, # 0
@@ -354,6 +354,9 @@ func check_for_the_s2_shit():
 	get_node("/root/Root").unlock_tab(Tab.EXTRA_NORMAL)
 
 const SRC := {
+	
+	"Upgrades": preload("res://Prefabs/upgrade/Upgrades.tscn"),
+	
 	"emote": preload("res://Prefabs/NewLORED/Emote.tscn"),
 	"flash": preload("res://Prefabs/Flash.tscn"),
 	
@@ -1217,10 +1220,6 @@ func resetList():
 		list.upgrade[str(Tab[t])] = []
 		list.upgrade["unowned " + str(Tab[t])] = []
 		list.upgrade["owned " + str(Tab[t])] = []
-	for t in Tab:
-		list.upgrade[str(Tab[t])] = []
-		list.upgrade["unowned " + str(Tab[t])] = []
-		list.upgrade["owned " + str(Tab[t])] = []
 
 func append(list: Array, value):
 	if value in list:
@@ -1407,7 +1406,7 @@ var stats := {
 		"Refuel": {"granted": 0, "denied": 0,},
 		"Joy Collection": {"granted": 0, "denied": 0,},
 		"Grief Collection": {"granted": 0, "denied": 0,},
-		#"Limit Break": {"granted": 0, "denied": 0,},
+		"Limit Break": {"granted": 0, "denied": 0,},
 	},
 	"UpgradesPurchased": {},
 	"ResourceStats": {"collected": {}, "used": {}, "spent": {}},
@@ -1599,3 +1598,4 @@ func newOutputText(details: Dictionary, parent_node):
 	var outputText = SRC["flying text"].instance()
 	outputText.init(details)
 	parent_node.add_child(outputText)
+

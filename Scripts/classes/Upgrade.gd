@@ -294,3 +294,15 @@ func load(data: Dictionary):
 			set(x, str2var(data[x]))
 
 
+
+func alter_Limit_Break():
+	if applied:
+		print(gv.up["Limit Break"].effects)
+		remove()
+	
+	gv.up["Limit Break"].effects.clear()
+	gv.up["Limit Break"].effects.append(Effect.new("haste", gv.list.lored[gv.Tab.S1] + gv.list.lored[gv.Tab.S2]))
+	gv.up["Limit Break"].effects[0].dynamic = true
+	sync_effects()
+	apply()
+	print(gv.up["Limit Break"].effects)

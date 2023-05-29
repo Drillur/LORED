@@ -126,6 +126,10 @@ func init() -> void:
 	var stage = "1"
 	var parent_path = gn.category % "0"
 	
+	var gay = gv.SRC["Upgrades"].instance()
+	gay.setup(gv.Tab.NORMAL)
+	get_node("%TabContainer").add_child(gay)
+	
 	# s1n
 	if true:
 		

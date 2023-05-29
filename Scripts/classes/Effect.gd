@@ -58,6 +58,8 @@ func apply(upgrade_name: String):
 					lv.lored[b].applyDynamicUpgrade(upgrade_name, index, "OUTPUT")
 				"input":
 					lv.lored[b].applyDynamicUpgrade(upgrade_name, index, "INPUT")
+				"haste":
+					lv.lored[b].applyDynamicUpgrade(upgrade_name, index, "HASTE")
 		
 		return
 	

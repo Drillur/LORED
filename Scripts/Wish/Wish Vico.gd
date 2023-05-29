@@ -185,8 +185,8 @@ func flyingTextIfComplete():
 	
 	texts.append({ # joy
 		"text": "+1",
-		"icon": gv.sprite["joy"],
-		"color": gv.COLORS["joy"],
+		"icon": gv.sprite["JOY"],
+		"color": gv.COLORS["JOY"],
 		"position": flyingTextPosition
 	})
 	
@@ -201,8 +201,8 @@ func flyingTextIfDiscarded():
 	
 	rt.throwText({
 		"text": "+1",
-		"icon": gv.sprite["grief"],
-		"color": gv.COLORS["grief"],
+		"icon": gv.sprite["GRIEF"],
+		"color": gv.COLORS["GRIEF"],
 		"position": flyingTextPosition
 	})
 

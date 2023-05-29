@@ -13,31 +13,23 @@ onready var importByFileWindow = get_node("import/byFile failure")
 onready var exitConfirm = get_node("exitConfirm")
 onready var newGameWindow = get_node("new game")
 
-onready var diffDropdown = get_node("new game/m/v/diff/m/v/v/presets/m/v/select")
-onready var diffDesc = get_node("new game/m/v/diff/m/v/v/presets/m/v/desc")
-onready var diffValues = get_node("new game/m/v/diff/m/v/v/values")
-onready var diffCustom = get_node("new game/m/v/diff/m/v/v/custom")
+onready var diffDropdown = get_node("%difficulty dropdown")
+onready var diffDesc = get_node("%diff desc")
+onready var diffValues = get_node("%diffValues")
+onready var diffCustom = get_node("%diffCustom")
 
-onready var customize_Output_text = get_node("new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/Output/TextEdit")
-onready var customize_Output_slider = get_node("new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/Output/h/HSlider")
-onready var customize_Input_text = get_node("new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/Input/TextEdit")
-onready var customize_Input_slider = get_node("new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/Input/h/HSlider")
-onready var customize_Haste_text = get_node("new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/Haste/TextEdit")
-onready var customize_Haste_slider = get_node("new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/Haste/h/HSlider")
-onready var customize_Crit_text = get_node("new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/Crit/TextEdit")
-onready var customize_Crit_slider = get_node("new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/Crit/h/HSlider")
-onready var customize_FuelStorage_text = get_node("new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelStorage/TextEdit")
-onready var customize_FuelStorage_slider = get_node("new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelStorage/h/HSlider")
-onready var customize_FuelCost_text = get_node("new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelCost/TextEdit")
-onready var customize_FuelCost_slider = get_node("new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/FuelCost/h/HSlider")
-
-
-onready var _Output = get_node("new game/m/v/diff/m/v/v/values/m/v/lored/m/v/Output/text")
-onready var _Input = get_node("new game/m/v/diff/m/v/v/values/m/v/lored/m/v/Input/text")
-onready var _Haste = get_node("new game/m/v/diff/m/v/v/values/m/v/lored/m/v/Haste/text")
-onready var _Crit = get_node("new game/m/v/diff/m/v/v/values/m/v/lored/m/v/Crit/text")
-onready var _FuelStorage = get_node("new game/m/v/diff/m/v/v/values/m/v/lored/m/v/FuelStorage/text")
-onready var _FuelCost = get_node("new game/m/v/diff/m/v/v/values/m/v/lored/m/v/FuelCost/text")
+onready var customize_Output_text = get_node("%customOutput/TextEdit")
+onready var customize_Output_slider = get_node("%customOutput/h/HSlider")
+onready var customize_Input_text = get_node("%customInput/TextEdit")
+onready var customize_Input_slider = get_node("%customInput/h/HSlider")
+onready var customize_Haste_text = get_node("%customHaste/TextEdit")
+onready var customize_Haste_slider = get_node("%customHaste/h/HSlider")
+onready var customize_Crit_text = get_node("%customCrit/TextEdit")
+onready var customize_Crit_slider = get_node("%customCrit/h/HSlider")
+onready var customize_FuelCost_text = get_node("%customFuelCost/TextEdit")
+onready var customize_FuelCost_slider = get_node("%customFuelCost/h/HSlider")
+onready var customize_FuelStorage_text = get_node("%customFuelStorage/TextEdit")
+onready var customize_FuelStorage_slider = get_node("%customFuelStorage/h/HSlider")
 
 var no_saves_found := false
 
@@ -228,17 +220,16 @@ func resetDiffOption(attribute: String):
 
 func setOptionValue(option: String, val: float):
 	
-	var node_var = "_" + option
-	
+	var node_var = "%val" + option + "/text"
 	if option == "Crit":
 		if val >= 0:
-			get(node_var).text = "+" + str(val)
+			get_node(node_var).text = "+" + str(val)
 		else:
-			get(node_var).text = str(val)
+			get_node(node_var).text = str(val)
 	else:
-		get(node_var).text = str(val) + "x"
+		get_node(node_var).text = str(val) + "x"
 	
-	get(node_var).self_modulate = getOptionColor(option, val)
+	get_node(node_var).self_modulate = getOptionColor(option, val)
 
 func getOptionColor(option: String, val: float) -> Color:
 	match option:
@@ -552,7 +543,7 @@ func _on_newgame_pressed() -> void:
 func _on_newgame_back_pressed() -> void:
 	get_node("new game/m/v/save info").hide()
 	get_node("new game/m/v/diff").hide()
-	get_node("new game/m/v/prefs").hide()
+	get_node("new game/m/v/upgrades").hide()
 	newGameWindow.hide()
 	get_node("h").show()
 	_on_newgame_back_mouse_exited()
@@ -562,16 +553,16 @@ func _on_newgame_back_pressed() -> void:
 func _on_new_safeinfo_pressed() -> void:
 	get_node("new game/m/v/save info").visible = not get_node("new game/m/v/save info").visible
 	get_node("new game/m/v/diff").hide()
-	get_node("new game/m/v/prefs").hide()
+	get_node("new game/m/v/upgrades").hide()
 	get_node("new game/m/v/save info/m/v/filename/TextEdit").scroll_horizontal = 0
 	get_node("new game/m/v/save info/m/v/filename/TextEdit").grab_focus()
 	get_node("new game/m/v/save info/m/v/filename/TextEdit").select_all()
 func _on_new_diff_pressed() -> void:
 	get_node("new game/m/v/diff").visible = not get_node("new game/m/v/diff").visible
 	get_node("new game/m/v/save info").hide()
-	get_node("new game/m/v/prefs").hide()
-func _on_new_prefs_pressed() -> void:
-	get_node("new game/m/v/prefs").visible = not get_node("new game/m/v/prefs").visible
+	get_node("new game/m/v/upgrades").hide()
+func _on_new_upgrades_pressed() -> void:
+	get_node("new game/m/v/upgrades").visible = not get_node("new game/m/v/upgrades").visible
 	get_node("new game/m/v/save info").hide()
 	get_node("new game/m/v/diff").hide()
 
@@ -620,16 +611,16 @@ func _on_custom_randomize_pressed() -> void:
 		var _min = MIN_VALUES[d]
 		var _max = MAX_VALUES[d]
 		var randomVal = stepify(rand_range(_min, _max), 0.1)
-		get_node("new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/" + d + "/h/HSlider").value = randomVal
+		get_node("%custom" + d + "/h/HSlider").value = randomVal
 		_on_HSlider_value_changed(randomVal, d)
 
 func _on_new_color_pressed() -> void:
 	gv.emit_signal("edit_save_color", get_node("new game/m/v/save info/m/v/v2/color/m/ColorRect"))
 
 func _on_newgame_play_pressed() -> void:
-	if get_node("new game/m/v/diff/m/v/v/custom").visible:
+	if get_node("%diffCustom").visible:
 		for d in DEFAULT_VALUES:
-			var val = float(get_node("new game/m/v/diff/m/v/v/custom/m/v/lored/m/v/" + d + "/TextEdit").text)
+			var val = float(get_node("%custom" + d + "/TextEdit").text)
 			diff.call("set" + d, val)
 	
 	var saveName = get_node("new game/m/v/save info/m/v/filename/TextEdit").text
@@ -680,12 +671,12 @@ func _on_new_saveinfo_mouse_entered() -> void:
 	get_node("new game/m/v/v/h/save info/v/h/text").add_font_override("font", gv.font.buttonHover)
 func _on_new_diff_entered() -> void:
 	get_node("new game/m/v/v/h/diff/v/h/text").add_font_override("font", gv.font.buttonHover)
-func _on_new_prefs_mouse_entered() -> void:
-	get_node("new game/m/v/v/h/prefs/v/h/text").add_font_override("font", gv.font.buttonHover)
+func _on_new_upgrades_entered() -> void:
+	get_node("new game/m/v/v/h/upgrades/v/h/text").add_font_override("font", gv.font.buttonHover)
 func _on_randomize_mouse_entered() -> void:
 	get_node("new game/m/v/save info/m/v/randomize/v/h/text").add_font_override("font", gv.font.buttonHover)
 func _on_custom_randomize_mouse_entered() -> void:
-	get_node("new game/m/v/diff/m/v/v/custom/m/v/randomize/v/h/text").add_font_override("font", gv.font.buttonHover)
+	get_node("%randomValuesText").add_font_override("font", gv.font.buttonHover)
 func _on_newgame_play_mouse_entered() -> void:
 	buttonEntered("new game/top/h/v/v/begin")
 
@@ -720,12 +711,12 @@ func _on_new_saveinfo_mouse_exited() -> void:
 	get_node("new game/m/v/v/h/save info/v/h/text").add_font_override("font", gv.font.buttonNormal)
 func _on_new_diff_mouse_exited() -> void:
 	get_node("new game/m/v/v/h/diff/v/h/text").add_font_override("font", gv.font.buttonNormal)
-func _on_new_prefs_mouse_exited() -> void:
-	get_node("new game/m/v/v/h/prefs/v/h/text").add_font_override("font", gv.font.buttonNormal)
+func _on_new_upgrades_mouse_exited() -> void:
+	get_node("new game/m/v/v/h/upgrades/v/h/text").add_font_override("font", gv.font.buttonNormal)
 func _on_randomize_mouse_exited() -> void:
 	get_node("new game/m/v/save info/m/v/randomize/v/h/text").add_font_override("font", gv.font.buttonNormal)
 func _on_custom_randomize_mouse_exited() -> void:
-	get_node("new game/m/v/diff/m/v/v/custom/m/v/randomize/v/h/text").add_font_override("font", gv.font.buttonNormal)
+	get_node("%randomValuesText").add_font_override("font", gv.font.buttonNormal)
 func _on_newgame_play_mouse_exited() -> void:
 	buttonExited("new game/top/h/v/v/begin")
 
@@ -744,9 +735,5 @@ func _on_exit_pressed() -> void:
 	get_tree().quit()
 func _on_dontExit_pressed() -> void:
 	exitConfirm.hide()
-
-
-
-
 
 

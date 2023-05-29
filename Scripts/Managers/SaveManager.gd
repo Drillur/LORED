@@ -386,7 +386,7 @@ func loadSavedVars(saved_vars: Dictionary, save_data: Dictionary) -> Dictionary:
 		
 		if not x in save_data.keys():
 			continue
-		ResourceSaver
+		
 		if saved_vars[x] is Big:
 			loadedVars[x] = Big.new(save_data[x])
 			continue
@@ -394,8 +394,17 @@ func loadSavedVars(saved_vars: Dictionary, save_data: Dictionary) -> Dictionary:
 		if saved_vars[x] is Dictionary:
 			loadedVars[x] = str2var(save_data[x])
 			for key in saved_vars[x]:
-				if not key in loadedVars[x]:
-					loadedVars[x][key] = saved_vars[x][key]
+				if saved_vars[x][key] is Dictionary:
+					for sub_key in saved_vars[x][key]:
+						if not sub_key in loadedVars[x][key]:
+							loadedVars[x][key][sub_key] = saved_vars[x][key][sub_key]
+				else:
+					if not key in loadedVars[x]:
+						loadedVars[x][key] = saved_vars[x][key]
+				# if the code above fails, this is what it used to be:
+				# just delete everything with this indentation until "for key in saved_vars[x]"
+#				if not key in loadedVars[x]:
+#					loadedVars[x][key] = saved_vars[x][key]
 			continue
 		
 		loadedVars[x] = str2var(save_data[x])

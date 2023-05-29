@@ -1,3 +1,4 @@
+class_name UpgradeBlock
 extends MarginContainer
 
 
@@ -23,6 +24,10 @@ var cont := {}
 var routine := []
 
 var already_displayed_alert_guy := false
+
+func _ready() -> void:
+	if name in gv.up.keys():
+		setup(name)
 
 func setup(_key):
 	

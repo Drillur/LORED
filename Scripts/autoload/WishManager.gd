@@ -390,11 +390,13 @@ func getSelectedWish() -> String:
 			gv.emit_signal("statChanged", "WishMain")
 			return "r"
 	
-	if gv.resource[gv.Resource.COAL].less(Big.new(lv.lored[lv.Type.COAL].output).m(10)):
+	if gv.resource[gv.Resource.COAL].less(Big.new(lv.lored[lv.Type.COAL].output).m(30)):
 		if not "veryLowCoal" in active_wish_keys and not gv.manualLaborActive:
-			var duration = lv.lored[lv.Type.COAL].getJobDuration(0)
-			var minimum_fuel = Big.new(duration).m(lv.lored[lv.Type.COAL].fuelCost).m(1.1)
+			print("very low coal checking...")
+			var job_required_fuel = lv.lored[lv.Type.COAL].lored.jobs.values()[0].requiredFuel
+			var minimum_fuel = Big.new(job_required_fuel).m(2)
 			if lv.lored[lv.Type.COAL].currentFuel.less(minimum_fuel) and not lv.lored[lv.Type.COAL].working:
+				print("very low coal wish assigned!")
 				return "veryLowCoal"
 	
 	if gv.list.lored["unlocked and inactive"].size() > 0:

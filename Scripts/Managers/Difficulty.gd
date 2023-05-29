@@ -89,6 +89,11 @@ func changeDifficulty(new_diff: int):
 	active_difficulty = new_diff
 	resetAll()
 	
+	BuffManager.clear_queued_buffs()
+	
+	# You may apply buffs here. They will be applied when the game starts in Root
+	#BuffManager.queue_apply_buff(BuffManager.Type.WITCH, lv.Type.STONE, {"max_ticks": -1})
+	
 	match active_difficulty:
 		
 		Difficulty.MARATHON:
@@ -116,10 +121,10 @@ func changeDifficulty(new_diff: int):
 			setFuelCost(0.5)
 		
 		Difficulty.SONIC:
-			#setHaste(0.1)
-			setUnlockedUpgrades(["Limit Break", "THE WITCH OF LOREDELITH"])
+			setUnlockedUpgrades(["Limit Break"])
 	
 	lv.syncLOREDs()
+
 
 
 

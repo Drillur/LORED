@@ -41,7 +41,7 @@ func getTotal() -> float:
 	for x in dynamic:
 		gv.up[x].sync_effects()
 		var effectIndex: int = dynamic[x]
-		total *= gv.up[x].effects[effectIndex].effect.t
+		total *= gv.up[x].effects[effectIndex].effect.t.toFloat()
 	
 	match name:
 		"haste":

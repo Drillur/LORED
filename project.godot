@@ -64,11 +64,6 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://Scripts/LORED/LORED Vars.gd"
 }, {
-"base": "Resource",
-"class": "LORED_Resource",
-"language": "GDScript",
-"path": "res://Scripts/Resources/LORED.gd"
-}, {
 "base": "MarginContainer",
 "class": "LimitBreak",
 "language": "GDScript",
@@ -93,6 +88,11 @@ _global_script_classes=[ {
 "class": "Upgrade",
 "language": "GDScript",
 "path": "res://Scripts/classes/Upgrade.gd"
+}, {
+"base": "MarginContainer",
+"class": "UpgradeBlock",
+"language": "GDScript",
+"path": "res://Prefabs/Scripts/Upgrade.gd"
 }, {
 "base": "Reference",
 "class": "Wish",
@@ -131,12 +131,12 @@ _global_script_class_icons={
 "LORED": "",
 "LOREDManager": "",
 "LOREDVars": "",
-"LORED_Resource": "",
 "LimitBreak": "",
 "Ob": "",
 "Purchasable": "",
 "Save": "",
 "Upgrade": "",
+"UpgradeBlock": "",
 "Wish": "",
 "WishManager": "",
 "_root": "",

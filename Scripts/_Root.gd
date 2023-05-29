@@ -103,10 +103,6 @@ func _load(data: Dictionary):
 	
 	
 	activate_lb_effects()
-	
-	SaveManager.save = Save.new()
-	for lored in lv.lored:
-		SaveManager.save.lored_data[lored] = lv.lored[lored].lored.stats
 
 
 
@@ -155,6 +151,9 @@ func game_start(successful_load: bool) -> void:
 	
 	lv.lored[lv.Type.STONE].unlock()
 	lv.lored[lv.Type.COAL].unlock()
+	
+	if diff.active_difficulty == diff.Difficulty.SONIC:
+		gv.up["Limit Break"].alter_Limit_Break()
 	
 	if not successful_load:
 		newGame()
@@ -235,6 +234,11 @@ func game_start(successful_load: bool) -> void:
 		
 		if gv.dev_mode:
 			$"%devButton".show()
+			unlock_tab(gv.Tab.MALIGNANT)
+			unlock_tab(gv.Tab.EXTRA_NORMAL)
+			unlock_tab(gv.Tab.RADIATIVE)
+			unlock_tab(gv.Tab.S2)
+			unlock_tab(gv.Tab.S3)
 	
 	var t = Timer.new()
 	add_child(t)
@@ -255,6 +259,8 @@ func newGame():
 	lv.lored[lv.Type.STONE].currentFuel = Big.new(lv.lored[lv.Type.STONE].fuelStorage).m(0.2)
 	
 	gv.setResource(gv.Resource.STONE, 5)
+	
+	BuffManager.apply_queued_buffs()
 
 
 
@@ -1209,10 +1215,7 @@ func clearWishNotice():
 
 func _on_Button_pressed() -> void:
 	#BuffManager.apply_buff(BuffManager.Type.WITCH, lv.Type.STONE)
-	SaveManager.save.write_savegame("test.tres")
-	
-	print(
-	ResourceSaver.save("user://test2.tres", lv.lored[lv.Type.COAL].lored.stats))
+	print("Limit Break" in gv.stats["WishStats"].keys())
 
 
 

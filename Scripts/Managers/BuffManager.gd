@@ -35,4 +35,8 @@ func queue_apply_buff(buff_type: int, target_lored: int, optional_commands := {}
 func apply_queued_buffs():
 	for queued_buff in queued_buffs:
 		apply_buff(queued_buff["buff_type"], queued_buff["target_lored"], queued_buff["optional_commands"])
+	clear_queued_buffs()
+
+
+func clear_queued_buffs():
 	queued_buffs.clear()

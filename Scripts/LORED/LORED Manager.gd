@@ -128,7 +128,7 @@ func syncQueue():
 var level: int setget , getLevel
 var levelText: String setget , getLevelText
 func getLevel() -> int:
-	return lored.stats.level
+	return lored.level
 func getLevelText() -> String:
 	return str(getLevel())
 var smart: bool setget , getSmart
@@ -145,7 +145,7 @@ func getUnlocked() -> bool:
 	return lored.unlocked
 var purchased: bool setget , getPurchased
 func getPurchased() -> bool:
-	return lored.stats.purchased
+	return lored.purchased
 
 var tab: int setget , getTab
 func getTab() -> int:
