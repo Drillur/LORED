@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=2]
+[gd_scene load_steps=32 format=2]
 
 [ext_resource path="res://Scripts/_Root.gd" type="Script" id=1]
 [ext_resource path="res://Scripts/map.gd" type="Script" id=2]
@@ -22,6 +22,7 @@
 [ext_resource path="res://Prefabs/Log/WishLog.tscn" type="PackedScene" id=20]
 [ext_resource path="res://Sprites/Menu/Log.png" type="Texture" id=21]
 [ext_resource path="res://Styles/Master Theme.tres" type="Theme" id=22]
+[ext_resource path="res://Prefabs/ui/Wallet.tscn" type="PackedScene" id=23]
 [ext_resource path="res://Sprites/Menu/Notice.png" type="Texture" id=25]
 
 [sub_resource type="StyleBoxFlat" id=1]
@@ -95,6 +96,9 @@ custom_constants/margin_right = 0
 custom_constants/margin_top = 0
 custom_constants/margin_left = 0
 custom_constants/margin_bottom = 0
+__meta__ = {
+"_edit_lock_": true
+}
 
 [node name="v" type="VBoxContainer" parent="m"]
 visible = false
@@ -182,9 +186,9 @@ __meta__ = {
 [node name="up_container" parent="m" instance=ExtResource( 6 )]
 visible = false
 margin_left = 402.0
-margin_top = 160.0
+margin_top = 60.0
 margin_right = 877.0
-margin_bottom = 560.0
+margin_bottom = 660.0
 size_flags_horizontal = 4
 size_flags_vertical = 6
 
@@ -243,6 +247,14 @@ margin_left = 465.0
 margin_top = 192.0
 margin_right = 815.0
 margin_bottom = 528.0
+
+[node name="Wallet" parent="m" instance=ExtResource( 23 )]
+unique_name_in_owner = true
+visible = false
+margin_left = 495.0
+margin_top = 308.0
+margin_right = 785.0
+margin_bottom = 411.0
 
 [node name="Tabs" type="MarginContainer" parent="m"]
 margin_right = 124.0

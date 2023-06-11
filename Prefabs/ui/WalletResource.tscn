@@ -1,0 +1,173 @@
+[gd_scene load_steps=12 format=2]
+
+[ext_resource path="res://Prefabs/Labels/Medium Label.tscn" type="PackedScene" id=2]
+[ext_resource path="res://WalletResource.gd" type="Script" id=3]
+[ext_resource path="res://Sprites/Menu/Alarm.png" type="Texture" id=4]
+[ext_resource path="res://Prefabs/ui/Icon.tscn" type="PackedScene" id=5]
+
+[sub_resource type="StyleBoxFlat" id=7]
+bg_color = Color( 1, 1, 1, 0.08 )
+
+[sub_resource type="StyleBoxFlat" id=8]
+bg_color = Color( 1, 1, 1, 0.04 )
+
+[sub_resource type="StyleBoxFlat" id=9]
+bg_color = Color( 1, 1, 1, 0.0392157 )
+draw_center = false
+
+[sub_resource type="StyleBoxFlat" id=2]
+bg_color = Color( 1, 1, 1, 0.08 )
+
+[sub_resource type="StyleBoxFlat" id=3]
+bg_color = Color( 1, 1, 1, 0.04 )
+
+[sub_resource type="StyleBoxFlat" id=4]
+bg_color = Color( 1, 1, 1, 0.0392157 )
+draw_center = false
+
+[sub_resource type="StyleBoxFlat" id=5]
+draw_center = false
+
+[node name="WalletResource" type="MarginContainer"]
+margin_right = 290.0
+margin_bottom = 34.0
+rect_min_size = Vector2( 290, 0 )
+size_flags_horizontal = 3
+script = ExtResource( 3 )
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+margin_right = 290.0
+margin_bottom = 34.0
+custom_constants/separation = 0
+
+[node name="Export" type="MarginContainer" parent="HBoxContainer"]
+unique_name_in_owner = true
+margin_right = 26.0
+margin_bottom = 34.0
+rect_min_size = Vector2( 26, 0 )
+
+[node name="Unlock" parent="HBoxContainer/Export" instance=ExtResource( 5 )]
+unique_name_in_owner = true
+margin_left = 13.0
+margin_top = 9.0
+margin_right = 13.0
+margin_bottom = 25.0
+rect_min_size = Vector2( 0, 16 )
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Export" type="Button" parent="HBoxContainer/Export"]
+margin_right = 26.0
+margin_bottom = 34.0
+mouse_default_cursor_shape = 2
+custom_styles/hover = SubResource( 7 )
+custom_styles/pressed = SubResource( 8 )
+custom_styles/normal = SubResource( 9 )
+
+[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer"]
+margin_left = 26.0
+margin_right = 290.0
+margin_bottom = 34.0
+
+[node name="Select" type="Button" parent="HBoxContainer/MarginContainer"]
+unique_name_in_owner = true
+margin_right = 264.0
+margin_bottom = 34.0
+rect_min_size = Vector2( 36, 0 )
+custom_styles/hover = SubResource( 2 )
+custom_styles/pressed = SubResource( 3 )
+custom_styles/normal = SubResource( 4 )
+
+[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/MarginContainer"]
+unique_name_in_owner = true
+margin_right = 264.0
+margin_bottom = 34.0
+mouse_filter = 2
+custom_constants/margin_right = 5
+custom_constants/margin_top = 5
+custom_constants/margin_left = 5
+custom_constants/margin_bottom = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/MarginContainer/MarginContainer"]
+margin_left = 5.0
+margin_top = 5.0
+margin_right = 259.0
+margin_bottom = 29.0
+mouse_filter = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/MarginContainer/MarginContainer/VBoxContainer"]
+margin_right = 254.0
+margin_bottom = 24.0
+mouse_filter = 2
+alignment = 1
+
+[node name="Icon and Name" type="HBoxContainer" parent="HBoxContainer/MarginContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+margin_right = 100.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 100, 0 )
+mouse_filter = 2
+
+[node name="Resource Icon" parent="HBoxContainer/MarginContainer/MarginContainer/VBoxContainer/HBoxContainer/Icon and Name" instance=ExtResource( 5 )]
+unique_name_in_owner = true
+margin_bottom = 24.0
+rect_min_size = Vector2( 0, 24 )
+
+[node name="resource name" parent="HBoxContainer/MarginContainer/MarginContainer/VBoxContainer/HBoxContainer/Icon and Name" instance=ExtResource( 2 )]
+unique_name_in_owner = true
+margin_left = 4.0
+margin_top = 4.0
+margin_right = 72.0
+margin_bottom = 19.0
+text = "Carcinogens"
+
+[node name="amount" parent="HBoxContainer/MarginContainer/MarginContainer/VBoxContainer/HBoxContainer" instance=ExtResource( 2 )]
+unique_name_in_owner = true
+margin_left = 104.0
+margin_top = 4.0
+margin_right = 174.0
+margin_bottom = 19.0
+rect_min_size = Vector2( 70, 0 )
+size_flags_horizontal = 0
+text = "123e123"
+
+[node name="net" parent="HBoxContainer/MarginContainer/MarginContainer/VBoxContainer/HBoxContainer" instance=ExtResource( 2 )]
+unique_name_in_owner = true
+margin_left = 178.0
+margin_top = 4.0
+margin_right = 238.0
+margin_bottom = 19.0
+rect_min_size = Vector2( 60, 0 )
+size_flags_horizontal = 2
+text = "123e123/s"
+
+[node name="negative net" type="Panel" parent="HBoxContainer/MarginContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+margin_left = 242.0
+margin_top = 6.0
+margin_right = 254.0
+margin_bottom = 18.0
+rect_min_size = Vector2( 12, 12 )
+mouse_filter = 2
+size_flags_horizontal = 0
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 5 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Sprite" type="Sprite" parent="HBoxContainer/MarginContainer/MarginContainer/VBoxContainer/HBoxContainer/negative net"]
+position = Vector2( 6, 6 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 4 )
+
+[node name="shadow" type="Sprite" parent="HBoxContainer/MarginContainer/MarginContainer/VBoxContainer/HBoxContainer/negative net/Sprite"]
+self_modulate = Color( 0, 0, 0, 1 )
+show_behind_parent = true
+position = Vector2( 2, 2 )
+texture = ExtResource( 4 )
+
+[connection signal="mouse_entered" from="HBoxContainer/Export/Export" to="." method="_on_Export_mouse_entered"]
+[connection signal="mouse_exited" from="HBoxContainer/Export/Export" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="HBoxContainer/Export/Export" to="." method="_on_Export_pressed"]
+[connection signal="mouse_entered" from="HBoxContainer/MarginContainer/Select" to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="HBoxContainer/MarginContainer/Select" to="." method="_on_mouse_exited"]

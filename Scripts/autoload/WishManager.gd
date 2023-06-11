@@ -292,7 +292,7 @@ func seekNewWish():
 		
 		var t = Timer.new()
 		add_child(t)
-		t.start(rand_range(5, 10))
+		t.start(rand_range(1, 5))
 		yield(t, "timeout")
 		t.queue_free()
 		
@@ -392,11 +392,9 @@ func getSelectedWish() -> String:
 	
 	if gv.resource[gv.Resource.COAL].less(Big.new(lv.lored[lv.Type.COAL].output).m(30)):
 		if not "veryLowCoal" in active_wish_keys and not gv.manualLaborActive:
-			print("very low coal checking...")
 			var job_required_fuel = lv.lored[lv.Type.COAL].lored.jobs.values()[0].requiredFuel
 			var minimum_fuel = Big.new(job_required_fuel).m(2)
 			if lv.lored[lv.Type.COAL].currentFuel.less(minimum_fuel) and not lv.lored[lv.Type.COAL].working:
-				print("very low coal wish assigned!")
 				return "veryLowCoal"
 	
 	if gv.list.lored["unlocked and inactive"].size() > 0:
@@ -422,45 +420,45 @@ func emoteEvent(_wish: Wish):
 			EmoteManager.emote(EmoteManager.Type.STONE_HAPPY)
 
 
-func maxedFuelStorageManager(wish: Wish):
+func maxedFuelStorageManager(_wish: Wish):
 	
 	var t = Timer.new()
 	add_child(t)
 	
-	while not wish.ready and wish.exists:
+	while not _wish.ready and _wish.exists:
 		
 		if gv.active_scene != gv.Scene.ROOT:
 			break
 		
-		var lored_key = int(wish.obj.key)
+		var lored_key = int(_wish.obj.key)
 		var fuel_percentage = Big.new(lv.lored[lored_key].currentFuelPercent).m(100)
 		
-		wish.setCount(fuel_percentage)
+		_wish.setCount(fuel_percentage)
 		
 		t.start(0.1)
 		yield(t, "timeout")
 	
 	t.queue_free()
 
-func sleepManager(wish: Wish):
+func sleepManager(_wish: Wish):
 	
-	var lored: LOREDManager = lv.lored[wish.objKey()]
+	var lored: LOREDManager = lv.lored[_wish.objKey()]
 	var was_already_halted: bool = lored.asleep
 	
 	if automatedSleep:
 		lored.putToSleep()
 	
-	while not wish.ready:
+	while not _wish.ready:
 		
 		if gv.active_scene == gv.Scene.MAIN_MENU:
 			return
 		
-		var lored_key = int(wish.obj.key)
+		#var lored_key = int(_wish.obj.key)
 		
 		if not lored.working and lored.asleep:
-			wish.setCount(Big.new(wish.obj.current_count).a(1))
+			_wish.setCount(Big.new(_wish.obj.current_count).a(1))
 		
-		if wish.ready or not wish.exists:
+		if _wish.ready or not _wish.exists:
 			if lored.asleep and not was_already_halted:
 				lored.wakeUp()
 				lored.vico.updateSleepButton()

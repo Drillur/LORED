@@ -47,27 +47,27 @@ func update_description(lored: int, buff_type: int):
 	description.bbcode_text = format_description(buff)
 
 
-func format_description(buff: Buff) -> String:
+func format_description(_buff: Buff) -> String:
 	
-	var description = "[fill]" + buff.description.format({"tick_rate": fval.f(buff.tick_rate)})
+	var _description = "[fill]" + _buff.description.format({"tick_rate": fval.f(_buff.tick_rate)})
 	
-	return description
+	return _description
 
 
 
-func loop(buff: Buff):
+func loop(_buff: Buff):
 	
 	var timer = Timer.new()
 	add_child(timer)
 	
 	while not is_queued_for_deletion():
 		
-		set_progress(buff)
+		set_progress(_buff)
 		
 		timer.start(gv.fps)
 		yield(timer, "timeout")
 		
-		if buff.queued_for_removal:
+		if _buff.queued_for_removal:
 			hide()
 			queue_free()
 			return
@@ -75,11 +75,11 @@ func loop(buff: Buff):
 	timer.queue_free()
 
 
-func set_progress(buff: Buff):
+func set_progress(_buff: Buff):
 	
-	var i = OS.get_ticks_msec() - buff.last_tick
+	var i = OS.get_ticks_msec() - _buff.last_tick
 	
-	progress.rect_size.x = min(i / (buff.tick_rate * 1000) * rect_size.x, rect_size.x)
+	progress.rect_size.x = min(i / (_buff.tick_rate * 1000) * rect_size.x, rect_size.x)
 
 
 

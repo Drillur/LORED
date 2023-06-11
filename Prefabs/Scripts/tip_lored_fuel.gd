@@ -16,11 +16,11 @@ func setup(key: int):
 
 func static_vals():
 	
-	var icon: Texture
+	#var icon: Texture
 	var color: Color
 	var fuel_source = lv.lored[lored].fuelResource
 	
-	icon = gv.sprite[fuel_source]
+	#icon = gv.sprite[fuel_source]
 	color = gv.COLORS[fuel_source]
 	
 	if not lv.lored[lored].smart:

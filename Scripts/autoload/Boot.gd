@@ -921,9 +921,8 @@ func init_upgrades():
 			gv.up[f].requires.append("Wood Lord")
 			
 			f = "Glitterdelve"
-			gv.up[f] = Upgrade.new(f, "s2n output","Galena output and input x{e0}.", "gale")
+			gv.up[f] = Upgrade.new(f, "s2n output","Galena output x{e0}.", "gale")
 			gv.up[f].effects.append(Effect.new("output", [lv.Type.GALENA], 1.25))
-			gv.up[f].effects.append(Effect.new("input", [lv.Type.GALENA], 1.25))
 			gv.up[f].cost[gv.Resource.LEAD] = Ob.Num.new(100000.0)
 			gv.up[f].cost[gv.Resource.CARCINOGENS] = Ob.Num.new(8000.0)
 			gv.up[f].requires.append("Cioran")
@@ -946,9 +945,8 @@ func init_upgrades():
 			gv.up[f].requires.append("Cioran")
 			
 			f = "CANOPY"
-			gv.up[f] = Upgrade.new(f, "s2n output","Water output and input x{e0}.", "water")
+			gv.up[f] = Upgrade.new(f, "s2n output","Water output x{e0}.", "water")
 			gv.up[f].effects.append(Effect.new("output", [lv.Type.WATER], 1.25))
-			gv.up[f].effects.append(Effect.new("input", [lv.Type.WATER], 1.25))
 			gv.up[f].cost[gv.Resource.TREES] = Ob.Num.new(10.0)
 			
 			f = "EQUINE"
@@ -998,9 +996,8 @@ func init_upgrades():
 			gv.up[f].requires.append("Patreon Artist")
 			
 			f = "Henry Cavill"
-			gv.up[f] = Upgrade.new(f, "s2n output","Water output and input x{e0}.", "water")
+			gv.up[f] = Upgrade.new(f, "s2n output","Water output x{e0}.", "water")
 			gv.up[f].effects.append(Effect.new("output", [lv.Type.WATER], 1.3))
-			gv.up[f].effects.append(Effect.new("input", [lv.Type.WATER], 1.3))
 			gv.up[f].cost[gv.Resource.CIGARETTES] = Ob.Num.new(23.23)
 			gv.up[f].cost[gv.Resource.WOOD_PULP] = Ob.Num.new(70.0)
 			gv.up[f].requires.append("Sagan")

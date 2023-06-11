@@ -1,8 +1,7 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://Prefabs/Scripts/LORED Manager.gd" type="Script" id=1]
 [ext_resource path="res://Prefabs/NewLORED/LORED.tscn" type="PackedScene" id=2]
-[ext_resource path="res://Prefabs/NewLORED/WITCH.tscn" type="PackedScene" id=3]
 
 [sub_resource type="StyleBoxFlat" id=1]
 bg_color = Color( 0.054902, 0.054902, 0.054902, 1 )
@@ -45,7 +44,7 @@ position = Vector2( -10, -10 )
 
 [node name="MarginContainer" type="MarginContainer" parent="MarginContainer/sc"]
 margin_right = 1248.0
-margin_bottom = 1265.0
+margin_bottom = 1605.0
 size_flags_horizontal = 3
 custom_constants/margin_top = 250
 custom_constants/margin_bottom = 250
@@ -53,7 +52,7 @@ custom_constants/margin_bottom = 250
 [node name="v" type="VBoxContainer" parent="MarginContainer/sc/MarginContainer"]
 margin_top = 250.0
 margin_right = 1248.0
-margin_bottom = 1015.0
+margin_bottom = 1355.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_constants/separation = 20
@@ -62,98 +61,114 @@ alignment = 1
 [node name="1" type="VBoxContainer" parent="MarginContainer/sc/MarginContainer/v"]
 unique_name_in_owner = true
 margin_right = 1248.0
-margin_bottom = 765.0
+margin_bottom = 1105.0
 size_flags_horizontal = 3
 custom_constants/separation = 30
 alignment = 1
 
 [node name="MALIGNANCY" parent="MarginContainer/sc/MarginContainer/v/1" instance=ExtResource( 2 )]
-margin_left = 516.0
-margin_right = 732.0
+margin_left = 498.0
+margin_right = 750.0
+margin_bottom = 197.0
 
 [node name="h5" type="HBoxContainer" parent="MarginContainer/sc/MarginContainer/v/1"]
-margin_top = 159.0
+margin_top = 227.0
 margin_right = 1248.0
-margin_bottom = 288.0
+margin_bottom = 424.0
 custom_constants/separation = 30
 alignment = 1
 
 [node name="TARBALLS" parent="MarginContainer/sc/MarginContainer/v/1/h5" instance=ExtResource( 2 )]
-margin_left = 393.0
+margin_left = 357.0
 margin_right = 609.0
+margin_bottom = 197.0
 
 [node name="GROWTH" parent="MarginContainer/sc/MarginContainer/v/1/h5" instance=ExtResource( 2 )]
 margin_left = 639.0
-margin_right = 855.0
+margin_right = 891.0
+margin_bottom = 197.0
 
 [node name="h4" type="HBoxContainer" parent="MarginContainer/sc/MarginContainer/v/1"]
-margin_top = 318.0
+margin_top = 454.0
 margin_right = 1248.0
-margin_bottom = 765.0
+margin_bottom = 1105.0
 custom_constants/separation = 50
 alignment = 1
 
 [node name="v" type="VBoxContainer" parent="MarginContainer/sc/MarginContainer/v/1/h4"]
-margin_left = 260.0
-margin_right = 476.0
-margin_bottom = 447.0
+margin_left = 206.0
+margin_right = 458.0
+margin_bottom = 651.0
 custom_constants/separation = 30
 alignment = 1
 
 [node name="CONCRETE" parent="MarginContainer/sc/MarginContainer/v/1/h4/v" instance=ExtResource( 2 )]
+margin_right = 252.0
+margin_bottom = 197.0
 
 [node name="OIL" parent="MarginContainer/sc/MarginContainer/v/1/h4/v" instance=ExtResource( 2 )]
-margin_top = 159.0
-margin_bottom = 288.0
+margin_top = 227.0
+margin_right = 252.0
+margin_bottom = 424.0
 
 [node name="JOULES" parent="MarginContainer/sc/MarginContainer/v/1/h4/v" instance=ExtResource( 2 )]
-margin_top = 318.0
-margin_bottom = 447.0
+margin_top = 454.0
+margin_right = 252.0
+margin_bottom = 651.0
 size_flags_vertical = 10
 
 [node name="v2" type="VBoxContainer" parent="MarginContainer/sc/MarginContainer/v/1/h4"]
-margin_left = 526.0
-margin_right = 988.0
-margin_bottom = 447.0
+margin_left = 508.0
+margin_right = 1042.0
+margin_bottom = 651.0
 custom_constants/separation = 30
 
 [node name="h2" type="HBoxContainer" parent="MarginContainer/sc/MarginContainer/v/1/h4/v2"]
-margin_right = 462.0
-margin_bottom = 129.0
+margin_right = 534.0
+margin_bottom = 197.0
 custom_constants/separation = 30
 alignment = 1
 
 [node name="IRON" parent="MarginContainer/sc/MarginContainer/v/1/h4/v2/h2" instance=ExtResource( 2 )]
+margin_right = 252.0
+margin_bottom = 197.0
 
 [node name="COPPER" parent="MarginContainer/sc/MarginContainer/v/1/h4/v2/h2" instance=ExtResource( 2 )]
-margin_left = 246.0
-margin_right = 462.0
+margin_left = 282.0
+margin_right = 534.0
+margin_bottom = 197.0
 
 [node name="h3" type="HBoxContainer" parent="MarginContainer/sc/MarginContainer/v/1/h4/v2"]
-margin_top = 159.0
-margin_right = 462.0
-margin_bottom = 288.0
+margin_top = 227.0
+margin_right = 534.0
+margin_bottom = 424.0
 custom_constants/separation = 30
 alignment = 1
 
 [node name="IRON_ORE" parent="MarginContainer/sc/MarginContainer/v/1/h4/v2/h3" instance=ExtResource( 2 )]
+margin_right = 252.0
+margin_bottom = 197.0
 
 [node name="COPPER_ORE" parent="MarginContainer/sc/MarginContainer/v/1/h4/v2/h3" instance=ExtResource( 2 )]
-margin_left = 246.0
-margin_right = 462.0
+margin_left = 282.0
+margin_right = 534.0
+margin_bottom = 197.0
 
 [node name="h" type="HBoxContainer" parent="MarginContainer/sc/MarginContainer/v/1/h4/v2"]
-margin_top = 318.0
-margin_right = 462.0
-margin_bottom = 447.0
+margin_top = 454.0
+margin_right = 534.0
+margin_bottom = 651.0
 custom_constants/separation = 30
 alignment = 1
 
 [node name="COAL" parent="MarginContainer/sc/MarginContainer/v/1/h4/v2/h" instance=ExtResource( 2 )]
+margin_right = 252.0
+margin_bottom = 197.0
 
 [node name="STONE" parent="MarginContainer/sc/MarginContainer/v/1/h4/v2/h" instance=ExtResource( 2 )]
-margin_left = 246.0
-margin_right = 462.0
+margin_left = 282.0
+margin_right = 534.0
+margin_bottom = 197.0
 
 [node name="2" type="VBoxContainer" parent="MarginContainer/sc/MarginContainer/v"]
 unique_name_in_owner = true
@@ -338,15 +353,14 @@ margin_right = 855.0
 [node name="3" type="VBoxContainer" parent="MarginContainer/sc/MarginContainer/v"]
 unique_name_in_owner = true
 visible = false
-margin_right = 1260.0
-margin_bottom = 129.0
+margin_top = 785.0
+margin_right = 1248.0
+margin_bottom = 785.0
 size_flags_horizontal = 3
 custom_constants/separation = 20
 alignment = 1
 
-[node name="Witch and Garden" parent="MarginContainer/sc/MarginContainer/v/3" instance=ExtResource( 3 )]
-margin_right = 1260.0
-margin_bottom = 129.0
+[node name="WITCH" parent="MarginContainer/sc/MarginContainer/v/3" instance=ExtResource( 2 )]
 
 [node name="4" type="VBoxContainer" parent="MarginContainer/sc/MarginContainer/v"]
 unique_name_in_owner = true

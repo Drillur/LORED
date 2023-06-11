@@ -8,7 +8,7 @@ var totalCost: Big
 onready var icon = get_node("m/h/icon/Sprite")
 onready var gnResource = get_node("m/h/resource")
 onready var resourceName = get_node("m/h/name")
-onready var check = get_node("m/h/p/CheckBox")
+onready var check_box: Panel = $"%CheckBox"
 
 
 func setup(_totalCost: Big, _resource: int):
@@ -34,7 +34,7 @@ func updateLoop():
 	while not is_queued_for_deletion():
 		
 		gnResource.text = gv.resource[resource].toString() + "/" + totalCostText
-		check.pressed = gv.resource[resource].greater_equal(totalCost)
+		check_box.checked = gv.resource[resource].greater_equal(totalCost)
 		
 		t.start(gv.fps)
 		yield(t, "timeout")

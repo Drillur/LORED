@@ -8,7 +8,8 @@ extends Node
 
 enum NotationType {ENGINEERING, SCIENTIFIC}
 
-onready var Root = get_node("/root/Root")
+
+#onready var rt = get_node("/root/Root")
 
 
 func f(value: float) -> String:

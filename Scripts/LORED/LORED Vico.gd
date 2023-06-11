@@ -3,6 +3,7 @@ extends MarginContainer
 
 
 onready var t = get_node("Timer")
+onready var lock: Panel = $"%Lock"
 onready var misc = get_node("misc")
 onready var jobs = get_node("%jobs")
 onready var alert = get_node("%alert")
@@ -18,6 +19,7 @@ onready var draw_plate_throw = get_node("%DRAW_PLATE throw")
 onready var gnResourceText = get_node("m/v/top/v/mid/v2/resource/v/amount")
 onready var iconShadow = get_node("m/v/top/v/mid/v2/resource/icon/Sprite/shadow")
 onready var active_buffs = get_node("%active buffs")
+onready var garden: MarginContainer = $"%garden"
 
 onready var rt = get_node("/root/Root")
 
@@ -29,6 +31,7 @@ func _ready() -> void:
 	
 	set_physics_process(false)
 	
+	lock.hide()
 	alert.hide()
 	asleepAlert.hide()
 	
@@ -45,6 +48,14 @@ func _ready() -> void:
 	queueResourceTextUpdate(primaryResource)
 
 
+
+func _on_AlertBubble_pressed() -> void:
+	if lock.visible:
+		get_node("/root/Root").hideAllMenus()
+		get_node("/root/Root").wallet.show()
+
+
+
 func setup(type: int):
 	setColors(type)
 	#setIcon(type)
@@ -52,6 +63,7 @@ func setup(type: int):
 	
 	animation.init(type)
 	
+	#get_node("%eye").set_icon(gv.sprite["view"])
 	get_node("%pinnedFuel").setup(type, false)
 
 
@@ -69,10 +81,12 @@ func setColors(type: int):
 	get_node("progress/current").self_modulate = loredColor
 	get_node("progress/current").self_modulate.a = 0.25
 	get_node("progress/current/edge").self_modulate = loredColor
+	lock.modulate = loredColor
 	asleepAlert.modulate = loredColor
 	jobs.modulate = fadedLoredColor
 	active_buffs.modulate = fadedLoredColor
 	get_node("%fuel/Button").self_modulate = fadedLoredColor
+	get_node("%view").modulate = fadedLoredColor
 
 
 func assignManager(_manager: Node2D):
@@ -129,7 +143,7 @@ func enterStandby():
 	jobs.hide()
 	get_node("%fuel").hide()
 	active_buffs.hide()
-	get_node("%view special").hide()
+	get_node("%special").hide()
 
 func enterActive():
 	get_node("%info").show()
@@ -140,7 +154,7 @@ func enterActive():
 	displayFuel()
 	var loreds_with_special_areas := [lv.Type.WITCH]
 	if manager.type in loreds_with_special_areas:
-		get_node("%view special").show()
+		get_node("%special").show()
 
 
 
@@ -148,7 +162,7 @@ func enterActive():
 
 var start_time: int
 var animation_duration: float
-func _physics_process(delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	var i = get_i(start_time)
 	if i > animation_duration:
 		setProgress(0)
@@ -192,6 +206,9 @@ func play_animation(duration: float, job: int):
 	
 	var job_animation = lv.lored[manager.type].jobs[job].animation
 	
+	if job_animation == "no":
+		return
+	
 	animation.play_animation(duration, job_animation)
 
 
@@ -217,8 +234,8 @@ func finishedWorkingForNow():
 func stop():
 	t.stop()
 
-func get_i(start_time: int) -> int:
-	return OS.get_ticks_msec() - start_time
+func get_i(_start_time: int) -> int:
+	return OS.get_ticks_msec() - _start_time
 
 
 func throw_draw_plate():
@@ -228,7 +245,7 @@ func throw_draw_plate():
 	
 	var wire_job_duration = lv.lored[lv.Type.WIRE].lored.jobs.values()[0].duration
 	var wire_animation_length = gv.max_frame["WIRE"]
-	draw_plate_throw.speed_scale = wire_animation_length / wire_job_duration
+	draw_plate_throw.speed_scale = min(25.0, wire_animation_length / wire_job_duration)
 	
 	yield(draw_plate_throw, "animation_finished")
 	
@@ -296,6 +313,12 @@ func display_active_buffs():
 
 func hide_active_buffs():
 	active_buffs.hide()
+
+func _on_special_pressed() -> void:
+	
+	match manager.type:
+		lv.Type.WITCH:
+			garden.visible = not garden.visible
 
 
 
@@ -399,6 +422,15 @@ func alert_asleep():
 	asleepAlert.show()
 func alert_asleep_stop():
 	asleepAlert.hide()
+
+func alert_resource_not_exporting():
+	lock.show()
+func alert_resource_not_exporting_stop():
+	lock.hide()
+
+
+
+
 
 
 

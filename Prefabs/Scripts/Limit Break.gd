@@ -52,19 +52,19 @@ func levelUp():
 
 func setColors():
 	
-	var color = get_color_by_key(floor(gv.up["Limit Break"].effects[0].effect.t.toFloat()))
+	var color = get_color_by_key(int(floor(gv.up["Limit Break"].effects[0].effect.t.toFloat())))
 	
 	current_progress.modulate = color
 	value.self_modulate = color
 	current_xp.self_modulate = color
-	total_xp.self_modulate = get_color_by_key(floor(gv.up["Limit Break"].effects[0].effect.t.toFloat() + 1))
+	total_xp.self_modulate = get_color_by_key(int(floor(gv.up["Limit Break"].effects[0].effect.t.toFloat() + 1)))
 
 static func get_color_by_key(key: int) -> Color:
 	
 	if key == -1:
 		key += 15
 	
-	key = max(0, key)
+	key = int(max(0, key))
 	
 	key = key % 15
 	return gv.LIMIT_BREAK_COLORS[key]

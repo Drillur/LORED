@@ -24,9 +24,6 @@ signal gameSaved
 
 
 
-var save: Save
-
-
 
 
 func save(path := save_path, type := "normal"):
@@ -300,7 +297,7 @@ func getUniqueFilename(filename: String) -> String:
 		if i == 20:
 			return "Are you trying to break the game?.lored"
 		if fileExists(newFilename + ".lored"):
-			newFilename += String(randi() % 1000000)
+			newFilename += String(OS.get_ticks_msec())
 			i += 1
 			continue
 		newFilename = LOREDifyFilename(newFilename)
@@ -349,6 +346,8 @@ func getRandomSaveFileName() -> String:
 		"SSJ10",
 	]
 	
+	randomize()
+	
 	var baseFilename = filenamePool[randi() % filenamePool.size()]
 	
 	baseFilename = SaveManager.getUniqueFilename(baseFilename)
@@ -378,36 +377,36 @@ func importedFileIsCompatible(path: String) -> bool:
 
 
 
-func loadSavedVars(saved_vars: Dictionary, save_data: Dictionary) -> Dictionary:
+func loadSavedVars(_saved_vars: Dictionary, _save_data: Dictionary) -> Dictionary:
 	
 	var loadedVars := {}
 	
-	for x in saved_vars:
+	for x in _saved_vars:
 		
-		if not x in save_data.keys():
+		if not x in _save_data.keys():
 			continue
 		
-		if saved_vars[x] is Big:
-			loadedVars[x] = Big.new(save_data[x])
+		if _saved_vars[x] is Big:
+			loadedVars[x] = Big.new(_save_data[x])
 			continue
 		
-		if saved_vars[x] is Dictionary:
-			loadedVars[x] = str2var(save_data[x])
-			for key in saved_vars[x]:
-				if saved_vars[x][key] is Dictionary:
-					for sub_key in saved_vars[x][key]:
+		if _saved_vars[x] is Dictionary:
+			loadedVars[x] = str2var(_save_data[x])
+			for key in _saved_vars[x]:
+				if _saved_vars[x][key] is Dictionary:
+					for sub_key in _saved_vars[x][key]:
 						if not sub_key in loadedVars[x][key]:
-							loadedVars[x][key][sub_key] = saved_vars[x][key][sub_key]
+							loadedVars[x][key][sub_key] = _saved_vars[x][key][sub_key]
 				else:
 					if not key in loadedVars[x]:
-						loadedVars[x][key] = saved_vars[x][key]
+						loadedVars[x][key] = _saved_vars[x][key]
 				# if the code above fails, this is what it used to be:
 				# just delete everything with this indentation until "for key in saved_vars[x]"
 #				if not key in loadedVars[x]:
 #					loadedVars[x][key] = saved_vars[x][key]
 			continue
 		
-		loadedVars[x] = str2var(save_data[x])
+		loadedVars[x] = str2var(_save_data[x])
 	
 	return loadedVars
 

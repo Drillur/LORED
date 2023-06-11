@@ -23,7 +23,7 @@ var tab: int
 var color: Color
 var unlocked := false
 
-var manager: MarginContainer
+var manager: UpgradeBlock
 var active_tooltip: MarginContainer
 var active_tooltip_exists := false
 
@@ -168,6 +168,8 @@ func refresh():
 		apply()
 
 
+func active_or_refundable() -> bool:
+	return active(true)
 func active(include_refundable := false) -> bool:
 	if include_refundable:
 		if refundable:
@@ -241,6 +243,8 @@ func reset(reset_type := 0) -> bool:
 	
 	if normal:
 		gv.list.upgrade["unowned " + str(tab)].append(key)
+	
+	manager.connect_resource_signal()
 	
 	refund()
 	have = false

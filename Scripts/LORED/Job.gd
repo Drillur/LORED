@@ -41,6 +41,13 @@ func construct_SIFT_SEEDS():
 	addProducedResource(gv.Resource.RANDOM_SEED, 5)
 	addRequiredResource(gv.Resource.SEEDS, 5)
 	name = "Sift Seeds"
+	animation = "no"
+
+func construct_IDLE():
+	setDuration(10)
+	setVicoText("{idle}")
+	name = "Idle"
+	animation = "no"
 
 func construct_REFUEL():
 	setDuration(4)
@@ -449,14 +456,18 @@ func eligibleForOfflineEarnings() -> bool:
 			return false
 	return true
 
+var reason_resource: int
+
 func haveAndCanUseRequiredResources() -> bool:
 	if requiresResource:
 		for resource in requiredResources:
-			if resource in gv.resourcesNotBeingExported:
+			if gv.resource_is_locked(resource):
 				lv.lored[lored].reasonWhyCannotStartJob = lv.ReasonCannotBeginJob.LORED_NOT_EXPORTING
+				reason_resource = resource
 				return false
 			if gv.resource[resource].less(requiredResources[resource]):
 				lv.lored[lored].reasonWhyCannotStartJob = lv.ReasonCannotBeginJob.INSUFFICIENT_RESOURCES
+				reason_resource = resource
 				return false
 	return true
 
@@ -557,3 +568,12 @@ func update_witch():
 		return
 	
 	lv.lored[lored].active_buffs[BuffManager.Type.WITCH].update_WITCH()
+
+
+func add_pending_resource():
+	for resource in producedResources.keys():
+		gv.add_pending_resource(resource, lored, producedResources[resource])
+
+func remove_pending_resource():
+	for resource in producedResources.keys():
+		gv.remove_pending_resource(resource, lored)

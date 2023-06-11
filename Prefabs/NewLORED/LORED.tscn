@@ -1,4 +1,4 @@
-[gd_scene load_steps=58 format=2]
+[gd_scene load_steps=60 format=2]
 
 [ext_resource path="res://Sprites/animations/seed.tres" type="SpriteFrames" id=1]
 [ext_resource path="res://Sprites/animations/draw throw/ff0002.png" type="Texture" id=2]
@@ -37,8 +37,8 @@
 [ext_resource path="res://Sprites/animations/draw throw/ff0015.png" type="Texture" id=35]
 [ext_resource path="res://Sprites/animations/draw throw/ff0012.png" type="Texture" id=36]
 [ext_resource path="res://Sprites/Menu/activeBuffs.png" type="Texture" id=37]
-[ext_resource path="res://Sprites/Menu/View.png" type="Texture" id=38]
-[ext_resource path="res://Sprites/Menu/ViewHide.png" type="Texture" id=39]
+[ext_resource path="res://Prefabs/NewLORED/Garden.gd" type="Script" id=38]
+[ext_resource path="res://Prefabs/ui/Icon.tscn" type="PackedScene" id=40]
 
 [sub_resource type="StyleBoxFlat" id=10]
 bg_color = Color( 0.0823529, 0.0823529, 0.0823529, 1 )
@@ -73,7 +73,7 @@ anti_aliasing = false
 bg_color = Color( 1, 1, 1, 1 )
 draw_center = false
 border_width_bottom = 4
-border_color = Color( 0, 0, 0, 0.33 )
+border_color = Color( 0, 0, 0, 0.329412 )
 border_blend = true
 expand_margin_left = 10.0
 expand_margin_right = 10.0
@@ -120,6 +120,22 @@ animations = [ {
 "name": "ff",
 "speed": 1.0
 } ]
+
+[sub_resource type="StyleBoxFlat" id=29]
+bg_color = Color( 0.0823529, 0.0823529, 0.0823529, 1 )
+border_width_bottom = 4
+border_color = Color( 0, 0, 0, 0.329412 )
+border_blend = true
+shadow_color = Color( 1, 1, 1, 0.34902 )
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id=30]
+bg_color = Color( 0.0823529, 0.0823529, 0.0823529, 1 )
+draw_center = false
+border_width_top = 2
+border_color = Color( 1, 1, 1, 0.329412 )
+shadow_color = Color( 1, 1, 1, 0.34902 )
+anti_aliasing = false
 
 [sub_resource type="StyleBoxFlat" id=13]
 bg_color = Color( 0.152941, 0.152941, 0.152941, 1 )
@@ -169,15 +185,15 @@ script = ExtResource( 15 )
 one_shot = true
 
 [node name="bg_grey" type="Panel" parent="."]
-margin_right = 216.0
-margin_bottom = 129.0
+margin_right = 252.0
+margin_bottom = 197.0
 rect_pivot_offset = Vector2( -61, -6 )
 custom_styles/panel = SubResource( 10 )
 
 [node name="bg_color" type="Panel" parent="."]
 self_modulate = Color( 1, 0, 0, 1 )
-margin_right = 216.0
-margin_bottom = 129.0
+margin_right = 252.0
+margin_bottom = 197.0
 rect_pivot_offset = Vector2( -61, -6 )
 custom_styles/panel = SubResource( 11 )
 
@@ -201,8 +217,8 @@ rect_clip_content = true
 custom_styles/panel = SubResource( 22 )
 
 [node name="m" type="MarginContainer" parent="."]
-margin_right = 216.0
-margin_bottom = 129.0
+margin_right = 252.0
+margin_bottom = 197.0
 rect_clip_content = true
 custom_constants/margin_right = 0
 custom_constants/margin_top = 1
@@ -211,14 +227,14 @@ custom_constants/margin_bottom = 0
 
 [node name="v" type="VBoxContainer" parent="m"]
 margin_top = 1.0
-margin_right = 216.0
-margin_bottom = 129.0
+margin_right = 252.0
+margin_bottom = 197.0
 rect_pivot_offset = Vector2( 16, 3 )
 custom_constants/separation = 0
 
 [node name="top" type="MarginContainer" parent="m/v"]
-margin_right = 216.0
-margin_bottom = 92.0
+margin_right = 252.0
+margin_bottom = 88.0
 size_flags_vertical = 3
 custom_constants/margin_right = 10
 custom_constants/margin_top = 10
@@ -228,32 +244,32 @@ custom_constants/margin_bottom = 10
 [node name="bg" type="Panel" parent="m/v/top"]
 margin_left = 10.0
 margin_top = 10.0
-margin_right = 206.0
-margin_bottom = 82.0
+margin_right = 242.0
+margin_bottom = 78.0
 rect_pivot_offset = Vector2( -61, -6 )
 custom_styles/panel = SubResource( 23 )
 
 [node name="v" type="VBoxContainer" parent="m/v/top"]
 margin_left = 10.0
 margin_top = 10.0
-margin_right = 206.0
-margin_bottom = 82.0
+margin_right = 242.0
+margin_bottom = 78.0
 
 [node name="mid" type="HBoxContainer" parent="m/v/top/v"]
-margin_right = 196.0
+margin_right = 232.0
 margin_bottom = 68.0
 custom_constants/separation = 10
 alignment = 1
 
 [node name="v2" type="VBoxContainer" parent="m/v/top/v/mid"]
-margin_right = 118.0
+margin_right = 154.0
 margin_bottom = 68.0
 size_flags_horizontal = 3
 alignment = 1
 
 [node name="resource" type="HBoxContainer" parent="m/v/top/v/mid/v2"]
 margin_top = 16.0
-margin_right = 118.0
+margin_right = 154.0
 margin_bottom = 52.0
 size_flags_vertical = 4
 
@@ -362,9 +378,9 @@ text = "-123e123/s"
 [node name="status" type="RichTextLabel" parent="m/v/top/v/mid/v2"]
 unique_name_in_owner = true
 visible = false
-margin_top = 40.0
+margin_top = 46.0
 margin_right = 118.0
-margin_bottom = 72.0
+margin_bottom = 62.0
 rect_min_size = Vector2( 95, 0 )
 mouse_filter = 2
 size_flags_horizontal = 3
@@ -373,10 +389,8 @@ custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/italics_font = SubResource( 5 )
 custom_fonts/normal_font = SubResource( 6 )
 bbcode_enabled = true
-bbcode_text = "[center]Letting Coal
-catch up."
-text = "Letting Coal
-catch up."
+bbcode_text = "[center]Insufficient resources."
+text = "Insufficient resources."
 fit_content_height = true
 scroll_active = false
 __meta__ = {
@@ -384,8 +398,8 @@ __meta__ = {
 }
 
 [node name="animation" type="Panel" parent="m/v/top/v/mid"]
-margin_left = 128.0
-margin_right = 196.0
+margin_left = 164.0
+margin_right = 232.0
 margin_bottom = 68.0
 rect_min_size = Vector2( 68, 68 )
 size_flags_horizontal = 4
@@ -413,20 +427,67 @@ frames = SubResource( 28 )
 animation = "ff"
 frame = 4
 
+[node name="garden" type="MarginContainer" parent="m/v"]
+unique_name_in_owner = true
+margin_top = 88.0
+margin_right = 252.0
+margin_bottom = 160.0
+script = ExtResource( 38 )
+
+[node name="bg" type="Panel" parent="m/v/garden"]
+unique_name_in_owner = true
+margin_right = 252.0
+margin_bottom = 72.0
+rect_pivot_offset = Vector2( -61, -6 )
+custom_styles/panel = SubResource( 29 )
+
+[node name="border" type="Panel" parent="m/v/garden"]
+unique_name_in_owner = true
+margin_right = 252.0
+margin_bottom = 72.0
+rect_pivot_offset = Vector2( -61, -6 )
+custom_styles/panel = SubResource( 30 )
+
+[node name="MarginContainer" type="MarginContainer" parent="m/v/garden"]
+margin_right = 252.0
+margin_bottom = 72.0
+custom_constants/margin_right = 4
+custom_constants/margin_top = 4
+custom_constants/margin_left = 4
+custom_constants/margin_bottom = 4
+
+[node name="ScrollContainer" type="ScrollContainer" parent="m/v/garden/MarginContainer"]
+margin_left = 4.0
+margin_top = 4.0
+margin_right = 248.0
+margin_bottom = 68.0
+rect_min_size = Vector2( 0, 64 )
+scroll_horizontal_enabled = false
+
+[node name="MarginContainer" type="MarginContainer" parent="m/v/garden/MarginContainer/ScrollContainer"]
+margin_right = 4.0
+custom_constants/margin_right = 4
+
+[node name="FlowerBed" type="GridContainer" parent="m/v/garden/MarginContainer/ScrollContainer/MarginContainer"]
+unique_name_in_owner = true
+custom_constants/vseparation = 0
+custom_constants/hseparation = 0
+columns = 7
+
 [node name="bot" type="MarginContainer" parent="m/v"]
-margin_top = 92.0
-margin_right = 216.0
-margin_bottom = 128.0
+margin_top = 160.0
+margin_right = 252.0
+margin_bottom = 196.0
 size_flags_vertical = 8
 
 [node name="bg_grey" type="Panel" parent="m/v/bot"]
-margin_right = 216.0
+margin_right = 252.0
 margin_bottom = 36.0
 rect_pivot_offset = Vector2( -61, -6 )
 custom_styles/panel = SubResource( 13 )
 
 [node name="m" type="MarginContainer" parent="m/v/bot"]
-margin_right = 216.0
+margin_right = 252.0
 margin_bottom = 36.0
 custom_constants/margin_right = 0
 custom_constants/margin_top = 0
@@ -434,7 +495,7 @@ custom_constants/margin_left = 0
 custom_constants/margin_bottom = 0
 
 [node name="h" type="HBoxContainer" parent="m/v/bot/m"]
-margin_right = 216.0
+margin_right = 252.0
 margin_bottom = 36.0
 custom_constants/separation = 0
 alignment = 1
@@ -618,16 +679,15 @@ custom_styles/hover = SubResource( 14 )
 custom_styles/pressed = SubResource( 15 )
 custom_styles/normal = SubResource( 16 )
 
-[node name="view special" type="MarginContainer" parent="m/v/bot/m/h"]
+[node name="special" type="MarginContainer" parent="m/v/bot/m/h"]
 unique_name_in_owner = true
-visible = false
-modulate = Color( 1, 0, 0, 1 )
 margin_left = 180.0
 margin_right = 216.0
 margin_bottom = 36.0
 size_flags_horizontal = 0
 
-[node name="icon" type="Panel" parent="m/v/bot/m/h/view special"]
+[node name="view" parent="m/v/bot/m/h/special" instance=ExtResource( 40 )]
+unique_name_in_owner = true
 margin_left = 6.0
 margin_top = 6.0
 margin_right = 30.0
@@ -635,30 +695,8 @@ margin_bottom = 30.0
 rect_min_size = Vector2( 24, 24 )
 size_flags_horizontal = 4
 size_flags_vertical = 4
-custom_styles/panel = SubResource( 7 )
 
-[node name="visible" type="Sprite" parent="m/v/bot/m/h/view special/icon"]
-position = Vector2( 12, 12 )
-texture = ExtResource( 38 )
-
-[node name="shadow" type="Sprite" parent="m/v/bot/m/h/view special/icon/visible"]
-self_modulate = Color( 0, 0, 0, 0.501961 )
-show_behind_parent = true
-position = Vector2( 2, 2 )
-texture = ExtResource( 38 )
-
-[node name="asleep" type="Sprite" parent="m/v/bot/m/h/view special/icon"]
-visible = false
-position = Vector2( 12, 12 )
-texture = ExtResource( 39 )
-
-[node name="shadow" type="Sprite" parent="m/v/bot/m/h/view special/icon/asleep"]
-self_modulate = Color( 0, 0, 0, 0.501961 )
-show_behind_parent = true
-position = Vector2( 2, 2 )
-texture = ExtResource( 39 )
-
-[node name="Button" type="Button" parent="m/v/bot/m/h/view special"]
+[node name="Button" type="Button" parent="m/v/bot/m/h/special"]
 margin_right = 36.0
 margin_bottom = 36.0
 rect_min_size = Vector2( 36, 36 )
@@ -671,8 +709,8 @@ custom_styles/normal = SubResource( 16 )
 
 [node name="level up" type="MarginContainer" parent="m/v/bot/m/h"]
 unique_name_in_owner = true
-margin_left = 180.0
-margin_right = 216.0
+margin_left = 216.0
+margin_right = 252.0
 margin_bottom = 36.0
 size_flags_horizontal = 0
 
@@ -691,7 +729,7 @@ unique_name_in_owner = true
 visible = false
 position = Vector2( 12, 12 )
 frames = ExtResource( 11 )
-frame = 9
+frame = 12
 playing = true
 
 [node name="Sprite" type="Sprite" parent="m/v/bot/m/h/level up/icon"]
@@ -731,7 +769,6 @@ custom_styles/normal = SubResource( 16 )
 
 [node name="alert" type="Node2D" parent="."]
 unique_name_in_owner = true
-visible = false
 position = Vector2( 201, 0 )
 
 [node name="Bubble" type="Sprite" parent="alert"]
@@ -752,8 +789,18 @@ show_behind_parent = true
 position = Vector2( 1, 1 )
 texture = ExtResource( 3 )
 
+[node name="Lock" parent="alert" instance=ExtResource( 40 )]
+unique_name_in_owner = true
+visible = false
+margin_left = -11.0
+margin_top = -12.0
+margin_right = -11.0
+margin_bottom = 8.0
+rect_min_size = Vector2( 0, 20 )
+
 [node name="asleepAlert" type="Sprite" parent="alert"]
 unique_name_in_owner = true
+visible = false
 position = Vector2( 0, -1 )
 texture = ExtResource( 10 )
 __meta__ = {
@@ -819,10 +866,11 @@ __meta__ = {
 [connection signal="mouse_entered" from="m/v/bot/m/h/sleep/Button" to="." method="_on_asleep_mouse_entered"]
 [connection signal="mouse_exited" from="m/v/bot/m/h/sleep/Button" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="m/v/bot/m/h/sleep/Button" to="." method="_on_asleep_pressed"]
-[connection signal="mouse_exited" from="m/v/bot/m/h/view special/Button" to="." method="_on_mouse_exited"]
-[connection signal="pressed" from="m/v/bot/m/h/view special/Button" to="." method="_on_asleep_pressed"]
+[connection signal="mouse_exited" from="m/v/bot/m/h/special/Button" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="m/v/bot/m/h/special/Button" to="." method="_on_special_pressed"]
 [connection signal="mouse_entered" from="m/v/bot/m/h/level up/Button" to="." method="_on_level_mouse_entered"]
 [connection signal="mouse_exited" from="m/v/bot/m/h/level up/Button" to="." method="_on_mouse_exited"]
 [connection signal="pressed" from="m/v/bot/m/h/level up/Button" to="." method="_on_level_pressed"]
 [connection signal="mouse_entered" from="alert/Button" to="." method="_on_alert_mouse_entered"]
 [connection signal="mouse_exited" from="alert/Button" to="." method="_on_mouse_exited"]
+[connection signal="pressed" from="alert/Button" to="." method="_on_AlertBubble_pressed"]

@@ -180,8 +180,8 @@ size_flags_vertical = 3
 scroll_horizontal_enabled = false
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/TabContainer/General/ScrollContainer"]
-margin_left = 164.0
-margin_right = 416.0
+margin_left = 158.0
+margin_right = 410.0
 margin_bottom = 118.0
 size_flags_horizontal = 6
 custom_constants/separation = 10

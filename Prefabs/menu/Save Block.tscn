@@ -1,10 +1,9 @@
-[gd_scene load_steps=38 format=2]
+[gd_scene load_steps=36 format=2]
 
 [ext_resource path="res://Fonts/Roboto-Black.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Sprites/Menu/Time.png" type="Texture" id=2]
 [ext_resource path="res://Fonts/Roboto-MediumItalic.ttf" type="DynamicFontData" id=3]
 [ext_resource path="res://Sprites/Menu/Difficulty.png" type="Texture" id=4]
-[ext_resource path="res://Sprites/Menu/Main Save.png" type="Texture" id=5]
 [ext_resource path="res://Prefabs/menu/Save Block.gd" type="Script" id=6]
 [ext_resource path="res://Fonts/Roboto-Medium.ttf" type="DynamicFontData" id=7]
 [ext_resource path="res://Sprites/Menu/Delete.png" type="Texture" id=8]
@@ -37,9 +36,6 @@ font_data = ExtResource( 1 )
 [sub_resource type="DynamicFont" id=13]
 size = 10
 font_data = ExtResource( 3 )
-
-[sub_resource type="StyleBoxFlat" id=12]
-draw_center = false
 
 [sub_resource type="StyleBoxFlat" id=3]
 draw_center = false
@@ -221,46 +217,9 @@ margin_bottom = 61.0
 custom_constants/separation = 8
 alignment = 1
 
-[node name="main save" type="HBoxContainer" parent="v/m/m/v/h"]
-margin_right = 93.0
-margin_bottom = 24.0
-
-[node name="icon" type="Panel" parent="v/m/m/v/h/main save"]
-margin_right = 24.0
-margin_bottom = 24.0
-rect_min_size = Vector2( 24, 24 )
-mouse_filter = 2
-size_flags_horizontal = 4
-custom_styles/panel = SubResource( 12 )
-
-[node name="Sprite" type="Sprite" parent="v/m/m/v/h/main save/icon"]
-modulate = Color( 1, 0.807843, 0, 1 )
-position = Vector2( 12, 12 )
-scale = Vector2( 0.5, 0.5 )
-texture = ExtResource( 5 )
-__meta__ = {
-"_edit_group_": true
-}
-
-[node name="shadow" type="Sprite" parent="v/m/m/v/h/main save/icon/Sprite"]
-self_modulate = Color( 0, 0, 0, 0.501961 )
-show_behind_parent = true
-position = Vector2( 2, 2 )
-texture = ExtResource( 5 )
-
-[node name="text" type="Label" parent="v/m/m/v/h/main save"]
-margin_left = 28.0
-margin_top = 3.0
-margin_right = 93.0
-margin_bottom = 20.0
-custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-custom_fonts/font = SubResource( 4 )
-text = "Main Save"
-align = 1
-
 [node name="time played" type="HBoxContainer" parent="v/m/m/v/h"]
-margin_left = 101.0
-margin_right = 153.0
+margin_left = 50.0
+margin_right = 102.0
 margin_bottom = 24.0
 
 [node name="icon" type="Panel" parent="v/m/m/v/h/time played"]
@@ -291,8 +250,8 @@ text = "35h"
 align = 1
 
 [node name="difficulty" type="HBoxContainer" parent="v/m/m/v/h"]
-margin_left = 161.0
-margin_right = 249.0
+margin_left = 110.0
+margin_right = 198.0
 margin_bottom = 24.0
 
 [node name="icon" type="Panel" parent="v/m/m/v/h/difficulty"]

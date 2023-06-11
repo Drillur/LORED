@@ -2,13 +2,14 @@ extends MarginContainer
 
 
 onready var lock = get_node("Lock")
+onready var icon = get_node("icon")
 
 var upgrade_key: String
 
 func init(_upgrade_key: String) -> void:
 	
 	upgrade_key = _upgrade_key
-	get_node("Sprite").texture = gv.sprite[str(gv.up[upgrade_key].icon)]
+	icon.set_icon(gv.sprite[str(gv.up[upgrade_key].icon)])
 	lock.self_modulate = gv.up[upgrade_key].color
 	
 	update()
@@ -19,8 +20,8 @@ func update():
 		return
 	
 	if gv.up[upgrade_key].have or gv.up[upgrade_key].requirements():
-		get_node("Sprite").show()
+		icon.show()
 		lock.hide()
 	else:
-		get_node("Sprite").hide()
+		icon.hide()
 		lock.show()

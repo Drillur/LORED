@@ -44,6 +44,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://Scripts/autoload/_vars.gd"
 }, {
+"base": "Panel",
+"class": "Icon",
+"language": "GDScript",
+"path": "res://Prefabs/ui/Icon.gd"
+}, {
 "base": "Reference",
 "class": "Job",
 "language": "GDScript",
@@ -79,11 +84,6 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://Scripts/classes/Purchasable.gd"
 }, {
-"base": "Resource",
-"class": "Save",
-"language": "GDScript",
-"path": "res://Scripts/save.gd"
-}, {
 "base": "Reference",
 "class": "Upgrade",
 "language": "GDScript",
@@ -93,6 +93,11 @@ _global_script_classes=[ {
 "class": "UpgradeBlock",
 "language": "GDScript",
 "path": "res://Prefabs/Scripts/Upgrade.gd"
+}, {
+"base": "MarginContainer",
+"class": "UpgradeContainer",
+"language": "GDScript",
+"path": "res://Scripts/up_new/up_container.gd"
 }, {
 "base": "Reference",
 "class": "Wish",
@@ -127,6 +132,7 @@ _global_script_class_icons={
 "Effect": "",
 "FormatValue": "",
 "GlobalVariables": "",
+"Icon": "",
 "Job": "",
 "LORED": "",
 "LOREDManager": "",
@@ -134,9 +140,9 @@ _global_script_class_icons={
 "LimitBreak": "",
 "Ob": "",
 "Purchasable": "",
-"Save": "",
 "Upgrade": "",
 "UpgradeBlock": "",
+"UpgradeContainer": "",
 "Wish": "",
 "WishManager": "",
 "_root": "",
@@ -164,6 +170,7 @@ lv="*res://Scripts/LORED/LORED Vars.gd"
 diff="*res://Scripts/Managers/Difficulty.gd"
 SaveManager="*res://Scripts/Managers/SaveManager.gd"
 BuffManager="*res://Scripts/Managers/BuffManager.gd"
+Flower="*res://Scripts/LORED/FlowerManager.gd"
 Boot="*res://Scripts/autoload/Boot.gd"
 
 [debug]

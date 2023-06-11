@@ -2,10 +2,6 @@ extends MarginContainer
 
 onready var jobName = get_node("%jobName")
 onready var duration = get_node("%duration")
-onready var requiredFuel = get_node("%requiredFuel")
-onready var requiredFuelIcon = get_node("%requiredFuelIcon")
-
-#onready var entry = preload()
 
 var loredColor: Color
 
@@ -126,7 +122,6 @@ func loop(job: Job):
 
 func updateNodes(job: Job):
 	#info.bbcode_text = job.jobText
-	#requiredFuel.text = job.requiredFuelText
 	duration.text = job.durationText + " sec"# (" + fval.f(job.durationBits.base) + " base)"
 #	var offlineGainText = job.gainText
 #	var i = 0

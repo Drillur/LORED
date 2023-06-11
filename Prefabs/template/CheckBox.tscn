@@ -1,0 +1,42 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://Prefabs/template/CheckBox.gd" type="Script" id=1]
+[ext_resource path="res://Prefabs/ui/Icon.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Sprites/Menu/Check.png" type="Texture" id=4]
+
+[sub_resource type="StyleBoxFlat" id=11]
+bg_color = Color( 0.168627, 0.168627, 0.168627, 1 )
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color( 0, 0, 0, 1 )
+border_blend = true
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+anti_aliasing = false
+
+[node name="CheckBox" type="Panel"]
+unique_name_in_owner = true
+margin_right = 12.0
+margin_bottom = 12.0
+rect_min_size = Vector2( 12, 12 )
+mouse_filter = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 11 )
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="checkmark" parent="." instance=ExtResource( 2 )]
+unique_name_in_owner = true
+margin_left = -5.0
+margin_top = -8.0
+margin_right = 7.0
+margin_bottom = 16.0
+rect_min_size = Vector2( 12, 24 )
+icon = ExtResource( 4 )

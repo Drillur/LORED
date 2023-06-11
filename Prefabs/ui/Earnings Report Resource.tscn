@@ -8,7 +8,7 @@ bg_color = Color( 0, 0, 0, 0.25 )
 draw_center = false
 
 [node name="Earnings Report Resource" type="HBoxContainer"]
-margin_right = 88.0
+margin_right = 75.0
 margin_bottom = 16.0
 
 [node name="Panel" type="Panel" parent="."]

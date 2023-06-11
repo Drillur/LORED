@@ -26,6 +26,8 @@ func _init(_type: int):
 	lored = LORED.new(type)
 	lored.assignManager(self)
 	
+	store_produced_and_required_resources()
+	
 	name = lored.name
 	
 	if type == lv.Type.COPPER_ORE:
@@ -46,8 +48,6 @@ func setupVico():
 	vico.assignManager(self)
 
 func setupSignals():
-	gv.connect("fuelResourceEmpty", self, "fuelResourceEmpty")
-	gv.connect("throwFuel", self, "catchFuel")
 	gv.connect("exportChanged", self, "exportChanged")
 
 func setupElements():
@@ -451,7 +451,7 @@ func watchCost():
 		
 		updateVicoCheck()
 		
-		t.start(0.25 if mode == lv.Mode.ACTIVE else 1)
+		t.start(0.25 if mode == lv.Mode.ACTIVE else 1.0)
 		yield(t, "timeout")
 	
 	t.queue_free()
@@ -531,17 +531,19 @@ func limit_break_level_up():
 
 func canAffordPurchase() -> bool:
 	
-	var cost = getCost()
-	for c in cost:
-		if gv.resource[c].less(cost[c]):
+	var _cost = getCost()
+	for c in _cost:
+		if gv.resource[c].less(_cost[c]):
 			return false
 	
 	return true
 
+var locked_resource: int
 func exportChanged(resource: int):
 	if not resource in lored.usedResources:
 		return
-	if resource in gv.resourcesNotBeingExported:
+	if gv.resource_is_locked(resource):
+		locked_resource = resource
 		newAlert(lv.AlertType.REQUIRED_RESOURCE_NOT_EXPORTING)
 
 
@@ -551,31 +553,31 @@ func exportChanged(resource: int):
 var alerts := []
 var activeAlert := -1
 
-func newAlert(type: int):
+func newAlert(_type: int):
 	
-	if type in alerts:
+	if _type in alerts:
 		return
 	
-	alerts.append(type)
+	alerts.append(_type)
 	
 	if alerts.size() == 1:
 		vico.showAlert()
 	
 	alerts.sort()
 	
-	if type < activeAlert:
+	if _type < activeAlert:
 		stopAlertProcess(activeAlert)
 	
-	startAlertProcess(type)
+	startAlertProcess(_type)
 
-func stopAlert(type: int):
+func stopAlert(_type: int):
 	
-	if not type in alerts:
+	if not _type in alerts:
 		return
 	
-	alerts.erase(type)
+	alerts.erase(_type)
 	
-	if type == activeAlert:
+	if _type == activeAlert:
 		resumeUnfinishedAlert()
 
 func resumeUnfinishedAlert():
@@ -588,15 +590,17 @@ func allAlertsGone():
 	activeAlert = -1
 	vico.hideAlert()
 
-func startAlertProcess(type: int):
-	activeAlert = type
-	match type:
+func startAlertProcess(_type: int):
+	activeAlert = _type
+	match _type:
 		lv.AlertType.ASLEEP:
 			alert_asleep()
 		lv.AlertType.LOW_FUEL:
 			alert_lowFuel()
-func stopAlertProcess(type: int):
-	match type:
+		lv.AlertType.REQUIRED_RESOURCE_NOT_EXPORTING:
+			alert_resource_not_exporting()
+func stopAlertProcess(_type: int):
+	match _type:
 		lv.AlertType.LOW_FUEL:
 			alert_lowFuel_stop()
 
@@ -642,6 +646,26 @@ func alert_asleep():
 func alert_asleep_stop():
 	vico.alert_asleep_stop()
 
+func alert_resource_not_exporting():
+	
+	vico.alert_resource_not_exporting()
+	
+	var t = Timer.new()
+	add_child(t)
+	
+	while not is_queued_for_deletion():
+		
+		if not locked_resource in gv.locked_resources:
+			stopAlert(lv.AlertType.REQUIRED_RESOURCE_NOT_EXPORTING)
+			alert_resource_not_exporting_stop()
+			break
+		
+		t.start(1)
+		yield(t, "timeout")
+	
+	t.queue_free()
+func alert_resource_not_exporting_stop():
+	vico.alert_resource_not_exporting_stop()
 
 
 # - - - Modes
@@ -725,7 +749,6 @@ func canStartJob(job: Job) -> bool:
 			if job.type != lv.Job.REFUEL:
 				reasonWhyCannotStartJob = lv.ReasonCannotBeginJob.LOW_FUEL
 				return false
-				return false
 	
 	if job.type == lv.Job.REFUEL:
 		if getFuelResource() == gv.Resource.COAL:
@@ -751,7 +774,13 @@ func canStartJob(job: Job) -> bool:
 	if not job.haveAndCanUseRequiredResources():
 		# reasonWhyCannotStartJob is set in job.haveAndCanUseRequiredResources()
 		if reasonWhyCannotStartJob == lv.ReasonCannotBeginJob.LORED_NOT_EXPORTING:
-			updateStatus("Required resource(s) are not being exported.")
+			var resource_shorthand = gv.shorthandByResource[job.reason_resource]
+			var img_bbcode = "[img=<16>]" + gv.sprite[resource_shorthand].get_path() + "[/img]"
+			updateStatus(img_bbcode + " is locked.")
+		elif reasonWhyCannotStartJob == lv.ReasonCannotBeginJob.INSUFFICIENT_RESOURCES:
+			var resource_shorthand = gv.shorthandByResource[job.reason_resource]
+			var img_bbcode = "[img=<16>]" + gv.sprite[resource_shorthand].get_path() + "[/img]"
+			updateStatus("Insufficient " + img_bbcode)
 		return false
 	reasonWhyCannotStartJob = -1
 	lored.working = true
@@ -786,10 +815,13 @@ func workJob(job: Job):
 	if job.type == lv.Job.WIRE:
 		lv.lored[lv.Type.DRAW_PLATE].throw_draw_plate()
 	
+	job.add_pending_resource()
 	
 	
 	jobTimer.start(job.duration)
 	yield(jobTimer, "timeout")
+	
+	job.remove_pending_resource()
 	
 	stopHighlightJobInTooltip(job)
 	
@@ -844,6 +876,45 @@ func getProducedResourcesDictionary(job: Job, critMultiplier: float) -> Dictiona
 	for resource in job.producedResources:
 		f[resource] = Big.new(job.producedResources[resource]).m(critMultiplier)
 	return f
+
+var produced_resources := {}
+func store_produced_and_required_resources():
+	produced_resources = {}
+	for job in lored.jobs.values():
+		for resource in job.producedResourcesBits.keys():
+			if not resource in produced_resources.keys():
+				produced_resources[resource] = []
+			if not job in produced_resources[resource]:
+				produced_resources[resource].append(job)
+
+func can_produce_resource(resource: int, lored_stack := []) -> bool:
+	
+	if type in lored_stack:
+		return true
+	
+	lored_stack.append(type)
+	
+	if not getPurchased():
+		return false
+	if not lv.lored[lored.fuelResourceLORED].purchased:
+		return false
+	if not resource in produced_resources:
+		return false
+	
+	for job in produced_resources[resource]:
+		
+		if not job.requiresResource:
+			return true
+		
+		for _resource in job.requiredResources:
+			if not gv.resourceBeingProduced(_resource, lored_stack):
+				return false
+		
+		return true
+	
+	print_debug("Oh, this code can be reached? Bruh moment! Haha xD")
+	return false
+
 
 func takeRequiredFuelFromStorage(requiredFuel: Big):
 	lored.currentFuel.s(requiredFuel)
@@ -1015,8 +1086,8 @@ func updateStatus(text: String):
 
 # - - - Production
 
-func updateFuelDrain(purchased = getPurchased()):
-	if purchased:
+func updateFuelDrain(_purchased = getPurchased()):
+	if _purchased:
 		lv.updateFuelDrain(getFuelResource(), type, getFuelCost())
 	else:
 		lv.updateFuelDrain(getFuelResource(), type, Big.new(0))
@@ -1051,6 +1122,9 @@ func autoWatch():
 	t.queue_free()
 
 func shouldAutobuy() -> bool:
+	
+	if not getUnlocked():
+		return false
 	
 	if gv.inFirstTwoSecondsOfRun():
 		return false
@@ -1220,7 +1294,7 @@ func buff_tick_WITCH():
 		return
 	
 	var witch: Dictionary = active_buffs[BuffManager.Type.WITCH].witch
-	var output_texts: Array
+	var output_texts := []
 	
 	for resource in witch:
 		output_texts.append({

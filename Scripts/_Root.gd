@@ -6,6 +6,7 @@ const prefab := {
 	"dtext": preload("res://Prefabs/dtext.tscn"),
 }
 
+onready var wallet = get_node("%Wallet")
 onready var menu = get_node("%Menu Hub")
 
 var saved_vars := ["tabsExpanded", "WishLogButtonVisible"]
@@ -86,6 +87,7 @@ func _load(data: Dictionary):
 		else:
 			if gv.up[x].active():
 				gv.up[x].apply()
+				gv.up[x].manager.r_update()
 		
 		if not gv.up[x].have:
 			continue
@@ -109,7 +111,6 @@ func _load(data: Dictionary):
 
 func _ready():
 	
-	gv.active_scene = gv.Scene.ROOT
 	SaveManager.setRT()
 	
 	gv.setupStats()
@@ -199,9 +200,9 @@ func game_start(successful_load: bool) -> void:
 			
 			gv.up["ROUTINE"].have = false
 		
-		routineLOREDsync()
+		#routineLOREDsync()
 		
-		watch_stage1and2resourcesAreUnlocked()
+		#watch_stage1and2resourcesAreUnlocked()
 	
 	# ref
 	if true:
@@ -225,20 +226,22 @@ func game_start(successful_load: bool) -> void:
 					
 					gv.up[x].apply()
 					
-					get_node(gnupcon).cont[x].upgrade_effects(true)
-					get_node(gnupcon).cont[x].r_update()
+					gv.up[x].manager.upgrade_effects(true)
+					gv.up[x].manager.r_update()
 	
-	gv.emit_signal("gameStarted")
+	gv.emit_signal("startGame")
 	
 	if true:
 		
 		if gv.dev_mode:
 			$"%devButton".show()
+			unlock_tab(gv.Tab.NORMAL)
 			unlock_tab(gv.Tab.MALIGNANT)
 			unlock_tab(gv.Tab.EXTRA_NORMAL)
 			unlock_tab(gv.Tab.RADIATIVE)
 			unlock_tab(gv.Tab.S2)
 			unlock_tab(gv.Tab.S3)
+			lv.lored[lv.Type.WITCH].unlock()
 	
 	var t = Timer.new()
 	add_child(t)
@@ -300,22 +303,21 @@ func _input(ev):
 	if ev.is_action_pressed("ui_upgrade_menu"):
 		
 		if get_node(gnupcon).visible:
-			
-			if get_node(gnupcon).get_node("v").visible:
-				get_node("global_tip")._call("no")
-				get_node(gnupcon).go_back()
-			else:
-				get_node(gnupcon).hide()
-				
-			
-			return
+			get_node(gnupcon).hide()
 		
 		else:
 			menu.hide()
 			get_node(gnupcon).show()
-			return
+		
+		return
 	
-	
+	if ev.is_action_pressed("T"):
+		if wallet.visible:
+			wallet.hide()
+		else:
+			hideAllMenus()
+			wallet.show()
+		return
 	
 	if Input.is_key_pressed(KEY_Q):
 		b_tabkey(KEY_Q)
@@ -337,28 +339,11 @@ func _input(ev):
 		b_tabkey(KEY_A)
 		return
 	
-	#task
-#	if Input.is_key_pressed(KEY_KP_ENTER) or Input.is_key_pressed(KEY_SPACE) or Input.is_key_pressed(KEY_ENTER):
-#
-#		if gn_tasks.ready_task_count > 0:
-#			var _content = []
-#			for x in taq.task:
-#				_content.append(x)
-#			if $global_tip.tip_filled:
-#				if "taq" in $global_tip.tip.type:
-#					$global_tip._call("no")
-#			for x in _content:
-#				x.attempt_turn_in(false)
-#			return
-#
-#		if taq.cur_quest != -1:
-#			taq.turnInMainQuest(true)
-#
-#		return
-	
 	if Input.is_key_pressed(KEY_EQUAL):
 		b_tabkey(KEY_ESCAPE)
 		return
+
+
 func _notification(ev):
 	
 	if ev == MainLoop.NOTIFICATION_WM_FOCUS_IN:
@@ -374,15 +359,16 @@ func _notification(ev):
 	elif ev == MainLoop.NOTIFICATION_WM_FOCUS_OUT:
 		gv.last_clock = OS.get_unix_time()
 
+
 func hideAllMenus():
+	wallet.hide()
 	get_node("%SaveMenu").hide()
 	get_node("%OptionsMenu").hide()
 	get_node("%Earnings Report").hide()
 	get_node("%StatsMenu").hide()
 	get_node("%WishLog").hide()
 	get_node("%PatchNotesMenu").hide()
-	if get_node(gnupcon).get_node("v").visible:
-		get_node(gnupcon).go_back()
+	get_node(gnupcon).clear_tip_n_stuff()
 	get_node(gnupcon).hide()
 	menu.hide()
 
@@ -391,8 +377,12 @@ func hideAllMenus():
 func exitToMainMenu():
 	close()
 	get_tree().change_scene("res://Scenes/Main Menu.tscn")
+	gv.active_scene = gv.Scene.MAIN_MENU
+
+
 func close():
 	taq.close() #002
+	Flower.close()
 	gv.close()
 	EmoteManager.close()
 
@@ -400,7 +390,6 @@ func _on_Upgrades_pressed() -> void:
 	
 	if get_node(gnupcon).visible:
 		
-		get_node(gnupcon).go_back()
 		get_node(gnupcon).hide()
 		
 		return
@@ -423,39 +412,39 @@ func _on_s4tab_pressed() -> void:
 
 
 
-func watch_stage1and2resourcesAreUnlocked():
-	return #note
-	var t = Timer.new()
-	add_child(t)
-	
-	var properSize = gv.list.lored[gv.Tab.S1].size() + gv.list.lored[gv.Tab.S2].size()
-	
-	t.start(1)
-	yield(t, "timeout")
-	
-	while not gv.list["unlocked resources"].size() == properSize:
-		
-		for x in gv.g:
-			gv.g[x].unlockResource()
-		
-		t.start(10)
-		yield(t, "timeout")
-	
-	t.queue_free()
+#func watch_stage1and2resourcesAreUnlocked():
+#	return #note
+#	var t = Timer.new()
+#	add_child(t)
+#
+#	var properSize = gv.list.lored[gv.Tab.S1].size() + gv.list.lored[gv.Tab.S2].size()
+#
+#	t.start(1)
+#	yield(t, "timeout")
+#
+#	while not gv.list["unlocked resources"].size() == properSize:
+#
+#		for x in gv.g:
+#			gv.g[x].unlockResource()
+#
+#		t.start(10)
+#		yield(t, "timeout")
+#
+#	t.queue_free()
 
-func routineLOREDsync():
-	return
-	var t = Timer.new()
-	add_child(t)
-	
-	while true:
-		
-		t.start(10)
-		yield(t, "timeout")
-		
-		lv.syncLOREDs()
-	
-	t.queue_free()
+#func routineLOREDsync():
+#	return
+#	var t = Timer.new()
+#	add_child(t)
+#
+#	while true:
+#
+#		t.start(10)
+#		yield(t, "timeout")
+#
+#		lv.syncLOREDs()
+#
+#	t.queue_free()
 
 func getOfflineEarnings(timeOffline: int):
 	
@@ -480,7 +469,7 @@ func getOfflineEarnings(timeOffline: int):
 		earningsReport.setup(timeOffline)
 
 func w_total_per_sec(clock_dif : float) -> void:
-	return
+	
 	for x in gv.g:
 		gv.g[x].manager.start_all()
 	
@@ -640,7 +629,7 @@ func w_total_per_sec(clock_dif : float) -> void:
 		
 		
 		if consumed[x].greater(gained[x]):
-			var net = Big.new(consumed[x]).s(gained[x])
+			#var net = Big.new(consumed[x]).s(gained[x])
 			#print(x, ": -", net.toString(), " (", gained[x].toString(), " gained, ", consumed[x].toString(), " drained)")
 			consumed[x].s(gained[x])
 			if consumed[x].greater(gv.resource[x]): #z
@@ -648,7 +637,7 @@ func w_total_per_sec(clock_dif : float) -> void:
 			else:
 				gv.resource[x].s(consumed[x]) #z
 		else:
-			var net = Big.new(gained[x]).s(consumed[x])
+			#var net = Big.new(gained[x]).s(consumed[x])
 			#print(x, ": +", net.toString(), " (", gained[x].toString(), " gained, ", consumed[x].toString(), " drained)")
 			gained[x].s(consumed[x])
 			gv.resource[x].a(gained[x]) #z
@@ -705,7 +694,6 @@ func activate_lb_effects():
 func r_window_size_changed() -> void:
 	
 	var win :Vector2= get_viewport_rect().size
-	var node = 0
 	
 	#print(-INF)
 	if win.y == -INF:
@@ -714,8 +702,6 @@ func r_window_size_changed() -> void:
 	
 	get_node("m").rect_size = Vector2(win.x / scale.x, win.y / scale.y)
 	get_node(gnLOREDs).rect_size = get_node("m").rect_size
-	
-	get_node(gnupcon).get_node("v/upgrades").scroll_vertical = 0
 
 
 
@@ -753,8 +739,6 @@ func reset(reset_type: int, manual := true) -> void:
 	
 	if manual:
 		b_tabkey(KEY_1)
-	
-	get_node(gnupcon).sync()
 	
 	if reset_type == -1:
 		get_tree().reload_current_scene()
@@ -1041,9 +1025,6 @@ func b_tabkey(key):
 			
 			if get_node(gnupcon).visible:
 				
-				if get_node(gnupcon).get_node("v").visible:
-					get_node(gnupcon).go_back()
-				
 				get_node(gnupcon).hide()
 				
 				return
@@ -1066,6 +1047,10 @@ func b_tabkey(key):
 			
 			if get_node("%WishLog").visible:
 				get_node("%WishLog").hide()
+				return
+			
+			if wallet.visible:
+				wallet.hide()
 				return
 			
 			# open the menu
@@ -1109,6 +1094,7 @@ func switch_tabs(target: int):
 		return
 	
 	menu.hide()
+	wallet.hide()
 	get_node("%SaveMenu").hide()
 	get_node("%WishLog").hide()
 	get_node("%OptionsMenu").hide()
@@ -1140,11 +1126,12 @@ func open_up_tab(tab: int):
 	
 	hideAllMenus()
 	
-	if tab == gv.open_tab:
+	if get_node(gnupcon).visible and tab == gv.open_tab:
 		b_tabkey(KEY_ESCAPE)
 		return
 	
-	get_node(gnupcon).col_time(str(tab))
+	get_node(gnupcon).select_tab(tab)
+	get_node(gnupcon).show()
 	
 	get_node("global_tip")._call("no")
 
@@ -1157,6 +1144,8 @@ func b_move_map(x, y):
 func unlock_tab(tab: int, add := true):
 	
 	if add:
+		if tab in gv.unlocked_tabs:
+			return
 		gv.unlocked_tabs.append(tab)
 	else:
 		gv.unlocked_tabs.erase(tab)
@@ -1166,8 +1155,11 @@ func unlock_tab(tab: int, add := true):
 			get_node("%upgradesTab").visible = add
 			continue
 		gv.Tab.NORMAL, gv.Tab.MALIGNANT, gv.Tab.EXTRA_NORMAL, gv.Tab.RADIATIVE, gv.Tab.RUNED_DIAL, gv.Tab.SPIRIT, gv.Tab.s4n, gv.Tab.s4m:
-			gv.emit_signal("stats_unlockTab", tab)
-			get_node(gnupcon + "/top/" + str(tab)).visible = add
+			if add:
+				gv.emit_signal("stats_unlockTab", tab)
+				get_node(gnupcon).unlock_tab(tab)
+			else:
+				get_node(gnupcon).lock_tab(tab)
 		gv.Tab.S2:
 			gv.emit_signal("stats_unlockRuns")
 			$"%s1tab".visible = add
@@ -1178,6 +1170,10 @@ func unlock_tab(tab: int, add := true):
 			continue
 		gv.Tab.S2, gv.Tab.S3, gv.Tab.S4:
 			get_node("%s" + str(tab - gv.Tab.S1 + 1) + "tab").visible = add
+			if add:
+				gv.emit_signal("tab_unlocked", tab)
+			else:
+				gv.emit_signal("tab_locked", tab)
 
 
 # - - - Handy
@@ -1212,10 +1208,12 @@ func clearWishNotice():
 
 
 
-
+var roll_bonus = 0
 func _on_Button_pressed() -> void:
-	#BuffManager.apply_buff(BuffManager.Type.WITCH, lv.Type.STONE)
-	print("Limit Break" in gv.stats["WishStats"].keys())
+	for i in 10:
+		Flower.add_random_flower()
+	
+	pass
 
 
 

@@ -56,7 +56,6 @@ size_flags_vertical = 3
 custom_constants/separation = 0
 
 [node name="true" type="MarginContainer" parent="."]
-margin_left = -3.8147e-06
 margin_right = 41.0
 margin_bottom = 21.0
 rect_min_size = Vector2( 41, 21 )
@@ -69,13 +68,13 @@ margin_bottom = 21.0
 custom_styles/panel = SubResource( 4 )
 
 [node name="Label" type="Label" parent="true"]
-margin_left = 5.0
+margin_left = 4.0
 margin_top = 3.0
 margin_right = 36.0
 margin_bottom = 18.0
 size_flags_horizontal = 4
-custom_fonts/font = ExtResource( 1 )
 custom_colors/font_color = Color( 1, 1, 1, 1 )
+custom_fonts/font = ExtResource( 1 )
 text = "active"
 
 [node name="Button" type="Button" parent="true"]
@@ -103,11 +102,11 @@ custom_styles/panel = SubResource( 9 )
 [node name="Label" type="Label" parent="false"]
 margin_left = 4.0
 margin_top = 3.0
-margin_right = 45.0
+margin_right = 46.0
 margin_bottom = 18.0
 size_flags_horizontal = 4
-custom_fonts/font = ExtResource( 1 )
 custom_colors/font_color = Color( 1, 1, 1, 1 )
+custom_fonts/font = ExtResource( 1 )
 text = "inactive"
 
 [node name="Button" type="Button" parent="false"]
@@ -135,9 +134,9 @@ custom_styles/panel = SubResource( 10 )
 [node name="Label" type="Label" parent="permanent"]
 margin_left = 4.0
 margin_top = 3.0
-margin_right = 61.0
+margin_right = 62.0
 margin_bottom = 18.0
 size_flags_horizontal = 4
-custom_fonts/font = ExtResource( 1 )
 custom_colors/font_color = Color( 1, 1, 1, 1 )
+custom_fonts/font = ExtResource( 1 )
 text = "permanent"

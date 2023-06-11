@@ -44,7 +44,6 @@ enum Type {
 	TUMORS,
 	
 	WITCH,
-	
 }
 enum Num {
 	BASE,
@@ -112,6 +111,10 @@ enum Job {
 	TUMORS,
 	
 	REFUEL,
+	
+	# WITCH
+	IDLE,
+	SIFT_SEEDS,
 }
 
 enum Mode {
@@ -193,9 +196,6 @@ export var lored := {}
 var loredByShorthand := {}
 
 
-func _ready() -> void:
-	#open()
-	pass
 
 func open():
 	
@@ -248,12 +248,13 @@ func setLoredByShorthand():
 
 
 
-
 # - - - Production
 
 var gain := {}
 var gainUpdated := {}
 var gainBits := {}
+signal gain_updated(resource)
+signal gain_bit_updated(resource, lored, bits)
 
 func initGain():
 	for resource in gv.Resource.values():
@@ -263,10 +264,12 @@ func initGain():
 		gainUpdated[resource] = true
 		drainOrGainUpdated[resource] = true
 
-func updateGain(resource: int, lored: int, val: Big):
-	gainBits[resource].setValue(Num.ADD, lored, val)
+func updateGain(resource: int, _lored: int, val: Big):
+	gainBits[resource].setValue(Num.ADD, _lored, val)
 	gainUpdated[resource] = true
 	drainOrGainUpdated[resource] = true
+	emit_signal("gain_updated", resource)
+	emit_signal("gain_bit_updated", resource, _lored, gainBits[resource].get_bits()[Num.ADD])
 
 func gainRate(resource: int) -> Big:
 	if gainUpdated[resource]:
@@ -283,6 +286,8 @@ func reportGain(resource: int):
 var drain := {}
 var drainUpdated := {}
 var drainBits := {}
+signal drain_updated(resource)
+signal drain_bit_updated(resource, lored, bits)
 
 func initDrain():
 	for resource in gv.Resource.values():
@@ -293,13 +298,15 @@ func initDrain():
 		drainUpdated[resource] = true
 		drainOrGainUpdated[resource] = true
 
-func updateDrain(resource: int, lored: int, val: Big):
-	drainBits[resource].setValue(Num.ADD, lored, val)
+func updateDrain(resource: int, _lored: int, val: Big):
+	drainBits[resource].setValue(Num.ADD, _lored, val)
 	drainUpdated[resource] = true
 	drainOrGainUpdated[resource] = true
-func updateFuelDrain(resource: int, lored: int, val: Big):
-	drainBits[resource].setValue(Num.ADD_FUEL, lored, val)
-	maxDrainBits[resource].setValue(Num.ADD_FUEL, lored, val)
+	emit_signal("drain_updated", resource)
+	emit_signal("drain_bit_updated", resource, _lored, drainBits[resource].get_bits())
+func updateFuelDrain(resource: int, _lored: int, val: Big):
+	drainBits[resource].setValue(Num.ADD_FUEL, _lored, val)
+	maxDrainBits[resource].setValue(Num.ADD_FUEL, _lored, val)
 	maxDrainUpdated[resource] = true
 	drainUpdated[resource] = true
 	drainOrGainUpdated[resource] = true
@@ -326,8 +333,8 @@ func initMaxDrain():
 			Num.ADD_FUEL: {}, # fuel use only goes here
 		})
 		maxDrainUpdated[resource] = true
-func updateMaxDrain(resource: int, lored: int, val: Big):
-	maxDrainBits[resource].setValue(Num.ADD, lored, val)
+func updateMaxDrain(resource: int, _lored: int, val: Big):
+	maxDrainBits[resource].setValue(Num.ADD, _lored, val)
 	maxDrainUpdated[resource] = true
 func maxDrainRate(resource: int) -> Big:
 	if maxDrainUpdated[resource]:
@@ -344,42 +351,47 @@ func reportMaxDrain(resource: int):
 
 var net := {} # text only.
 var drainOrGainUpdated := {}
+signal net_updated(resource)
 
 func recalculateNet(resource: int):
 	
 	drainOrGainUpdated[resource] = false
-	var gain: Big = Big.new(gainRate(resource))
-	var drain: Big = Big.new(drainRate(resource))
-	var maxDrain: Big = Big.new(maxDrainRate(resource))
 	
-	if gain.greater_equal(maxDrain):
-		maxNet[resource] = Big.new(gain).s(maxDrain).toString()
-	else:
-		maxNet[resource] = "-" + maxDrain.s(gain).toString()
+	var _gain: Big = Big.new(gainRate(resource))
+	var _drain: Big = Big.new(drainRate(resource))
+	var _maxDrain: Big = Big.new(maxDrainRate(resource))
 	
-	if gain.greater_equal(drain):
-		net[resource] = gain.s(drain).toString()
+	if _gain.greater_equal(_maxDrain):
+		maxNet[resource] = Big.new(_gain).s(_maxDrain).toString()
 	else:
-		net[resource] = "-" + drain.s(gain).toString()
+		maxNet[resource] = "-" + _maxDrain.s(_gain).toString()
+	
+	if _gain.greater_equal(_drain):
+		net[resource] = _gain.s(_drain).toString()
+	else:
+		net[resource] = "-" + _drain.s(_gain).toString()
+	
+	emit_signal("net_updated", resource)
+	emit_signal("maxNet_updated", resource)
 
 func netText(resource: int) -> String:
 	if drainOrGainUpdated[resource]:
 		recalculateNet(resource)
 	return net[resource]
 
-func net(resource: int) -> Array:
+func net(_resource: int) -> Array:
 	
-	var gain: Big = Big.new(gainRate(resource))
-	var drain: Big = Big.new(drainRate(resource))
+	var _gain: Big = Big.new(gainRate(_resource))
+	var _drain: Big = Big.new(drainRate(_resource))
 	
 	# must return a Big, AND some value indicating if the big represents a positive or negative number
 	# since Big class cannot handle negative numbers
 	
-	if gain.greater(drain):
-		return [gain.s(drain), 1]
-	if gain.equal(drain):
+	if _gain.greater(_drain):
+		return [_gain.s(_drain), 1]
+	if _gain.equal(_drain):
 		return [Big.new(0), 0]
-	return [drain.s(gain), -1]
+	return [_drain.s(_gain), -1]
 
 func reportNet(resource: int):
 	print(" * Net for ", gv.Resource.keys()[resource], ": ", netText(resource), " *")
@@ -387,16 +399,17 @@ func reportNet(resource: int):
 	reportDrain(resource)
 
 var maxNet := {}
+signal maxNet_updated(resource)
 func maxNet(resource: int) -> Array:
 	
-	var gain: Big = Big.new(gainRate(resource))
-	var drain: Big = Big.new(maxDrainRate(resource))
+	var _gain: Big = Big.new(gainRate(resource))
+	var _drain: Big = Big.new(maxDrainRate(resource))
 	
-	if gain.greater(drain):
-		return [gain.s(drain), 1]
-	if gain.equal(drain):
+	if _gain.greater(_drain):
+		return [_gain.s(_drain), 1]
+	if _gain.equal(_drain):
 		return [Big.new(0), 0]
-	return [drain.s(gain), -1]
+	return [_drain.s(_gain), -1]
 func maxNetText(resource: int) -> String:
 	if drainOrGainUpdated[resource]:
 		recalculateNet(resource)

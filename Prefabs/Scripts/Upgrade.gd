@@ -3,7 +3,7 @@ extends MarginContainer
 
 
 
-onready var rt = get_node("/root/Root")
+var rt: Node2D
 
 
 var key: String
@@ -17,17 +17,22 @@ onready var icon = get_node("upgrade icon")
 onready var button = get_node("Button")
 onready var afford = get_node("afford")
 onready var shadow = get_node("unowned shadow")
-onready var color_blind = get_node("color blind")
+onready var checkbox = get_node("%CheckBox")
 
 var cont := {}
 
 var routine := []
 
-var already_displayed_alert_guy := false
-
 func _ready() -> void:
 	if name in gv.up.keys():
 		setup(name)
+	
+	if gv.active_scene == gv.Scene.MAIN_MENU:
+		icon.lock.hide()
+		button.hint_tooltip = name
+		checkbox.uncheck()
+	elif gv.active_scene == gv.Scene.ROOT:
+		rt = get_node("/root/Root")
 
 func setup(_key):
 	
@@ -38,10 +43,8 @@ func setup(_key):
 	
 	name = key
 	
-	color_blind.self_modulate = gv.up[key].color
 	afford.self_modulate = gv.up[key].color
 	button.self_modulate = gv.up[key].color
-	#shadow.self_modulate = gv.up[key].color
 	get_node("icon shadow").self_modulate = gv.up[key].color
 	
 	if gv.up[key].have:
@@ -51,24 +54,34 @@ func setup(_key):
 	
 	afford()
 	
-	loop_1s()
-	loop_025s()
+	yield(get_tree().create_timer(0.5), "timeout")
+	r_update()
 
 
 func _on_Button_mouse_entered() -> void:
 	
-	rt.get_node("global_tip")._call("buy upgrade " + key)
+	if gv.active_scene == gv.Scene.ROOT:
+		rt.get_node("global_tip")._call("buy upgrade " + key)
+	elif gv.active_scene == gv.Scene.MAIN_MENU:
+		return
 	
 	set_mouse_cursor_shape()
 
 func _on_Button_mouse_exited() -> void:
 	
-	gv.up[key].active_tooltip_exists = false
-	rt.get_node("global_tip")._call("no")
+	if gv.active_scene == gv.Scene.ROOT:
+		gv.up[key].active_tooltip_exists = false
+		rt.get_node("global_tip")._call("no")
 
 
 func _on_Button_pressed() -> void:
-	buy_upgrade()
+	if gv.active_scene == gv.Scene.MAIN_MENU:
+		if name in diff.unlockedUpgrades:
+			diff.lock_upgrade(name)
+		else:
+			diff.unlock_upgrade(name)
+	elif gv.active_scene == gv.Scene.ROOT:
+		buy_upgrade()
 
 
 func requirements() -> bool:
@@ -94,7 +107,7 @@ func r_update():
 	icon.update()
 	afford()
 	
-	color_blind.visible = not gv.up[key].have and not gv.up[key].refundable and not icon.lock.visible
+	checkbox.visible = not gv.up[key].have and not gv.up[key].refundable and not icon.lock.visible
 	
 	if gv.up[key].refundable:
 		shadow.hide()
@@ -104,11 +117,6 @@ func r_update():
 		shadow.hide()
 	else:
 		shadow.show()
-	
-	if icon.lock.visible:
-		button.self_modulate = Color(button.self_modulate.r, button.self_modulate.g, button.self_modulate.b, 0.25)
-	else:
-		button.self_modulate = Color(button.self_modulate.r, button.self_modulate.g, button.self_modulate.b, 1.0)
 
 func flash():
 	
@@ -143,10 +151,7 @@ func afford():
 		button.modulate = Color(0.6,0.6,0.6)
 		return
 	
-	if gv.up[key].have:
-		afford.hide()
-	else:
-		afford.hide()
+	afford.hide()
 	
 	if gv.up[key].have or gv.up[key].refundable:
 		afford.modulate = Color(0.2, 0.2, 0.2)
@@ -158,13 +163,13 @@ func afford():
 	
 	if can_purchase():
 		afford.show()
-		afford.modulate = Color(1,1,1)
-		button.modulate = Color(1,1,1)
-		color_blind.pressed = true
+		afford.modulate = Color(1, 1, 1)
+		button.modulate = Color(1, 1, 1)
+		checkbox.check()
 	else:
 		afford.hide()
-		button.modulate = Color(1,1,1)
-		color_blind.pressed = false
+		button.modulate = Color(1, 1, 1)
+		checkbox.uncheck()
 
 
 func can_purchase() -> bool:
@@ -182,41 +187,19 @@ func can_purchase() -> bool:
 	
 	return gv.up[key].cost_check()
 
-func loop_025s():
-	
-	while true:
-		
-		var t = Timer.new()
-		add_child(t)
-		t.start(0.25)
-		yield(t, "timeout")
-		t.queue_free()
-		
-		afford()
-	
 
-func loop_1s():
+func autobuy() -> bool:
 	
-	while true:
-		
-		var t = Timer.new()
-		add_child(t)
-		t.start(1)
-		yield(t, "timeout")
-		t.queue_free()
-		
-		autobuy()
-
-func autobuy():
+	# returns true if was bought.
 	
 	if not gv.up[key].autobuy:
-		return
+		return false
 	
 	if not gv.s2_upgrades_may_be_autobought:
 		if key in gv.list.upgrade[str(gv.Tab.EXTRA_NORMAL)]:
-			return
+			return false
 	
-	buy_upgrade(false, true)
+	return buy_upgrade(false, true)
 
 
 
@@ -258,7 +241,6 @@ func upgrade_bought(manual: bool, red_necro := false):
 		
 		if not key == "ROUTINE":
 			gv.list.upgrade["owned " + str(tab)].append(key)
-		rt.get_node(rt.gnupcon).sync()
 		
 		w_update_other_upgrades_or_something()
 		
@@ -277,21 +259,20 @@ func upgrade_bought(manual: bool, red_necro := false):
 		
 		gv.up[key].active_tooltip.display()
 	
+	disconnect_resource_signal()
+	
 	afford()
 
-func buy_upgrade(manual := true, red_necro := false) -> void:
+func buy_upgrade(manual := true, red_necro := false) -> bool:
 	
 	if gv.up[key].have:
-		return
-	
-	if not red_necro and button.mouse_default_cursor_shape == Control.CURSOR_FORBIDDEN:
-		rt.get_node(rt.gnupcon).flash_reset_button()
-		return
+		return false
 	
 	if unowned_catches(manual, red_necro):
-		return
+		return false
 	
 	upgrade_bought(manual, red_necro)
+	return true
 
 func unowned_catches(manual: bool, red_necro: bool) -> bool:
 	
@@ -324,7 +305,9 @@ func refundable(red_necro: bool) -> bool:
 	gv.up[key].refundable = false
 	
 	for c in gv.up[key].cost:
-		gv.resource[c].a(gv.up[key].cost[c].t)
+		gv.addToResource(c, gv.up[key].cost[c].t)
+	
+	connect_resource_signal()
 	
 	rt.get_node("global_tip")._call("no")
 	rt.get_node("global_tip")._call("buy upgrade " + key)
@@ -446,7 +429,9 @@ func w_update_other_upgrades_or_something():
 		if will_unlock:
 			gv.up[x].unlocked = true
 		
-		rt.get_node(rt.gnupcon).cont[x].r_update()
+		if not gv.up[x].manager.autobuy():
+			rt.get_node(rt.gnupcon).cont[x].r_update()
+		
 		for v in gv.up[x].required_by:
 			rt.get_node(rt.gnupcon).cont[v].r_update()
 
@@ -460,7 +445,7 @@ func _kill_all_children(up : String) -> void:
 		if gv.up[x].refundable:
 			
 			gv.up[x].refundable = false
-			rt.get_node(rt.gnupcon).r_update()
+			rt.get_node(rt.gnupcon).r_update([gv.up[x].tab])
 			
 			
 			for c in gv.up[x].cost:
@@ -474,14 +459,30 @@ func _kill_all_children(up : String) -> void:
 
 
 
+func _on_visibility_changed() -> void:
+	if visible and gv.active_scene == gv.Scene.ROOT:
+		afford()
 
 
+func connect_resource_signal():
+	gv.connect("resourceChanged", self, "check_if_can_afford_upgrade")
+
+func disconnect_resource_signal():
+	gv.disconnect("resourceChanged", self, "check_if_can_afford_upgrade")
 
 
+func check_if_can_afford_upgrade(resource: int):
+	
+	if gv.up[key].active_or_refundable():
+		return
+	if not resource in gv.up[key].cost.keys():
+		return
+	
+	if not autobuy():
+		afford()
 
-func _on_button2_mouse_exited() -> void:
-	pass # Replace with function body.
 
-
-func _on_button2_pressed() -> void:
-	pass # Replace with function body.
+func check_the_checkbox_from_the_main_menu():
+	checkbox.check()
+func uncheck_the_checkbox_from_the_main_menu():
+	checkbox.uncheck()

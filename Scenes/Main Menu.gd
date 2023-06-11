@@ -72,9 +72,6 @@ const COLORS := {
 
 func _ready():
 	
-	
-	gv.active_scene = gv.Scene.MAIN_MENU
-	
 	gv.connect("hideAllActions", self, "_on_color_cancel_pressed")
 	
 	get_tree().get_root().connect("size_changed", self, "windowSizeChanged")
@@ -87,7 +84,7 @@ func _ready():
 	importWindow.hide()
 	importByStringWindow.hide()
 	get_node("import/byString/m/v/manual save name/h2").hide()
-	get_node("new game/m/v/save info").hide()
+	get_node("%new game window/v/save info").hide()
 	importByStringFailureWindow.hide()
 	importByFileWindow.hide()
 	importDialog.set_access(2)
@@ -177,7 +174,6 @@ func clearMouseoverEffects():
 func windowSizeChanged() -> void:
 	
 	var win: Vector2 = get_viewport_rect().size
-	var node = 0
 	
 	if win.y == -INF:
 		return
@@ -541,9 +537,9 @@ func _on_newgame_pressed() -> void:
 	_on_new_mouse_exited()
 	exitConfirm.hide()
 func _on_newgame_back_pressed() -> void:
-	get_node("new game/m/v/save info").hide()
-	get_node("new game/m/v/diff").hide()
-	get_node("new game/m/v/upgrades").hide()
+	get_node("%new game window/v/save info").hide()
+	get_node("%new game window/v/diff").hide()
+	get_node("%new game window/v/upgrades").hide()
 	newGameWindow.hide()
 	get_node("h").show()
 	_on_newgame_back_mouse_exited()
@@ -551,20 +547,20 @@ func _on_newgame_back_pressed() -> void:
 
 
 func _on_new_safeinfo_pressed() -> void:
-	get_node("new game/m/v/save info").visible = not get_node("new game/m/v/save info").visible
-	get_node("new game/m/v/diff").hide()
-	get_node("new game/m/v/upgrades").hide()
-	get_node("new game/m/v/save info/m/v/filename/TextEdit").scroll_horizontal = 0
-	get_node("new game/m/v/save info/m/v/filename/TextEdit").grab_focus()
-	get_node("new game/m/v/save info/m/v/filename/TextEdit").select_all()
+	get_node("%new game window/v/save info").visible = not get_node("%new game window/v/save info").visible
+	get_node("%new game window/v/diff").hide()
+	get_node("%new game window/v/upgrades").hide()
+	get_node("%new game window/v/save info/m/v/filename/TextEdit").scroll_horizontal = 0
+	get_node("%new game window/v/save info/m/v/filename/TextEdit").grab_focus()
+	get_node("%new game window/v/save info/m/v/filename/TextEdit").select_all()
 func _on_new_diff_pressed() -> void:
-	get_node("new game/m/v/diff").visible = not get_node("new game/m/v/diff").visible
-	get_node("new game/m/v/save info").hide()
-	get_node("new game/m/v/upgrades").hide()
+	get_node("%new game window/v/diff").visible = not get_node("%new game window/v/diff").visible
+	get_node("%new game window/v/save info").hide()
+	get_node("%new game window/v/upgrades").hide()
 func _on_new_upgrades_pressed() -> void:
-	get_node("new game/m/v/upgrades").visible = not get_node("new game/m/v/upgrades").visible
-	get_node("new game/m/v/save info").hide()
-	get_node("new game/m/v/diff").hide()
+	get_node("%new game window/v/upgrades").visible = not get_node("%new game window/v/upgrades").visible
+	get_node("%new game window/v/save info").hide()
+	get_node("%new game window/v/diff").hide()
 
 func _on_HSlider_value_changed(value: float, attribute: String) -> void:
 	
@@ -604,7 +600,7 @@ func randomizeSaveNameAndColor(saveNameNode, colorNode):
 	colorNode.setSaveColor(gv.getRandomColor())
 
 func _on_randomize_pressed() -> void:
-	randomizeSaveNameAndColor(get_node("new game/m/v/save info/m/v/filename/TextEdit"), get_node("new game/m/v/save info/m/v/v2/color/m/ColorRect"))
+	randomizeSaveNameAndColor(get_node("%new game window/v/save info/m/v/filename/TextEdit"), get_node("%new game window/v/save info/m/v/v2/color/m/ColorRect"))
 	color_picker.hide()
 func _on_custom_randomize_pressed() -> void:
 	for d in DEFAULT_VALUES:
@@ -614,8 +610,11 @@ func _on_custom_randomize_pressed() -> void:
 		get_node("%custom" + d + "/h/HSlider").value = randomVal
 		_on_HSlider_value_changed(randomVal, d)
 
+func _on_customup_randomize_pressed() -> void:
+	get_node("%Upgrades").randomize_starting_upgrades()
+
 func _on_new_color_pressed() -> void:
-	gv.emit_signal("edit_save_color", get_node("new game/m/v/save info/m/v/v2/color/m/ColorRect"))
+	gv.emit_signal("edit_save_color", get_node("%new game window/v/save info/m/v/v2/color/m/ColorRect"))
 
 func _on_newgame_play_pressed() -> void:
 	if get_node("%diffCustom").visible:
@@ -623,7 +622,7 @@ func _on_newgame_play_pressed() -> void:
 			var val = float(get_node("%custom" + d + "/TextEdit").text)
 			diff.call("set" + d, val)
 	
-	var saveName = get_node("new game/m/v/save info/m/v/filename/TextEdit").text
+	var saveName = get_node("%new game window/v/save info/m/v/filename/TextEdit").text
 	
 	if not saveName.is_valid_filename():
 		get_node("filename error").show()
@@ -638,7 +637,7 @@ func _on_newgame_play_pressed() -> void:
 	
 	saveName = SaveManager.getUniqueFilename(saveName)
 	
-	var saveColor = get_node("new game/m/v/save info/m/v/v2/color/m/ColorRect").color
+	var saveColor = get_node("%new game window/v/save info/m/v/v2/color/m/ColorRect").color
 	
 	SaveManager.loadNewGame(saveName, saveColor)
 
@@ -668,15 +667,17 @@ func _on_import_byFile_mouse_entered() -> void:
 func _on_newgame_back_mouse_entered() -> void:
 	buttonEntered("new game/top/h/v/v/back")
 func _on_new_saveinfo_mouse_entered() -> void:
-	get_node("new game/m/v/v/h/save info/v/h/text").add_font_override("font", gv.font.buttonHover)
+	get_node("%new game window/v/v/h/save info/v/h/text").add_font_override("font", gv.font.buttonHover)
 func _on_new_diff_entered() -> void:
-	get_node("new game/m/v/v/h/diff/v/h/text").add_font_override("font", gv.font.buttonHover)
+	get_node("%new game window/v/v/h/diff/v/h/text").add_font_override("font", gv.font.buttonHover)
 func _on_new_upgrades_entered() -> void:
-	get_node("new game/m/v/v/h/upgrades/v/h/text").add_font_override("font", gv.font.buttonHover)
+	get_node("%new game window/v/v/h/upgrades/v/h/text").add_font_override("font", gv.font.buttonHover)
 func _on_randomize_mouse_entered() -> void:
-	get_node("new game/m/v/save info/m/v/randomize/v/h/text").add_font_override("font", gv.font.buttonHover)
+	get_node("%new game window/v/save info/m/v/randomize/v/h/text").add_font_override("font", gv.font.buttonHover)
 func _on_custom_randomize_mouse_entered() -> void:
 	get_node("%randomValuesText").add_font_override("font", gv.font.buttonHover)
+func _on_customup_randomize_mouse_entered() -> void:
+	get_node("%randomUpgradesText").add_font_override("font", gv.font.buttonHover)
 func _on_newgame_play_mouse_entered() -> void:
 	buttonEntered("new game/top/h/v/v/begin")
 
@@ -708,15 +709,19 @@ func _on_import_byFile_mouse_exited() -> void:
 func _on_newgame_back_mouse_exited() -> void:
 	buttonExited("new game/top/h/v/v/back")
 func _on_new_saveinfo_mouse_exited() -> void:
-	get_node("new game/m/v/v/h/save info/v/h/text").add_font_override("font", gv.font.buttonNormal)
+	get_node("%new game window/v/v/h/save info/v/h/text").add_font_override("font", gv.font.buttonNormal)
 func _on_new_diff_mouse_exited() -> void:
-	get_node("new game/m/v/v/h/diff/v/h/text").add_font_override("font", gv.font.buttonNormal)
+	get_node("%new game window/v/v/h/diff/v/h/text").add_font_override("font", gv.font.buttonNormal)
 func _on_new_upgrades_mouse_exited() -> void:
-	get_node("new game/m/v/v/h/upgrades/v/h/text").add_font_override("font", gv.font.buttonNormal)
+	get_node("%new game window/v/v/h/upgrades/v/h/text").add_font_override("font", gv.font.buttonNormal)
 func _on_randomize_mouse_exited() -> void:
-	get_node("new game/m/v/save info/m/v/randomize/v/h/text").add_font_override("font", gv.font.buttonNormal)
+	get_node("%new game window/v/save info/m/v/randomize/v/h/text").add_font_override("font", gv.font.buttonNormal)
+
 func _on_custom_randomize_mouse_exited() -> void:
 	get_node("%randomValuesText").add_font_override("font", gv.font.buttonNormal)
+func _on_customup_randomize_mouse_exited() -> void:
+	get_node("%randomUpgradesText").add_font_override("font", gv.font.buttonNormal)
+
 func _on_newgame_play_mouse_exited() -> void:
 	buttonExited("new game/top/h/v/v/begin")
 
@@ -735,5 +740,15 @@ func _on_exit_pressed() -> void:
 	get_tree().quit()
 func _on_dontExit_pressed() -> void:
 	exitConfirm.hide()
+
+
+func unlock_upgrade(key: String):
+	get_node("%Upgrades").unlock_upgrade(key)
+func lock_upgrade(key: String):
+	get_node("%Upgrades").lock_upgrade(key)
+
+
+
+
 
 

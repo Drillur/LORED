@@ -19,13 +19,13 @@ const PATCH_NOTES := {
 	"3.0.0": [
 		"Added a main menu with save management (desktop-only).",
 		"Added difficulty options (desktop-only).",
-		"Merged quests and tasks into Wishes.",
 		"LOREDs now think out-loud and may speak to each other.",
 		"New LORED UI and tooltips.",
 		"Completely re-wrote the LORED and Quest/Task classes and separated resources from LOREDs in the code.",
 		"LOREDs no longer automatically refill their fuel. They must refuel manually.",
-		"Every main and random Wish has dialogue.",
-		"Added the Steel and Soil animations.",
+		"Merged quests and tasks into Wishes.",
+		"Added the remaining Stage 2 animations.",
+		"Added a resource viewer with kewl functionality.",
 		"Added and removed some options.",
 	],
 	
@@ -258,7 +258,11 @@ func save() -> String:
 	
 	data["resources"] = {}
 	for x in resource:
-		data["resources"][x] = resource[x].save()
+		var saved_amount := Big.new(resource[x])
+		if x in pending_resource.keys():
+			for lored in pending_resource[x].keys():
+				saved_amount.a(pending_resource[x][lored])
+		data["resources"][x] = saved_amount.save()
 	
 	return var2str(data)
 
@@ -305,12 +309,13 @@ func _ready():
 	
 	for r in gv.Resource.values():
 		gv.resourceName[r] = gv.Resource.keys()[r].capitalize().replace("_", " ")
-		gv.resourceText[r] = ""
 	
 	setResourceColors()
 	
 	connect("startGame", self, "gameStarted")
 	connect("Reset", self, "runReset")
+	
+	#setup_bag()
 
 func setupFonts():
 	font.buttonNormal.font_data = load("res://Fonts/Roboto-Light.ttf")
@@ -354,7 +359,9 @@ func check_for_the_s2_shit():
 	get_node("/root/Root").unlock_tab(Tab.EXTRA_NORMAL)
 
 const SRC := {
-	
+	"WalletResourceTooltipLORED": preload("res://Prefabs/ui/WalletResourceTooltipLORED.tscn"),
+	"WalletResourceTooltip": preload("res://Prefabs/ui/WalletResourceTooltip.tscn"),
+	"WalletResource": preload("res://Prefabs/ui/WalletResource.tscn"),
 	"Upgrades": preload("res://Prefabs/upgrade/Upgrades.tscn"),
 	
 	"emote": preload("res://Prefabs/NewLORED/Emote.tscn"),
@@ -380,7 +387,7 @@ const SRC := {
 	"tooltip/lored jobs": preload("res://Prefabs/tooltip/LORED Tooltip Jobs.tscn"),
 	"tooltip/lored job": preload("res://Prefabs/tooltip/LORED Tooltip Job.tscn"),
 	"tooltip/lored asleep": preload("res://Prefabs/tooltip/Asleep.tscn"),
-	"tooltip/lored export": preload("res://Prefabs/tooltip/LORED Tooltip Export.tscn"),
+	"tooltip/resource export": preload("res://Prefabs/tooltip/LORED Tooltip Export.tscn"),
 	"tooltip/active buffs": preload("res://Prefabs/tooltip/LORED Active Buffs.tscn"),
 	"tooltip/buff tooltip": preload("res://Prefabs/tooltip/LORED Buff Tooltip.tscn"),
 	
@@ -442,8 +449,6 @@ signal amount_updated(key) # LORED.gd -> resources.gd
 signal net_updated(net)
 signal wishReward(type, key) # -> Root.gd
 
-signal throwFuel(resource) # LORED Manager.gd -> LORED Manager.gd
-
 signal upgrade_purchased(key, routine) # Upgrade Slot.gd -> up_container.gd
 
 const LIMIT_BREAK_COLORS := {
@@ -464,9 +469,8 @@ const LIMIT_BREAK_COLORS := {
 	14: Color(0, 1, 0),
 }
 
-var resourceSprite := {
-	
-}
+
+
 var sprite := {
 	
 	"RANDOM_SEED": preload("res://Sprites/resources/seed.png"),
@@ -485,13 +489,17 @@ var sprite := {
 	"witch" : preload("res://Sprites/upgrades/thewitchofloredelith.png"),
 	
 	# menu
+	"Halt": preload("res://Sprites/Menu/Halt.png"),
+	"Report": preload("res://Sprites/Menu/Report.png"),
+	"log": preload("res://Sprites/Menu/Log.png"),
+	"Lock": preload("res://Sprites/Menu/Lock.png"),
 	"fuel": preload("res://Sprites/Menu/fuel.png"),
-	"fuel full": preload("res://Sprites/Menu/Fuel Full.png"),
 	"view": preload("res://Sprites/Menu/View.png"),
 	"viewHide": preload("res://Sprites/Menu/ViewHide.png"),
-	"fuelCost": preload("res://Sprites/Menu/drain rate.png"),
 	"level": preload("res://Sprites/Menu/Level.png"),
-	"log": preload("res://Sprites/Menu/Log.png"),
+	"Unlock": preload("res://Sprites/Menu/Unlock.png"),
+	"fuel full": preload("res://Sprites/Menu/Fuel Full.png"),
+	"fuelCost": preload("res://Sprites/Menu/drain rate.png"),
 	
 	"coal" : preload("res://Sprites/resources/coal.png"),
 	"stone" : preload("res://Sprites/resources/stone.png"),
@@ -550,9 +558,6 @@ var sprite := {
 	
 	
 	# misc
-	"hold_true" : preload("res://Sprites/misc/hold_true.png"),
-	"hold_false" : preload("res://Sprites/misc/hold_false.png"),
-	
 	"unknown" : preload("res://Sprites/misc/unknown.png"),
 	"copy" : preload("res://Sprites/tab/savetoclipboard.png"),
 	
@@ -1006,7 +1011,6 @@ enum Resource {
 }
 var resource := {}
 var resourceName := {}
-var resourceText := {}
 var resourceColor := {}
 func addToResource(key: int, val):
 	resource[key].a(val)
@@ -1025,17 +1029,44 @@ func setResource(key: int, val):
 func updateResources():
 	for r in resource:
 		emit_signal("resourceChanged", r)
-var resourcesNotBeingExported := []
-func exportBlocked(_resource: int):
-	if _resource in resourcesNotBeingExported:
-		return
-	resourcesNotBeingExported.append(_resource)
-	emit_signal("exportChanged")
-func exportResumed(_resource: int):
-	if not _resource in resourcesNotBeingExported:
-		return
-	resourcesNotBeingExported.erase(_resource)
-	emit_signal("exportChanged")
+
+
+
+var pending_resource := {}
+
+
+func add_pending_resource(_resource: int, lored: int, amount: Big):
+	if not _resource in pending_resource.keys():
+		pending_resource[_resource] = {}
+	pending_resource[_resource][lored] = amount
+
+
+func remove_pending_resource(_resource: int, lored: int):
+	if _resource in pending_resource.keys():
+		if lored in pending_resource[_resource].keys():
+			pending_resource[_resource].erase(lored)
+			if pending_resource[_resource].empty():
+				pending_resource.erase(_resource)
+	else:
+		pass # occasionally this line is actually reached. i never figured out how or why. but it's rare.
+
+
+
+var locked_resources := []
+
+
+func swap_locked_resource(_resource: int):
+	if _resource in locked_resources:
+		locked_resources.erase(_resource)
+	else:
+		locked_resources.append(_resource)
+	
+	emit_signal("exportChanged", _resource)
+
+
+func resource_is_locked(_resource: int) -> bool:
+	return _resource in locked_resources
+
 
 
 var offlineEarnings := {}
@@ -1210,6 +1241,12 @@ func resetList():
 			Resource.CARCINOGENS,
 			Resource.TUMORS
 		],
+		"stage 3 resources": [ #s3 add every stage 3 resource here
+			
+		],
+		"stage 4 resources": [ #s4 add every stage 4 resource here
+			
+		],
 		"unlocked resources": [Resource.STONE], #note stage 3 resources need to be manually added
 		"matured resources": [],
 		"fuel resource": [],
@@ -1221,38 +1258,36 @@ func resetList():
 		list.upgrade["unowned " + str(Tab[t])] = []
 		list.upgrade["owned " + str(Tab[t])] = []
 
-func append(list: Array, value):
-	if value in list:
+func append(_list: Array, value):
+	if value in _list:
 		return
-	list.append(value)
+	_list.append(value)
 
 func everyStage2LOREDunlocked() -> bool:
 	return list.lored["active " + str(Tab.S2)].size() == list.lored[Tab.S2].size()
 
-func unlockResource(resource: int):
-	if not resource in list["unlocked resources"]:
-		list["unlocked resources"].append(resource)
-	emit_signal("stats_unlockResource", resource)
+func unlockResource(_resource: int):
+	if not _resource in list["unlocked resources"]:
+		list["unlocked resources"].append(_resource)
+	emit_signal("stats_unlockResource", _resource)
 
-func addResourceProducer(resource: int, lored: int):
-	if not resource in list["resource producer"]:
-		list["resource producer"][resource] = []
-	if not lored in list["resource producer"][resource]:
-		list["resource producer"][resource].append(lored)
+func addResourceProducer(_resource: int, lored: int):
+	if not _resource in list["resource producer"]:
+		list["resource producer"][_resource] = []
+	if not lored in list["resource producer"][_resource]:
+		list["resource producer"][_resource].append(lored)
 
-func resourceBeingProduced(resource: int) -> bool:
-	if list["resource producer"][resource].size() == 0:
-		return false
-	for lored in list["resource producer"][resource]:
-		if lv.lored[lored].purchased:
+func resourceBeingProduced(_resource: int, lored_stack := []) -> bool:
+	for lored in list["resource producer"][_resource]:
+		if lv.lored[lored].can_produce_resource(_resource, lored_stack):
 			return true
 	return false
 
-func producerDrainUpdated(resource: int):
-	if not resource in list["resource producer"]:
+func producerDrainUpdated(_resource: int):
+	if not _resource in list["resource producer"]:
 		return
-	for producer in list["resource producer"][resource]:
-		lv.lored[producer].updateOfflineNet(resource)
+	for producer in list["resource producer"][_resource]:
+		lv.lored[producer].updateOfflineNet(_resource)
 
 
 enum Objective {
@@ -1314,24 +1349,24 @@ func version_older_than(_save_version: String, _version: String) -> bool:
 	return false
 
 
-func commaifyAnArrayOfStrings(list: Array) -> String:
+func commaifyAnArrayOfStrings(_list: Array) -> String:
 	
-	if list.size() == 1:
-		return str(list[0])
+	if _list.size() == 1:
+		return str(_list[0])
 	
-	if list.size() == 2:
-		return str(list[0]) + " and " + str(list[1])
+	if _list.size() == 2:
+		return str(_list[0]) + " and " + str(_list[1])
 	
-	if list.size() > 2:
+	if _list.size() > 2:
 		var i = 0
-		var text: String
-		for f in list:
+		var text := ""
+		for f in _list:
 			
-			if i < list.size() - 2:
+			if i < _list.size() - 2:
 				text += f + ","
-			elif i == list.size() - 2:
+			elif i == _list.size() - 2:
 				text += f + ", and "
-			elif i == list.size() - 1:
+			elif i == _list.size() - 1:
 				text += f
 			
 			i += 1
@@ -1385,6 +1420,8 @@ signal stats_unlockLOREDStats(lored)
 signal stats_unlockResource(resource)
 signal stats_unlockRuns
 signal stats_unlockTab(tab)
+signal tab_unlocked(tab)
+signal tab_locked(tab)
 
 var stats := {
 	"WishMain": 0,
@@ -1543,12 +1580,15 @@ func getRandomColor() -> Color:
 
 func changeScene(newScene: int):
 	
-	Boot.go()
-	open()
-	
 	match newScene:
 		Scene.ROOT:
+			
+			Boot.go()
+			Flower.open()
+			open()
+			
 			get_tree().change_scene("res://Scenes/Root.tscn")
+			gv.active_scene = gv.Scene.ROOT
 
 
 signal manualLabor
@@ -1598,4 +1638,5 @@ func newOutputText(details: Dictionary, parent_node):
 	var outputText = SRC["flying text"].instance()
 	outputText.init(details)
 	parent_node.add_child(outputText)
+
 

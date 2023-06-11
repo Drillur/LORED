@@ -5,7 +5,6 @@ extends MarginContainer
 onready var bg = get_node("v/m/bg")
 onready var actions = get_node("v/actions")
 onready var mainMenu = get_node("/root/Main Menu")
-onready var gnMainSave = get_node("v/m/m/v/h/main save")
 onready var saveName = get_node("v/m/m/v/top/h/save name") setget setSaveName, getSaveName
 onready var textEdit = get_node("v/actions/textEdit/v/TextEdit")
 onready var textEditFolder = get_node("v/actions/textEdit")
@@ -15,7 +14,6 @@ onready var deleteFolder = get_node("v/actions/delete save")
 var clock: int
 
 var mostRecent := false setget , getMostRecent
-var mainSave: bool setget setMainSave, getMainSave
 
 var color: Color setget setColor, getColor
 
@@ -25,7 +23,6 @@ var color: Color setget setColor, getColor
 func _ready() -> void:
 	
 	get_node("v/m/select").show()
-	setMainSave(false)
 	
 	actions.hide()
 	
@@ -62,9 +59,6 @@ func setupKeySaveData():
 
 
 
-func setMainSave(val: bool):
-	gnMainSave.visible = val
-
 func setSaveName(_saveName: String):
 	saveName.text = _saveName
 
@@ -77,9 +71,6 @@ func setNewSavename():
 	#setSaveName(textEdit.text)
 	mainMenu.refreshAllSaves()
 
-
-func getMainSave() -> bool:
-	return gnMainSave.visible
 
 func getSaveName() -> String:
 	return saveName.text

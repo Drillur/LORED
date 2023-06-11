@@ -13,26 +13,29 @@ func setup(_lored: int, alert: int):
 	updateMethod = "update" + key
 	
 	get_node("%" + key).show()
-	get_node("%icon " + key).show()
+	if has_method("set_icon_" + key):
+		call("set_icon_" + key)
+	else:
+		get_node("%icon").hide()
 	
 	yield(self, "ready")
 	
 	match alert:
 		lv.AlertType.REQUIRED_RESOURCE_NOT_EXPORTING:
 			
-			get_node("%top text").text = "Required Resource Not Exporting"
-			get_node("%sub").hide()
+			get_node("%top text").text = "Resource Dependency"
+			get_node("%sub_" + key).show()
 			
 			var blockedResource: int
 			
 			for resource in lv.lored[lored].usedResources:
-				if resource in gv.resourcesNotBeingExported:
+				if gv.resource_is_locked(resource):
 					blockedResource = resource
 					break
 			
 			var icon = gv.sprite[gv.shorthandByResource[blockedResource]]
 			get_node("%iconRequiredResource").texture = icon
-			get_node("%iconRequiredResource/shadow").texture = icon
+			get_node("%iconRequiredResource/shadow").texture = get_node("%iconRequiredResource").texture
 			
 			get_node("%textRequiredResource").text = gv.resourceName[blockedResource]
 		
@@ -41,6 +44,7 @@ func setup(_lored: int, alert: int):
 			get_node("%sub_" + key).show()
 			rect_min_size.x = 244
 			return
+		
 		lv.AlertType.LOW_FUEL:
 			
 			rect_min_size.x = 216
@@ -67,7 +71,8 @@ func updateLoop():
 	
 	while not is_queued_for_deletion():
 		
-		call(updateMethod)
+		if has_method(updateMethod):
+			call(updateMethod)
 		
 		t.start(2)
 		yield(t, "timeout")
@@ -81,3 +86,13 @@ func updateLOW_FUEL():
 	get_node("%fuel").text = currentFuel + " / " + maxFuel
 	
 	get_node("%fuelCost").text = lv.lored[lored].fuelCostText + "/s"
+
+
+func set_icon_LOW_FUEL():
+	get_node("%icon").set_icon(gv.sprite["fuel"])
+
+func set_icon_ASLEEP():
+	get_node("%icon").set_icon(gv.sprite["Halt"])
+
+func set_icon_REQUIRED_RESOURCE_NOT_EXPORTING():
+	get_node("%icon").set_icon(gv.sprite["Lock"])

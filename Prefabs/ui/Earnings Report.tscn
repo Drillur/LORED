@@ -1,7 +1,6 @@
-[gd_scene load_steps=26 format=2]
+[gd_scene load_steps=25 format=2]
 
 [ext_resource path="res://Fonts/Roboto-BlackItalic.ttf" type="DynamicFontData" id=1]
-[ext_resource path="res://Sprites/Menu/Report.png" type="Texture" id=2]
 [ext_resource path="res://Fonts/Roboto-MediumItalic.ttf" type="DynamicFontData" id=3]
 [ext_resource path="res://Prefabs/ui/Earnings Report.gd" type="Script" id=4]
 [ext_resource path="res://Fonts/Roboto-Medium.ttf" type="DynamicFontData" id=5]
@@ -10,6 +9,7 @@
 [ext_resource path="res://Sprites/Menu/Check.png" type="Texture" id=8]
 [ext_resource path="res://Sprites/Menu/Log.png" type="Texture" id=9]
 [ext_resource path="res://Sprites/Menu/Alarm.png" type="Texture" id=10]
+[ext_resource path="res://Prefabs/ui/Icon.tscn" type="PackedScene" id=11]
 
 [sub_resource type="StyleBoxFlat" id=12]
 bg_color = Color( 0.0705882, 0.0705882, 0.0705882, 1 )
@@ -41,10 +41,6 @@ expand_margin_right = 10.0
 expand_margin_top = 10.0
 expand_margin_bottom = 10.0
 
-[sub_resource type="StyleBoxFlat" id=7]
-bg_color = Color( 0, 0, 0, 0.25 )
-draw_center = false
-
 [sub_resource type="DynamicFont" id=3]
 size = 17
 outline_color = Color( 0, 0, 0, 1 )
@@ -52,11 +48,13 @@ font_data = ExtResource( 1 )
 
 [sub_resource type="StyleBoxFlat" id=9]
 bg_color = Color( 1, 1, 1, 0.03 )
-border_color = Color( 1, 1, 1, 0.65 )
+draw_center = false
+border_color = Color( 1, 1, 0, 0.65098 )
 expand_margin_left = 10.0
 expand_margin_right = 10.0
 expand_margin_top = 10.0
 expand_margin_bottom = 10.0
+anti_aliasing = false
 
 [sub_resource type="StyleBoxFlat" id=13]
 draw_center = false
@@ -128,110 +126,108 @@ margin_top = 2.0
 margin_right = 298.0
 margin_bottom = 298.0
 
-[node name="ScrollContainer" type="ScrollContainer" parent="m/v"]
+[node name="top" type="MarginContainer" parent="m/v"]
 margin_right = 296.0
-margin_bottom = 256.0
-size_flags_vertical = 3
-
-[node name="m" type="MarginContainer" parent="m/v/ScrollContainer"]
-margin_right = 296.0
-margin_bottom = 187.0
-size_flags_horizontal = 3
+margin_bottom = 44.0
 custom_constants/margin_right = 10
 custom_constants/margin_top = 10
 custom_constants/margin_left = 10
 custom_constants/margin_bottom = 10
 
-[node name="v" type="VBoxContainer" parent="m/v/ScrollContainer/m"]
+[node name="bg" type="Panel" parent="m/v/top"]
 margin_left = 10.0
 margin_top = 10.0
 margin_right = 286.0
-margin_bottom = 177.0
-custom_constants/separation = 10
-
-[node name="v" type="VBoxContainer" parent="m/v/ScrollContainer/m/v"]
-margin_right = 276.0
-margin_bottom = 36.0
-custom_constants/separation = 20
-
-[node name="top" type="MarginContainer" parent="m/v/ScrollContainer/m/v/v"]
-margin_right = 276.0
-margin_bottom = 36.0
-
-[node name="bg" type="Panel" parent="m/v/ScrollContainer/m/v/v/top"]
-margin_right = 276.0
-margin_bottom = 36.0
+margin_bottom = 34.0
 custom_styles/panel = SubResource( 2 )
 
-[node name="v" type="VBoxContainer" parent="m/v/ScrollContainer/m/v/v/top"]
-margin_right = 276.0
-margin_bottom = 36.0
+[node name="v" type="VBoxContainer" parent="m/v/top"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 286.0
+margin_bottom = 34.0
 custom_constants/separation = 0
 
-[node name="h" type="HBoxContainer" parent="m/v/ScrollContainer/m/v/v/top/v"]
+[node name="h" type="HBoxContainer" parent="m/v/top/v"]
 margin_right = 276.0
-margin_bottom = 36.0
+margin_bottom = 24.0
 alignment = 1
 
-[node name="Panel" type="Panel" parent="m/v/ScrollContainer/m/v/v/top/v/h"]
-margin_left = 58.0
-margin_right = 94.0
-margin_bottom = 36.0
-rect_min_size = Vector2( 36, 36 )
-size_flags_vertical = 4
-custom_styles/panel = SubResource( 7 )
-
-[node name="icon" type="Sprite" parent="m/v/ScrollContainer/m/v/v/top/v/h/Panel"]
+[node name="Report" parent="m/v/top/v/h" instance=ExtResource( 11 )]
 unique_name_in_owner = true
-position = Vector2( 18, 18 )
-texture = ExtResource( 2 )
+margin_left = 70.0
+margin_right = 82.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 12, 24 )
 
-[node name="shadow" type="Sprite" parent="m/v/ScrollContainer/m/v/v/top/v/h/Panel/icon"]
-self_modulate = Color( 0, 0, 0, 1 )
-show_behind_parent = true
-position = Vector2( 1, 1 )
-texture = ExtResource( 2 )
-
-[node name="Label" type="Label" parent="m/v/ScrollContainer/m/v/v/top/v/h"]
-margin_left = 98.0
-margin_top = 7.0
-margin_right = 218.0
-margin_bottom = 28.0
+[node name="Label" type="Label" parent="m/v/top/v/h"]
+margin_left = 86.0
+margin_top = 1.0
+margin_right = 206.0
+margin_bottom = 22.0
 size_flags_horizontal = 0
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 3 )
 text = "Earnings Report"
 valign = 1
 
-[node name="fuel ratios" type="MarginContainer" parent="m/v/ScrollContainer/m/v/v"]
+[node name="MarginContainer" type="MarginContainer" parent="m/v"]
+margin_top = 48.0
+margin_right = 296.0
+margin_bottom = 256.0
+size_flags_vertical = 3
+custom_constants/margin_right = 5
+
+[node name="ScrollContainer" type="ScrollContainer" parent="m/v/MarginContainer"]
+margin_right = 291.0
+margin_bottom = 208.0
+size_flags_vertical = 3
+scroll_horizontal_enabled = false
+
+[node name="m" type="MarginContainer" parent="m/v/MarginContainer/ScrollContainer"]
+margin_right = 291.0
+margin_bottom = 141.0
+size_flags_horizontal = 3
+custom_constants/margin_right = 15
+custom_constants/margin_top = 10
+custom_constants/margin_left = 10
+custom_constants/margin_bottom = 10
+
+[node name="v" type="VBoxContainer" parent="m/v/MarginContainer/ScrollContainer/m"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 276.0
+margin_bottom = 131.0
+custom_constants/separation = 10
+
+[node name="fuel ratios" type="MarginContainer" parent="m/v/MarginContainer/ScrollContainer/m/v"]
 unique_name_in_owner = true
 visible = false
-margin_top = 56.0
-margin_right = 264.0
-margin_bottom = 160.0
+margin_right = 254.0
+margin_bottom = 104.0
 custom_constants/margin_right = 0
 custom_constants/margin_top = 0
 custom_constants/margin_left = 0
 custom_constants/margin_bottom = 0
 
-[node name="bg" type="Panel" parent="m/v/ScrollContainer/m/v/v/fuel ratios"]
-margin_right = 264.0
+[node name="bg" type="Panel" parent="m/v/MarginContainer/ScrollContainer/m/v/fuel ratios"]
+margin_right = 254.0
 margin_bottom = 104.0
 custom_styles/panel = SubResource( 9 )
 
-[node name="VBoxContainer" type="VBoxContainer" parent="m/v/ScrollContainer/m/v/v/fuel ratios"]
-margin_right = 264.0
+[node name="VBoxContainer" type="VBoxContainer" parent="m/v/MarginContainer/ScrollContainer/m/v/fuel ratios"]
+margin_right = 254.0
 margin_bottom = 104.0
 custom_constants/separation = 10
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="m/v/ScrollContainer/m/v/v/fuel ratios/VBoxContainer"]
-margin_right = 264.0
+[node name="HBoxContainer2" type="HBoxContainer" parent="m/v/MarginContainer/ScrollContainer/m/v/fuel ratios/VBoxContainer"]
+margin_right = 254.0
 margin_bottom = 18.0
 alignment = 1
 
-[node name="icon" type="Panel" parent="m/v/ScrollContainer/m/v/v/fuel ratios/VBoxContainer/HBoxContainer2"]
-margin_left = 16.0
-margin_right = 34.0
+[node name="icon" type="Panel" parent="m/v/MarginContainer/ScrollContainer/m/v/fuel ratios/VBoxContainer/HBoxContainer2"]
+margin_left = 11.0
+margin_right = 29.0
 margin_bottom = 18.0
 rect_min_size = Vector2( 18, 18 )
 size_flags_horizontal = 0
@@ -241,44 +237,44 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Sprite" type="Sprite" parent="m/v/ScrollContainer/m/v/v/fuel ratios/VBoxContainer/HBoxContainer2/icon"]
+[node name="Sprite" type="Sprite" parent="m/v/MarginContainer/ScrollContainer/m/v/fuel ratios/VBoxContainer/HBoxContainer2/icon"]
 modulate = Color( 1, 0, 0, 1 )
 position = Vector2( 9, 11 )
 texture = ExtResource( 10 )
 
-[node name="shadow" type="Sprite" parent="m/v/ScrollContainer/m/v/v/fuel ratios/VBoxContainer/HBoxContainer2/icon/Sprite"]
+[node name="shadow" type="Sprite" parent="m/v/MarginContainer/ScrollContainer/m/v/fuel ratios/VBoxContainer/HBoxContainer2/icon/Sprite"]
 self_modulate = Color( 0, 0, 0, 1 )
 show_behind_parent = true
 position = Vector2( 2, 2 )
 texture = ExtResource( 10 )
 
-[node name="Label" type="Label" parent="m/v/ScrollContainer/m/v/v/fuel ratios/VBoxContainer/HBoxContainer2"]
-margin_left = 38.0
+[node name="Label" type="Label" parent="m/v/MarginContainer/ScrollContainer/m/v/fuel ratios/VBoxContainer/HBoxContainer2"]
+margin_left = 33.0
 margin_top = 1.0
-margin_right = 247.0
+margin_right = 242.0
 margin_bottom = 16.0
 custom_fonts/font = SubResource( 11 )
 text = "Insufficient Fuel Resource Production"
 align = 1
 
-[node name="fuelRatio" type="GridContainer" parent="m/v/ScrollContainer/m/v/v/fuel ratios/VBoxContainer"]
+[node name="fuelRatio" type="GridContainer" parent="m/v/MarginContainer/ScrollContainer/m/v/fuel ratios/VBoxContainer"]
 unique_name_in_owner = true
-margin_left = 53.0
+margin_left = 48.0
 margin_top = 28.0
-margin_right = 211.0
+margin_right = 206.0
 margin_bottom = 43.0
 size_flags_horizontal = 4
 custom_constants/hseparation = 10
 columns = 4
 
-[node name="resource" type="Label" parent="m/v/ScrollContainer/m/v/v/fuel ratios/VBoxContainer/fuelRatio"]
+[node name="resource" type="Label" parent="m/v/MarginContainer/ScrollContainer/m/v/fuel ratios/VBoxContainer/fuelRatio"]
 margin_right = 49.0
 margin_bottom = 15.0
 custom_fonts/font = SubResource( 8 )
 text = "Resource"
 valign = 1
 
-[node name="gain" type="Label" parent="m/v/ScrollContainer/m/v/v/fuel ratios/VBoxContainer/fuelRatio"]
+[node name="gain" type="Label" parent="m/v/MarginContainer/ScrollContainer/m/v/fuel ratios/VBoxContainer/fuelRatio"]
 margin_left = 59.0
 margin_right = 83.0
 margin_bottom = 15.0
@@ -286,7 +282,7 @@ custom_fonts/font = SubResource( 8 )
 text = "Gain"
 valign = 1
 
-[node name="drain" type="Label" parent="m/v/ScrollContainer/m/v/v/fuel ratios/VBoxContainer/fuelRatio"]
+[node name="drain" type="Label" parent="m/v/MarginContainer/ScrollContainer/m/v/fuel ratios/VBoxContainer/fuelRatio"]
 margin_left = 93.0
 margin_right = 121.0
 margin_bottom = 15.0
@@ -294,7 +290,7 @@ custom_fonts/font = SubResource( 8 )
 text = "Drain"
 valign = 1
 
-[node name="ratio" type="Label" parent="m/v/ScrollContainer/m/v/v/fuel ratios/VBoxContainer/fuelRatio"]
+[node name="ratio" type="Label" parent="m/v/MarginContainer/ScrollContainer/m/v/fuel ratios/VBoxContainer/fuelRatio"]
 margin_left = 131.0
 margin_right = 158.0
 margin_bottom = 15.0
@@ -302,13 +298,13 @@ custom_fonts/font = SubResource( 8 )
 text = "Ratio"
 valign = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="m/v/ScrollContainer/m/v/v/fuel ratios/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="m/v/MarginContainer/ScrollContainer/m/v/fuel ratios/VBoxContainer"]
 margin_top = 53.0
-margin_right = 264.0
+margin_right = 254.0
 margin_bottom = 104.0
 custom_constants/separation = 10
 
-[node name="icon" type="Panel" parent="m/v/ScrollContainer/m/v/v/fuel ratios/VBoxContainer/HBoxContainer"]
+[node name="icon" type="Panel" parent="m/v/MarginContainer/ScrollContainer/m/v/fuel ratios/VBoxContainer/HBoxContainer"]
 margin_top = 16.0
 margin_right = 18.0
 margin_bottom = 34.0
@@ -320,19 +316,19 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Sprite" type="Sprite" parent="m/v/ScrollContainer/m/v/v/fuel ratios/VBoxContainer/HBoxContainer/icon"]
+[node name="Sprite" type="Sprite" parent="m/v/MarginContainer/ScrollContainer/m/v/fuel ratios/VBoxContainer/HBoxContainer/icon"]
 position = Vector2( 9, 9 )
 texture = ExtResource( 7 )
 
-[node name="shadow" type="Sprite" parent="m/v/ScrollContainer/m/v/v/fuel ratios/VBoxContainer/HBoxContainer/icon/Sprite"]
+[node name="shadow" type="Sprite" parent="m/v/MarginContainer/ScrollContainer/m/v/fuel ratios/VBoxContainer/HBoxContainer/icon/Sprite"]
 self_modulate = Color( 0, 0, 0, 1 )
 show_behind_parent = true
 position = Vector2( 2, 2 )
 texture = ExtResource( 7 )
 
-[node name="resource" type="Label" parent="m/v/ScrollContainer/m/v/v/fuel ratios/VBoxContainer/HBoxContainer"]
+[node name="resource" type="Label" parent="m/v/MarginContainer/ScrollContainer/m/v/fuel ratios/VBoxContainer/HBoxContainer"]
 margin_left = 28.0
-margin_right = 264.0
+margin_right = 254.0
 margin_bottom = 51.0
 size_flags_horizontal = 3
 custom_fonts/font = SubResource( 8 )
@@ -340,55 +336,54 @@ text = "Resource production is dependent on fuel resources. Their yield is direc
 valign = 1
 autowrap = true
 
-[node name="bot" type="MarginContainer" parent="m/v/ScrollContainer/m/v"]
-margin_top = 46.0
-margin_right = 276.0
-margin_bottom = 167.0
+[node name="bot" type="MarginContainer" parent="m/v/MarginContainer/ScrollContainer/m/v"]
+margin_right = 266.0
+margin_bottom = 121.0
 custom_constants/margin_right = 0
 custom_constants/margin_top = 10
 custom_constants/margin_left = 0
 custom_constants/margin_bottom = 0
 
-[node name="v" type="VBoxContainer" parent="m/v/ScrollContainer/m/v/bot"]
+[node name="v" type="VBoxContainer" parent="m/v/MarginContainer/ScrollContainer/m/v/bot"]
 margin_top = 10.0
-margin_right = 276.0
+margin_right = 266.0
 margin_bottom = 121.0
 custom_constants/separation = 10
 
-[node name="Label" type="Label" parent="m/v/ScrollContainer/m/v/bot/v"]
-margin_right = 276.0
+[node name="Label" type="Label" parent="m/v/MarginContainer/ScrollContainer/m/v/bot/v"]
+margin_right = 266.0
 margin_bottom = 15.0
 custom_fonts/font = SubResource( 11 )
 text = "Offline Resource Production"
 align = 1
 
-[node name="timeOffline" type="Label" parent="m/v/ScrollContainer/m/v/bot/v"]
+[node name="timeOffline" type="Label" parent="m/v/MarginContainer/ScrollContainer/m/v/bot/v"]
 unique_name_in_owner = true
 margin_top = 25.0
-margin_right = 276.0
+margin_right = 266.0
 margin_bottom = 40.0
 custom_fonts/font = SubResource( 10 )
 text = "Time offline: 14h 25m 13s"
 align = 1
 
-[node name="resourceProduction" type="GridContainer" parent="m/v/ScrollContainer/m/v/bot/v"]
+[node name="resourceProduction" type="GridContainer" parent="m/v/MarginContainer/ScrollContainer/m/v/bot/v"]
 unique_name_in_owner = true
-margin_left = 45.0
+margin_left = 40.0
 margin_top = 50.0
-margin_right = 230.0
+margin_right = 225.0
 margin_bottom = 65.0
 size_flags_horizontal = 4
 custom_constants/hseparation = 10
 columns = 4
 
-[node name="resource" type="Label" parent="m/v/ScrollContainer/m/v/bot/v/resourceProduction"]
+[node name="resource" type="Label" parent="m/v/MarginContainer/ScrollContainer/m/v/bot/v/resourceProduction"]
 margin_right = 49.0
 margin_bottom = 15.0
 custom_fonts/font = SubResource( 8 )
 text = "Resource"
 valign = 1
 
-[node name="yield" type="Label" parent="m/v/ScrollContainer/m/v/bot/v/resourceProduction"]
+[node name="yield" type="Label" parent="m/v/MarginContainer/ScrollContainer/m/v/bot/v/resourceProduction"]
 margin_left = 59.0
 margin_right = 85.0
 margin_bottom = 15.0
@@ -396,7 +391,7 @@ custom_fonts/font = SubResource( 8 )
 text = "Yield"
 valign = 1
 
-[node name="gain" type="Label" parent="m/v/ScrollContainer/m/v/bot/v/resourceProduction"]
+[node name="gain" type="Label" parent="m/v/MarginContainer/ScrollContainer/m/v/bot/v/resourceProduction"]
 margin_left = 95.0
 margin_right = 147.0
 margin_bottom = 15.0
@@ -404,7 +399,7 @@ custom_fonts/font = SubResource( 8 )
 text = "Base Gain"
 valign = 1
 
-[node name="drain" type="Label" parent="m/v/ScrollContainer/m/v/bot/v/resourceProduction"]
+[node name="drain" type="Label" parent="m/v/MarginContainer/ScrollContainer/m/v/bot/v/resourceProduction"]
 margin_left = 157.0
 margin_right = 185.0
 margin_bottom = 15.0
@@ -412,16 +407,16 @@ custom_fonts/font = SubResource( 8 )
 text = "Drain"
 valign = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="m/v/ScrollContainer/m/v/bot/v"]
+[node name="HBoxContainer" type="HBoxContainer" parent="m/v/MarginContainer/ScrollContainer/m/v/bot/v"]
 margin_top = 75.0
-margin_right = 276.0
+margin_right = 266.0
 margin_bottom = 111.0
 custom_constants/separation = 10
 alignment = 1
 
-[node name="icon" type="Panel" parent="m/v/ScrollContainer/m/v/bot/v/HBoxContainer"]
-margin_left = 47.0
-margin_right = 65.0
+[node name="icon" type="Panel" parent="m/v/MarginContainer/ScrollContainer/m/v/bot/v/HBoxContainer"]
+margin_left = 42.0
+margin_right = 60.0
 margin_bottom = 36.0
 rect_min_size = Vector2( 18, 36 )
 size_flags_horizontal = 0
@@ -431,20 +426,20 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Sprite" type="Sprite" parent="m/v/ScrollContainer/m/v/bot/v/HBoxContainer/icon"]
+[node name="Sprite" type="Sprite" parent="m/v/MarginContainer/ScrollContainer/m/v/bot/v/HBoxContainer/icon"]
 position = Vector2( 9, 18 )
 texture = ExtResource( 9 )
 
-[node name="shadow" type="Sprite" parent="m/v/ScrollContainer/m/v/bot/v/HBoxContainer/icon/Sprite"]
+[node name="shadow" type="Sprite" parent="m/v/MarginContainer/ScrollContainer/m/v/bot/v/HBoxContainer/icon/Sprite"]
 self_modulate = Color( 0, 0, 0, 1 )
 show_behind_parent = true
 position = Vector2( 2, 2 )
 texture = ExtResource( 9 )
 
-[node name="timeOffline" type="Label" parent="m/v/ScrollContainer/m/v/bot/v/HBoxContainer"]
-margin_left = 75.0
+[node name="timeOffline" type="Label" parent="m/v/MarginContainer/ScrollContainer/m/v/bot/v/HBoxContainer"]
+margin_left = 70.0
 margin_top = 10.0
-margin_right = 228.0
+margin_right = 223.0
 margin_bottom = 25.0
 custom_fonts/font = SubResource( 10 )
 text = "This report has been logged."

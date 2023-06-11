@@ -2,7 +2,7 @@ extends MarginContainer
 
 
 onready var bg = get_node("%bg")
-onready var gnIcon = get_node("%icon")
+onready var gnIcon = get_node("%Report")
 onready var gnClose = get_node("%close")
 onready var gnFuelRatio = get_node("%fuelRatio")
 onready var gnFuelRatios = get_node("%fuel ratios")
@@ -85,10 +85,13 @@ func addFuelResource(resource: int, timeOffline: int):
 func setupResourceProduction(timeOffline: int):
 	for resource in unlockedResources:
 		addResource(resource, timeOffline)
+	#sort_children(gnResourceProduction)
 
 func addResource(resource: int, timeOffline: int):
 	
 	var nameAndIconNodes = gv.SRC["earnings report/resource"].instance()
+	
+	nameAndIconNodes.name = gv.Resource.keys()[resource]
 	
 	var icon = gv.sprite[gv.shorthandByResource[resource]]
 	nameAndIconNodes.get_node("%icon").texture = icon
@@ -130,3 +133,20 @@ func _on_close_pressed() -> void:
 
 func close():
 	hide()
+
+
+#func sort_children(parent_node: Node):
+#
+#	var sorted_nodes: Array = parent_node.get_children()
+#
+#	sorted_nodes.sort_custom(self, "sort")
+#
+#	for node in parent_node.get_children():
+#		parent_node.remove_child(node)
+#
+#	for node in sorted_nodes:
+#		parent_node.add_child(node)
+#
+#static func sort(a: Node, b: Node):
+#	return a.name.naturalnocasecmp_to(b.name) < 0
+

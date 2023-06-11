@@ -2,7 +2,6 @@ class_name Bits
 extends Reference
 
 
-
 var bits := {}
 
 var base: Big
@@ -109,7 +108,7 @@ func report():
 			#print(lv.Num.keys()[folder], "//", lv.Type.keys()[item], ": ", bits[folder][item].toString())
 			print(lv.Num.keys()[folder], "//", lv.Num.keys()[item], ": ", bits[folder][item].toString())
 
-func fullReport():
+func fullReport() -> void:
 	
 	total = Big.new(base)
 	print("* * * FULL REPORT * * *\n!Don't use unless debugging. Restart game after use.!\n - Base: ", total.toString())
@@ -140,7 +139,13 @@ func fullReport():
 		total.m(call(bonusEffectsMethod))
 		print("BONUS METHOD//", name, ": ", call(bonusEffectsMethod))
 		print(" - Total: ", total.toString())
+	
+	print("* * * Report Concluded * * * ")
 
 var dynamic := {}
 func updateDynamic(_dynamic: Dictionary):
 	dynamic = _dynamic
+
+
+func get_bits() -> Dictionary:
+	return bits

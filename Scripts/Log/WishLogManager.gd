@@ -12,10 +12,10 @@ func log(wish: Wish):
 	if not gv.inFirstTwoSecondsOfRun():
 		get_node("/root/Root").wishNotice()
 	
-	emoteEvent(wish.key)
-
-func emoteEvent(key: String):
-	pass
+#	emoteEvent(wish.key)
+#
+#func emoteEvent(key: String):
+#	pass
 #	if key == "upgrade_stone":
 #		EmoteManager.emote(EmoteManager.Type.IRON_WISH_LOG)
 #		# in case the game is closed before the meta is clicked:

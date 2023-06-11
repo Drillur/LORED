@@ -64,10 +64,10 @@ func _ready() -> void:
 
 var fps := 0
 func setupFPS():
-	var fps = get_node("%fps dropdown")
-	fps.add_item("15")
-	fps.add_item("30")
-	fps.add_item("60")
+	var _fps = get_node("%fps dropdown")
+	_fps.add_item("15")
+	_fps.add_item("30")
+	_fps.add_item("60")
 func selectFPS(index: int) -> void:
 	fps = index
 	get_node("%fps dropdown").select(index)
@@ -76,10 +76,10 @@ func selectFPS(index: int) -> void:
 
 var notation := 0
 func setupNotation():
-	var notation = get_node("%notationDropdown")
-	notation.add_item("Scientific")
-	notation.add_item("Engineering")
-	notation.add_item("Logarithmic")
+	var _notation = get_node("%notationDropdown")
+	_notation.add_item("Scientific")
+	_notation.add_item("Engineering")
+	_notation.add_item("Logarithmic")
 func selectNotation(index: int):
 	notation = index
 	get_node("%notationDropdown").select(index)

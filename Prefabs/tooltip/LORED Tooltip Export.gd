@@ -1,12 +1,12 @@
 extends MarginContainer
 
 
-func setup(lored: int):
-	if lv.lored[lored].exporting:
-		get_node("%top text").text = "Exporting"
-		get_node("%iconExporting").show()
-		get_node("%textExporting").show()
+func setup(resource: int):
+	if gv.resource_is_locked(resource):
+		get_node("%top text").text = "Locked"
+		get_node("%icon").set_icon(gv.sprite["Lock"])
+		get_node("%text_locked").show()
 	else:
-		get_node("%top text").text = "Not Exporting"
-		get_node("%iconExportingFalse").show()
-		get_node("%textExportingFalse").show()
+		get_node("%top text").text = "Unlocked"
+		get_node("%icon").set_icon(gv.sprite["Unlock"])
+		get_node("%text_unlocked").show()

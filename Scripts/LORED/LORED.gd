@@ -89,6 +89,9 @@ func _init(_type: int):
 	
 	call("construct_" + base_name)
 	
+	if stage == 3:
+		addJob(lv.Job.IDLE)
+	
 	keyLORED = type in lv.DEFAULT_KEY_LOREDS
 	tab = [gv.Tab.S1, gv.Tab.S2, gv.Tab.S3, gv.Tab.S4][stage - 1]
 	fuelResourceLORED = lv.Type.COAL if fuelResource == gv.Resource.COAL else lv.Type.JOULES
@@ -130,6 +133,7 @@ func construct_WITCH():
 	stage = 3
 	color = gv.COLORS["witch"]
 	fuelResource = gv.Resource.COAL
+	name = "Circe"
 	icon = preload("res://Sprites/upgrades/thewitchofloredelith.png")
 
 func construct_STONE():
@@ -1048,6 +1052,8 @@ var jobs: Dictionary
 var refuelJob: Job
 func addJob(jobType: int):
 	jobs[jobType] = Job.new(jobType, type)
+	if is_instance_valid(manager):
+		manager.store_produced_and_required_resources()
 func syncJobs_all():
 	refuelJob.syncAll()
 	for job in jobs:

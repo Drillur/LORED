@@ -21,8 +21,9 @@ func init(_upgrade_key: String) -> void:
 	up.active_tooltip = self
 	up.active_tooltip_exists = true
 	
-	icon.init(_upgrade_key)
 	upgradeName.text = up.name
+	
+	icon.init(_upgrade_key)
 	
 	display()
 

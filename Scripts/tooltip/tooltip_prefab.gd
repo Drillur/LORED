@@ -46,6 +46,13 @@ func _call(source : String, other: Dictionary) -> void:
 			temp["lored"] = other["lored"]
 			$bg.self_modulate = other["color"]
 		
+		elif "wallet resource" == type:
+			
+			cont = gv.SRC["WalletResourceTooltip"].instance()
+			cont.setup(other["resource"])
+			add_child(cont)
+			$bg.self_modulate = gv.COLORS[gv.shorthandByResource[other["resource"]]]
+		
 		elif "lored active buffs" == type:
 			
 			cont = gv.SRC["tooltip/active buffs"].instance()
@@ -55,14 +62,13 @@ func _call(source : String, other: Dictionary) -> void:
 			temp["lored"] = other["lored"]
 			$bg.self_modulate = lv.lored[other["lored"]].color
 		
-		elif "lored export" == type:
+		elif "resource export" == type:
 			
-			cont = gv.SRC["tooltip/lored export"].instance()
-			cont.setup(other["lored"])
+			cont = gv.SRC["tooltip/resource export"].instance()
+			cont.setup(other["resource"])
 			add_child(cont)
 			
-			temp["lored"] = other["lored"]
-			$bg.self_modulate = lv.lored[other["lored"]].color
+			$bg.self_modulate = gv.resourceColor[other["resource"]]
 		
 		elif "lored asleep" == type:
 			
@@ -213,7 +219,14 @@ func r_tip(move_tip := false) -> void:
 			
 			return
 		
-		elif type in ["lored export", "lored level up", "lored info", "lored alert", "lored jobs", "lored asleep", "lored active buffs"]:
+		elif type in ["resource export", "wallet resource"]:
+			
+			rect_position = Vector2(
+				rt.wallet.rect_position.x + rt.wallet.rect_size.x + 10,
+				rt.wallet.rect_position.y
+			)
+		
+		elif type in ["lored level up", "lored info", "lored alert", "lored jobs", "lored asleep", "lored active buffs"]:
 			
 			var f = temp["lored"]
 			
@@ -288,7 +301,7 @@ func r_tip(move_tip := false) -> void:
 
 func price_flash() -> void:
 	
-	var cost_dict := {}
+	#var cost_dict := {}
 	
 	if "lored level up" == type or "buy upgrade" in type:
 		cont.flash()

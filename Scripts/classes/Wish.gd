@@ -992,10 +992,11 @@ func get_possible_types() -> Dictionary:
 				var time_to_buy = gv.up[x].time_to_buy()
 				if not time_to_buy is Big:
 					continue
-				if time_to_buy.less(60) and gv.up[x].manager.availableToBuy():
-					possible_types["random_buy_upgrade:" + x] = 15
-					exit = true
-					break
+				if is_instance_valid(gv.up[x].manager):
+					if time_to_buy.less(60) and gv.up[x].manager.availableToBuy():
+						possible_types["random_buy_upgrade:" + x] = 15
+						exit = true
+						break
 			
 			if exit:
 				break
@@ -1036,7 +1037,9 @@ func construct_random_collect():
 	
 	setRandomGiver()
 	
-	var resource = randomResource()
+	var resource := randomResource()
+#	while not gv.resourceBeingProduced(resource):
+#		resource = randomResource()
 	
 	var difficulty = rand_range(20,80)
 	

@@ -38,7 +38,6 @@ func _input(ev):
 		var upcon = rt.get_node(rt.gnupcon)
 		if rt.get_node(rt.gnupcon).visible and mouse_out(rt.get_node("%upgradesTab").rect_global_position, rt.get_node("%upgradesTab").rect_size) and mouse_out(upcon.rect_global_position, upcon.rect_size * rt.scale):
 			rt.get_node(rt.gnupcon).hide()
-			rt.get_node(rt.gnupcon).go_back()
 		
 		 # earnings report
 		if earningsReport.visible and mouse_out(earningsReport.rect_global_position, earningsReport.rect_size):
@@ -59,6 +58,9 @@ func _input(ev):
 		# PatchNotesMenu
 		if rt.get_node("%PatchNotesMenu").visible and mouse_out(rt.get_node("%PatchNotesMenu").rect_global_position, rt.get_node("%PatchNotesMenu").rect_size):
 			rt.get_node("%PatchNotesMenu").hide()
+		
+		if rt.wallet.visible and mouse_out(rt.wallet.rect_global_position, rt.wallet.rect_size):
+			rt.wallet.hide()
 		
 		# WishLog
 		if rt.get_node("%WishLog").visible and mouse_out(rt.get_node("%WishLogButton").rect_global_position, rt.get_node("%WishLogButton").rect_size) and mouse_out(rt.get_node("%WishLog").rect_global_position, rt.get_node("%WishLog").rect_size):

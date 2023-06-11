@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=32 format=2]
+[gd_resource type="Theme" load_steps=30 format=2]
 
 [ext_resource path="res://Fonts/Roboto-Bold.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Styles/Buttons/norm.tres" type="StyleBox" id=2]
@@ -6,6 +6,7 @@
 [ext_resource path="res://Fonts/Roboto-Medium.ttf" type="DynamicFontData" id=4]
 [ext_resource path="res://Fonts/Roboto-LightItalic.ttf" type="DynamicFontData" id=5]
 [ext_resource path="res://Styles/Labels/Sub Header.tres" type="DynamicFont" id=6]
+[ext_resource path="res://Sprites/Menu/Lock.png" type="Texture" id=7]
 
 [sub_resource type="DynamicFont" id=1]
 size = 14
@@ -86,40 +87,10 @@ corner_radius_top_right = 15
 corner_radius_bottom_right = 15
 corner_radius_bottom_left = 15
 
-[sub_resource type="DynamicFont" id=4]
-size = 12
-font_data = ExtResource( 4 )
-
-[sub_resource type="StyleBoxFlat" id=5]
-content_margin_left = 10.0
-draw_center = false
-
-[sub_resource type="StyleBoxFlat" id=6]
-content_margin_left = 10.0
-bg_color = Color( 0.6, 0.6, 0.6, 0.0509804 )
-draw_center = false
-corner_radius_top_left = 3
-corner_radius_top_right = 3
-corner_radius_bottom_right = 3
-corner_radius_bottom_left = 3
-
-[sub_resource type="StyleBoxFlat" id=7]
-content_margin_left = 10.0
-bg_color = Color( 0.6, 0.6, 0.6, 0.1 )
-draw_center = false
-corner_radius_top_left = 3
-corner_radius_top_right = 3
-corner_radius_bottom_right = 3
-corner_radius_bottom_left = 3
-
-[sub_resource type="StyleBoxFlat" id=8]
-content_margin_left = 10.0
-bg_color = Color( 0.87451, 0.262745, 0.262745, 0.247059 )
-draw_center = false
-corner_radius_top_left = 3
-corner_radius_top_right = 3
-corner_radius_bottom_right = 3
-corner_radius_bottom_left = 3
+[sub_resource type="StyleBoxTexture" id=28]
+texture = ExtResource( 7 )
+region_rect = Rect2( -1, -1, 24, 24 )
+modulate_color = Color( 0, 0, 0, 1 )
 
 [sub_resource type="DynamicFont" id=9]
 size = 12
@@ -158,20 +129,19 @@ content_margin_bottom = 10.0
 bg_color = Color( 0.1, 0.1, 0.1, 0.95 )
 
 [sub_resource type="StyleBoxFlat" id=15]
+content_margin_top = 10.0
 bg_color = Color( 1, 1, 1, 0.03 )
 draw_center = false
 border_color = Color( 0.235294, 0.235294, 0.235294, 0.8 )
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
-expand_margin_top = 1.0
 anti_aliasing = false
 
 [sub_resource type="StyleBoxFlat" id=16]
 content_margin_left = 10.0
 content_margin_right = 10.0
 bg_color = Color( 0.152344, 0.152344, 0.152344, 0.8 )
+draw_center = false
+
+[sub_resource type="StyleBoxFlat" id=26]
 draw_center = false
 
 [sub_resource type="StyleBoxFlat" id=17]
@@ -235,24 +205,8 @@ CheckBox/styles/hover = SubResource( 21 )
 CheckBox/styles/hover_pressed = SubResource( 21 )
 CheckBox/styles/normal = SubResource( 22 )
 CheckBox/styles/pressed = SubResource( 22 )
-CheckButton/colors/font_color = Color( 0.88, 0.88, 0.88, 1 )
-CheckButton/colors/font_color_disabled = Color( 0.9, 0.9, 0.9, 0.2 )
-CheckButton/colors/font_color_hover = Color( 0.94, 0.94, 0.94, 1 )
-CheckButton/colors/font_color_hover_pressed = Color( 1, 1, 1, 1 )
-CheckButton/colors/font_color_pressed = Color( 1, 1, 1, 1 )
-CheckButton/constants/check_vadjust = 0
-CheckButton/constants/hseparation = 4
-CheckButton/fonts/font = SubResource( 4 )
-CheckButton/icons/off = null
-CheckButton/icons/off_disabled = null
-CheckButton/icons/on = null
-CheckButton/icons/on_disabled = null
-CheckButton/styles/disabled = SubResource( 5 )
-CheckButton/styles/focus = null
-CheckButton/styles/hover = SubResource( 6 )
-CheckButton/styles/hover_pressed = SubResource( 6 )
-CheckButton/styles/normal = SubResource( 7 )
-CheckButton/styles/pressed = SubResource( 8 )
+LockShadow/base_type = "Panel"
+LockShadow/styles/panel = SubResource( 28 )
 OptionButton/colors/font_color = Color( 0.88, 0.88, 0.88, 1 )
 OptionButton/colors/font_color_disabled = Color( 0.9, 0.9, 0.9, 0.2 )
 OptionButton/colors/font_color_hover = Color( 0.94, 0.94, 0.94, 1 )
@@ -286,13 +240,13 @@ PopupMenu/styles/panel = SubResource( 14 )
 PopupMenu/styles/panel_disabled = null
 PopupMenu/styles/separator = null
 TabContainer/colors/font_color_bg = Color( 0.498039, 0.498039, 0.498039, 1 )
-TabContainer/colors/font_color_disabled = Color( 0.9, 0.9, 0.9, 0.2 )
+TabContainer/colors/font_color_disabled = Color( 0, 0, 0, 0 )
 TabContainer/colors/font_color_fg = Color( 1, 1, 1, 1 )
 TabContainer/constants/hseparation = 4
 TabContainer/constants/label_valign_bg = 2
 TabContainer/constants/label_valign_fg = 0
 TabContainer/constants/side_margin = 8
-TabContainer/constants/top_margin = 24
+TabContainer/constants/top_margin = 0
 TabContainer/fonts/font = ExtResource( 6 )
 TabContainer/icons/decrement = null
 TabContainer/icons/decrement_highlight = null
@@ -302,7 +256,7 @@ TabContainer/icons/menu = null
 TabContainer/icons/menu_highlight = null
 TabContainer/styles/panel = SubResource( 15 )
 TabContainer/styles/tab_bg = SubResource( 16 )
-TabContainer/styles/tab_disabled = null
+TabContainer/styles/tab_disabled = SubResource( 26 )
 TabContainer/styles/tab_fg = SubResource( 17 )
 TooltipLabel/fonts/font = SubResource( 19 )
 TooltipPanel/styles/panel = SubResource( 20 )

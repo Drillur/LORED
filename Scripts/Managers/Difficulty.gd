@@ -20,17 +20,19 @@ enum Difficulty {
 	HARD,
 	TORTOISE,
 	NORMAL, # 4
-	EASY, # 5
-	SONIC,
+	LAZYBONES, 
+	EASY, # 6
+	SONIC, # 7
 }
 const DifficultyDescription := {
 	Difficulty.CUSTOM: "Go wild!",
 	Difficulty.MARATHON: "For freaks or excessive idling.",
-	Difficulty.TORTOISE: "Slow and steady wins the race. Permanently owns Limit Break.",
+	Difficulty.TORTOISE: "Slow and steady wins the race. Begin the game with Limit Break.",
 	Difficulty.HARD: "For the patient.",
 	Difficulty.NORMAL: "Intended values. First-time or returning players should begin here.",
+	Difficulty.LAZYBONES: "Begin the game with every autobuyer upgrade.",
 	Difficulty.EASY: "For the impatient.",
-	Difficulty.SONIC: "Prepare yourself for game-breaking speed. Permanently owns THE WITCH OF LOREDELITH and Limit Break; Limit Break instead affects LORED haste.",
+	Difficulty.SONIC: "Prepare yourself for game-breaking speed. Begin the game with Limit Break, except it instead affects LORED haste.",
 }
 var active_difficulty: int = Difficulty.NORMAL
 
@@ -71,7 +73,11 @@ func setFuelCost(val: float):
 func setFuelStorage(val: float):
 	FuelStorage = val
 func setUnlockedUpgrades(val: Array):
-	unlockedUpgrades = val
+	for upgrade in unlockedUpgrades:
+		lock_upgrade(upgrade, true)
+	unlockedUpgrades.clear()
+	for upgrade in val:
+		unlock_upgrade(upgrade)
 
 
 
@@ -82,7 +88,6 @@ func resetAll():
 	setCrit(0)
 	setFuelCost(1)
 	setFuelStorage(1)
-	setUnlockedUpgrades([])
 
 func changeDifficulty(new_diff: int):
 	
@@ -97,6 +102,7 @@ func changeDifficulty(new_diff: int):
 	match active_difficulty:
 		
 		Difficulty.MARATHON:
+			setUnlockedUpgrades([])
 			setHaste(0.25)
 			setOutput(0.5)
 			setInput(2)
@@ -111,12 +117,57 @@ func changeDifficulty(new_diff: int):
 			setUnlockedUpgrades(["Limit Break"])
 		
 		Difficulty.HARD:
+			setUnlockedUpgrades([])
 			setHaste(0.75)
 			setOutput(0.75)
 			setFuelCost(2)
 			setCrit(-5)
 		
+		Difficulty.LAZYBONES:
+			setUnlockedUpgrades([
+				"we were so close, now you don't even think about me",
+				"Now That's What I'm Talkin About, YeeeeeeaaaaaaaAAAAAAGGGGGHHH",
+				"RED NECROMANCY",
+				"Sudden Commission",
+				"AUTOSENSU",
+				"Master",
+				"AXELOT",
+				"AUTOSHIT",
+				"Smashy Crashy",
+				"A baby Roleum!! Thanks, pa!",
+				"poofy wizard boy",
+				"BENEFIT",
+				"AUTOAQUATICICIDE",
+				"Go on, then, LEAD us!",
+				"BEEKEEPING",
+				"Master Iron Worker",
+				"Scoopy Doopy",
+				"JOINTSHACK",
+				"AROUSAL",
+				"autofloof",
+				"ELECTRONIC CIRCUITS",
+				"AUTOBADDECISIONMAKER",
+				"what kind of resource is 'tumors', you hack fraud",
+				"PILLAR OF AUTUMN",
+				"AUTOSMITHY",
+				"DEVOUR",
+				"Splishy Splashy",
+				"SENTIENT DERRICK",
+				"SLAPAPOW!",
+				"MOUND",
+				"wtf is that musk",
+				"CANKERITE",
+				"MOIST",
+				"AUTOPOLICE",
+				"SIDIUS IRON",
+				"pippenpaddle- oppsoCOPolis",
+				"OREOREUHBor E ALICE",
+				"AUTOSTONER",
+				"AUTOSHOVELER",
+			])
+		
 		Difficulty.EASY:
+			setUnlockedUpgrades([])
 			setHaste(1.25)
 			setFuelCost(0.5)
 		
@@ -132,7 +183,7 @@ func getDifficultyText() -> String:
 	return Difficulty.keys()[active_difficulty].capitalize()
 
 func readAll() -> String:
-	var text: String
+	var text := ""
 	text += getDifficultyText() + "\n"
 	for v in saved_vars:
 		if v == "active_difficulty":
@@ -141,4 +192,18 @@ func readAll() -> String:
 	return text
 func readVal(val: String) -> String:
 	return val + ": " + str(get(val))
+
+
+func unlock_upgrade(upgrade_key: String):
+	if not upgrade_key in unlockedUpgrades:
+		unlockedUpgrades.append(upgrade_key)
+		if gv.active_scene == gv.Scene.MAIN_MENU:
+			get_node("/root/Main Menu").unlock_upgrade(upgrade_key)
+
+func lock_upgrade(upgrade_key: String, iterating = false):
+	if upgrade_key in unlockedUpgrades:
+		if not iterating:
+			unlockedUpgrades.erase(upgrade_key)
+		if gv.active_scene == gv.Scene.MAIN_MENU:
+			get_node("/root/Main Menu").lock_upgrade(upgrade_key)
 

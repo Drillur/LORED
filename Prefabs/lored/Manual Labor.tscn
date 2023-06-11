@@ -2,7 +2,7 @@
 
 [ext_resource path="res://Fonts/Roboto-MediumItalic.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Fonts/Roboto-Black.ttf" type="DynamicFontData" id=2]
-[ext_resource path="res://Sprites/Shovel.png" type="Texture" id=3]
+[ext_resource path="res://Sprites/misc/Shovel.png" type="Texture" id=3]
 [ext_resource path="res://Prefabs/ui/Progress Bar.tscn" type="PackedScene" id=4]
 [ext_resource path="res://Prefabs/lored/Manual Labor.gd" type="Script" id=5]
 [ext_resource path="res://Sprites/Menu/drain rate.png" type="Texture" id=6]

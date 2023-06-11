@@ -1,0 +1,874 @@
+[gd_scene load_steps=17 format=2]
+
+[ext_resource path="res://Fonts/Roboto-BlackItalic.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://Sprites/Menu/ResourceViewer.png" type="Texture" id=2]
+[ext_resource path="res://Prefabs/Labels/Medium Label.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Prefabs/ui/Wallet.gd" type="Script" id=4]
+[ext_resource path="res://Styles/Master Theme.tres" type="Theme" id=6]
+[ext_resource path="res://Prefabs/ui/SortDirection.gd" type="Script" id=7]
+[ext_resource path="res://Sprites/Menu/Sort.png" type="Texture" id=8]
+
+[sub_resource type="StyleBoxFlat" id=4]
+bg_color = Color( 0.0980392, 0.0980392, 0.0980392, 1 )
+border_color = Color( 1, 0, 0.380392, 1 )
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+shadow_color = Color( 0, 0, 0, 1 )
+shadow_size = 10
+
+[sub_resource type="StyleBoxFlat" id=5]
+bg_color = Color( 0.0980392, 0.0980392, 0.0980392, 1 )
+draw_center = false
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color( 1, 1, 1, 0.462745 )
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+shadow_size = 3
+
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 1, 1, 1, 0.0509804 )
+border_color = Color( 1, 1, 1, 0.65 )
+
+[sub_resource type="StyleBoxFlat" id=2]
+bg_color = Color( 0, 0, 0, 0.25 )
+draw_center = false
+
+[sub_resource type="DynamicFont" id=3]
+size = 17
+outline_color = Color( 0, 0, 0, 1 )
+font_data = ExtResource( 1 )
+
+[sub_resource type="StyleBoxFlat" id=6]
+bg_color = Color( 1, 1, 1, 0.08 )
+
+[sub_resource type="StyleBoxFlat" id=7]
+bg_color = Color( 1, 1, 1, 0.04 )
+
+[sub_resource type="StyleBoxFlat" id=8]
+bg_color = Color( 1, 1, 1, 0.0392157 )
+draw_center = false
+
+[sub_resource type="StyleBoxFlat" id=9]
+bg_color = Color( 0, 0, 0, 0.25 )
+draw_center = false
+
+[node name="Wallet" type="MarginContainer" groups=["Resources"]]
+margin_right = 272.0
+margin_bottom = 360.0
+rect_min_size = Vector2( 245, 0 )
+size_flags_horizontal = 4
+size_flags_vertical = 4
+script = ExtResource( 4 )
+
+[node name="bg" type="Panel" parent="."]
+margin_right = 304.0
+margin_bottom = 442.0
+custom_styles/panel = SubResource( 4 )
+
+[node name="border" type="Panel" parent="."]
+modulate = Color( 0.74902, 0.639216, 0.0352941, 1 )
+margin_right = 304.0
+margin_bottom = 442.0
+rect_clip_content = true
+custom_styles/panel = SubResource( 5 )
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+margin_right = 304.0
+margin_bottom = 442.0
+custom_constants/separation = 10
+
+[node name="top" type="MarginContainer" parent="VBoxContainer"]
+margin_right = 304.0
+margin_bottom = 56.0
+
+[node name="bg" type="Panel" parent="VBoxContainer/top"]
+margin_right = 304.0
+margin_bottom = 56.0
+custom_styles/panel = SubResource( 1 )
+__meta__ = {
+"_editor_description_": ""
+}
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/top"]
+margin_right = 304.0
+margin_bottom = 56.0
+custom_constants/margin_right = 10
+custom_constants/margin_top = 10
+custom_constants/margin_left = 10
+custom_constants/margin_bottom = 10
+
+[node name="h" type="HBoxContainer" parent="VBoxContainer/top/MarginContainer"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 294.0
+margin_bottom = 46.0
+alignment = 1
+
+[node name="Panel" type="Panel" parent="VBoxContainer/top/MarginContainer/h"]
+margin_left = 98.0
+margin_right = 134.0
+margin_bottom = 36.0
+rect_min_size = Vector2( 36, 36 )
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 2 )
+
+[node name="icon" type="Sprite" parent="VBoxContainer/top/MarginContainer/h/Panel"]
+unique_name_in_owner = true
+position = Vector2( 18, 18 )
+texture = ExtResource( 2 )
+
+[node name="shadow" type="Sprite" parent="VBoxContainer/top/MarginContainer/h/Panel/icon"]
+self_modulate = Color( 0, 0, 0, 1 )
+show_behind_parent = true
+position = Vector2( 1, 1 )
+texture = ExtResource( 2 )
+
+[node name="Label" type="Label" parent="VBoxContainer/top/MarginContainer/h"]
+margin_left = 138.0
+margin_top = 7.0
+margin_right = 186.0
+margin_bottom = 28.0
+size_flags_horizontal = 0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 3 )
+text = "Wallet"
+valign = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer"]
+margin_top = 66.0
+margin_right = 304.0
+margin_bottom = 442.0
+rect_min_size = Vector2( 290, 0 )
+custom_constants/margin_right = 10
+custom_constants/margin_bottom = 10
+
+[node name="TabContainer" type="TabContainer" parent="VBoxContainer/MarginContainer"]
+unique_name_in_owner = true
+margin_right = 294.0
+margin_bottom = 366.0
+theme = ExtResource( 6 )
+
+[node name="1" type="MarginContainer" parent="VBoxContainer/MarginContainer/TabContainer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = 27.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/MarginContainer/TabContainer/1"]
+margin_right = 294.0
+margin_bottom = 339.0
+custom_constants/separation = 10
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/MarginContainer/TabContainer/1/VBoxContainer"]
+margin_right = 294.0
+margin_bottom = 17.0
+custom_constants/margin_right = 10
+custom_constants/margin_left = 36
+
+[node name="Legend" type="HBoxContainer" parent="VBoxContainer/MarginContainer/TabContainer/1/VBoxContainer/MarginContainer"]
+margin_left = 36.0
+margin_right = 284.0
+margin_bottom = 17.0
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/MarginContainer/TabContainer/1/VBoxContainer/MarginContainer/Legend"]
+margin_right = 100.0
+margin_bottom = 17.0
+rect_min_size = Vector2( 100, 0 )
+
+[node name="Button" type="Button" parent="VBoxContainer/MarginContainer/TabContainer/1/VBoxContainer/MarginContainer/Legend/MarginContainer"]
+margin_right = 100.0
+margin_bottom = 17.0
+rect_min_size = Vector2( 36, 0 )
+mouse_default_cursor_shape = 2
+custom_styles/hover = SubResource( 6 )
+custom_styles/pressed = SubResource( 7 )
+custom_styles/normal = SubResource( 8 )
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/MarginContainer/TabContainer/1/VBoxContainer/MarginContainer/Legend/MarginContainer"]
+margin_right = 100.0
+margin_bottom = 17.0
+mouse_filter = 2
+
+[node name="Panel" type="Panel" parent="VBoxContainer/MarginContainer/TabContainer/1/VBoxContainer/MarginContainer/Legend/MarginContainer/HBoxContainer"]
+margin_right = 16.0
+margin_bottom = 16.0
+rect_min_size = Vector2( 16, 16 )
+mouse_filter = 2
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 9 )
+
+[node name="Sort" type="Sprite" parent="VBoxContainer/MarginContainer/TabContainer/1/VBoxContainer/MarginContainer/Legend/MarginContainer/HBoxContainer/Panel" groups=["WalletSortResource"]]
+position = Vector2( -4, -4 )
+texture = ExtResource( 8 )
+centered = false
+script = ExtResource( 7 )
+
+[node name="shadow" type="Sprite" parent="VBoxContainer/MarginContainer/TabContainer/1/VBoxContainer/MarginContainer/Legend/MarginContainer/HBoxContainer/Panel/Sort"]
+self_modulate = Color( 0, 0, 0, 1 )
+show_behind_parent = true
+position = Vector2( 13, 13 )
+texture = ExtResource( 8 )
+
+[node name="resource name" parent="VBoxContainer/MarginContainer/TabContainer/1/VBoxContainer/MarginContainer/Legend/MarginContainer/HBoxContainer" instance=ExtResource( 3 )]
+margin_left = 20.0
+margin_right = 69.0
+text = "Resource"
+
+[node name="MarginContainer2" type="MarginContainer" parent="VBoxContainer/MarginContainer/TabContainer/1/VBoxContainer/MarginContainer/Legend"]
+margin_left = 104.0
+margin_right = 174.0
+margin_bottom = 17.0
+rect_min_size = Vector2( 70, 0 )
+
+[node name="Button" type="Button" parent="VBoxContainer/MarginContainer/TabContainer/1/VBoxContainer/MarginContainer/Legend/MarginContainer2"]
+margin_right = 70.0
+margin_bottom = 17.0
+rect_min_size = Vector2( 36, 0 )
+mouse_default_cursor_shape = 2
+custom_styles/hover = SubResource( 6 )
+custom_styles/pressed = SubResource( 7 )
+custom_styles/normal = SubResource( 8 )
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/MarginContainer/TabContainer/1/VBoxContainer/MarginContainer/Legend/MarginContainer2"]
+margin_right = 70.0
+margin_bottom = 17.0
+mouse_filter = 2
+
+[node name="Panel" type="Panel" parent="VBoxContainer/MarginContainer/TabContainer/1/VBoxContainer/MarginContainer/Legend/MarginContainer2/HBoxContainer"]
+margin_right = 16.0
+margin_bottom = 16.0
+rect_min_size = Vector2( 16, 16 )
+mouse_filter = 2
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 9 )
+
+[node name="Sort" type="Sprite" parent="VBoxContainer/MarginContainer/TabContainer/1/VBoxContainer/MarginContainer/Legend/MarginContainer2/HBoxContainer/Panel" groups=["WalletSortAmount"]]
+position = Vector2( -4, -4 )
+texture = ExtResource( 8 )
+centered = false
+script = ExtResource( 7 )
+
+[node name="shadow" type="Sprite" parent="VBoxContainer/MarginContainer/TabContainer/1/VBoxContainer/MarginContainer/Legend/MarginContainer2/HBoxContainer/Panel/Sort"]
+self_modulate = Color( 0, 0, 0, 1 )
+show_behind_parent = true
+position = Vector2( 13, 13 )
+texture = ExtResource( 8 )
+
+[node name="resource name" parent="VBoxContainer/MarginContainer/TabContainer/1/VBoxContainer/MarginContainer/Legend/MarginContainer2/HBoxContainer" instance=ExtResource( 3 )]
+margin_left = 20.0
+margin_right = 63.0
+text = "Amount"
+
+[node name="MarginContainer3" type="MarginContainer" parent="VBoxContainer/MarginContainer/TabContainer/1/VBoxContainer/MarginContainer/Legend"]
+margin_left = 178.0
+margin_right = 248.0
+margin_bottom = 17.0
+rect_min_size = Vector2( 70, 0 )
+
+[node name="Button" type="Button" parent="VBoxContainer/MarginContainer/TabContainer/1/VBoxContainer/MarginContainer/Legend/MarginContainer3"]
+margin_right = 70.0
+margin_bottom = 17.0
+rect_min_size = Vector2( 36, 0 )
+mouse_default_cursor_shape = 2
+custom_styles/hover = SubResource( 6 )
+custom_styles/pressed = SubResource( 7 )
+custom_styles/normal = SubResource( 8 )
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/MarginContainer/TabContainer/1/VBoxContainer/MarginContainer/Legend/MarginContainer3"]
+margin_right = 70.0
+margin_bottom = 17.0
+mouse_filter = 2
+
+[node name="Panel" type="Panel" parent="VBoxContainer/MarginContainer/TabContainer/1/VBoxContainer/MarginContainer/Legend/MarginContainer3/HBoxContainer"]
+margin_right = 16.0
+margin_bottom = 16.0
+rect_min_size = Vector2( 16, 16 )
+mouse_filter = 2
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 9 )
+
+[node name="Sort" type="Sprite" parent="VBoxContainer/MarginContainer/TabContainer/1/VBoxContainer/MarginContainer/Legend/MarginContainer3/HBoxContainer/Panel" groups=["WalletSortIncome"]]
+position = Vector2( -4, -4 )
+texture = ExtResource( 8 )
+centered = false
+script = ExtResource( 7 )
+
+[node name="shadow" type="Sprite" parent="VBoxContainer/MarginContainer/TabContainer/1/VBoxContainer/MarginContainer/Legend/MarginContainer3/HBoxContainer/Panel/Sort"]
+self_modulate = Color( 0, 0, 0, 1 )
+show_behind_parent = true
+position = Vector2( 13, 13 )
+texture = ExtResource( 8 )
+
+[node name="resource name" parent="VBoxContainer/MarginContainer/TabContainer/1/VBoxContainer/MarginContainer/Legend/MarginContainer3/HBoxContainer" instance=ExtResource( 3 )]
+margin_left = 20.0
+margin_right = 59.0
+text = "Income"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/MarginContainer/TabContainer/1/VBoxContainer"]
+margin_top = 27.0
+margin_right = 294.0
+margin_bottom = 339.0
+rect_min_size = Vector2( 0, 312 )
+scroll_horizontal_enabled = false
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/MarginContainer/TabContainer/1/VBoxContainer/ScrollContainer"]
+margin_right = 294.0
+size_flags_horizontal = 3
+custom_constants/margin_right = 10
+custom_constants/margin_left = 10
+custom_constants/margin_bottom = 0
+
+[node name="resources1" type="VBoxContainer" parent="VBoxContainer/MarginContainer/TabContainer/1/VBoxContainer/ScrollContainer/MarginContainer"]
+unique_name_in_owner = true
+margin_left = 10.0
+margin_right = 284.0
+custom_constants/separation = 0
+
+[node name="2" type="MarginContainer" parent="VBoxContainer/MarginContainer/TabContainer"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = 27.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/MarginContainer/TabContainer/2"]
+margin_right = 294.0
+margin_bottom = 339.0
+custom_constants/separation = 10
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/MarginContainer/TabContainer/2/VBoxContainer"]
+margin_right = 294.0
+margin_bottom = 17.0
+custom_constants/margin_right = 10
+custom_constants/margin_left = 36
+
+[node name="Legend" type="HBoxContainer" parent="VBoxContainer/MarginContainer/TabContainer/2/VBoxContainer/MarginContainer"]
+margin_left = 36.0
+margin_right = 284.0
+margin_bottom = 17.0
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/MarginContainer/TabContainer/2/VBoxContainer/MarginContainer/Legend"]
+margin_right = 100.0
+margin_bottom = 17.0
+rect_min_size = Vector2( 100, 0 )
+
+[node name="Button" type="Button" parent="VBoxContainer/MarginContainer/TabContainer/2/VBoxContainer/MarginContainer/Legend/MarginContainer"]
+margin_right = 100.0
+margin_bottom = 17.0
+rect_min_size = Vector2( 36, 0 )
+mouse_default_cursor_shape = 2
+custom_styles/hover = SubResource( 6 )
+custom_styles/pressed = SubResource( 7 )
+custom_styles/normal = SubResource( 8 )
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/MarginContainer/TabContainer/2/VBoxContainer/MarginContainer/Legend/MarginContainer"]
+margin_right = 100.0
+margin_bottom = 17.0
+mouse_filter = 2
+
+[node name="Panel" type="Panel" parent="VBoxContainer/MarginContainer/TabContainer/2/VBoxContainer/MarginContainer/Legend/MarginContainer/HBoxContainer"]
+margin_right = 16.0
+margin_bottom = 16.0
+rect_min_size = Vector2( 16, 16 )
+mouse_filter = 2
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 9 )
+
+[node name="Sort" type="Sprite" parent="VBoxContainer/MarginContainer/TabContainer/2/VBoxContainer/MarginContainer/Legend/MarginContainer/HBoxContainer/Panel" groups=["WalletSortResource"]]
+position = Vector2( -4, -4 )
+texture = ExtResource( 8 )
+centered = false
+script = ExtResource( 7 )
+
+[node name="shadow" type="Sprite" parent="VBoxContainer/MarginContainer/TabContainer/2/VBoxContainer/MarginContainer/Legend/MarginContainer/HBoxContainer/Panel/Sort"]
+self_modulate = Color( 0, 0, 0, 1 )
+show_behind_parent = true
+position = Vector2( 13, 13 )
+texture = ExtResource( 8 )
+
+[node name="resource name" parent="VBoxContainer/MarginContainer/TabContainer/2/VBoxContainer/MarginContainer/Legend/MarginContainer/HBoxContainer" instance=ExtResource( 3 )]
+margin_left = 20.0
+margin_right = 69.0
+text = "Resource"
+
+[node name="MarginContainer2" type="MarginContainer" parent="VBoxContainer/MarginContainer/TabContainer/2/VBoxContainer/MarginContainer/Legend"]
+margin_left = 104.0
+margin_right = 174.0
+margin_bottom = 17.0
+rect_min_size = Vector2( 70, 0 )
+
+[node name="Button" type="Button" parent="VBoxContainer/MarginContainer/TabContainer/2/VBoxContainer/MarginContainer/Legend/MarginContainer2"]
+margin_right = 70.0
+margin_bottom = 17.0
+rect_min_size = Vector2( 36, 0 )
+mouse_default_cursor_shape = 2
+custom_styles/hover = SubResource( 6 )
+custom_styles/pressed = SubResource( 7 )
+custom_styles/normal = SubResource( 8 )
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/MarginContainer/TabContainer/2/VBoxContainer/MarginContainer/Legend/MarginContainer2"]
+margin_right = 70.0
+margin_bottom = 17.0
+mouse_filter = 2
+
+[node name="Panel" type="Panel" parent="VBoxContainer/MarginContainer/TabContainer/2/VBoxContainer/MarginContainer/Legend/MarginContainer2/HBoxContainer"]
+margin_right = 16.0
+margin_bottom = 16.0
+rect_min_size = Vector2( 16, 16 )
+mouse_filter = 2
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 9 )
+
+[node name="Sort" type="Sprite" parent="VBoxContainer/MarginContainer/TabContainer/2/VBoxContainer/MarginContainer/Legend/MarginContainer2/HBoxContainer/Panel" groups=["WalletSortAmount"]]
+position = Vector2( -4, -4 )
+texture = ExtResource( 8 )
+centered = false
+script = ExtResource( 7 )
+
+[node name="shadow" type="Sprite" parent="VBoxContainer/MarginContainer/TabContainer/2/VBoxContainer/MarginContainer/Legend/MarginContainer2/HBoxContainer/Panel/Sort"]
+self_modulate = Color( 0, 0, 0, 1 )
+show_behind_parent = true
+position = Vector2( 13, 13 )
+texture = ExtResource( 8 )
+
+[node name="resource name" parent="VBoxContainer/MarginContainer/TabContainer/2/VBoxContainer/MarginContainer/Legend/MarginContainer2/HBoxContainer" instance=ExtResource( 3 )]
+margin_left = 20.0
+margin_right = 63.0
+text = "Amount"
+
+[node name="MarginContainer3" type="MarginContainer" parent="VBoxContainer/MarginContainer/TabContainer/2/VBoxContainer/MarginContainer/Legend"]
+margin_left = 178.0
+margin_right = 248.0
+margin_bottom = 17.0
+rect_min_size = Vector2( 70, 0 )
+
+[node name="Button" type="Button" parent="VBoxContainer/MarginContainer/TabContainer/2/VBoxContainer/MarginContainer/Legend/MarginContainer3"]
+margin_right = 70.0
+margin_bottom = 17.0
+rect_min_size = Vector2( 36, 0 )
+mouse_default_cursor_shape = 2
+custom_styles/hover = SubResource( 6 )
+custom_styles/pressed = SubResource( 7 )
+custom_styles/normal = SubResource( 8 )
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/MarginContainer/TabContainer/2/VBoxContainer/MarginContainer/Legend/MarginContainer3"]
+margin_right = 70.0
+margin_bottom = 17.0
+mouse_filter = 2
+
+[node name="Panel" type="Panel" parent="VBoxContainer/MarginContainer/TabContainer/2/VBoxContainer/MarginContainer/Legend/MarginContainer3/HBoxContainer"]
+margin_right = 16.0
+margin_bottom = 16.0
+rect_min_size = Vector2( 16, 16 )
+mouse_filter = 2
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 9 )
+
+[node name="Sort" type="Sprite" parent="VBoxContainer/MarginContainer/TabContainer/2/VBoxContainer/MarginContainer/Legend/MarginContainer3/HBoxContainer/Panel" groups=["WalletSortIncome"]]
+position = Vector2( -4, -4 )
+texture = ExtResource( 8 )
+centered = false
+script = ExtResource( 7 )
+
+[node name="shadow" type="Sprite" parent="VBoxContainer/MarginContainer/TabContainer/2/VBoxContainer/MarginContainer/Legend/MarginContainer3/HBoxContainer/Panel/Sort"]
+self_modulate = Color( 0, 0, 0, 1 )
+show_behind_parent = true
+position = Vector2( 13, 13 )
+texture = ExtResource( 8 )
+
+[node name="resource name" parent="VBoxContainer/MarginContainer/TabContainer/2/VBoxContainer/MarginContainer/Legend/MarginContainer3/HBoxContainer" instance=ExtResource( 3 )]
+margin_left = 20.0
+margin_right = 59.0
+text = "Income"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/MarginContainer/TabContainer/2/VBoxContainer"]
+margin_top = 27.0
+margin_right = 294.0
+margin_bottom = 339.0
+rect_min_size = Vector2( 0, 312 )
+scroll_horizontal_enabled = false
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/MarginContainer/TabContainer/2/VBoxContainer/ScrollContainer"]
+margin_right = 294.0
+size_flags_horizontal = 3
+custom_constants/margin_right = 10
+custom_constants/margin_left = 10
+custom_constants/margin_bottom = 0
+
+[node name="resources2" type="VBoxContainer" parent="VBoxContainer/MarginContainer/TabContainer/2/VBoxContainer/ScrollContainer/MarginContainer"]
+unique_name_in_owner = true
+margin_left = 10.0
+margin_right = 284.0
+custom_constants/separation = 0
+
+[node name="3" type="MarginContainer" parent="VBoxContainer/MarginContainer/TabContainer"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = 27.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/MarginContainer/TabContainer/3"]
+margin_right = 294.0
+margin_bottom = 339.0
+custom_constants/separation = 10
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/MarginContainer/TabContainer/3/VBoxContainer"]
+margin_right = 294.0
+margin_bottom = 17.0
+custom_constants/margin_right = 10
+custom_constants/margin_left = 36
+
+[node name="Legend" type="HBoxContainer" parent="VBoxContainer/MarginContainer/TabContainer/3/VBoxContainer/MarginContainer"]
+margin_left = 36.0
+margin_right = 284.0
+margin_bottom = 17.0
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/MarginContainer/TabContainer/3/VBoxContainer/MarginContainer/Legend"]
+margin_right = 100.0
+margin_bottom = 17.0
+rect_min_size = Vector2( 100, 0 )
+
+[node name="Button" type="Button" parent="VBoxContainer/MarginContainer/TabContainer/3/VBoxContainer/MarginContainer/Legend/MarginContainer"]
+margin_right = 100.0
+margin_bottom = 17.0
+rect_min_size = Vector2( 36, 0 )
+mouse_default_cursor_shape = 2
+custom_styles/hover = SubResource( 6 )
+custom_styles/pressed = SubResource( 7 )
+custom_styles/normal = SubResource( 8 )
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/MarginContainer/TabContainer/3/VBoxContainer/MarginContainer/Legend/MarginContainer"]
+margin_right = 100.0
+margin_bottom = 17.0
+mouse_filter = 2
+
+[node name="Panel" type="Panel" parent="VBoxContainer/MarginContainer/TabContainer/3/VBoxContainer/MarginContainer/Legend/MarginContainer/HBoxContainer"]
+margin_right = 16.0
+margin_bottom = 16.0
+rect_min_size = Vector2( 16, 16 )
+mouse_filter = 2
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 9 )
+
+[node name="Sort" type="Sprite" parent="VBoxContainer/MarginContainer/TabContainer/3/VBoxContainer/MarginContainer/Legend/MarginContainer/HBoxContainer/Panel" groups=["WalletSortResource"]]
+position = Vector2( -4, -4 )
+texture = ExtResource( 8 )
+centered = false
+script = ExtResource( 7 )
+
+[node name="shadow" type="Sprite" parent="VBoxContainer/MarginContainer/TabContainer/3/VBoxContainer/MarginContainer/Legend/MarginContainer/HBoxContainer/Panel/Sort"]
+self_modulate = Color( 0, 0, 0, 1 )
+show_behind_parent = true
+position = Vector2( 13, 13 )
+texture = ExtResource( 8 )
+
+[node name="resource name" parent="VBoxContainer/MarginContainer/TabContainer/3/VBoxContainer/MarginContainer/Legend/MarginContainer/HBoxContainer" instance=ExtResource( 3 )]
+margin_left = 20.0
+margin_right = 69.0
+text = "Resource"
+
+[node name="MarginContainer2" type="MarginContainer" parent="VBoxContainer/MarginContainer/TabContainer/3/VBoxContainer/MarginContainer/Legend"]
+margin_left = 104.0
+margin_right = 174.0
+margin_bottom = 17.0
+rect_min_size = Vector2( 70, 0 )
+
+[node name="Button" type="Button" parent="VBoxContainer/MarginContainer/TabContainer/3/VBoxContainer/MarginContainer/Legend/MarginContainer2"]
+margin_right = 70.0
+margin_bottom = 17.0
+rect_min_size = Vector2( 36, 0 )
+mouse_default_cursor_shape = 2
+custom_styles/hover = SubResource( 6 )
+custom_styles/pressed = SubResource( 7 )
+custom_styles/normal = SubResource( 8 )
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/MarginContainer/TabContainer/3/VBoxContainer/MarginContainer/Legend/MarginContainer2"]
+margin_right = 70.0
+margin_bottom = 17.0
+mouse_filter = 2
+
+[node name="Panel" type="Panel" parent="VBoxContainer/MarginContainer/TabContainer/3/VBoxContainer/MarginContainer/Legend/MarginContainer2/HBoxContainer"]
+margin_right = 16.0
+margin_bottom = 16.0
+rect_min_size = Vector2( 16, 16 )
+mouse_filter = 2
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 9 )
+
+[node name="Sort" type="Sprite" parent="VBoxContainer/MarginContainer/TabContainer/3/VBoxContainer/MarginContainer/Legend/MarginContainer2/HBoxContainer/Panel" groups=["WalletSortAmount"]]
+position = Vector2( -4, -4 )
+texture = ExtResource( 8 )
+centered = false
+script = ExtResource( 7 )
+
+[node name="shadow" type="Sprite" parent="VBoxContainer/MarginContainer/TabContainer/3/VBoxContainer/MarginContainer/Legend/MarginContainer2/HBoxContainer/Panel/Sort"]
+self_modulate = Color( 0, 0, 0, 1 )
+show_behind_parent = true
+position = Vector2( 13, 13 )
+texture = ExtResource( 8 )
+
+[node name="resource name" parent="VBoxContainer/MarginContainer/TabContainer/3/VBoxContainer/MarginContainer/Legend/MarginContainer2/HBoxContainer" instance=ExtResource( 3 )]
+margin_left = 20.0
+margin_right = 63.0
+text = "Amount"
+
+[node name="MarginContainer3" type="MarginContainer" parent="VBoxContainer/MarginContainer/TabContainer/3/VBoxContainer/MarginContainer/Legend"]
+margin_left = 178.0
+margin_right = 248.0
+margin_bottom = 17.0
+rect_min_size = Vector2( 70, 0 )
+
+[node name="Button" type="Button" parent="VBoxContainer/MarginContainer/TabContainer/3/VBoxContainer/MarginContainer/Legend/MarginContainer3"]
+margin_right = 70.0
+margin_bottom = 17.0
+rect_min_size = Vector2( 36, 0 )
+mouse_default_cursor_shape = 2
+custom_styles/hover = SubResource( 6 )
+custom_styles/pressed = SubResource( 7 )
+custom_styles/normal = SubResource( 8 )
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/MarginContainer/TabContainer/3/VBoxContainer/MarginContainer/Legend/MarginContainer3"]
+margin_right = 70.0
+margin_bottom = 17.0
+mouse_filter = 2
+
+[node name="Panel" type="Panel" parent="VBoxContainer/MarginContainer/TabContainer/3/VBoxContainer/MarginContainer/Legend/MarginContainer3/HBoxContainer"]
+margin_right = 16.0
+margin_bottom = 16.0
+rect_min_size = Vector2( 16, 16 )
+mouse_filter = 2
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 9 )
+
+[node name="Sort" type="Sprite" parent="VBoxContainer/MarginContainer/TabContainer/3/VBoxContainer/MarginContainer/Legend/MarginContainer3/HBoxContainer/Panel" groups=["WalletSortIncome"]]
+position = Vector2( -4, -4 )
+texture = ExtResource( 8 )
+centered = false
+script = ExtResource( 7 )
+
+[node name="shadow" type="Sprite" parent="VBoxContainer/MarginContainer/TabContainer/3/VBoxContainer/MarginContainer/Legend/MarginContainer3/HBoxContainer/Panel/Sort"]
+self_modulate = Color( 0, 0, 0, 1 )
+show_behind_parent = true
+position = Vector2( 13, 13 )
+texture = ExtResource( 8 )
+
+[node name="resource name" parent="VBoxContainer/MarginContainer/TabContainer/3/VBoxContainer/MarginContainer/Legend/MarginContainer3/HBoxContainer" instance=ExtResource( 3 )]
+margin_left = 20.0
+margin_right = 59.0
+text = "Income"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/MarginContainer/TabContainer/3/VBoxContainer"]
+margin_top = 27.0
+margin_right = 294.0
+margin_bottom = 339.0
+rect_min_size = Vector2( 0, 312 )
+scroll_horizontal_enabled = false
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/MarginContainer/TabContainer/3/VBoxContainer/ScrollContainer"]
+margin_right = 294.0
+size_flags_horizontal = 3
+custom_constants/margin_right = 10
+custom_constants/margin_left = 10
+custom_constants/margin_bottom = 0
+
+[node name="resources3" type="VBoxContainer" parent="VBoxContainer/MarginContainer/TabContainer/3/VBoxContainer/ScrollContainer/MarginContainer"]
+unique_name_in_owner = true
+margin_left = 10.0
+margin_right = 284.0
+custom_constants/separation = 0
+
+[node name="4" type="MarginContainer" parent="VBoxContainer/MarginContainer/TabContainer"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = 27.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/MarginContainer/TabContainer/4"]
+margin_right = 294.0
+margin_bottom = 339.0
+custom_constants/separation = 10
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/MarginContainer/TabContainer/4/VBoxContainer"]
+margin_right = 294.0
+margin_bottom = 17.0
+custom_constants/margin_right = 10
+custom_constants/margin_left = 36
+
+[node name="Legend" type="HBoxContainer" parent="VBoxContainer/MarginContainer/TabContainer/4/VBoxContainer/MarginContainer"]
+margin_left = 36.0
+margin_right = 284.0
+margin_bottom = 17.0
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/MarginContainer/TabContainer/4/VBoxContainer/MarginContainer/Legend"]
+margin_right = 100.0
+margin_bottom = 17.0
+rect_min_size = Vector2( 100, 0 )
+
+[node name="Button" type="Button" parent="VBoxContainer/MarginContainer/TabContainer/4/VBoxContainer/MarginContainer/Legend/MarginContainer"]
+margin_right = 100.0
+margin_bottom = 17.0
+rect_min_size = Vector2( 36, 0 )
+mouse_default_cursor_shape = 2
+custom_styles/hover = SubResource( 6 )
+custom_styles/pressed = SubResource( 7 )
+custom_styles/normal = SubResource( 8 )
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/MarginContainer/TabContainer/4/VBoxContainer/MarginContainer/Legend/MarginContainer"]
+margin_right = 100.0
+margin_bottom = 17.0
+mouse_filter = 2
+
+[node name="Panel" type="Panel" parent="VBoxContainer/MarginContainer/TabContainer/4/VBoxContainer/MarginContainer/Legend/MarginContainer/HBoxContainer"]
+margin_right = 16.0
+margin_bottom = 16.0
+rect_min_size = Vector2( 16, 16 )
+mouse_filter = 2
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 9 )
+
+[node name="Sort" type="Sprite" parent="VBoxContainer/MarginContainer/TabContainer/4/VBoxContainer/MarginContainer/Legend/MarginContainer/HBoxContainer/Panel" groups=["WalletSortResource"]]
+position = Vector2( -4, -4 )
+texture = ExtResource( 8 )
+centered = false
+script = ExtResource( 7 )
+
+[node name="shadow" type="Sprite" parent="VBoxContainer/MarginContainer/TabContainer/4/VBoxContainer/MarginContainer/Legend/MarginContainer/HBoxContainer/Panel/Sort"]
+self_modulate = Color( 0, 0, 0, 1 )
+show_behind_parent = true
+position = Vector2( 13, 13 )
+texture = ExtResource( 8 )
+
+[node name="resource name" parent="VBoxContainer/MarginContainer/TabContainer/4/VBoxContainer/MarginContainer/Legend/MarginContainer/HBoxContainer" instance=ExtResource( 3 )]
+margin_left = 20.0
+margin_right = 69.0
+text = "Resource"
+
+[node name="MarginContainer2" type="MarginContainer" parent="VBoxContainer/MarginContainer/TabContainer/4/VBoxContainer/MarginContainer/Legend"]
+margin_left = 104.0
+margin_right = 174.0
+margin_bottom = 17.0
+rect_min_size = Vector2( 70, 0 )
+
+[node name="Button" type="Button" parent="VBoxContainer/MarginContainer/TabContainer/4/VBoxContainer/MarginContainer/Legend/MarginContainer2"]
+margin_right = 70.0
+margin_bottom = 17.0
+rect_min_size = Vector2( 36, 0 )
+mouse_default_cursor_shape = 2
+custom_styles/hover = SubResource( 6 )
+custom_styles/pressed = SubResource( 7 )
+custom_styles/normal = SubResource( 8 )
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/MarginContainer/TabContainer/4/VBoxContainer/MarginContainer/Legend/MarginContainer2"]
+margin_right = 70.0
+margin_bottom = 17.0
+mouse_filter = 2
+
+[node name="Panel" type="Panel" parent="VBoxContainer/MarginContainer/TabContainer/4/VBoxContainer/MarginContainer/Legend/MarginContainer2/HBoxContainer"]
+margin_right = 16.0
+margin_bottom = 16.0
+rect_min_size = Vector2( 16, 16 )
+mouse_filter = 2
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 9 )
+
+[node name="Sort" type="Sprite" parent="VBoxContainer/MarginContainer/TabContainer/4/VBoxContainer/MarginContainer/Legend/MarginContainer2/HBoxContainer/Panel" groups=["WalletSortAmount"]]
+position = Vector2( -4, -4 )
+texture = ExtResource( 8 )
+centered = false
+script = ExtResource( 7 )
+
+[node name="shadow" type="Sprite" parent="VBoxContainer/MarginContainer/TabContainer/4/VBoxContainer/MarginContainer/Legend/MarginContainer2/HBoxContainer/Panel/Sort"]
+self_modulate = Color( 0, 0, 0, 1 )
+show_behind_parent = true
+position = Vector2( 13, 13 )
+texture = ExtResource( 8 )
+
+[node name="resource name" parent="VBoxContainer/MarginContainer/TabContainer/4/VBoxContainer/MarginContainer/Legend/MarginContainer2/HBoxContainer" instance=ExtResource( 3 )]
+margin_left = 20.0
+margin_right = 63.0
+text = "Amount"
+
+[node name="MarginContainer3" type="MarginContainer" parent="VBoxContainer/MarginContainer/TabContainer/4/VBoxContainer/MarginContainer/Legend"]
+margin_left = 178.0
+margin_right = 248.0
+margin_bottom = 17.0
+rect_min_size = Vector2( 70, 0 )
+
+[node name="Button" type="Button" parent="VBoxContainer/MarginContainer/TabContainer/4/VBoxContainer/MarginContainer/Legend/MarginContainer3"]
+margin_right = 70.0
+margin_bottom = 17.0
+rect_min_size = Vector2( 36, 0 )
+mouse_default_cursor_shape = 2
+custom_styles/hover = SubResource( 6 )
+custom_styles/pressed = SubResource( 7 )
+custom_styles/normal = SubResource( 8 )
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/MarginContainer/TabContainer/4/VBoxContainer/MarginContainer/Legend/MarginContainer3"]
+margin_right = 70.0
+margin_bottom = 17.0
+mouse_filter = 2
+
+[node name="Panel" type="Panel" parent="VBoxContainer/MarginContainer/TabContainer/4/VBoxContainer/MarginContainer/Legend/MarginContainer3/HBoxContainer"]
+margin_right = 16.0
+margin_bottom = 16.0
+rect_min_size = Vector2( 16, 16 )
+mouse_filter = 2
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 9 )
+
+[node name="Sort" type="Sprite" parent="VBoxContainer/MarginContainer/TabContainer/4/VBoxContainer/MarginContainer/Legend/MarginContainer3/HBoxContainer/Panel" groups=["WalletSortIncome"]]
+position = Vector2( -4, -4 )
+texture = ExtResource( 8 )
+centered = false
+script = ExtResource( 7 )
+
+[node name="shadow" type="Sprite" parent="VBoxContainer/MarginContainer/TabContainer/4/VBoxContainer/MarginContainer/Legend/MarginContainer3/HBoxContainer/Panel/Sort"]
+self_modulate = Color( 0, 0, 0, 1 )
+show_behind_parent = true
+position = Vector2( 13, 13 )
+texture = ExtResource( 8 )
+
+[node name="resource name" parent="VBoxContainer/MarginContainer/TabContainer/4/VBoxContainer/MarginContainer/Legend/MarginContainer3/HBoxContainer" instance=ExtResource( 3 )]
+margin_left = 20.0
+margin_right = 59.0
+text = "Income"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/MarginContainer/TabContainer/4/VBoxContainer"]
+margin_top = 27.0
+margin_right = 294.0
+margin_bottom = 339.0
+rect_min_size = Vector2( 0, 312 )
+scroll_horizontal_enabled = false
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/MarginContainer/TabContainer/4/VBoxContainer/ScrollContainer"]
+margin_right = 294.0
+size_flags_horizontal = 3
+custom_constants/margin_right = 10
+custom_constants/margin_left = 10
+custom_constants/margin_bottom = 0
+
+[node name="resources4" type="VBoxContainer" parent="VBoxContainer/MarginContainer/TabContainer/4/VBoxContainer/ScrollContainer/MarginContainer"]
+unique_name_in_owner = true
+margin_left = 10.0
+margin_right = 284.0
+custom_constants/separation = 0
+
+[connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]
+[connection signal="tab_changed" from="VBoxContainer/MarginContainer/TabContainer" to="." method="_on_TabContainer_tab_changed"]
+[connection signal="pressed" from="VBoxContainer/MarginContainer/TabContainer/1/VBoxContainer/MarginContainer/Legend/MarginContainer/Button" to="." method="_on_sort_resource_button_down"]
+[connection signal="pressed" from="VBoxContainer/MarginContainer/TabContainer/1/VBoxContainer/MarginContainer/Legend/MarginContainer2/Button" to="." method="_on_sort_amount_button_down"]
+[connection signal="pressed" from="VBoxContainer/MarginContainer/TabContainer/1/VBoxContainer/MarginContainer/Legend/MarginContainer3/Button" to="." method="_on_sort_income_button_down"]
+[connection signal="pressed" from="VBoxContainer/MarginContainer/TabContainer/2/VBoxContainer/MarginContainer/Legend/MarginContainer/Button" to="." method="_on_sort_resource_button_down"]
+[connection signal="pressed" from="VBoxContainer/MarginContainer/TabContainer/2/VBoxContainer/MarginContainer/Legend/MarginContainer2/Button" to="." method="_on_sort_amount_button_down"]
+[connection signal="pressed" from="VBoxContainer/MarginContainer/TabContainer/2/VBoxContainer/MarginContainer/Legend/MarginContainer3/Button" to="." method="_on_sort_income_button_down"]
+[connection signal="pressed" from="VBoxContainer/MarginContainer/TabContainer/3/VBoxContainer/MarginContainer/Legend/MarginContainer/Button" to="." method="_on_sort_resource_button_down"]
+[connection signal="pressed" from="VBoxContainer/MarginContainer/TabContainer/3/VBoxContainer/MarginContainer/Legend/MarginContainer2/Button" to="." method="_on_sort_amount_button_down"]
+[connection signal="pressed" from="VBoxContainer/MarginContainer/TabContainer/3/VBoxContainer/MarginContainer/Legend/MarginContainer3/Button" to="." method="_on_sort_income_button_down"]
+[connection signal="pressed" from="VBoxContainer/MarginContainer/TabContainer/4/VBoxContainer/MarginContainer/Legend/MarginContainer/Button" to="." method="_on_sort_resource_button_down"]
+[connection signal="pressed" from="VBoxContainer/MarginContainer/TabContainer/4/VBoxContainer/MarginContainer/Legend/MarginContainer2/Button" to="." method="_on_sort_amount_button_down"]
+[connection signal="pressed" from="VBoxContainer/MarginContainer/TabContainer/4/VBoxContainer/MarginContainer/Legend/MarginContainer3/Button" to="." method="_on_sort_income_button_down"]
