@@ -2,22 +2,23 @@ extends Node
 
 
 
-var saved_vars := ["wallet"]
+var saved_vars := ["flower_seeds", "wallet"]
 
 
 
 enum Type {
 	NEBULA_NECTAR, # - - - 5
+	MOONLIGHT_BLOSSOM, # produces mana
+	BLOODROOT, # produces blood
+	MALIGNANT_MAGNOLIA, # produces 
 	STARDUST_ORCHID,
 	CELESTIA_ROSE,
 	TWILIGHT_DAISY,
 	EMBER_TULIP,
-	BLOODROOT,
 	PHOENIX_PETAL,
 	QUEEN_OF_THE_NIGHT,
 	RADIANT_DAHLIA,
 	STARLILY,
-	MOONLIGHT_BLOSSOM,
 	BLACK_ROSE,
 	STARFIRE_SUNFLOWER,
 	SLIPPER_GINGER,
@@ -29,7 +30,6 @@ enum Type {
 	FROSTFIRE_SNAP,
 	JADE_VINE,
 	TITAN_ARUM,
-	MYSTIQUE_MAGNOLIA,
 	PETALWING_LILY,
 	GHOST_ORCHID, # - - - 4
 	CELESTIAL_ZINNIA,
@@ -153,9 +153,9 @@ enum Type {
 }
 
 const TIER_WEIGHT := {
-	tier0 = 50,
-	tier1 = 200,
-	tier2 = 100,
+	tier0 = 100,
+	tier1 = 600,
+	tier2 = 200,
 	tier3 = 50,
 	tier4 = 10,
 	tier5 = 1,
@@ -182,8 +182,10 @@ const Icons := {
 	"JACOBS_LADDER": preload("res://Sprites/flowers/053.png"),
 	"HYDRANGEA": preload("res://Sprites/flowers/056.png"),
 	"DANDELION": preload("res://Sprites/flowers/062.png"),
+	"YARROW": preload("res://Sprites/flowers/062.png"),
 	"SUNFLOWER": preload("res://Sprites/flowers/063.png"),
 	"TULIP": preload("res://Sprites/flowers/079.png"),
+	"MORNING_GLORY": preload("res://Sprites/flowers/084.png"),
 	"GERANIUM": preload("res://Sprites/flowers/093.png"),
 	"COCKSCOMB": preload("res://Sprites/flowers/096.png"),
 	"PITCHER_PLANT": preload("res://Sprites/flowers/096.png"),
@@ -240,39 +242,15 @@ var tier_3_list := []
 var tier_4_list := []
 var tier_5_list := []
 
+var flower_seeds := []
 
 var wallet := {}
 
 
 
-func save() -> String:
-	
-	var data := {}
-	
-	for x in saved_vars:
-		if get(x) is Big or get(x) is Ob.Num:
-			data[x] = get(x).save()
-		else:
-			data[x] = var2str(get(x))
-	
-	return var2str(data)
-
-
-func load(data: Dictionary):
-	
-	#* Copy-paste this block to a script where saving a Dictionary is necessary
-	var saved_vars_dict := {}
-	
-	for x in saved_vars:
-		saved_vars_dict[x] = get(x)
-	
-	var loadedVars = SaveManager.loadSavedVars(saved_vars_dict, data)
-	
-	for x in saved_vars:
-		if not x in loadedVars:
-			continue
-		set(x, loadedVars[x])
-	#*
+func load(data: Dictionary) -> void:
+	SaveManager.load_vars(self, data)
+	post_load_garden_setup()
 
 
 
@@ -289,6 +267,8 @@ func _ready() -> void:
 	setup_total_weight()
 	setup_tier_lists()
 	setup_flower_names()
+	
+	#DEBUG__test_tier_weight()
 
 
 
@@ -333,6 +313,12 @@ func setup_tier_lists():
 			tier_0_list.append(flower)
 
 
+func post_load_garden_setup():
+	for flower in wallet:
+		if wallet[flower] > 0:
+			emit_signal("flower_count_changed", flower)
+
+
 
 func add_random_flower(output_modifier = 1, roll_bonus := 0):
 	
@@ -344,6 +330,7 @@ func add_random_flower(output_modifier = 1, roll_bonus := 0):
 	var amount: int = int(output_modifier)
 	
 	add_flower(flower, amount)
+
 
 
 func get_random_flower(roll_bonus := 0) -> String:
@@ -370,7 +357,6 @@ func roll_for_tier(roll_bonus: int) -> int:
 	
 	var roll = randi() % total_adjusted_weight
 	var threshold = 0
-	
 	for i in range(tier_weights.size()):
 		threshold += tier_weights[i]
 		if roll < threshold:
@@ -388,6 +374,9 @@ func add_flower(flower, amount := 1) -> void:
 	wallet[flower] += amount
 	emit_signal("flower_count_changed", flower)
 
+
+func subtract_flower(flower, amount: int) -> void:
+	remove_flower(flower, amount)
 
 func remove_flower(flower, amount: int) -> void:
 	
@@ -424,13 +413,83 @@ func get_flower_tier(flower) -> int:
 
 
 func get_flower_name(flower) -> String:
-	
 	if flower is int:
 		flower = Type.keys()[flower]
 	
 	return flower_names[flower]
 
 
+func get_plural_flower_name(flower) -> String:
+	if flower is int:
+		flower = Type.keys()[flower]
+	var name = flower_names[flower]
+	if name.ends_with("y"):
+		name = name.rsplit("y")[0] + "ies"
+	else:
+		name += "s"
+	return name
+
+
+func get_flower_icon(flower) -> Texture:
+	if flower is int:
+		flower = Type.keys()[flower]
+	return Icons[flower]
+
+
+func get_flower_color(flower) -> Color:
+	return Colors[flower] if flower in Colors.keys() else Color(1, 1, 1)
+
+
+
+func get_output_text_details(producedResources: Dictionary, _critMultiplier: float) -> Array:
+	
+	var array := []
+	
+	for flower in producedResources:
+		
+		var f := {}
+		
+		#var tier := get_flower_tier(flower)
+		var flower_color = get_flower_color(flower)
+		
+		f["life"] = 75
+		f["text"] = "+" + fval.f(producedResources[flower])
+		f["resource name"] = get_flower_name(flower)# + (" (Trash)" if tier == 0 else "(" + str(tier) + ")")
+		f["icon"] = Icons[flower] if flower in Icons.keys() else Icons["flowers"]
+		f["color"] = flower_color if flower in Colors.keys() else gv.COLORS["witch"]
+		f["texture modulate"] = flower_color
+		
+		array.append(f)
+	
+	return array
+
+
+
+
+func store_new_flower_seed(count: int, roll_bonus: int):
+	var new_seed = FlowerSeed.new(count, roll_bonus)
+	flower_seeds.append(new_seed)
+
+
+func seed_is_available() -> bool:
+	return not flower_seeds.empty()
+
+
+func get_most_recent_flower_seed() -> FlowerSeed:
+	var most_recent_seed_position: int = flower_seeds.size() - 1
+	return flower_seeds[most_recent_seed_position]
+
+
+func plant_flower_seed(_seed: FlowerSeed = get_most_recent_flower_seed()):
+	gv.subtractFromResource(gv.Resource.FLOWER_SEED, _seed.count)
+	_seed.sprout()
+	flower_seeds.erase(_seed)
+
+
+
+
+
+# - Debug
 
 func DEBUG__test_tier_weight():
 	
@@ -438,11 +497,11 @@ func DEBUG__test_tier_weight():
 	
 	var rolled_tiers = []
 	
-	for i in range(1, 100000):
-		var tier := roll_for_tier(1000)
+	for _i in range(1, 100000):
+		var tier := roll_for_tier(500) # cap: 500.
 		rolled_tiers.append(tier)
 	
-	print(
+	print_debug(
 		"0: ", float(rolled_tiers.count(0)) / rolled_tiers.size() * 100, "%",
 		"\n1: ", float(rolled_tiers.count(1)) / rolled_tiers.size() * 100, "%",
 		"\n2: ", float(rolled_tiers.count(2)) / rolled_tiers.size() * 100, "%",

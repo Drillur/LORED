@@ -46,6 +46,24 @@ func _call(source : String, other: Dictionary) -> void:
 			temp["lored"] = other["lored"]
 			$bg.self_modulate = other["color"]
 		
+		elif "tooltip/Unit" == type:
+			
+			cont = gv.SRC[type].instance()
+			cont.setup(other["unit"])
+			add_child(cont)
+			
+			temp["lored"] = lv.Type.BLOOD
+			$bg.self_modulate = gv.COLORS["BLOOD"]
+		
+		elif "tooltip/Ability" == type:
+			
+			cont = gv.SRC[type].instance()
+			cont.setup(other["ability"])
+			add_child(cont)
+			
+			temp["lored"] = lv.Type.BLOOD
+			$bg.self_modulate = gv.COLORS["BLOOD"]
+		
 		elif "wallet resource" == type:
 			
 			cont = gv.SRC["WalletResourceTooltip"].instance()
@@ -226,7 +244,7 @@ func r_tip(move_tip := false) -> void:
 				rt.wallet.rect_position.y
 			)
 		
-		elif type in ["lored level up", "lored info", "lored alert", "lored jobs", "lored asleep", "lored active buffs"]:
+		elif type in ["tooltip/Unit", "lored level up", "tooltip/Ability", "lored info", "lored alert", "lored jobs", "lored asleep", "lored active buffs"]:
 			
 			var f = temp["lored"]
 			
@@ -330,3 +348,8 @@ func _input(event: InputEvent) -> void:
 				if cont.has_method("scrollDown"):
 					cont.scrollDown()
 	pass
+
+
+func scroll_content(direction: int):
+	if type == "lored jobs":
+		cont.scroll(direction)

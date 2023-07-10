@@ -309,7 +309,7 @@ func upgrade_purchased(key: String, routine := []):
 		
 		var icon = gv.sprite[gv.shorthandByResource[x]]
 		
-		cont_flying_texts["(upgrade purchased flying text)" + str(i)].init({"text": _text, "icon": icon, "color": gv.resourceColor[x], "life": 20})
+		cont_flying_texts["(upgrade purchased flying text)" + str(i)].init({"text": _text, "icon": icon, "color": gv.resourceColor[x], "life": 50})
 		
 		if i == 0:
 			cont_flying_texts["(upgrade purchased flying text)" + str(i)].rect_position = Vector2(

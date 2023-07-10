@@ -1,6 +1,6 @@
-[gd_scene load_steps=60 format=2]
+[gd_scene load_steps=63 format=2]
 
-[ext_resource path="res://Sprites/animations/seed.tres" type="SpriteFrames" id=1]
+[ext_resource path="res://Sprites/animations/axe.tres" type="SpriteFrames" id=1]
 [ext_resource path="res://Sprites/animations/draw throw/ff0002.png" type="Texture" id=2]
 [ext_resource path="res://Sprites/Menu/Alarm.png" type="Texture" id=3]
 [ext_resource path="res://Sprites/emote/Bubble.png" type="Texture" id=4]
@@ -38,7 +38,9 @@
 [ext_resource path="res://Sprites/animations/draw throw/ff0012.png" type="Texture" id=36]
 [ext_resource path="res://Sprites/Menu/activeBuffs.png" type="Texture" id=37]
 [ext_resource path="res://Prefabs/NewLORED/Garden.gd" type="Script" id=38]
+[ext_resource path="res://Fonts/Roboto-Black.ttf" type="DynamicFontData" id=39]
 [ext_resource path="res://Prefabs/ui/Icon.tscn" type="PackedScene" id=40]
+[ext_resource path="res://Prefabs/Unit/HealingEvent.tscn" type="PackedScene" id=41]
 
 [sub_resource type="StyleBoxFlat" id=10]
 bg_color = Color( 0.0823529, 0.0823529, 0.0823529, 1 )
@@ -82,6 +84,11 @@ shadow_color = Color( 0, 0, 0, 0.341176 )
 
 [sub_resource type="StyleBoxFlat" id=20]
 draw_center = false
+
+[sub_resource type="DynamicFont" id=31]
+size = 14
+outline_color = Color( 0, 0, 0, 1 )
+font_data = ExtResource( 39 )
 
 [sub_resource type="DynamicFont" id=18]
 size = 12
@@ -173,7 +180,7 @@ corner_radius_bottom_right = 16
 corner_radius_bottom_left = 16
 
 [node name="LORED Vico" type="MarginContainer"]
-margin_right = 216.0
+margin_right = 252.0
 margin_bottom = 129.0
 rect_min_size = Vector2( 216, 129 )
 rect_pivot_offset = Vector2( -150, -54 )
@@ -185,15 +192,15 @@ script = ExtResource( 15 )
 one_shot = true
 
 [node name="bg_grey" type="Panel" parent="."]
-margin_right = 252.0
-margin_bottom = 197.0
+margin_right = 340.0
+margin_bottom = 466.0
 rect_pivot_offset = Vector2( -61, -6 )
 custom_styles/panel = SubResource( 10 )
 
 [node name="bg_color" type="Panel" parent="."]
 self_modulate = Color( 1, 0, 0, 1 )
-margin_right = 252.0
-margin_bottom = 197.0
+margin_right = 340.0
+margin_bottom = 466.0
 rect_pivot_offset = Vector2( -61, -6 )
 custom_styles/panel = SubResource( 11 )
 
@@ -217,8 +224,8 @@ rect_clip_content = true
 custom_styles/panel = SubResource( 22 )
 
 [node name="m" type="MarginContainer" parent="."]
-margin_right = 252.0
-margin_bottom = 197.0
+margin_right = 340.0
+margin_bottom = 466.0
 rect_clip_content = true
 custom_constants/margin_right = 0
 custom_constants/margin_top = 1
@@ -227,14 +234,15 @@ custom_constants/margin_bottom = 0
 
 [node name="v" type="VBoxContainer" parent="m"]
 margin_top = 1.0
-margin_right = 252.0
-margin_bottom = 197.0
+margin_right = 340.0
+margin_bottom = 466.0
 rect_pivot_offset = Vector2( 16, 3 )
 custom_constants/separation = 0
 
 [node name="top" type="MarginContainer" parent="m/v"]
-margin_right = 252.0
-margin_bottom = 88.0
+margin_right = 340.0
+margin_bottom = 92.0
+rect_min_size = Vector2( 0, 92 )
 size_flags_vertical = 3
 custom_constants/margin_right = 10
 custom_constants/margin_top = 10
@@ -244,33 +252,32 @@ custom_constants/margin_bottom = 10
 [node name="bg" type="Panel" parent="m/v/top"]
 margin_left = 10.0
 margin_top = 10.0
-margin_right = 242.0
-margin_bottom = 78.0
+margin_right = 330.0
+margin_bottom = 82.0
 rect_pivot_offset = Vector2( -61, -6 )
 custom_styles/panel = SubResource( 23 )
 
 [node name="v" type="VBoxContainer" parent="m/v/top"]
 margin_left = 10.0
 margin_top = 10.0
-margin_right = 242.0
-margin_bottom = 78.0
+margin_right = 330.0
+margin_bottom = 82.0
 
 [node name="mid" type="HBoxContainer" parent="m/v/top/v"]
-margin_right = 232.0
-margin_bottom = 68.0
+margin_right = 320.0
+margin_bottom = 72.0
 custom_constants/separation = 10
 alignment = 1
 
 [node name="v2" type="VBoxContainer" parent="m/v/top/v/mid"]
-margin_right = 154.0
-margin_bottom = 68.0
+margin_right = 242.0
+margin_bottom = 72.0
 size_flags_horizontal = 3
 alignment = 1
 
 [node name="resource" type="HBoxContainer" parent="m/v/top/v/mid/v2"]
-margin_top = 16.0
-margin_right = 154.0
-margin_bottom = 52.0
+margin_right = 242.0
+margin_bottom = 36.0
 size_flags_vertical = 4
 
 [node name="icon" type="Panel" parent="m/v/top/v/mid/v2/resource"]
@@ -302,13 +309,12 @@ custom_constants/separation = 0
 alignment = 1
 
 [node name="amount" type="Label" parent="m/v/top/v/mid/v2/resource/v"]
-modulate = Color( 0.806152, 0.806152, 0.806152, 1 )
 self_modulate = Color( 0.89, 0, 0, 1 )
 margin_top = 2.0
 margin_right = 63.0
 margin_bottom = 19.0
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-custom_fonts/font = ExtResource( 13 )
+custom_fonts/font = SubResource( 31 )
 text = "123e123"
 
 [node name="production" type="Label" parent="m/v/top/v/mid/v2/resource/v"]
@@ -377,11 +383,10 @@ text = "-123e123/s"
 
 [node name="status" type="RichTextLabel" parent="m/v/top/v/mid/v2"]
 unique_name_in_owner = true
-visible = false
-margin_top = 46.0
-margin_right = 118.0
-margin_bottom = 62.0
-rect_min_size = Vector2( 95, 0 )
+margin_top = 40.0
+margin_right = 242.0
+margin_bottom = 72.0
+rect_min_size = Vector2( 95, 32 )
 mouse_filter = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
@@ -389,8 +394,8 @@ custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/italics_font = SubResource( 5 )
 custom_fonts/normal_font = SubResource( 6 )
 bbcode_enabled = true
-bbcode_text = "[center]Insufficient resources."
-text = "Insufficient resources."
+bbcode_text = "Furiously watering all the shit"
+text = "Furiously watering all the shit"
 fit_content_height = true
 scroll_active = false
 __meta__ = {
@@ -398,9 +403,10 @@ __meta__ = {
 }
 
 [node name="animation" type="Panel" parent="m/v/top/v/mid"]
-margin_left = 164.0
-margin_right = 232.0
-margin_bottom = 68.0
+margin_left = 252.0
+margin_top = 2.0
+margin_right = 320.0
+margin_bottom = 70.0
 rect_min_size = Vector2( 68, 68 )
 size_flags_horizontal = 4
 size_flags_vertical = 4
@@ -413,8 +419,7 @@ __meta__ = {
 position = Vector2( 2, 2 )
 scale = Vector2( 0.5, 0.5 )
 frames = ExtResource( 1 )
-animation = "SEEDS2"
-frame = 13
+animation = "ww"
 centered = false
 script = ExtResource( 22 )
 
@@ -427,29 +432,35 @@ frames = SubResource( 28 )
 animation = "ff"
 frame = 4
 
+[node name="HealingEvent" parent="m/v" instance=ExtResource( 41 )]
+margin_top = 92.0
+margin_right = 340.0
+margin_bottom = 429.0
+
 [node name="garden" type="MarginContainer" parent="m/v"]
 unique_name_in_owner = true
-margin_top = 88.0
-margin_right = 252.0
-margin_bottom = 160.0
+visible = false
+margin_top = 92.0
+margin_right = 464.0
+margin_bottom = 164.0
 script = ExtResource( 38 )
 
 [node name="bg" type="Panel" parent="m/v/garden"]
 unique_name_in_owner = true
-margin_right = 252.0
+margin_right = 464.0
 margin_bottom = 72.0
 rect_pivot_offset = Vector2( -61, -6 )
 custom_styles/panel = SubResource( 29 )
 
 [node name="border" type="Panel" parent="m/v/garden"]
 unique_name_in_owner = true
-margin_right = 252.0
+margin_right = 464.0
 margin_bottom = 72.0
 rect_pivot_offset = Vector2( -61, -6 )
 custom_styles/panel = SubResource( 30 )
 
 [node name="MarginContainer" type="MarginContainer" parent="m/v/garden"]
-margin_right = 252.0
+margin_right = 464.0
 margin_bottom = 72.0
 custom_constants/margin_right = 4
 custom_constants/margin_top = 4
@@ -459,7 +470,7 @@ custom_constants/margin_bottom = 4
 [node name="ScrollContainer" type="ScrollContainer" parent="m/v/garden/MarginContainer"]
 margin_left = 4.0
 margin_top = 4.0
-margin_right = 248.0
+margin_right = 460.0
 margin_bottom = 68.0
 rect_min_size = Vector2( 0, 64 )
 scroll_horizontal_enabled = false
@@ -475,19 +486,19 @@ custom_constants/hseparation = 0
 columns = 7
 
 [node name="bot" type="MarginContainer" parent="m/v"]
-margin_top = 160.0
-margin_right = 252.0
-margin_bottom = 196.0
+margin_top = 429.0
+margin_right = 340.0
+margin_bottom = 465.0
 size_flags_vertical = 8
 
 [node name="bg_grey" type="Panel" parent="m/v/bot"]
-margin_right = 252.0
+margin_right = 340.0
 margin_bottom = 36.0
 rect_pivot_offset = Vector2( -61, -6 )
 custom_styles/panel = SubResource( 13 )
 
 [node name="m" type="MarginContainer" parent="m/v/bot"]
-margin_right = 252.0
+margin_right = 340.0
 margin_bottom = 36.0
 custom_constants/margin_right = 0
 custom_constants/margin_top = 0
@@ -495,14 +506,15 @@ custom_constants/margin_left = 0
 custom_constants/margin_bottom = 0
 
 [node name="h" type="HBoxContainer" parent="m/v/bot/m"]
-margin_right = 252.0
+margin_right = 340.0
 margin_bottom = 36.0
 custom_constants/separation = 0
 alignment = 1
 
 [node name="fuel" type="MarginContainer" parent="m/v/bot/m/h"]
 unique_name_in_owner = true
-margin_right = 36.0
+margin_left = 44.0
+margin_right = 80.0
 margin_bottom = 36.0
 
 [node name="pinnedFuel" parent="m/v/bot/m/h/fuel" instance=ExtResource( 9 )]
@@ -524,8 +536,8 @@ custom_styles/normal = SubResource( 16 )
 [node name="info" type="MarginContainer" parent="m/v/bot/m/h"]
 unique_name_in_owner = true
 modulate = Color( 1, 0, 0, 1 )
-margin_left = 36.0
-margin_right = 72.0
+margin_left = 80.0
+margin_right = 116.0
 margin_bottom = 36.0
 
 [node name="icon" type="Panel" parent="m/v/bot/m/h/info"]
@@ -560,8 +572,8 @@ custom_styles/normal = SubResource( 16 )
 [node name="jobs" type="MarginContainer" parent="m/v/bot/m/h"]
 unique_name_in_owner = true
 modulate = Color( 1, 0, 0, 1 )
-margin_left = 72.0
-margin_right = 108.0
+margin_left = 116.0
+margin_right = 152.0
 margin_bottom = 36.0
 
 [node name="icon" type="Panel" parent="m/v/bot/m/h/jobs"]
@@ -596,8 +608,8 @@ custom_styles/normal = SubResource( 16 )
 
 [node name="active buffs" type="MarginContainer" parent="m/v/bot/m/h"]
 unique_name_in_owner = true
-margin_left = 108.0
-margin_right = 144.0
+margin_left = 152.0
+margin_right = 188.0
 margin_bottom = 36.0
 size_flags_horizontal = 0
 
@@ -633,8 +645,8 @@ custom_styles/normal = SubResource( 16 )
 [node name="sleep" type="MarginContainer" parent="m/v/bot/m/h"]
 unique_name_in_owner = true
 modulate = Color( 1, 0, 0, 1 )
-margin_left = 144.0
-margin_right = 180.0
+margin_left = 188.0
+margin_right = 224.0
 margin_bottom = 36.0
 size_flags_horizontal = 0
 
@@ -681,8 +693,8 @@ custom_styles/normal = SubResource( 16 )
 
 [node name="special" type="MarginContainer" parent="m/v/bot/m/h"]
 unique_name_in_owner = true
-margin_left = 180.0
-margin_right = 216.0
+margin_left = 224.0
+margin_right = 260.0
 margin_bottom = 36.0
 size_flags_horizontal = 0
 
@@ -709,8 +721,8 @@ custom_styles/normal = SubResource( 16 )
 
 [node name="level up" type="MarginContainer" parent="m/v/bot/m/h"]
 unique_name_in_owner = true
-margin_left = 216.0
-margin_right = 252.0
+margin_left = 260.0
+margin_right = 296.0
 margin_bottom = 36.0
 size_flags_horizontal = 0
 
@@ -729,7 +741,7 @@ unique_name_in_owner = true
 visible = false
 position = Vector2( 12, 12 )
 frames = ExtResource( 11 )
-frame = 12
+frame = 3
 playing = true
 
 [node name="Sprite" type="Sprite" parent="m/v/bot/m/h/level up/icon"]

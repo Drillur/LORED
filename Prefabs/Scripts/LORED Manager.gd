@@ -2,6 +2,8 @@ extends MarginContainer
 
 
 
+onready var scroll_container: ScrollContainer = $"%sc"
+
 var src := {
 	hbox = preload("res://Prefabs/template/HBoxContainer 10 separation.tscn"),
 }
@@ -9,16 +11,26 @@ var src := {
 var cont := {}
 
 var LOREDKeys: Array = lv.Type.keys()
-#var g_keys = gv.g.keys()
+
+
 
 func _ready():
-	get_node("%3").hide()
+	#get_node("%3").hide()
 	
 	gv.connect("autobuyer_purchased", self, "autobuyer_purchased")
 	gv.connect("manualLabor", self, "instanceManualLabor")
 	
 	for f in lv.lored:
 		add_child(lv.lored[f])
+
+
+
+func _input(_event: InputEvent) -> void:
+	if Input.is_action_just_pressed("Shift"):
+		scroll_container.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	if Input.is_action_just_released("Shift"):
+		scroll_container.mouse_filter = Control.MOUSE_FILTER_STOP
+
 
 
 func setup():

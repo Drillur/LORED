@@ -1,0 +1,182 @@
+[gd_scene load_steps=12 format=2]
+
+[ext_resource path="res://Prefabs/ui/Icon.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Prefabs/Unit/UnitVico.gd" type="Script" id=2]
+[ext_resource path="res://Fonts/Roboto-BoldItalic.ttf" type="DynamicFontData" id=3]
+[ext_resource path="res://Prefabs/Unit/AttributeVico.tscn" type="PackedScene" id=4]
+
+[sub_resource type="StyleBoxFlat" id=5]
+bg_color = Color( 1, 1, 1, 0.1 )
+border_color = Color( 1, 1, 1, 0.65 )
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+shadow_size = 3
+
+[sub_resource type="StyleBoxFlat" id=6]
+bg_color = Color( 1, 1, 1, 0.1 )
+draw_center = false
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 1, 1, 1, 0.65 )
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+shadow_size = 3
+
+[sub_resource type="StyleBoxFlat" id=7]
+bg_color = Color( 1, 1, 1, 0.1 )
+draw_center = false
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color( 1, 1, 1, 1 )
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="DynamicFont" id=4]
+size = 12
+font_data = ExtResource( 3 )
+
+[sub_resource type="StyleBoxFlat" id=8]
+bg_color = Color( 1, 1, 1, 0.04 )
+
+[sub_resource type="StyleBoxFlat" id=9]
+bg_color = Color( 1, 1, 1, 0.02 )
+
+[sub_resource type="StyleBoxFlat" id=3]
+bg_color = Color( 1, 1, 1, 0.0392157 )
+draw_center = false
+
+[node name="Unit" type="MarginContainer"]
+margin_right = 100.0
+margin_bottom = 141.0
+rect_min_size = Vector2( 100, 0 )
+rect_pivot_offset = Vector2( -201, -26 )
+script = ExtResource( 2 )
+
+[node name="bg" type="Panel" parent="."]
+margin_right = 100.0
+margin_bottom = 141.0
+custom_styles/panel = SubResource( 5 )
+
+[node name="target_border" type="Panel" parent="."]
+unique_name_in_owner = true
+self_modulate = Color( 1, 1, 1, 0.66 )
+margin_right = 100.0
+margin_bottom = 141.0
+custom_styles/panel = SubResource( 6 )
+
+[node name="MarginContainer2" type="MarginContainer" parent="."]
+margin_right = 100.0
+margin_bottom = 141.0
+custom_constants/margin_right = 1
+custom_constants/margin_top = 1
+custom_constants/margin_left = 1
+custom_constants/margin_bottom = 1
+
+[node name="spell_main_target_border" type="Panel" parent="MarginContainer2"]
+unique_name_in_owner = true
+visible = false
+modulate = Color( 0, 1, 0, 1 )
+self_modulate = Color( 1, 1, 1, 0.66 )
+margin_left = 1.0
+margin_top = 1.0
+margin_right = 99.0
+margin_bottom = 140.0
+custom_styles/panel = SubResource( 7 )
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+margin_right = 100.0
+margin_bottom = 141.0
+custom_constants/margin_right = 5
+custom_constants/margin_top = 5
+custom_constants/margin_left = 5
+custom_constants/margin_bottom = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+margin_left = 5.0
+margin_top = 5.0
+margin_right = 95.0
+margin_bottom = 136.0
+custom_constants/separation = 8
+
+[node name="icon" parent="MarginContainer/VBoxContainer" instance=ExtResource( 1 )]
+unique_name_in_owner = true
+margin_left = 13.0
+margin_right = 77.0
+margin_bottom = 64.0
+rect_min_size = Vector2( 64, 64 )
+size_flags_horizontal = 4
+
+[node name="texts" type="Node2D" parent="MarginContainer/VBoxContainer/icon"]
+unique_name_in_owner = true
+position = Vector2( 32, 0 )
+
+[node name="details" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+margin_top = 72.0
+margin_right = 90.0
+margin_bottom = 131.0
+custom_constants/separation = 10
+
+[node name="name" type="Label" parent="MarginContainer/VBoxContainer/details"]
+unique_name_in_owner = true
+margin_right = 90.0
+margin_bottom = 15.0
+mouse_filter = 1
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 4 )
+text = "Skinny Pete"
+align = 1
+
+[node name="health" parent="MarginContainer/VBoxContainer/details" instance=ExtResource( 4 )]
+unique_name_in_owner = true
+margin_top = 25.0
+margin_right = 90.0
+margin_bottom = 37.0
+rect_min_size = Vector2( 0, 12 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="blood" parent="MarginContainer/VBoxContainer/details" instance=ExtResource( 4 )]
+unique_name_in_owner = true
+margin_top = 47.0
+margin_right = 90.0
+margin_bottom = 59.0
+rect_min_size = Vector2( 0, 12 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Left" type="Panel" parent="."]
+size_flags_horizontal = 0
+size_flags_vertical = 0
+
+[node name="buffs" type="VBoxContainer" parent="Left"]
+unique_name_in_owner = true
+margin_left = 1.0
+margin_top = 4.0
+margin_right = 25.0
+margin_bottom = 188.0
+
+[node name="Button" type="Button" parent="."]
+margin_right = 100.0
+margin_bottom = 141.0
+rect_min_size = Vector2( 36, 36 )
+focus_mode = 0
+mouse_default_cursor_shape = 2
+custom_styles/hover = SubResource( 8 )
+custom_styles/pressed = SubResource( 9 )
+custom_styles/normal = SubResource( 3 )
+
+[connection signal="mouse_entered" from="Button" to="." method="_on_Button_mouse_entered"]
+[connection signal="mouse_exited" from="Button" to="." method="_on_Button_mouse_exited"]

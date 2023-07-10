@@ -1,8 +1,13 @@
 extends MarginContainer
 
+
+
 onready var jobParent = get_node("%jobs")
+onready var scroll_container: ScrollContainer = $m/v/bot/ScrollContainer
+
 var lored: int
 var jobs: Dictionary
+
 
 
 func setup(_lored: int):
@@ -12,31 +17,24 @@ func setup(_lored: int):
 	
 	yield(self, "ready")
 	
-	var i = 0
-	for job in lv.lored[lored].lored.jobs.values():
-		var jobUI = gv.SRC["tooltip/lored job"].instance()
-		jobUI.setup(job)
-		jobParent.add_child(jobUI)
-		jobs[job.type] = i
-	
-	var refuelJobUI = gv.SRC["tooltip/lored job"].instance()
-	refuelJobUI.setup(lv.lored[lored].lored.refuelJob)
-	jobParent.add_child(refuelJobUI)
+	for job_key in lv.lored[lored].sorted_jobs:
+		var job = lv.lored[lored].lored.jobs[job_key] as Job
+		jobs[job.type] = gv.SRC["tooltip/lored job"].instance()
+		jobs[job.type].setup(job)
+		jobParent.add_child(jobs[job.type])
 	
 	if lv.lored[lored].lored.lastJob != -1:
 		if lv.lored[lored].lored.lastJob == lv.Job.REFUEL:
-			highlightJob(lv.lored[lored].lored.refuelJob)
+			highlightJob(lv.lored[lored].get_refuel_job())
 		else:
 			highlightJob(lv.lored[lored].lored.jobs[lv.lored[lored].lored.lastJob])
 
 func highlightJob(job: Job):
-	if job.type == lv.Job.REFUEL:
-		jobParent.get_child(jobParent.get_child_count() - 1).glow()
-	else:
-		jobParent.get_child(jobs[job.type]).glow()
+	jobs[job.type].glow()
 
 func stopHighlightJob(job: Job):
-	if job.type == lv.Job.REFUEL:
-		jobParent.get_child(jobParent.get_child_count() - 1).stopGlow()
-	else:
-		jobParent.get_child(jobs[job.type]).stopGlow()
+	jobs[job.type].stopGlow()
+
+
+func scroll(direction: int):
+	scroll_container.scroll_vertical += direction * 30

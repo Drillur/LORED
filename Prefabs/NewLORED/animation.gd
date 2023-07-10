@@ -80,9 +80,10 @@ func pick_a_refuel_animation(duration: float):
 	var animation = str(int(rand_range(0, 2)))
 	var _animation_length = gv.max_frame["refuel" + animation]
 	
-	speed_scale = _animation_length / duration
+	set_speed_scale(_animation_length / duration)
 	
 	previous_animation = "refuel" + animation
+	
 	
 	play(animation)
 	

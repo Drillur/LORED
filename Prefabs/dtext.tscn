@@ -1,51 +1,84 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://Fonts/Roboto-BlackItalic.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Scripts/dtext.gd" type="Script" id=2]
 [ext_resource path="res://Sprites/resources/axe.png" type="Texture" id=3]
+[ext_resource path="res://Fonts/Roboto-BoldItalic.ttf" type="DynamicFontData" id=4]
+
+[sub_resource type="StyleBoxFlat" id=4]
+bg_color = Color( 0, 0, 0, 0.5 )
+expand_margin_left = 2.0
+expand_margin_right = 2.0
+shadow_color = Color( 0, 0, 0, 1 )
 
 [sub_resource type="DynamicFont" id=1]
 size = 13
-outline_size = 1
 outline_color = Color( 0, 0, 0, 0.6 )
 font_data = ExtResource( 1 )
 
-[sub_resource type="StyleBoxFlat" id=2]
-bg_color = Color( 0, 0, 0, 0 )
-corner_radius_top_left = 3
-corner_radius_top_right = 3
-corner_radius_bottom_right = 3
-corner_radius_bottom_left = 3
-shadow_color = Color( 0, 0, 0, 1 )
-shadow_size = 3
+[sub_resource type="DynamicFont" id=3]
+size = 12
+font_data = ExtResource( 4 )
 
-[node name="dtext" type="Label"]
-margin_right = 7.0
+[node name="MarginContainer" type="MarginContainer"]
+margin_left = -3.0
+margin_right = 4.0
 margin_bottom = 17.0
-custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-custom_fonts/font = SubResource( 1 )
-text = "+1"
+grow_horizontal = 2
 script = ExtResource( 2 )
 
-[node name="Timer" type="Timer" parent="."]
-wait_time = 0.015
-autostart = true
+[node name="center" type="Panel" parent="."]
+margin_bottom = 17.0
+size_flags_horizontal = 0
 
-[node name="icon" type="Sprite" parent="."]
+[node name="icon" type="Sprite" parent="center"]
+unique_name_in_owner = true
 show_behind_parent = true
+position = Vector2( -11, 3 )
 texture = ExtResource( 3 )
+__meta__ = {
+"_edit_group_": true
+}
 
-[node name="shadow" type="Sprite" parent="icon"]
+[node name="shadow" type="Sprite" parent="center/icon"]
 self_modulate = Color( 0, 0, 0, 1 )
 show_behind_parent = true
 position = Vector2( 1, 1 )
 texture = ExtResource( 3 )
 
 [node name="bg" type="Panel" parent="."]
-show_behind_parent = true
-anchor_right = 1.0
-margin_top = 4.0
-margin_bottom = 13.0
-custom_styles/panel = SubResource( 2 )
+margin_top = 2.0
+margin_right = 7.0
+margin_bottom = 15.0
+rect_min_size = Vector2( 0, 13 )
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 4 )
 
-[connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+margin_right = 7.0
+margin_bottom = 17.0
+
+[node name="amount" type="Label" parent="HBoxContainer"]
+unique_name_in_owner = true
+margin_right = 7.0
+margin_bottom = 17.0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 1 )
+text = "1"
+
+[node name="Timer" type="Timer" parent="HBoxContainer/amount"]
+wait_time = 0.015
+autostart = true
+
+[node name="resource name" type="Label" parent="HBoxContainer"]
+unique_name_in_owner = true
+visible = false
+margin_left = 60.0
+margin_top = 1.0
+margin_right = 107.0
+margin_bottom = 16.0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 3 )
+text = "Marigold"
+
+[connection signal="timeout" from="HBoxContainer/amount/Timer" to="." method="_on_Timer_timeout"]

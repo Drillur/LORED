@@ -135,7 +135,7 @@ func random_desc() -> String:
 		2:
 			var mant: float = rand_range(1,9)
 			var expo: float = rand_range(1000, 100000)
-			return "LORED haste x" + Big.new(str(mant)+"e"+str(expo)).toString() + "."
+			return "LORED haste x" + Big.new(mant, expo).toString() + "."
 		3:
 			return "Improves the quality of every animation."
 		4:
@@ -169,7 +169,7 @@ func random_desc() -> String:
 		18:
 			return "You restart your entire life, but bring your memories with you. A real-life prestige."
 		19:
-			return "Enables the game to work on Safari."
+			return "The game can now run on Game Boy Color."
 		20:
 			return "Combines the power of every piece of feedback ever received into an awful abomination of mostly-decent ideas."
 		21:

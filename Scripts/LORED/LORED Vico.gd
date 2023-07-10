@@ -1,3 +1,4 @@
+class_name LOREDVico
 extends MarginContainer
 
 
@@ -19,11 +20,15 @@ onready var draw_plate_throw = get_node("%DRAW_PLATE throw")
 onready var gnResourceText = get_node("m/v/top/v/mid/v2/resource/v/amount")
 onready var iconShadow = get_node("m/v/top/v/mid/v2/resource/icon/Sprite/shadow")
 onready var active_buffs = get_node("%active buffs")
+
 onready var garden: MarginContainer = $"%garden"
+onready var healing_event: MarginContainer = $m/v/HealingEvent as HealingEventVico
 
 onready var rt = get_node("/root/Root")
 
 var manager: Node2D
+
+var mouse_in_jobs := false
 
 
 
@@ -44,6 +49,8 @@ func _ready() -> void:
 	outputTextTimer.one_shot = true
 	add_child(outputTextTimer)
 	
+	status.hide()
+	
 	gv.connect("resourceChanged", self, "queueResourceTextUpdate")
 	queueResourceTextUpdate(primaryResource)
 
@@ -53,6 +60,16 @@ func _on_AlertBubble_pressed() -> void:
 	if lock.visible:
 		get_node("/root/Root").hideAllMenus()
 		get_node("/root/Root").wallet.show()
+
+
+
+func _input(_event: InputEvent) -> void:
+	if mouse_in_jobs:
+		if Input.is_action_pressed("Shift"):
+			if Input.is_action_just_released("ScrollUp"):
+				rt.get_node("global_tip").scroll_content(-1)
+			elif Input.is_action_just_released("ScrollDown"):
+				rt.get_node("global_tip").scroll_content(1)
 
 
 
@@ -107,6 +124,7 @@ func _on_asleep_pressed() -> void:
 
 func _on_mouse_exited() -> void:
 	rt.get_node("global_tip")._call("no")
+	mouse_in_jobs = false
 func _on_info_mouse_entered() -> void:
 	rt.get_node("global_tip")._call("lored info", {"type": manager.type})
 func _on_level_mouse_entered() -> void:
@@ -115,6 +133,7 @@ func _on_alert_mouse_entered() -> void:
 	rt.get_node("global_tip")._call("lored alert", {"type": manager.type, "alert": manager.activeAlert})
 func _on_jobs_mouse_entered() -> void:
 	rt.get_node("global_tip")._call("lored jobs", {"lored": manager.type})
+	mouse_in_jobs = true
 func _on_asleep_mouse_entered() -> void:
 	if gv.option["tipSleep"]:
 		rt.get_node("global_tip")._call("lored asleep", {"lored": manager.type})
@@ -135,9 +154,7 @@ func _on_visibility_changed() -> void:
 
 func enterStandby():
 	
-	animation.stop()
-	hideProduction()
-	hideProgress()
+	stop_working()
 	get_node("%info").hide()
 	get_node("%sleep").hide()
 	jobs.hide()
@@ -152,7 +169,7 @@ func enterActive():
 	if "jobs" in taq.completed_wishes:
 		jobs.show()
 	displayFuel()
-	var loreds_with_special_areas := [lv.Type.WITCH]
+	var loreds_with_special_areas := [lv.Type.WITCH, lv.Type.BLOOD]
 	if manager.type in loreds_with_special_areas:
 		get_node("%special").show()
 
@@ -167,6 +184,8 @@ func _physics_process(_delta: float) -> void:
 	if i > animation_duration:
 		setProgress(0)
 		set_physics_process(false)
+		if casting:
+			stop_casting()
 		return
 	setProgress(i / animation_duration)
 
@@ -224,15 +243,13 @@ func setStatusText(text: String):
 	if text == "":
 		status.hide()
 		return
-	status.bbcode_text = "[center]" + text
+	status.bbcode_text = text #"[center]" + text
 	status.show()
 
 func finishedWorkingForNow():
 	hideProduction()
 	animation.sleep()
 
-func stop():
-	t.stop()
 
 func get_i(_start_time: int) -> int:
 	return OS.get_ticks_msec() - _start_time
@@ -270,6 +287,12 @@ func goToSleep():
 
 
 # - - - Actions
+
+func stop_working():
+	set_physics_process(false)
+	animation.stop()
+	hideProduction()
+	hideProgress()
 
 func hideCheck():
 	check.hide()
@@ -315,8 +338,9 @@ func hide_active_buffs():
 	active_buffs.hide()
 
 func _on_special_pressed() -> void:
-	
 	match manager.type:
+		lv.Type.BLOOD:
+			healing_event.visible = not healing_event.visible
 		lv.Type.WITCH:
 			garden.visible = not garden.visible
 
@@ -358,7 +382,7 @@ func newOutputText(details: Dictionary):
 	outputText.rect_position = Vector2(-rect_global_position.x + animation.global_position.x - (outputText.rect_size.x / 2) + 10, 0)
 	
 	if "levelup" in details.keys():
-		details["life"] = 200
+		details["life"] = 75
 		outputText.rect_position.x = (rect_size.x / 2) - (outputText.rect_size.x / 2)
 	
 	get_node("misc").add_child(outputText)
@@ -430,9 +454,33 @@ func alert_resource_not_exporting_stop():
 
 
 
+# - Special
+
+func new_healing_event(_type: int) -> void:
+	hideProduction()
+	healing_event.new_healing_event(_type)
+
+var casting := false
+
+func castbar_start(duration: float, _start_time: int):
+	
+	currentProgress.show()
+	
+	#play_animation(duration, job)
+	# should do something like play_spell_animation
+	
+	start_time = _start_time
+	animation_duration = duration * 1000
+	casting = true
+	
+	set_physics_process(true)
 
 
-
+func stop_casting() -> void:
+	casting = false
+	set_physics_process(false)
+	animation.stop()
+	hideProgress()
 
 
 

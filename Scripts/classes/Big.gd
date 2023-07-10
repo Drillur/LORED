@@ -1,6 +1,6 @@
+class_name Big
 extends Reference
 
-class_name Big
 
 export var mantissa:float = 0.0
 export var exponent:int = 1
@@ -60,19 +60,12 @@ func parse(n, return_dict = false):
 
 
 func type_check(n):
-	
 	match typeof(n):
-		
 		TYPE_INT, TYPE_REAL:
-			
 			return {"mantissa":float(n), "exponent":0}
-		
 		TYPE_STRING:
-			
 			return parse(n, true)
-		
 		_:
-			
 			return n
 
 func reset():
@@ -355,6 +348,19 @@ func capMin(n):
 		mantissa = n.mantissa
 		exponent = n.exponent
 
+func _round():
+	if exponent <= 0:
+		mantissa = round(mantissa)
+	elif exponent == 1:
+		mantissa = stepify(mantissa, 0.1)
+	elif exponent == 2:
+		mantissa = stepify(mantissa, 0.01)
+	elif exponent == 3:
+		mantissa = stepify(mantissa, 0.001)
+	else:
+		mantissa = stepify(mantissa, 0.0001)
+	return self
+
 func roundDown():
 	if exponent <= 0:
 		mantissa = floor(mantissa)
@@ -455,6 +461,9 @@ func format_exponent(value: int) -> String:
 
 func toFloat():
 	return mantissa * pow(10, exponent)
+
+func toInt() -> int:
+	return int(mantissa * pow(10, exponent))
 
 
 func save() -> String:

@@ -5,13 +5,16 @@ extends Reference
 
 var locked := true
 var resourcesUnlocked := false
+var costs_fuel := true
 
 var type: int
 var lored: int
 
 var name: String
-var vicoText: String
+var key: String
+var vicoText: String setget , get_text
 var animation: String
+var lored_key: String
 
 #var considerBabyhood := false
 
@@ -21,11 +24,12 @@ func _init(_type: int, _lored: int):
 	type = _type
 	lored = _lored
 	
-	var base_name: String = lv.Job.keys()[type]
+	key = lv.Job.keys()[type]
+	lored_key = lv.Type.keys()[lored]
 	
 	animation = lv.Type.keys()[lored]
 	
-	call("construct_" + base_name)
+	call("construct_" + key)
 	
 	setPrimaryResource()
 	addResourceProducers()
@@ -37,17 +41,26 @@ func addResourceProducers():
 
 func construct_SIFT_SEEDS():
 	setDuration(8)
-	setVicoText("Sifting seeds.")
-	addProducedResource(gv.Resource.RANDOM_SEED, 5)
-	addRequiredResource(gv.Resource.SEEDS, 5)
+	setVicoText("Sifting for flower seeds.")
+	addProducedResource(gv.Resource.FLOWER_SEED, 1)
+	add_resource_range(gv.Resource.FLOWER_SEED, 3, true)
+	addRequiredResource(gv.Resource.SEEDS, 100)
 	name = "Sift Seeds"
 	animation = "no"
 
+func construct_PLANT_SEED():
+	setDuration(5)
+	setVicoText("Identifying and planting a flower.")
+	addRequiredResource(gv.Resource.FLOWER_SEED, 1)
+	name = "Plant Flower"
+	animation = "no"
+
 func construct_IDLE():
-	setDuration(10)
+	setDuration(2.5 if gv.dev_mode else 10)
 	setVicoText("{idle}")
 	name = "Idle"
 	animation = "no"
+	costs_fuel = false
 
 func construct_REFUEL():
 	setDuration(4)
@@ -288,20 +301,27 @@ func changeBaseDuration(val: float):
 # - - - Produced Resources
 
 var producesResource := false
+var range_multiplier := {}
+var round_range_multiplier := {}
 var producedResources := {}
 var producedResourcesText: Dictionary setget , getProducedResourcesText
 var producedResourcesBits := {}
 var producedResourcesBitsUpdated := false
-func addProducedResource(key: int, base: float):
+func addProducedResource(_key: int, base: float):
 	if not producesResource:
 		producesResource = true
-	producedResourcesBits[key] = Bits.new({
+	
+	producedResourcesBits[_key] = Bits.new({
 		lv.Num.BASE: base,
 		lv.Num.MULTIPLY: {
 			lv.Num.FROM_UPGRADES: Big.new(1),
 			lv.Num.BY_LORED_OUTPUT: Big.new(1),
 		},
 	})
+func add_resource_range(resource: int, _range: float, _should_round: bool):
+	range_multiplier[resource] = _range
+	round_range_multiplier[resource] = _should_round
+
 func syncProducedResources():
 	for c in producedResourcesBits:
 		producedResourcesBits[c].setValue(lv.Num.MULTIPLY, lv.Num.BY_LORED_OUTPUT, lv.lored[lored].output)
@@ -327,10 +347,10 @@ var requiredResources := {}
 var requiredResourcesText: Dictionary setget , getRequiredResourcesText
 var requiredResourcesBits := {}
 var requiredResourcesBitsUpdated := false
-func addRequiredResource(key: int, base: float):
+func addRequiredResource(_key: int, base: float):
 	if not requiresResource:
 		requiresResource = true
-	requiredResourcesBits[key] = Bits.new({
+	requiredResourcesBits[_key] = Bits.new({
 		lv.Num.BASE: base,
 		lv.Num.DIVIDE: {
 			lv.Num.FROM_UPGRADES: Big.new(1),
@@ -373,7 +393,10 @@ func getRequiredFuel() -> Big:
 	return requiredFuel
 func setRequiredFuel():
 	updateRequiredFuel = false
-	requiredFuel = Big.new(lv.lored[lored].fuelCost).m(duration)
+	if costs_fuel:
+		requiredFuel = Big.new(lv.lored[lored].fuelCost).m(duration)
+	else:
+		requiredFuel = Big.new(0)
 func updateRequiredFuel():
 	if updateRequiredFuel:
 		return
@@ -445,6 +468,16 @@ func canUnlockResources() -> bool:
 			return true
 	
 	return false
+
+func randomize_duration():
+	if type != lv.Job.IDLE:
+		return
+	durationBits.changeBase(rand_range(7.5, 12.5))
+	syncDuration()
+
+
+func remove_fuel_cost():
+	costs_fuel = false
 
 
 
@@ -577,3 +610,108 @@ func add_pending_resource():
 func remove_pending_resource():
 	for resource in producedResources.keys():
 		gv.remove_pending_resource(resource, lored)
+
+
+
+# - - - Vico Shit
+
+func get_text() -> String:
+	match type:
+		lv.Job.IDLE:
+			return get_idle_text()
+	return vicoText
+
+
+var idle_text_WITCH := []
+var idle_text_BLOOD := []
+
+
+func get_idle_text() -> String:
+	var pool: Array = get("idle_text_" + lored_key)
+	if pool.empty():
+		call("setup_idle_text_" + lored_key)
+		pool = get("idle_text_" + lored_key)
+	var random_index: int = randi() % len(pool)
+	return pool[random_index]
+
+
+func setup_idle_text_BLOOD():
+	idle_text_BLOOD = [
+		"Patrolling Aurum.",
+		"Studying Anthomancy.",
+	]
+
+
+func setup_idle_text_WITCH():
+	idle_text_WITCH = [
+		"Frolicking!",
+		"Studying botany.",
+		"Sculpting petals.",
+		"Ignoring the bees!",
+		"Kicking the gnomes!",
+		"Juggling her potions.",
+		"Smelling the flowers.",
+		"Singing to the snails.",
+		"Reading her tarot cards.",
+		"Getting lost in the wood.",
+		"Running away from her cat.",
+		"Karaoke night with the deer!",
+		"Having a picnic with some owls.",
+		"Having a fashion show with mushrooms.",
+		"Furiously watering all of the flowers at once!",
+	]
+
+
+func add_idle_text_WITCH():
+	idle_text_WITCH.append("Brewing a bubble bath bomb!")
+	idle_text_WITCH.append("Taste testing her curry potion!")
+	idle_text_WITCH.append("Scratching her back with her wand.")
+	idle_text_WITCH.append("Floating an acorn out of reach of a squirrel!")
+
+
+
+func resource_has_a_range(resource: int) -> bool:
+	return resource in range_multiplier.keys()
+
+
+func should_round_random_value(resource: int) -> bool:
+	return round_range_multiplier[resource]
+
+
+var latest_random_value: float
+
+func get_value_in_resource_range(resource: int) -> float:
+	latest_random_value = rand_range(1, range_multiplier[resource])
+	if should_round_random_value(resource):
+		latest_random_value = round(latest_random_value)
+	return latest_random_value
+
+
+
+func completed():
+	var complete_method = key + "_complete"
+	if has_method(complete_method):
+		call(complete_method)
+
+
+func SIFT_SEEDS_complete():
+	var roll_bonus := 0.0
+	var count: int = lv.lored[lored].output.toInt()
+	for seeds_picked_up in latest_random_value:
+		Flower.store_new_flower_seed(count, roll_bonus)
+
+
+func PLANT_SEED_complete():
+	
+	var flower_seed: FlowerSeed = Flower.get_most_recent_flower_seed()
+	
+	var count: int = flower_seed.count
+	var flower_name = flower_seed.get_name()
+	
+	var crit_multiplier := 1.0
+	var produced_resources := {flower_name: count}
+	var output_text_details = Flower.get_output_text_details(produced_resources, crit_multiplier)
+	lv.lored[lored].vico.throwOutputTexts(output_text_details)
+	
+	Flower.plant_flower_seed(flower_seed)
+

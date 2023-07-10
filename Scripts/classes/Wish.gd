@@ -879,10 +879,6 @@ func construct_stuff():
 
 
 
-
-
-
-
 func construct_veryLowCoal():
 	giver = str(lv.Type.COAL)
 	match taq.completed_wishes.count("veryLowCoal"):
@@ -911,6 +907,8 @@ func construct_veryLowCoal():
 	obj = Objective.new(gv.Objective.RESOURCES_PRODUCED, str(gv.Resource.COAL), Big.new(lv.lored[lv.Type.COAL].output).m(10).toString())
 	rew.append(Reward.new(gv.WishReward.RESOURCE, str(gv.Resource.COAL), Big.new(lv.lored[lv.Type.COAL].output).m(25)))
 	gv.emit_signal("manualLabor")
+
+
 
 
 
@@ -990,7 +988,7 @@ func get_possible_types() -> Dictionary:
 			
 			for x in gv.list.upgrade["unowned " + str(i)]:
 				var time_to_buy = gv.up[x].time_to_buy()
-				if not time_to_buy is Big:
+				if time_to_buy.equal(0):
 					continue
 				if is_instance_valid(gv.up[x].manager):
 					if time_to_buy.less(60) and gv.up[x].manager.availableToBuy():
@@ -1052,7 +1050,8 @@ func construct_random_collect():
 	# stage 1 or 2
 	if s1_or_s2:
 		difficulty *= lv.lored[resource].haste
-		amount = Big.new(difficulty).m(lv.lored[resource].output)
+	
+	amount = Big.new(difficulty).m(lv.lored[resource].output)
 	
 	# stage 1 or 2
 	if s1_or_s2:

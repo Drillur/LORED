@@ -1,11 +1,14 @@
 class_name LOREDManager
 extends Node2D
 
+
+
 onready var rt = get_node("/root/Root")
 
 
+
 var lored: LORED
-var vico: MarginContainer
+var vico: LOREDVico
 
 
 
@@ -15,14 +18,15 @@ var type: int
 
 func _ready() -> void:
 	gv.connect("limit_break_leveled_up", self, "limit_break_level_up")
-
+	if type == lv.Type.BLOOD:
+		cast_timer = Timer.new()
+		add_child(cast_timer)
 
 
 
 func _init(_type: int):
 	
 	type = _type
-	
 	lored = LORED.new(type)
 	lored.assignManager(self)
 	
@@ -32,6 +36,9 @@ func _init(_type: int):
 	
 	if type == lv.Type.COPPER_ORE:
 		nextEmote = EmoteManager.Type.COPPER_ORE0
+	
+	if type == lv.Type.BLOOD:
+		gv.connect("unit_status_effect_applied", self, "add_status_effects_to_unit_tooltip")
 
 
 
@@ -61,6 +68,7 @@ func setupElements():
 func justAppearedForTheFirstTime():
 	syncAllNow()
 	lored.syncJobs_all()
+	lored.sort_jobs()
 	updatePrimaryResource(getPrimaryResource())
 	enterStandby()
 
@@ -90,7 +98,7 @@ func syncQueue():
 			continue
 		lored.call("sync_" + lv.Queue.keys()[q])
 	
-	var minimum = Big.new(lored.fuelCost).m(lored.refuelJob.duration * 2)
+	var minimum = Big.new(lored.fuelCost).m(get_refuel_job().duration * 2)
 	if lored.currentFuel.less(minimum):
 		lored.currentFuel = Big.new(minimum)
 		if lored.type == lv.Type.COAL:
@@ -124,6 +132,9 @@ func syncQueue():
 # - - - Getters
 # These variables are never assigned a value.
 # Instead, they only pull from the LORED class. See: the "lored" var
+
+func get_refuel_job() -> Job:
+	return lored.get_refuel_job()
 
 var level: int setget , getLevel
 var levelText: String setget , getLevelText
@@ -317,6 +328,14 @@ var jobs: Dictionary setget , getJobs
 func getJobs() -> Dictionary:
 	return lored.jobs
 
+var key: String setget , get_key
+func get_key() -> String:
+	return lored.key
+
+var sorted_jobs: Array setget , get_sorted_jobs
+func get_sorted_jobs() -> Array:
+	return lored.sorted_job_keys
+
 
 
 # - - - Duplicate functions
@@ -349,16 +368,17 @@ func updateOfflineNet(resource: int):
 func getOfflineEarnings(timeOffline: int):
 	lored.getOfflineEarnings(timeOffline)
 
-func applyDynamicUpgrade(key: String, effectIndex: int, folder: String):
-	lored.applyDynamicUpgrade(key, effectIndex, folder)
-func removeDynamicUpgrade(key: String, folder: String):
-	lored.removeDynamicUpgrade(key, folder)
+func applyDynamicUpgrade(_key: String, effectIndex: int, folder: String):
+	lored.applyDynamicUpgrade(_key, effectIndex, folder)
+func removeDynamicUpgrade(_key: String, folder: String):
+	lored.removeDynamicUpgrade(_key, folder)
 
 func emote(emote: MarginContainer):
 	vico.emote(emote)
 
 func removeCost(resource: int):
 	lored.removeCost(resource)
+
 
 
 # - - - Actions
@@ -437,6 +457,12 @@ func emoteEvent():
 				EmoteManager.emote(EmoteManager.Type.COAL_WHOA)
 			elif gv.stats["TimesLeveledUp"]["manual"][type] == 1:
 				EmoteManager.emote(EmoteManager.Type.COAL_GREET)
+
+
+func addJob(jobType: int):
+	lored.addJob(jobType)
+	lored.jobs[jobType].syncAll()
+	lored.sort_jobs()
 
 
 
@@ -678,7 +704,7 @@ func enterStandby():
 	mode = lv.Mode.STANDBY
 	vico.enterStandby()
 	updateFuelDrain(false)
-	gv.append(gv.list.lored["unlocked and inactive"], type)
+	gv.append_value_to_list(type, gv.list.lored["unlocked and inactive"])
 
 func enterActive():
 	syncQueue()
@@ -707,6 +733,7 @@ func stopWorking():
 	stopWorking = true
 	jobTimer.start(0.01)
 	lored.working = false
+	vico.stop_working()
 
 func findFirstJob():
 	
@@ -728,6 +755,9 @@ func repeatedlyLookForWork():
 		jobTimer.start(1)
 		yield(jobTimer, "timeout")
 		
+		if stopWorking:
+			return
+		
 		if getAsleep():
 			cleanUpIfAsleep()
 			continue
@@ -737,58 +767,80 @@ func repeatedlyLookForWork():
 			lookForWork()
 
 func lookForWork():
-	for job in lored.jobs.values():
+	for job_key in get_sorted_jobs():
+		var job = lored.jobs[job_key]
 		if canStartJob(job):
 			workJob(job)
 
 var reasonWhyCannotStartJob: int
+
 func canStartJob(job: Job) -> bool:
-	
-	if getCurrentFuelPercent() <= 0.25:
-		if type != lv.Type.COAL:
-			if job.type != lv.Job.REFUEL:
-				reasonWhyCannotStartJob = lv.ReasonCannotBeginJob.LOW_FUEL
-				return false
+#	the refuel job is spamming!! that means somewhere here it is returning true.
+#	i changed it so that Refuel is at the top of the lv.Job list, giving it the highest priority.
+#	make it so that it will not refuel if lored is >75% fuel duh
 	
 	if job.type == lv.Job.REFUEL:
-		if getFuelResource() == gv.Resource.COAL:
+		if getCurrentFuelPercent() > 0.75:
+			return false
+		var fuel_resource = getFuelResource()
+		if fuel_resource == gv.Resource.COAL:
 			if lv.lored[lv.Type.COAL].purchased:
 				if lv.lored[lv.Type.COAL].getCurrentFuelPercent() <= 0.5:
 					if type != lv.Type.COAL:
-						var coloredResourceName = "[color=#" + gv.COLORS[gv.shorthandByResource[getFuelResource()]].to_html() + "]" + gv.resourceName[getFuelResource()] + "[/color]"
+						var coloredResourceName = "[color=#" + gv.COLORS[gv.shorthandByResource[fuel_resource]].to_html() + "]" + gv.resourceName[fuel_resource] + "[/color]"
 						updateStatus("Letting " + coloredResourceName + "\ncatch up.")
 						return false
-		var requiredFuel = lored.refuelJob.requiredResourcesBits[getFuelResource()].total
-		if gv.resource[getFuelResource()].less(getQuarterTank()):
+		var requiredFuel = get_refuel_job().requiredResourcesBits[getFuelResource()].total
+		var quarter_tank = getQuarterTank()
+		if gv.resource[fuel_resource].less(quarter_tank):
 			reasonWhyCannotStartJob = lv.ReasonCannotBeginJob.INSUFFICIENT_FUEL_RESOURCE
-			var coloredResourceName = "[color=#" + gv.COLORS[gv.shorthandByResource[getFuelResource()]].to_html() + "]" + gv.resourceName[getFuelResource()] + "[/color]"
+			var coloredResourceName = "[color=#" + gv.COLORS[gv.shorthandByResource[fuel_resource]].to_html() + "]" + gv.resourceName[fuel_resource] + "[/color]"
 			updateStatus("Awaiting " + requiredFuel.toString() + " available " + coloredResourceName + ".")
-			updatePrimaryResource(getFuelResource())
+			updatePrimaryResource(fuel_resource)
 			vico.hideProduction()
 			return false
 	
-	if lored.currentFuel.less(job.requiredFuel):
-		reasonWhyCannotStartJob = lv.ReasonCannotBeginJob.LOW_FUEL
-		return false
+	if getCurrentFuelPercent() <= 0.25:
+		
+		var the_coal_lored: bool = type == lv.Type.COAL
+		var the_refuel_job: bool = job.type == lv.Job.REFUEL
+		
+		if not the_coal_lored and not the_refuel_job:
+			reasonWhyCannotStartJob = lv.ReasonCannotBeginJob.LOW_FUEL
+			return false
+	
+	if job.costs_fuel:
+		if lored.currentFuel.less(job.requiredFuel):
+			reasonWhyCannotStartJob = lv.ReasonCannotBeginJob.LOW_FUEL
+			return false
 	
 	if not job.haveAndCanUseRequiredResources():
+		
 		# reasonWhyCannotStartJob is set in job.haveAndCanUseRequiredResources()
+		
 		if reasonWhyCannotStartJob == lv.ReasonCannotBeginJob.LORED_NOT_EXPORTING:
 			var resource_shorthand = gv.shorthandByResource[job.reason_resource]
 			var img_bbcode = "[img=<16>]" + gv.sprite[resource_shorthand].get_path() + "[/img]"
 			updateStatus(img_bbcode + " is locked.")
+		
 		elif reasonWhyCannotStartJob == lv.ReasonCannotBeginJob.INSUFFICIENT_RESOURCES:
 			var resource_shorthand = gv.shorthandByResource[job.reason_resource]
 			var img_bbcode = "[img=<16>]" + gv.sprite[resource_shorthand].get_path() + "[/img]"
 			updateStatus("Insufficient " + img_bbcode)
+		
 		return false
+	
+	if job.type == lv.Job.PLANT_SEED:
+		if not Flower.seed_is_available():
+			gv.setResource(gv.Resource.FLOWER_SEED, 0)
+			return false
+	
 	reasonWhyCannotStartJob = -1
 	lored.working = true
 	return true
 
 
 func workJob(job: Job):
-	
 	highlightJobInTooltip(job)
 	
 	lored.jobStarted(job)
@@ -810,7 +862,7 @@ func workJob(job: Job):
 		gv.stats["OtherJobs"][type] += 1
 		gv.emit_signal("OtherJobs", type)
 		vico.updateProduction()
-	updateStatus(job.vicoText)
+	updateStatus(job.get_text())
 	
 	if job.type == lv.Job.WIRE:
 		lv.lored[lv.Type.DRAW_PLATE].throw_draw_plate()
@@ -821,6 +873,7 @@ func workJob(job: Job):
 	jobTimer.start(job.duration)
 	yield(jobTimer, "timeout")
 	
+	job.randomize_duration()
 	job.remove_pending_resource()
 	
 	stopHighlightJobInTooltip(job)
@@ -847,10 +900,18 @@ func workJob(job: Job):
 		
 		resetCritRolls()
 	
+	job.completed()
+	
 	if job.type == lv.Job.REFUEL:
 		lored.currentFuel.a(getQuarterTank())
 	
 	syncQueue()
+	
+	if should_create_new_healing_event():
+		lored.working = false
+		stopWorking()
+		new_healing_event()
+		return
 	
 	if getAsleep():
 		quitWorkingForNow()
@@ -872,9 +933,17 @@ func rollForCrit() -> float:
 	return critMultiplier
 
 func getProducedResourcesDictionary(job: Job, critMultiplier: float) -> Dictionary:
+	
 	var f := {}
+	
 	for resource in job.producedResources:
+		
 		f[resource] = Big.new(job.producedResources[resource]).m(critMultiplier)
+		
+		if job.resource_has_a_range(resource):
+			var random_value = job.get_value_in_resource_range(resource)
+			f[resource].m(random_value)
+	
 	return f
 
 var produced_resources := {}
@@ -1012,7 +1081,7 @@ func getOutputTextDetails(producedResources: Dictionary, critMultiplier: float) 
 			gv.emit_signal("Crits", type)
 			text += " (x" + str(stepify(critMultiplier, 0.1)) + ")"
 		
-		f["life"] = 10
+		f["life"] = 50
 		f["text"] = text
 		f["icon"] = gv.sprite[gv.shorthandByResource[resource]]
 		f["color"] = gv.COLORS[gv.shorthandByResource[resource]]
@@ -1023,7 +1092,8 @@ func getOutputTextDetails(producedResources: Dictionary, critMultiplier: float) 
 
 var nextJob: Job
 func canStartAnotherJob() -> bool:
-	for job in lored.jobs.values():
+	for job_key in get_sorted_jobs():
+		var job = lored.jobs[job_key]
 		if canStartJob(job):
 			nextJob = job
 			return true
@@ -1034,8 +1104,8 @@ func canAndShouldRefuel() -> bool:
 	if getCurrentFuelPercent() > 0.75:
 		return false
 	
-	if canStartJob(lored.refuelJob):
-		nextJob = lored.refuelJob
+	if canStartJob(get_refuel_job()):
+		nextJob = get_refuel_job()
 		updatePrimaryResource(getPrimaryResource())
 		return true
 	
@@ -1074,6 +1144,14 @@ func stopHighlightJobInTooltip(job: Job):
 
 func throw_draw_plate():
 	vico.throw_draw_plate()
+
+
+func should_create_new_healing_event() -> bool:
+	if type != lv.Type.BLOOD:
+		return false
+	if healing_event_queued:
+		return true
+	return false
 
 
 
@@ -1340,3 +1418,189 @@ func buff_already_applied(buff_type: int) -> bool:
 
 func buff_is_queued_for_removal(buff_type: int) -> bool:
 	return active_buffs[buff_type].queued_for_removal
+
+
+
+# - Promotions
+
+func promote():
+	var _key := get_key()
+	if has_method("promote_" + _key):
+		call("promote_" + _key)
+	else:
+		print_debug(_key)
+		print_debug("Make the function for this you little fucker")
+
+
+func promote_WITCH():
+	lored.remove_original_fuel_cost_from_relevant_jobs()
+	lored.change_fuel_resource(gv.Resource.MANA)
+	# add new jobs here
+
+
+
+
+# - Special
+
+var healing_event_queued := false
+var queued_healing_event_type: int
+var casting := -1
+var cast_pass: int
+var cast_timer: Timer
+var time_when_cast_begun: float
+var queue_cast: Dictionary
+
+var last_target: Unit
+var last_ability: UnitAbility
+
+
+func queue_healing_event(_type = HealingEvent.Type.RANDOM) -> void:
+	healing_event_queued = true
+	queued_healing_event_type = _type
+
+
+func new_healing_event() -> void:
+	vico.new_healing_event(queued_healing_event_type)
+	healing_event_queued = false
+
+
+
+func cannot_cast_ability(reason: int = reasonWhyCannotStartJob, ability = 0) -> void:
+	reasonWhyCannotStartJob = reason
+	
+	var reason_text: String
+	
+	match reasonWhyCannotStartJob:
+		lv.ReasonCannotBeginJob.INSUFFICIENT_BLOOD, lv.ReasonCannotBeginJob.INSUFFICIENT_MANA:
+			reason_text = lv.ReasonCannotBeginJob.keys()[reasonWhyCannotStartJob]
+			reason_text = reason_text.replace("_", " ").capitalize() + "."
+		lv.ReasonCannotBeginJob.INSUFFICIENT_FLOWERS:
+			reason_text = "Insufficient " + Flower.get_plural_flower_name(ability.flower_cost) + "."
+		lv.ReasonCannotBeginJob.NO_TARGET:
+			reason_text = "You have no target."
+		lv.ReasonCannotBeginJob.ABILITY_ON_CD:
+			reason_text = ability.name + " is on cooldown."
+		lv.ReasonCannotBeginJob.CURRENTLY_CASTING:
+			reason_text = "Already casting."
+	
+	var output_texts := [{
+		"text": reason_text,
+		"color": Color(1, 0, 0),
+	}]
+	
+	var parent_node = lv.lored[lv.Type.BLOOD].vico.healing_event.hotbar.get_node("%Texts")
+	gv.throwOutputTexts(output_texts, parent_node)
+
+
+func cast_ability_at_target(ability: UnitAbility, target: Unit) -> void:
+	if is_casting():
+		if get_cast_time_remaining_in_msec(healer.abilities[casting].get_cast_time_as_float()) < 500:
+			queue_cast_ability_at_target(ability, target)
+		else:
+			cannot_cast_ability(lv.ReasonCannotBeginJob.CURRENTLY_CASTING)
+		return
+	
+	clear_queue()
+	
+	time_when_cast_begun = OS.get_ticks_msec()
+	var cast_time = ability.get_cast_time_as_float()
+	vico.castbar_start(cast_time, time_when_cast_begun)
+	casting = ability.type
+	updateStatus("Casting " + ability.name + " on " + target.name + ".")
+	target.vico.show_main_target_border()
+	
+	ability.just_cast = true
+	
+	gv.emit_global_cooldown(time_when_cast_begun)
+	
+	last_target = target
+	last_ability = ability
+	
+	if ability.has_cast_time:
+		ability.vico.show_casting_border()
+		
+		cast_pass = OS.get_ticks_msec()
+		var my_pass = cast_pass
+		cast_timer.start(cast_time)
+		
+		yield(cast_timer, "timeout")
+		
+		if my_pass != cast_pass:
+			return
+	
+	ability.takeaway_costs(target)
+	
+	updateStatus("")
+	
+	stop_casting()
+	ability.apply_effects(target)
+	ability.start_cooldown()
+	ability.just_cast = false
+	
+	if ability.is_instant_cast():
+		ability.vico.flash_casting_border()
+	
+	cast_queued_ability_if_applicable()
+
+
+func get_cast_time_remaining_in_msec(ability_cast_time: float) -> float:
+	ability_cast_time *= 1000
+	return abs(OS.get_ticks_msec() - (time_when_cast_begun + ability_cast_time))
+
+
+func cast_queued_ability_if_applicable() -> void:
+	if queue_cast.empty():
+		return
+	if queue_cast["ability"].is_on_cooldown:
+		if queue_cast["ability"].get_cooldown_remaining() > 0.05:
+			clear_queue()
+			return
+	cast_ability_at_target(queue_cast["ability"], queue_cast["target"])
+
+
+func queue_cast_ability_at_target(ability: UnitAbility, target: Unit) -> void:
+	clear_queue()
+	queue_cast["ability"] = ability
+	queue_cast["target"] = target
+
+
+func clear_queue() -> void:
+	queue_cast = {}
+
+
+func is_casting() -> bool:
+	return casting > -1
+
+
+func interrupt_and_cancel_cast() -> void:
+	if not is_casting():
+		return
+	gv.cancel_gcd()
+	stop_casting()
+
+
+func stop_casting() -> void:
+	if not is_casting():
+		return
+	updateStatus("")
+	last_ability.vico.hide_casting_border()
+	last_target.vico.hide_main_target_border()
+	cast_timer.stop()
+	casting = -1
+	vico.stop_casting()
+
+
+func add_status_effects_to_unit_tooltip(unit: Unit, buff: UnitStatusEffect) -> void:
+	if not unit_tooltip_exists():
+		return
+	if rt.get_node("global_tip").tip.cont.unit != unit:
+		return
+	rt.get_node("global_tip").tip.cont.add_status_effect_vico(buff)
+
+
+func unit_tooltip_exists() -> bool:
+	if not rt.get_node("global_tip").tip_filled:
+		return false
+	if rt.get_node("global_tip").type != "tooltip/Unit":
+		return false
+	return true

@@ -10,6 +10,16 @@ config_version=4
 
 _global_script_classes=[ {
 "base": "Reference",
+"class": "Attribute",
+"language": "GDScript",
+"path": "res://Scripts/classes/Attribute.gd"
+}, {
+"base": "Panel",
+"class": "AttributeVico",
+"language": "GDScript",
+"path": "res://Prefabs/Unit/AttributeVico.gd"
+}, {
+"base": "Reference",
 "class": "Big",
 "language": "GDScript",
 "path": "res://Scripts/classes/Big.gd"
@@ -34,6 +44,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://Scripts/classes/Effect.gd"
 }, {
+"base": "Reference",
+"class": "FlowerSeed",
+"language": "GDScript",
+"path": "res://Prefabs/Flower/FlowerSeed.gd"
+}, {
 "base": "Node",
 "class": "FormatValue",
 "language": "GDScript",
@@ -43,6 +58,21 @@ _global_script_classes=[ {
 "class": "GlobalVariables",
 "language": "GDScript",
 "path": "res://Scripts/autoload/_vars.gd"
+}, {
+"base": "Node",
+"class": "Healer",
+"language": "GDScript",
+"path": "res://Scripts/Unit/Healer.gd"
+}, {
+"base": "Reference",
+"class": "HealingEvent",
+"language": "GDScript",
+"path": "res://Scripts/Unit/HealingEvent.gd"
+}, {
+"base": "MarginContainer",
+"class": "HealingEventVico",
+"language": "GDScript",
+"path": "res://Prefabs/Unit/HealingEventVico.gd"
 }, {
 "base": "Panel",
 "class": "Icon",
@@ -70,6 +100,11 @@ _global_script_classes=[ {
 "path": "res://Scripts/LORED/LORED Vars.gd"
 }, {
 "base": "MarginContainer",
+"class": "LOREDVico",
+"language": "GDScript",
+"path": "res://Scripts/LORED/LORED Vico.gd"
+}, {
+"base": "MarginContainer",
 "class": "LimitBreak",
 "language": "GDScript",
 "path": "res://Prefabs/Scripts/Limit Break.gd"
@@ -83,6 +118,31 @@ _global_script_classes=[ {
 "class": "Purchasable",
 "language": "GDScript",
 "path": "res://Scripts/classes/Purchasable.gd"
+}, {
+"base": "Resource",
+"class": "Save",
+"language": "GDScript",
+"path": "res://Scripts/Save.gd"
+}, {
+"base": "Reference",
+"class": "Unit",
+"language": "GDScript",
+"path": "res://Scripts/Unit/Unit.gd"
+}, {
+"base": "Reference",
+"class": "UnitAbility",
+"language": "GDScript",
+"path": "res://Scripts/Unit/UnitAbility.gd"
+}, {
+"base": "Reference",
+"class": "UnitStatusEffect",
+"language": "GDScript",
+"path": "res://Scripts/Unit/UnitStatusEffect.gd"
+}, {
+"base": "MarginContainer",
+"class": "UnitVico",
+"language": "GDScript",
+"path": "res://Prefabs/Unit/UnitVico.gd"
 }, {
 "base": "Reference",
 "class": "Upgrade",
@@ -100,6 +160,11 @@ _global_script_classes=[ {
 "path": "res://Scripts/up_new/up_container.gd"
 }, {
 "base": "Reference",
+"class": "Value",
+"language": "GDScript",
+"path": "res://Scripts/classes/Value.gd"
+}, {
+"base": "Reference",
 "class": "Wish",
 "language": "GDScript",
 "path": "res://Scripts/classes/Wish.gd"
@@ -113,41 +178,42 @@ _global_script_classes=[ {
 "class": "_root",
 "language": "GDScript",
 "path": "res://Scripts/_Root.gd"
-}, {
-"base": "Reference",
-"class": "oldJob",
-"language": "GDScript",
-"path": "res://Scripts/classes/Job.gd"
-}, {
-"base": "Reference",
-"class": "oldLORED",
-"language": "GDScript",
-"path": "res://Scripts/classes/LORED.gd"
 } ]
 _global_script_class_icons={
+"Attribute": "",
+"AttributeVico": "",
 "Big": "",
 "Bits": "",
 "BitsFloat": "",
 "Buff": "",
 "Effect": "",
+"FlowerSeed": "",
 "FormatValue": "",
 "GlobalVariables": "",
+"Healer": "",
+"HealingEvent": "",
+"HealingEventVico": "",
 "Icon": "",
 "Job": "",
 "LORED": "",
 "LOREDManager": "",
 "LOREDVars": "",
+"LOREDVico": "",
 "LimitBreak": "",
 "Ob": "",
 "Purchasable": "",
+"Save": "",
+"Unit": "",
+"UnitAbility": "",
+"UnitStatusEffect": "",
+"UnitVico": "",
 "Upgrade": "",
 "UpgradeBlock": "",
 "UpgradeContainer": "",
+"Value": "",
 "Wish": "",
 "WishManager": "",
-"_root": "",
-"oldJob": "",
-"oldLORED": ""
+"_root": ""
 }
 
 [application]
@@ -171,6 +237,7 @@ diff="*res://Scripts/Managers/Difficulty.gd"
 SaveManager="*res://Scripts/Managers/SaveManager.gd"
 BuffManager="*res://Scripts/Managers/BuffManager.gd"
 Flower="*res://Scripts/LORED/FlowerManager.gd"
+healer="*res://Scripts/Unit/Healer.gd"
 Boot="*res://Scripts/autoload/Boot.gd"
 
 [debug]
@@ -437,6 +504,21 @@ CTRLS={
 WishLog={
 "deadzone": 0.5,
 "events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":0,"physical_scancode":76,"unicode":0,"echo":false,"script":null)
+ ]
+}
+Shift={
+"deadzone": 0.5,
+"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":0,"physical_scancode":16777237,"unicode":0,"echo":false,"script":null)
+ ]
+}
+ScrollUp={
+"deadzone": 0.5,
+"events": [ Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"button_mask":0,"position":Vector2( 0, 0 ),"global_position":Vector2( 0, 0 ),"factor":1.0,"button_index":4,"pressed":false,"doubleclick":false,"script":null)
+ ]
+}
+ScrollDown={
+"deadzone": 0.5,
+"events": [ Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"button_mask":0,"position":Vector2( 0, 0 ),"global_position":Vector2( 0, 0 ),"factor":1.0,"button_index":5,"pressed":false,"doubleclick":false,"script":null)
  ]
 }
 

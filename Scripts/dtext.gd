@@ -1,4 +1,4 @@
-extends Label
+extends MarginContainer
 
 var life := 50
 var death := 0
@@ -13,15 +13,18 @@ func _ready():
 
 func init(data: Dictionary = {}):
 	
-	text = data["text"]
+	get_node("%amount").text = data["text"]
 	if data["text"] == "":
 		get_node("bg").hide()
-	self_modulate = data["color"]
+	get_node("%amount").self_modulate = data["color"]
+	if "resource name" in data.keys():
+		get_node("%resource name").show()
+		get_node("%resource name").text = data["resource name"]
 	if "icon" in data.keys():
-		get_node("icon").texture = data["icon"]
-		get_node("icon/shadow").texture = data["icon"]
+		get_node("%icon").texture = data["icon"]
+		get_node("%icon/shadow").texture = data["icon"]
 	else:
-		get_node("icon").hide()
+		get_node("%icon").hide()
 	
 	var dkeys = data.keys()
 	
@@ -29,10 +32,13 @@ func init(data: Dictionary = {}):
 		direction = data["direction"] * 0.005
 	
 	if "life" in dkeys:
-		life = randi() % data["life"] + 50 - (data["life"] / 2)
+		life = data["life"] * rand_range(0.9, 1.1)
 	
 	if "texture modulate" in dkeys:
-		get_node("icon").modulate = data["texture modulate"]
+		get_node("%icon").modulate = data["texture modulate"]
+	
+	if "position" in dkeys:
+		rect_position = data["position"]
 
 
 func _on_Timer_timeout() -> void:

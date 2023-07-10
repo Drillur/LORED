@@ -6,6 +6,7 @@ const prefab := {
 	"dtext": preload("res://Prefabs/dtext.tscn"),
 }
 
+var healing_event: HealingEventVico
 onready var wallet = get_node("%Wallet")
 onready var menu = get_node("%Menu Hub")
 
@@ -45,7 +46,7 @@ func save() -> String:
 	data["options"] = get_node("%OptionsMenu").save()
 	data["EmoteManager"] = EmoteManager.save()
 	data["loreds"] = lv.save()
-	
+	data["flowers"] = SaveManager.save_vars(Flower)
 	
 	data["upgrades"] = {}
 	for x in gv.up:
@@ -76,6 +77,7 @@ func _load(data: Dictionary):
 	get_node("%OptionsMenu").load(str2var(data["options"]))
 	EmoteManager.load(str2var(data["EmoteManager"]))
 	lv.load(str2var(data["loreds"]))
+	Flower.load(str2var(data["flowers"]))
 	
 	for x in gv.up:
 		if not x in data["upgrades"].keys():
@@ -110,7 +112,6 @@ func _load(data: Dictionary):
 
 
 func _ready():
-	
 	SaveManager.setRT()
 	
 	gv.setupStats()
@@ -207,6 +208,7 @@ func game_start(successful_load: bool) -> void:
 	# ref
 	if true:
 		
+		healing_event = lv.lored[lv.Type.BLOOD].vico.healing_event
 		gv.updateResources()
 		get_node("%StatsMenu").updateAll()
 		
@@ -241,7 +243,11 @@ func game_start(successful_load: bool) -> void:
 			unlock_tab(gv.Tab.RADIATIVE)
 			unlock_tab(gv.Tab.S2)
 			unlock_tab(gv.Tab.S3)
+			lv.lored[lv.Type.BLOOD].unlock()
 			lv.lored[lv.Type.WITCH].unlock()
+			lv.lored[lv.Type.WITCH].addJob(lv.Job.SIFT_SEEDS)
+			lv.lored[lv.Type.WITCH].addJob(lv.Job.PLANT_SEED)
+			
 	
 	var t = Timer.new()
 	add_child(t)
@@ -270,6 +276,9 @@ func newGame():
 
 
 func _input(ev):
+	
+	if healing_event.mode == healing_event.Mode.ACTIVE:
+		return
 	
 	if ev.is_class("InputEventMouseMotion"):
 		return
@@ -385,6 +394,7 @@ func close():
 	Flower.close()
 	gv.close()
 	EmoteManager.close()
+	healer.close()
 
 func _on_Upgrades_pressed() -> void:
 	
@@ -468,190 +478,6 @@ func getOfflineEarnings(timeOffline: int):
 	if timeOffline > 60:
 		earningsReport.setup(timeOffline)
 
-func w_total_per_sec(clock_dif : float) -> void:
-	
-	for x in gv.g:
-		gv.g[x].manager.start_all()
-	
-	if clock_dif <= 0:
-		return
-	
-	var rate := 1.0 # offline earnings modifier
-	var gained := {}
-	var consumed := {}
-	var num_of_consumers := {}
-	var gain_reduction := {}
-	var consumed_reduction := {}
-	
-	for x in gv.g:
-		gain_reduction[x] = Big.new()
-		consumed_reduction[x] = Big.new()
-		consumed[x] = Big.new(0)
-		gained[x] = Big.new(0)
-		num_of_consumers[x] = 0
-	
-	# set gained and consumed for each lored
-	for x in gv.g:
-		
-		if not gv.g[x].active:
-			continue
-		
-		if gv.g[x].halt:
-			continue
-		
-		var inactive_input := false
-		for v in gv.g[x].b:
-			if not gv.g[v].active() or gv.g[v].hold:
-				inactive_input = true
-				break
-		if inactive_input: continue
-		
-		# fuel consumption
-		if true:
-			
-			if "bur " in gv.g[x].type:
-				consumed["coal"].a(Big.new(gv.g[x].fc.t).m(clock_dif))
-			if "ele " in gv.g[x].type:
-				consumed["jo"].a(Big.new(gv.g[x].fc.t).m(clock_dif))
-		
-		var net = gv.g[x].net(true)
-		
-		# gained
-		var _gained = Big.new(net[0]).m(clock_dif).m(rate)
-		gained[x] = Big.new(_gained)
-		var per_sec = Big.new(gv.g[x].d.t).d(gv.g[x].speed.t).m(clock_dif).d(gv.g[x].jobs[0].base_duration)
-		
-		# consumed
-		for v in gv.g[x].b:
-			# by this point, every lored here will be active. see 2 sections up
-			consumed[v] = Big.new(per_sec).m(gv.g[x].b[v].t).m(rate)
-			num_of_consumers[v] += 1
-	
-	# unique gained reductions
-	if true:
-		
-		# routine
-		while true:
-			
-			if gained["malig"].less(gv.up["ROUTINE"].cost["malig"].t):
-				break
-			var excess = Big.new(gained["malig"]).s(gv.up["ROUTINE"].cost["malig"].t).m(rate).m(0.1)
-			
-			gained["malig"] = Big.new(gv.up["ROUTINE"].cost["malig"].t).a(excess)
-			
-			break
-	
-	# reduce gained if either fuel or input is insufficient. if gained is reduced, reduce consumed of input.
-	if true:
-		
-		var coal_efficiency : Big = Big.new(gained["coal"])
-		if consumed["coal"].equal(0):
-			coal_efficiency = Big.new()
-		else:
-			coal_efficiency.d(consumed["coal"])
-		if coal_efficiency.greater(1) or Big.new(gv.resource[gv.Resource.COAL]).s(consumed["coal"]).greater(lv.lored[lv.Type.COAL].output):
-			coal_efficiency = Big.new()
-		
-		var jo_efficiency : Big = Big.new(gained["jo"])
-		if consumed["jo"].equal(0):
-			jo_efficiency = Big.new()
-		else:
-			jo_efficiency.d(consumed["jo"])
-		if jo_efficiency.greater(1) or Big.new(gv.resource[gv.Resource.JOULES]).s(consumed["jo"]).greater(gv.g["jo"].d.t):
-			jo_efficiency = Big.new()
-		
-		#print("Time offline: ", gv.parse_time(clock_dif))
-		#print("coal/joule efficiency: ", coal_efficiency.toString(), "/", jo_efficiency.toString(), "\n")
-		
-		for x in gv.g:
-			
-			if not gv.g[x].active: continue
-			
-			var fuel_gained := true
-			if "bur " in gv.g[x].type and not gv.g["coal"].active():
-				fuel_gained = false
-			if "ele " in gv.g[x].type and not gv.g["jo"].active():
-				fuel_gained = false
-			
-			# coal storage / battery gain
-			if fuel_gained:
-				
-				var fuel_gain = Big.new(gv.g[x].fc.t).m(clock_dif).m(coal_efficiency)
-				
-				gv.g[x].f.f = Big.new(Big.min(Big.new(gv.g[x].f.f).a(fuel_gain), gv.g[x].f.t))
-				gv.g[x].sync()
-			
-			if "bur " in gv.g[x].type: gain_reduction[x].m(coal_efficiency)
-			if "ele " in gv.g[x].type: gain_reduction[x].m(jo_efficiency)
-			
-			if consumed[x].less(gained[x]): continue
-			if Big.new(gv.resource[x]).s(consumed[x]).greater(0): continue #z
-			
-			if "bur " in gv.g[x].type: consumed_reduction[x].m(coal_efficiency)
-			if "ele " in gv.g[x].type: consumed_reduction[x].m(jo_efficiency)
-			
-			if num_of_consumers[x] == 0: num_of_consumers[x] = 1
-			
-			if consumed[x].equal(0): consumed[x] = Big.new()
-			
-			
-			var uh = Big.new(gained[x].percent(consumed[x])).d(num_of_consumers[x])
-			
-			for v in gv.g[x].used_by:
-				
-				if not gv.g[v].active: continue
-				gain_reduction[v].m(uh)
-			
-			consumed_reduction[x].m(uh)
-		
-		for x in gain_reduction:
-			
-			if gain_reduction[x].equal(1): continue
-			
-			gained[x].m(gain_reduction[x])
-		
-		for x in consumed_reduction:
-			
-			if consumed_reduction[x].equal(1): continue
-			
-			#print_debug(x, " consumed x", consumed_reduction[x].toString(), " :: ", consumed[x].toString(), " -> ", Big.new(consumed[x]).m(consumed_reduction[x]).toString())
-			consumed[x].m(consumed_reduction[x])
-			gained[x] = Big.new(0)
-	
-	for x in gv.g:
-		taq.increaseProgress(gv.Objective.RESOURCES_PRODUCED, x, gained[x])
-	
-	# subtract consumed from gained
-	for x in gv.g:
-		
-		if not gv.g[x].active:
-			continue
-		
-		
-		if consumed[x].greater(gained[x]):
-			#var net = Big.new(consumed[x]).s(gained[x])
-			#print(x, ": -", net.toString(), " (", gained[x].toString(), " gained, ", consumed[x].toString(), " drained)")
-			consumed[x].s(gained[x])
-			if consumed[x].greater(gv.resource[x]): #z
-				gv.resource[x] = Big.new(0) #z
-			else:
-				gv.resource[x].s(consumed[x]) #z
-		else:
-			#var net = Big.new(gained[x]).s(consumed[x])
-			#print(x, ": +", net.toString(), " (", gained[x].toString(), " gained, ", consumed[x].toString(), " drained)")
-			gained[x].s(consumed[x])
-			gv.resource[x].a(gained[x]) #z
-		
-		if x != "coal": continue
-		if gv.resource[x].less(gv.g[x].d.t): #z
-			gv.resource[x] = Big.new(gv.g[x].d.t) #z
-	
-	for r in gv.resource:
-		if gv.resource[r].less(0):
-			gv.resource[r] = Big.new(0)
-
-
-
 
 
 func wishReward(type: int, key: String) -> void:
@@ -659,8 +485,6 @@ func wishReward(type: int, key: String) -> void:
 	match type:
 		gv.WishReward.TAB:
 			unlock_tab(int(key), true)
-
-
 
 
 
@@ -695,9 +519,7 @@ func r_window_size_changed() -> void:
 	
 	var win :Vector2= get_viewport_rect().size
 	
-	#print(-INF)
 	if win.y == -INF:
-		#print("Vector2().y == ", win.y, "; what in tarnation?")
 		return
 	
 	get_node("m").rect_size = Vector2(win.x / scale.x, win.y / scale.y)
@@ -1208,11 +1030,20 @@ func clearWishNotice():
 
 
 
-var roll_bonus = 0
+#onready var attribute_vico: Panel = $AttributeVico
+#var test_hp := Attribute.new(100)
+#var i = 0
 func _on_Button_pressed() -> void:
-	for i in 10:
-		Flower.add_random_flower()
-	
+#	if i == 0:
+#		attribute_vico.setup(AttributeVico.Type.HEALTH, test_hp)
+#		i += 1
+#		return
+#	if test_hp.get_current().less(10):
+#		test_hp.set_to(100)
+#		return
+#	test_hp.subtract(rand_range(1, 25))
+	#lv.lored[lv.Type.WITCH].promote()
+	lv.lored[lv.Type.BLOOD].queue_healing_event(HealingEvent.Type.TEST)
 	pass
 
 

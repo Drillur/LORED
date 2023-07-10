@@ -25,6 +25,7 @@ var keyLORED := false
 var unlocked := false # a wish was completed that unlocked this lored
 var purchased := false # purchased at least a single time in the current run
 
+var key: String
 var name: String
 var shorthandKey: String
 
@@ -82,6 +83,7 @@ func load(data: Dictionary) -> void:
 func _init(_type: int):
 	
 	type = _type
+	key = lv.Type.keys()[type]
 	
 	var base_name: String = lv.Type.keys()[type]
 	shorthandKey = base_name.to_lower()
@@ -96,7 +98,7 @@ func _init(_type: int):
 	tab = [gv.Tab.S1, gv.Tab.S2, gv.Tab.S3, gv.Tab.S4][stage - 1]
 	fuelResourceLORED = lv.Type.COAL if fuelResource == gv.Resource.COAL else lv.Type.JOULES
 	fuelResourceShorthand = "coal" if fuelResource == gv.Resource.COAL else "jo"
-	if stage <= 2:
+	if stage < 3:
 		fuelStorageBits.changeBase(Big.new(fuelCostBits.base).m(jobs.values()[0].durationBits.base).m(40))
 	setProducedResources()
 	setUsedResources()
@@ -115,10 +117,10 @@ func _init(_type: int):
 
 
 func setupRefuelJob():
-	refuelJob = Job.new(lv.Job.REFUEL, type)
-	refuelJob.unlock()
-	refuelJob.requiresResource = true
-	refuelJob.requiredResourcesBits[fuelResource] = Bits.new({
+	jobs[lv.Job.REFUEL] = Job.new(lv.Job.REFUEL, type)
+	jobs[lv.Job.REFUEL].unlock()
+	jobs[lv.Job.REFUEL].requiresResource = true
+	jobs[lv.Job.REFUEL].requiredResourcesBits[fuelResource] = Bits.new({
 		lv.Num.BASE: 0.25,
 		lv.Num.MULTIPLY: {
 			lv.Num.BY_LORED_FUEL_STORAGE: Big.new(fuelStorageBits.base),
@@ -126,18 +128,35 @@ func setupRefuelJob():
 	})
 	match type:
 		lv.Type.OIL:
-			refuelJob.changeBaseDuration(1)
+			jobs[lv.Job.REFUEL].changeBaseDuration(1)
+
+
+func get_refuel_job() -> Job:
+	return jobs[lv.Job.REFUEL]
+
+
+func construct_BLOOD():
+	name = "Charity"
+	icon = preload("res://Sprites/reactions/WATER1.png")
+	stage = 3
+	color = gv.COLORS["BLOOD"]
+	fuelResource = gv.Resource.COAL
+	fuelStorageBits.changeBase(Big.new(25))
+	set_pronouns(Gender.FEMALE)
 
 
 func construct_WITCH():
+	name = "Circe"
+	icon = preload("res://Sprites/upgrades/thewitchofloredelith.png")
 	stage = 3
 	color = gv.COLORS["witch"]
 	fuelResource = gv.Resource.COAL
-	name = "Circe"
-	icon = preload("res://Sprites/upgrades/thewitchofloredelith.png")
+	fuelStorageBits.changeBase(Big.new(25))
+	set_pronouns(Gender.FEMALE)
+
 
 func construct_STONE():
-	addJob(type)
+	addJob(type + 1)
 	stage = 1
 	addCost(gv.Resource.IRON, 25.0 / 3)
 	addCost(gv.Resource.COPPER, 15 / 3)
@@ -155,7 +174,7 @@ func construct_STONE():
 		EmoteManager.Type.STONE7,
 	]
 func construct_COAL():
-	addJob(type)
+	addJob(type + 1)
 	stage = 1
 	addCost(gv.Resource.STONE, 5)
 	color = Color(0.7, 0, 1)
@@ -172,7 +191,7 @@ func construct_COAL():
 		EmoteManager.Type.COAL7,
 	]
 func construct_IRON_ORE():
-	addJob(type)
+	addJob(type + 1)
 	stage = 1
 	shorthandKey = "irono"
 	addCost(gv.Resource.STONE, 8)
@@ -193,7 +212,7 @@ func construct_IRON_ORE():
 		EmoteManager.Type.IRON_ORE10,
 	]
 func construct_COPPER_ORE():
-	addJob(type)
+	addJob(type + 1)
 	stage = 1
 	shorthandKey = "copo"
 	addCost(gv.Resource.STONE, 8)
@@ -216,7 +235,7 @@ func construct_COPPER_ORE():
 		EmoteManager.Type.COPPER_ORE12,
 	]
 func construct_IRON():
-	addJob(type)
+	addJob(type + 1)
 	stage = 1
 	addCost(gv.Resource.STONE, 9)
 	addCost(gv.Resource.COPPER, 8)
@@ -233,7 +252,7 @@ func construct_IRON():
 		EmoteManager.Type.IRON7,
 	]
 func construct_COPPER():
-	addJob(type)
+	addJob(type + 1)
 	stage = 1
 	shorthandKey = "cop"
 	addCost(gv.Resource.STONE, 9)
@@ -252,7 +271,7 @@ func construct_COPPER():
 		EmoteManager.Type.COPPER7,
 	]
 func construct_JOULES():
-	addJob(type)
+	addJob(type + 1)
 	stage = 1
 	shorthandKey = "jo"
 	addCost(gv.Resource.CONCRETE, 25)
@@ -270,7 +289,7 @@ func construct_JOULES():
 		EmoteManager.Type.JOULES7,
 	]
 func construct_CONCRETE():
-	addJob(type)
+	addJob(type + 1)
 	stage = 1
 	shorthandKey = "conc"
 	addCost(gv.Resource.IRON, 90)
@@ -289,7 +308,7 @@ func construct_CONCRETE():
 		EmoteManager.Type.CONCRETE7,
 	]
 func construct_GROWTH():
-	addJob(type)
+	addJob(type + 1)
 	stage = 1
 	addCost(gv.Resource.STONE, 900)
 	color = Color(0.79, 1, 0.05)
@@ -308,7 +327,7 @@ func construct_GROWTH():
 		EmoteManager.Type.GROWTH9,
 	]
 func construct_OIL():
-	addJob(type)
+	addJob(type + 1)
 	stage = 1
 	addCost(gv.Resource.COPPER, 1.6)
 	addCost(gv.Resource.CONCRETE, 250)
@@ -329,7 +348,7 @@ func construct_OIL():
 		EmoteManager.Type.OIL10,
 	]
 func construct_TARBALLS():
-	addJob(type)
+	addJob(type + 1)
 	stage = 1
 	shorthandKey = "tar"
 	addCost(gv.Resource.IRON, 350)
@@ -349,7 +368,7 @@ func construct_TARBALLS():
 		EmoteManager.Type.TARBALLS8,
 	]
 func construct_MALIGNANCY():
-	addJob(type)
+	addJob(type + 1)
 	stage = 1
 	shorthandKey = "malig"
 	addCost(gv.Resource.IRON, 900)
@@ -375,7 +394,7 @@ func construct_MALIGNANCY():
 		EmoteManager.Type.MALIGNANCY13,
 	]
 func construct_WATER():
-	addJob(type)
+	addJob(type + 1)
 	stage = 2
 	shorthandKey = "water"
 	addCost(gv.Resource.STONE, 2500)
@@ -396,7 +415,7 @@ func construct_WATER():
 		EmoteManager.Type.WATER9,
 	]
 func construct_HUMUS():
-	addJob(type)
+	addJob(type + 1)
 	stage = 2
 	addCost(gv.Resource.IRON, 600)
 	addCost(gv.Resource.COPPER, 600)
@@ -416,7 +435,7 @@ func construct_HUMUS():
 		EmoteManager.Type.HUMUS8,
 	]
 func construct_SOIL():
-	addJob(type)
+	addJob(type + 1)
 	stage = 2
 	addCost(gv.Resource.CONCRETE, 1000)
 	addCost(gv.Resource.HARDWOOD, 40)
@@ -434,7 +453,7 @@ func construct_SOIL():
 		EmoteManager.Type.SOIL7,
 	]
 func construct_TREES():
-	addJob(type)
+	addJob(type + 1)
 	stage = 2
 	shorthandKey = "tree"
 	addCost(gv.Resource.GROWTH, 150)
@@ -454,7 +473,7 @@ func construct_TREES():
 		EmoteManager.Type.TREES8,
 	]
 func construct_SEEDS():
-	addJob(type)
+	addJob(type + 1)
 	name = "Maybe"
 	stage = 2
 	shorthandKey = "seed"
@@ -475,7 +494,7 @@ func construct_SEEDS():
 		EmoteManager.Type.SEEDS8,
 	]
 func construct_GALENA():
-	addJob(type)
+	addJob(type + 1)
 	stage = 2
 	shorthandKey = "gale"
 	addCost(gv.Resource.STONE, 1100)
@@ -484,7 +503,7 @@ func construct_GALENA():
 	fuelResource = gv.Resource.COAL
 	icon = preload("res://Sprites/resources/gale.png")
 func construct_LEAD():
-	addJob(type)
+	addJob(type + 1)
 	stage = 2
 	addCost(gv.Resource.STONE, 400)
 	addCost(gv.Resource.GROWTH, 800)
@@ -492,7 +511,7 @@ func construct_LEAD():
 	fuelResource = gv.Resource.COAL
 	icon = preload("res://Sprites/resources/lead.png")
 func construct_WOOD_PULP():
-	addJob(type)
+	addJob(type + 1)
 	stage = 2
 	shorthandKey = "pulp"
 	addCost(gv.Resource.WIRE, 15)
@@ -501,7 +520,7 @@ func construct_WOOD_PULP():
 	fuelResource = gv.Resource.JOULES
 	icon = preload("res://Sprites/resources/pulp.png")
 func construct_PAPER():
-	addJob(type)
+	addJob(type + 1)
 	stage = 2
 	addCost(gv.Resource.CONCRETE, 1200)
 	addCost(gv.Resource.STEEL, 15)
@@ -509,7 +528,7 @@ func construct_PAPER():
 	fuelResource = gv.Resource.COAL
 	icon = preload("res://Sprites/resources/paper.png")
 func construct_TOBACCO():
-	addJob(type)
+	addJob(type + 1)
 	stage = 2
 	shorthandKey = "toba"
 	addCost(gv.Resource.SOIL, 3)
@@ -518,7 +537,7 @@ func construct_TOBACCO():
 	fuelResource = gv.Resource.COAL
 	icon = preload("res://Sprites/resources/toba.png")
 func construct_CIGARETTES():
-	addJob(type)
+	addJob(type + 1)
 	stage = 2
 	shorthandKey = "ciga"
 	addCost(gv.Resource.HARDWOOD, 50)
@@ -527,7 +546,7 @@ func construct_CIGARETTES():
 	fuelResource = gv.Resource.JOULES
 	icon = preload("res://Sprites/resources/ciga.png")
 func construct_PETROLEUM():
-	addJob(type)
+	addJob(type + 1)
 	stage = 2
 	shorthandKey = "pet"
 	addCost(gv.Resource.IRON, 3000)
@@ -537,7 +556,7 @@ func construct_PETROLEUM():
 	fuelResource = gv.Resource.COAL
 	icon = preload("res://Sprites/resources/pet.png")
 func construct_PLASTIC():
-	addJob(type)
+	addJob(type + 1)
 	stage = 2
 	shorthandKey = "plast"
 	addCost(gv.Resource.STONE, 10000)
@@ -546,7 +565,7 @@ func construct_PLASTIC():
 	fuelResource = gv.Resource.JOULES
 	icon = preload("res://Sprites/resources/plast.png")
 func construct_CARCINOGENS():
-	addJob(type)
+	addJob(type + 1)
 	stage = 2
 	shorthandKey = "carc"
 	addCost(gv.Resource.GROWTH, 8500)
@@ -557,7 +576,7 @@ func construct_CARCINOGENS():
 	fuelResource = gv.Resource.JOULES
 	icon = preload("res://Sprites/resources/carc.png")
 func construct_LIQUID_IRON():
-	addJob(type)
+	addJob(type + 1)
 	stage = 2
 	shorthandKey = "liq"
 	addCost(gv.Resource.CONCRETE, 30)
@@ -566,7 +585,7 @@ func construct_LIQUID_IRON():
 	fuelResource = gv.Resource.JOULES
 	icon = preload("res://Sprites/resources/liq.png")
 func construct_STEEL():
-	addJob(type)
+	addJob(type + 1)
 	stage = 2
 	addCost(gv.Resource.IRON, 15000)
 	addCost(gv.Resource.COPPER, 3000)
@@ -575,16 +594,16 @@ func construct_STEEL():
 	fuelResource = gv.Resource.JOULES
 	icon = preload("res://Sprites/resources/steel.png")
 func construct_SAND():
-	addJob(type)
+	addJob(type + 1)
 	stage = 2
 	addCost(gv.Resource.IRON, 700)
 	addCost(gv.Resource.COPPER, 2850)
 	color = Color(.87, .70, .45)
 	fuelResource = gv.Resource.COAL
 	icon = preload("res://Sprites/resources/sand.png")
-	setPronouns(false)
+	set_pronouns(Gender.FEMALE)
 func construct_GLASS():
-	addJob(type)
+	addJob(type + 1)
 	stage = 2
 	addCost(gv.Resource.COPPER, 6000)
 	addCost(gv.Resource.STEEL, 40)
@@ -592,16 +611,16 @@ func construct_GLASS():
 	fuelResource = gv.Resource.JOULES
 	icon = preload("res://Sprites/resources/glass.png")
 func construct_WIRE():
-	addJob(type)
+	addJob(type + 1)
 	stage = 2
 	addCost(gv.Resource.STONE, 13000)
 	addCost(gv.Resource.GLASS, 30)
 	color = Color(0.9, 0.6, 0.14)
 	fuelResource = gv.Resource.JOULES
 	icon = preload("res://Sprites/resources/wire.png")
-	setPronouns(false)
+	set_pronouns(Gender.FEMALE)
 func construct_DRAW_PLATE():
-	addJob(type)
+	addJob(type + 1)
 	stage = 2
 	shorthandKey = "draw"
 	addCost(gv.Resource.IRON, 900)
@@ -624,7 +643,7 @@ func construct_DRAW_PLATE():
 		EmoteManager.Type.DRAW_PLATE10,
 	]
 func construct_AXES():
-	addJob(type)
+	addJob(type + 1)
 	stage = 2
 	shorthandKey = "axe"
 	addCost(gv.Resource.IRON, 1000)
@@ -633,7 +652,7 @@ func construct_AXES():
 	fuelResource = gv.Resource.JOULES
 	icon = preload("res://Sprites/resources/axe.png")
 func construct_WOOD():
-	addJob(type)
+	addJob(type + 1)
 	stage = 2
 	addCost(gv.Resource.COPPER, 4500)
 	addCost(gv.Resource.WIRE, 15)
@@ -641,7 +660,7 @@ func construct_WOOD():
 	fuelResource = gv.Resource.JOULES
 	icon = preload("res://Sprites/resources/wood.png")
 func construct_HARDWOOD():
-	addJob(type)
+	addJob(type + 1)
 	stage = 2
 	shorthandKey = "hard"
 	addCost(gv.Resource.IRON, 3500)
@@ -650,9 +669,9 @@ func construct_HARDWOOD():
 	color = Color(0.92549, 0.690196, 0.184314)
 	fuelResource = gv.Resource.JOULES
 	icon = preload("res://Sprites/resources/hard.png")
-	setPronouns(false)
+	set_pronouns(Gender.FEMALE)
 func construct_TUMORS():
-	addJob(type)
+	addJob(type + 1)
 	stage = 2
 	shorthandKey = "tum"
 	addCost(gv.Resource.HARDWOOD, 50)
@@ -768,6 +787,7 @@ func setOutputValue(folder: int, item: int, amount):
 
 var producedResources: Array
 func setProducedResources():
+	producedResources = []
 	for j in jobs:
 		var poop = jobs[j].producedResourcesBits.keys()
 		for p in poop:
@@ -830,9 +850,9 @@ var costBits := {}
 var costBitsUpdated := false
 var costModifier := 3.0
 var baseCost := {}
-func addCost(key: int, base: float):
-	baseCost[key] = base
-	costBits[key] = Bits.new({
+func addCost(_key: int, base: float):
+	baseCost[_key] = base
+	costBits[_key] = Bits.new({
 		lv.Num.BASE: base,
 		lv.Num.MULTIPLY: {
 			lv.Num.FROM_UPGRADES: Big.new(1),
@@ -931,7 +951,7 @@ var fuelStorageBits := Bits.new({
 
 func sync_FUEL_STORAGE():
 	fuelStorage = fuelStorageBits.total
-	refuelJob.requiredResourcesBits[fuelResource].setValue(lv.Num.MULTIPLY, lv.Num.BY_LORED_FUEL_STORAGE, fuelStorage)
+	jobs[lv.Job.REFUEL].requiredResourcesBits[fuelResource].setValue(lv.Num.MULTIPLY, lv.Num.BY_LORED_FUEL_STORAGE, fuelStorage)
 
 func getFuelStorageText() -> String:
 	return fuelStorageBits.totalText
@@ -1034,44 +1054,49 @@ var dynamic_OUTPUT: Dictionary
 var dynamic_INPUT: Dictionary
 var dynamic_HASTE: Dictionary
 
-func applyDynamicUpgrade(key: String, effectIndex: int, folder: String):
+func applyDynamicUpgrade(_key: String, effectIndex: int, folder: String):
 	folder = "dynamic_" + folder
-	if key in get(folder).keys():
+	if _key in get(folder).keys():
 		return
-	get(folder)[key] = effectIndex
-func removeDynamicUpgrade(key: String, folder: String):
+	get(folder)[_key] = effectIndex
+func removeDynamicUpgrade(_key: String, folder: String):
 	folder = "dynamic_" + folder
-	if key in get(folder).keys():
-		get(folder).erase(key)
+	if _key in get(folder).keys():
+		get(folder).erase(_key)
 
 
 
 # - - - Jobs
 
 var jobs: Dictionary
-var refuelJob: Job
+var sorted_job_keys: Array
+
 func addJob(jobType: int):
 	jobs[jobType] = Job.new(jobType, type)
 	if is_instance_valid(manager):
 		manager.store_produced_and_required_resources()
 func syncJobs_all():
-	refuelJob.syncAll()
 	for job in jobs:
 		jobs[job].syncAll()
 func syncJobs_duration():
-	refuelJob.syncDuration()
+	jobs[lv.Job.REFUEL].syncDuration()
 	for job in jobs:
 		jobs[job].syncDuration()
 func syncJobs_producedResources():
 	for job in jobs:
 		jobs[job].syncProducedResources()
 func syncJobs_requiredResources():
-	refuelJob.syncRequiredResources()
+	jobs[lv.Job.REFUEL].syncRequiredResources()
 	for job in jobs:
 		jobs[job].syncRequiredResources()
 
 func getJobDuration(index: int) -> float:
 	return jobs.values()[index].duration
+
+func sort_jobs():
+	sorted_job_keys = []
+	sorted_job_keys = jobs.keys()
+	sorted_job_keys.sort()
 
 
 
@@ -1274,6 +1299,13 @@ func getOfflineEarnings(timeOffline: int):
 
 # - - - Actions
 
+func remove_original_fuel_cost_from_relevant_jobs() -> void:
+	for job in jobs.values():
+		job.remove_fuel_cost()
+
+func change_fuel_resource(new_fuel_resource: int) -> void:
+	fuelResource = new_fuel_resource
+
 func reset():
 	level = 0
 	fuelCostBits.setValue(lv.Num.MULTIPLY, lv.Num.FROM_LEVELS, Big.new(1))
@@ -1291,8 +1323,13 @@ func reset():
 
 # - - - Pronouns
 
-func setPronouns(isMale := true):
-	if isMale:
+enum Gender {
+	MALE,
+	FEMALE,
+}
+
+func set_pronouns(_gender: int):
+	if _gender == Gender.MALE:
 		pronoun = ["he", "him", "his"]
 	else:
 		pronoun = ["she", "her", "hers"]

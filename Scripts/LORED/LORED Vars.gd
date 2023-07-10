@@ -5,7 +5,7 @@ extends Node
 enum Type {
 	# New LOREDs must be added at the bottom.
 	# When adding a new LORED, go to GlobalVars and in Icon, add a new 
-	STONE,
+	STONE, # 0
 	COAL,
 	IRON_ORE,
 	COPPER_ORE,
@@ -18,7 +18,7 @@ enum Type {
 	TARBALLS,
 	OIL,
 	
-	WATER,
+	WATER, # 12
 	HUMUS,
 	SEEDS,
 	TREES,
@@ -26,7 +26,7 @@ enum Type {
 	AXES,
 	WOOD,
 	HARDWOOD,
-	LIQUID_IRON,
+	LIQUID_IRON, # 20
 	STEEL,
 	SAND,
 	GLASS,
@@ -36,14 +36,15 @@ enum Type {
 	LEAD,
 	PETROLEUM,
 	WOOD_PULP,
-	PAPER,
+	PAPER, # 30
 	PLASTIC,
 	TOBACCO,
 	CIGARETTES,
 	CARCINOGENS,
 	TUMORS,
 	
-	WITCH,
+	WITCH, # 36
+	BLOOD,
 }
 enum Num {
 	BASE,
@@ -72,6 +73,8 @@ enum Attribute {
 
 enum Job {
 	
+	REFUEL,
+	
 	STONE,
 	COAL,
 	IRON_ORE,
@@ -110,11 +113,14 @@ enum Job {
 	CARCINOGENS,
 	TUMORS,
 	
-	REFUEL,
-	
 	# WITCH
-	IDLE,
+	PLANT_SEED,
 	SIFT_SEEDS,
+	
+	# BLOOD,
+	#CAST_ABILITY,
+	
+	IDLE, # lowest priority job; leave at bottom
 }
 
 enum Mode {
@@ -159,6 +165,13 @@ enum ReasonCannotBeginJob {
 	INSUFFICIENT_FUEL_RESOURCE,
 	INSUFFICIENT_RESOURCES,
 	LORED_NOT_EXPORTING,
+	
+	NO_TARGET,
+	INSUFFICIENT_MANA,
+	INSUFFICIENT_FLOWERS,
+	INSUFFICIENT_BLOOD,
+	ABILITY_ON_CD,
+	CURRENTLY_CASTING,
 }
 
 
@@ -278,8 +291,8 @@ func gainRate(resource: int) -> Big:
 	return gain[resource]
 
 func reportGain(resource: int):
-	print("---- ", gv.Resource.keys()[resource], " GAIN REPORT ----")
-	print(" * Total: ", gainRate(resource).toString(), " *")
+	print_debug("---- ", gv.Resource.keys()[resource], " GAIN REPORT ----")
+	print_debug(" * Total: ", gainRate(resource).toString(), " *")
 	gainBits[resource].report()
 
 
@@ -318,8 +331,8 @@ func drainRate(resource: int) -> Big:
 	return drain[resource]
 
 func reportDrain(resource: int):
-	print("---- ", gv.Resource.keys()[resource], " DRAIN REPORT ----")
-	print(" * Total: ", drainRate(resource).toString(), " *")
+	print_debug("---- ", gv.Resource.keys()[resource], " DRAIN REPORT ----")
+	print_debug(" * Total: ", drainRate(resource).toString(), " *")
 	drainBits[resource].report()
 
 
@@ -343,8 +356,8 @@ func maxDrainRate(resource: int) -> Big:
 	return maxDrain[resource]
 
 func reportMaxDrain(resource: int):
-	print("---- ", gv.Resource.keys()[resource], " MAX REPORT ----")
-	print(" * Total: ", maxDrainRate(resource).toString(), " *")
+	print_debug("---- ", gv.Resource.keys()[resource], " MAX REPORT ----")
+	print_debug(" * Total: ", maxDrainRate(resource).toString(), " *")
 	maxDrainBits[resource].report()
 
 
@@ -394,7 +407,7 @@ func net(_resource: int) -> Array:
 	return [_drain.s(_gain), -1]
 
 func reportNet(resource: int):
-	print(" * Net for ", gv.Resource.keys()[resource], ": ", netText(resource), " *")
+	print_debug(" * Net for ", gv.Resource.keys()[resource], ": ", netText(resource), " *")
 	reportGain(resource)
 	reportDrain(resource)
 

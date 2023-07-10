@@ -21,12 +21,12 @@ const PATCH_NOTES := {
 		"Added difficulty options (desktop-only).",
 		"LOREDs now think out-loud and may speak to each other.",
 		"New LORED UI and tooltips.",
-		"Completely re-wrote the LORED and Quest/Task classes and separated resources from LOREDs in the code.",
-		"LOREDs no longer automatically refill their fuel. They must refuel manually.",
-		"Merged quests and tasks into Wishes.",
+		"Refactored 95% of the code.",
+		"New LORED fuel system.",
+		"Quests and Tasks are removed. LOREDs now Wish for stuff!",
 		"Added the remaining Stage 2 animations.",
 		"Added a resource viewer with kewl functionality.",
-		"Added and removed some options.",
+		"New in-game menu, with new options.",
 	],
 	
 	"2.2.28": [
@@ -240,7 +240,7 @@ var saved_vars := [
 	"run1", "run2", "run3", "run4",
 	"run1duration", "run2duration", "run3duration", "run4duration", 
 	"cur_clock", "time_played", "times_game_loaded", "highest_run",
-	"most_resources_gained", "stats",
+	"most_resources_gained",
 	"lb_xp",
 ]
 
@@ -255,6 +255,8 @@ func save() -> String:
 			data[x] = get(x).save()
 		else:
 			data[x] = var2str(get(x))
+	
+	data["stats"] = SaveManager.save_dictionary(stats)
 	
 	data["resources"] = {}
 	for x in resource:
@@ -284,6 +286,8 @@ func load(data: Dictionary):
 		else:
 			set(x, loadedVars[x])
 	#*
+	
+	stats = SaveManager.load_dictionary(str2var(data["stats"]), stats)
 	
 	for x in resource:
 		if not x in data["resources"]:
@@ -359,6 +363,9 @@ func check_for_the_s2_shit():
 	get_node("/root/Root").unlock_tab(Tab.EXTRA_NORMAL)
 
 const SRC := {
+	"UnitStatusEffectVico": preload("res://Prefabs/Unit/UnitStatusEffectVico.tscn"),
+	"UnitStatusEffectWheel": preload("res://Prefabs/Unit/UnitStatusEffectWheel.tscn"),
+	
 	"WalletResourceTooltipLORED": preload("res://Prefabs/ui/WalletResourceTooltipLORED.tscn"),
 	"WalletResourceTooltip": preload("res://Prefabs/ui/WalletResourceTooltip.tscn"),
 	"WalletResource": preload("res://Prefabs/ui/WalletResource.tscn"),
@@ -378,7 +385,6 @@ const SRC := {
 	"price": preload("res://Prefabs/tooltip/price.tscn"),
 	
 	"tooltip/LORED": preload("res://Prefabs/tooltip/LORED.tscn"),
-	"tooltip/autobuyer": preload("res://Prefabs/tooltip/AutobuyerTooltip.tscn"),
 	"tooltip/upgrade": preload("res://Prefabs/tooltip/Upgrade Tooltip.tscn"),
 	"tooltip/wish": preload("res://Prefabs/Wish/Wish Tooltip.tscn"),
 	"tooltip/level up": preload("res://Prefabs/tooltip/Tooltip Level Up.tscn"),
@@ -390,6 +396,8 @@ const SRC := {
 	"tooltip/resource export": preload("res://Prefabs/tooltip/LORED Tooltip Export.tscn"),
 	"tooltip/active buffs": preload("res://Prefabs/tooltip/LORED Active Buffs.tscn"),
 	"tooltip/buff tooltip": preload("res://Prefabs/tooltip/LORED Buff Tooltip.tscn"),
+	"tooltip/Ability": preload("res://Prefabs/Unit/AbilityTooltip.tscn"),
+	"tooltip/Unit": preload("res://Prefabs/Unit/UnitTooltip.tscn"),
 	
 	"earnings report/resource": preload("res://Prefabs/ui/Earnings Report Resource.tscn"),
 	"labels/medium label": preload("res://Prefabs/Labels/Medium Label.tscn"),
@@ -473,7 +481,7 @@ const LIMIT_BREAK_COLORS := {
 
 var sprite := {
 	
-	"RANDOM_SEED": preload("res://Sprites/resources/seed.png"),
+	"FLOWER_SEED": preload("res://Sprites/resources/seed.png"),
 	
 	"JOY": preload("res://Sprites/resources/Joy.png"),
 	"GRIEF": preload("res://Sprites/resources/Grief.png"),
@@ -481,14 +489,15 @@ var sprite := {
 	"angry": preload("res://Sprites/reactions/Angry.png"),
 	"test": preload("res://Sprites/reactions/Test.png"),
 	
-	"mana" : preload("res://Sprites/upgrades/thewitchofloredelith.png"),
+	"BLOOD": preload("res://Sprites/resources/carc.png"),
+	"MANA" : preload("res://Sprites/upgrades/thewitchofloredelith.png"),
 	"embryo" : preload("res://Sprites/resources/carc.png"),
 	
-	"blood" : preload("res://Sprites/resources/carc.png"),
-	"necro" : preload("res://Sprites/resources/carc.png"),
 	"witch" : preload("res://Sprites/upgrades/thewitchofloredelith.png"),
 	
 	# menu
+	"Cost": preload("res://Sprites/Menu/Cost.png"),
+	"Arrow": preload("res://Sprites/Menu/Arrow.png"),
 	"Halt": preload("res://Sprites/Menu/Halt.png"),
 	"Report": preload("res://Sprites/Menu/Report.png"),
 	"log": preload("res://Sprites/Menu/Log.png"),
@@ -654,15 +663,12 @@ var autobuy_speed := 0.25
 var up := {}
 
 var COLORS := {
-#	"fire": Color(1, 0, 0),
-#	"frost": Color(0, 0.694118, 1),
-#	"air": Color(0.612122, 0.394531, 1),
-#	"earth": Color(1, 0.6, 0),
-#	"stamina": Color(0.501961, 1, 0),
-#	"barrier": Color(1, 0.8, 0),
-#	"health": Color(1, 0, 0),
-#	"mana": Color(0, 0.709804, 1),
-#	"overwhelming power": Color(0.721569, 0.34902, 0.901961), #note too close to air?
+	"DAMAGE": Color(1, 0, 0),
+	"HEALTH": Color(0, 1, 0),
+	"BLOOD": Color(1, 0, 0),
+	"SHIELD": Color(1, 1, 1),
+	"MANA": Color(0, 0.709804, 1),
+	"MANA ALT": Color(0.721569, 0.34902, 0.901961),
 	"GRIEF": Color(0.74902, 0.203922, 0.533333),
 	"JOY": Color(1, 0.909804, 0),
 	"ciga": Color(0.929412, 0.584314, 0.298039),
@@ -689,8 +695,8 @@ var COLORS := {
 	"glass": Color(0.81, 0.93, 1.0),
 	"wire": Color(0.9, 0.6, 0.14),
 	
-	"seed": Color(1, 0.878431, 0.431373), # same as RANDOM_SEED v
-	"RANDOM_SEED": Color(1, 0.878431, 0.431373), # same as seed ^
+	"seed": Color(1, 0.878431, 0.431373), # same as FLOWER_SEED v
+	"FLOWER_SEED": Color(1, 0.878431, 0.431373), # same as seed ^
 	
 	"abeewithdaggers": Color(1, 0.878431, 0.431373),
 	"sand": Color(.87, .70, .45),
@@ -708,6 +714,7 @@ var COLORS := {
 	
 	"necro": Color(0.88, .12, .35),
 	"witch": Color(0.937255, 0.501961, 0.776471),
+	"ANTHOMANCY": Color(0.937255, 0.501961, 0.776471),
 	
 	"spirit": Color(0.88, .12, .35),
 	
@@ -740,82 +747,22 @@ func haveLoredsRequiredForExtraNormalUpgradeMenu() -> bool:
 	return true
 
 
-
-
-
-
-func time_remaining_including_INF(
-	lored: int,
-	present_amount: Big,
-	total_amount: Big):
-	
-	
-	if lv.lored[lored].asleep:
-		return INF
-	
-	var net = lv.lored[lored].net()
-	
-	if net[1].greater(net[0]):
-		return INF
-	
-	net = net[0].s(net[1])
-	
-	if net.equal(0):
-		return INF
-	
-	var delta: Big = Big.new(total_amount).s(present_amount)
-	var incoming_amount := Big.new(0)
-	
-	
-	if lv.lored[lored].working:
-		incoming_amount.a(lv.lored[lored].d.t)
-	
-	return Big.new(delta).s(incoming_amount).d(net)
-
-func timeUntil(_resource: int, threshold: Big):
+func seconds_until(_resource: int, threshold: Big):
 	
 	if gv.resource[_resource].greater_equal(threshold):
 		return Big.new(0)
 	
-	var rawNet = lv.net(_resource)
-	var net = rawNet[0]
-	var _sign = rawNet[1]
+	var netArray = lv.net(_resource)
+	var net = netArray[0]
+	var netSign = netArray[1]
 	
-	if _sign < 1:
-		return INF
+	if netSign < 1:
+		return Big.new(0)
 	
-	var amountRemaining = Big.new(threshold).s(gv.resource[_resource])
+	var delta = Big.new(threshold).s(gv.resource[_resource])
 	
-	return Big.new(amountRemaining).d(net)
+	return Big.new(delta).d(net)
 
-func time_remaining(
-	lored: int,
-	present_amount: Big,
-	total_amount: Big) -> String:
-	
-	
-	if lv.lored[lored].asleep:
-		return "Asleep"
-	
-	
-	var net = lv.lored[lored].net() #z
-	
-	if net[1].greater(net[0]):
-		return "-"
-	
-	net = net[0].s(net[1])
-	
-	if net.equal(0):
-		return "!?"
-	
-	var delta: Big = Big.new(total_amount).s(present_amount)
-	var incoming_amount := Big.new(0)
-	
-	
-	if lv.lored[lored].working:
-		incoming_amount.a(lv.lored[lored].output)
-	
-	return parse_time(Big.new(delta).s(incoming_amount).d(net))
 
 
 
@@ -1006,8 +953,9 @@ enum Resource {
 	#EMBRYO,
 	#SPIRIT,
 	
-	RANDOM_SEED,
-	#MANA,
+	FLOWER_SEED,
+	MANA,
+	BLOOD,
 }
 var resource := {}
 var resourceName := {}
@@ -1018,6 +966,8 @@ func addToResource(key: int, val):
 	stats["ResourceStats"]["collected"][key].a(val)
 	emit_signal("ResourceCollected", key)
 func subtractFromResource(key: int, val):
+	if not val is Big:
+		val = Big.new(val)
 	if val.greater(resource[key]):
 		resource[key] = Big.new(0)
 	else:
@@ -1099,9 +1049,9 @@ func logOfflineEarnings(_resource: int, amount: Big, _sign: int):
 func reportOfflineEarnings():
 	for _resource in offlineEarnings:
 		if offlineEarnings[_resource][1] == 1:
-			print("+", offlineEarnings[_resource][0].toString(), " ", resourceName[_resource])
+			print_debug("+", offlineEarnings[_resource][0].toString(), " ", resourceName[_resource])
 		else:
-			print("-", offlineEarnings[_resource][0].toString(), " ", resourceName[_resource])
+			print_debug("-", offlineEarnings[_resource][0].toString(), " ", resourceName[_resource])
 
 func clearOfflineEarnings():
 	offlineEarnings.clear()
@@ -1144,10 +1094,6 @@ enum Tab {
 	S1, S2, S3, S4,
 }
 var unlocked_tabs := []
-var unholy_bodies := {}
-var latest_unholy_body: int # key
-var ub_count := 0
-signal new_unholy_body(amount) # -> Unholy Body Manager.gd
 
 
 var animationless = ["CARCINOGENS", "TUMORS", "PETROLEUM", "PAPER", "PLASTIC", "WOOD_PULP"]
@@ -1189,8 +1135,8 @@ var max_frame = {
 	"CIGARETTES": 25,
 #	"CARCINOGENS": ,
 #	"TUMORS": ,
-	"refuel1": 28,
-	"refuel0": 27,
+	"refuel1": 27,
+	"refuel0": 28,
 }
 var list := {}
 func resetList():
@@ -1258,7 +1204,7 @@ func resetList():
 		list.upgrade["unowned " + str(Tab[t])] = []
 		list.upgrade["owned " + str(Tab[t])] = []
 
-func append(_list: Array, value):
+func append_value_to_list(value, _list: Array):
 	if value in _list:
 		return
 	_list.append(value)
@@ -1570,7 +1516,11 @@ signal hideAllActions
 
 
 func getRandomColor() -> Color:
-	return Color(rand_range(0, 1), rand_range(0, 1), rand_range(0, 1), 1)
+	var r = rand_range(0, 1)
+	var g = rand_range(0, 1)
+	var b = rand_range(0, 1)
+	var alpha = 1
+	return Color(r, g, b, alpha)
 
 
 
@@ -1585,6 +1535,7 @@ func changeScene(newScene: int):
 			
 			Boot.go()
 			Flower.open()
+			healer.open()
 			open()
 			
 			get_tree().change_scene("res://Scenes/Root.tscn")
@@ -1622,11 +1573,6 @@ func randomLORED() -> int:
 	return list.lored["active"][randi() % list.lored["active"].size()]
 
 
-func timer(duration: float):
-	yield(get_tree().create_timer(duration), "timeout")
-
-
-
 func throwOutputTexts(allTexts: Array, parent_node):
 	for textDetails in allTexts:
 		newOutputText(textDetails, parent_node)
@@ -1638,5 +1584,49 @@ func newOutputText(details: Dictionary, parent_node):
 	var outputText = SRC["flying text"].instance()
 	outputText.init(details)
 	parent_node.add_child(outputText)
+
+
+
+# - Unit Shit
+
+enum AbilitySchool {
+	HIEROMANCY,
+	ANTHOMANCY,
+	HEMOMANCY,
+}
+
+signal global_cooldown
+signal unit_status_effect_applied(unit, buff)
+
+var time_last_ability_cast: int = OS.get_ticks_msec()
+var gcd := Attribute.new(1.5, false)
+
+
+func emit_global_cooldown(time_when_cast_begun: int) -> void:
+	time_last_ability_cast = time_when_cast_begun
+	emit_signal("global_cooldown")
+
+
+func wrap_text_by_type(text: String, type: String) -> String:
+	return "[color=#" + COLORS[type.to_upper()].to_html() + "][i]" + text + "[/i] " + type + "[/color]"
+
+
+func wrap_text_in_bold_color(text: String, color: Color) -> String:
+	return "[color=#" + color.to_html() + "][i]" + text + "[/i][/color]"
+
+
+func get_gcd_remaining() -> float:
+	var _gcd = gcd.get_as_float() * 1000
+	var current_time = OS.get_ticks_msec()
+	return (_gcd - (current_time - time_last_ability_cast)) / 1000
+
+
+func get_gcd_percent() -> float:
+	return get_gcd_remaining() / gcd.get_as_float()
+
+
+func cancel_gcd() -> void:
+	time_last_ability_cast = 0
+
 
 

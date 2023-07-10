@@ -124,7 +124,7 @@ func reset(reset_type: int):
 		
 		var t = Timer.new()
 		add_child(t)
-		t.start(10)
+		t.start(3)
 		yield(t, "timeout")
 		t.queue_free()
 		

@@ -2,7 +2,7 @@ extends MarginContainer
 
 
 
-const flower_prefab = preload("res://Prefabs/NewLORED/Flower.tscn")
+const flower_vico = preload("res://Prefabs/Flower/FlowerVico.tscn")
 
 onready var flower_bed: GridContainer = $"%FlowerBed"
 
@@ -11,6 +11,11 @@ var flowers := {}
 
 
 func _ready() -> void:
+	
+	if get_owner().name != "WITCH":
+		queue_free()
+		return
+	
 	hide()
 	$"%bg".self_modulate = gv.COLORS["witch"]
 	$"%border".self_modulate = gv.COLORS["witch"]
@@ -23,7 +28,7 @@ func setup_flowers():
 	for flower in Flower.Type:
 		if Flower.get_flower_tier(flower) == 0:
 			continue
-		flowers[flower] = flower_prefab.instance()
+		flowers[flower] = flower_vico.instance()
 		flowers[flower].setup(flower)
 		flower_bed.add_child(flowers[flower])
 	sort_children(flower_bed)

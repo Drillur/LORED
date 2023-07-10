@@ -1,4 +1,4 @@
-[gd_scene load_steps=32 format=2]
+[gd_scene load_steps=33 format=2]
 
 [ext_resource path="res://Scripts/_Root.gd" type="Script" id=1]
 [ext_resource path="res://Scripts/map.gd" type="Script" id=2]
@@ -23,6 +23,7 @@
 [ext_resource path="res://Sprites/Menu/Log.png" type="Texture" id=21]
 [ext_resource path="res://Styles/Master Theme.tres" type="Theme" id=22]
 [ext_resource path="res://Prefabs/ui/Wallet.tscn" type="PackedScene" id=23]
+[ext_resource path="res://Prefabs/Unit/HealingEvent.tscn" type="PackedScene" id=24]
 [ext_resource path="res://Sprites/Menu/Notice.png" type="Texture" id=25]
 
 [sub_resource type="StyleBoxFlat" id=1]
@@ -744,6 +745,11 @@ margin_bottom = 54.0
 
 [node name="Off" type="Timer" parent="misc"]
 one_shot = true
+
+[node name="HealingEvent" parent="." instance=ExtResource( 24 )]
+visible = false
+margin_right = 1280.0
+margin_bottom = 720.0
 
 [node name="WishAnchor" type="Node2D" parent="."]
 position = Vector2( 0, 720 )

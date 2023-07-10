@@ -35,7 +35,8 @@ func getPercent() -> float:
 
 var updating = false
 func update():
-	
+	if not lv.lored[type].unlocked:
+		return
 	var t = Timer.new()
 	add_child(t)
 	

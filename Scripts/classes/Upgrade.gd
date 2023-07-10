@@ -207,7 +207,7 @@ func get_witch_percent() -> String:
 	
 	return "1%"
 
-func time_to_buy():
+func time_to_buy() -> Big:
 	
 	if cost_check():
 		return Big.new(0)
@@ -215,9 +215,9 @@ func time_to_buy():
 	var longest_time = Big.new(0)
 	
 	for c in cost:
-		var time_to_c = gv.timeUntil(c, cost[c].t)
+		var time_to_c = gv.seconds_until(c, cost[c].t)
 		if typeof(time_to_c) != TYPE_INT:
-			return INF
+			return time_to_c
 		if time_to_c.greater(longest_time):
 			longest_time = Big.new(time_to_c)
 	
@@ -301,7 +301,6 @@ func load(data: Dictionary):
 
 func alter_Limit_Break():
 	if applied:
-		print(gv.up["Limit Break"].effects)
 		remove()
 	
 	gv.up["Limit Break"].effects.clear()
@@ -309,4 +308,3 @@ func alter_Limit_Break():
 	gv.up["Limit Break"].effects[0].dynamic = true
 	sync_effects()
 	apply()
-	print(gv.up["Limit Break"].effects)

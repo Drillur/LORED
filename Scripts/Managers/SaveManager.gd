@@ -375,9 +375,180 @@ func importedFileIsCompatible(path: String) -> bool:
 
 
 
+func save_vars(object) -> String:
+	
+	var data := {}
+	var saved_vars_keys = object.get("saved_vars")
+	
+	for var_key in saved_vars_keys:
+		
+		var x = object.get(var_key)
+		
+		if x is Dictionary:
+			data[var_key] = save_dictionary(x)
+		elif x is Array:
+			data[var_key] = save_array(x)
+		elif x is Reference:
+			if x.has_method("save"):
+				data[var_key] = x.save()
+			else:
+				save_vars(x)
+		else:
+			data[var_key] = var2str(x)
+	
+	return var2str(data)
+
+
+func save_dictionary(dictionary: Dictionary) -> String:
+	
+	var data := {}
+	
+	for key in dictionary:
+		if dictionary[key] is Dictionary:
+			data[key] = save_dictionary(dictionary[key])
+		elif dictionary[key] is Array:
+			data[key] = save_array(dictionary[key])
+		elif dictionary[key] is Reference:
+			if dictionary[key].has_method("save"):
+				data[key] = dictionary[key].save()
+			else:
+				data[key] = save_vars(dictionary[key])
+		else:
+			data[key] = var2str(dictionary[key])
+	
+	return var2str(data)
+
+
+func save_array(array: Array) -> String:
+	
+	var data := {}
+	
+	var i = 0
+	for x in array:
+		if x is Array:
+			data[i] = save_array(x)
+		elif x is Reference:
+			var _class: String
+			if x is Big:
+				_class = "Big"
+				data[_class + str(i)] = x.save()
+			elif x is FlowerSeed:
+				_class = "FlowerSeed"
+				data[_class + str(i)] = save_vars(x)
+			elif x is Ob.Num:
+				_class = "Num"
+				data[_class + str(i)] = x.save()
+		else:
+			data[i] = var2str(x)
+		i += 1
+	
+	return var2str(data)
+
+
+
+func load_vars(object, _save_data: Dictionary):
+	
+	for var_key in object.get("saved_vars"):
+		
+		if not var_key in _save_data.keys():
+			continue
+		
+		var x = object.get(var_key)
+		var saved_x = str2var(_save_data[var_key])
+		
+		if x is Dictionary:
+			object.set(var_key, load_dictionary(saved_x, x))
+		elif x is Array:
+			object.set(var_key, load_empty_array(saved_x))
+		elif x is Reference:
+			if x.has_method("load"):
+				if object.get(var_key) is Big:
+					object.get(var_key).load(_save_data[var_key])
+				elif object.get(var_key) is Ob.Num:
+					object.get(var_key).load(_save_data[var_key])
+				else:
+					object.get(var_key).load(saved_x)
+			else:
+				load_vars(object.get(var_key), saved_x)
+		else:
+			object.set(var_key, saved_x)
+
+
+func load_dictionary(loaded_dictionary: Dictionary, actual_dictionary: Dictionary) -> Dictionary:
+	
+	for key in actual_dictionary:
+		
+		if not key in loaded_dictionary.keys():
+			continue
+		
+		var x = actual_dictionary[key]
+		var saved_x = str2var(loaded_dictionary[key])
+		
+		if x is Dictionary:
+			actual_dictionary[key] = load_dictionary(saved_x, x)
+		elif x is Array:
+			actual_dictionary[key] = load_empty_array(saved_x)
+		elif x is Reference:
+			if x.has_method("load"):
+				if x is Big:
+					actual_dictionary[key].load(loaded_dictionary[key])
+				elif x is Ob.Num:
+					actual_dictionary[key].load(loaded_dictionary[key])
+				else:
+					actual_dictionary[key].load(saved_x)
+			else:
+				load_vars(actual_dictionary[key], saved_x)
+		else:
+			actual_dictionary[key] = saved_x
+	
+	return actual_dictionary
+
+
+const REF_CLASSES := ["FlowerSeed", "Big", "Num"]
+
+func load_empty_array(loaded_dictionary: Dictionary) -> Array:
+	
+	var array := []
+	
+	for key in loaded_dictionary:
+		
+		var saved_x = str2var(loaded_dictionary[key])
+		var _class = key.rstrip("0123456789")
+		
+		if (_class in REF_CLASSES) or (saved_x is Reference):
+			array.append(new_reference_by_save_data(_class, saved_x))
+		elif saved_x is Array:
+			array.append(load_empty_array(saved_x))
+		else:
+			array.append(saved_x)
+	
+	return array
+
+
+func new_reference_by_save_data(_class: String, saved_x):
+	var new_thing
+	
+	if _class == "FlowerSeed":
+		new_thing = FlowerSeed.new()
+		load_vars(new_thing, saved_x)
+	elif _class == "Big":
+		new_thing = Big.new()
+		new_thing.load(saved_x)
+	elif _class == "Num":
+		new_thing = Ob.Num.new()
+		new_thing.load(saved_x)
+	
+	return new_thing
+
+
+
+
 
 
 func loadSavedVars(_saved_vars: Dictionary, _save_data: Dictionary) -> Dictionary:
+	
+	# this is still used in some funcs.
+	# It's the first version of the newer load_vars() method
 	
 	var loadedVars := {}
 	

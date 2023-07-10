@@ -41,3 +41,11 @@ func refresh(currentType: String = type):
 	var currentOther = other
 	_call("no")
 	_call(currentType, currentOther)
+
+
+func scroll_content(direction: int):
+	
+	if not tip_filled:
+		return
+	
+	tip.scroll_content(direction)

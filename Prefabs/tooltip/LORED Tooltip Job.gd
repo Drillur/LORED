@@ -8,7 +8,7 @@ var loredColor: Color
 
 func setup(job: Job):
 	
-	hideNodes()
+	hideNodes(job)
 	
 	loredColor = lv.lored[job.lored].color
 	
@@ -41,11 +41,18 @@ func setup(job: Job):
 	get_node("%separator1").self_modulate = loredColor
 	loop(job)
 
-func hideNodes():
+func hideNodes(job: Job):
 	for x in 3:
 		get_node("%output" + str(x)).hide()
 		get_node("%input" + str(x)).hide()
 	get_node("%effects").hide()
+	if not jobProducesResources(job):
+		get_node("%output").hide()
+		get_node("%separator0").hide()
+	if not jobRequiresResources(job):
+		if not job.costs_fuel:
+			get_node("%input").hide()
+			get_node("%separator1").hide()
 
 func jobProducesResources(job: Job) -> bool:
 	return job.producedResourcesBits.size() > 0

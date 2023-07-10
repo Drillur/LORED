@@ -40,6 +40,7 @@ shadow_color = Color( 1, 1, 1, 0 )
 margin_right = 76.0
 margin_bottom = 69.0
 rect_min_size = Vector2( 0, 40 )
+size_flags_horizontal = 4
 script = ExtResource( 4 )
 
 [node name="v" type="VBoxContainer" parent="."]

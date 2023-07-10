@@ -91,26 +91,26 @@ func updateDynamic(_dynamic: Dictionary):
 
 func report():
 	for f in bits:
-		print("Bits ", lv.Num.keys()[f], " (base: ", base, "):")
+		print_debug("Bits ", lv.Num.keys()[f], " (base: ", base, "):")
 		for g in bits[f]:
-			print(bits[f][g])
+			print_debug(bits[f][g])
 
 
 func fullReport():
 	
 	total = base
-	print("* * * FULL REPORT * * *\n!Don't use unless debugging. Restart game after use.!\n - Base: ", total)
+	print_debug("* * * FULL REPORT * * *\n!Don't use unless debugging. Restart game after use.!\n - Base: ", total)
 	for f in bits:
 		if f == lv.Num.ADD or f == lv.Num.ADD_FUEL:
 			for g in bits[f]:
 				total += bits[f][g]
-				print(lv.Num.keys()[f], "//", lv.Num.keys()[g])
+				print_debug(lv.Num.keys()[f], "//", lv.Num.keys()[g])
 		elif f == lv.Num.DIVIDE:
 			for g in bits[f]:
 				total /= bits[f][g]
-				print(lv.Num.keys()[f], "//", lv.Num.keys()[g])
+				print_debug(lv.Num.keys()[f], "//", lv.Num.keys()[g])
 		elif f == lv.Num.MULTIPLY:
 			for g in bits[f]:
 				total *= bits[f][g]
-				print(lv.Num.keys()[f], "//", lv.Num.keys()[g])
-		print(" - Total: ", total)
+				print_debug(lv.Num.keys()[f], "//", lv.Num.keys()[g])
+		print_debug(" - Total: ", total)
