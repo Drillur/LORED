@@ -26,8 +26,6 @@ func setup(_flower: String):
 func set_icon():
 	if flower in Flower.Icons:
 		icon.set_icon(Flower.Icons[flower])
-	if flower in Flower.Colors:
-		icon.modulate = Flower.Colors[flower]
 
 
 

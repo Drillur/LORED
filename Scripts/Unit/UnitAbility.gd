@@ -50,6 +50,9 @@ var has_blood_cost: bool
 var initial_heal: Attribute
 var has_initial_heal: bool
 
+var barrier: Attribute
+var has_barrier: bool
+
 var is_on_cooldown: bool
 var time_cooldown_began: int
 var cooldown: Attribute
@@ -57,6 +60,9 @@ var has_cooldown: bool
 
 var applied_buffs := []
 var applies_buffs: bool
+
+var dispells_buffs := false
+var dispells_debuffs := false
 
 var just_cast := false
 
@@ -79,6 +85,7 @@ func _init(_type: int) -> void:
 	has_initial_heal = initial_heal != null
 	has_cooldown = cooldown != null
 	applies_buffs = not applied_buffs.empty()
+	has_barrier = barrier != null
 	
 	init_school_text()
 
@@ -98,20 +105,57 @@ func init_CURE():
 	initial_heal = Attribute.new(5, WILL_NOT_USE_CURRENT)
 	flower_cost = Flower.Type.MORNING_GLORY
 	school = gv.AbilitySchool.ANTHOMANCY
-	mana_cost = Attribute.new(1, WILL_NOT_USE_CURRENT)
 	icon = preload("res://Sprites/flowers/006.png")
 	description = "Restores {initial_heal} to a single target."
-	cost_text = "Costs {mana_cost} and {flower_cost}."
+	cost_text = "Costs {flower_cost}."
 
 
 func init_REGENERATE():
 	flower_cost = Flower.Type.YARROW
 	school = gv.AbilitySchool.ANTHOMANCY
-	mana_cost = Attribute.new(1, WILL_NOT_USE_CURRENT)
 	icon = preload("res://Sprites/flowers/007.png")
-	description = "Applies [i]Regenerating[/i] to a single target.\n{applied_buffs}"
-	cost_text = "Costs {mana_cost} and {flower_cost}."
+	description = "Applies [i]Regenerating[/i] to a single target.{applied_buffs}"
+	cost_text = "Costs {flower_cost}."
 	applied_buffs.append(UnitStatusEffect.new(UnitStatusEffect.Type.REGENERATING))
+
+
+func init_CLEANSE():
+	flower_cost = Flower.Type.GINGER_ROOT
+	school = gv.AbilitySchool.ANTHOMANCY
+	cooldown = Attribute.new(8, WILL_NOT_USE_CURRENT)
+	icon = preload("res://Sprites/flowers/008.png")
+	description = "Dispells one harmful effect from a target."
+	cost_text = "Costs {flower_cost}."
+	dispells_debuffs = true
+
+
+func init_HEAL():
+	cast_time = Attribute.new(2.5, WILL_NOT_USE_CURRENT)
+	initial_heal = Attribute.new(15, WILL_NOT_USE_CURRENT)
+	flower_cost = Flower.Type.DAISY
+	school = gv.AbilitySchool.ANTHOMANCY
+	icon = preload("res://Sprites/flowers/043.png")
+	description = "Restores {initial_heal} to a single target."
+	cost_text = "Costs {flower_cost}."
+
+
+func init_REJUVENATE():
+	flower_cost = Flower.Type.LAVENDER
+	school = gv.AbilitySchool.ANTHOMANCY
+	icon = preload("res://Sprites/flowers/021.png")
+	description = "Applies [i]Rejuvenating[/i] to a single target.{applied_buffs}"
+	cost_text = "Costs {flower_cost}."
+	applied_buffs.append(UnitStatusEffect.new(UnitStatusEffect.Type.REJUVENATING))
+
+
+func init_SHIELD():
+	flower_cost = Flower.Type.CARNATION
+	cooldown = Attribute.new(15, WILL_NOT_USE_CURRENT)
+	barrier = Attribute.new(30, WILL_NOT_USE_CURRENT)
+	school = gv.AbilitySchool.ANTHOMANCY
+	icon = preload("res://Sprites/flowers/090.png")
+	description = "Adds {barrier} to a single target."
+	cost_text = "Costs {flower_cost}."
 
 
 
@@ -140,7 +184,9 @@ func get_description() -> String:
 			applied_buff_text += "\n[i]" + x.name + "[/i] - " + x.get_inactive_description()
 		text = text.format({"applied_buffs": applied_buff_text})
 	if "{initial_heal}" in text:
-		text = text.format({"initial_heal": gv.wrap_text_by_type(initial_heal.get_total_text(), "health"),})
+		text = text.format({"initial_heal": gv.wrap_text_by_type(initial_heal.get_total_text(), "health")})
+	if "{barrier}" in text:
+		text = text.format({"barrier": gv.wrap_text_by_type(barrier.get_total_text(), "barrier")})
 	return "[center]" + text
 
 
@@ -273,4 +319,8 @@ func apply_effects(target: Unit) -> void:
 	if applies_buffs:
 		for buff in applied_buffs:
 			target.take_status_effect(buff.type)
+	if dispells_debuffs:
+		target.dispell_status_effect()
+	if has_barrier:
+		target.take_barrier(barrier.get_total())
 

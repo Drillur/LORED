@@ -22,9 +22,10 @@ func setup() -> void:
 
 
 func setup_starter_abilities() -> void:
-	ability_1.setup(healer.abilities[UnitAbility.Type.MEND])
-	ability_2.setup(healer.abilities[UnitAbility.Type.CURE])
-	ability_3.setup(healer.abilities[UnitAbility.Type.REGENERATE])
+	ability_1.setup(healer.abilities[UnitAbility.Type.SHIELD])
+	ability_2.setup(healer.abilities[UnitAbility.Type.HEAL])
+	ability_3.setup(healer.abilities[UnitAbility.Type.REJUVENATE])
+	ability_R.setup(healer.abilities[UnitAbility.Type.CLEANSE])
 
 
 

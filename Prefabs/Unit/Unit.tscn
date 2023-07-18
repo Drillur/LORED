@@ -57,26 +57,26 @@ draw_center = false
 
 [node name="Unit" type="MarginContainer"]
 margin_right = 100.0
-margin_bottom = 141.0
+margin_bottom = 131.0
 rect_min_size = Vector2( 100, 0 )
 rect_pivot_offset = Vector2( -201, -26 )
 script = ExtResource( 2 )
 
 [node name="bg" type="Panel" parent="."]
 margin_right = 100.0
-margin_bottom = 141.0
+margin_bottom = 131.0
 custom_styles/panel = SubResource( 5 )
 
 [node name="target_border" type="Panel" parent="."]
 unique_name_in_owner = true
 self_modulate = Color( 1, 1, 1, 0.66 )
 margin_right = 100.0
-margin_bottom = 141.0
+margin_bottom = 131.0
 custom_styles/panel = SubResource( 6 )
 
 [node name="MarginContainer2" type="MarginContainer" parent="."]
 margin_right = 100.0
-margin_bottom = 141.0
+margin_bottom = 131.0
 custom_constants/margin_right = 1
 custom_constants/margin_top = 1
 custom_constants/margin_left = 1
@@ -90,12 +90,12 @@ self_modulate = Color( 1, 1, 1, 0.66 )
 margin_left = 1.0
 margin_top = 1.0
 margin_right = 99.0
-margin_bottom = 140.0
+margin_bottom = 130.0
 custom_styles/panel = SubResource( 7 )
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 margin_right = 100.0
-margin_bottom = 141.0
+margin_bottom = 131.0
 custom_constants/margin_right = 5
 custom_constants/margin_top = 5
 custom_constants/margin_left = 5
@@ -105,7 +105,7 @@ custom_constants/margin_bottom = 5
 margin_left = 5.0
 margin_top = 5.0
 margin_right = 95.0
-margin_bottom = 136.0
+margin_bottom = 126.0
 custom_constants/separation = 8
 
 [node name="icon" parent="MarginContainer/VBoxContainer" instance=ExtResource( 1 )]
@@ -124,7 +124,7 @@ position = Vector2( 32, 0 )
 unique_name_in_owner = true
 margin_top = 72.0
 margin_right = 90.0
-margin_bottom = 131.0
+margin_bottom = 121.0
 custom_constants/separation = 10
 
 [node name="name" type="Label" parent="MarginContainer/VBoxContainer/details"]
@@ -137,21 +137,25 @@ custom_fonts/font = SubResource( 4 )
 text = "Skinny Pete"
 align = 1
 
-[node name="health" parent="MarginContainer/VBoxContainer/details" instance=ExtResource( 4 )]
-unique_name_in_owner = true
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/details"]
 margin_top = 25.0
 margin_right = 90.0
-margin_bottom = 37.0
+margin_bottom = 49.0
+custom_constants/separation = 0
+
+[node name="health" parent="MarginContainer/VBoxContainer/details/VBoxContainer" instance=ExtResource( 4 )]
+unique_name_in_owner = true
+margin_right = 90.0
 rect_min_size = Vector2( 0, 12 )
 __meta__ = {
 "_edit_group_": true
 }
 
-[node name="blood" parent="MarginContainer/VBoxContainer/details" instance=ExtResource( 4 )]
+[node name="blood" parent="MarginContainer/VBoxContainer/details/VBoxContainer" instance=ExtResource( 4 )]
 unique_name_in_owner = true
-margin_top = 47.0
+margin_top = 12.0
 margin_right = 90.0
-margin_bottom = 59.0
+margin_bottom = 24.0
 rect_min_size = Vector2( 0, 12 )
 __meta__ = {
 "_edit_group_": true
@@ -170,7 +174,7 @@ margin_bottom = 188.0
 
 [node name="Button" type="Button" parent="."]
 margin_right = 100.0
-margin_bottom = 141.0
+margin_bottom = 131.0
 rect_min_size = Vector2( 36, 36 )
 focus_mode = 0
 mouse_default_cursor_shape = 2

@@ -8,25 +8,51 @@ onready var delta_progress: Panel = $"%delta"
 onready var label: Label = $"%Label"
 onready var edge: Panel = $"%edge"
 onready var flair: Label = $"%flair"
-onready var h_box_container: HBoxContainer = $HBoxContainer
-
-
+onready var texts: HBoxContainer = $"%Texts"
 
 enum Type {
 	HEALTH,
 	BLOOD,
 	MANA,
+	BARRIER,
 }
+
+var dead_text_pool = [
+	"DEAD",
+	"DECEASED",
+	"GONER",
+	"KAPUT",
+	"DEPARTED",
+	"STIFF",
+	"COLD",
+	"Bereft of life.",
+	"DONE FOR",
+	"ERASED",
+	"EXPIRED",
+	"CHECKED OUT",
+	"DEFUNCT",
+	"INANIMATE",
+	"NO MORE",
+	"OFFED",
+	"PERISHED",
+	"PUSHING DAISIES",
+	"RESTING IN PEACE",
+	"WASTED",
+	"GAME OVER",
+]
 
 var type: int
 var delta_pass: int
 var previous_progress: float
 
 var key: String
+var using_texts := true
 
 var attribute: Attribute
 
 var delta_timer := Timer.new()
+
+var barrier: Panel
 
 
 
@@ -46,22 +72,48 @@ func setup(_type: int, _attribute: Attribute) -> void:
 	previous_progress = progress.rect_size.x
 	delta_progress.hide()
 	
-	h_box_container.rect_size.x = rect_size.x
+	if using_texts:
+		texts.rect_size.x = rect_size.x
+	
 	update()
 
 
 func setup_HEALTH():
 	flair.text = "hp"
+	barrier = gv.SRC["AttributeVico"].instance()
+	add_child(barrier)
+	move_child(barrier, 2)
 
 
 func setup_BLOOD():
-	flair.text = "blood"
+	if using_texts:
+		flair.text = "blood"
 	set_self_modulates(Color(1, 0, 0))
 
 
 func setup_MANA():
 	flair.text = "mana"
 	set_self_modulates(gv.COLORS["MANA"])
+
+
+func setup_BARRIER():
+	set_self_modulates(gv.COLORS["BARRIER"])
+	kill_texts()
+	add_stylebox_override("panel", preload("res://Styles/Panels/DrawCenterFalse.tres"))
+
+
+
+func make_small() -> void:
+	rect_min_size.y = 6
+	progress.rect_size.y = rect_min_size.y
+	delta_progress.rect_size.y = progress.rect_size.y
+	flair.hide()
+	kill_texts()
+
+
+func kill_texts() -> void:
+	using_texts = false
+	texts.queue_free()
 
 
 
@@ -72,10 +124,14 @@ func update():
 
 
 func update_progress():
-	progress.rect_size = Vector2(
-		min(attribute.get_current_percent() * rect_size.x, rect_size.x),
-		rect_size.y
-	)
+	if type == Type.BARRIER:
+		if attribute.get_current_percent() == 0.0:
+			progress.hide()
+		else:
+			progress.show()
+	
+	progress.rect_size.x = min(attribute.get_current_percent() * rect_size.x, rect_size.x)
+	
 	new_delta_animation()
 	previous_progress = progress.rect_size.x
 
@@ -109,6 +165,8 @@ func new_delta_animation() -> void:
 
 
 func update_text():
+	if not using_texts:
+		return
 	if type == Type.HEALTH and attribute.get_current_percent() == 1.0:
 		label.text = "100%"
 		return
@@ -137,3 +195,11 @@ func set_self_modulates(color: Color) -> void:
 	progress.set_self_modulate(color)
 	edge.set_self_modulate(color)
 	delta_progress.set_self_modulate(color)
+	if using_texts:
+		label.set_self_modulate(color)
+
+
+
+func update_dead() -> void:
+	label.text = dead_text_pool[randi() % len(dead_text_pool)]
+	flair.hide()

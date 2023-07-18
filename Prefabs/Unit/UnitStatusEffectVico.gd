@@ -7,6 +7,7 @@ onready var ticks_remaining: Label = $"%ticks remaining"
 onready var total_ticks: Label = $"%total ticks"
 onready var progress: Panel = $"%progress"
 onready var description: RichTextLabel = $"%description"
+onready var stacks: Label = $"%stacks"
 
 var buff: UnitStatusEffect
 
@@ -23,6 +24,7 @@ func setup(_buff: UnitStatusEffect) -> void:
 	
 	_name.text = buff.name
 	description.bbcode_text = buff.get_active_description()
+	stacks.setup(buff.stacks)
 	
 	if buff.unlimited_ticks:
 		$"%tick text".hide()
@@ -46,6 +48,7 @@ func set_color(color: Color) -> void:
 
 
 func unassign_vico() -> void:
+	stacks.unassign_vico()
 	buff.unassign_vico()
 
 

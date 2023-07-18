@@ -59,35 +59,35 @@ script = ExtResource( 4 )
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 margin_right = 340.0
-margin_bottom = 335.0
+margin_bottom = 325.0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
 margin_right = 340.0
-margin_bottom = 335.0
+margin_bottom = 325.0
 custom_constants/separation = 0
 alignment = 1
 
 [node name="Units" type="MarginContainer" parent="MarginContainer/VBoxContainer"]
 margin_right = 340.0
-margin_bottom = 165.0
+margin_bottom = 155.0
 
 [node name="bg" type="Panel" parent="MarginContainer/VBoxContainer/Units"]
 unique_name_in_owner = true
 margin_right = 340.0
-margin_bottom = 165.0
+margin_bottom = 155.0
 rect_pivot_offset = Vector2( -61, -6 )
 custom_styles/panel = SubResource( 1 )
 
 [node name="border" type="Panel" parent="MarginContainer/VBoxContainer/Units"]
 unique_name_in_owner = true
 margin_right = 340.0
-margin_bottom = 165.0
+margin_bottom = 155.0
 rect_pivot_offset = Vector2( -61, -6 )
 custom_styles/panel = SubResource( 2 )
 
 [node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/Units"]
 margin_right = 340.0
-margin_bottom = 165.0
+margin_bottom = 155.0
 custom_constants/margin_right = 10
 custom_constants/margin_top = 12
 custom_constants/margin_left = 10
@@ -97,7 +97,7 @@ custom_constants/margin_bottom = 12
 margin_left = 10.0
 margin_top = 12.0
 margin_right = 330.0
-margin_bottom = 153.0
+margin_bottom = 143.0
 custom_constants/separation = 10
 alignment = 1
 
@@ -122,15 +122,15 @@ size_flags_vertical = 6
 
 [node name="Hotbar" parent="MarginContainer/VBoxContainer" instance=ExtResource( 2 )]
 unique_name_in_owner = true
-margin_top = 165.0
+margin_top = 155.0
 margin_right = 340.0
-margin_bottom = 256.0
+margin_bottom = 246.0
 size_flags_horizontal = 1
 
 [node name="MarginContainer2" type="MarginContainer" parent="MarginContainer/VBoxContainer"]
-margin_top = 256.0
+margin_top = 246.0
 margin_right = 340.0
-margin_bottom = 335.0
+margin_bottom = 325.0
 
 [node name="bg" type="Panel" parent="MarginContainer/VBoxContainer/MarginContainer2"]
 margin_right = 340.0

@@ -363,6 +363,7 @@ func check_for_the_s2_shit():
 	get_node("/root/Root").unlock_tab(Tab.EXTRA_NORMAL)
 
 const SRC := {
+	"AttributeVico": preload("res://Prefabs/Unit/AttributeVico.tscn"),
 	"UnitStatusEffectVico": preload("res://Prefabs/Unit/UnitStatusEffectVico.tscn"),
 	"UnitStatusEffectWheel": preload("res://Prefabs/Unit/UnitStatusEffectWheel.tscn"),
 	
@@ -666,6 +667,8 @@ var COLORS := {
 	"DAMAGE": Color(1, 0, 0),
 	"HEALTH": Color(0, 1, 0),
 	"BLOOD": Color(1, 0, 0),
+	"BLOOD LOSS": Color(1, 0, 0),
+	"BARRIER": Color(1, 1, 1),
 	"SHIELD": Color(1, 1, 1),
 	"MANA": Color(0, 0.709804, 1),
 	"MANA ALT": Color(0.721569, 0.34902, 0.901961),
@@ -1595,6 +1598,7 @@ enum AbilitySchool {
 	HEMOMANCY,
 }
 
+signal remove_status_effect(unit, buff)
 signal global_cooldown
 signal unit_status_effect_applied(unit, buff)
 
@@ -1629,4 +1633,7 @@ func cancel_gcd() -> void:
 	time_last_ability_cast = 0
 
 
+var temp_buff: UnitStatusEffect
+func temp_store_buff(_type: int) -> void:
+	temp_buff = UnitStatusEffect.new(_type)
 

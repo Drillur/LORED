@@ -8,6 +8,7 @@ onready var key: RichTextLabel = $"%key"
 onready var description: Label = $"%description"
 onready var status_effects: MarginContainer = $"%status effects"
 onready var buff_parent: VBoxContainer = $"%buff parent"
+onready var blood: Label = $"%blood"
 
 var unit: Unit
 
@@ -22,7 +23,8 @@ func setup(_unit: Unit) -> void:
 	
 	_name.text = unit.name
 	key.bbcode_text = "[center]" + unit.get_key_text()
-	description.text = unit.description
+	description.text = "Is dead." if unit.is_dead() else unit.description
+	blood_watch()
 	setup_status_effects()
 
 
@@ -35,6 +37,8 @@ func setup_status_effects() -> void:
 
 
 func add_status_effect_vico(buff: UnitStatusEffect) -> void:
+	if buff.marked_for_removal:
+		return
 	var buff_vico = gv.SRC["UnitStatusEffectVico"].instance()
 	buff_vico.setup(buff)
 	buff_parent.add_child(buff_vico)
@@ -54,3 +58,20 @@ func unassign_vico(buff: MarginContainer) -> void:
 	if buffs.empty():
 		status_effects.hide()
 		rect_size.y = 0
+
+
+
+func blood_watch() -> void:
+	var t = Timer.new()
+	add_child(t)
+	while not is_queued_for_deletion():
+		if unit.is_dead():
+			blood.hide()
+			break
+		if unit.blood.get_current_percent() < 1.0:
+			blood.show()
+		else:
+			blood.hide()
+		t.start(1)
+		yield(t, "timeout")
+	t.queue_free()

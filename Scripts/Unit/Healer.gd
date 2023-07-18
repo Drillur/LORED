@@ -30,6 +30,10 @@ func init_abilities():
 	add_ability(UnitAbility.Type.MEND)
 	add_ability(UnitAbility.Type.CURE)
 	add_ability(UnitAbility.Type.REGENERATE)
+	add_ability(UnitAbility.Type.CLEANSE)
+	add_ability(UnitAbility.Type.SHIELD)
+	add_ability(UnitAbility.Type.HEAL)
+	add_ability(UnitAbility.Type.REJUVENATE)
 
 
 

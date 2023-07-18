@@ -119,6 +119,7 @@ enum Type {
 	TULIP,
 	VIOLET,
 	HYDRANGEA,
+	GINGER_ROOT,
 	RAGWORT, # - - - 0
 	GOOGRASS,
 	STINKWEED,
@@ -169,6 +170,9 @@ const Icons := {
 	
 	# 2
 	
+	"LAVENDER": preload("res://Sprites/flowers/021.png"),
+	"DAISY": preload("res://Sprites/flowers/043.png"),
+	"CARNATION": preload("res://Sprites/flowers/090.png"),
 	"ROSE": preload("res://Sprites/flowers/091.png"),
 	
 	# 1 
@@ -184,6 +188,7 @@ const Icons := {
 	"DANDELION": preload("res://Sprites/flowers/062.png"),
 	"YARROW": preload("res://Sprites/flowers/062.png"),
 	"SUNFLOWER": preload("res://Sprites/flowers/063.png"),
+	"GINGER_ROOT": preload("res://Sprites/flowers/078.png"),
 	"TULIP": preload("res://Sprites/flowers/079.png"),
 	"MORNING_GLORY": preload("res://Sprites/flowers/084.png"),
 	"GERANIUM": preload("res://Sprites/flowers/093.png"),
@@ -223,10 +228,6 @@ const Icons := {
 	"SNOTWEED": preload("res://Sprites/flowers/036.png"),
 	"SLIMEWEED": preload("res://Sprites/flowers/036.png"),
 	"EVERSTAIN": preload("res://Sprites/flowers/036.png"),
-}
-
-const Colors := {
-	"PITCHER_PLANT": Color(0.329412, 1, 0),
 }
 
 signal flower_count_changed(flower)
@@ -436,10 +437,6 @@ func get_flower_icon(flower) -> Texture:
 	return Icons[flower]
 
 
-func get_flower_color(flower) -> Color:
-	return Colors[flower] if flower in Colors.keys() else Color(1, 1, 1)
-
-
 
 func get_output_text_details(producedResources: Dictionary, _critMultiplier: float) -> Array:
 	
@@ -449,15 +446,12 @@ func get_output_text_details(producedResources: Dictionary, _critMultiplier: flo
 		
 		var f := {}
 		
-		#var tier := get_flower_tier(flower)
-		var flower_color = get_flower_color(flower)
-		
 		f["life"] = 75
 		f["text"] = "+" + fval.f(producedResources[flower])
 		f["resource name"] = get_flower_name(flower)# + (" (Trash)" if tier == 0 else "(" + str(tier) + ")")
 		f["icon"] = Icons[flower] if flower in Icons.keys() else Icons["flowers"]
-		f["color"] = flower_color if flower in Colors.keys() else gv.COLORS["witch"]
-		f["texture modulate"] = flower_color
+		f["color"] = gv.COLORS["witch"]
+		f["texture modulate"] = gv.COLORS["witch"]
 		
 		array.append(f)
 	

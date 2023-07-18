@@ -1043,7 +1043,7 @@ func _on_Button_pressed() -> void:
 #		return
 #	test_hp.subtract(rand_range(1, 25))
 	#lv.lored[lv.Type.WITCH].promote()
-	lv.lored[lv.Type.BLOOD].queue_healing_event(HealingEvent.Type.TEST)
+	lv.lored[lv.Type.BLOOD].queue_healing_event(HealingEvent.Type.BLOOD_LOSS)
 	pass
 
 

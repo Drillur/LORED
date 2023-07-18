@@ -3,6 +3,7 @@ extends TextureProgress
 
 
 onready var deficit: Label = $deficit
+onready var stacks: Label = $stacks
 
 var buff: UnitStatusEffect
 
@@ -43,14 +44,18 @@ func update_loop() -> void:
 
 func update() -> void:
 	update_progress()
-	update_text()
+	update_tick_text()
+	update_stack_text()
 
 
 func update_progress() -> void:
 	value = (1 - buff.get_tick_percent()) * 100
 
 
-func update_text() -> void:
+func update_tick_text() -> void:
+	if buff.marked_for_removal:
+		hide()
+		return
 	if buff.unlimited_ticks:
 		return
 	deficit.text = Big.new(buff.ticks.get_current_text()).s(1).toString()
@@ -58,6 +63,17 @@ func update_text() -> void:
 		deficit.hide()
 	else:
 		deficit.show()
+
+
+func update_stack_text() -> void:
+	if buff.marked_for_removal:
+		hide()
+		return
+	stacks.text = buff.stacks.get_current_text()
+	if stacks.text == "1":
+		stacks.hide()
+	else:
+		stacks.show()
 
 
 

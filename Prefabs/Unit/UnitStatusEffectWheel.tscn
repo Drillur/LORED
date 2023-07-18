@@ -6,6 +6,7 @@
 
 [sub_resource type="DynamicFont" id=1]
 size = 12
+outline_size = 1
 outline_color = Color( 0, 0, 0, 1 )
 font_data = ExtResource( 2 )
 
@@ -21,6 +22,19 @@ script = ExtResource( 3 )
 [node name="deficit" type="Label" parent="."]
 margin_right = 24.0
 margin_bottom = 24.0
+mouse_filter = 1
+size_flags_horizontal = 0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 1 )
+text = "7"
+align = 1
+valign = 1
+
+[node name="stacks" type="Label" parent="."]
+margin_left = 7.0
+margin_top = -7.0
+margin_right = 31.0
+margin_bottom = 17.0
 mouse_filter = 1
 size_flags_horizontal = 0
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )

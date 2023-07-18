@@ -67,6 +67,12 @@ func set_to(amount) -> void:
 	update_vico()
 
 
+func set_to_percent(percent: float, with_random_range := true) -> void:
+	current.set_to(
+		Big.new(get_total()).m(percent * (rand_range(0.8, 1.2) if with_random_range else 1.0))
+	)
+
+
 
 # - Get
 

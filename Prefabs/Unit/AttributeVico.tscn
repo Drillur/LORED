@@ -2,12 +2,8 @@
 
 [ext_resource path="res://Styles/Labels/Num.tres" type="DynamicFont" id=1]
 [ext_resource path="res://Prefabs/Unit/AttributeVico.gd" type="Script" id=2]
-[ext_resource path="res://Fonts/Roboto-BoldItalic.ttf" type="DynamicFontData" id=3]
-
-[sub_resource type="StyleBoxFlat" id=5]
-bg_color = Color( 0.197266, 0.197266, 0.197266, 1 )
-border_color = Color( 0, 0, 0, 0.431373 )
-border_blend = true
+[ext_resource path="res://Fonts/Roboto-MediumItalic.ttf" type="DynamicFontData" id=3]
+[ext_resource path="res://Styles/Panels/AttributeVicoStandard.tres" type="StyleBox" id=4]
 
 [sub_resource type="StyleBoxFlat" id=2]
 bg_color = Color( 0.654902, 0.654902, 0.654902, 1 )
@@ -36,14 +32,14 @@ margin_right = 100.0
 margin_bottom = 12.0
 rect_min_size = Vector2( 100, 12 )
 rect_pivot_offset = Vector2( -61, -6 )
-custom_styles/panel = SubResource( 5 )
+custom_styles/panel = ExtResource( 4 )
 script = ExtResource( 2 )
 
 [node name="progress" type="Panel" parent="."]
 unique_name_in_owner = true
 margin_right = 51.0
 margin_bottom = 12.0
-rect_min_size = Vector2( 2, 12 )
+rect_min_size = Vector2( 2, 0 )
 custom_styles/panel = SubResource( 2 )
 
 [node name="edge" type="Panel" parent="progress"]
@@ -61,24 +57,24 @@ unique_name_in_owner = true
 margin_left = 51.0
 margin_right = 87.0
 margin_bottom = 12.0
-rect_min_size = Vector2( 0, 12 )
 custom_styles/panel = SubResource( 6 )
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
-margin_top = -9.0
+[node name="Texts" type="HBoxContainer" parent="."]
+unique_name_in_owner = true
+margin_top = -7.0
 margin_right = 91.0
-margin_bottom = 8.0
+margin_bottom = 10.0
 alignment = 1
 
-[node name="Label" type="Label" parent="HBoxContainer"]
+[node name="Label" type="Label" parent="Texts"]
 unique_name_in_owner = true
 margin_right = 56.0
 margin_bottom = 17.0
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = ExtResource( 1 )
-text = "123e123"
+text = "412e123"
 
-[node name="flair" type="Label" parent="HBoxContainer"]
+[node name="flair" type="Label" parent="Texts"]
 unique_name_in_owner = true
 margin_left = 60.0
 margin_top = 1.0

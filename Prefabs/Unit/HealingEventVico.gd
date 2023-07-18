@@ -46,6 +46,7 @@ func _ready() -> void:
 func setup_unit_vicos() -> void:
 	for i in range(1, 4):
 		var unit_vico = get_node("%Unit" + str(i)) as UnitVico
+		unit_vico.blood.make_small()
 		unit_vicos.append(unit_vico)
 
 
@@ -122,8 +123,10 @@ func setup_units() -> void:
 		else:
 			unit_vico.setup(units[i - 1])
 	for x in units.size():
-		for buff in healing_event.starting_status_effects[x]:
-			units[x].take_status_effect(buff)
+		if not x in healing_event.starting_status_effects.keys():
+			continue
+		for buff_type in healing_event.starting_status_effects[x]:
+			units[x].take_status_effect(buff_type)
 
 
 

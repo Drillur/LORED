@@ -340,10 +340,13 @@ var pet_type: String
 
 var health: Attribute
 var blood: Attribute
+var barrier := Attribute.new(0)
 
 var sprite: Texture
 
 var has_vico := false
+var dead := false
+var cured := false
 var vico: MarginContainer
 
 var status_effects := {}
@@ -353,7 +356,6 @@ var status_effects := {}
 
 
 func _init(_type: int) -> void:
-	
 	type = _type
 	key = Type.keys()[type]
 	
@@ -365,6 +367,8 @@ func _init(_type: int) -> void:
 		pet_type = pet_types[randi() % len(pet_types)]
 	else:
 		description = civilian_description_pool[randi() % len(civilian_description_pool)]
+	
+	gv.connect("remove_status_effect", self, "remove_status_effect_signal")
 
 
 
@@ -409,6 +413,7 @@ func get_random_pet_name() -> String:
 func init_health(base_value: float) -> void:
 	base_value = rand_range(base_value * 0.8, base_value * 1.2)
 	health = Attribute.new(base_value)
+	barrier.total = health.total
 
 
 func init_blood(base_value: float) -> void:
@@ -428,7 +433,11 @@ func assign_vico(_vico: MarginContainer) -> void:
 # - Get
 
 func is_dead() -> bool:
-	return health.get_current().equal(0)
+	return dead
+
+
+func is_alive() -> bool:
+	return not dead
 
 
 func get_key_text() -> String:
@@ -446,47 +455,76 @@ func has_status_effect(_type: int) -> bool:
 
 
 func take_healing(amount) -> void:
+	if is_dead():
+		return
 	throw_healing_text(amount)
-	add_health(amount)
+	health.add(amount)
+	check_if_cured()
+
+
+func take_barrier(amount) -> void:
+	if is_dead():
+		return
+	throw_barrier_text(amount)
+	barrier.add(amount)
 
 
 func take_damage(amount) -> void:
+	if is_dead():
+		return
+	if not amount is Big:
+		amount = Big.new(amount)
 	var roll = randi() % 20
 	if roll == 0:
-		if amount is Big:
-			amount.m(2)
-		else:
-			amount *= 2
-	subtract_health(amount)
+		amount.m(2)
+	
 	throw_damage_text(amount)
+	
+	if barrier.get_current().greater(amount):
+		barrier.subtract(amount)
+	else:
+		amount.s(barrier.get_current())
+		barrier.set_to(0)
+		health.subtract(amount)
+		if health.get_current().equal(0):
+			die()
 
 
 func take_blood_loss(amount) -> void:
-	subtract_blood(amount)
+	if is_dead():
+		return
+	blood.subtract(amount)
 
-
-func add_health(amount) -> void:
-	health.add(amount)
-
-
-func subtract_health(amount) -> void:
-	health.subtract(amount)
 
 
 func set_current_health(value) -> void:
 	health.set_to(value)
 
 
-func subtract_blood(amount) -> void:
-	blood.subtract(amount)
-
-
 
 func take_status_effect(_type: int) -> void:
+	if is_dead():
+		return
 	if has_status_effect(_type):
-		renew_status_effect(status_effects[_type])
-	else:
-		apply_new_status_effect(_type)
+		if not status_effects[_type].marked_for_removal:
+			renew_status_effect(status_effects[_type])
+			return
+	apply_new_status_effect(_type)
+
+
+
+func dispell_status_effect() -> void:
+	if status_effects.empty():
+		return
+	
+	for buff in status_effects.values():
+		if not buff.dispellable:
+			continue
+		if buff.marked_for_removal:
+			continue
+		
+		buff.dispell()
+		break
 
 
 
@@ -496,6 +534,8 @@ func renew_status_effect(buff: UnitStatusEffect) -> void:
 
 
 func apply_new_status_effect(_type: int) -> void:
+	if _type in status_effects.keys():
+		status_effects.erase(_type)
 	var buff = UnitStatusEffect.new(_type)
 	status_effects[_type] = buff
 	buff.target = self
@@ -503,8 +543,43 @@ func apply_new_status_effect(_type: int) -> void:
 	gv.emit_signal("unit_status_effect_applied", self, buff)
 
 
-func remove_buff(buff: UnitStatusEffect) -> void:
+func remove_status_effect_signal(unit: Unit, buff: UnitStatusEffect) -> void:
+	if unit != self:
+		return
+	if not buff.type in status_effects.keys():
+		return
+	if not status_effects[buff.type].marked_for_removal:
+		return
+	remove_status_effect(status_effects[buff.type])
+
+
+func remove_status_effect(buff: UnitStatusEffect) -> void:
 	status_effects.erase(buff.type)
+
+
+func remove_all_status_effects() -> void:
+	for buff in status_effects.values():
+		if buff.marked_for_removal:
+			continue
+		buff.remove_from_unit()
+
+
+func remove_all_harmful_effects() -> void:
+	for buff in status_effects.values():
+		if buff.marked_for_removal:
+			continue
+		if buff.harmful:
+			buff.remove_from_unit()
+
+
+
+func die() -> void:
+	dead = true
+	health.set_to(0)
+	barrier.set_to(0)
+	remove_all_status_effects()
+	vico.update_dead()
+
 
 
 
@@ -544,6 +619,41 @@ func throw_damage_text(amount) -> void:
 	})
 
 
+func throw_barrier_text(amount) -> void:
+	if not amount is Big:
+		amount = Big.new(amount)
+	
+	var text: String = "+" + amount.toString()
+	
+	throw_finalized_text({
+		"text": text,
+		"color": Color(1, 1, 1),
+	})
+
+
 func throw_finalized_text(data: Dictionary) -> void:
 	var parent_node = vico.get_node("%texts")
 	gv.newOutputText(data, parent_node)
+
+
+
+func check_if_cured() -> void:
+	if is_cured():
+		mark_as_cured()
+
+
+func is_cured() -> bool:
+	if cured:
+		return true
+	if health.get_current_percent() < 1.0:
+		return false
+	if blood.get_current_percent() < 1.0:
+		return false
+	return true
+
+
+func mark_as_cured() -> void:
+	if cured:
+		return
+	cured = true
+	remove_all_harmful_effects()
