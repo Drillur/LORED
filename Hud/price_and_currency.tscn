@@ -1,0 +1,76 @@
+[gd_scene load_steps=3 format=3 uid="uid://7sj7harw8lg"]
+
+[ext_resource type="Script" path="res://Hud/Price and Currency.gd" id="1_alsmb"]
+[ext_resource type="Theme" uid="uid://b8t7tkhvril5g" path="res://Theme/Standard.tres" id="2_85t62"]
+
+[node name="MarginContainer" type="MarginContainer"]
+offset_right = 127.0
+offset_bottom = 19.0
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 0
+theme_override_constants/margin_bottom = 0
+script = ExtResource("1_alsmb")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 2
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 2
+theme_override_constants/margin_bottom = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Currency Text" type="RichTextLabel" parent="MarginContainer/HBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 4
+theme = ExtResource("2_85t62")
+theme_override_font_sizes/italics_font_size = 12
+bbcode_enabled = true
+text = "123e123"
+fit_content = true
+autowrap_mode = 0
+
+[node name="slash" type="RichTextLabel" parent="MarginContainer/HBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 4
+theme = ExtResource("2_85t62")
+theme_override_font_sizes/italics_font_size = 12
+bbcode_enabled = true
+text = "/"
+fit_content = true
+autowrap_mode = 0
+
+[node name="Cost Text" type="RichTextLabel" parent="MarginContainer/HBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 4
+theme = ExtResource("2_85t62")
+theme_override_font_sizes/italics_font_size = 12
+bbcode_enabled = true
+text = "123e123"
+fit_content = true
+autowrap_mode = 0
+
+[node name="Currency Name" type="RichTextLabel" parent="MarginContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 4
+theme = ExtResource("2_85t62")
+theme_override_font_sizes/italics_font_size = 12
+bbcode_enabled = true
+text = "bits"
+fit_content = true
+autowrap_mode = 0

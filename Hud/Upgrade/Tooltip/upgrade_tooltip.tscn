@@ -1,0 +1,90 @@
+[gd_scene load_steps=5 format=3 uid="uid://d0yrba4xrrhr6"]
+
+[ext_resource type="Theme" uid="uid://b8t7tkhvril5g" path="res://Theme/Standard.tres" id="1_eflbk"]
+[ext_resource type="Script" path="res://Hud/Upgrade/Tooltip/upgrade_tooltip.gd" id="1_u0jaa"]
+[ext_resource type="Theme" uid="uid://8dmfgxdrr5yh" path="res://Theme/Title.tres" id="2_dibeo"]
+[ext_resource type="PackedScene" uid="uid://dky60pdpk0ffa" path="res://Hud/Price.tscn" id="4_q8grj"]
+
+[node name="Upgrade Tooltip" type="MarginContainer"]
+offset_right = 73.0
+offset_bottom = 89.0
+script = ExtResource("1_u0jaa")
+
+[node name="bg" type="Panel" parent="."]
+layout_mode = 2
+theme = ExtResource("1_eflbk")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="title bg" type="Panel" parent="VBoxContainer/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("2_dibeo")
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="Title" type="RichTextLabel" parent="VBoxContainer/MarginContainer/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("2_dibeo")
+bbcode_enabled = true
+text = "GRINDER"
+fit_content = true
+autowrap_mode = 0
+
+[node name="MarginContainer2" type="MarginContainer" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="Details" type="VBoxContainer" parent="VBoxContainer/MarginContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Price" parent="VBoxContainer/MarginContainer2/Details" instance=ExtResource("4_q8grj")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/margin_bottom = 6
+
+[node name="effect" type="RichTextLabel" parent="VBoxContainer/MarginContainer2/Details"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+theme = ExtResource("1_eflbk")
+bbcode_enabled = true
+text = "Haste [b]x2"
+fit_content = true
+autowrap_mode = 0
+
+[node name="recipients" type="RichTextLabel" parent="VBoxContainer/MarginContainer2/Details"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+theme = ExtResource("1_eflbk")
+bbcode_enabled = true
+text = "[i]for [/i]Stone!"
+fit_content = true
+autowrap_mode = 0
+
+[node name="description" type="RichTextLabel" parent="VBoxContainer/MarginContainer2/Details"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme = ExtResource("1_eflbk")
+bbcode_enabled = true
+text = "hi"
+fit_content = true
+autowrap_mode = 2

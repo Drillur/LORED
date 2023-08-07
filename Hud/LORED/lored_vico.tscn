@@ -1,0 +1,213 @@
+[gd_scene load_steps=12 format=3 uid="uid://cc20piiohvlkw"]
+
+[ext_resource type="Script" path="res://Hud/LORED/lored_vico.gd" id="1_0ael0"]
+[ext_resource type="Theme" uid="uid://b8t7tkhvril5g" path="res://Theme/Standard.tres" id="1_7ail2"]
+[ext_resource type="Theme" uid="uid://bl4v2v143rihi" path="res://Theme/Background.tres" id="2_b2xx2"]
+[ext_resource type="PackedScene" uid="uid://exe3ppvvv74m" path="res://Hud/bar.tscn" id="2_p04r2"]
+[ext_resource type="PackedScene" uid="uid://bhw3xnrs1osqd" path="res://Hud/currency_vico.tscn" id="3_omytn"]
+[ext_resource type="Theme" uid="uid://dt7rd31blnvth" path="res://Theme/Invis.tres" id="4_43dff"]
+[ext_resource type="Texture2D" uid="uid://b5sh16p1b12b1" path="res://Sprites/Currency/axe.png" id="4_g5nc0"]
+[ext_resource type="SpriteFrames" path="res://Sprites/animations/copo.tres" id="5_c42kk"]
+[ext_resource type="PackedScene" uid="uid://cb3ej8nlybhvm" path="res://Hud/icon_button.tscn" id="7_d7ftl"]
+[ext_resource type="Script" path="res://Hud/LORED/lored_animation.gd" id="9_tchys"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_iihta"]
+bg_color = Color(1, 1, 1, 0.0470588)
+border_width_left = 10
+border_width_top = 10
+border_width_right = 10
+border_width_bottom = 10
+border_color = Color(0.0392157, 0.0745098, 0.0745098, 0.0745098)
+border_blend = true
+corner_radius_top_left = 33
+corner_radius_top_right = 33
+corner_radius_bottom_right = 33
+corner_radius_bottom_left = 33
+
+[node name="LORED Vico" type="MarginContainer"]
+custom_minimum_size = Vector2(216, 0)
+offset_right = 216.0
+offset_bottom = 134.0
+script = ExtResource("1_0ael0")
+
+[node name="bg" type="Panel" parent="."]
+layout_mode = 2
+theme = ExtResource("2_b2xx2")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="Progress Bar" parent="VBoxContainer/MarginContainer" instance=ExtResource("2_p04r2")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/MarginContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/MarginContainer/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="Name and Icon" type="HBoxContainer" parent="VBoxContainer/MarginContainer/MarginContainer/HBoxContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="LORED Icon" type="TextureRect" parent="VBoxContainer/MarginContainer/MarginContainer/HBoxContainer/VBoxContainer/Name and Icon"]
+unique_name_in_owner = true
+layout_mode = 2
+texture = ExtResource("4_g5nc0")
+stretch_mode = 5
+
+[node name="LORED Name" type="RichTextLabel" parent="VBoxContainer/MarginContainer/MarginContainer/HBoxContainer/VBoxContainer/Name and Icon"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 4
+theme = ExtResource("1_7ail2")
+bbcode_enabled = true
+text = "Carcinogens"
+fit_content = true
+autowrap_mode = 0
+
+[node name="Currency" parent="VBoxContainer/MarginContainer/MarginContainer/HBoxContainer/VBoxContainer" instance=ExtResource("3_omytn")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="Status" type="RichTextLabel" parent="VBoxContainer/MarginContainer/MarginContainer/HBoxContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("1_7ail2")
+bbcode_enabled = true
+text = "Sleeping."
+fit_content = true
+
+[node name="Panel" type="Panel" parent="VBoxContainer/MarginContainer/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(68, 68)
+layout_mode = 2
+theme = ExtResource("4_43dff")
+theme_override_styles/panel = SubResource("StyleBoxFlat_iihta")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="VBoxContainer/MarginContainer/MarginContainer/HBoxContainer/Panel"]
+unique_name_in_owner = true
+position = Vector2(2, 2)
+scale = Vector2(2, 2)
+sprite_frames = ExtResource("5_c42kk")
+animation = &"COPPER_ORE"
+centered = false
+script = ExtResource("9_tchys")
+
+[node name="Fuel Bar" parent="VBoxContainer" instance=ExtResource("2_p04r2")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Control" type="MarginContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="Panel" type="Panel" parent="VBoxContainer/Control"]
+layout_mode = 2
+theme = ExtResource("1_7ail2")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/Control"]
+layout_mode = 2
+theme_override_constants/separation = 0
+alignment = 1
+
+[node name="Info" parent="VBoxContainer/Control/HBoxContainer" instance=ExtResource("7_d7ftl")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Jobs" parent="VBoxContainer/Control/HBoxContainer" instance=ExtResource("7_d7ftl")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Active Buffs" parent="VBoxContainer/Control/HBoxContainer" instance=ExtResource("7_d7ftl")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="View Special" parent="VBoxContainer/Control/HBoxContainer" instance=ExtResource("7_d7ftl")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Sleep" parent="VBoxContainer/Control/HBoxContainer" instance=ExtResource("7_d7ftl")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Level Up" parent="VBoxContainer/Control/HBoxContainer" instance=ExtResource("7_d7ftl")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 2
+mouse_filter = 2
+metadata/_edit_lock_ = true
+
+[node name="LeftDown" type="Control" parent="Control"]
+unique_name_in_owner = true
+anchors_preset = 0
+offset_left = -10.0
+offset_top = -10.0
+offset_right = -10.0
+offset_bottom = -10.0
+
+[node name="RightDown" type="Control" parent="Control"]
+unique_name_in_owner = true
+layout_mode = 2
+anchors_preset = 0
+offset_left = 226.0
+offset_top = -10.0
+offset_right = 226.0
+offset_bottom = -10.0
+
+[node name="Output Texts" type="Control" parent="Control"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -44.0
+offset_top = 15.0
+offset_right = -44.0
+offset_bottom = 15.0
+grow_horizontal = 0
+
+[node name="Emote Anchor" type="Control" parent="Control"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -44.0
+offset_top = 15.0
+offset_right = -44.0
+offset_bottom = 15.0
+grow_horizontal = 0
+
+[node name="Emote Container" type="MarginContainer" parent="Control/Emote Anchor"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -342.0
+offset_top = -166.0
+offset_bottom = -10.0
+grow_horizontal = 0
+grow_vertical = 0
+mouse_filter = 2
+
+[connection signal="item_rect_changed" from="." to="." method="_on_item_rect_changed"]
+[connection signal="tree_exited" from="." to="." method="_on_tree_exited"]
+[connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]

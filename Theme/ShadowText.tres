@@ -1,0 +1,44 @@
+[gd_resource type="Theme" load_steps=10 format=3 uid="uid://cwt08llwihqii"]
+
+[ext_resource type="FontFile" uid="uid://cubavfw1lomep" path="res://Fonts/Roboto-Black.ttf" id="1_6qu4w"]
+[ext_resource type="FontFile" uid="uid://d2cepijgbnmb1" path="res://Fonts/Roboto-BlackItalic.ttf" id="2_qvwoc"]
+[ext_resource type="FontFile" uid="uid://1w6nq6sovkc2" path="res://Fonts/Roboto-MediumItalic.ttf" id="3_ou367"]
+[ext_resource type="FontFile" uid="uid://caej2ljgikhb3" path="res://Fonts/Roboto-Medium.ttf" id="4_urbhl"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3b0uh"]
+bg_color = Color(1, 1, 1, 0.0509804)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ft1y4"]
+draw_center = false
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rqb2p"]
+content_margin_left = 10.0
+content_margin_right = 10.0
+draw_center = false
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1gal3"]
+content_margin_left = 10.0
+content_margin_right = 10.0
+draw_center = false
+border_width_bottom = 1
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_h0on3"]
+content_margin_left = 10.0
+content_margin_right = 10.0
+draw_center = false
+
+[resource]
+Panel/styles/panel = SubResource("StyleBoxFlat_3b0uh")
+RichTextLabel/colors/font_shadow_color = Color(0, 0, 0, 1)
+RichTextLabel/font_sizes/bold_font_size = 12
+RichTextLabel/font_sizes/bold_italics_font_size = 12
+RichTextLabel/font_sizes/italics_font_size = 12
+RichTextLabel/font_sizes/normal_font_size = 12
+RichTextLabel/fonts/bold_font = ExtResource("1_6qu4w")
+RichTextLabel/fonts/bold_italics_font = ExtResource("2_qvwoc")
+RichTextLabel/fonts/italics_font = ExtResource("3_ou367")
+RichTextLabel/fonts/normal_font = ExtResource("4_urbhl")
+TabContainer/styles/panel = SubResource("StyleBoxFlat_ft1y4")
+TabContainer/styles/tab_hovered = SubResource("StyleBoxFlat_rqb2p")
+TabContainer/styles/tab_selected = SubResource("StyleBoxFlat_1gal3")
+TabContainer/styles/tab_unselected = SubResource("StyleBoxFlat_h0on3")

@@ -1,13 +1,24 @@
-[gd_resource type="SpriteFrames" load_steps=2 format=2]
+[gd_resource type="SpriteFrames" load_steps=13 format=2]
 
 [ext_resource path="res://Sprites/animations/lead/wait.png" type="Texture" id=1]
+[ext_resource path="res://Sprites/animations/lead/ff0008.png" type="Texture" id=2]
+[ext_resource path="res://Sprites/animations/lead/ff0007.png" type="Texture" id=3]
+[ext_resource path="res://Sprites/animations/lead/ff0004.png" type="Texture" id=4]
+[ext_resource path="res://Sprites/animations/lead/ff0003.png" type="Texture" id=5]
+[ext_resource path="res://Sprites/animations/lead/ff0001.png" type="Texture" id=6]
+[ext_resource path="res://Sprites/animations/lead/ff0009.png" type="Texture" id=7]
+[ext_resource path="res://Sprites/animations/lead/ff0005.png" type="Texture" id=8]
+[ext_resource path="res://Sprites/animations/lead/ff0006.png" type="Texture" id=9]
+[ext_resource path="res://Sprites/animations/lead/ff0011.png" type="Texture" id=10]
+[ext_resource path="res://Sprites/animations/lead/ff0002.png" type="Texture" id=11]
+[ext_resource path="res://Sprites/animations/lead/ff0010.png" type="Texture" id=12]
 
 [resource]
 animations = [ {
-"frames": [  ],
+"frames": [ ExtResource( 2 ), ExtResource( 7 ), ExtResource( 12 ), ExtResource( 10 ), ExtResource( 6 ), ExtResource( 11 ), ExtResource( 5 ), ExtResource( 4 ), ExtResource( 8 ), ExtResource( 9 ), ExtResource( 3 ) ],
 "loop": true,
-"name": "ff",
-"speed": 14.0
+"name": "LEAD",
+"speed": 1.0
 }, {
 "frames": [ ExtResource( 1 ) ],
 "loop": true,

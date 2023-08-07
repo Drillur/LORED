@@ -1,0 +1,49 @@
+[gd_resource type="Theme" load_steps=5 format=3 uid="uid://ckdnb4in367o6"]
+
+[ext_resource type="FontFile" uid="uid://caej2ljgikhb3" path="res://Fonts/Roboto-Medium.ttf" id="1_epbwr"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jg65o"]
+content_margin_left = 10.0
+content_margin_top = 7.0
+content_margin_right = 10.0
+content_margin_bottom = 7.0
+bg_color = Color(0.65098, 0.65098, 0.65098, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+shadow_size = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_r3s4d"]
+content_margin_left = 10.0
+content_margin_top = 7.0
+content_margin_right = 10.0
+content_margin_bottom = 7.0
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+shadow_size = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5s1w8"]
+content_margin_left = 10.0
+content_margin_top = 7.0
+content_margin_right = 10.0
+content_margin_bottom = 7.0
+bg_color = Color(0.54902, 0.54902, 0.54902, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+shadow_size = 3
+
+[resource]
+Button/colors/font_color = Color(0, 0, 0, 1)
+Button/colors/font_hover_color = Color(0, 0, 0, 1)
+Button/colors/font_hover_pressed_color = Color(0, 0, 0, 1)
+Button/colors/font_pressed_color = Color(0, 0, 0, 1)
+Button/font_sizes/font_size = 12
+Button/fonts/font = ExtResource("1_epbwr")
+Button/styles/hover = SubResource("StyleBoxFlat_jg65o")
+Button/styles/normal = SubResource("StyleBoxFlat_r3s4d")
+Button/styles/pressed = SubResource("StyleBoxFlat_5s1w8")

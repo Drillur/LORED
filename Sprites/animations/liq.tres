@@ -28,8 +28,8 @@
 animations = [ {
 "frames": [ ExtResource( 1 ), ExtResource( 9 ), ExtResource( 22 ), ExtResource( 23 ), ExtResource( 16 ), ExtResource( 19 ), ExtResource( 15 ), ExtResource( 17 ), ExtResource( 18 ), ExtResource( 21 ), ExtResource( 20 ), ExtResource( 13 ), ExtResource( 6 ), ExtResource( 4 ), ExtResource( 7 ), ExtResource( 8 ), ExtResource( 5 ), ExtResource( 11 ), ExtResource( 10 ), ExtResource( 12 ), ExtResource( 3 ), ExtResource( 2 ) ],
 "loop": true,
-"name": "ff",
-"speed": 14.0
+"name": "LIQUID_IRON",
+"speed": 1.0
 }, {
 "frames": [ ExtResource( 14 ) ],
 "loop": true,

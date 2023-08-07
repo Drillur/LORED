@@ -1,0 +1,71 @@
+[gd_scene load_steps=4 format=3 uid="uid://bhw3xnrs1osqd"]
+
+[ext_resource type="Script" path="res://Hud/currency_vico.gd" id="1_bpbqi"]
+[ext_resource type="Texture2D" uid="uid://b5sh16p1b12b1" path="res://Sprites/Currency/axe.png" id="2_gsqm2"]
+[ext_resource type="Theme" uid="uid://cwt08llwihqii" path="res://Theme/ShadowText.tres" id="3_ifira"]
+
+[node name="Currency Vico" type="MarginContainer"]
+offset_right = 58.0
+offset_bottom = 15.0
+script = ExtResource("1_bpbqi")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Icon" type="TextureRect" parent="HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+texture = ExtResource("2_gsqm2")
+expand_mode = 2
+stretch_mode = 5
+
+[node name="Icon Shadow" type="TextureRect" parent="HBoxContainer/Icon"]
+unique_name_in_owner = true
+modulate = Color(0, 0, 0, 1)
+show_behind_parent = true
+layout_mode = 2
+offset_left = 1.0
+offset_top = 1.0
+offset_right = 31.0
+offset_bottom = 31.0
+texture = ExtResource("2_gsqm2")
+expand_mode = 2
+stretch_mode = 5
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+alignment = 1
+
+[node name="Count" type="RichTextLabel" parent="HBoxContainer/HBoxContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 0
+theme = ExtResource("3_ifira")
+bbcode_enabled = true
+text = "1,080"
+fit_content = true
+autowrap_mode = 0
+
+[node name="Rate" type="RichTextLabel" parent="HBoxContainer/HBoxContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 0
+theme = ExtResource("3_ifira")
+bbcode_enabled = true
+text = "[i]14/s"
+fit_content = true
+autowrap_mode = 0
+
+[node name="Threshold" type="RichTextLabel" parent="HBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("3_ifira")
+bbcode_enabled = true
+text = "/1,080"
+fit_content = true
+autowrap_mode = 0

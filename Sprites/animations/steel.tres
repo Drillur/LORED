@@ -1,4 +1,4 @@
-[gd_resource type="SpriteFrames" load_steps=59 format=2]
+[gd_resource type="SpriteFrames" load_steps=60 format=2]
 
 [ext_resource path="res://Sprites/animations/steel/ff0001.png" type="Texture" id=1]
 [ext_resource path="res://Sprites/animations/steel/ff0002.png" type="Texture" id=2]
@@ -53,6 +53,7 @@
 [ext_resource path="res://Sprites/animations/steel/ff0020.png" type="Texture" id=51]
 [ext_resource path="res://Sprites/animations/steel/ff0025.png" type="Texture" id=52]
 [ext_resource path="res://Sprites/animations/steel/ff0042.png" type="Texture" id=53]
+[ext_resource path="res://Sprites/animations/steel/wait.png" type="Texture" id=54]
 [ext_resource path="res://Sprites/animations/steel/ff0029.png" type="Texture" id=55]
 [ext_resource path="res://Sprites/animations/steel/ff0048.png" type="Texture" id=56]
 [ext_resource path="res://Sprites/animations/steel/ff0019.png" type="Texture" id=57]
@@ -63,10 +64,10 @@
 animations = [ {
 "frames": [ ExtResource( 11 ), ExtResource( 43 ), ExtResource( 36 ), ExtResource( 39 ), ExtResource( 45 ), ExtResource( 47 ), ExtResource( 20 ), ExtResource( 57 ), ExtResource( 51 ), ExtResource( 38 ), ExtResource( 28 ), ExtResource( 29 ), ExtResource( 26 ), ExtResource( 52 ), ExtResource( 32 ), ExtResource( 35 ), ExtResource( 14 ), ExtResource( 55 ), ExtResource( 34 ), ExtResource( 48 ), ExtResource( 15 ), ExtResource( 58 ), ExtResource( 17 ), ExtResource( 18 ), ExtResource( 30 ), ExtResource( 21 ), ExtResource( 50 ), ExtResource( 27 ), ExtResource( 59 ), ExtResource( 42 ), ExtResource( 53 ), ExtResource( 16 ), ExtResource( 40 ), ExtResource( 44 ), ExtResource( 46 ), ExtResource( 22 ), ExtResource( 56 ), ExtResource( 23 ), ExtResource( 49 ), ExtResource( 19 ), ExtResource( 31 ), ExtResource( 24 ), ExtResource( 25 ), ExtResource( 13 ), ExtResource( 41 ), ExtResource( 33 ), ExtResource( 37 ), ExtResource( 1 ), ExtResource( 2 ), ExtResource( 4 ), ExtResource( 3 ), ExtResource( 5 ), ExtResource( 12 ), ExtResource( 6 ), ExtResource( 7 ), ExtResource( 8 ), ExtResource( 9 ), ExtResource( 10 ) ],
 "loop": true,
-"name": "ff",
-"speed": 5.0
+"name": "STEEL",
+"speed": 1.0
 }, {
-"frames": [ null ],
+"frames": [ ExtResource( 54 ) ],
 "loop": true,
 "name": "ww",
 "speed": 5.0

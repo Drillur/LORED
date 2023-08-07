@@ -1,0 +1,70 @@
+[gd_scene load_steps=5 format=3 uid="uid://23dog5ok2vsp"]
+
+[ext_resource type="Script" path="res://Hud/LORED/Tooltip/lored_job.gd" id="1_v2sti"]
+[ext_resource type="Theme" uid="uid://b8t7tkhvril5g" path="res://Theme/Standard.tres" id="2_srluh"]
+[ext_resource type="Theme" uid="uid://dpjvckeu73050" path="res://Theme/Subtitle.tres" id="3_gyk4w"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_03eo3"]
+bg_color = Color(1, 1, 1, 0.0901961)
+corner_radius_top_left = 1
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 1
+shadow_color = Color(1, 1, 1, 0.101961)
+
+[node name="LORED Job" type="MarginContainer"]
+offset_right = 59.0
+offset_bottom = 74.0
+script = ExtResource("1_v2sti")
+
+[node name="bg" type="Panel" parent="."]
+layout_mode = 2
+theme = ExtResource("2_srluh")
+
+[node name="glow" type="Panel" parent="."]
+layout_mode = 2
+theme = ExtResource("2_srluh")
+theme_override_styles/panel = SubResource("StyleBoxFlat_03eo3")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="Details" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/Details"]
+layout_mode = 2
+
+[node name="Title" type="RichTextLabel" parent="MarginContainer/Details/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+theme = ExtResource("3_gyk4w")
+bbcode_enabled = true
+text = "Toast"
+fit_content = true
+autowrap_mode = 0
+
+[node name="Duration" type="RichTextLabel" parent="MarginContainer/Details/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+theme = ExtResource("2_srluh")
+bbcode_enabled = true
+text = "3.0 sec"
+fit_content = true
+autowrap_mode = 0
+
+[node name="Produced Currencies Parent" type="VBoxContainer" parent="MarginContainer/Details"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Required Currencies Parent" type="VBoxContainer" parent="MarginContainer/Details"]
+unique_name_in_owner = true
+layout_mode = 2

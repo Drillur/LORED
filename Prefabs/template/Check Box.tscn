@@ -1,9 +1,0 @@
-[gd_scene format=2]
-
-[node name="check" type="CheckBox"]
-margin_left = 29.0
-margin_right = 54.0
-margin_bottom = 48.0
-rect_min_size = Vector2( 25, 0 )
-disabled = true
-pressed = true

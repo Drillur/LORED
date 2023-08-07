@@ -1,0 +1,68 @@
+[gd_scene load_steps=4 format=3 uid="uid://hc3ost75mg2v"]
+
+[ext_resource type="Theme" uid="uid://b8t7tkhvril5g" path="res://Theme/Standard.tres" id="1_m0mf0"]
+[ext_resource type="Script" path="res://Hud/LORED/Tooltip/lored_jobs.gd" id="1_n13r1"]
+[ext_resource type="Theme" uid="uid://8dmfgxdrr5yh" path="res://Theme/Title.tres" id="2_bypee"]
+
+[node name="LORED Jobs" type="MarginContainer"]
+custom_minimum_size = Vector2(0, 180)
+layout_direction = 2
+offset_right = 47.0
+offset_bottom = 180.0
+size_flags_horizontal = 0
+script = ExtResource("1_n13r1")
+
+[node name="bg" type="Panel" parent="."]
+layout_mode = 2
+theme = ExtResource("1_m0mf0")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="title bg" type="Panel" parent="VBoxContainer/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("2_bypee")
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="Title" type="RichTextLabel" parent="VBoxContainer/MarginContainer/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("2_bypee")
+bbcode_enabled = true
+text = "Jobs"
+fit_content = true
+autowrap_mode = 0
+
+[node name="MarginContainer2" type="MarginContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/MarginContainer2"]
+layout_mode = 2
+horizontal_scroll_mode = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/MarginContainer2/ScrollContainer"]
+layout_mode = 2
+theme_override_constants/margin_right = 10
+
+[node name="Jobs Parent" type="GridContainer" parent="VBoxContainer/MarginContainer2/ScrollContainer/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/h_separation = 10
+theme_override_constants/v_separation = 10
+columns = 2

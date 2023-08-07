@@ -1,0 +1,40 @@
+[gd_scene load_steps=3 format=3 uid="uid://bh234hureol4n"]
+
+[ext_resource type="Script" path="res://Hud/attribute_text_vico.gd" id="1_oxert"]
+[ext_resource type="Theme" uid="uid://b8t7tkhvril5g" path="res://Theme/Standard.tres" id="2_l6jhh"]
+
+[node name="AttributeTextVico" type="MarginContainer"]
+offset_right = 80.0
+offset_bottom = 15.0
+size_flags_horizontal = 4
+script = ExtResource("1_oxert")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="Current" type="RichTextLabel" parent="HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("2_l6jhh")
+bbcode_enabled = true
+text = "123e123"
+fit_content = true
+autowrap_mode = 0
+
+[node name="Slash" type="RichTextLabel" parent="HBoxContainer"]
+layout_mode = 2
+theme = ExtResource("2_l6jhh")
+bbcode_enabled = true
+text = "/"
+fit_content = true
+autowrap_mode = 0
+
+[node name="Total" type="RichTextLabel" parent="HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("2_l6jhh")
+bbcode_enabled = true
+text = "123e123"
+fit_content = true
+autowrap_mode = 0

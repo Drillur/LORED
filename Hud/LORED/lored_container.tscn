@@ -1,0 +1,331 @@
+[gd_scene load_steps=4 format=3 uid="uid://rmruae8fguk4"]
+
+[ext_resource type="Script" path="res://Hud/LORED/lored_container.gd" id="1_2pklp"]
+[ext_resource type="PackedScene" uid="uid://cc20piiohvlkw" path="res://Hud/LORED/lored_vico.tscn" id="1_4k0y7"]
+[ext_resource type="Theme" uid="uid://b8t7tkhvril5g" path="res://Theme/Standard.tres" id="1_q3qro"]
+
+[node name="LORED Container" type="MarginContainer"]
+offset_right = 1280.0
+offset_bottom = 720.0
+script = ExtResource("1_2pklp")
+
+[node name="TabContainer" type="TabContainer" parent="."]
+self_modulate = Color(0.890196, 0, 0.235294, 1)
+layout_mode = 2
+theme = ExtResource("1_q3qro")
+theme_override_colors/font_selected_color = Color(0, 0, 0, 1)
+tabs_visible = false
+
+[node name="Stage 1" type="MarginContainer" parent="TabContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/Stage 1"]
+layout_mode = 2
+scroll_vertical = 100
+horizontal_scroll_mode = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="TabContainer/Stage 1/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_top = 250
+theme_override_constants/margin_bottom = 250
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Stage 1/ScrollContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 30
+
+[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Stage 1/ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 30
+alignment = 1
+
+[node name="MALIGNANCY" parent="TabContainer/Stage 1/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer" groups=["Stage 1"] instance=ExtResource("1_4k0y7")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="TabContainer/Stage 1/ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 30
+alignment = 1
+
+[node name="TARBALLS" parent="TabContainer/Stage 1/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer2" groups=["Stage 1"] instance=ExtResource("1_4k0y7")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="GROWTH" parent="TabContainer/Stage 1/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer2" groups=["Stage 1"] instance=ExtResource("1_4k0y7")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="TabContainer/Stage 1/ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 30
+alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Stage 1/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+theme_override_constants/separation = 30
+
+[node name="CONCRETE" parent="TabContainer/Stage 1/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer3/VBoxContainer" groups=["Stage 1"] instance=ExtResource("1_4k0y7")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="OIL" parent="TabContainer/Stage 1/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer3/VBoxContainer" groups=["Stage 1"] instance=ExtResource("1_4k0y7")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="JOULES" parent="TabContainer/Stage 1/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer3/VBoxContainer" groups=["Stage 1"] instance=ExtResource("1_4k0y7")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="TabContainer/Stage 1/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+theme_override_constants/separation = 30
+
+[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Stage 1/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer3/VBoxContainer2"]
+layout_mode = 2
+theme_override_constants/separation = 30
+
+[node name="IRON" parent="TabContainer/Stage 1/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer3/VBoxContainer2/HBoxContainer" groups=["Stage 1"] instance=ExtResource("1_4k0y7")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="COPPER" parent="TabContainer/Stage 1/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer3/VBoxContainer2/HBoxContainer" groups=["Stage 1"] instance=ExtResource("1_4k0y7")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="TabContainer/Stage 1/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer3/VBoxContainer2"]
+layout_mode = 2
+theme_override_constants/separation = 30
+
+[node name="IRON_ORE" parent="TabContainer/Stage 1/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer3/VBoxContainer2/HBoxContainer2" groups=["Stage 1"] instance=ExtResource("1_4k0y7")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="COPPER_ORE" parent="TabContainer/Stage 1/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer3/VBoxContainer2/HBoxContainer2" groups=["Stage 1"] instance=ExtResource("1_4k0y7")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="TabContainer/Stage 1/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer3/VBoxContainer2"]
+layout_mode = 2
+theme_override_constants/separation = 30
+
+[node name="COAL" parent="TabContainer/Stage 1/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer3/VBoxContainer2/HBoxContainer3" groups=["Stage 1"] instance=ExtResource("1_4k0y7")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="STONE" parent="TabContainer/Stage 1/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer3/VBoxContainer2/HBoxContainer3" groups=["Stage 1"] instance=ExtResource("1_4k0y7")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Stage 2" type="MarginContainer" parent="TabContainer"]
+visible = false
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/Stage 2"]
+layout_mode = 2
+scroll_vertical = 100
+horizontal_scroll_mode = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="TabContainer/Stage 2/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_top = 250
+theme_override_constants/margin_bottom = 250
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Stage 2/ScrollContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 30
+
+[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Stage 2/ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 30
+alignment = 1
+
+[node name="CARCINOGENS" parent="TabContainer/Stage 2/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer" groups=["Stage 2"] instance=ExtResource("1_4k0y7")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="TUMORS" parent="TabContainer/Stage 2/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer" groups=["Stage 2"] instance=ExtResource("1_4k0y7")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="TabContainer/Stage 2/ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 30
+alignment = 1
+
+[node name="PLASTIC" parent="TabContainer/Stage 2/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer2" groups=["Stage 2"] instance=ExtResource("1_4k0y7")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="TOBACCO" parent="TabContainer/Stage 2/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer2" groups=["Stage 2"] instance=ExtResource("1_4k0y7")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="CIGARETTES" parent="TabContainer/Stage 2/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer2" groups=["Stage 2"] instance=ExtResource("1_4k0y7")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="TabContainer/Stage 2/ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 30
+alignment = 1
+
+[node name="PETROLEUM" parent="TabContainer/Stage 2/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer4" groups=["Stage 2"] instance=ExtResource("1_4k0y7")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="WOOD_PULP" parent="TabContainer/Stage 2/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer4" groups=["Stage 2"] instance=ExtResource("1_4k0y7")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="PAPER" parent="TabContainer/Stage 2/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer4" groups=["Stage 2"] instance=ExtResource("1_4k0y7")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer5" type="HBoxContainer" parent="TabContainer/Stage 2/ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 30
+alignment = 1
+
+[node name="GALENA" parent="TabContainer/Stage 2/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer5" groups=["Stage 2"] instance=ExtResource("1_4k0y7")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="LEAD" parent="TabContainer/Stage 2/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer5" groups=["Stage 2"] instance=ExtResource("1_4k0y7")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer6" type="HBoxContainer" parent="TabContainer/Stage 2/ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 30
+alignment = 1
+
+[node name="DRAW_PLATE" parent="TabContainer/Stage 2/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer6" groups=["Stage 2"] instance=ExtResource("1_4k0y7")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="WIRE" parent="TabContainer/Stage 2/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer6" groups=["Stage 2"] instance=ExtResource("1_4k0y7")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer7" type="HBoxContainer" parent="TabContainer/Stage 2/ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 30
+alignment = 1
+
+[node name="SAND" parent="TabContainer/Stage 2/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer7" groups=["Stage 2"] instance=ExtResource("1_4k0y7")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="GLASS" parent="TabContainer/Stage 2/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer7" groups=["Stage 2"] instance=ExtResource("1_4k0y7")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer8" type="HBoxContainer" parent="TabContainer/Stage 2/ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 30
+alignment = 1
+
+[node name="LIQUID_IRON" parent="TabContainer/Stage 2/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer8" groups=["Stage 2"] instance=ExtResource("1_4k0y7")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="STEEL" parent="TabContainer/Stage 2/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer8" groups=["Stage 2"] instance=ExtResource("1_4k0y7")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer9" type="HBoxContainer" parent="TabContainer/Stage 2/ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 30
+alignment = 1
+
+[node name="AXES" parent="TabContainer/Stage 2/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer9" groups=["Stage 2"] instance=ExtResource("1_4k0y7")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="WOOD" parent="TabContainer/Stage 2/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer9" groups=["Stage 2"] instance=ExtResource("1_4k0y7")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HARDWOOD" parent="TabContainer/Stage 2/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer9" groups=["Stage 2"] instance=ExtResource("1_4k0y7")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer10" type="HBoxContainer" parent="TabContainer/Stage 2/ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 30
+alignment = 1
+
+[node name="SEEDS" parent="TabContainer/Stage 2/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer10" groups=["Stage 2"] instance=ExtResource("1_4k0y7")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="TREES" parent="TabContainer/Stage 2/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer10" groups=["Stage 2"] instance=ExtResource("1_4k0y7")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="SOIL" parent="TabContainer/Stage 2/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer10" groups=["Stage 2"] instance=ExtResource("1_4k0y7")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer11" type="HBoxContainer" parent="TabContainer/Stage 2/ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 30
+alignment = 1
+
+[node name="WATER" parent="TabContainer/Stage 2/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer11" groups=["Stage 2"] instance=ExtResource("1_4k0y7")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HUMUS" parent="TabContainer/Stage 2/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer11" groups=["Stage 2"] instance=ExtResource("1_4k0y7")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Stage 3" type="MarginContainer" parent="TabContainer"]
+visible = false
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/Stage 3"]
+layout_mode = 2
+horizontal_scroll_mode = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="TabContainer/Stage 3/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_top = 250
+theme_override_constants/margin_bottom = 250
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Stage 3/ScrollContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 30
+
+[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Stage 3/ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 30
+alignment = 1
+
+[node name="BLOOD" parent="TabContainer/Stage 3/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer" instance=ExtResource("1_4k0y7")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="WITCH" parent="TabContainer/Stage 3/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer" instance=ExtResource("1_4k0y7")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[connection signal="tab_changed" from="TabContainer" to="." method="_on_tab_container_tab_changed"]

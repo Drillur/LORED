@@ -1,0 +1,51 @@
+[gd_scene load_steps=4 format=3 uid="uid://dky60pdpk0ffa"]
+
+[ext_resource type="Theme" uid="uid://b8t7tkhvril5g" path="res://Theme/Standard.tres" id="1_3vkne"]
+[ext_resource type="Texture2D" uid="uid://de68iry5swvex" path="res://Sprites/Hud/price-tag-3-fill.png" id="1_7cws7"]
+[ext_resource type="Script" path="res://Hud/Price.gd" id="1_ncutb"]
+
+[node name="Price" type="MarginContainer"]
+offset_right = 48.0
+offset_bottom = 19.0
+size_flags_horizontal = 0
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 0
+theme_override_constants/margin_bottom = 10
+script = ExtResource("1_ncutb")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer"]
+custom_minimum_size = Vector2(0, 19)
+layout_mode = 2
+size_flags_vertical = 0
+
+[node name="Eta" type="RichTextLabel" parent="HBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(25, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 4
+theme = ExtResource("1_3vkne")
+theme_override_font_sizes/italics_font_size = 12
+bbcode_enabled = true
+text = "[right]55s"
+fit_content = true
+autowrap_mode = 0
+
+[node name="Icon" type="TextureRect" parent="HBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(15, 15)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource("1_7cws7")
+expand_mode = 2
+
+[node name="Content Parent" type="VBoxContainer" parent="HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 0

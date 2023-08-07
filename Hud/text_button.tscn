@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://c0518n1uf8jt2"]
+
+[ext_resource type="Theme" uid="uid://ckdnb4in367o6" path="res://Theme/TextButton.tres" id="1_3l6gr"]
+[ext_resource type="Script" path="res://Hud/text_button.gd" id="1_at1eo"]
+
+[node name="Text Button" type="MarginContainer"]
+offset_right = 71.0
+offset_bottom = 25.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+script = ExtResource("1_at1eo")
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 2
+focus_mode = 0
+mouse_default_cursor_shape = 2
+theme = ExtResource("1_3l6gr")
+text = "DISCORD"

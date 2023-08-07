@@ -1,0 +1,20 @@
+[gd_scene load_steps=3 format=3 uid="uid://cjrvv7gf1rvcq"]
+
+[ext_resource type="Script" path="res://Hud/tooltip.gd" id="1_e14g4"]
+[ext_resource type="Theme" uid="uid://bl4v2v143rihi" path="res://Theme/Background.tres" id="1_ohnix"]
+
+[node name="Tooltip" type="MarginContainer"]
+offset_right = 52.0
+offset_bottom = 58.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+script = ExtResource("1_e14g4")
+
+[node name="bg" type="Panel" parent="."]
+layout_mode = 2
+theme = ExtResource("1_ohnix")
+
+[node name="Tooltip Content" type="MarginContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0

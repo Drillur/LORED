@@ -1,0 +1,107 @@
+[gd_scene load_steps=6 format=3 uid="uid://6cjrke2cybqn"]
+
+[ext_resource type="Script" path="res://Hud/Emote/emote_vico.gd" id="1_hquu4"]
+[ext_resource type="Texture2D" uid="uid://d04kr43kmt18j" path="res://Sprites/Hud/BottomBubble.png" id="1_k6vn0"]
+[ext_resource type="Texture2D" uid="uid://71ksxcwcnb74" path="res://Sprites/reactions/WATER2.png" id="2_nwudr"]
+[ext_resource type="Theme" uid="uid://cwt08llwihqii" path="res://Theme/ShadowText.tres" id="4_ob3if"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_r8yxn"]
+bg_color = Color(0.305882, 0.305882, 0.305882, 1)
+border_width_left = 4
+border_width_top = 4
+border_color = Color(1, 1, 1, 0.729412)
+border_blend = true
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+shadow_size = 5
+
+[node name="EmoteVico" type="MarginContainer"]
+custom_minimum_size = Vector2(75, 52)
+offset_right = 170.0
+offset_bottom = 84.0
+size_flags_horizontal = 8
+size_flags_vertical = 8
+mouse_filter = 2
+script = ExtResource("1_hquu4")
+
+[node name="bg" type="Panel" parent="."]
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_r8yxn")
+
+[node name="Flocket" type="Control" parent="."]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8
+mouse_filter = 2
+
+[node name="TextureRect" type="TextureRect" parent="Flocket"]
+modulate = Color(0.380392, 0.380392, 0.380392, 1)
+layout_mode = 0
+offset_left = -46.0
+offset_right = 89.0
+offset_bottom = 78.0
+scale = Vector2(0.164, 0.164)
+mouse_filter = 2
+texture = ExtResource("1_k6vn0")
+expand_mode = 2
+stretch_mode = 4
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Pose" type="TextureRect" parent="MarginContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+texture = ExtResource("2_nwudr")
+
+[node name="Pose Shadow" type="TextureRect" parent="MarginContainer/HBoxContainer/Pose"]
+unique_name_in_owner = true
+modulate = Color(0, 0, 0, 1)
+show_behind_parent = true
+layout_mode = 2
+offset_left = 1.0
+offset_top = 1.0
+offset_right = 65.0
+offset_bottom = 65.0
+mouse_filter = 2
+texture = ExtResource("2_nwudr")
+
+[node name="Dialogue Container" type="ScrollContainer" parent="MarginContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+horizontal_scroll_mode = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer/Dialogue Container"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="Dialogue Text" type="RichTextLabel" parent="MarginContainer/HBoxContainer/Dialogue Container/MarginContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(20, 0)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+theme = ExtResource("4_ob3if")
+bbcode_enabled = true
+text = "[i]Boy do I sure have a lot to say!"
+fit_content = true
+
+[node name="Timer" type="Timer" parent="."]

@@ -1,0 +1,113 @@
+[gd_scene load_steps=8 format=3 uid="uid://exe3ppvvv74m"]
+
+[ext_resource type="Script" path="res://Hud/bar.gd" id="1_cyi4v"]
+[ext_resource type="Theme" uid="uid://b8t7tkhvril5g" path="res://Theme/Standard.tres" id="2_yan3f"]
+[ext_resource type="StyleBox" uid="uid://d2c8tugtevfef" path="res://Theme/ProgressBar.tres" id="3_lyuce"]
+[ext_resource type="PackedScene" uid="uid://b411lpbrvvmuj" path="res://Hud/rich_text_label.tscn" id="4_sxja3"]
+[ext_resource type="Theme" uid="uid://cwt08llwihqii" path="res://Theme/ShadowText.tres" id="5_y8pu7"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dtm17"]
+bg_color = Color(1, 1, 1, 1)
+shadow_color = Color(1, 1, 1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pr56i"]
+bg_color = Color(1, 1, 1, 1)
+
+[node name="Bar" type="MarginContainer"]
+custom_minimum_size = Vector2(40, 10)
+offset_right = 71.0
+offset_bottom = 10.0
+mouse_filter = 0
+script = ExtResource("1_cyi4v")
+
+[node name="bg" type="Panel" parent="."]
+layout_mode = 2
+mouse_filter = 2
+theme = ExtResource("2_yan3f")
+
+[node name="Marker 33" type="Panel" parent="bg"]
+modulate = Color(1, 0, 0, 1)
+custom_minimum_size = Vector2(2, 0)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.15
+anchor_right = 0.15
+offset_left = -0.850006
+offset_right = 0.149994
+offset_bottom = 10.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_dtm17")
+
+[node name="Marker 66" type="Panel" parent="bg"]
+modulate = Color(1, 1, 0, 1)
+custom_minimum_size = Vector2(2, 0)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -0.85001
+offset_right = 1.14999
+offset_bottom = 10.0
+grow_horizontal = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_dtm17")
+
+[node name="Progress Bar" type="Panel" parent="bg"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(2, 0)
+layout_mode = 1
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_right = 35.0
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = ExtResource("3_lyuce")
+
+[node name="Edge" type="Panel" parent="bg/Progress Bar"]
+custom_minimum_size = Vector2(2, 0)
+layout_mode = 1
+anchors_preset = 11
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_pr56i")
+
+[node name="Delta Bar" type="Panel" parent="bg"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_bottom = 1.0
+offset_left = 34.0
+offset_right = 36.0
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_pr56i")
+
+[node name="Timer" type="Timer" parent="bg/Delta Bar"]
+unique_name_in_owner = true
+
+[node name="Texts" type="Control" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="TextsContainer" type="HBoxContainer" parent="Texts"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_top = -8.0
+offset_right = 103.0
+offset_bottom = 7.0
+mouse_filter = 2
+alignment = 1
+
+[node name="Text" parent="Texts/TextsContainer" instance=ExtResource("4_sxja3")]
+layout_mode = 2
+theme = ExtResource("5_y8pu7")
+text = ""
+
+[connection signal="resized" from="." to="." method="_on_resized"]
+[connection signal="tree_exited" from="." to="." method="_on_tree_exited"]
+[connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]

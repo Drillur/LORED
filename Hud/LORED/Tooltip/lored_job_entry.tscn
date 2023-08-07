@@ -1,0 +1,30 @@
+[gd_scene load_steps=4 format=3 uid="uid://q2v7jcdoik5q"]
+
+[ext_resource type="Script" path="res://Hud/LORED/Tooltip/lored_job_entry.gd" id="1_fldbd"]
+[ext_resource type="PackedScene" uid="uid://bh234hureol4n" path="res://Hud/attribute_text_vico.tscn" id="1_vjtl7"]
+[ext_resource type="Theme" uid="uid://b8t7tkhvril5g" path="res://Theme/Standard.tres" id="3_d2fmc"]
+
+[node name="LORED Job Entry" type="MarginContainer"]
+offset_right = 200.0
+offset_bottom = 15.0
+size_flags_horizontal = 4
+script = ExtResource("1_fldbd")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Attribute" parent="HBoxContainer" instance=ExtResource("1_vjtl7")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Currency Name" type="RichTextLabel" parent="HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 4
+theme = ExtResource("3_d2fmc")
+theme_override_font_sizes/italics_font_size = 12
+bbcode_enabled = true
+text = "bits"
+fit_content = true
+autowrap_mode = 0

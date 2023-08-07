@@ -1,0 +1,101 @@
+[gd_scene load_steps=5 format=3 uid="uid://cpwc406k8fps0"]
+
+[ext_resource type="Script" path="res://Hud/Wish/Tooltip/wish_tooltip.gd" id="1_1qjwx"]
+[ext_resource type="Theme" uid="uid://b8t7tkhvril5g" path="res://Theme/Standard.tres" id="2_mjtoi"]
+[ext_resource type="Texture2D" uid="uid://jbcyavxupodp" path="res://Sprites/reactions/Test.png" id="3_h88gb"]
+[ext_resource type="Theme" uid="uid://8dmfgxdrr5yh" path="res://Theme/Title.tres" id="4_ciwtp"]
+
+[node name="Wish Tooltip" type="MarginContainer"]
+offset_right = 124.0
+offset_bottom = 156.0
+script = ExtResource("1_1qjwx")
+
+[node name="bg" type="Panel" parent="."]
+layout_mode = 2
+theme = ExtResource("2_mjtoi")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Top" type="MarginContainer" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/Top"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/Top/HBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="face" type="TextureRect" parent="VBoxContainer/Top/HBoxContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+texture = ExtResource("3_h88gb")
+stretch_mode = 3
+
+[node name="giver" type="RichTextLabel" parent="VBoxContainer/Top/HBoxContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+theme = ExtResource("2_mjtoi")
+bbcode_enabled = true
+text = "[i]Copper"
+fit_content = true
+autowrap_mode = 0
+
+[node name="text" type="RichTextLabel" parent="VBoxContainer/Top/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(95, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme = ExtResource("2_mjtoi")
+theme_override_constants/line_separation = 3
+bbcode_enabled = true
+text = "Sometimes I have quite a lot to say! Really, it's pretty insane!"
+fit_content = true
+
+[node name="Rewards" type="VBoxContainer" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Top" type="MarginContainer" parent="VBoxContainer/Rewards"]
+layout_mode = 2
+
+[node name="rewards title bg" type="Panel" parent="VBoxContainer/Rewards/Top"]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("4_ciwtp")
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Rewards/Top"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="Title" type="RichTextLabel" parent="VBoxContainer/Rewards/Top/MarginContainer"]
+layout_mode = 2
+theme = ExtResource("4_ciwtp")
+bbcode_enabled = true
+text = "Rewards"
+fit_content = true
+autowrap_mode = 0
+
+[node name="Content" type="MarginContainer" parent="VBoxContainer/Rewards"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="RewardDetails" type="VBoxContainer" parent="VBoxContainer/Rewards/Content"]
+unique_name_in_owner = true
+layout_mode = 2

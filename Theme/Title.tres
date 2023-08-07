@@ -1,0 +1,30 @@
+[gd_resource type="Theme" load_steps=9 format=3 uid="uid://8dmfgxdrr5yh"]
+
+[ext_resource type="FontFile" uid="uid://caej2ljgikhb3" path="res://Fonts/Roboto-Medium.ttf" id="1_af45c"]
+[ext_resource type="FontFile" uid="uid://cubavfw1lomep" path="res://Fonts/Roboto-Black.ttf" id="1_rxjx6"]
+[ext_resource type="FontFile" uid="uid://d2cepijgbnmb1" path="res://Fonts/Roboto-BlackItalic.ttf" id="2_pb77h"]
+[ext_resource type="FontFile" uid="uid://1w6nq6sovkc2" path="res://Fonts/Roboto-MediumItalic.ttf" id="3_5o8o2"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kolcj"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_q73hr"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_04l6q"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_10oex"]
+bg_color = Color(0.662745, 0.662745, 0.662745, 1)
+
+[resource]
+CheckBox/styles/hover = SubResource("StyleBoxFlat_kolcj")
+CheckBox/styles/normal = SubResource("StyleBoxFlat_q73hr")
+CheckBox/styles/pressed = SubResource("StyleBoxFlat_04l6q")
+Panel/styles/panel = SubResource("StyleBoxFlat_10oex")
+RichTextLabel/colors/default_color = Color(0, 0, 0, 1)
+RichTextLabel/font_sizes/bold_font_size = 12
+RichTextLabel/font_sizes/bold_italics_font_size = 12
+RichTextLabel/font_sizes/italics_font_size = 12
+RichTextLabel/font_sizes/normal_font_size = 12
+RichTextLabel/fonts/bold_font = ExtResource("1_rxjx6")
+RichTextLabel/fonts/bold_italics_font = ExtResource("2_pb77h")
+RichTextLabel/fonts/italics_font = ExtResource("3_5o8o2")
+RichTextLabel/fonts/normal_font = ExtResource("1_af45c")

@@ -1,0 +1,129 @@
+[gd_scene load_steps=8 format=3 uid="uid://c4jcyq4x5dq51"]
+
+[ext_resource type="Theme" uid="uid://bl4v2v143rihi" path="res://Theme/Background.tres" id="1_aejav"]
+[ext_resource type="Script" path="res://Hud/Menu/menu.gd" id="1_rhx82"]
+[ext_resource type="Theme" uid="uid://8dmfgxdrr5yh" path="res://Theme/Title.tres" id="3_b7dtb"]
+[ext_resource type="PackedScene" uid="uid://cb3ej8nlybhvm" path="res://Hud/icon_button.tscn" id="4_2rvg6"]
+[ext_resource type="Theme" uid="uid://b8t7tkhvril5g" path="res://Theme/Standard.tres" id="5_sls7b"]
+[ext_resource type="PackedScene" uid="uid://c0518n1uf8jt2" path="res://Hud/text_button.tscn" id="6_btu12"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_s67hr"]
+bg_color = Color(0.0705882, 0.0705882, 0.0705882, 1)
+corner_radius_top_left = 1
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 1
+shadow_color = Color(1, 0, 0.235294, 1)
+shadow_size = 8
+
+[node name="Menu" type="MarginContainer"]
+offset_right = 298.0
+offset_bottom = 180.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+script = ExtResource("1_rhx82")
+
+[node name="bg" type="Panel" parent="."]
+layout_mode = 2
+theme = ExtResource("1_aejav")
+theme_override_styles/panel = SubResource("StyleBoxFlat_s67hr")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="title bg" type="Panel" parent="VBoxContainer/MarginContainer"]
+modulate = Color(1, 0, 0.235294, 1)
+layout_mode = 2
+theme = ExtResource("3_b7dtb")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Hamburger" parent="VBoxContainer/MarginContainer/HBoxContainer" instance=ExtResource("4_2rvg6")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/MarginContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/MarginContainer/HBoxContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Title" type="RichTextLabel" parent="VBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme = ExtResource("3_b7dtb")
+bbcode_enabled = true
+text = "LORED"
+fit_content = true
+autowrap_mode = 0
+
+[node name="Game Version" type="RichTextLabel" parent="VBoxContainer/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("3_b7dtb")
+bbcode_enabled = true
+text = "[i]1.2.3"
+fit_content = true
+autowrap_mode = 0
+
+[node name="Content" type="MarginContainer" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="Default Content" type="MarginContainer" parent="VBoxContainer/Content"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/Content/Default Content"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer/Content/Default Content/VBoxContainer"]
+layout_mode = 2
+theme = ExtResource("5_sls7b")
+text = "Difficulty: Normal"
+fit_content = true
+
+[node name="RichTextLabel3" type="RichTextLabel" parent="VBoxContainer/Content/Default Content/VBoxContainer"]
+layout_mode = 2
+theme = ExtResource("5_sls7b")
+text = "Session Count: 3
+Session duration: 14m
+Total duration: 14m"
+fit_content = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/Content/Default Content/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="Discord" parent="VBoxContainer/Content/Default Content/VBoxContainer/HBoxContainer" instance=ExtResource("6_btu12")]
+unique_name_in_owner = true
+modulate = Color(0.376471, 0.741176, 0.992157, 1)
+layout_mode = 2
+
+[node name="Godot" parent="VBoxContainer/Content/Default Content/VBoxContainer/HBoxContainer" instance=ExtResource("6_btu12")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="VBoxContainer/Content/Default Content/VBoxContainer"]
+custom_minimum_size = Vector2(230, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+theme = ExtResource("5_sls7b")
+bbcode_enabled = true
+text = "[center][i]LORED is developed by [color=#ff003c]Drillur[/color] using the Godot Engine. Thanks for playing the game!"
+fit_content = true

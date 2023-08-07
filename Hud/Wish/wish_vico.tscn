@@ -1,0 +1,148 @@
+[gd_scene load_steps=10 format=3 uid="uid://bxwt1hbvsigah"]
+
+[ext_resource type="Theme" uid="uid://bl4v2v143rihi" path="res://Theme/Background.tres" id="1_nnvct"]
+[ext_resource type="Script" path="res://Hud/Wish/wish_vico.gd" id="1_u1cay"]
+[ext_resource type="PackedScene" uid="uid://exe3ppvvv74m" path="res://Hud/bar.tscn" id="2_48rek"]
+[ext_resource type="Theme" uid="uid://crf5gyv8gm6r1" path="res://Theme/Subtle Background.tres" id="2_lqvp4"]
+[ext_resource type="Texture2D" uid="uid://b5sh16p1b12b1" path="res://Sprites/Currency/axe.png" id="3_oiaw7"]
+[ext_resource type="StyleBox" uid="uid://chtvcjgh56o7a" path="res://Theme/Backdrop.tres" id="3_x88r3"]
+[ext_resource type="Theme" uid="uid://dt7rd31blnvth" path="res://Theme/Invis.tres" id="5_cra02"]
+[ext_resource type="Theme" uid="uid://cwt08llwihqii" path="res://Theme/ShadowText.tres" id="7_i6th1"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hwp3n"]
+bg_color = Color(1, 1, 1, 1)
+draw_center = false
+border_width_left = 2
+border_width_top = 2
+border_width_bottom = 2
+border_color = Color(1, 1, 1, 1)
+shadow_color = Color(0, 0, 0, 1)
+shadow_size = 5
+
+[node name="Wish Vico" type="MarginContainer"]
+offset_right = 71.0
+offset_bottom = 46.0
+script = ExtResource("1_u1cay")
+
+[node name="bg" type="Panel" parent="."]
+visible = false
+layout_mode = 2
+theme = ExtResource("2_lqvp4")
+
+[node name="Bar" parent="." instance=ExtResource("2_48rek")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="ready" type="Panel" parent="."]
+visible = false
+layout_mode = 2
+theme = ExtResource("1_nnvct")
+theme_override_styles/panel = SubResource("StyleBoxFlat_hwp3n")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 5
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Icon" type="MarginContainer" parent="MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="bg" type="Panel" parent="MarginContainer/HBoxContainer/Icon"]
+layout_mode = 2
+theme_override_styles/panel = ExtResource("3_x88r3")
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer/Icon"]
+layout_mode = 2
+theme_override_constants/margin_left = 2
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 2
+theme_override_constants/margin_bottom = 2
+
+[node name="Icon" type="TextureRect" parent="MarginContainer/HBoxContainer/Icon/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+texture = ExtResource("3_oiaw7")
+stretch_mode = 2
+
+[node name="Icon Shadow" type="TextureRect" parent="MarginContainer/HBoxContainer/Icon/MarginContainer/Icon"]
+unique_name_in_owner = true
+modulate = Color(0, 0, 0, 1)
+show_behind_parent = true
+layout_mode = 2
+offset_left = 1.0
+offset_top = 1.0
+offset_right = 33.0
+offset_bottom = 33.0
+texture = ExtResource("3_oiaw7")
+stretch_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="Objective Text" type="RichTextLabel" parent="MarginContainer/HBoxContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+theme = ExtResource("7_i6th1")
+bbcode_enabled = true
+text = "Obj"
+fit_content = true
+autowrap_mode = 0
+
+[node name="Progress Text" type="RichTextLabel" parent="MarginContainer/HBoxContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+theme = ExtResource("7_i6th1")
+bbcode_enabled = true
+text = "414"
+fit_content = true
+autowrap_mode = 0
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 2
+mouse_filter = 2
+metadata/_edit_lock_ = true
+
+[node name="RightUp" type="Control" parent="Control"]
+unique_name_in_owner = true
+layout_mode = 2
+anchors_preset = 0
+offset_left = 81.0
+offset_top = 46.0
+offset_right = 81.0
+offset_bottom = 46.0
+
+[node name="RightDown" type="Control" parent="Control"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+grow_horizontal = 0
+
+[node name="TopCenter" type="Control" parent="Control"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+grow_horizontal = 2
+
+[node name="Button" type="Button" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+mouse_default_cursor_shape = 2
+theme = ExtResource("5_cra02")
+metadata/_edit_lock_ = true
+
+[connection signal="resized" from="." to="." method="_on_resized"]

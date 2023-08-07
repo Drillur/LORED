@@ -1,0 +1,301 @@
+[gd_scene load_steps=6 format=3 uid="uid://dlt6lvasr6c46"]
+
+[ext_resource type="Theme" uid="uid://b8t7tkhvril5g" path="res://Theme/Standard.tres" id="1_nf00e"]
+[ext_resource type="Script" path="res://Hud/Upgrade/upgrade_container.gd" id="1_t6e5m"]
+[ext_resource type="Theme" uid="uid://bl4v2v143rihi" path="res://Theme/Background.tres" id="1_wef1c"]
+[ext_resource type="PackedScene" uid="uid://bvb7sgyflbxkp" path="res://Hud/Upgrade/upgrade_vico.tscn" id="2_enitg"]
+[ext_resource type="Theme" uid="uid://8dmfgxdrr5yh" path="res://Theme/Title.tres" id="3_l07lh"]
+
+[node name="Upgrade Container" type="MarginContainer"]
+custom_minimum_size = Vector2(300, 500)
+offset_right = 424.0
+offset_bottom = 513.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+script = ExtResource("1_t6e5m")
+
+[node name="bg" type="Panel" parent="."]
+layout_mode = 2
+theme = ExtResource("1_wef1c")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Title" type="MarginContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="title bg" type="Panel" parent="MarginContainer/VBoxContainer/Title"]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("3_l07lh")
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/Title"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Title/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Title" type="RichTextLabel" parent="MarginContainer/VBoxContainer/Title/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 0
+theme = ExtResource("3_l07lh")
+bbcode_enabled = true
+text = "Normal Upgrades"
+fit_content = true
+autowrap_mode = 0
+
+[node name="Count" type="RichTextLabel" parent="MarginContainer/VBoxContainer/Title/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 0
+theme = ExtResource("3_l07lh")
+bbcode_enabled = true
+text = "[i][b]24[/b]/28"
+fit_content = true
+autowrap_mode = 0
+
+[node name="Tabs" type="TabContainer" parent="MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+theme = ExtResource("1_nf00e")
+theme_override_colors/font_selected_color = Color(0.937255, 0.32549, 0, 1)
+tab_alignment = 1
+
+[node name="Q" type="MarginContainer" parent="MarginContainer/VBoxContainer/Tabs"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/Q"]
+layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 6
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 10
+
+[node name="Upgrades" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades"]
+layout_mode = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="GRINDER" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="LIGHTER_SHOVEL" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades"]
+layout_mode = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="TEXAS" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer2" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="RYE" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer2" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="GRANDER" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer2" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="SAALNDT" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer2" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades"]
+layout_mode = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="SALT" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer3" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="SAND" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer3" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="GRANDMA" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer3" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="MIXER" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer3" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades"]
+layout_mode = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="FLANK" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer4" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="RIB" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer4" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="GRANDPA" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer4" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="WATT" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer4" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="SWIRLER" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer4" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer5" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades"]
+layout_mode = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="GEARED_OILS" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer5" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="CHEEKS" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer5" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="GROUNDER" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer5" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="MAXER" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer5" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer6" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades"]
+layout_mode = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="THYME" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer6" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="PEPPER" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer6" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="ANCHOVE_COVE" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer6" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="GARLIC" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer6" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="MUD" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer6" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer7" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades"]
+layout_mode = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="SLOP" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer7" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="SLIMER" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer7" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="STICKYTAR" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer7" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer8" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades"]
+layout_mode = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="INJECT" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer8" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="RED_GOOPY_BOY" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer8" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="W" type="MarginContainer" parent="MarginContainer/VBoxContainer/Tabs"]
+visible = false
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/W"]
+layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 6
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 10
+
+[node name="Upgrades" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 2
+mouse_filter = 2
+metadata/_edit_lock_ = true
+
+[node name="RightDown" type="Control" parent="Control"]
+unique_name_in_owner = true
+layout_mode = 2
+anchors_preset = 0
+offset_left = 370.0
+offset_top = -10.0
+offset_right = 370.0
+offset_bottom = -10.0
+
+[connection signal="resized" from="." to="." method="_on_resized"]
+[connection signal="tab_changed" from="MarginContainer/VBoxContainer/Tabs" to="." method="_on_tab_changed"]

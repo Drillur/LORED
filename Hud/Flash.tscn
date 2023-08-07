@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3 uid="uid://bhe3wm14sfxho"]
+
+[ext_resource type="Script" path="res://Hud/Flash.gd" id="1"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dvmj0"]
+bg_color = Color(1, 1, 1, 1)
+
+[node name="Flash" type="Panel"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_dvmj0")
+script = ExtResource("1")
+
+[node name="Timer" type="Timer" parent="."]

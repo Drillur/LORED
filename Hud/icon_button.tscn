@@ -1,0 +1,79 @@
+[gd_scene load_steps=5 format=3 uid="uid://cb3ej8nlybhvm"]
+
+[ext_resource type="Script" path="res://Hud/icon_button.gd" id="1_0b77l"]
+[ext_resource type="Texture2D" uid="uid://b5sh16p1b12b1" path="res://Sprites/Currency/axe.png" id="2_3o3sn"]
+[ext_resource type="Theme" uid="uid://b8t7tkhvril5g" path="res://Theme/Standard.tres" id="2_der4p"]
+[ext_resource type="Texture2D" uid="uid://dlxx28hr2xdck" path="res://Sprites/Hud/Check.png" id="3_c3ale"]
+
+[node name="Icon Button" type="MarginContainer"]
+custom_minimum_size = Vector2(36, 36)
+offset_right = 36.0
+offset_bottom = 36.0
+script = ExtResource("1_0b77l")
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 2
+focus_mode = 0
+mouse_default_cursor_shape = 2
+theme = ExtResource("2_der4p")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+custom_minimum_size = Vector2(36, 36)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+mouse_filter = 2
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 6
+
+[node name="Icon" type="TextureRect" parent="MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 0
+mouse_filter = 2
+texture = ExtResource("2_3o3sn")
+expand_mode = 2
+stretch_mode = 5
+
+[node name="Check" type="TextureRect" parent="MarginContainer/Icon"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+offset_top = -1.0
+offset_right = 24.0
+offset_bottom = 23.0
+mouse_filter = 2
+texture = ExtResource("3_c3ale")
+expand_mode = 1
+
+[node name="Check2" type="TextureRect" parent="MarginContainer/Icon/Check"]
+unique_name_in_owner = true
+modulate = Color(0, 0, 0, 1)
+show_behind_parent = true
+layout_mode = 2
+offset_left = 1.0
+offset_top = 1.0
+offset_right = 25.0
+offset_bottom = 25.0
+mouse_filter = 2
+texture = ExtResource("3_c3ale")
+expand_mode = 1
+
+[node name="Icon Shadow" type="TextureRect" parent="MarginContainer/Icon"]
+unique_name_in_owner = true
+modulate = Color(0, 0, 0, 1)
+show_behind_parent = true
+layout_mode = 2
+offset_left = 1.0
+offset_top = 1.0
+offset_right = 25.0
+offset_bottom = 25.0
+size_flags_horizontal = 0
+mouse_filter = 2
+texture = ExtResource("2_3o3sn")
+expand_mode = 2
+stretch_mode = 5
+
+[connection signal="pressed" from="Button" to="." method="_on_button_pressed"]

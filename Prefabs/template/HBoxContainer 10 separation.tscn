@@ -1,6 +1,0 @@
-[gd_scene format=2]
-
-[node name="h" type="HBoxContainer"]
-size_flags_horizontal = 3
-custom_constants/separation = 15
-alignment = 1
