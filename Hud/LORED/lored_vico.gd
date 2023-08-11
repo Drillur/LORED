@@ -109,15 +109,13 @@ func attach_lored(_lored: LORED) -> void:
 	lored.connect("leveled_up", flash_on_level_up)
 	
 	info.button.connect("mouse_entered", show_info_tooltip)
-	info.button.connect("mouse_exited", clear_tooltip)
-	fuel_bar.connect("mouse_entered", show_fuel_tooltip)
-	fuel_bar.connect("mouse_exited", clear_tooltip)
+	info.button.connect("mouse_exited", gv.clear_tooltip)
 	level_up.button.connect("mouse_entered", show_level_up_tooltip)
-	level_up.button.connect("mouse_exited", clear_tooltip)
+	level_up.button.connect("mouse_exited", gv.clear_tooltip)
 	sleep.button.connect("mouse_entered", show_sleep_tooltip)
-	sleep.button.connect("mouse_exited", clear_tooltip)
+	sleep.button.connect("mouse_exited", gv.clear_tooltip)
 	jobs.button.connect("mouse_entered", show_jobs_tooltip)
-	jobs.button.connect("mouse_exited", clear_tooltip)
+	jobs.button.connect("mouse_exited", gv.clear_tooltip)
 	
 	for job in lored.jobs:
 		lored.jobs[job].connect("cut_short", job_cut_short)
@@ -146,7 +144,7 @@ func attach_lored(_lored: LORED) -> void:
 	
 	if not lored.unlocked:
 		hide()
-		await lored.became_unlocked
+		await lored.just_unlocked
 		show()
 
 
@@ -158,16 +156,9 @@ func cost_update(affordable: bool) -> void:
 
 # - Tooltip
 
-func clear_tooltip() -> void:
-	gv.clear_tooltip()
-
 
 func show_info_tooltip() -> void:
 	gv.new_tooltip(gv.Tooltip.LORED_INFO, get_preferred_side(), {"lored": lored.type})
-
-
-func show_fuel_tooltip() -> void:
-	gv.new_tooltip(gv.Tooltip.LORED_FUEL, get_preferred_side(), {"lored": lored.type})
 
 
 func show_level_up_tooltip() -> void:
@@ -199,18 +190,17 @@ func adjust_if_not_purchased() -> void:
 		name_and_icon.hide()
 		currency.show()
 		
-		jobs.show()
-		active_buffs.show()
+		#active_buffs.show()
 		if lv.sleep_unlocked:
 			sleep.show()
 		else:
 			lv.connect("sleep_became_unlocked", sleep_became_unlocked)
-		view_special.show()
+		if lv.jobs_unlocked:
+			jobs.show()
+		else:
+			lv.connect("jobs_just_unlocked", jobs_just_unlocked)
+		#view_special.show()
 		lored.level.remove_notify_method(adjust_if_not_purchased)
-
-
-func setup_currency(cur: int) -> void:
-	currency.setup(cur)
 
 
 func job_completed() -> void:
@@ -227,7 +217,7 @@ func flash_level_up_button() -> void:
 	gv.flash(level_up, Color(0, 1, 0))
 
 
-func flash_on_level_up() -> void:
+func flash_on_level_up(_level: int) -> void:
 	gv.flash(self, lored.color)
 
 
@@ -235,6 +225,12 @@ func sleep_became_unlocked() -> void:
 	lv.disconnect("sleep_became_unlocked", sleep_became_unlocked)
 	sleep.show()
 	gv.flash(sleep, lored.color)
+
+
+func jobs_just_unlocked() -> void:
+	lv.disconnect("jobs_just_unlocked", jobs_just_unlocked)
+	jobs.show()
+	gv.flash(jobs, lored.color)
 
 
 
@@ -266,8 +262,8 @@ func set_status_and_currency(_status: String, _currency: int = -1) -> void:
 		status.show()
 		status.text = "[i]" + _status
 	if _currency != -1:
-		currency.setup(_currency)
 		currency.show()
+		currency.setup(_currency)
 	else:
 		currency.hide()
 
@@ -279,7 +275,6 @@ func sleep_clicked() -> void:
 	else:
 		lored.go_to_sleep()
 		sleep.set_icon(gv.icon_awake)
-		gv.get_tooltip().wake_up()
 
 
 func start_idle() -> void:
@@ -299,7 +294,7 @@ func go_to_sleep() -> void:
 		gv.throw_text(
 			output_texts, 
 			{
-				"text": sleep_text_pool[randi() % len(sleep_text_pool)],
+				"text": sleep_text_pool[randi() % sleep_text_pool.size()],
 				"color": lored.color,
 			}
 		)

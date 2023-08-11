@@ -6,8 +6,8 @@
 [ext_resource type="PackedScene" uid="uid://dky60pdpk0ffa" path="res://Hud/Price.tscn" id="4_q8grj"]
 
 [node name="Upgrade Tooltip" type="MarginContainer"]
-offset_right = 73.0
-offset_bottom = 89.0
+offset_right = 179.0
+offset_bottom = 104.0
 script = ExtResource("1_u0jaa")
 
 [node name="bg" type="Panel" parent="."]
@@ -36,30 +36,32 @@ theme_override_constants/margin_bottom = 10
 [node name="Title" type="RichTextLabel" parent="VBoxContainer/MarginContainer/MarginContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 4
 theme = ExtResource("2_dibeo")
 bbcode_enabled = true
 text = "GRINDER"
 fit_content = true
 autowrap_mode = 0
 
-[node name="MarginContainer2" type="MarginContainer" parent="VBoxContainer"]
+[node name="Unlocked" type="MarginContainer" parent="VBoxContainer"]
+unique_name_in_owner = true
+visible = false
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="Details" type="VBoxContainer" parent="VBoxContainer/MarginContainer2"]
-unique_name_in_owner = true
+[node name="Details" type="VBoxContainer" parent="VBoxContainer/Unlocked"]
 layout_mode = 2
 
-[node name="Price" parent="VBoxContainer/MarginContainer2/Details" instance=ExtResource("4_q8grj")]
+[node name="Price" parent="VBoxContainer/Unlocked/Details" instance=ExtResource("4_q8grj")]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_constants/margin_bottom = 6
 
-[node name="effect" type="RichTextLabel" parent="VBoxContainer/MarginContainer2/Details"]
+[node name="effect" type="RichTextLabel" parent="VBoxContainer/Unlocked/Details"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
@@ -69,7 +71,7 @@ text = "Haste [b]x2"
 fit_content = true
 autowrap_mode = 0
 
-[node name="recipients" type="RichTextLabel" parent="VBoxContainer/MarginContainer2/Details"]
+[node name="recipients" type="RichTextLabel" parent="VBoxContainer/Unlocked/Details"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
@@ -79,7 +81,7 @@ text = "[i]for [/i]Stone!"
 fit_content = true
 autowrap_mode = 0
 
-[node name="description" type="RichTextLabel" parent="VBoxContainer/MarginContainer2/Details"]
+[node name="description" type="RichTextLabel" parent="VBoxContainer/Unlocked/Details"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
@@ -88,3 +90,68 @@ bbcode_enabled = true
 text = "hi"
 fit_content = true
 autowrap_mode = 2
+
+[node name="Locked" type="MarginContainer" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/Locked"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="MarginContainer2" type="MarginContainer" parent="VBoxContainer/Locked/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="random_upgrade_description" type="RichTextLabel" parent="VBoxContainer/Locked/VBoxContainer/MarginContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("1_eflbk")
+bbcode_enabled = true
+text = "Obviously it'll be a ton of bullshit right about here yessir thank u very much"
+fit_content = true
+
+[node name="MarginContainer3" type="MarginContainer" parent="VBoxContainer/Locked/VBoxContainer"]
+layout_mode = 2
+
+[node name="required upgrade title bg" type="Panel" parent="VBoxContainer/Locked/VBoxContainer/MarginContainer3"]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("2_dibeo")
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Locked/VBoxContainer/MarginContainer3"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="Title" type="RichTextLabel" parent="VBoxContainer/Locked/VBoxContainer/MarginContainer3/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme = ExtResource("2_dibeo")
+bbcode_enabled = true
+text = "Required Upgrade"
+fit_content = true
+autowrap_mode = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Locked/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="Locked" type="VBoxContainer" parent="VBoxContainer/Locked/VBoxContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="required_upgrade" type="RichTextLabel" parent="VBoxContainer/Locked/VBoxContainer/MarginContainer/Locked"]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("1_eflbk")
+bbcode_enabled = true
+text = "[b][i]GRINDER"
+fit_content = true

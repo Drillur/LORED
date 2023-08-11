@@ -50,6 +50,9 @@ func _on_resized():
 	progress = progress
 	if progress_bar.size.x > size.x:
 		progress_bar.size.x = size.x
+	progress_bar.size.y = size.y
+	if animate_changes:
+		delta_bar.size.y = size.y
 
 
 

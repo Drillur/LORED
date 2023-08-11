@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://6cjrke2cybqn"]
+[gd_scene load_steps=7 format=3 uid="uid://6cjrke2cybqn"]
 
 [ext_resource type="Script" path="res://Hud/Emote/emote_vico.gd" id="1_hquu4"]
 [ext_resource type="Texture2D" uid="uid://d04kr43kmt18j" path="res://Sprites/Hud/BottomBubble.png" id="1_k6vn0"]
@@ -6,9 +6,9 @@
 [ext_resource type="Theme" uid="uid://cwt08llwihqii" path="res://Theme/ShadowText.tres" id="4_ob3if"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_r8yxn"]
-bg_color = Color(0.305882, 0.305882, 0.305882, 1)
-border_width_left = 4
-border_width_top = 4
+bg_color = Color(0.478431, 0.478431, 0.478431, 0.501961)
+border_width_left = 2
+border_width_top = 2
 border_color = Color(1, 1, 1, 0.729412)
 border_blend = true
 corner_radius_top_left = 20
@@ -17,10 +17,23 @@ corner_radius_bottom_right = 20
 corner_radius_bottom_left = 20
 shadow_size = 5
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hwjl0"]
+bg_color = Color(0.258824, 0.258824, 0.258824, 1)
+border_width_left = 10
+border_width_top = 10
+border_width_right = 10
+border_width_bottom = 10
+border_color = Color(0.258824, 0.258824, 0.258824, 0)
+border_blend = true
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
 [node name="EmoteVico" type="MarginContainer"]
 custom_minimum_size = Vector2(75, 52)
-offset_right = 170.0
-offset_bottom = 84.0
+offset_right = 168.0
+offset_bottom = 89.0
 size_flags_horizontal = 8
 size_flags_vertical = 8
 mouse_filter = 2
@@ -38,7 +51,7 @@ size_flags_vertical = 8
 mouse_filter = 2
 
 [node name="TextureRect" type="TextureRect" parent="Flocket"]
-modulate = Color(0.380392, 0.380392, 0.380392, 1)
+modulate = Color(0.609375, 0.609375, 0.609375, 0.5)
 layout_mode = 0
 offset_left = -46.0
 offset_right = 89.0
@@ -80,6 +93,18 @@ offset_bottom = 65.0
 mouse_filter = 2
 texture = ExtResource("2_nwudr")
 
+[node name="pose bg" type="Panel" parent="MarginContainer/HBoxContainer/Pose"]
+unique_name_in_owner = true
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_hwjl0")
+
 [node name="Dialogue Container" type="ScrollContainer" parent="MarginContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
@@ -101,7 +126,10 @@ size_flags_vertical = 4
 mouse_filter = 2
 theme = ExtResource("4_ob3if")
 bbcode_enabled = true
-text = "[i]Boy do I sure have a lot to say!"
+text = "[i]Boy do I sure have "
 fit_content = true
+visible_characters_behavior = 1
 
 [node name="Timer" type="Timer" parent="."]
+
+[node name="display_text_timer" type="Timer" parent="."]

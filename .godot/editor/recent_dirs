@@ -1,9 +1,10 @@
-res://Hud
-res://Theme
+res://Hud/Wish
 res://Script/Autoload
+res://Theme
+res://Hud/Tooltip
+res://Hud
 res://Hud/LORED/Tooltip
 res://Hud/Emote
-res://Hud/Wish
 res://Hud/Upgrade
 res://Hud/Log
 res://Hud/LORED

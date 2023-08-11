@@ -3,14 +3,22 @@ extends Node
 
 
 
+var saved_vars := [
+	"completed_wishes", "completed_random_wishes", 
+]
+
+
+
 signal wish_completed(type)
 
 var wish_vico := preload("res://Hud/Wish/wish_vico.tscn")
+var pending_wish_vico := preload("res://Hud/Wish/wish_pending.tscn")
 
 var main_wish_container: VBoxContainer
 var random_wish_container: VBoxContainer
 
 var completed_wishes: Array
+var completed_random_wishes := 0
 
 var active_main_wishes := 0
 var active_wish_types := []
@@ -25,7 +33,7 @@ var random_wish_limit := 0:
 
 
 func new_game_start() -> void:
-	
+	create_wish_vico(await Wish.new(Wish.Type.STUFF))
 	start()
 
 
@@ -41,16 +49,13 @@ func start() -> void:
 
 
 func find_new_main_wish() -> void:
-	if lv.has_unlocked_and_inactive_loreds():
-		await lv.no_unlocked_and_inactive_loreds
+	if not lv.purchased_every_unlocked_lored_once():
+		await lv.purchased_every_lored_once
+	
+	if active_main_wishes > 0:
+		return
 	
 	var wish = await Wish.new(select_main_wish())
-	if not wish.ready_to_start:
-		await wish.became_ready_to_start
-		if wish.skip_wish:
-			if active_main_wishes == 0:
-				find_new_main_wish()
-			return
 	create_wish_vico(wish)
 	if wish.has_pair():
 		for x in wish.pair:
@@ -60,52 +65,74 @@ func find_new_main_wish() -> void:
 
 func select_main_wish() -> int:
 	for type in Wish.Type.values():
+		if type == Wish.Type.RANDOM:
+			continue
 		if not is_wish_begun_or_completed(type):
 			return type
 	return -1
 
 
 func find_new_random_wish() -> void:
-	print("getting RANDOM wish...")
+	var wish = await Wish.new(Wish.Type.RANDOM)
+	create_wish_vico(wish)
 
 
 func create_wish_vico(wish: Wish) -> void:
-	var vico = wish_vico.instantiate()
-	vico.setup(wish)
+	if not wish.ready_to_start:
+		await wish.became_ready_to_start
+		if wish.skip_wish:
+			if active_main_wishes == 0:
+				find_new_main_wish()
+			return
+	
+	var container: VBoxContainer
 	
 	if wish.is_main_wish():
+		container = main_wish_container
 		active_wish_types.append(wish.type)
-		main_wish_container.add_child(vico)
 		active_main_wishes += 1
-		start_new_wish_after_wish_completed(wish)
-	
 	else:
+		container = random_wish_container
 		active_random_wishes += 1
-		random_wish_container.add_child(vico)
+	
+	var pending_vico = pending_wish_vico.instantiate()
+	pending_vico.setup(wish)
+	container.add_child(pending_vico)
+	var pending_vico_index = pending_vico.get_index()
+	await pending_vico.tree_exited
+	
+	var vico = wish_vico.instantiate()
+	vico.setup(wish)
+	container.add_child(vico)
+	container.move_child(vico, pending_vico_index)
+	
+	start_new_wish_after_wish_completed(wish)
 
 
 func start_new_wish_after_wish_completed(wish: Wish) -> void:
-	await wish.turned_in
-	active_wish_types.erase(wish.type)
-	completed_wishes.append(wish.type)
+	await wish.just_ended
 	if wish.is_main_wish():
+		active_wish_types.erase(wish.type)
+		completed_wishes.append(wish.type)
 		active_main_wishes -= 1
 		if active_main_wishes == 0:
 			find_new_main_wish()
 	else:
 		active_random_wishes -= 1
+		if wish.turned_in:
+			completed_random_wishes += 1
 		find_new_random_wish()
 	emit_signal("wish_completed", wish.type)
 
 
 
 func skip_STUFF_wish() -> void:
-	if wi.is_wish_begun_or_completed(Wish.Type.FUEL):
+	if is_wish_begun_or_completed(Wish.Type.FUEL):
 		return
 	await lv.get_lored(LORED.Type.COAL).leveled_up
-	if wi.active_main_wishes == 0 and not wi.is_wish_begun_or_completed(Wish.Type.FUEL):
-		wi.create_wish_vico(await Wish.new(Wish.Type.FUEL))
-		wi.completed_wishes.append(Wish.Type.STUFF)
+	if active_main_wishes == 0 and not is_wish_begun_or_completed(Wish.Type.FUEL):
+		create_wish_vico(await Wish.new(Wish.Type.FUEL))
+		completed_wishes.append(Wish.Type.STUFF)
 
 
 

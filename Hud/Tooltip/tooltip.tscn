@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://cjrvv7gf1rvcq"]
 
-[ext_resource type="Script" path="res://Hud/tooltip.gd" id="1_e14g4"]
+[ext_resource type="Script" path="res://Hud/Tooltip/tooltip.gd" id="1_e14g4"]
 [ext_resource type="Theme" uid="uid://bl4v2v143rihi" path="res://Theme/Background.tres" id="1_ohnix"]
 
 [node name="Tooltip" type="MarginContainer"]

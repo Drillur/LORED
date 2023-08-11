@@ -10,6 +10,8 @@ extends MarginContainer
 @onready var dialogue_container = %"Dialogue Container"
 @onready var dialogue_text = %"Dialogue Text"
 @onready var timer = $Timer
+@onready var pose_only_bg = %"pose only bg"
+@onready var display_text_timer = $display_text_timer
 
 var emote: Emote
 
@@ -40,15 +42,46 @@ func setup(_emote: Emote) -> void:
 		dialogue_container.hide()
 	
 	var text_length = emote.dialogue.length()
-	dialogue_text.custom_minimum_size.x = min(180, max(50 + text_length * 2, custom_minimum_size.x))
-	custom_minimum_size.y = snapped(max(32, min(48, text_length * 2)), 16) + 20
+	dialogue_text.custom_minimum_size.x = min(180, max(40 + text_length * 2.1, custom_minimum_size.x))
+	custom_minimum_size.y = snapped(max(32, min(48, text_length * 2)), 15) + 20
 	
 	start()
 
 
 
 func start() -> void:
+	if not emote.has_dialogue():
+		display_text_timer.queue_free()
+	else:
+		display_text()
+		await emote.just_fully_displayed
 	timer.start(emote.duration)
 	await timer.timeout
 	emote.emit_signal("finished_emoting")
 	queue_free()
+
+
+
+func display_text() -> void:
+	if not emote.has_dialogue():
+		return
+	
+	dialogue_text.visible_characters = 0
+	
+	while not is_queued_for_deletion():
+		dialogue_text.visible_characters += 1
+		if dialogue_text.visible_ratio == 1:
+			display_text_timer.start(1.5)
+			await display_text_timer.timeout
+			break
+		
+		if dialogue_text.text[dialogue_text.visible_characters - 1] in ["!", ",", ".", "?"]:
+			display_text_timer.start(0.25)
+		else:
+			display_text_timer.start(0.04)
+		
+		await display_text_timer.timeout
+	
+	display_text_timer.queue_free()
+	
+	emote.emit_signal("just_fully_displayed")

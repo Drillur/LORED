@@ -4,6 +4,7 @@ extends Node
 
 var saved_vars := [
 	"sleep_unlocked",
+	"jobs_unlocked",
 ]
 
 const FUEL_WARNING := 0.5
@@ -78,21 +79,27 @@ const ANIMATION_FRAMES := {
 	"refuel1": 27,
 }
 
-signal no_unlocked_and_inactive_loreds
+signal purchased_every_lored_once
+signal all_loreds_became_active
 signal loreds_initialized
 signal sleep_became_unlocked
+signal jobs_just_unlocked
 
 var loreds := {}
 var lored_container: LOREDContainer
 
 var loreds_are_initialized := false
 var sleep_unlocked := false
+var jobs_unlocked := false
 
 var stage_1_loreds := {}
 var stage_2_loreds := {}
 var stage_3_loreds := {}
 var stage_4_loreds := {}
-var unlocked_and_inactive := []
+var unlocked := []
+var active := []
+var active_and_awake := []
+var never_purchased := []
 
 
 func _ready():
@@ -115,17 +122,23 @@ func _ready():
 
 
 func new_game_start() -> void:
-	
+	unlock_lored(LORED.Type.COAL)
+	unlock_lored(LORED.Type.STONE)
+	get_lored(LORED.Type.STONE).force_purchase()
 	start()
 
 
 func loaded_game_start() -> void:
-	
+	# when loading loreds, 
+	# if they are purchased, append to active
+	# elif they are unlocked, append to unlocked
+	# else don't append anywhere
 	start()
 
 
 func start() -> void:
 	unlock_sleep()
+	unlock_jobs()
 
 
 
@@ -137,6 +150,14 @@ func unlock_sleep() -> void:
 			pass
 		sleep_unlocked = true
 		emit_signal("sleep_became_unlocked")
+
+
+func unlock_jobs() -> void:
+	if not jobs_unlocked:
+		while await wi.wish_completed != Wish.Type.JOBS:
+			pass
+		jobs_unlocked = true
+		emit_signal("jobs_just_unlocked")
 
 
 
@@ -166,11 +187,21 @@ func start_job_timer(job: Job) -> void:
 func unlock_lored(_lored: int) -> void:
 	var lored = get_lored(_lored) as LORED
 	lored.unlock()
-	unlocked_and_inactive.append(lored)
+	unlocked.append(lored)
+	never_purchased.append(lored)
 	await lored.leveled_up
-	unlocked_and_inactive.erase(lored)
-	if unlocked_and_inactive.size() == 0:
-		emit_signal("no_unlocked_and_inactive_loreds")
+	never_purchased.erase(lored)
+	if all_loreds_are_active():
+		emit_signal("all_loreds_became_active")
+	if purchased_every_unlocked_lored_once():
+		emit_signal("purchased_every_lored_once")
+
+
+
+func reset() -> void:
+	active.clear()
+	active_and_awake.clear()
+
 
 
 
@@ -178,6 +209,14 @@ func unlock_lored(_lored: int) -> void:
 
 func get_lored(lored: int) -> LORED:
 	return loreds[lored]
+
+
+func get_random_active_lored() -> LORED:
+	return active[randi() % active.size()]
+
+
+func get_random_awake_lored() -> LORED:
+	return active_and_awake[randi() % active_and_awake.size()]
 
 
 func get_loreds_in_stage(stage: int) -> Array:
@@ -188,5 +227,13 @@ func get_lored_types_in_stage(stage: int) -> Array:
 	return get("stage_" + str(stage) + "_loreds").keys()
 
 
-func has_unlocked_and_inactive_loreds() -> bool:
-	return unlocked_and_inactive.size() > 0
+func all_loreds_are_active() -> bool:
+	return unlocked.size() == active.size()
+
+
+func purchased_every_unlocked_lored_once() -> bool:
+	return never_purchased.size() == 0
+
+
+func get_active_lored_count() -> int:
+	return active.size()

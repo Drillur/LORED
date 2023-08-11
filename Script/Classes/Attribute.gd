@@ -88,7 +88,7 @@ func add_notify_total_change_method(method: Callable, remove_automatically := fa
 
 func remove_notify_method_if_obj_freed(method: Callable) -> void:
 	await method.get_object().tree_exiting
-	#print(method, " removed automatically")
+	##printt(method, " removed automatically")
 	remove_notify_method(method)
 
 

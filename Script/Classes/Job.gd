@@ -74,9 +74,10 @@ var animation_key: String
 var two_part_animation := false
 var part_one_played := false
 
+var starting := false
 var added_rate := false
 var working := false
-var rate_requires_update := false
+var added_rate_based_on_inhand: bool
 
 var has_sufficient_fuel := true
 var has_produced_currencies := false
@@ -288,7 +289,7 @@ func init_WOOD() -> void:
 	name = "Obliterate"
 	duration = Attribute.new(5, false)
 	animation = preload("res://Sprites/animations/wood.tres")
-	add_produced_currency(Currency.Type.IRON, 25)
+	add_produced_currency(Currency.Type.WOOD, 25)
 	required_currencies = Cost.new({
 		Currency.Type.AXES: Attribute.new(5, false),
 		Currency.Type.TREES: Attribute.new(1, false),
@@ -489,6 +490,9 @@ func assign_lored(_lored: LORED) -> void:
 	else:
 		animation_key = lored.key
 	
+	lored.connect("job_started", another_job_started)
+	lored.connect("stopped_working", subtract_current_rate)
+	
 	if has_produced_currencies:
 		for cur in produced_currencies:
 			wa.add_producer(cur, lored)
@@ -506,24 +510,26 @@ func add_produced_currency(currency: int, amount: float) -> void:
 # - Signal
 
 func lored_output_changed() -> void:
-	rate_requires_update = true
+	subtract_current_rate()
 	for x in produced_currencies.values():
 		x.set_m_from_lored(lored.get_output())
+	add_current_rate()
 
 
 func lored_input_changed() -> void:
-	rate_requires_update = true
+	subtract_current_rate()
 	required_currencies.increase_m_from_lored(lored.get_input())
+	add_current_rate()
 
 
 func lored_haste_changed() -> void:
-	rate_requires_update = true
+	subtract_current_rate()
 	duration.set_d_from_lored(lored.get_haste())
 	fuel_cost.set_d_from_lored(lored.get_haste())
+	add_current_rate()
 
 
 func lored_fuel_cost_changed() -> void:
-	rate_requires_update = true
 	fuel_cost.set_m_from_lored(lored.get_fuel_cost())
 	has_sufficient_fuel = lored.fuel.get_current().greater_equal(fuel_cost.get_value())
 
@@ -544,6 +550,11 @@ func fuel_decreased() -> void:
 		return
 	if lored.fuel.get_current().less(fuel_cost.get_value()):
 		has_sufficient_fuel = false
+
+
+func another_job_started(job: Job) -> void:
+	if job != self:
+		subtract_current_rate()
 
 
 
@@ -574,48 +585,63 @@ func can_start_job_special_requirements_REFUEL() -> bool:
 
 
 
-func should_refresh_rate() -> bool:
-	if rate_requires_update:
-		return true
-	return lored.last_job != self
-
-
 func add_current_rate() -> void:
+	if not starting and not working:
+		return
 	if added_rate:
 		return
+	added_rate = true
+	
+	if not has_produced_currencies and not has_required_currencies:
+		return
+	
+	added_rate_based_on_inhand = not working
+	
 	var _duration = duration.get_as_float()
 	if has_produced_currencies:
 		for cur in produced_currencies:
 			var currency = wa.get_currency(cur) as Currency
-			currency.add_current_gain_rate(Big.new(in_hand_output[cur]).d(_duration))
+			if added_rate_based_on_inhand:
+				currency.add_current_gain_rate(Big.new(in_hand_output[cur]).d(_duration))
+			else:
+				currency.add_current_gain_rate(Big.new(produced_currencies[cur].get_value()).d(_duration))
 	if has_required_currencies and type != Type.REFUEL:
 		for cur in required_currencies.cost:
 			var currency = wa.get_currency(cur) as Currency
-			currency.add_current_loss_rate(Big.new(in_hand_input[cur]).d(_duration))
-	added_rate = true
-	rate_requires_update = false
+			if added_rate_based_on_inhand:
+				currency.add_current_loss_rate(Big.new(in_hand_input[cur]).d(_duration))
+			else:
+				currency.add_current_loss_rate(Big.new(required_currencies.cost[cur].get_value()).d(_duration))
 
 
 func subtract_current_rate() -> void:
 	if not added_rate:
 		return
+	added_rate = false
+	
+	if not has_produced_currencies and not has_required_currencies:
+		return
+	
 	var _duration = duration.get_as_float()
 	if has_produced_currencies:
 		for cur in produced_currencies:
 			var currency = wa.get_currency(cur) as Currency
-			currency.subtract_current_gain_rate(Big.new(in_hand_output[cur]).d(_duration))
+			if added_rate_based_on_inhand:
+				currency.subtract_current_gain_rate(Big.new(in_hand_output[cur]).d(_duration))
+			else:
+				currency.subtract_current_gain_rate(Big.new(produced_currencies[cur].get_value()).d(_duration))
 	if has_required_currencies and type != Type.REFUEL:
 		for cur in required_currencies.cost:
 			var currency = wa.get_currency(cur) as Currency
-			currency.subtract_current_loss_rate(Big.new(in_hand_input[cur]).d(_duration))
-	added_rate = false
+			if added_rate_based_on_inhand:
+				currency.subtract_current_loss_rate(Big.new(in_hand_input[cur]).d(_duration))
+			else:
+				currency.subtract_current_loss_rate(Big.new(required_currencies.cost[cur].get_value()).d(_duration))
 
 
 
 func start() -> void:
-	if should_refresh_rate():
-		subtract_current_rate()
-	working = true
+	starting = true
 	if has_produced_currencies:
 		in_hand_output.clear()
 		for cur in produced_currencies:
@@ -628,6 +654,8 @@ func start() -> void:
 			in_hand_input[cur] = required_currencies.cost[cur].get_value()
 	
 	add_current_rate()
+	starting = false
+	working = true
 	
 	lored.fuel.subtract(fuel_cost.get_total())
 	lv.start_job_timer(self)
@@ -670,6 +698,14 @@ func complete_REFUEL() -> void:
 
 # - Get
 
+func get_produced_currencies() -> Array:
+	var arr := []
+	if has_produced_currencies:
+		for cur in produced_currencies:
+			arr.append(cur)
+	return arr
+
+
 func get_required_currency_types() -> Array:
 	if not has_required_currencies:
 		return []
@@ -708,3 +744,13 @@ func get_attributes_by_currency(currency: int) -> Array:
 			if cur == currency:
 				arr.append(required_currencies.cost[cur])
 	return arr
+
+
+func produces_currency(cur: int) -> bool:
+	return cur in produced_currencies.keys()
+
+
+func get_basic_rate() -> Big:
+	var _duration = duration.get_as_float()
+	var _output = Big.new(produced_currencies.values()[0].get_value())
+	return _output.d(_duration)

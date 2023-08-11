@@ -19,6 +19,8 @@ var affordable := false:
 
 var purchased := false:
 	set(val):
+		if purchased == val:
+			return
 		purchased = val
 		if val:
 			for cur in cost:
@@ -110,6 +112,12 @@ func purchase(from_player: bool) -> void:
 	purchased = true
 
 
+func refund() -> void:
+	for cur in cost:
+		wa.add(cur, cost[cur].get_value())
+	purchased = false
+
+
 func reset() -> void:
 	for cur in cost:
 		cost[cur].reset()
@@ -160,4 +168,13 @@ func get_insufficient_currencies() -> Array:
 	return array
 
 
+func get_eta() -> Big:
+	var cur: Currency = wa.get_currency(cost.keys()[0])
+	var eta: Big = cur.get_eta(cost.values()[0].get_value())
+	for i in range(1, cost.size()):
+		cur = wa.get_currency(cost.keys()[i])
+		var i_eta = cur.get_eta(cost.values()[i].get_value())
+		if i_eta.greater(eta):
+			eta = i_eta
+	return eta
 

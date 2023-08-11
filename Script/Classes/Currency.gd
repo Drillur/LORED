@@ -62,7 +62,7 @@ var TYPE_KEYS := Type.keys()
 var saved_vars := ["count", "pending", "subtracted_by_loreds", "subtracted_by_player", "added_by_loreds"]
 
 signal increased(amount)
-#signal decreased
+signal just_unlocked
 
 var type: int
 var stage: int
@@ -91,7 +91,10 @@ var subtracted_by_loreds := Attribute.new(0, false)
 var subtracted_by_player := Attribute.new(0, false)
 var added_by_loreds := Attribute.new(0, false)
 
-var unlocked := false
+var unlocked := false:
+	set(val):
+		unlocked = val
+		emit_signal("just_unlocked")
 
 var produced_by := []
 
@@ -537,3 +540,7 @@ func get_eta(threshold: Big) -> Big:
 func get_eta_text(threshold: Big) -> String:
 	var eta = get_eta(threshold)
 	return gv.parse_time(eta)
+
+
+func get_random_producer() -> LORED:
+	return produced_by[randi() % produced_by.size()]

@@ -61,4 +61,4 @@ func setup_reward_text() -> void:
 
 func set_text(_text: String) -> void:
 	text.text = "[i]" + _text
-	text.custom_minimum_size.x = max(_text.length() * 0.75, 95)
+	text.custom_minimum_size.x = min(250, max(50 + text.text.length() * 2, 100))

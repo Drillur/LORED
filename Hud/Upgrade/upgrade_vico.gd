@@ -1,3 +1,4 @@
+class_name UpgradeVico
 extends MarginContainer
 
 
@@ -6,6 +7,7 @@ extends MarginContainer
 @onready var button = $Button as IconButton
 @onready var check = %CheckBox
 @onready var center = %Center
+@onready var lock = %Lock
 
 var tooltip_parent: Control
 
@@ -24,27 +26,26 @@ func setup(_upgrade: Upgrade):
 	upgrade = _upgrade
 	if not is_node_ready():
 		await ready
+	upgrade.vico = self
 	button.set_icon(upgrade.icon)
 	button.remove_check()
 	button.set_button_color(upgrade.color)
 	bg.self_modulate = upgrade.color
 	check.self_modulate = upgrade.color
+	lock.modulate = upgrade.color
 	
 	button.button.connect("mouse_entered", show_tooltip)
-	button.button.connect("mouse_exited", clear_tooltip)
-	button.connect("clicked", purchase)
+	button.button.connect("mouse_exited", gv.clear_tooltip)
+	button.connect("pressed", purchase)
 	
 	upgrade.connect("purchased_changed", purchased_changed)
+	upgrade.connect("unlocked_changed", unlocked_changed)
 	purchased_changed()
-	upgrade.cost.add_cost_vico(self)
+	unlocked_changed()
 
 
 
 # - Signals
-
-
-func clear_tooltip() -> void:
-	gv.clear_tooltip()
 
 
 func show_tooltip() -> void:
@@ -67,15 +68,32 @@ func purchased_changed() -> void:
 		button.set_theme_standard()
 
 
+func unlocked_changed() -> void:
+	if upgrade.unlocked:
+		upgrade.cost.add_cost_vico(self)
+		button.modulate.a = 1
+		lock.hide()
+		button.icon.show()
+	else:
+		upgrade.cost.remove_cost_vico(self)
+		button.modulate.a = 0.5
+		lock.show()
+		button.icon.hide()
+		check.hide()
+
+
+
 # - Actions
 
 func purchase() -> void:
 	if not upgrade.purchased:
-		if upgrade.cost.affordable or gv.dev_mode:
+		if upgrade.unlocked and (upgrade.cost.affordable or gv.dev_mode):
 			upgrade.purchase()
 			upgrade.cost.throw_texts(center)
-		else:
+		elif upgrade.unlocked:
 			gv.get_tooltip().get_price_node().flash()
+		else:
+			upgrade.required_upgrade.vico.flash()
 
 
 func show_check() -> void:
@@ -84,3 +102,7 @@ func show_check() -> void:
 
 func hide_check() -> void:
 	check.hide()
+
+
+func flash() -> void:
+	gv.flash(self, upgrade.color)

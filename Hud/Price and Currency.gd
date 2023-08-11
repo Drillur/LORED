@@ -52,10 +52,3 @@ func flash() -> void:
 
 func flash_became_affordable() -> void:
 	gv.flash(self, Color(0, 1, 0))
-
-
-
-# - Get
-
-func get_eta() -> Big:
-	return currency.get_eta(cost.get_total())

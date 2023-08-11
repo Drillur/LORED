@@ -13,12 +13,15 @@ extends MarginContainer
 @onready var right = %RightUp
 @onready var top_center = %TopCenter
 
+@onready var dismiss_node = %Dismiss
+
 var wish: Wish
 
 
 
 func _ready() -> void:
 	_on_resized()
+	dismiss_node.hide()
 
 
 func _on_resized() -> void:
@@ -48,20 +51,18 @@ func setup(_wish: Wish) -> void:
 	update_objective_text()
 	wish.objective.progress.add_notify_change_method(update_progress_text)
 	button.connect("mouse_entered", show_tooltip)
-	button.connect("mouse_exited", clear_tooltip)
-	button.connect("pressed", turn_in)
+	button.connect("mouse_exited", gv.clear_tooltip)
+	button.connect("gui_input", button_input)
 	
 	wish.vico = self
+	
+	gv.flash(self, wish.objective.color)
 	
 	await_ready()
 
 
 
 # - Signal Shit
-
-
-func clear_tooltip() -> void:
-	gv.clear_tooltip()
 
 
 func show_tooltip() -> void:
@@ -82,10 +83,22 @@ func await_ready() -> void:
 	ready_border.show()
 	wish.objective.progress.remove_notify_method(update_progress_text)
 	progress_text.text = "Complete!"
+	
+	while not is_queued_for_deletion():
+		await gv.get_tree().create_timer(10).timeout
+		gv.flash(self, wish.objective.color)
 
 
 
 # - Actions
+
+func button_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton and event.is_pressed():
+		if event.button_index == MOUSE_BUTTON_LEFT:
+			turn_in()
+		elif event.button_index == MOUSE_BUTTON_RIGHT:
+			dismiss()
+
 
 func turn_in() -> void:
 	if wish.ready_to_turn_in or gv.dev_mode:
@@ -95,3 +108,20 @@ func turn_in() -> void:
 		queue_free()
 	else:
 		wish.flash_something()
+
+
+func dismiss() -> void:
+	if wish.is_main_wish():
+		return
+	if wish.ready_to_turn_in:
+		return
+	
+	if dismiss_node.visible:
+		gv.clear_tooltip()
+		gv.throw_texts(top_center, wish.get_dismissal_currencies())
+		wish.dismiss()
+		queue_free()
+	else:
+		dismiss_node.show()
+		await get_tree().create_timer(2).timeout
+		dismiss_node.hide()

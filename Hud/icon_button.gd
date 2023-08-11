@@ -3,7 +3,7 @@ extends MarginContainer
 
 
 
-signal clicked
+signal pressed
 
 @onready var check = %Check
 @onready var icon = %Icon
@@ -24,7 +24,7 @@ func _ready():
 
 
 func _on_button_pressed():
-	emit_signal("clicked")
+	emit_signal("pressed")
 
 
 

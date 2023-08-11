@@ -15,6 +15,7 @@ func _ready() -> void:
 func slow_flash(color: Color):
 	rate = 0.08
 	flash(color)
+	
 
 
 func flash(color: Color) -> void:
@@ -42,3 +43,4 @@ func flash(color: Color) -> void:
 				alpha = 0.07
 			0.07:
 				queue_free()
+

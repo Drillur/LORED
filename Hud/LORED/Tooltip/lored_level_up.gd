@@ -66,7 +66,7 @@ func adjust_if_not_purchased() -> void:
 				"Promise " + lored.colored_name + " the largest share of the booty if " + lored.pronoun_he + " joins!",
 			]
 			#description.custom_minimum_size.x = 150
-			description.text = pool[randi() % len(pool)]
+			description.text = pool[randi() % pool.size()]
 			description.autowrap_mode = 2
 	else:
 		details.show()

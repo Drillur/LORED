@@ -7,8 +7,6 @@ extends MarginContainer
 @onready var discord = %Discord as TextButton
 @onready var godot = %Godot
 
-var game_color := Color(1, 0, 0.235)
-
 
 
 func _ready():
@@ -20,7 +18,7 @@ func _ready():
 	
 	
 	hamburger.modulate = Color(0, 0, 0)
-	discord.color = game_color
+	discord.color = gv.game_color
 	godot.color = Color(0.376, 0.741, 0.992)
 	
 	discord.button.connect("pressed", open_discord)

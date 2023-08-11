@@ -20,8 +20,6 @@ var random_emotes_allowed := false:
 
 
 
-
-
 # - Start
 
 func new_game_start() -> void:
@@ -52,6 +50,16 @@ func start_all_main_emotes() -> void:
 func start_random_emotes() -> void:
 	if not random_emotes_allowed:
 		await random_emotes_became_allowed
+	
+	while random_emotes_allowed:
+		await gv.get_tree().create_timer(randi() % 20 + 20).timeout # 20-40
+		var lored := lv.get_random_awake_lored() as LORED
+		var emote_key = "RANDOM_" + lored.key
+		var emote_type = Emote.Type.get(emote_key)
+		if emote_type:
+			emote(emote_type)
+		else:
+			print_debug(lored.key, " cannot random emote. emote_key: ", emote_key)
 
 
 
@@ -69,6 +77,9 @@ func emote(emote_type: int) -> void:
 		if not _emote.ready_to_emote:
 			await _emote.became_ready_to_emote
 		var wait_time = max(3.0, _emote.duration / 2)
+		if _emote.has_dialogue():
+			wait_time /= 2
+			await _emote.just_fully_displayed
 		await get_tree().create_timer(wait_time).timeout
 		emote(_emote.reply)
 

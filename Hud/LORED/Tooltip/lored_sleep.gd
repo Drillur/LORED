@@ -29,6 +29,7 @@ func setup(data: Dictionary) -> void:
 	await ready
 	color = lored.color
 	lored.connect("woke_up", sleep)
+	lored.connect("plan_to_sleep", wake_up)
 	if lored.asleep:
 		wake_up()
 	else:
@@ -51,7 +52,7 @@ func wake_up() -> void:
 		"Carpe freaking diem, dude!",
 	]
 	title.text = "Wake"
-	description.text = pool[randi() % len(pool)]
+	description.text = pool[randi() % pool.size()]
 
 
 func sleep() -> void:
@@ -68,4 +69,4 @@ func sleep() -> void:
 		"Get outta here.",
 	]
 	title.text = "Sleep"
-	description.text = pool[randi() % len(pool)]
+	description.text = pool[randi() % pool.size()]

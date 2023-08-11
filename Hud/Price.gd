@@ -39,27 +39,19 @@ func set_icon_color(color: Color) -> void:
 
 
 func set_eta_text() -> void:
-	var etas = []
-	for x in content:
-		etas.append(content[x].get_eta())
-	
-	var biggest_eta = etas[0]
-	for i in range(1, etas.size()):
-		if etas[i].greater(biggest_eta):
-			biggest_eta = etas[i]
-	
-	if biggest_eta.equal(0):
+	var _eta = cost.get_eta()
+	if _eta.equal(0):
 		eta.hide()
 		return
-	
 	eta.show()
-	eta.text = "[right]" + gv.parse_time(biggest_eta)
+	eta.text = "[right]" + gv.parse_time(_eta)
 
 
 func flash():
 	if cost.affordable:
 		flash_became_affordable()
 	else:
+		# content[cur] is price_and_currency
 		for cur in cost.get_insufficient_currencies():
 			content[cur].flash()
 

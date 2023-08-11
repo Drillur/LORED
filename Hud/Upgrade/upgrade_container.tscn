@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=3 uid="uid://dlt6lvasr6c46"]
+[gd_scene load_steps=7 format=3 uid="uid://dlt6lvasr6c46"]
 
 [ext_resource type="Theme" uid="uid://b8t7tkhvril5g" path="res://Theme/Standard.tres" id="1_nf00e"]
 [ext_resource type="Script" path="res://Hud/Upgrade/upgrade_container.gd" id="1_t6e5m"]
 [ext_resource type="Theme" uid="uid://bl4v2v143rihi" path="res://Theme/Background.tres" id="1_wef1c"]
 [ext_resource type="PackedScene" uid="uid://bvb7sgyflbxkp" path="res://Hud/Upgrade/upgrade_vico.tscn" id="2_enitg"]
 [ext_resource type="Theme" uid="uid://8dmfgxdrr5yh" path="res://Theme/Title.tres" id="3_l07lh"]
+[ext_resource type="Texture2D" uid="uid://cu1jwsvhvsxfn" path="res://Sprites/Hud/Tab/s1n.png" id="6_rp56p"]
 
 [node name="Upgrade Container" type="MarginContainer"]
 custom_minimum_size = Vector2(300, 500)
@@ -47,7 +48,7 @@ theme_override_constants/separation = 0
 [node name="Title" type="RichTextLabel" parent="MarginContainer/VBoxContainer/Title/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 0
+size_flags_horizontal = 4
 theme = ExtResource("3_l07lh")
 bbcode_enabled = true
 text = "Normal Upgrades"
@@ -57,7 +58,7 @@ autowrap_mode = 0
 [node name="Count" type="RichTextLabel" parent="MarginContainer/VBoxContainer/Title/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 0
+size_flags_horizontal = 4
 theme = ExtResource("3_l07lh")
 bbcode_enabled = true
 text = "[i][b]24[/b]/28"
@@ -95,12 +96,27 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 15
 theme_override_constants/margin_bottom = 10
 
+[node name="Control" type="Control" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="S1N" type="TextureRect" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Control"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 34.0
+offset_top = 31.0
+offset_right = 74.0
+offset_bottom = 71.0
+texture = ExtResource("6_rp56p")
+
 [node name="Upgrades" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer"]
 layout_mode = 2
+mouse_filter = 2
 theme_override_constants/separation = 20
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades"]
 layout_mode = 2
+mouse_filter = 2
 theme_override_constants/separation = 20
 alignment = 1
 
@@ -114,6 +130,7 @@ layout_mode = 2
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades"]
 layout_mode = 2
+mouse_filter = 2
 theme_override_constants/separation = 20
 alignment = 1
 
@@ -135,6 +152,7 @@ layout_mode = 2
 
 [node name="HBoxContainer3" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades"]
 layout_mode = 2
+mouse_filter = 2
 theme_override_constants/separation = 20
 alignment = 1
 
@@ -156,6 +174,7 @@ layout_mode = 2
 
 [node name="HBoxContainer4" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades"]
 layout_mode = 2
+mouse_filter = 2
 theme_override_constants/separation = 20
 alignment = 1
 
@@ -181,6 +200,7 @@ layout_mode = 2
 
 [node name="HBoxContainer5" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades"]
 layout_mode = 2
+mouse_filter = 2
 theme_override_constants/separation = 20
 alignment = 1
 
@@ -202,6 +222,7 @@ layout_mode = 2
 
 [node name="HBoxContainer6" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades"]
 layout_mode = 2
+mouse_filter = 2
 theme_override_constants/separation = 20
 alignment = 1
 
@@ -227,6 +248,7 @@ layout_mode = 2
 
 [node name="HBoxContainer7" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades"]
 layout_mode = 2
+mouse_filter = 2
 theme_override_constants/separation = 20
 alignment = 1
 
@@ -244,6 +266,7 @@ layout_mode = 2
 
 [node name="HBoxContainer8" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades"]
 layout_mode = 2
+mouse_filter = 2
 theme_override_constants/separation = 20
 alignment = 1
 

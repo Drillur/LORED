@@ -25,7 +25,6 @@ theme_override_constants/margin_bottom = 10
 
 [node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/Stage 1"]
 layout_mode = 2
-scroll_vertical = 100
 horizontal_scroll_mode = 0
 
 [node name="MarginContainer" type="MarginContainer" parent="TabContainer/Stage 1/ScrollContainer"]
@@ -132,7 +131,6 @@ theme_override_constants/margin_bottom = 10
 
 [node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/Stage 2"]
 layout_mode = 2
-scroll_vertical = 100
 horizontal_scroll_mode = 0
 
 [node name="MarginContainer" type="MarginContainer" parent="TabContainer/Stage 2/ScrollContainer"]

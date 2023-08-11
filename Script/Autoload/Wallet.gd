@@ -3,6 +3,9 @@ extends Node
 
 
 var currency := {}
+var unlocked_currencies := []
+
+signal currency_just_unlocked(cur)
 
 
 
@@ -49,6 +52,14 @@ func subtract_from_player(cur: int, amount) -> void:
 
 
 
+func unlock_currency(cur: int) -> void:
+	var _currency = get_currency(cur)
+	_currency.unlock()
+	unlocked_currencies.append(_currency)
+	emit_signal("currency_just_unlocked", cur)
+
+
+
 # - Get
 
 func get_count(cur: int) -> Big:
@@ -85,6 +96,10 @@ func get_colored_currency_name(cur: int) -> String:
 
 func get_currency(cur: int) -> Currency:
 	return currency[cur]
+
+
+func get_random_unlocked_currency() -> Currency:
+	return unlocked_currencies[randi() % unlocked_currencies.size()]
 
 
 func get_icon_and_name_text(cur: int) -> String:

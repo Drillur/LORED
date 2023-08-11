@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://dx4lfsy60htg0"]
+[gd_scene load_steps=6 format=3 uid="uid://dx4lfsy60htg0"]
 
 [ext_resource type="Script" path="res://Hud/LORED/Tooltip/lored_info.gd" id="1_5ostr"]
 [ext_resource type="Theme" uid="uid://b8t7tkhvril5g" path="res://Theme/Standard.tres" id="2_tohh5"]
 [ext_resource type="Theme" uid="uid://8dmfgxdrr5yh" path="res://Theme/Title.tres" id="3_ufmq5"]
 [ext_resource type="Texture2D" uid="uid://b5sh16p1b12b1" path="res://Sprites/Currency/axe.png" id="4_dx8d2"]
+[ext_resource type="PackedScene" uid="uid://bh234hureol4n" path="res://Hud/attribute_text_vico.tscn" id="5_x3hn5"]
 
 [node name="MarginContainer" type="MarginContainer"]
 layout_direction = 2
@@ -38,6 +39,7 @@ theme_override_constants/margin_bottom = 10
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/MarginContainer/MarginContainer"]
 layout_mode = 2
+alignment = 1
 
 [node name="Icon" type="TextureRect" parent="VBoxContainer/MarginContainer/MarginContainer/HBoxContainer"]
 unique_name_in_owner = true
@@ -139,5 +141,94 @@ layout_mode = 2
 theme = ExtResource("2_tohh5")
 bbcode_enabled = true
 text = "Crit: [b]14"
+fit_content = true
+autowrap_mode = 0
+
+[node name="Fuel" type="VBoxContainer" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="MarginContainer3" type="MarginContainer" parent="VBoxContainer/Fuel"]
+layout_mode = 2
+
+[node name="fuel title bg" type="Panel" parent="VBoxContainer/Fuel/MarginContainer3"]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("3_ufmq5")
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Fuel/MarginContainer3"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="Title" type="RichTextLabel" parent="VBoxContainer/Fuel/MarginContainer3/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme = ExtResource("3_ufmq5")
+bbcode_enabled = true
+text = "Fuel"
+fit_content = true
+autowrap_mode = 0
+
+[node name="MarginContainer4" type="MarginContainer" parent="VBoxContainer/Fuel"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="VBoxContainer/Fuel/MarginContainer4"]
+layout_mode = 2
+
+[node name="Fuel Text" parent="VBoxContainer/Fuel/MarginContainer4/VBoxContainer2" instance=ExtResource("5_x3hn5")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Fuel Cost" type="RichTextLabel" parent="VBoxContainer/Fuel/MarginContainer4/VBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("2_tohh5")
+bbcode_enabled = true
+text = "Fuel Cost: [b]14[/b]/s"
+fit_content = true
+autowrap_mode = 0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/Fuel/MarginContainer4/VBoxContainer2"]
+layout_mode = 2
+
+[node name="Label" type="RichTextLabel" parent="VBoxContainer/Fuel/MarginContainer4/VBoxContainer2/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+theme = ExtResource("2_tohh5")
+bbcode_enabled = true
+text = "Fuel resource:"
+fit_content = true
+autowrap_mode = 0
+
+[node name="Fuel Currency Icon" type="TextureRect" parent="VBoxContainer/Fuel/MarginContainer4/VBoxContainer2/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+texture = ExtResource("4_dx8d2")
+expand_mode = 2
+stretch_mode = 5
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/Fuel/MarginContainer4/VBoxContainer2/HBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/Fuel/MarginContainer4/VBoxContainer2/HBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+alignment = 1
+
+[node name="Fuel Currency" type="RichTextLabel" parent="VBoxContainer/Fuel/MarginContainer4/VBoxContainer2/HBoxContainer/HBoxContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("2_tohh5")
+bbcode_enabled = true
+text = "Coal"
 fit_content = true
 autowrap_mode = 0

@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://bvb7sgyflbxkp"]
+[gd_scene load_steps=6 format=3 uid="uid://bvb7sgyflbxkp"]
 
 [ext_resource type="PackedScene" uid="uid://cb3ej8nlybhvm" path="res://Hud/icon_button.tscn" id="1_36ve1"]
 [ext_resource type="Script" path="res://Hud/Upgrade/upgrade_vico.gd" id="1_y3gc6"]
 [ext_resource type="Theme" uid="uid://b8t7tkhvril5g" path="res://Theme/Standard.tres" id="3_5ps5m"]
+[ext_resource type="Texture2D" uid="uid://ygxbtnng8h6u" path="res://Sprites/Hud/Locked.png" id="3_mevru"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_h2uwq"]
 bg_color = Color(0.117647, 0.117647, 0.117647, 1)
@@ -24,6 +25,27 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_h2uwq")
 
 [node name="Button" parent="." instance=ExtResource("1_36ve1")]
 layout_mode = 2
+
+[node name="Lock" type="TextureRect" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("3_mevru")
+expand_mode = 2
+stretch_mode = 3
+
+[node name="Lock Shadow" type="TextureRect" parent="Lock"]
+modulate = Color(0, 0, 0, 1)
+show_behind_parent = true
+layout_mode = 2
+offset_left = 1.0
+offset_top = 1.0
+offset_right = 51.0
+offset_bottom = 51.0
+mouse_filter = 2
+texture = ExtResource("3_mevru")
+expand_mode = 2
+stretch_mode = 3
 
 [node name="CheckBox" type="CheckBox" parent="."]
 unique_name_in_owner = true

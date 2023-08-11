@@ -2,6 +2,10 @@ extends Node
 
 
 
+var saved_vars := [
+	"session_duration",
+]
+
 var dev_mode := true # false
 
 
@@ -10,20 +14,22 @@ var icon_asleep := preload("res://Sprites/Hud/Halt.png")
 
 var theme_standard := preload("res://Theme/Standard.tres")
 var theme_invis := preload("res://Theme/Invis.tres")
+var theme_text_button := preload("res://Theme/TextButton.tres")
+var theme_text_button_alternate := preload("res://Theme/TextButtonAlternate.tres")
 
 const SRC := {
 	"dtext": preload("res://Hud/dtext.tscn"),
 	"price_and_currency": preload("res://Hud/price_and_currency.tscn"),
 	"flash": preload("res://Hud/Flash.tscn"),
 	
-	"tooltip": preload("res://Hud/tooltip.tscn"),
+	"tooltip": preload("res://Hud/Tooltip/tooltip.tscn"),
 	"LORED_INFO": preload("res://Hud/LORED/Tooltip/lored_info.tscn"),
-	"LORED_FUEL": preload("res://Hud/LORED/Tooltip/lored_fuel.tscn"),
 	"LORED_LEVEL_UP": preload("res://Hud/LORED/Tooltip/lored_level_up.tscn"),
 	"LORED_SLEEP": preload("res://Hud/LORED/Tooltip/lored_sleep.tscn"),
 	"LORED_JOBS": preload("res://Hud/LORED/Tooltip/lored_jobs.tscn"),
 	"UPGRADE": preload("res://Hud/Upgrade/Tooltip/upgrade_tooltip.tscn"),
 	"WISH": preload("res://Hud/Wish/Tooltip/wish_tooltip.tscn"),
+	"JUST_TEXT": preload("res://Hud/Tooltip/Just Text.tscn"),
 }
 
 const TEXTURES := {
@@ -37,6 +43,8 @@ const STAGE_COLORS := {
 	4: Color(0.8, 0.8, 0.8),
 }
 
+var game_color := Color(1, 0, 0.235)
+
 
 var stage_1_icon_and_name := "[img=<15>]" + preload("res://Sprites/Hud/Tab/t0.png").get_path() + "[/img][color=#" + STAGE_COLORS[1].to_html() + "] Stage 1"
 var stage_2_icon_and_name := "[img=<15>]" + preload("res://Sprites/Hud/Tab/s2.png").get_path() + "[/img][color=#" + STAGE_COLORS[2].to_html() + "] Stage 2"
@@ -47,20 +55,43 @@ var texts_parent: Control
 
 
 
+# - Clock
+
+signal clock_updated
+
+var last_clock: float
+var current_clock: float
+var session_duration: int
+
+func _notification(what) -> void:
+	if what == MainLoop.NOTIFICATION_APPLICATION_FOCUS_OUT:
+		last_clock = Time.get_unix_time_from_system()
+	elif what == MainLoop.NOTIFICATION_APPLICATION_FOCUS_IN:
+		var time := Time.get_unix_time_from_system()
+		if time - current_clock > 1:
+			var time_delta := time - last_clock
+			if time_delta > 1:
+				# get offline earnings(time_delta)
+				pass
+
+
+func session_tracker() -> void:
+	var t = Timer.new()
+	add_child(t)
+	while true:
+		current_clock = Time.get_unix_time_from_system()
+		emit_signal("clock_updated")
+		t.start(1)
+		await t.timeout
+		session_duration += 1
+	t.queue_free()
+
+
+
 # - Handy
 
-func is_mouse_outside_node(mouse_position: Vector2, node: Node) -> bool:
-	var size = node.size
-	var position = node.position
-	return (
-		(
-			mouse_position.x > position.x + size.x or
-			mouse_position.x < position.x
-		) or (
-			mouse_position.y < position.y or
-			mouse_position.y > position.y + size.y
-		)
-	)
+func node_has_point(node: Node, point: Vector2) -> bool:
+	return node.get_global_rect().has_point(point)
 
 
 func get_list_text_from_array(arr: Array) -> String:
@@ -180,13 +211,10 @@ func parse_time(big: Big) -> String:
 	return big.roundDown().toString() + "mil"
 
 
-func flash(parent: Node, color = Color(1, 0, 0), slow_flash := false) -> void:
+func flash(parent: Node, color = Color(1, 0, 0)) -> void:
 	var _flash = gv.SRC["flash"].instantiate()
 	parent.add_child(_flash)
-	if slow_flash:
-		_flash.slow_flash(color)
-	else:
-		_flash.flash(color)
+	_flash.flash(color)
 
 
 
@@ -242,6 +270,7 @@ enum Tooltip {
 	LORED_JOBS,
 	UPGRADE,
 	WISH,
+	JUST_TEXT,
 }
 
 var TOOLTIP_KEYS := Tooltip.keys()
@@ -309,5 +338,5 @@ var last_reset_stage: int
 
 func reset(stage: int) -> void:
 	emit_signal("stage_" + str(stage) + "_reset")
-	emit_signal("reset")
+	emit_signal("game_reset")
 

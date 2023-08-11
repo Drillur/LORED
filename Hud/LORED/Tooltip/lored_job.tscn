@@ -1,8 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://23dog5ok2vsp"]
+[gd_scene load_steps=4 format=3 uid="uid://23dog5ok2vsp"]
 
 [ext_resource type="Script" path="res://Hud/LORED/Tooltip/lored_job.gd" id="1_v2sti"]
 [ext_resource type="Theme" uid="uid://b8t7tkhvril5g" path="res://Theme/Standard.tres" id="2_srluh"]
-[ext_resource type="Theme" uid="uid://dpjvckeu73050" path="res://Theme/Subtitle.tres" id="3_gyk4w"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_03eo3"]
 bg_color = Color(1, 1, 1, 0.0901961)
@@ -45,7 +44,7 @@ layout_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
-theme = ExtResource("3_gyk4w")
+theme = ExtResource("2_srluh")
 bbcode_enabled = true
 text = "Toast"
 fit_content = true

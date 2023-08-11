@@ -1,0 +1,69 @@
+[gd_scene load_steps=4 format=3 uid="uid://c8f7jwtn8oya4"]
+
+[ext_resource type="Script" path="res://Hud/Wish/wish_pending.gd" id="1_0b3o5"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2okpp"]
+bg_color = Color(0.305882, 0.305882, 0.305882, 1)
+border_width_left = 2
+border_width_top = 2
+border_color = Color(1, 1, 1, 0.729412)
+border_blend = true
+corner_radius_top_left = 9
+corner_radius_top_right = 9
+corner_radius_bottom_right = 9
+corner_radius_bottom_left = 9
+shadow_size = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mghex"]
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[node name="Wish Pending" type="MarginContainer"]
+custom_minimum_size = Vector2(0, 46)
+offset_right = 38.0
+offset_bottom = 46.0
+size_flags_horizontal = 0
+script = ExtResource("1_0b3o5")
+
+[node name="bg" type="Panel" parent="."]
+custom_minimum_size = Vector2(0, 22)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_2okpp")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 2
+alignment = 1
+
+[node name="Panel" type="Panel" parent="MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(6, 6)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_mghex")
+
+[node name="Panel2" type="Panel" parent="MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(6, 6)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_mghex")
+
+[node name="Panel3" type="Panel" parent="MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(6, 6)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_mghex")

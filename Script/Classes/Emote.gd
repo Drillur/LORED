@@ -80,6 +80,7 @@ enum Type {
 
 signal became_ready_to_emote
 signal finished_emoting
+signal just_fully_displayed
 
 var TYPE_KEYS := Type.keys()
 
@@ -116,7 +117,7 @@ func _init(_type: int) -> void:
 	posing = pose_texture != null
 	
 	if duration == 0:
-		var automatic_duration = 5 + (float(dialogue.length()) / 25) + (3 if posing else 0)
+		var automatic_duration = 3 + (float(dialogue.length()) / 25) + (3 if posing else 0)
 		duration = automatic_duration
 	
 	if not has_method("await_" + key):
@@ -236,7 +237,7 @@ func RANDOM_STONE() -> void:
 		2:
 			dialogue = "My bag is getting heavy! :("
 			pose_texture = load("res://Sprites/reactions/STONE2.png")
-		3: dialogue = "My back smarts. :("
+		3: dialogue = "My back smarts.\n:("
 		4: dialogue = "Hey, I found one you might like!"
 		5: dialogue = "Gotta go fast!"
 		6: dialogue = "I wonder how much this one is worth."
@@ -304,7 +305,7 @@ func RANDOM_COPPER_ORE() -> void:
 
 
 func RANDOM_IRON() -> void:
-	speaker = lv.get_lored(LORED.Type.COPPER_ORE)
+	speaker = lv.get_lored(LORED.Type.IRON)
 	match randi() % 8:
 		0: dialogue = "Bread is good, but [b]toast[/b]... Toast is better."
 		1:
@@ -347,7 +348,7 @@ func IRON2_STONE0():
 
 
 func RANDOM_COPPER() -> void:
-	speaker = lv.get_lored(LORED.Type.COPPER_ORE)
+	speaker = lv.get_lored(LORED.Type.COPPER)
 	match randi() % 8:
 		0: dialogue = "This stuff's the bee's knees!"
 		1: pose_texture = load("res://Sprites/reactions/COPPER1.png")

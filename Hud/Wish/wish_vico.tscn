@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://bxwt1hbvsigah"]
+[gd_scene load_steps=11 format=3 uid="uid://bxwt1hbvsigah"]
 
 [ext_resource type="Theme" uid="uid://bl4v2v143rihi" path="res://Theme/Background.tres" id="1_nnvct"]
 [ext_resource type="Script" path="res://Hud/Wish/wish_vico.gd" id="1_u1cay"]
@@ -19,15 +19,14 @@ border_color = Color(1, 1, 1, 1)
 shadow_color = Color(0, 0, 0, 1)
 shadow_size = 5
 
-[node name="Wish Vico" type="MarginContainer"]
-offset_right = 71.0
-offset_bottom = 46.0
-script = ExtResource("1_u1cay")
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xncda"]
+bg_color = Color(0.36, 0, 0, 0.85)
 
-[node name="bg" type="Panel" parent="."]
-visible = false
-layout_mode = 2
-theme = ExtResource("2_lqvp4")
+[node name="Wish Vico" type="MarginContainer"]
+offset_right = 82.0
+offset_bottom = 46.0
+size_flags_horizontal = 0
+script = ExtResource("1_u1cay")
 
 [node name="Bar" parent="." instance=ExtResource("2_48rek")]
 unique_name_in_owner = true
@@ -136,6 +135,45 @@ anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
 grow_horizontal = 2
+
+[node name="Dismiss" type="MarginContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="bg" type="Panel" parent="Dismiss"]
+layout_mode = 2
+theme = ExtResource("2_lqvp4")
+theme_override_styles/panel = SubResource("StyleBoxFlat_xncda")
+
+[node name="MarginContainer" type="MarginContainer" parent="Dismiss"]
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Dismiss/MarginContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="Objective Text" type="RichTextLabel" parent="Dismiss/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme = ExtResource("7_i6th1")
+bbcode_enabled = true
+text = "[i]Deny wish?"
+fit_content = true
+autowrap_mode = 0
+
+[node name="Objective Text2" type="RichTextLabel" parent="Dismiss/MarginContainer/VBoxContainer"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 4
+theme = ExtResource("7_i6th1")
+bbcode_enabled = true
+text = "+1 [img=<15>]res://Sprites/Currency/Grief.png[/img] Grief"
+fit_content = true
+autowrap_mode = 0
 
 [node name="Button" type="Button" parent="."]
 unique_name_in_owner = true

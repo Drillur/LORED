@@ -1,0 +1,20 @@
+[gd_scene load_steps=3 format=3 uid="uid://boqv3kmueha0v"]
+
+[ext_resource type="Script" path="res://Hud/Tooltip/Just Text.gd" id="1_qjqcy"]
+[ext_resource type="Theme" uid="uid://b8t7tkhvril5g" path="res://Theme/Standard.tres" id="2_lhn5c"]
+
+[node name="Just Text Tooltip" type="MarginContainer"]
+offset_right = 100.0
+offset_bottom = 35.0
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+script = ExtResource("1_qjqcy")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="."]
+layout_mode = 2
+theme = ExtResource("2_lhn5c")
+bbcode_enabled = true
+text = "Don't mind me!"
+fit_content = true

@@ -65,9 +65,12 @@ signal began_working
 signal leveled_up(level)
 signal went_to_sleep
 signal woke_up
-signal became_unlocked
+signal plan_to_sleep
+signal just_unlocked
 signal second_passed_while_asleep
 signal finished_emoting
+signal purchased_changed(purchased)
+signal job_started(job)
 
 var type: int
 var stage: int
@@ -82,8 +85,26 @@ var time_spent_asleep := 0.0
 var reason_cannot_work := 0
 var pending_attribute_changes := 0
 
-var unlocked: bool
-var purchased: bool
+var produced_currencies := []
+var required_currencies := []
+var upgrades := []
+var unpurchased_upgrades := []
+
+var unlocked := false
+var purchased := false:
+	set(val):
+		if purchased == val:
+			return
+		purchased = val
+		if val:
+			lv.active.append(self)
+			if not asleep:
+				lv.active_and_awake.append(self)
+		else:
+			lv.active.erase(self)
+			if self in lv.active_and_awake:
+				lv.active_and_awake.erase(self)
+		emit_signal("purchased_changed", val)
 var working := false
 var looking_for_jobs := false
 var asleep := false
@@ -136,6 +157,7 @@ func _init(_type: int) -> void:
 	call("init_" + key)
 	
 	fuel_currency = wa.get_currency(fuel_currency_type)
+	required_currencies.append(fuel_currency)
 	add_job(Job.Type.REFUEL)
 	
 	if name == "":
@@ -147,9 +169,6 @@ func _init(_type: int) -> void:
 	connect("completed_job", start_working)
 	connect("began_working", add_fuel_rate)
 	connect("stopped_working", subtract_fuel_rate)
-	
-	purchased = true if type == Type.STONE else false
-	unlocked = true if type in [Type.COAL, Type.STONE] else false
 	
 	# stage and fuel
 	if type <= Type.OIL:
@@ -179,10 +198,7 @@ func _init(_type: int) -> void:
 		fuel.change_base(1.0)
 		fuel.reset()
 	
-	if purchased:
-		level = Attribute.new(1, false)
-	else:
-		level = Attribute.new(0, false)
+	level = Attribute.new(0, false)
 	
 	icon_text = "[img=<15>]" + icon.get_path() + "[/img]"
 	icon_and_name_text = icon_text + " " + colored_name
@@ -194,8 +210,8 @@ func _init(_type: int) -> void:
 func init_STONE() -> void:
 	add_job(Job.Type.STONE)
 	cost = Cost.new({
-		Currency.Type.IRON: Attribute.new(25.0, false),
-		Currency.Type.COPPER: Attribute.new(15.0, false),
+		Currency.Type.IRON: Attribute.new(25.0 / 3, false),
+		Currency.Type.COPPER: Attribute.new(15.0 / 3, false),
 	})
 	color = Color(0.79, 0.79, 0.79)
 	faded_color = Color(0.788235, 0.788235, 0.788235)
@@ -727,16 +743,28 @@ func init_BLOOD() -> void:
 
 func add_job(_job: int) -> void:
 	jobs[_job] = Job.new(_job) as Job
-	if len(jobs) == 1:
+	if jobs.size() == 1:
 		default_frames = jobs[_job].animation
+	
+	for cur in jobs[_job].get_produced_currencies():
+		if not cur in produced_currencies:
+			var currency = wa.get_currency(cur)
+			produced_currencies.append(currency)
+	for cur in jobs[_job].get_required_currency_types():
+		if not cur in required_currencies:
+			var currency = wa.get_currency(cur)
+			required_currencies.append(currency)
+	
 	if not lv.loreds_are_initialized:
 		await lv.loreds_initialized
 	jobs[_job].assign_lored(self)
+	
 	output.add_immediate_notify_method(jobs[_job].lored_output_changed)
-	if jobs[_job].has_required_currencies:
-		input.add_immediate_notify_method(jobs[_job].lored_input_changed)
 	haste.add_immediate_notify_method(jobs[_job].lored_haste_changed)
 	fuel_cost.add_immediate_notify_method(jobs[_job].lored_fuel_cost_changed)
+	if jobs[_job].has_required_currencies:
+		input.add_immediate_notify_method(jobs[_job].lored_input_changed)
+	
 	jobs[_job].connect("became_workable", job_became_workable)
 	jobs[_job].connect("completed", job_completed)
 	jobs[_job].connect("cut_short", job_cut_short)
@@ -810,6 +838,14 @@ func purchase() -> void:
 		start_working()
 
 
+func force_purchase() -> void:
+	times_purchased += 1
+	purchased = true
+	level_up()
+	if times_purchased == 1:
+		start_working()
+
+
 func level_up() -> void:
 	set_level_to(level.get_as_int() + 1)
 
@@ -832,24 +868,25 @@ func set_level_to(_level: int) -> void:
 
 
 func unlock() -> void:
-	unlocked = false
-	emit_signal("became_unlocked")
-
+	unlocked = true
+	for currency in produced_currencies:
+		wa.unlock_currency(currency.type)
+	emit_signal("just_unlocked")
 
 
 
 func go_to_sleep() -> void:
-	will_go_to_sleep = true
+	emit_signal("plan_to_sleep")
 	if working:
+		will_go_to_sleep = true
 		await completed_job
 		if not will_go_to_sleep:
 			return
 	will_go_to_sleep = false
 	asleep = true
-	if last_job_type != -1:
-		jobs[last_job_type].subtract_current_rate()
 	time_went_to_bed = Time.get_unix_time_from_system()
 	lv.start_sleep_emitter(self)
+	lv.active_and_awake.erase(self)
 	emit_signal("stopped_working")
 	emit_signal("went_to_sleep")
 
@@ -862,6 +899,7 @@ func wake_up() -> void:
 	asleep = false
 	if reason_cannot_work != ReasonCannotWork.CAN_WORK:
 		cannot_work(reason_cannot_work)
+	lv.active_and_awake.append(self)
 	emit_signal("woke_up")
 
 
@@ -877,6 +915,17 @@ func emote(_emote: Emote) -> void:
 	await _emote.finished_emoting
 	emoting = false
 	emit_signal("finished_emoting")
+
+
+
+func add_influencing_upgrade(upgrade: Upgrade) -> void:
+	if not upgrade in upgrades:
+		upgrades.append(upgrade)
+		if not upgrade.purchased:
+			if not upgrade in unpurchased_upgrades:
+				unpurchased_upgrades.append(upgrade)
+				await upgrade.just_purchased
+				unpurchased_upgrades.erase(upgrade)
 
 
 
@@ -946,6 +995,7 @@ func start_job(_type: int) -> void:
 	last_job.start()
 	vico.start_job(last_job)
 	emit_signal("began_working")
+	emit_signal("job_started", last_job)
 
 
 func stop_job() -> void:
@@ -969,30 +1019,85 @@ func determine_why_cannot_work() -> void:
 	if fuel.get_current_percent() <= lv.FUEL_DANGER:
 		cannot_work(ReasonCannotWork.INSUFFICIENT_FUEL)
 	elif jobs[sorted_jobs[1]].has_required_currencies:
-		cannot_work(ReasonCannotWork.INSUFFICIENT_CURRENCIES, jobs[sorted_jobs[1]])
+		cannot_work(ReasonCannotWork.INSUFFICIENT_CURRENCIES)
 	else:
 		cannot_work(ReasonCannotWork.UNKNOWN)
 	emit_signal("stopped_working")
 
 
-func cannot_work(reason: int, _job = 0) -> void:
+func cannot_work(reason: int) -> void:
 	if reason == ReasonCannotWork.CAN_WORK:
 		return
 	reason_cannot_work = reason
 	match reason:
 		ReasonCannotWork.INSUFFICIENT_FUEL:
 			vico.set_status_and_currency(
-				"Awaiting sufficient " + fuel_currency.name + ".",
+				"Awaiting " + fuel_currency.name + ".",
 				 fuel_currency_type
 			)
 		ReasonCannotWork.INSUFFICIENT_CURRENCIES:
-			_job = _job as Job
-			var cur = _job.required_currencies.get_insufficient_currencies()[0]
-			vico.set_status_and_currency(
-				"Awaiting sufficient " + wa.get_currency_name(cur) + ".",
-				cur
-			)
+			vico.set_status_and_currency("Awaiting required resource.")
 	emit_signal("became_unable_to_work")
+
+
+
+# - Wish
+
+var wished_upgrade: Upgrade
+var wished_currency: Currency
+
+func get_wish() -> String:
+	randomize()
+	
+	var possible_types := {
+		"LORED_LEVELED_UP": 10,
+		"SLEEP": 10,
+	}
+	
+	if fuel.get_current_percent() < lv.FUEL_DANGER and df.fuel.less_equal(2):
+		if randi() % 100 < 30:
+			possible_types["ACCEPTABLE_FUEL"] = 50
+		else:
+			wished_currency = fuel_currency
+			possible_types["COLLECT_CURRENCY"] = 50
+	elif reason_cannot_work != ReasonCannotWork.CAN_WORK and required_currencies.size() > 1:
+		wished_currency = required_currencies[randi() % (required_currencies.size() - 1) + 1]
+		possible_types["COLLECT_CURRENCY"] = 50
+	else:
+		if randi() % 100 < 10:
+			wished_currency = wa.get_currency(Currency.Type.JOY)
+			possible_types["COLLECT_CURRENCY"] = 10
+		else:
+			wished_currency = wa.get_random_unlocked_currency()
+			possible_types["COLLECT_CURRENCY"] = 30
+	
+	for upgrade in unpurchased_upgrades:
+		var upgrade_eta = upgrade.cost.get_eta()
+		if upgrade_eta.equal(0):
+			continue
+		if upgrade.unlocked and upgrade_eta.less_equal(60):
+			wished_upgrade = upgrade
+			possible_types["UPGRADE_PURCHASED"] = 30
+			break
+	
+	
+	
+	var total_points := 0
+	for x in possible_types.values():
+		total_points += x
+	
+	var roll := randi() % total_points
+	
+	var shuffled_possible_types := possible_types.keys()
+	shuffled_possible_types.shuffle()
+	
+	for i in possible_types.size():
+		if roll < possible_types[shuffled_possible_types[i]]:
+			return shuffled_possible_types[i]
+		roll -= possible_types[shuffled_possible_types[i]]
+	
+	print_debug("This rly shouldn't have happened")
+	return "Stinky"
 
 
 
@@ -1085,3 +1190,11 @@ func get_attributes_by_currency(currency_type: int) -> Array:
 	for job in jobs.values():
 		arr += job.get_attributes_by_currency(currency_type)
 	return arr
+
+
+func get_job_that_produces_currency(cur: int) -> Job:
+	for job in jobs.values():
+		if job.produces_currency(cur):
+			return job
+	print_debug("why and how")
+	return Job.new(0)
