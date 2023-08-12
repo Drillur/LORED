@@ -11,11 +11,13 @@ func _ready():
 
 
 func init(data: Dictionary = {}):
+	if "text" in data.keys():
+		get_node("%amount").text = data["text"]
+		get_node("%amount").self_modulate = data["color"]
 	
-	get_node("%amount").text = data["text"]
-	if data["text"] == "":
+	if get_node("%amount").text == "":
 		get_node("bg").hide()
-	get_node("%amount").self_modulate = data["color"]
+	
 	if "resource name" in data.keys():
 		get_node("%resource name").show()
 		get_node("%resource name").text = data["resource name"]
@@ -25,6 +27,8 @@ func init(data: Dictionary = {}):
 		%Icon.show()
 		get_node("%Icon").texture = data["icon"]
 		get_node("%Icon Shadow").texture = data["icon"]
+		if "icon modulate" in data.keys():
+			%Icon.modulate = data["icon modulate"]
 	else:
 		get_node("%Icon").queue_free()
 	

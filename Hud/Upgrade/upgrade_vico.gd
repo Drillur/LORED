@@ -70,12 +70,13 @@ func purchased_changed() -> void:
 
 func unlocked_changed() -> void:
 	if upgrade.unlocked:
-		upgrade.cost.add_cost_vico(self)
+		upgrade.cost.connect("affordable_changed", cost_update)
+		cost_update(upgrade.cost.affordable)
 		button.modulate.a = 1
 		lock.hide()
 		button.icon.show()
 	else:
-		upgrade.cost.remove_cost_vico(self)
+		upgrade.cost.disconnect("affordable_changed", cost_update)
 		button.modulate.a = 0.5
 		lock.show()
 		button.icon.hide()

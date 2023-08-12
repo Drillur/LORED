@@ -87,6 +87,8 @@ var net_rate := Attribute.new(0)
 var gain_rate := Attribute.new(0)
 var loss_rate := Attribute.new(0)
 
+var weight := 1
+
 var subtracted_by_loreds := Attribute.new(0, false)
 var subtracted_by_player := Attribute.new(0, false)
 var added_by_loreds := Attribute.new(0, false)
@@ -147,11 +149,13 @@ func init_STONE() -> void:
 	count = Attribute.new(5, false)
 	color = Color(0.79, 0.79, 0.79)
 	icon = preload("res://Sprites/Currency/stone.png")
+	weight = 3
 
 
 func init_COAL() -> void:
 	color = Color(0.7, 0, 1)
 	icon = preload("res://Sprites/Currency/coal.png")
+	weight = 2
 
 
 func init_IRON_ORE() -> void:
@@ -168,27 +172,32 @@ func init_IRON() -> void:
 	count = Attribute.new(8, false)
 	color = Color(0.07, 0.89, 1)
 	icon = preload("res://Sprites/Currency/iron.png")
+	weight = 3
 
 
 func init_COPPER() -> void:
 	count = Attribute.new(8, false)
 	color = Color(1, 0.74, 0.05)
 	icon = preload("res://Sprites/Currency/cop.png")
+	weight = 3
 
 
 func init_GROWTH() -> void:
 	color = Color(0.79, 1, 0.05)
 	icon = preload("res://Sprites/Currency/growth.png")
+	weight = 2
 
 
 func init_JOULES() -> void:
 	color = Color(1, 0.98, 0)
 	icon = preload("res://Sprites/Currency/jo.png")
+	weight = 2
 
 
 func init_CONCRETE() -> void:
 	color = Color(0.35, 0.35, 0.35)
 	icon = preload("res://Sprites/Currency/conc.png")
+	weight = 3
 
 
 func init_MALIGNANCY() -> void:
@@ -200,6 +209,7 @@ func init_MALIGNANCY() -> void:
 func init_TARBALLS() -> void:
 	color = Color(.56, .44, 1)
 	icon = preload("res://Sprites/Currency/tar.png")
+	weight = 2
 
 
 func init_OIL() -> void:
@@ -210,6 +220,7 @@ func init_OIL() -> void:
 func init_WATER() -> void:
 	color = Color(0, 0.647059, 1)
 	icon = preload("res://Sprites/Currency/water.png")
+	weight = 2
 
 
 func init_HUMUS() -> void:
@@ -250,6 +261,7 @@ func init_HARDWOOD() -> void:
 	count = Attribute.new(95, false)
 	color = Color(0.92549, 0.690196, 0.184314)
 	icon = preload("res://Sprites/Currency/hard.png")
+	weight = 3
 
 
 func init_LIQUID_IRON() -> void:
@@ -261,6 +273,7 @@ func init_STEEL() -> void:
 	count = Attribute.new(25, false)
 	color = Color(0.607843, 0.802328, 0.878431)
 	icon = preload("res://Sprites/Currency/steel.png")
+	weight = 3
 
 
 func init_SAND() -> void:
@@ -273,6 +286,7 @@ func init_GLASS() -> void:
 	count = Attribute.new(30, false)
 	color = Color(0.81, 0.93, 1.0)
 	icon = preload("res://Sprites/Currency/glass.png")
+	weight = 3
 
 
 func init_DRAW_PLATE() -> void:
@@ -284,6 +298,7 @@ func init_WIRE() -> void:
 	count = Attribute.new(20, false)
 	color = Color(0.9, 0.6, 0.14)
 	icon = preload("res://Sprites/Currency/wire.png")
+	weight = 3
 
 
 func init_GALENA() -> void:
@@ -314,6 +329,7 @@ func init_PAPER() -> void:
 func init_PLASTIC() -> void:
 	color = Color(0.85, 0.85, 0.85)
 	icon = preload("res://Sprites/Currency/plast.png")
+	weight = 2
 
 
 func init_TOBACCO() -> void:
@@ -324,11 +340,13 @@ func init_TOBACCO() -> void:
 func init_CIGARETTES() -> void:
 	color = Color(0.929412, 0.584314, 0.298039)
 	icon = preload("res://Sprites/Currency/ciga.png")
+	weight = 2
 
 
 func init_CARCINOGENS() -> void:
 	color = Color(0.772549, 0.223529, 0.192157)
 	icon = preload("res://Sprites/Currency/carc.png")
+	weight = 2
 
 
 func init_EMBRYO() -> void:

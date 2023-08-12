@@ -5,6 +5,7 @@ extends Resource
 
 signal became_affordable
 signal became_unaffordable
+signal affordable_changed(affordable)
 
 var cost := {}
 var affordable := false:
@@ -14,8 +15,7 @@ var affordable := false:
 			emit_signal("became_affordable")
 		else:
 			emit_signal("became_unaffordable")
-		for node in cost_vicos:
-			node.cost_update(val)
+		emit_signal("affordable_changed", affordable)
 
 var purchased := false:
 	set(val):
@@ -34,8 +34,6 @@ var purchased := false:
 				for cur in cost:
 					wa.currency[cur].count.add_notify_increased_method(currency_increased)
 
-var cost_vicos: Array
-
 
 
 func _init(_cost: Dictionary) -> void:
@@ -43,16 +41,6 @@ func _init(_cost: Dictionary) -> void:
 	for cur in cost:
 		wa.currency[cur].count.add_notify_increased_method(currency_increased)
 		#wa.currency[cur].count.add_notify_decreased_method(currency_decreased)
-
-
-func add_cost_vico(node: Node) -> void:
-	cost_vicos.append(node)
-	node.cost_update(affordable)
-
-
-func remove_cost_vico(node: Node) -> void:
-	if node in cost_vicos:
-		cost_vicos.erase(node)
 
 
 func notify_if_increased() -> void:

@@ -18,7 +18,6 @@ extends MarginContainer
 @onready var fuel = %Fuel
 @onready var fuel_text = %"Fuel Text"
 @onready var fuel_currency_text = %"Fuel Currency"
-@onready var fuel_currency_icon = %"Fuel Currency Icon"
 @onready var fuel_cost = %"Fuel Cost"
 @onready var fuel_title_bg = %"fuel title bg"
 
@@ -49,8 +48,7 @@ func setup(data: Dictionary) -> void:
 	fuel_text.setup(lored.fuel)
 	color = lored.color
 	fuel_title_bg.self_modulate = lored.fuel_currency.color
-	fuel_currency_icon.texture = lored.fuel_currency.icon
-	fuel_currency_text.text = lored.fuel_currency.colored_name
+	fuel_currency_text.text = lored.fuel_currency.icon_and_name_text
 	lored.fuel_cost.add_notify_change_method(update_fuel_cost, true)
 
 

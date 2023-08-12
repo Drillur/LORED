@@ -75,17 +75,20 @@ var two_part_animation := false
 var part_one_played := false
 
 var starting := false
-var added_rate := false
+var added_current_rate := false
+var added_total_rate := false
 var working := false
 var added_rate_based_on_inhand: bool
 
 var has_sufficient_fuel := true
 var has_produced_currencies := false
 var produced_currencies := {}
+var produced_rates := {}
 var in_hand_output := {}
 var has_required_currencies := false
 var in_hand_input := {}
 var required_currencies: Cost
+var required_rates := {}
 
 var last_production := {}
 
@@ -510,23 +513,23 @@ func add_produced_currency(currency: int, amount: float) -> void:
 # - Signal
 
 func lored_output_changed() -> void:
-	subtract_current_rate()
+	subtract_rates()
 	for x in produced_currencies.values():
 		x.set_m_from_lored(lored.get_output())
-	add_current_rate()
+	add_rates()
 
 
 func lored_input_changed() -> void:
-	subtract_current_rate()
+	subtract_rates()
 	required_currencies.increase_m_from_lored(lored.get_input())
-	add_current_rate()
+	add_rates()
 
 
 func lored_haste_changed() -> void:
-	subtract_current_rate()
+	subtract_rates()
 	duration.set_d_from_lored(lored.get_haste())
 	fuel_cost.set_d_from_lored(lored.get_haste())
-	add_current_rate()
+	add_rates()
 
 
 func lored_fuel_cost_changed() -> void:
@@ -560,9 +563,6 @@ func another_job_started(job: Job) -> void:
 
 # - Actions
 
-#might want to move reason why cannot work here somehow.
-#it would probably work better than in lored
-
 func can_start() -> bool:
 	if lored.fuel.get_current_percent() <= lv.FUEL_DANGER and type != Type.REFUEL:
 		return false
@@ -585,12 +585,23 @@ func can_start_job_special_requirements_REFUEL() -> bool:
 
 
 
+func subtract_rates() -> void:
+	subtract_current_rate()
+	subtract_total_rate()
+
+
+func add_rates() -> void:
+	add_current_rate()
+	add_total_rate()
+
+
+
 func add_current_rate() -> void:
 	if not starting and not working:
 		return
-	if added_rate:
+	if added_current_rate:
 		return
-	added_rate = true
+	added_current_rate = true
 	
 	if not has_produced_currencies and not has_required_currencies:
 		return
@@ -614,10 +625,37 @@ func add_current_rate() -> void:
 				currency.add_current_loss_rate(Big.new(required_currencies.cost[cur].get_value()).d(_duration))
 
 
-func subtract_current_rate() -> void:
-	if not added_rate:
+func add_total_rate() -> void:
+	if not has_produced_currencies and not has_required_currencies:
 		return
-	added_rate = false
+	if added_total_rate:
+		return
+	added_total_rate = true
+	
+	var _duration = duration.get_as_float()
+	if has_produced_currencies:
+		produced_rates.clear()
+		for cur in produced_currencies:
+			var currency = wa.get_currency(cur) as Currency
+			var rate = Big.new(produced_currencies[cur].get_value()).d(_duration)
+			
+			currency.add_total_gain_rate(rate)
+			produced_rates[cur] = rate
+	
+	if has_required_currencies and type != Type.REFUEL:
+		required_rates.clear()
+		for cur in required_currencies.cost:
+			var currency = wa.get_currency(cur) as Currency
+			var rate = Big.new(required_currencies.cost[cur].get_value()).d(_duration)
+			
+			currency.add_total_loss_rate(rate)
+			required_rates[cur] = rate
+
+
+func subtract_current_rate() -> void:
+	if not added_current_rate:
+		return
+	added_current_rate = false
 	
 	if not has_produced_currencies and not has_required_currencies:
 		return
@@ -637,6 +675,24 @@ func subtract_current_rate() -> void:
 				currency.subtract_current_loss_rate(Big.new(in_hand_input[cur]).d(_duration))
 			else:
 				currency.subtract_current_loss_rate(Big.new(required_currencies.cost[cur].get_value()).d(_duration))
+
+
+func subtract_total_rate() -> void:
+	if not added_total_rate:
+		return
+	if not has_produced_currencies and not has_required_currencies:
+		return
+	added_total_rate = false
+	
+	var _duration = duration.get_as_float()
+	if has_produced_currencies:
+		for cur in produced_currencies:
+			var currency = wa.get_currency(cur) as Currency
+			currency.subtract_total_gain_rate(Big.new(produced_currencies[cur].get_value()).d(_duration))
+	if has_required_currencies and type != Type.REFUEL:
+		for cur in required_currencies.cost:
+			var currency = wa.get_currency(cur) as Currency
+			currency.subtract_total_loss_rate(Big.new(required_currencies.cost[cur].get_value()).d(_duration))
 
 
 
@@ -750,7 +806,9 @@ func produces_currency(cur: int) -> bool:
 	return cur in produced_currencies.keys()
 
 
-func get_basic_rate() -> Big:
-	var _duration = duration.get_as_float()
-	var _output = Big.new(produced_currencies.values()[0].get_value())
-	return _output.d(_duration)
+func get_produced_rates() -> Dictionary:
+	if not added_total_rate:
+		print_debug("This is apparently possible. You need to create and then await signal just_added_total_rate")
+	var arr = []
+	
+	return arr

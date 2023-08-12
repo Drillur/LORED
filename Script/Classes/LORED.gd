@@ -65,6 +65,7 @@ signal began_working
 signal leveled_up(level)
 signal went_to_sleep
 signal woke_up
+signal asleep_changed(asleep)
 signal plan_to_sleep
 signal just_unlocked
 signal second_passed_while_asleep
@@ -107,11 +108,18 @@ var purchased := false:
 		emit_signal("purchased_changed", val)
 var working := false
 var looking_for_jobs := false
-var asleep := false
+var asleep := false:
+	set(val):
+		if asleep == val:
+			return
+		asleep = val
+		emit_signal("asleep_changed", asleep)
 var will_go_to_sleep := false
 var time_went_to_bed: float
-var fuel_rate_added := false
+var current_fuel_rate_added := false
+var total_fuel_rate_added := false
 var emoting := false
+var awaiting_a_job_opening := false
 
 var key: String
 var name := ""
@@ -167,8 +175,9 @@ func _init(_type: int) -> void:
 		faded_color = color
 	
 	connect("completed_job", start_working)
-	connect("began_working", add_fuel_rate)
-	connect("stopped_working", subtract_fuel_rate)
+	connect("began_working", add_current_fuel_rate)
+	connect("stopped_working", subtract_current_fuel_rate)
+	connect("woke_up", start_working)
 	
 	# stage and fuel
 	if type <= Type.OIL:
@@ -802,16 +811,29 @@ func lored_vicos_ready() -> void:
 		start_working()
 
 
-func add_fuel_rate() -> void:
-	if not fuel_rate_added:
-		fuel_rate_added = true
+func add_current_fuel_rate() -> void:
+	if not current_fuel_rate_added:
+		current_fuel_rate_added = true
 		fuel_currency.add_current_loss_rate(fuel_cost.get_value())
 
 
-func subtract_fuel_rate() -> void:
-	if fuel_rate_added:
-		fuel_rate_added = false
+func subtract_current_fuel_rate() -> void:
+	if current_fuel_rate_added:
+		current_fuel_rate_added = false
 		fuel_currency.subtract_current_loss_rate(fuel_cost.get_value())
+
+
+func add_total_fuel_rate() -> void:
+	if not total_fuel_rate_added:
+		total_fuel_rate_added = true
+		fuel_currency.add_total_loss_rate(fuel_cost.get_value())
+
+
+func subtract_total_fuel_rate() -> void:
+	if total_fuel_rate_added:
+		total_fuel_rate_added = false
+		fuel_currency.subtract_total_loss_rate(fuel_cost.get_value())
+
 
 
 
@@ -834,16 +856,22 @@ func purchase() -> void:
 	purchased = true
 	cost.spend(true)
 	level_up()
-	if times_purchased == 1:
-		start_working()
+	first_purchase()
 
 
 func force_purchase() -> void:
 	times_purchased += 1
 	purchased = true
 	level_up()
-	if times_purchased == 1:
-		start_working()
+	first_purchase()
+
+
+func first_purchase() -> void:
+	if times_purchased > 1:
+		return
+	start_working()
+	for currency in produced_currencies:
+		wa.unlock_currency(currency.type)
 
 
 func level_up() -> void:
@@ -860,22 +888,28 @@ func set_level_to(_level: int) -> void:
 	var fuel_percent = fuel.get_current_percent()
 	fuel.set_from_level(Big.new(2).power(current_level - 1))
 	fuel.set_to_percent(fuel_percent)
-	subtract_fuel_rate()
+	
+	if working:
+		subtract_current_fuel_rate()
+	subtract_total_fuel_rate()
 	fuel_cost.set_from_level(Big.new(2).power(current_level - 1))
-	add_fuel_rate()
+	if working:
+		add_current_fuel_rate()
+	add_total_fuel_rate()
+	
 	emit_signal("leveled_up", current_level)
 
 
 
 func unlock() -> void:
 	unlocked = true
-	for currency in produced_currencies:
-		wa.unlock_currency(currency.type)
 	emit_signal("just_unlocked")
 
 
 
 func go_to_sleep() -> void:
+	if asleep or will_go_to_sleep:
+		return
 	emit_signal("plan_to_sleep")
 	if working:
 		will_go_to_sleep = true
@@ -895,12 +929,11 @@ func wake_up() -> void:
 	if asleep:
 		var time_in_bed = Time.get_unix_time_from_system() - time_went_to_bed
 		time_spent_asleep += time_in_bed
-	will_go_to_sleep = false
-	asleep = false
-	if reason_cannot_work != ReasonCannotWork.CAN_WORK:
-		cannot_work(reason_cannot_work)
-	lv.active_and_awake.append(self)
-	emit_signal("woke_up")
+	if asleep or will_go_to_sleep:
+		will_go_to_sleep = false
+		lv.active_and_awake.append(self)
+		asleep = false
+		emit_signal("woke_up")
 
 
 
@@ -938,11 +971,12 @@ func start_working() -> void:
 
 
 func select_next_job(_type := -1) -> void:
-	if looking_for_jobs:
+	if awaiting_a_job_opening:
+		determine_why_cannot_work()
+		return
+	if looking_for_jobs or working:
 		return
 	looking_for_jobs = true
-	if working:
-		await completed_job
 	
 	if _type == -1:
 		next_job_type = get_next_job_automatically()
@@ -957,9 +991,11 @@ func select_next_job(_type := -1) -> void:
 				return
 			
 			determine_why_cannot_work()
+			awaiting_a_job_opening = true
 			await a_job_opened_up
+			awaiting_a_job_opening = false
 			looking_for_jobs = false
-			if asleep:
+			if asleep or will_go_to_sleep:
 				return
 			select_next_job()
 			return
@@ -1032,11 +1068,14 @@ func cannot_work(reason: int) -> void:
 	match reason:
 		ReasonCannotWork.INSUFFICIENT_FUEL:
 			vico.set_status_and_currency(
-				"Awaiting " + fuel_currency.name + ".",
+				"Awaiting " + fuel_currency.icon_and_name_text + ".",
 				 fuel_currency_type
 			)
 		ReasonCannotWork.INSUFFICIENT_CURRENCIES:
-			vico.set_status_and_currency("Awaiting required resource.")
+			if jobs.size() == 2:
+				var cur = jobs[sorted_jobs[1]].required_currencies.cost.keys()[0]
+				var currency = wa.get_currency(cur)
+				vico.set_status_and_currency("Awaiting " + currency.icon_and_name_text + ".", primary_currency)
 	emit_signal("became_unable_to_work")
 
 
@@ -1050,9 +1089,11 @@ func get_wish() -> String:
 	randomize()
 	
 	var possible_types := {
-		"LORED_LEVELED_UP": 10,
-		"SLEEP": 10,
+		"LORED_LEVELED_UP": 5,
+		"SLEEP": 5,
 	}
+	
+	var total_weight := 10
 	
 	if fuel.get_current_percent() < lv.FUEL_DANGER and df.fuel.less_equal(2):
 		if randi() % 100 < 30:
@@ -1060,16 +1101,20 @@ func get_wish() -> String:
 		else:
 			wished_currency = fuel_currency
 			possible_types["COLLECT_CURRENCY"] = 50
+		total_weight += 50
 	elif reason_cannot_work != ReasonCannotWork.CAN_WORK and required_currencies.size() > 1:
 		wished_currency = required_currencies[randi() % (required_currencies.size() - 1) + 1]
 		possible_types["COLLECT_CURRENCY"] = 50
+		total_weight += 50
 	else:
-		if randi() % 100 < 10:
+		if wi.random_wish_limit >= 2 and randi() % 100 < 10:
 			wished_currency = wa.get_currency(Currency.Type.JOY)
 			possible_types["COLLECT_CURRENCY"] = 10
+			total_weight += 10
 		else:
 			wished_currency = wa.get_random_unlocked_currency()
 			possible_types["COLLECT_CURRENCY"] = 30
+			total_weight += 30
 	
 	for upgrade in unpurchased_upgrades:
 		var upgrade_eta = upgrade.cost.get_eta()
@@ -1078,15 +1123,11 @@ func get_wish() -> String:
 		if upgrade.unlocked and upgrade_eta.less_equal(60):
 			wished_upgrade = upgrade
 			possible_types["UPGRADE_PURCHASED"] = 30
+			total_weight += 30
 			break
 	
 	
-	
-	var total_points := 0
-	for x in possible_types.values():
-		total_points += x
-	
-	var roll := randi() % total_points
+	var roll := randi() % total_weight
 	
 	var shuffled_possible_types := possible_types.keys()
 	shuffled_possible_types.shuffle()

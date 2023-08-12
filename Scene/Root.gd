@@ -170,7 +170,6 @@ func select_upgrade_menu_tab(tab: int, _show = true) -> void:
 
 
 
-
 var i = 0
 func _on_dev_pressed():
 	i += 1

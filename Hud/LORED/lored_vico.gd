@@ -22,6 +22,8 @@ extends MarginContainer
 @onready var animation = %AnimatedSprite2D as LOREDAnimation
 @onready var emote_container = %"Emote Container"
 
+var level_icon = preload("res://Sprites/Hud/Level.png")
+
 var prefer_left_down: bool
 var spewing_sleep_text := false
 var has_lored := false
@@ -98,10 +100,12 @@ func attach_lored(_lored: LORED) -> void:
 	has_lored = true
 	
 	# signals
-	lored.level.add_notify_change_method(adjust_if_not_purchased)
-	lored.cost.add_cost_vico(self)
+	lored.level.add_notify_change_method(lored_leveled_up)
+	lored.cost.connect("affordable_changed", cost_update)
+	cost_update(lored.cost.affordable)
 	level_up.button.connect("pressed", purchase_level_up)
 	sleep.button.connect("pressed", sleep_clicked)
+	lored.connect("asleep_changed", sleep_changed)
 	fuel_bar.attach_attribute(lored.fuel)
 	lored.connect("became_unable_to_work", start_idle)
 	lored.connect("went_to_sleep", go_to_sleep)
@@ -180,17 +184,18 @@ func get_preferred_side() -> Node:
 
 # - Ref Shit
 
-func adjust_if_not_purchased() -> void:
+func lored_leveled_up() -> void:
 	if not lored.purchased:
 		jobs.hide()
 		active_buffs.hide()
 		sleep.hide()
 		view_special.hide()
-	else:
+		return
+	
+	if lored.times_purchased == 1:
 		name_and_icon.hide()
 		currency.show()
 		
-		#active_buffs.show()
 		if lv.sleep_unlocked:
 			sleep.show()
 		else:
@@ -199,8 +204,19 @@ func adjust_if_not_purchased() -> void:
 			jobs.show()
 		else:
 			lv.connect("jobs_just_unlocked", jobs_just_unlocked)
-		#view_special.show()
-		lored.level.remove_notify_method(adjust_if_not_purchased)
+		
+	
+	gv.throw_text(
+		level_up, 
+		{
+			"text": lored.level.get_text(),
+			"color": lored.color,
+			"icon": level_icon,
+			"icon modulate": lored.color,
+		}
+	)
+	
+	
 
 
 func job_completed() -> void:
@@ -255,26 +271,31 @@ func stop_progress_bar() -> void:
 		progress_bar.stop()
 
 
-func set_status_and_currency(_status: String, _currency: int = -1) -> void:
+func set_status_and_currency(_status: String, _currency: int) -> void:
 	if _status == "":
 		status.hide()
 	else:
 		status.show()
 		status.text = "[i]" + _status
-	if _currency != -1:
-		currency.show()
-		currency.setup(_currency)
-	else:
-		currency.hide()
+	
+	currency.show()
+	currency.setup(_currency)
 
 
 func sleep_clicked() -> void:
 	if lored.asleep or lored.will_go_to_sleep:
 		lored.wake_up()
-		sleep.set_icon(gv.icon_asleep)
+		sleep_changed(false)
 	else:
 		lored.go_to_sleep()
+		sleep_changed(true)
+
+
+func sleep_changed(asleep: bool) -> void:
+	if asleep:
 		sleep.set_icon(gv.icon_awake)
+	else:
+		sleep.set_icon(gv.icon_asleep)
 
 
 func start_idle() -> void:

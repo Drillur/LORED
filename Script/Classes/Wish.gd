@@ -36,7 +36,10 @@ class Reward:
 	
 	func init_CURRENCY(data: Dictionary) -> void:
 		currency = wa.get_currency(data["currency"]) as Currency
-		amount = Big.new(data["amount"])
+		if data["amount"] is Big:
+			amount = data["amount"]
+		else:
+			amount = Big.new(data["amount"])
 		text = (currency.color_text % "+%s ") + currency.icon_and_name_text
 	
 	
@@ -361,9 +364,9 @@ func await_STUFF() -> void:
 
 
 func idk(x: float) -> float:
-	if x < 50:
-		return 5 - (5 * (1 - exp(-x/5))) + 1
-	return 1.0
+	if x > 50:
+		return 1.0
+	return (50 - (50 * (1 - exp(-x/5)))) / 10 + 1
 
 
 func init_RANDOM() -> void:
@@ -371,34 +374,60 @@ func init_RANDOM() -> void:
 	var obj_key = giver.get_wish()
 	var obj_type = Objective.Type[obj_key]
 	var data := {}
-	var experience_modifier = idk(wi.completed_random_wishes)
+	#var experience_modifier = idk(wi.completed_random_wishes)
+	var rewards_modifier := randf_range(10, 30)
 	match obj_key:
 		"COLLECT_CURRENCY":
 			var amount: Big
-			if giver.wished_currency.produced_by.size() == 0:
+			var currency: Currency = giver.wished_currency
+			if currency.produced_by.size() == 0:
 				amount = Big.new(randi_range(2, 5))
 			else:
-				var producer_lored: LORED = giver.wished_currency.get_random_producer()
-				var job: Job = producer_lored.get_job_that_produces_currency(giver.wished_currency.type)
-				amount = job.get_basic_rate()
-				amount.m(randf_range(30, 120))
-				amount.d(experience_modifier)
+				amount = Big.new(currency.gain_rate.get_total())
+				var amount_modifier = randf_range(20, 40)
+				amount.m(amount_modifier)
+				#amount.d(experience_modifier)
 			data = {
-				"currency": giver.wished_currency.type,
-				"amount": amount,
+				"currency": currency.type,
+				"amount": amount.roundDown(),
 			}
 		"LORED_LEVELED_UP":
 			data = {"lored": giver.type}
 		"SLEEP":
 			data = {
 				"lored": giver.type,
-				"amount": round(randi_range(10, 30) / experience_modifier),
+				"amount": round(randi_range(6, 20)),# / experience_modifier),
 			}
 		"ACCEPTABLE_FUEL":
 			data = {"lored": giver.type}
 		"UPGRADE_PURCHASED":
 			data = {"upgrade": giver.wished_upgrade.type}
 	objective = Objective.new(obj_type, data)
+	
+	
+	var reward_count = 1
+	var teehee = 50
+	while randi() % 100 < teehee:
+		reward_count += 1
+		teehee *= 0.66
+	rewards_modifier /= reward_count
+	rewards_modifier *= 1 + randf()
+	#rewards_modifier /= experience_modifier
+	
+	var cur_keys := {}
+	for i in reward_count:
+		var amount: Big
+		var currency: Currency = wa.get_weighted_random_currency()
+		amount = Big.new(currency.gain_rate.get_total()).m(rewards_modifier).roundDown()
+		amount.capMin(1)
+		if currency.type in cur_keys:
+			rewards[cur_keys[currency.type]].amount.a(amount)
+		else:
+			cur_keys[currency.type] = i
+			rewards.append(Reward.new(Reward.Type.CURRENCY, {
+				"currency": currency.type,
+				"amount": amount,
+			}))
 
 
 

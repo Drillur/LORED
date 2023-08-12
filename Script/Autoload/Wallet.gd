@@ -3,7 +3,10 @@ extends Node
 
 
 var currency := {}
+
 var unlocked_currencies := []
+var total_weight := 0
+
 
 signal currency_just_unlocked(cur)
 
@@ -53,9 +56,12 @@ func subtract_from_player(cur: int, amount) -> void:
 
 
 func unlock_currency(cur: int) -> void:
-	var _currency = get_currency(cur)
+	var _currency := get_currency(cur)
+	if _currency in unlocked_currencies:
+		return
 	_currency.unlock()
 	unlocked_currencies.append(_currency)
+	total_weight += _currency.weight
 	emit_signal("currency_just_unlocked", cur)
 
 
@@ -100,6 +106,18 @@ func get_currency(cur: int) -> Currency:
 
 func get_random_unlocked_currency() -> Currency:
 	return unlocked_currencies[randi() % unlocked_currencies.size()]
+
+
+func get_weighted_random_currency() -> Currency:
+	var roll = randi() % total_weight
+	var shuffled_pool = unlocked_currencies
+	shuffled_pool.shuffle()
+	for _currency in shuffled_pool:
+		if roll < _currency.weight:
+			return _currency
+		roll -= _currency.weight
+	print_debug("May be an issue with total_weight (", total_weight, "). pool size: ", shuffled_pool.size())
+	return get_random_unlocked_currency()
 
 
 func get_icon_and_name_text(cur: int) -> String:

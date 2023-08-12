@@ -59,17 +59,17 @@ func hide_threshold():
 	threshold_text.queue_free()
 
 
-func display_name() -> void:
-	pass
-
-
-
 
 func update_count() -> void:
 	count.text = currency.get_count_text()
 
 
 func update_rate() -> void:
+	if currency.net_rate.get_current().equal(0):
+		rate.hide()
+		return
+	else:
+		rate.show()
 	var _sign = "" if currency.positive_current_rate else "-"
 	rate.text = "[i]" + _sign + currency.net_rate.get_current_text() + "/s"
 
