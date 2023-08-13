@@ -36,7 +36,6 @@ func setup(data: Dictionary) -> void:
 		sleep()
 	var text_length = description.text.length()
 	description.custom_minimum_size.x = min(250, 50 + (text_length * 2))
-	#print(description.custom_minimum_size.x)
 
 
 func wake_up() -> void:

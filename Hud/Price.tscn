@@ -1,51 +1,68 @@
-[gd_scene load_steps=4 format=3 uid="uid://dky60pdpk0ffa"]
+[gd_scene load_steps=5 format=3 uid="uid://dky60pdpk0ffa"]
 
 [ext_resource type="Theme" uid="uid://b8t7tkhvril5g" path="res://Theme/Standard.tres" id="1_3vkne"]
 [ext_resource type="Texture2D" uid="uid://de68iry5swvex" path="res://Sprites/Hud/price-tag-3-fill.png" id="1_7cws7"]
 [ext_resource type="Script" path="res://Hud/Price.gd" id="1_ncutb"]
+[ext_resource type="Theme" uid="uid://8dmfgxdrr5yh" path="res://Theme/Title.tres" id="2_f5oma"]
 
 [node name="Price" type="MarginContainer"]
-offset_right = 48.0
-offset_bottom = 19.0
-size_flags_horizontal = 0
+offset_right = 60.0
+offset_bottom = 56.0
+size_flags_horizontal = 3
 theme_override_constants/margin_left = 0
 theme_override_constants/margin_top = 0
 theme_override_constants/margin_right = 0
-theme_override_constants/margin_bottom = 10
+theme_override_constants/margin_bottom = 0
 script = ExtResource("1_ncutb")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
-alignment = 1
+theme_override_constants/separation = 0
 
-[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer"]
-custom_minimum_size = Vector2(0, 19)
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 35)
 layout_mode = 2
-size_flags_vertical = 0
 
-[node name="Eta" type="RichTextLabel" parent="HBoxContainer/HBoxContainer"]
+[node name="title bg" type="Panel" parent="VBoxContainer/MarginContainer"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(25, 0)
 layout_mode = 2
-size_flags_horizontal = 0
-size_flags_vertical = 4
-theme = ExtResource("1_3vkne")
-theme_override_font_sizes/italics_font_size = 12
-bbcode_enabled = true
-text = "[right]55s"
-fit_content = true
-autowrap_mode = 0
+theme = ExtResource("2_f5oma")
 
-[node name="Icon" type="TextureRect" parent="HBoxContainer/HBoxContainer"]
-unique_name_in_owner = true
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 9
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 9
+
+[node name="Icon" type="TextureRect" parent="VBoxContainer/MarginContainer/MarginContainer"]
+visible = false
+modulate = Color(0, 0, 0, 1)
 custom_minimum_size = Vector2(15, 15)
 layout_mode = 2
-size_flags_horizontal = 4
+size_flags_horizontal = 0
 size_flags_vertical = 4
 texture = ExtResource("1_7cws7")
 expand_mode = 2
 
-[node name="Content Parent" type="VBoxContainer" parent="HBoxContainer"]
+[node name="Check" type="CheckBox" parent="VBoxContainer/MarginContainer/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+focus_mode = 0
+mouse_filter = 2
+theme = ExtResource("1_3vkne")
+text = "44 seconds"
+
+[node name="MarginContainer2" type="MarginContainer" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="Content Parent" type="VBoxContainer" parent="VBoxContainer/MarginContainer2"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 0

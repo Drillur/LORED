@@ -12,4 +12,3 @@ var type: int
 func setup(_type: int) -> void:
 	type = _type
 
-

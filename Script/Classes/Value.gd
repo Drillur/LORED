@@ -68,7 +68,7 @@ func subtract(amount: Big) -> void:
 		current = Big.new(0)
 	else:
 		current.s(amount)
-		if current.nearly(0):
+		if current.equal(0):
 			current = Big.new(0)
 	text_requires_update = true
 

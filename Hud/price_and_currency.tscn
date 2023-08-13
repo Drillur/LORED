@@ -4,8 +4,9 @@
 [ext_resource type="Theme" uid="uid://b8t7tkhvril5g" path="res://Theme/Standard.tres" id="2_85t62"]
 
 [node name="MarginContainer" type="MarginContainer"]
-offset_right = 127.0
+offset_right = 129.0
 offset_bottom = 19.0
+size_flags_horizontal = 3
 theme_override_constants/margin_left = 0
 theme_override_constants/margin_top = 0
 theme_override_constants/margin_right = 0
@@ -22,6 +23,7 @@ theme_override_constants/margin_bottom = 2
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
 layout_mode = 2
 theme_override_constants/separation = 4
+alignment = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer"]
 unique_name_in_owner = true

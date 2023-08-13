@@ -27,6 +27,7 @@ df="*res://Script/Autoload/Difficulty.gd"
 wi="*res://Script/Autoload/Wishes.gd"
 em="*res://Script/Autoload/Emotes.gd"
 SaveManager="*res://Script/Autoload/SaveManager.gd"
+DiscordSDKLoader="*res://addons/discord-sdk-gd/nodes/core_updater.gd"
 
 [debug]
 
@@ -36,6 +37,10 @@ gdscript/warnings/integer_division=0
 
 window/size/viewport_width=1280
 window/size/viewport_height=720
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/discord-sdk-gd/plugin.cfg")
 
 [input]
 

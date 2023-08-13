@@ -37,9 +37,11 @@ func setup(data: Dictionary) -> void:
 	color = lored.color
 	icon.texture = lored.icon
 	icon_shadow.texture = icon.texture
-	lored.connect("purchased_changed", purchased_changed)
 	purchased_changed(lored.purchased)
-	lored.level.add_notify_change_method(update_level, true)
+	lored.connect("purchased_changed", purchased_changed)
+	lored.connect("leveled_up", update_level)
+	purchased_changed(lored.purchased)
+	update_level(lored.level)
 	lored.output.add_notify_change_method(update_output, true)
 	lored.input.add_notify_change_method(update_input, true)
 	lored.haste.add_notify_change_method(update_haste, true)
@@ -58,7 +60,7 @@ func update_fuel_cost() -> void:
 
 
 
-func update_level() -> void:
+func update_level(_level: int) -> void:
 	level.text = "Level " + "[b]" + lored.get_level_text()
 
 

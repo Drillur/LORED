@@ -4,10 +4,21 @@ extends MarginContainer
 
 
 @onready var icon = %Icon
-@onready var eta = %Eta
 @onready var content_parent = %"Content Parent"
 @onready var price_and_currency = preload("res://Hud/price_and_currency.tscn")
+@onready var check = %Check
+@onready var title_bg = %"title bg"
+
+
 var content := {}
+
+var color: Color:
+	set(val):
+		if color == val:
+			return
+		color = val
+		check.self_modulate = color
+		title_bg.self_modulate = color
 
 var cost: Cost
 
@@ -24,6 +35,8 @@ func setup(_cost: Cost) -> void:
 		content[cur].connect("currency_changed", set_eta_text)
 	content.values()[content.size() - 1].get_node("MarginContainer").add_theme_constant_override("margin_bottom", 0)
 	cost.connect("became_affordable", flash_became_affordable)
+	cost.connect("affordable_changed", affordable_changed)
+	affordable_changed(cost.affordable)
 	set_eta_text()
 
 
@@ -33,18 +46,12 @@ func reconnect() -> void:
 
 
 
-func set_icon_color(color: Color) -> void:
-	icon.self_modulate = color
-
-
-
 func set_eta_text() -> void:
 	var _eta = cost.get_eta()
 	if _eta.equal(0):
-		eta.hide()
+		check.text = ""
 		return
-	eta.show()
-	eta.text = "[right]" + gv.parse_time(_eta)
+	check.text = gv.parse_time(_eta)
 
 
 func flash():
@@ -52,11 +59,13 @@ func flash():
 		flash_became_affordable()
 	else:
 		# content[cur] is price_and_currency
-		for cur in cost.get_insufficient_currencies():
+		for cur in cost.get_insufficient_currency_types():
 			content[cur].flash()
 
 
 func flash_became_affordable() -> void:
-	for cur in content.values():
-		gv.flash(cur, Color(0, 1, 0))
-		#cur.flash_became_affordable()
+	gv.flash(check, Color(0, 1, 0))
+
+
+func affordable_changed(affordable: bool) -> void:
+	check.button_pressed = affordable

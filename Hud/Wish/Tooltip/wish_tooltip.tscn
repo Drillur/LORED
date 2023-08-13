@@ -6,8 +6,8 @@
 [ext_resource type="Theme" uid="uid://8dmfgxdrr5yh" path="res://Theme/Title.tres" id="4_ciwtp"]
 
 [node name="Wish Tooltip" type="MarginContainer"]
-offset_right = 124.0
-offset_bottom = 156.0
+offset_right = 151.0
+offset_bottom = 158.0
 script = ExtResource("1_1qjwx")
 
 [node name="bg" type="Panel" parent="."]
@@ -28,6 +28,7 @@ theme_override_constants/margin_bottom = 10
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/Top"]
 layout_mode = 2
 theme_override_constants/separation = 10
+alignment = 1
 
 [node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/Top/HBoxContainer"]
 layout_mode = 2
@@ -51,6 +52,7 @@ autowrap_mode = 0
 
 [node name="text" type="RichTextLabel" parent="VBoxContainer/Top/HBoxContainer"]
 unique_name_in_owner = true
+visible = false
 custom_minimum_size = Vector2(95, 0)
 layout_mode = 2
 size_flags_horizontal = 4

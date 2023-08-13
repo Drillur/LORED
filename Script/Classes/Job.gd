@@ -591,6 +591,8 @@ func subtract_rates() -> void:
 
 
 func add_rates() -> void:
+	if not lored.purchased:
+		return
 	add_current_rate()
 	add_total_rate()
 

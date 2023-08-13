@@ -325,6 +325,10 @@ var skip_wish := false
 
 var help_text: String
 var thank_text: String
+var discord_state: String
+
+var help_icon: Texture
+var thank_icon: Texture
 
 var giver: LORED
 
@@ -349,6 +353,11 @@ func _init(_type: int) -> void:
 		call("await_" + key)
 		await became_ready_to_start
 		ready_to_start = true
+	
+	if help_icon == null:
+		help_icon = load("res://Sprites/reactions/Angry.png")
+	if thank_icon == null:
+		thank_icon = load("res://Sprites/reactions/Test.png")
 	
 	if not skip_wish:
 		start()
@@ -406,10 +415,8 @@ func init_RANDOM() -> void:
 	
 	
 	var reward_count = 1
-	var teehee = 50
-	while randi() % 100 < teehee:
+	while randi() % 100 < 40:
 		reward_count += 1
-		teehee *= 0.66
 	rewards_modifier /= reward_count
 	rewards_modifier *= 1 + randf()
 	#rewards_modifier /= experience_modifier
@@ -446,6 +453,7 @@ func init_FUEL() -> void:
 	giver = lv.get_lored(LORED.Type.COAL)
 	help_text = "If Stone wants my stuff, I'm happy to share!"
 	thank_text = "Glad I could help. :)"
+	discord_state = "Getting Stone back on his feet."
 	objective = Objective.new(Objective.Type.ACCEPTABLE_FUEL, {
 		"lored": LORED.Type.STONE,
 	})
@@ -459,6 +467,7 @@ func init_COLLECTION() -> void:
 	giver = lv.get_lored(LORED.Type.STONE)
 	help_text = "I'm just going to pick up some of these."
 	thank_text = "Rocks are neat."
+	discord_state = "Picking up rocks."
 	objective = Objective.new(Objective.Type.COLLECT_CURRENCY, {
 		"currency": Currency.Type.STONE,
 		"amount": 10,
@@ -500,6 +509,7 @@ func init_UPGRADE_STONE() -> void:
 	giver = lv.get_lored(LORED.Type.IRON)
 	help_text = "Stone seems like he's got a little much to do. Could you level him up to make it easier on him?"
 	thank_text = "Awesome! I bet he's liking that. Thanks :)"
+	discord_state = "Getting Stone to Level 2."
 	objective = Objective.new(Objective.Type.LORED_LEVELED_UP, {
 		"lored": LORED.Type.STONE,
 	})
@@ -517,6 +527,7 @@ func init_TEST_SLEEP() -> void:
 	giver = lv.get_lored(LORED.Type.COPPER)
 	help_text = "I'm about to introduce you to [b]Upgrades[/b], but first, uh... I'm tired. I want to take a nap."
 	thank_text = "Whuh? Whozzat? Where am I?"
+	discord_state = "Taking a nap."
 	objective = Objective.new(Objective.Type.SLEEP, {
 		"lored": LORED.Type.COPPER,
 		"amount": 15,
@@ -534,6 +545,7 @@ func init_GRINDER() -> void:
 	giver = lv.get_lored(LORED.Type.STONE)
 	help_text = "Whoa?! Does the GRINDER upgrade work on rocks?"
 	thank_text = "This is awesome!"
+	discord_state = "Getting Upgrades!"
 	objective = Objective.new(Objective.Type.UPGRADE_PURCHASED, {
 		"upgrade": Upgrade.Type.GRINDER,
 	})
@@ -554,6 +566,7 @@ func init_JOY() -> void:
 	giver = lv.get_lored(LORED.Type.IRON)
 	help_text = "Hey, it looks like everyone is opening up to you! They're sharing their Wishes! Isn't that nice?"
 	thank_text = "Whoa, look! Growth just showed up!"
+	discord_state = "Fulfilling wishes!"
 	objective = Objective.new(Objective.Type.COLLECT_CURRENCY, {
 		"currency": Currency.Type.JOY,
 		"amount": 3,
@@ -567,6 +580,7 @@ func init_JOBS() -> void:
 	giver = lv.get_lored(LORED.Type.STONE)
 	help_text = "I noticed that when Growth appeared, you got even more confused that before! I mean, how is any of this working?! Who is taking resources from who? What are each of us capable of?! When will my rock bag get full??!"
 	thank_text = "Don't mention it. You're welcome!"
+	discord_state = "Crushing dreams!"
 	objective = Objective.new(Objective.Type.COLLECT_CURRENCY, {
 		"currency": Currency.Type.GRIEF,
 		"amount": 3,
@@ -580,6 +594,7 @@ func init_RYE() -> void:
 	giver = lv.get_lored(LORED.Type.GROWTH)
 	help_text = "[b][i]I AM CURRENTLY IN AN [u]UNFORTUNATE[/u] SITUATION."
 	thank_text = "[b][i]IT WOULD APPEAR THAT THERE WILL BE [u]NO END[/u] TO MY SUFFERING."
+	discord_state = "Witnessing something juicy!"
 	objective = Objective.new(Objective.Type.UPGRADE_PURCHASED, {
 		"upgrade": Upgrade.Type.RYE,
 	})
@@ -595,6 +610,7 @@ func init_SAND() -> void:
 	giver = lv.get_lored(LORED.Type.JOULES)
 	help_text = "If you really want to progress, you could get this Upgrade over here."
 	thank_text = "Yeah, uhh... good job."
+	discord_state = "It's getting sandy!"
 	objective = Objective.new(Objective.Type.UPGRADE_PURCHASED, {
 		"upgrade": Upgrade.Type.SAND,
 	})
@@ -613,6 +629,7 @@ func init_MALIGNANCY() -> void:
 	giver = lv.get_lored(LORED.Type.MALIGNANCY)
 	help_text = "Heyo! It's grinding time, baby! You'll want this much Malignancy before you " + (up.get_menu_color_text(UpgradeMenu.Type.MALIGNANT) % "Metastaize") + ".\n\nWhat's that, you ask? Teheheheeeee >:D"
 	thank_text = "Good luck. Have fun!"
+	discord_state = "Approaching their first reset."
 	objective = Objective.new(Objective.Type.COLLECT_CURRENCY, {
 		"currency": Currency.Type.MALIGNANCY,
 		"amount": "3e3",
@@ -626,6 +643,7 @@ func init_SOCCER_DUDE() -> void:
 	giver = lv.get_lored(LORED.Type.COPPER_ORE)
 	help_text = "You've got to reset to get this one, boss, see? But, you don't have to reset right now, boss. Do what you want. You're the boss, boss, see, boss?"
 	thank_text = "Wicked, boss, real wicked. We're rolling with the big cats, now, boss!"
+	discord_state = "About to Metastasize for the first time!"
 	objective = Objective.new(Objective.Type.UPGRADE_PURCHASED, {
 		"upgrade": Upgrade.Type.SOCCER_DUDE,
 	})
@@ -641,6 +659,8 @@ func init_SOCCER_DUDE() -> void:
 # - Actions
 
 func start() -> void:
+	if discord_state != "":
+		gv.update_discord_state(discord_state)
 	objective.start()
 
 

@@ -235,5 +235,13 @@ func purchased_every_unlocked_lored_once() -> bool:
 	return never_purchased.size() == 0
 
 
+func is_lored_unlocked(lored: int) -> bool:
+	return get_lored(lored).unlocked
+
+
 func get_active_lored_count() -> int:
 	return active.size()
+
+
+func get_icon_and_name_text(lored: int) -> String:
+	return get_lored(lored).icon_and_name_text

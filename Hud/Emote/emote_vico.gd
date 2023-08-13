@@ -71,8 +71,6 @@ func display_text() -> void:
 	while not is_queued_for_deletion():
 		dialogue_text.visible_characters += 1
 		if dialogue_text.visible_ratio == 1:
-			display_text_timer.start(1.5)
-			await display_text_timer.timeout
 			break
 		
 		if dialogue_text.text[dialogue_text.visible_characters - 1] in ["!", ",", ".", "?"]:

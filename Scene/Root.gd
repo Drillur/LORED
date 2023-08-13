@@ -12,9 +12,15 @@ extends MarginContainer
 @onready var menu_button = %"Menu Button"
 @onready var upgrades_button = %"Upgrades Button"
 
+@onready var tooltip_position_display = $"Control/Tooltip/Tooltip Position Display"
+
 
 
 func _ready():
+	if not gv.dev_mode:
+		tooltip_position_display.queue_free()
+	
+	
 	gv.tooltip_parent = tooltip_parent
 	gv.texts_parent = control
 	lv.lored_container = lored_container
@@ -112,6 +118,20 @@ func _on_upgrades_button_visibility_changed():
 
 
 
+func _on_main_wishes_sort_children():
+	if main_wishes.get_child_count() == 0:
+		main_wishes.hide()
+	else:
+		main_wishes.show()
+
+
+func _on_random_wishes_sort_children():
+	if random_wishes.get_child_count() == 0:
+		random_wishes.hide()
+	else:
+		random_wishes.show()
+
+
 
 # - Signal Shit
 
@@ -136,6 +156,7 @@ func display_and_repeatedly_flash_upgrades_button() -> void:
 # - Actions
 
 func new_game() -> void:
+	gv.update_discord_details("Just began a new game!")
 	lv.new_game_start()
 	wi.new_game_start()
 	em.new_game_start()
@@ -173,8 +194,8 @@ func select_upgrade_menu_tab(tab: int, _show = true) -> void:
 var i = 0
 func _on_dev_pressed():
 	i += 1
-#	wa.add(Currency.Type.STONE, 10)
-#	wa.add(Currency.Type.COAL, 10)
+	wa.add(Currency.Type.STONE, 10)
+	wa.add(Currency.Type.COAL, 10)
 
 func _on_dev_2_pressed():
 	lv.get_lored(LORED.Type.IRON).purchase()
@@ -184,4 +205,5 @@ func _on_dev_2_pressed():
 
 func _on_dev_3_pressed():
 	wi.find_new_random_wish()
+
 

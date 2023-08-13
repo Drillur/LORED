@@ -100,7 +100,7 @@ func attach_lored(_lored: LORED) -> void:
 	has_lored = true
 	
 	# signals
-	lored.level.add_notify_change_method(lored_leveled_up)
+	lored.connect("leveled_up", lored_leveled_up)
 	lored.cost.connect("affordable_changed", cost_update)
 	cost_update(lored.cost.affordable)
 	level_up.button.connect("pressed", purchase_level_up)
@@ -184,7 +184,7 @@ func get_preferred_side() -> Node:
 
 # - Ref Shit
 
-func lored_leveled_up() -> void:
+func lored_leveled_up(_level: int) -> void:
 	if not lored.purchased:
 		jobs.hide()
 		active_buffs.hide()
@@ -204,19 +204,17 @@ func lored_leveled_up() -> void:
 			jobs.show()
 		else:
 			lv.connect("jobs_just_unlocked", jobs_just_unlocked)
-		
 	
-	gv.throw_text(
-		level_up, 
-		{
-			"text": lored.level.get_text(),
-			"color": lored.color,
-			"icon": level_icon,
-			"icon modulate": lored.color,
-		}
-	)
-	
-	
+	if not lored.last_purchase_forced:
+		gv.throw_text_from_parent(
+			level_up, 
+			{
+				"text": lored.get_level_text(),
+				"color": lored.color,
+				"icon": level_icon,
+				"icon modulate": lored.color,
+			}
+		)
 
 
 func job_completed() -> void:
@@ -254,7 +252,7 @@ func jobs_just_unlocked() -> void:
 
 func purchase_level_up() -> void:
 	if lored.cost.affordable or gv.dev_mode:
-		lored.purchase()
+		lored.manual_purchase()
 	else:
 		gv.get_tooltip().get_price_node().flash()
 
@@ -312,7 +310,7 @@ func go_to_sleep() -> void:
 	spewing_sleep_text = true
 	await get_tree().create_timer(randf_range(3, 6)).timeout
 	while lored.asleep:
-		gv.throw_text(
+		gv.throw_text_from_parent(
 			output_texts, 
 			{
 				"text": sleep_text_pool[randi() % sleep_text_pool.size()],

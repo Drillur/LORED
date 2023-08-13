@@ -493,7 +493,7 @@ func sync_current_net_rate() -> void:
 	else:
 		net_rate.current.set_to(Big.new(loss).s(gain))
 		positive_current_rate = false
-	if net_rate.get_current().nearly(0):
+	if net_rate.get_current().equal(0):
 		positive_current_rate = true
 	net_rate.notify_change()
 
@@ -549,7 +549,7 @@ func get_icon_path() -> String:
 func get_eta(threshold: Big) -> Big:
 	if count.get_value().greater_equal(threshold):
 		return Big.new(0)
-	if net_rate.get_current().nearly(0):
+	if net_rate.get_current().equal(0):
 		return Big.new(0)
 	var deficit = Big.new(threshold).s(count.get_value())
 	return deficit.d(net_rate.get_current())

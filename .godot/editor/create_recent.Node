@@ -1,11 +1,10 @@
+VBoxContainer
+MarginContainer
 Panel
 HBoxContainer
-MarginContainer
-VBoxContainer
 TextureRect
 RichTextLabel
 Control
-Sprite2D
 MenuButton
 MenuBar
 Button
@@ -16,7 +15,4 @@ TextureProgressBar
 CheckBox
 TabContainer
 GridContainer
-Node2D
-CanvasLayer
 AnimationPlayer
-AnimatedSprite2D

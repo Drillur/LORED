@@ -41,7 +41,7 @@ func setup(data: Dictionary) -> void:
 	
 	upgrade.connect("purchased_changed", purchased_changed)
 	price.setup(upgrade.cost)
-	price.set_icon_color(upgrade.color)
+	price.color = upgrade.color
 	purchased_changed()
 	
 	if upgrade.has_required_upgrade:

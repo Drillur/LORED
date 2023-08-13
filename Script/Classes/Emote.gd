@@ -11,34 +11,51 @@ enum Type {
 	COAL_GREET,
 	
 	RANDOM_STONE,
-	STONE7_IRON_ORE,
+	STONE7_REPLY,
+	STONE8_REPLY,
 	
 	RANDOM_COAL,
-	COAL5_COPPER_ORE0,
-	COAL5_CONCRETE0,
-	COAL5_JOULES0,
+	COAL16_REPLY,
+	COAL16_REPLY_REPLY,
+	COAL14_REPLY,
+	COAL14_REPLY_REPLY,
+	COAL13_REPLY,
+	COAL12_REPLY,
+	COAL10_REPLY,
+	COAL9_REPLY,
+	COAL8_REPLY,
+	COAL8_REPLY_REPLY,
+	COAL5_REPLY,
 	
 	RANDOM_IRON_ORE,
-	IRON_ORE8_STONE_REPLY0,
-	IRON_ORE9_JOULES0,
+	IRON_ORE8_REPLY,
+	IRON_ORE9_REPLY,
+	IRON_ORE14_REPLY,
+	IRON_ORE15_REPLY,
 	
 	RANDOM_COPPER_ORE,
+	COPPER_ORE6_REPLY,
+	COPPER_ORE7_REPLY,
 	
 	RANDOM_IRON,
-	IRON1_STONE0,
-	IRON2_STONE0,
-	IRON2_IRON_ORE0,
-	IRON4_HARDWOOD0,
+	IRON1_REPLY,
+	IRON2_REPLY,
+	IRON4_REPLY,
 	
 	RANDOM_COPPER,
-	COPPER4_WOOD0,
-	COPPER7_COPPER_ORE0,
+	COPPER12_REPLY,
+	COPPER12_REPLY0_REPLY,
+	COPPER12_REPLY2_REPLY,
+	COPPER4_REPLY,
+	COPPER7_REPLY,
 	
 	RANDOM_GROWTH,
 	GROWTH0_OIL0,
 	GROWTH3_TARBALLS0,
 	GROWTH6_JOULES0,
 	GROWTH9_IRON0,
+	GROWTH10_REPLY,
+	GROWTH_RANDOM_SCREAM,
 	
 	RANDOM_CONCRETE,
 	
@@ -54,8 +71,7 @@ enum Type {
 	RANDOM_MALIGNANCY,
 	
 	RANDOM_WATER,
-	WATER6_TREES0,
-	WATER6_DRAW_PLATE0,
+	WATER6_REPLY,
 	
 	RANDOM_HUMUS,
 	HUMUS7_GALENA0,
@@ -63,16 +79,17 @@ enum Type {
 	RANDOM_SEEDS,
 	
 	RANDOM_DRAW_PLATE,
-	DRAW_PLATE7_WIRE0,
-	DRAW_PLATE7_DRAW_PLATE0,
-	DRAW_PLATE7_WIRE1,
+	DRAW_PLATE7_REPLY,
+	DRAW_PLATE7_REPLY_REPLY,
+	DRAW_PLATE7_REPLY_REPLY_REPLY,
+	DRAW_PLATE7_REPLY_REPLY_REPLY_REPLY,
 	
 	RANDOM_TREES,
-	TREES0_GROWTH0,
+	TREES0_REPLY,
 	TREES0_SOIL0,
-	TREES2_WATER0,
-	TREES2_TREES0,
-	TREES8_SEEDS0,
+	TREES2_REPLY,
+	TREES2_REPLY_REPLY,
+	TREES8_REPLY,
 	
 	RANDOM_SOIL,
 	SOIL5_HUMUS0,
@@ -92,7 +109,19 @@ var ready_to_emote := false
 var speaker: LORED
 var dialogue: String
 var reply := -1
-var possible_replies := []
+
+const growth_scream_pool = [
+	"AHHHHH!!!",
+	"AWOOOOOOO!!!",
+	"HUUUUGGHHH!!!",
+	"OOOOOOOOO!!!",
+	"EEEEEEEE!!!",
+	"OH GAWWWWWWWWWWWWWWWWD!!!",
+	"HEEEEEELLLLLLLLP!!!",
+	"BAAAAAAGGGHHHH!!!",
+	"ARGH!!!",
+	"aaAAAAHEEEE!!!",
+]
 
 var posing := false
 var pose_texture: Texture
@@ -111,13 +140,10 @@ func _init(_type: int) -> void:
 	
 	color = speaker.color
 	
-	if possible_replies.size() > 0:
-		reply = possible_replies[randi() % possible_replies.size()]
-	
 	posing = pose_texture != null
 	
 	if duration == 0:
-		var automatic_duration = 3 + (float(dialogue.length()) / 25) + (3 if posing else 0)
+		var automatic_duration = 6 #(float(dialogue.length()) / 50) + (3 if posing else 0)
 		duration = automatic_duration
 	
 	if not has_method("await_" + key):
@@ -196,66 +222,312 @@ func COAL_GREET():
 
 func RANDOM_COAL() -> void:
 	speaker = lv.get_lored(LORED.Type.COAL)
-	match randi() % 8:
-		0: dialogue = "Dig, dig!"
-		1: dialogue = "Glad to help!"
-		2: dialogue = "Is this lump yours?\nJust kidding!"
-		3: dialogue = "I hope my posture is good."
-		4: dialogue = "I sure am grateful for this shovel."
+	var d = [0,1,2,3,4,5,6,7,10,13,15,]
+	
+	if lv.is_lored_unlocked(LORED.Type.TARBALLS):
+		d.append(8)
+		d.append(9)
+	if lv.is_lored_unlocked(LORED.Type.JOULES):
+		d.append(11)
+	if lv.is_lored_unlocked(LORED.Type.COPPER_ORE):
+		d.append(12)
+	if not wa.is_current_rate_positive(Currency.Type.COAL):
+		d.append(14)
+	if speaker.fuel.get_current_percent() <= lv.FUEL_WARNING:
+		d.append(17)
+	match d[randi() % d.size()]:
+		17:
+			dialogue = "Heeheeeee, I literally have priority over everyone else when it comes to fueling up. THAT'S RIGHT, YOU SICK FREAKS. NO MATTER HOW MUCH YOU TAKE, I'LL [b]ALWAYS[/b] BE ABLE TO HIT MAX FUEL."
+			reply = Type.COAL14_REPLY
+		16:
+			dialogue = "I want to have kids someday!"
+			if lv.is_lored_unlocked(LORED.Type.OIL):
+				reply = Type.COAL16_REPLY
+		15:
+			var text = wa.get_icon_and_name_text(Currency.Type.COAL)
+			dialogue = "Sometimes I take my %s with salt." % text
+		14:
+			var icon = wa.get_currency(Currency.Type.COAL).icon_text
+			var text = wa.get_currency(Currency.Type.COAL).color_text % "COAL"
+			dialogue = "WE NEED MORE %s %s! NONE OF YOU ARE GIVING ME A SECOND'S BREAK!" % [icon, text]
+			reply = Type.COAL14_REPLY
+		13:
+			var stone_text = wa.get_icon_and_name_text(Currency.Type.STONE)
+			var coal_text = wa.get_icon_and_name_text(Currency.Type.COAL)
+			dialogue = "More %s, more %s! It's simple trickle-down %senomics." % [stone_text, coal_text, coal_text]
+			reply = Type.COAL13_REPLY
+		12:
+			var text = lv.get_icon_and_name_text(LORED.Type.COPPER_ORE)
+			dialogue = "%s's mine looks scary." % text
+			reply = Type.COAL12_REPLY
+		11:
+			var text = lv.get_icon_and_name_text(LORED.Type.GROWTH)
+			dialogue = "What in tarnation is %s doing? Somebody help him." % text
+			reply = Type.GROWTH_RANDOM_SCREAM
+		10:
+			var f = [0]
+			if lv.is_lored_unlocked(LORED.Type.JOULES):
+				f.append(1)
+			match f[randi() % f.size()]:
+				0:
+					dialogue = "I plugged my shovel into a socket, and it was... tee hee hee... [b]ELECTRIFYING!!![/b]"
+				1:
+					var text = lv.get_icon_and_name_text(LORED.Type.JOULES)
+					dialogue = "Oh, oh!! Hey, %s. I saw you redirect lightning, and I thought it was quite... [b]SHOCKING!!!![/b] :)" % text
+			reply = Type.COAL10_REPLY
+		9:
+			dialogue = "That baby is sucking oil. Now I have truly seen it all."
+			reply = Type.COAL9_REPLY
+		8:
+			var text = lv.get_icon_and_name_text(LORED.Type.TARBALLS)
+			dialogue = "Wow!!! Can %s hack into my ex's Facebook account?" % text
+			reply = Type.COAL8_REPLY
+		7: dialogue = "Why is this stuff purple?"
+		6: dialogue = "I always liked playing support."
 		5:
 			dialogue = "If you didn't get enough, go ahead and take some more!"
-			possible_replies = [
-				Type.COAL5_COPPER_ORE0,
-				Type.COAL5_CONCRETE0,
-				Type.COAL5_JOULES0,
-			]
-		6: dialogue = "I always liked playing support."
-		7: dialogue = "Why is this stuff purple?"
+			if lv.is_lored_unlocked(LORED.Type.COPPER_ORE):
+				reply = Type.COAL5_REPLY
+		4: dialogue = "I sure am grateful for this shovel."
+		3: dialogue = "I hope my posture is good."
+		2: dialogue = "Is this lump yours?\nJust kidding!"
+		1: dialogue = "Glad to help!"
+		0: dialogue = "Dig, dig!"
 
 
-func COAL5_COPPER_ORE0():
-	speaker = lv.get_lored(LORED.Type.COPPER_ORE)
-	dialogue = "Well, shoot, there, boss, don't mind if I do!"
+func COAL16_REPLY():
+	speaker = lv.get_lored(LORED.Type.OIL)
+	dialogue = "*Farts and poops and sharts and toots.*"
+	reply = Type.COAL16_REPLY_REPLY
 
 
-func COAL5_CONCRETE0():
-	speaker = lv.get_lored(LORED.Type.CONCRETE)
-	dialogue = "Gracias, amigo."
+func COAL16_REPLY_REPLY():
+	speaker = lv.get_lored(LORED.Type.COAL)
+	dialogue = "Never mind."
 
 
-func COAL5_JOULES0():
-	speaker = lv.get_lored(LORED.Type.JOULES)
-	dialogue = "Thank you."
+func COAL14_REPLY():
+	var d = [0,]
+	if lv.is_lored_unlocked(LORED.Type.MALIGNANCY):
+		d.append(8)
+		d.append(7)
+	if lv.is_lored_unlocked(LORED.Type.CONCRETE):
+		d.append(6)
+	if lv.is_lored_unlocked(LORED.Type.JOULES):
+		d.append(5)
+	if lv.is_lored_unlocked(LORED.Type.IRON):
+		d.append(1)
+		d.append(2)
+		d.append(3)
+		d.append(4)
+	
+	match d[randi() % d.size()]:
+		0:
+			speaker = lv.get_lored(LORED.Type.STONE)
+			dialogue = "Whoa."
+		1:
+			speaker = lv.get_lored(LORED.Type.IRON_ORE)
+			var text = lv.get_icon_and_name_text(LORED.Type.COAL)
+			dialogue = "Yes, %s, embrace the dark side." % text
+		2:
+			speaker = lv.get_lored(LORED.Type.COPPER_ORE)
+			dialogue = "Fella's gettin' burnt out, I know all about that, boss, yessir."
+		3:
+			speaker = lv.get_lored(LORED.Type.IRON)
+			dialogue = "Um... Everyone needs to blow off some steam from time to time."
+		4:
+			speaker = lv.get_lored(LORED.Type.COPPER)
+			dialogue = "Hey, hey. Chill! Take it easy, brother! This is just a game!"
+		5:
+			speaker = lv.get_lored(LORED.Type.JOULES)
+			var text = lv.get_icon_and_name_text(LORED.Type.COAL)
+			dialogue = "No, %s! You must never give in to despair! Allow yourself to slip down that road, and you surrender to your lowest instincts! In the darkest times, hope is something you give [b]yourself[/b]. That is the meaning of [b]inner strength[/b]." % text
+		6:
+			speaker = lv.get_lored(LORED.Type.CONCRETE)
+			dialogue = "Pinche loco."
+		7:
+			speaker = lv.get_lored(LORED.Type.TARBALLS)
+			var text = lv.get_icon_and_name_text(LORED.Type.COAL)
+			dialogue = "%s's tilted." % text
+		8:
+			speaker = lv.get_lored(LORED.Type.OIL)
+			dialogue = "AH!!! ... :'("
+			pose_texture = load("res://Sprites/reactions/OIL5.png")
+	
+	reply = Type.COAL14_REPLY_REPLY
+
+
+func COAL14_REPLY_REPLY():
+	speaker = lv.get_lored(LORED.Type.COAL)
+	dialogue = "Oops! Excuse me! Hee hee."
+
+
+func COAL13_REPLY():
+	speaker = lv.get_lored(LORED.Type.STONE)
+	var text = lv.get_icon_and_name_text(LORED.Type.COAL)
+	dialogue = "%s's smart, listen to him!" % text
+
+
+func COAL12_REPLY():
+	var d = [0,]
+	if lv.is_lored_unlocked(LORED.Type.CONCRETE):
+		d.append(1)
+	match d[randi() % d.size()]:
+		0:
+			speaker = lv.get_lored(LORED.Type.COPPER_ORE)
+			dialogue = "It is, see, boss, it is--JEREMY, PUT YOUR HARD HAT BACK ON, SEE. I know it's hard to breathe, Jeremy, real hard. But until the earth above is is properly supported, the hat there increases your chances of survival by 1% in the unlikely (but actually likely, see) event of a complete collapse of the tunnel. All right, now, let's get these supports set up, Jeremy. There's a good lad. Boy's only 17 years old, boss, 17. Brings a tear to my eye, boss. I'll make sure he has a Tallboy 'fore the sun sets, boss. Get it, boss? We ain't seen the sun in years, boss. That's a classic joke, see, real classic. He ain't never gonna get that Tallboy, boss. We're all gonna die down here, for $1.70 per day, boss. That's a historically accurate number, boss, look it up. It's sick down here, real sick."
+		1:
+			speaker = lv.get_lored(LORED.Type.CONCRETE)
+			dialogue = "Trabajo fácil. I could do it."
+
+
+func COAL10_REPLY():
+	var d = [0,]
+	if lv.is_lored_unlocked(LORED.Type.JOULES):
+		d.append(1)
+	match d[randi() % d.size()]:
+		0:
+			speaker = lv.get_lored(LORED.Type.COAL)
+			dialogue = "Why didn't anyone laugh?"
+		1:
+			speaker = lv.get_lored(LORED.Type.JOULES)
+			dialogue = "Leaf me alone, I'm bushed."
+
+
+func COAL9_REPLY():
+	speaker = lv.get_lored(LORED.Type.COAL)
+	dialogue = "I want a taste."
+
+
+func COAL8_REPLY():
+	speaker = lv.get_lored(LORED.Type.TARBALLS)
+	dialogue = "With great power comes great responsibility. In other words, get lost."
+	reply = Type.COAL8_REPLY_REPLY
+
+
+func COAL8_REPLY_REPLY():
+	var d = [0, 1]
+	match d[randi() % d.size()]:
+		0:
+			speaker = lv.get_lored(LORED.Type.COAL)
+			dialogue = "True."
+		1:
+			speaker = lv.get_lored(LORED.Type.COPPER)
+			dialogue = "! Is that Spider-man?! Broo!"
+
+
+func COAL5_REPLY():
+	var d = [0,]
+	if lv.is_lored_unlocked(LORED.Type.CONCRETE):
+		d.append(1)
+	if lv.is_lored_unlocked(LORED.Type.JOULES):
+		d.append(1)
+	match d[randi() % d.size()]:
+		0:
+			speaker = lv.get_lored(LORED.Type.COPPER_ORE)
+			dialogue = "Well, shoot, there, boss, don't mind if I do!"
+		1:
+			speaker = lv.get_lored(LORED.Type.CONCRETE)
+			dialogue = "Gracias, amigo."
+		1:
+			speaker = lv.get_lored(LORED.Type.JOULES)
+			dialogue = "Thank you."
 
 
 
 func RANDOM_STONE() -> void:
 	speaker = lv.get_lored(LORED.Type.STONE)
-	match randi() % 8:
-		0: dialogue = "This one has a sweet edge!"
-		1: dialogue = "Was that a hacky sack?"
+	var d = [0,1,2,3,4,5,6,7,]
+	
+	if lv.is_lored_unlocked(LORED.Type.TARBALLS):
+		d.append(8)
+		d.append(10)
+	match d[randi() % d.size()]:
+		10:
+			var text = wa.get_icon_and_name_text(LORED.Type.OIL)
+			dialogue = "Is it alright that that baby is slurping up %s? Uh... well, I'm sure his parents know what they're doing!" % text
+		9: dialogue = "I like chocolate with peanut butter!"
+		8:
+			var text = lv.get_icon_and_name_text(LORED.Type.TARBALLS)
+			dialogue = "%s seems pretty smart." % text
+			reply = Type.STONE8_REPLY
+		7:
+			dialogue = "I don't like it when Iron Ore shoots rocks."
+			reply = Type.STONE7_REPLY
+		6: dialogue = "I wonder how much this one is worth."
+		5: dialogue = "Gotta go fast!"
+		4: dialogue = "Hey, I found one you might like!"
+		3: dialogue = "My back smarts. :("
 		2:
 			dialogue = "My bag is getting heavy! :("
 			pose_texture = load("res://Sprites/reactions/STONE2.png")
-		3: dialogue = "My back smarts.\n:("
-		4: dialogue = "Hey, I found one you might like!"
-		5: dialogue = "Gotta go fast!"
-		6: dialogue = "I wonder how much this one is worth."
-		7:
-			dialogue = "I don't like it when Iron Ore shoots rocks."
-			reply = Type.STONE7_IRON_ORE
+		1: dialogue = "Was that a hacky sack?"
+		0: dialogue = "This one has a sweet edge!"
 
 
-func STONE7_IRON_ORE():
+func STONE8_REPLY():
+	var d = [0,]
+	match d[randi() % d.size()]:
+		0:
+			speaker = lv.get_lored(LORED.Type.TARBALLS)
+			var text = lv.get_icon_and_name_text(LORED.Type.STONE)
+			dialogue = "%s seems pretty stupid." % text
+
+
+func STONE7_REPLY():
 	speaker = lv.get_lored(LORED.Type.IRON_ORE)
-	dialogue = "You rather I shoot you?"
+	dialogue = "Would you rather I shoot you?"
 	pose_texture = load("res://Sprites/reactions/IRON_ORE_REPLY0.png")
 
 
 
 func RANDOM_IRON_ORE() -> void:
 	speaker = lv.get_lored(LORED.Type.IRON_ORE)
-	match randi() % 11:
+	var d = [0, 1, 2, 3, 4, 5, 6, 7,8,9,10,11,12,13,14,19,20,21,22,23,25,]
+	if lv.is_lored_unlocked(LORED.Type.TARBALLS):
+		d.append(15)
+		d.append(16)
+	if lv.is_lored_unlocked(LORED.Type.JOULES):
+		d.append(17)
+	if lv.is_lored_unlocked(LORED.Type.GROWTH):
+		d.append(18)
+	if speaker.fuel.get_current_percent() <= lv.FUEL_DANGER:
+		d.append(24)
+	match d[randi() % d.size()]:
+		25: dialogue = "Joy and Grief are but two emotions on the coin of our brains, except our brains are full of coins. Wait, does that make any cents?"
+		24:
+			var text = lv.get_icon_and_name_text(LORED.Type.COAL)
+			match randi() % 2:
+				0: dialogue = "Are you kidding me? How did I get this low on fuel? Did you upgrade me too quickly? %s better not have a negative net output. I will [b]LOSE[/b] my [b]MIND[/b]. I will [b]FIND YOU[/b]. [b]FUEL ME UP. NOW.[/b]" % text
+				1: dialogue = "I have a very important role in this system. Don't you understand? I [b]CAN'T[/b] have low fuel. [b]FIX IT.[/b]"
+		23:
+			var text = lv.get_icon_and_name_text(LORED.Type.STONE)
+			dialogue = "%s. You're next." % text
+		22:
+			dialogue = "Yes. [b]JAB[/b] that shovel in, [b]real[/b] deep! Excellent!"
+		21:
+			var text = lv.get_icon_and_name_text(LORED.Type.COPPER_ORE)
+			dialogue = "%s. That incessant whacking and clanging. [b]I[/b] choose to work [b]smarter[/b]." % text
+		20:
+			var text = lv.get_icon_and_name_text(LORED.Type.IRON)
+			dialogue = "%s LORED. I follow you, my brother. My captain. My king." % text
+		19:
+			dialogue = "Hey, guess what, buddy? Those [b]aren't[/b] s'mores."
+			reply = Type.IRON_ORE15_REPLY
+		18:
+			dialogue = "Look at that idiot! Ever heard of chemotherapy, you ding dong?!"
+			reply = Type.IRON_ORE14_REPLY
+		17:
+			var text = lv.get_icon_and_name_text(LORED.Type.JOULES)
+			dialogue = "%s upsells you when you go in for only an oil change, he is [b]proud[/b] of it."
+		16: dialogue = "That baby is absolutely, positively [b]disgusting[/b]."
+		15:
+			var text = lv.get_icon_and_name_text(LORED.Type.TARBALLS)
+			dialogue = "That moron %s thinks he's smart, but all he does is create matter out of oil and cancer juice.\n\nWait, what? He does that? Holy crap. Well, I still don't like him." % text
+		14: dialogue = "I hate existing."
+		13: dialogue = "My ribcage is starting to hurt."
+		12: dialogue = "I hate children."
+		11: dialogue = "I hate chocolate, and I hate peanut butter."
 		0: dialogue = "DIE!"
 		1: dialogue = "KILL!"
 		2: dialogue = "GAH!"
@@ -266,20 +538,30 @@ func RANDOM_IRON_ORE() -> void:
 		7: dialogue = "Would you please die? Thank you."
 		8:
 			dialogue = "Can someone pass me some more shells?"
-			reply = Type.IRON_ORE8_STONE_REPLY0
+			reply = Type.IRON_ORE8_REPLY
 		9:
 			dialogue = "I learned something about myself the other day. I want literally everyone to die."
-			reply = Type.IRON_ORE9_JOULES0
+			reply = Type.IRON_ORE9_REPLY
 		10:
 			pose_texture = load("res://Sprites/reactions/IRON_ORE10.png")
 
 
-func IRON_ORE8_STONE_REPLY0():
+func IRON_ORE15_REPLY():
+	speaker = lv.get_lored(LORED.Type.COPPER)
+	dialogue = "How could you even say that to me?"
+
+
+func IRON_ORE14_REPLY():
+	speaker = lv.get_lored(LORED.Type.GROWTH)
+	dialogue = "It's in remission!!!"
+
+
+func IRON_ORE8_REPLY():
 	speaker = lv.get_lored(LORED.Type.STONE)
 	dialogue = "No, you creep!"
 
 
-func IRON_ORE9_JOULES0():
+func IRON_ORE9_REPLY():
 	speaker = lv.get_lored(LORED.Type.JOULES)
 	dialogue = "That's not even shocking, dude."
 
@@ -287,88 +569,177 @@ func IRON_ORE9_JOULES0():
 
 func RANDOM_COPPER_ORE() -> void:
 	speaker = lv.get_lored(LORED.Type.COPPER_ORE)
-	match randi() % 13:
-		0: dialogue = "It's a working man I am!"
-		1: dialogue = "I've been down underground."
-		2: dialogue = "I swear to god if I ever see the sun,"
-		3: dialogue = "or for any length of time, I can hold it in my mind,"
-		4: dialogue = "I never again will go down underground!"
-		5: dialogue = "At the age of sixteen years, I quarreled with my peers."
-		6: dialogue = "I swear there will never be another one."
-		7: dialogue = "In the dark recess of the mine, where you age before your time,"
-		8: dialogue = "and the coal dust lies heavy on your lungs."
-		9: dialogue = "At the age of sixty-four, if I live that long,"
-		10: dialogue = "I'll greet you at the door and gently lead you by the arm."
-		11: dialogue = "In the dark recess of the mine, I can take you back in time,"
-		12: dialogue = "and tell you of the hardships that were there!"
+	var d = [0, 1, 2, 3, 4, 5, 6, ]
+	if speaker.fuel.get_current_percent() < lv.FUEL_DANGER:
+		d.append(8)
+	if lv.is_lored_unlocked(LORED.Type.OIL):
+		d.append(7)
+	match d[randi() % d.size()]:
+		8:
+			var text = wa.get_icon_and_name_text(Currency.Type.COAL)
+			dialogue = "Hey, we're out of %s in the mine, and out of %s in the game, too! Look at that, boss!" % [text, text]
+		7:
+			dialogue = "Good god, look at how young those corporate fat heads have lowered the minimum working age to! It's downright horrific, see! I won't stand for it, boss, I just won't, y'see?!"
+			reply = Type.COPPER_ORE7_REPLY
+		6:
+			var text = lv.get_icon_and_name_text(LORED.Type.COPPER)
+			var text2 = lv.get_icon_and_name_text(LORED.Type.IRON_ORE)
+			dialogue = "%s, stop! Ah, see? Now a fire's started. See, that's now fixing to consume what little oxygen we have left down here, boss. Yep, takes a real man to brave these absolute twisted work conditions, boss. Complete and total, unspeakably-twisted work conditions. Just have %s shoot me now, boss, just have him shoot me now." % [text, text2]
+			reply = Type.COPPER_ORE6_REPLY
+		5:
+			var text = lv.get_icon_and_name_text(LORED.Type.IRON_ORE)
+			dialogue = "Unfortunately, I am seen as the brother or equal of %s, see, and that just ain't right. This fat head would ricochet-murder at least 5 workers in the mine, here, shootin' wild-like like that. No, it's not right at all, boss, not right at all, boss, at all, boss, all boss--hrrgggk.\nWhoa, I just blacked out, there, boss, am I okay?" % text
+		4:
+			var text = lv.get_icon_and_name_text(LORED.Type.COAL)
+			dialogue = "Now, see %s here, boss? This one's the only one who could make it in the mine, here, boss. He's tough, real tough. Of course, I'd never want him to work here. No, this mine should be shut down. But a man's gotta do what a man's gotta do, see?" % text
+		3: dialogue = "It's a working man I am! I've been down underground."
+		2: dialogue = "I swear to god if I ever see the sun, or for any length of time, I can hold it in my mind, I never again will go down underground!"
+		1: dialogue = "In the dark recess of the mine, where you age before your time, and the coal dust lies heavy on your lungs."
+		0: dialogue = "At the age of sixty-four, if I live that long, I'll greet you at the door and gently lead you by the arm. In the dark recess of the mine, I can take you back in time and tell you of the hardships that were there!"
+
+
+func COPPER_ORE7_REPLY():
+	var d = [0,]
+#	if lv.is_lored_unlocked(LORED.Type.DRAW_PLATE):
+#		d.append(1)
+	match d[randi() % d.size()]:
+		0:
+			speaker = lv.get_lored(LORED.Type.COPPER_ORE)
+			dialogue = "On second thought, see, I reckon it'll toughen him up. I was in the mine even before I was his age, and look at me--I turned out okay, boss, don't you think so?"
+
+
+func COPPER_ORE6_REPLY():
+	var d = [0]
+#	if lv.is_lored_unlocked(LORED.Type.DRAW_PLATE):
+#		d.append(1)
+	match d[randi() % d.size()]:
+		0:
+			speaker = lv.get_lored(LORED.Type.IRON_ORE)
+			dialogue = "With [b]extreme[/b] pleasure."
 
 
 
 func RANDOM_IRON() -> void:
 	speaker = lv.get_lored(LORED.Type.IRON)
-	match randi() % 8:
-		0: dialogue = "Bread is good, but [b]toast[/b]... Toast is better."
-		1:
-			dialogue = "Thank you for working so hard, Stone!"
-			reply = Type.IRON1_STONE0
-		2:
-			dialogue = "Iron Ore's methods may be extreme, but we need him nonetheless."
-			possible_replies = [
-				Type.IRON2_IRON_ORE0,
-				Type.IRON2_STONE0,
-			]
-		3: dialogue = "I haven't cleaned this toaster since I bought it!"
+	var d = [0,1,2,3,4,5,6,7,]
+	match d[randi() % d.size()]:
+		7: dialogue = "My arm is getting tired."
+		6: dialogue = "At this point, I'm going to need more toasters."
+		5: dialogue = "I shouldn't have left that one in for so long."
 		4:
 			dialogue = "Can I borrow anyone's helmet?"
-			reply = Type.IRON4_HARDWOOD0
-		5: dialogue = "I shouldn't have left that one in for so long."
-		6: dialogue = "At this point, I'm going to need more toasters."
-		7: dialogue = "My arm is getting tired."
+			reply = Type.IRON4_REPLY
+		3: dialogue = "I haven't cleaned this toaster since I bought it!"
+		2:
+			dialogue = "Iron Ore's methods may be extreme, but we need him nonetheless."
+			reply = Type.IRON2_REPLY
+		1:
+			dialogue = "Thank you for working so hard, Stone!"
+			reply = Type.IRON1_REPLY
+		0: dialogue = "Bread is good, but [b]toast[/b]... Toast is better."
 
 
-func IRON1_STONE0():
+func IRON1_REPLY():
 	speaker = lv.get_lored(LORED.Type.STONE)
 	dialogue = "I couldn't do it without you, buddy!"
 
 
-func IRON2_IRON_ORE0():
-	speaker = lv.get_lored(LORED.Type.IRON_ORE)
-	dialogue = "I can hear you, but I'm going to pretend like I can't."
+func IRON2_REPLY():
+	var d = [0,1,]
+	match d[randi() % d.size()]:
+		0:
+			speaker = lv.get_lored(LORED.Type.IRON_ORE)
+			dialogue = "I can hear you, but I'm going to pretend like I can't."
+		1:
+			speaker = lv.get_lored(LORED.Type.STONE)
+			dialogue = "Are you sure about that?"
 
 
-func IRON4_HARDWOOD0():
+func IRON4_REPLY():
 	speaker = lv.get_lored(LORED.Type.HARDWOOD)
 	dialogue = "Yes, but actually, no!"
-
-
-func IRON2_STONE0():
-	speaker = lv.get_lored(LORED.Type.STONE)
-	dialogue = "Are you sure about that?"
 
 
 
 func RANDOM_COPPER() -> void:
 	speaker = lv.get_lored(LORED.Type.COPPER)
-	match randi() % 8:
+	var d = [0, 1, 2, 3, 4, 5, 6, 7,12,13,]
+	if lv.is_lored_unlocked(LORED.Type.OIL):
+		d.append(8)
+		d.append(9)
+		d.append(10)
+	if speaker.fuel.get_current_percent() < lv.FUEL_DANGER:
+		d.append(11)
+	match d[randi() % d.size()]:
+		13: dialogue = "I found an extra piece of graham cracker in the bottom of the box!"
+		12:
+			dialogue = "I dreamt a future where there were no trees, no campsites. The air was poisonous. The bio balance of life was out of sorts. Farm food rotted, billions died. Marshmallow factories went bankrupt, as there were no campers to buy marshmallows. [b]S'mores[/b]... more like [b]n'mores[/b]. We followed soon after. I was the only one left, in a desert, my lips chapped, unable to move, as the lack of any moisture left my skin taut and crusty. I sat before a circle of rocks, a rod in my hand... with no wood for a fire, nothing stuck on the rod, and no one to share any of it with anyway. I waited for death, but it never came."
+			reply = Type.COPPER12_REPLY
+		11:
+			var icon = lv.get_lored(LORED.Type.COAL).icon_text
+			var text = lv.get_lored(LORED.Type.COAL).color_text % "Coca-Coal"
+			dialogue = "%s %s, what's happening, bro? Fill me up, baby! No homo." % [icon, text]
+			
+		10:
+			var text = lv.get_icon_and_name_text(LORED.Type.MALIGNANCY)
+			dialogue = "Oh, shit!! They on X-games mode, bruh!!! What the hell even is that?! %s you are freaking me the fuh-reak out, bro!!" % text
+		9:
+			var text = lv.get_icon_and_name_text(LORED.Type.TARBALLS)
+			dialogue = "%s and I have a playdate scheduled. We're gonna compare the English and Japanese dubs for the final episode of Death Note. Siiiick!"
+		8: dialogue = "I literally can't stop laughing at that baby, yo!!"
 		0: dialogue = "This stuff's the bee's knees!"
 		1: pose_texture = load("res://Sprites/reactions/COPPER1.png")
 		2: dialogue = "Anyone want sm' more?"
 		3: dialogue = "C'mon 'n rest ya dogs--try one of these bad bad boys!"
 		4:
 			dialogue = "Can I get some firewood?"
-			reply = Type.COPPER4_WOOD0
+			if lv.is_lored_unlocked(LORED.Type.WOOD):
+				reply = Type.COPPER4_REPLY
 		5: dialogue = "Stay awhile and listen to the fire."
 		6: dialogue = "Mmm! Gith ith good!"
-		7: dialogue = "Copper Ore, these puppies are amazing!"
+		7:
+			dialogue = "Copper Ore, these puppies are amazing!"
+			reply = Type.COPPER7_REPLY
 
 
-func COPPER4_WOOD0():
+func COPPER12_REPLY():
+	var d = [0, 2, 3]
+	if lv.is_lored_unlocked(LORED.Type.TARBALLS):
+		d.append(1)
+	match d[randi() % d.size()]:
+		0:
+			speaker = lv.get_lored(LORED.Type.IRON)
+			var text = lv.get_icon_and_name_text(LORED.Type.COPPER)
+			dialogue = "Oh, gosh, %s, are you okay?" % text
+			reply = Type.COPPER12_REPLY0_REPLY
+		1:
+			speaker = lv.get_lored(LORED.Type.TARBALLS)
+			dialogue = "I read something like that in a manga once."
+		2:
+			speaker = lv.get_lored(LORED.Type.IRON_ORE)
+			dialogue = "Fascinating. Go on."
+			reply = Type.COPPER12_REPLY2_REPLY
+		3:
+			speaker = lv.get_lored(LORED.Type.COPPER_ORE)
+			dialogue = "This fella's showin' signs of being shell-shocked, boss. That's all there is to that. He'll be fine."
+
+
+func COPPER12_REPLY0_REPLY():
+	speaker = lv.get_lored(LORED.Type.COPPER)
+	dialogue = "What? Dude, yeah, man! It was just a dream, bro! Ahah!"
+
+
+func COPPER12_REPLY2_REPLY():
+	speaker = lv.get_lored(LORED.Type.COPPER)
+	dialogue = "In truth, I died when those factories went under. I am not [b]a'live[/b] without [b]s'mores[/b]. But, it's okay. In real life, people wouldn't stop buying marshmallows, even if all the trees were gone. ...Right?"
+
+
+func COPPER4_REPLY():
 	speaker = lv.get_lored(LORED.Type.WOOD)
 	dialogue = "I got you, bro!"
-	reply = Type.COPPER7_COPPER_ORE0
 
 
-func COPPER7_COPPER_ORE0():
+func COPPER7_REPLY():
 	speaker = lv.get_lored(LORED.Type.COPPER_ORE)
 	dialogue = "Gee, thanks, pal! All in a hard day's work, see?"
 
@@ -376,7 +747,9 @@ func COPPER7_COPPER_ORE0():
 
 func RANDOM_JOULES() -> void:
 	speaker = lv.get_lored(LORED.Type.JOULES)
-	match randi() % 8:
+
+	var d = [0,1,2,3,4,5,6,7,]
+	match d[randi() % d.size()]:
 		0: dialogue = "It took me 12 years to be able to redirect lightning!"
 		1: dialogue = "My batteries are shock-full!"
 		2: dialogue = "Anyone's car need a jump-start?"
@@ -404,9 +777,17 @@ func JOULES6_OIL0():
 
 func RANDOM_GROWTH() -> void:
 	speaker = lv.get_lored(LORED.Type.GROWTH)
-	match randi() % 10:
+	var d = [1,2,3,4,5,6,7,8,9,10,11,]
+	if lv.is_lored_unlocked(LORED.Type.OIL):
+		d.append(0)
+	match d[randi() % d.size()]:
+		11: dialogue = "My skin is raw and wriggling."
+		10:
+			dialogue = "Does anyone want some juice?"
+			reply = Type.GROWTH10_REPLY
 		0:
-			dialogue = "I think Oil just made a boom-boom."
+			var text = lv.get_icon_and_name_text(LORED.Type.OIL)
+			dialogue = "I think %s just made a boom-boom." % text
 			reply = Type.GROWTH0_OIL0
 		1: dialogue = "Oh, your grandma got cancer three times? Must be nice."
 		2: dialogue = "Junji Ito ain't never thought of this!"
@@ -423,6 +804,24 @@ func RANDOM_GROWTH() -> void:
 		9:
 			dialogue = "Whatever you do, just don't ask me how I make growth out of iron and copper."
 			reply = Type.GROWTH9_IRON0
+
+
+func GROWTH10_REPLY():
+	var d = [0]
+	if lv.is_lored_unlocked(LORED.Type.CONCRETE):
+		d.append(1)
+	match d[randi() % d.size()]:
+		0:
+			speaker = lv.get_lored(LORED.Type.STONE)
+			dialogue = "Sure, don't mind if I do! *Glug glug.* [b]oh god[/b]"
+		1:
+			speaker = lv.get_lored(LORED.Type.CONCRETE)
+			dialogue = "No mames!"
+
+
+func GROWTH_RANDOM_SCREAM():
+	speaker = lv.get_lored(LORED.Type.GROWTH)
+	dialogue = growth_scream_pool[randi() % growth_scream_pool.size()]
 
 
 func GROWTH0_OIL0():
@@ -448,7 +847,8 @@ func GROWTH9_IRON0():
 
 func RANDOM_CONCRETE() -> void:
 	speaker = lv.get_lored(LORED.Type.CONCRETE)
-	match randi() % 8:
+	var d = [0,1,2,3,4,5,6,7,]
+	match d[randi() % d.size()]:
 		0: dialogue = "Que?"
 		1: dialogue = "Thank you, Primo!"
 		2: dialogue = "Quítate, chingada!"
@@ -462,7 +862,8 @@ func RANDOM_CONCRETE() -> void:
 
 func RANDOM_OIL() -> void:
 	speaker = lv.get_lored(LORED.Type.OIL)
-	match randi() % 11:
+	var d = [0,1,2,3,4,5,6,7,8,9,10,]
+	match d[randi() % d.size()]:
 		0: dialogue = "But I just a baby!"
 		1: dialogue = "Plbdffffffffshh!"
 		2: dialogue = "Pow! Pow pow! Pow pow pow pow pow!"
@@ -479,7 +880,8 @@ func RANDOM_OIL() -> void:
 
 func RANDOM_TARBALLS() -> void:
 	speaker = lv.get_lored(LORED.Type.TARBALLS)
-	match randi() % 9:
+	var d = [0,1,2,3,4,5,6,7,8,]
+	match d[randi() % d.size()]:
 		0: dialogue = "I'm still working on the perfect mixture."
 		1: dialogue = "That was good, but I can do better."
 		2: dialogue = "I lost some important notes. I need to be more careful."
@@ -501,7 +903,8 @@ func TARBALLS5_GROWTH0():
 
 func RANDOM_MALIGNANCY() -> void:
 	speaker = lv.get_lored(LORED.Type.MALIGNANCY)
-	match randi() % 14:
+	var d = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,]
+	match d[randi() % d.size()]:
 		0: dialogue = "Hiya. I just coalesced out of sticky, oily stuff and cancer juice. How's your day going?"
 		1: dialogue = "Hi. Oh, wow, there are a lot of me."
 		2: dialogue = "Whoa, hello! I'm Malignancy... Oh, so are all of you?"
@@ -521,7 +924,8 @@ func RANDOM_MALIGNANCY() -> void:
 
 func RANDOM_WATER() -> void:
 	speaker = lv.get_lored(LORED.Type.WATER)
-	match randi() % 10:
+	var d = [0,1,2,3,4,5,6,7,8,9,]
+	match d[randi() % d.size()]:
 		0: dialogue = "Ew, there's bugs in the water!"
 		1: pose_texture = load("res://Sprites/reactions/WATER1.png")
 		2: pose_texture = load("res://Sprites/reactions/WATER2.png")
@@ -530,29 +934,30 @@ func RANDOM_WATER() -> void:
 		5: dialogue = "I don't need it. I definitely don't need it."
 		6:
 			dialogue = "Does anyone want to play with me?"
-			possible_replies = [
-				Type.WATER6_TREES0,
-				Type.WATER6_DRAW_PLATE0,
-			]
+			reply = Type.WATER6_REPLY
 		7: dialogue = "My ears are clogged with water!"
 		8: dialogue = "I wish I had a noodle!"
 		9: pose_texture = load("res://Sprites/reactions/WATER9.png")
 
 
-func WATER6_TREES0():
-	speaker = lv.get_lored(LORED.Type.TREES)
-	dialogue = "I do!"
-
-
-func WATER6_DRAW_PLATE0():
-	speaker = lv.get_lored(LORED.Type.DRAW_PLATE)
-	dialogue = "Me!!!!"
+func WATER6_REPLY():
+	var d = [0,]
+	if lv.is_lored_unlocked(LORED.Type.DRAW_PLATE):
+		d.append(1)
+	match d[randi() % d.size()]:
+		0:
+			speaker = lv.get_lored(LORED.Type.TREES)
+			dialogue = "I do!"
+		1:
+			speaker = lv.get_lored(LORED.Type.DRAW_PLATE)
+			dialogue = "Me!!!!"
 
 
 
 func RANDOM_HUMUS() -> void:
 	speaker = lv.get_lored(LORED.Type.HUMUS)
-	match randi() % 9:
+	var d = [0,1,2,3,4,5,6,7,8,]
+	match d[randi() % d.size()]:
 		0: dialogue = "Heigh, give me an apple, I'm a freakin horse."
 		1: dialogue = "First I champ, then I stamp, then I stand still!"
 		2: dialogue = "Y'all are doing WHAT with my poop?!"
@@ -563,7 +968,7 @@ func RANDOM_HUMUS() -> void:
 		7:
 			dialogue = "Somebody, please trim my damn hooves before I keel over."
 			reply = Type.HUMUS7_GALENA0
-		8: dialogue = "*Browsing http://localmares.com.* Wait--no! I meant--UH--I meant to search local [b]wares!!"
+		8: dialogue = "*Browsing [u]http://localmares.com[/u].* Wait--no! I meant--UH--I meant to search local [b]wares!![/b]"
 
 
 func HUMUS7_GALENA0():
@@ -574,7 +979,8 @@ func HUMUS7_GALENA0():
 
 func RANDOM_SEEDS() -> void:
 	speaker = lv.get_lored(LORED.Type.SEEDS)
-	match randi() % 9:
+	var d = [0,1,2,3,4,5,6,7,8,]
+	match d[randi() % d.size()]:
 		0: dialogue = "Buzz, buzz!"
 		1: dialogue = "Honey is good."
 		2: dialogue = "Don't comb your hair, it'll get sticky!!!"
@@ -589,50 +995,57 @@ func RANDOM_SEEDS() -> void:
 
 func RANDOM_TREES() -> void:
 	speaker = lv.get_lored(LORED.Type.TREES)
-	match randi() % 9:
-		0:
-			dialogue = "Have you ever been through as much crap as I have?"
-			possible_replies = [
-				Type.TREES0_GROWTH0,
-				Type.TREES0_SOIL0,
-			]
-		1: dialogue = "They call me Green Face!"
-		2:
-			dialogue = "Thanks for the water, friend!"
-			reply = Type.TREES2_WATER0
-		3: dialogue = "Acrobatics level up!"
-		4: dialogue = "I want to try rock climbing one day!"
-		5: dialogue = "Want to see me do a cool trick? Watch!"
-		6: dialogue = "These sprouts blasting me have given me rock-hard abs!"
-		7: dialogue = "These volatile seeds won't leaf me alone!"
+	var d = [0,1,2,3,4,5,6,7,8,]
+	match d[randi() % d.size()]:
 		8:
 			dialogue = "Maybe, these seeds are poppin'!"
-			reply = Type.TREES8_SEEDS0
+			reply = Type.TREES8_REPLY
+		7: dialogue = "These volatile seeds won't leaf me alone!"
+		6: dialogue = "These sprouts blasting me have given me rock-hard abs!"
+		5: dialogue = "Want to see me do a cool trick? Watch!"
+		4: dialogue = "I want to try rock climbing one day!"
+		3: dialogue = "Acrobatics level up!"
+		2:
+			dialogue = "Thanks for the water, friend!"
+			reply = Type.TREES2_REPLY
+		1: dialogue = "They call me Green Face!"
+		0:
+			dialogue = "Have you ever been through as much crap as I have?"
+			reply = Type.TREES0_REPLY
 
 
-func TREES0_GROWTH0():
-	speaker = lv.get_lored(LORED.Type.GROWTH)
-	dialogue = "Are you freakin joking me, Trees?"
+func TREES0_REPLY():
+	var d = [0,1,]
+	if lv.is_lored_unlocked(LORED.Type.SOIL):
+		d.append(2)
+	match d[randi() % d.size()]:
+		0:
+			var text = lv.get_icon_and_name_text(LORED.Type.TREES)
+			speaker = lv.get_lored(LORED.Type.GROWTH)
+			dialogue = "Are you freakin joking me, %s?" % text
+		1:
+			var text1 = wa.get_icon_and_name_text(Currency.Type.TREES)
+			var text2 = lv.get_icon_and_name_text(LORED.Type.TREES)
+			speaker = lv.get_lored(LORED.Type.JOULES)
+			dialogue = "This fella must be jokin. Havin a nice time with the %s in the garden, are ya, %s?" % [text1, text2]
+		2:
+			speaker = lv.get_lored(LORED.Type.SOIL)
+			dialogue = "Um, hello??"
 
 
-func TREES0_SOIL0():
-	speaker = lv.get_lored(LORED.Type.SOIL)
-	dialogue = "Um, hello??"
-
-
-func TREES2_WATER0():
+func TREES2_REPLY():
 	speaker = lv.get_lored(LORED.Type.WATER)
 	dialogue = "It has chlorine in it!"
-	reply = Type.TREES2_TREES0
+	reply = Type.TREES2_REPLY_REPLY
 
 
-func TREES2_TREES0():
+func TREES2_REPLY_REPLY():
 	speaker = lv.get_lored(LORED.Type.TREES)
 	dialogue = "Come again?"
-	pose_texture = load("res://Sprites/reactions/TREES2_TREES0.png")
+	pose_texture = load("res://Sprites/reactions/TREES2_REPLY_REPLY.png")
 
 
-func TREES8_SEEDS0():
+func TREES8_REPLY():
 	speaker = lv.get_lored(LORED.Type.SEEDS)
 	dialogue = "Too bad I'm not the Corn LORED!"
 
@@ -640,7 +1053,8 @@ func TREES8_SEEDS0():
 
 func RANDOM_SOIL() -> void:
 	speaker = lv.get_lored(LORED.Type.SOIL)
-	match randi() % 8:
+	var d = [0,1,2,3,4,5,6,7,]
+	match d[randi() % d.size()]:
 		0: dialogue = "Gosh, what a sticky situation."
 		1: dialogue = "This stinks."
 		2: dialogue = "Wee!"
@@ -661,7 +1075,8 @@ func SOIL5_HUMUS0():
 
 func RANDOM_DRAW_PLATE() -> void:
 	speaker = lv.get_lored(LORED.Type.DRAW_PLATE)
-	match randi() % 11:
+	var d = [0,1,2,3,4,5,6,7,8,9,10,]
+	match d[randi() % d.size()]:
 		0: dialogue = "Next, I'm going to draw a castle!"
 		1: dialogue = "Who is your favorite superhero?"
 		2: dialogue = "I wish I could have pizza for dinner every night!"
@@ -671,27 +1086,33 @@ func RANDOM_DRAW_PLATE() -> void:
 		6: dialogue = "I don't want to go to bed early tonight."
 		7:
 			dialogue = "Can I have some ice cream?"
-			reply = Type.DRAW_PLATE7_WIRE0
+			reply = Type.DRAW_PLATE7_REPLY
 		8: dialogue = "Can I have some ice cream after I finish my drawing?"
 		9: dialogue = "I don't like doing homework!"
 		10: dialogue = "Have you ever been to the park? What's your favorite part about the park?"
 
 
-func DRAW_PLATE7_WIRE0() -> void:
+func DRAW_PLATE7_REPLY() -> void:
 	speaker = lv.get_lored(LORED.Type.WIRE)
 	dialogue = "No, honey."
-	reply = Type.DRAW_PLATE7_DRAW_PLATE0
+	reply = Type.DRAW_PLATE7_REPLY_REPLY
 
 
-func DRAW_PLATE7_DRAW_PLATE0() -> void:
+func DRAW_PLATE7_REPLY_REPLY() -> void:
 	speaker = lv.get_lored(LORED.Type.DRAW_PLATE)
-	dialogue = "What about after I finish my drawing?"
-	reply = Type.DRAW_PLATE7_WIRE1
+	dialogue = "What about after I finish drawing?"
+	reply = Type.DRAW_PLATE7_REPLY_REPLY_REPLY
 
 
-func DRAW_PLATE7_WIRE1() -> void:
+func DRAW_PLATE7_REPLY_REPLY_REPLY() -> void:
 	speaker = lv.get_lored(LORED.Type.WIRE)
 	dialogue = "We'll see."
+	reply = Type.DRAW_PLATE7_REPLY_REPLY_REPLY_REPLY
+
+
+func DRAW_PLATE7_REPLY_REPLY_REPLY_REPLY() -> void:
+	speaker = lv.get_lored(LORED.Type.DRAW_PLATE)
+	dialogue = "Ok."
 
 
 

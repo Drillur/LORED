@@ -124,4 +124,5 @@ func get_icon_and_name_text(cur: int) -> String:
 	return currency[cur].icon_and_name_text
 
 
-
+func is_current_rate_positive(cur: int) -> bool:
+	return get_currency(cur).positive_current_rate

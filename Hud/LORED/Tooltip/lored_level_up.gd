@@ -35,10 +35,12 @@ func setup(data: Dictionary) -> void:
 	color = lored.color
 	
 	price.setup(lored.cost)
-	price.set_icon_color(lored.color)
+	price.color = lored.color
 	
-	lored.level.add_notify_change_method(adjust_if_not_purchased, true)
-	lored.level.add_notify_change_method(set_level_text, true)
+	lored.connect("leveled_up", adjust_if_not_purchased)
+	lored.connect("leveled_up", set_level_text)
+	adjust_if_not_purchased(lored.level)
+	set_level_text(lored.level)
 	lored.output.add_notify_change_method(set_output_text, true)
 	lored.input.add_notify_change_method(set_input_text, true)
 	lored.fuel_cost.add_notify_change_method(set_fuel_cost_text, true)
@@ -47,12 +49,12 @@ func setup(data: Dictionary) -> void:
 	flash_allowed = true
 
 
-func adjust_if_not_purchased() -> void:
+func adjust_if_not_purchased(_level: int) -> void:
 	if not lored.purchased:
 		details.hide()
 		title.text = "Invite"
 		description.show()
-		description.text = "Ask " + lored.colored_name + " to join you!"
+		description.text = "[center]Ask " + lored.colored_name + " to join you!"
 		if randi() % 100 < 10:
 			var pool = [
 				"Bribe " + lored.colored_name + " to join you!",
@@ -66,16 +68,16 @@ func adjust_if_not_purchased() -> void:
 				"Promise " + lored.colored_name + " the largest share of the booty if " + lored.pronoun_he + " joins!",
 			]
 			#description.custom_minimum_size.x = 150
-			description.text = pool[randi() % pool.size()]
+			description.text = "[center]" + pool[randi() % pool.size()]
 			description.autowrap_mode = 2
 	else:
 		details.show()
 		description.hide()
 		title.text = "Level Up"
-		lored.level.remove_notify_method(adjust_if_not_purchased)
+		lored.disconnect("leveled_up", adjust_if_not_purchased)
 
 
-func set_level_text() -> void:
+func set_level_text(_level: int) -> void:
 	current_level.text = lored.get_level_text()
 	next_level.text = lored.get_next_level_text()
 	flash_green(current_level, next_level)

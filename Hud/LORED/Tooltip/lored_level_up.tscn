@@ -7,8 +7,8 @@
 
 [node name="LORED Level Up" type="MarginContainer"]
 layout_direction = 2
-offset_right = 40.0
-offset_bottom = 40.0
+offset_right = 149.0
+offset_bottom = 260.0
 script = ExtResource("1_disdc")
 
 [node name="bg" type="Panel" parent="."]
@@ -54,12 +54,6 @@ theme_override_constants/margin_bottom = 10
 [node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/MarginContainer2"]
 layout_mode = 2
 
-[node name="Price" parent="VBoxContainer/MarginContainer2/VBoxContainer" instance=ExtResource("3_cll0w")]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 4
-theme_override_constants/margin_bottom = 6
-
 [node name="Description" type="RichTextLabel" parent="VBoxContainer/MarginContainer2/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
@@ -71,6 +65,7 @@ autowrap_mode = 0
 
 [node name="Details" type="GridContainer" parent="VBoxContainer/MarginContainer2/VBoxContainer"]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_constants/h_separation = 10
@@ -301,3 +296,7 @@ theme = ExtResource("1_b4267")
 bbcode_enabled = true
 fit_content = true
 autowrap_mode = 0
+
+[node name="Price" parent="VBoxContainer" instance=ExtResource("3_cll0w")]
+unique_name_in_owner = true
+layout_mode = 2

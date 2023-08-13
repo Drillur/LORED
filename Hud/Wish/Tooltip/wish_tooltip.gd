@@ -38,6 +38,7 @@ func setup(data: Dictionary) -> void:
 	face.modulate = wish.giver.color
 	
 	set_text(wish.help_text)
+	set_face(wish.help_icon)
 	setup_reward_text()
 	
 	set_to_thank_text_when_ready()
@@ -47,6 +48,7 @@ func set_to_thank_text_when_ready() -> void:
 	if not wish.ready_to_turn_in:
 		await wish.became_ready_to_turn_in
 	set_text(wish.thank_text)
+	set_face(wish.thank_icon)
 
 
 func setup_reward_text() -> void:
@@ -60,5 +62,13 @@ func setup_reward_text() -> void:
 
 
 func set_text(_text: String) -> void:
-	text.text = "[i]" + _text
-	text.custom_minimum_size.x = min(250, max(50 + text.text.length() * 2, 100))
+	if _text == "":
+		text.hide()
+	else:
+		text.show()
+		text.text = "[i]" + _text
+		text.custom_minimum_size.x = min(250, max(50 + text.text.length() * 2, 100))
+
+
+func set_face(icon: Texture) -> void:
+	face.texture = icon

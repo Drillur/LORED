@@ -10,6 +10,7 @@ var saved_vars := [
 var emote_vico := preload("res://Hud/Emote/emote_vico.tscn")
 
 signal random_emotes_became_allowed
+signal emote_chain_finished
 
 var completed_emotes := []
 var random_emotes_allowed := false:
@@ -17,6 +18,8 @@ var random_emotes_allowed := false:
 		random_emotes_allowed = val
 		if val:
 			emit_signal("random_emotes_became_allowed")
+
+var in_emote_chain := false
 
 
 
@@ -52,6 +55,8 @@ func start_random_emotes() -> void:
 		await random_emotes_became_allowed
 	
 	while random_emotes_allowed:
+		if in_emote_chain:
+			await emote_chain_finished
 		await gv.get_tree().create_timer(randi() % 20 + 20).timeout # 20-40
 		var lored := lv.get_random_awake_lored() as LORED
 		var emote_key = "RANDOM_" + lored.key
@@ -74,14 +79,18 @@ func emote(emote_type: int) -> void:
 	_emote.speaker.emote(_emote)
 	
 	if _emote.has_reply():
+		in_emote_chain = true
 		if not _emote.ready_to_emote:
 			await _emote.became_ready_to_emote
-		var wait_time = max(3.0, _emote.duration / 2)
+		var wait_time = _emote.duration
 		if _emote.has_dialogue():
-			wait_time /= 2
+			wait_time = 1.0
 			await _emote.just_fully_displayed
 		await get_tree().create_timer(wait_time).timeout
 		emote(_emote.reply)
+	else:
+		in_emote_chain = false
+		emit_signal("emote_chain_finished")
 
 
 

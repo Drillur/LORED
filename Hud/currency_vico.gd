@@ -65,13 +65,13 @@ func update_count() -> void:
 
 
 func update_rate() -> void:
-	if currency.net_rate.get_current().equal(0):
+	if currency.net_rate.get_total().equal(0):
 		rate.hide()
 		return
 	else:
 		rate.show()
-	var _sign = "" if currency.positive_current_rate else "-"
-	rate.text = "[i]" + _sign + currency.net_rate.get_current_text() + "/s"
+	var _sign = "" if currency.positive_total_rate else "-"
+	rate.text = "[i]" + _sign + currency.net_rate.get_total_text() + "/s"
 
 
 func update_threshold() -> void:

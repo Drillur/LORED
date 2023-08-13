@@ -113,7 +113,8 @@ func reset() -> void:
 
 func increase(times_purchased: int, cost_increase: float) -> void:
 	for cur in cost:
-		cost[cur].set_from_level(Big.new(cost_increase).power(times_purchased))
+		var new_val = Big.new(cost_increase).power(times_purchased)
+		cost[cur].set_from_level(new_val)
 
 
 func increase_m_from_lored(amount) -> void:
@@ -146,7 +147,7 @@ func get_text() -> Array:
 	return text
 
 
-func get_insufficient_currencies() -> Array:
+func get_insufficient_currency_types() -> Array:
 	if affordable:
 		return []
 	var array := []
