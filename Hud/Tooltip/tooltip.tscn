@@ -18,3 +18,5 @@ theme = ExtResource("1_ohnix")
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
+
+[connection signal="item_rect_changed" from="Tooltip Content" to="." method="_on_tooltip_content_item_rect_changed"]

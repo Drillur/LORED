@@ -4,9 +4,14 @@ extends Node
 
 var saved_vars := [
 	"session_duration",
+	"wallet_unlocked",
+	"stage0", "stage1", "stage2", "stage3", "stage4",
 ]
 
-var dev_mode := true # false
+enum Platform {PC, HTML,}
+
+var dev_mode := true#false
+const PLATFORM := Platform.PC
 
 
 var icon_awake := preload("res://Sprites/Hud/awake.png")
@@ -38,26 +43,21 @@ const TEXTURES := {
 	"Level": preload("res://Sprites/Hud/Level.png"),
 }
 
-const STAGE_COLORS := {
-	1: Color(0.878431, 0.121569, 0.34902),
-	2: Color(1, 0.541176, 0.541176),
-	3: Color(0.8, 0.8, 0.8),
-	4: Color(0.8, 0.8, 0.8),
-}
-
-var game_color := Color(1, 0, 0.235)
-
-
-var stage_1_icon_and_name := "[img=<15>]" + preload("res://Sprites/Hud/Tab/t0.png").get_path() + "[/img][color=#" + STAGE_COLORS[1].to_html() + "] Stage 1"
-var stage_2_icon_and_name := "[img=<15>]" + preload("res://Sprites/Hud/Tab/s2.png").get_path() + "[/img][color=#" + STAGE_COLORS[2].to_html() + "] Stage 2"
-
-var selected_stage := 1
+signal game_color_changed(color)
+var game_color := Color(1, 0, 0.235):
+	set(val):
+		if game_color != val:
+			game_color = val
+			emit_signal("game_color_changed", game_color)
 
 var texts_parent: Control
 
 
 
 func _ready() -> void:
+	for i in range(0, 5):
+		set("stage" + str(i), Stage.new(i))
+	
 	discord_sdk.app_id = 1139940673747951696
 	
 	# this is boolean if everything worked
@@ -232,7 +232,6 @@ var update_cooldown := []
 
 
 func update(method: Callable) -> void:
-	# if not updating from a lored, do not pass 2nd var. won't matter.
 	
 	if method in update_cooldown:
 		if not method in update_queue:
@@ -243,8 +242,6 @@ func update(method: Callable) -> void:
 		return
 	
 	update_cooldown.append(method)
-	
-	#run the game and click SLeep on Stone. then fix
 	
 	var obj := method.get_object()
 	if obj.has_signal("visibility_changed"):
@@ -292,39 +289,17 @@ func new_tooltip(type: int, parent: Node, info: Dictionary) -> void:
 	clear_tooltip()
 	
 	tooltip = SRC["tooltip"].instantiate()
+	tooltip.parent = parent
+	tooltip.tooltip_parent = tooltip_parent
 	tooltip.setup(type)
 	tooltip_parent.add_child(tooltip)
 	tooltip.grow_vertical = Control.GROW_DIRECTION_BEGIN
+	
 	
 	tooltip_content = SRC[TOOLTIP_KEYS[type]].instantiate()
 	tooltip_content.setup(info)
 	tooltip.content.add_child(tooltip_content)
 	tooltip.get_node("bg").self_modulate = tooltip_content.color
-	
-	if "Right" in parent.name:
-		tooltip.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
-		tooltip_parent.position.x = parent.global_position.x
-	elif "Left" in parent.name:
-		tooltip.size_flags_horizontal = Control.SIZE_SHRINK_END
-		tooltip_parent.position.x = parent.global_position.x - tooltip_parent.size.x
-	if "Up" in parent.name:
-		tooltip.size_flags_vertical = Control.SIZE_SHRINK_END
-		tooltip_parent.position.y = parent.global_position.y - tooltip_parent.size.y
-		tooltip_parent.position.y = clamp(tooltip_parent.position.y, -get_viewport().size.y, get_viewport().size.y - tooltip_parent.size.y - 10)
-	elif "Down" in parent.name:
-		tooltip.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
-		tooltip_parent.position.y = parent.global_position.y
-		tooltip_parent.position.y = clamp(tooltip_parent.position.y, 10, get_viewport().size.y - tooltip.size.y - 10)
-	
-	#tooltip_parent.position.y = clamp(tooltip_parent.position.y, 10, get_viewport().size.y - tooltip.size.y - 10)
-#	if tooltip_parent.position.y + tooltip.size.y > get_viewport().size.y:
-#		tooltip_parent.position.y = get_viewport().size.y - tooltip.size.y - 10
-#	elif tooltip_parent.position.y < 10:
-#		tooltip_parent.position.y = 10
-#	if tooltip_parent.position.x + tooltip.size.x > get_viewport().size.x:
-#		tooltip_parent.position.x = get_viewport().size.x - tooltip.size.x - 10
-#	elif tooltip_parent.position.x < 10:
-#		tooltip_parent.position.x = 10
 	
 	tip_filled = true
 
@@ -417,19 +392,57 @@ func parse_time(big: Big) -> String:
 
 
 
-# - Reset
+# - Stage and - Reset
 
-signal game_reset
-signal complete_reset
-signal stage_1_reset
-signal stage_2_reset
-signal stage_3_reset
-signal stage_4_reset
+var stage0: Stage
+var stage1: Stage
+var stage2: Stage
+var stage3: Stage
+var stage4: Stage
+
+signal just_reset
+signal just_complete_reset
+signal stage_changed(stage)
+signal wallet_just_unlocked
+
+var selected_stage := 1:
+	set(val):
+		if selected_stage != val:
+			selected_stage = val
+			emit_signal("stage_changed", selected_stage)
 
 var last_reset_stage: int
+var wallet_unlocked := false:
+	set(val):
+		if wallet_unlocked != val:
+			wallet_unlocked = val
+			emit_signal("wallet_just_unlocked")
+
 
 
 func reset(stage: int) -> void:
-	emit_signal("stage_" + str(stage) + "_reset")
-	emit_signal("game_reset")
+	for i in range(stage, 0, -1):
+		get("stage" + str(i)).reset()
+	emit_signal("just_reset")
 
+
+func add_object_to_stage(_stage: int, object) -> void:
+	var stage = get("stage" + str(_stage)) as Stage
+	if object is LORED:
+		stage.add_lored(object)
+	elif object is Upgrade:
+		stage.add_upgrade(object)
+	elif object is Currency:
+		stage.add_currency(object)
+
+
+func get_stage_color(stage: int) -> Color:
+	return get("stage" + str(stage)).color
+
+
+func get_currencies_in_stage(stage: int) -> Array:
+	return get("stage" + str(stage)).currencies
+
+
+func get_loreds_in_stage(stage: int) -> Array:
+	return get("stage" + str(stage)).loreds

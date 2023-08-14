@@ -7,14 +7,6 @@ var saved_vars := [
 	"unlocked",
 	"times_reset",
 ]
-
-
-
-func save() -> String:
-	return SaveManager.save_vars(self)
-
-
-
 enum Type {
 	NORMAL,
 	MALIGNANT,
@@ -26,30 +18,28 @@ enum Type {
 	S4M,
 }
 
-var TYPE_KEYS := Type.keys()
-
 signal just_unlocked
 
-var type: int
-var key: String
+@export var type: int
+@export var key: String
 
-var name: String
-var icon: Texture
-var icon_text: String
-var color: Color
-var color_text: String
+@export var name: String
+@export var icon: Texture
+@export var icon_text: String
+@export var color: Color
+@export var color_text: String
 
-var times_reset := 0
-var unlocked := false
+@export var times_reset := 0
+@export var unlocked := false
 
-var upgrades := []
-var purchased_upgrades := []
+@export var upgrades := []
+@export var purchased_upgrades := []
 
 
 
 func _init(_type: int) -> void:
 	type = _type
-	key = TYPE_KEYS[type]
+	key = Type.keys()[type]
 	name = key.capitalize().replace("_", " ")
 	call(key)
 	if icon != null:

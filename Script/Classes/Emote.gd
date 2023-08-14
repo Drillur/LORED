@@ -97,7 +97,7 @@ enum Type {
 
 signal became_ready_to_emote
 signal finished_emoting
-signal just_fully_displayed
+signal text_display_finished
 
 var TYPE_KEYS := Type.keys()
 
@@ -135,6 +135,8 @@ var duration := 0.0
 func _init(_type: int) -> void:
 	type = _type
 	key = TYPE_KEYS[type]
+	
+	randomize()
 	
 	call(key)
 	
@@ -224,12 +226,12 @@ func RANDOM_COAL() -> void:
 	speaker = lv.get_lored(LORED.Type.COAL)
 	var d = [0,1,2,3,4,5,6,7,10,13,15,]
 	
-	if lv.is_lored_unlocked(LORED.Type.TARBALLS):
+	if lv.can_lored_emote(LORED.Type.TARBALLS):
 		d.append(8)
 		d.append(9)
-	if lv.is_lored_unlocked(LORED.Type.JOULES):
+	if lv.can_lored_emote(LORED.Type.JOULES):
 		d.append(11)
-	if lv.is_lored_unlocked(LORED.Type.COPPER_ORE):
+	if lv.can_lored_emote(LORED.Type.COPPER_ORE):
 		d.append(12)
 	if not wa.is_current_rate_positive(Currency.Type.COAL):
 		d.append(14)
@@ -241,7 +243,7 @@ func RANDOM_COAL() -> void:
 			reply = Type.COAL14_REPLY
 		16:
 			dialogue = "I want to have kids someday!"
-			if lv.is_lored_unlocked(LORED.Type.OIL):
+			if lv.can_lored_emote(LORED.Type.OIL):
 				reply = Type.COAL16_REPLY
 		15:
 			var text = wa.get_icon_and_name_text(Currency.Type.COAL)
@@ -266,7 +268,7 @@ func RANDOM_COAL() -> void:
 			reply = Type.GROWTH_RANDOM_SCREAM
 		10:
 			var f = [0]
-			if lv.is_lored_unlocked(LORED.Type.JOULES):
+			if lv.can_lored_emote(LORED.Type.JOULES):
 				f.append(1)
 			match f[randi() % f.size()]:
 				0:
@@ -286,7 +288,7 @@ func RANDOM_COAL() -> void:
 		6: dialogue = "I always liked playing support."
 		5:
 			dialogue = "If you didn't get enough, go ahead and take some more!"
-			if lv.is_lored_unlocked(LORED.Type.COPPER_ORE):
+			if lv.can_lored_emote(LORED.Type.COPPER_ORE):
 				reply = Type.COAL5_REPLY
 		4: dialogue = "I sure am grateful for this shovel."
 		3: dialogue = "I hope my posture is good."
@@ -308,14 +310,14 @@ func COAL16_REPLY_REPLY():
 
 func COAL14_REPLY():
 	var d = [0,]
-	if lv.is_lored_unlocked(LORED.Type.MALIGNANCY):
+	if lv.can_lored_emote(LORED.Type.MALIGNANCY):
 		d.append(8)
 		d.append(7)
-	if lv.is_lored_unlocked(LORED.Type.CONCRETE):
+	if lv.can_lored_emote(LORED.Type.CONCRETE):
 		d.append(6)
-	if lv.is_lored_unlocked(LORED.Type.JOULES):
+	if lv.can_lored_emote(LORED.Type.JOULES):
 		d.append(5)
-	if lv.is_lored_unlocked(LORED.Type.IRON):
+	if lv.can_lored_emote(LORED.Type.IRON):
 		d.append(1)
 		d.append(2)
 		d.append(3)
@@ -370,7 +372,7 @@ func COAL13_REPLY():
 
 func COAL12_REPLY():
 	var d = [0,]
-	if lv.is_lored_unlocked(LORED.Type.CONCRETE):
+	if lv.can_lored_emote(LORED.Type.CONCRETE):
 		d.append(1)
 	match d[randi() % d.size()]:
 		0:
@@ -383,7 +385,7 @@ func COAL12_REPLY():
 
 func COAL10_REPLY():
 	var d = [0,]
-	if lv.is_lored_unlocked(LORED.Type.JOULES):
+	if lv.can_lored_emote(LORED.Type.JOULES):
 		d.append(1)
 	match d[randi() % d.size()]:
 		0:
@@ -418,9 +420,9 @@ func COAL8_REPLY_REPLY():
 
 func COAL5_REPLY():
 	var d = [0,]
-	if lv.is_lored_unlocked(LORED.Type.CONCRETE):
+	if lv.can_lored_emote(LORED.Type.CONCRETE):
 		d.append(1)
-	if lv.is_lored_unlocked(LORED.Type.JOULES):
+	if lv.can_lored_emote(LORED.Type.JOULES):
 		d.append(1)
 	match d[randi() % d.size()]:
 		0:
@@ -437,11 +439,14 @@ func COAL5_REPLY():
 
 func RANDOM_STONE() -> void:
 	speaker = lv.get_lored(LORED.Type.STONE)
-	var d = [0,1,2,3,4,5,6,7,]
+	var d = [0,1,2,3,4,5,6,]
 	
-	if lv.is_lored_unlocked(LORED.Type.TARBALLS):
+	if lv.can_lored_emote(LORED.Type.IRON_ORE):
+		d.append(7)
+	if lv.can_lored_emote(LORED.Type.TARBALLS):
 		d.append(8)
 		d.append(10)
+	
 	match d[randi() % d.size()]:
 		10:
 			var text = wa.get_icon_and_name_text(LORED.Type.OIL)
@@ -484,12 +489,12 @@ func STONE7_REPLY():
 func RANDOM_IRON_ORE() -> void:
 	speaker = lv.get_lored(LORED.Type.IRON_ORE)
 	var d = [0, 1, 2, 3, 4, 5, 6, 7,8,9,10,11,12,13,14,19,20,21,22,23,25,]
-	if lv.is_lored_unlocked(LORED.Type.TARBALLS):
+	if lv.can_lored_emote(LORED.Type.TARBALLS):
 		d.append(15)
 		d.append(16)
-	if lv.is_lored_unlocked(LORED.Type.JOULES):
+	if lv.can_lored_emote(LORED.Type.JOULES):
 		d.append(17)
-	if lv.is_lored_unlocked(LORED.Type.GROWTH):
+	if lv.can_lored_emote(LORED.Type.GROWTH):
 		d.append(18)
 	if speaker.fuel.get_current_percent() <= lv.FUEL_DANGER:
 		d.append(24)
@@ -572,7 +577,7 @@ func RANDOM_COPPER_ORE() -> void:
 	var d = [0, 1, 2, 3, 4, 5, 6, ]
 	if speaker.fuel.get_current_percent() < lv.FUEL_DANGER:
 		d.append(8)
-	if lv.is_lored_unlocked(LORED.Type.OIL):
+	if lv.can_lored_emote(LORED.Type.OIL):
 		d.append(7)
 	match d[randi() % d.size()]:
 		8:
@@ -600,7 +605,7 @@ func RANDOM_COPPER_ORE() -> void:
 
 func COPPER_ORE7_REPLY():
 	var d = [0,]
-#	if lv.is_lored_unlocked(LORED.Type.DRAW_PLATE):
+#	if lv.can_lored_emote(LORED.Type.DRAW_PLATE):
 #		d.append(1)
 	match d[randi() % d.size()]:
 		0:
@@ -610,7 +615,7 @@ func COPPER_ORE7_REPLY():
 
 func COPPER_ORE6_REPLY():
 	var d = [0]
-#	if lv.is_lored_unlocked(LORED.Type.DRAW_PLATE):
+#	if lv.can_lored_emote(LORED.Type.DRAW_PLATE):
 #		d.append(1)
 	match d[randi() % d.size()]:
 		0:
@@ -664,7 +669,7 @@ func IRON4_REPLY():
 func RANDOM_COPPER() -> void:
 	speaker = lv.get_lored(LORED.Type.COPPER)
 	var d = [0, 1, 2, 3, 4, 5, 6, 7,12,13,]
-	if lv.is_lored_unlocked(LORED.Type.OIL):
+	if lv.can_lored_emote(LORED.Type.OIL):
 		d.append(8)
 		d.append(9)
 		d.append(10)
@@ -693,7 +698,7 @@ func RANDOM_COPPER() -> void:
 		3: dialogue = "C'mon 'n rest ya dogs--try one of these bad bad boys!"
 		4:
 			dialogue = "Can I get some firewood?"
-			if lv.is_lored_unlocked(LORED.Type.WOOD):
+			if lv.can_lored_emote(LORED.Type.WOOD):
 				reply = Type.COPPER4_REPLY
 		5: dialogue = "Stay awhile and listen to the fire."
 		6: dialogue = "Mmm! Gith ith good!"
@@ -704,7 +709,7 @@ func RANDOM_COPPER() -> void:
 
 func COPPER12_REPLY():
 	var d = [0, 2, 3]
-	if lv.is_lored_unlocked(LORED.Type.TARBALLS):
+	if lv.can_lored_emote(LORED.Type.TARBALLS):
 		d.append(1)
 	match d[randi() % d.size()]:
 		0:
@@ -778,7 +783,7 @@ func JOULES6_OIL0():
 func RANDOM_GROWTH() -> void:
 	speaker = lv.get_lored(LORED.Type.GROWTH)
 	var d = [1,2,3,4,5,6,7,8,9,10,11,]
-	if lv.is_lored_unlocked(LORED.Type.OIL):
+	if lv.can_lored_emote(LORED.Type.OIL):
 		d.append(0)
 	match d[randi() % d.size()]:
 		11: dialogue = "My skin is raw and wriggling."
@@ -808,7 +813,7 @@ func RANDOM_GROWTH() -> void:
 
 func GROWTH10_REPLY():
 	var d = [0]
-	if lv.is_lored_unlocked(LORED.Type.CONCRETE):
+	if lv.can_lored_emote(LORED.Type.CONCRETE):
 		d.append(1)
 	match d[randi() % d.size()]:
 		0:
@@ -942,7 +947,7 @@ func RANDOM_WATER() -> void:
 
 func WATER6_REPLY():
 	var d = [0,]
-	if lv.is_lored_unlocked(LORED.Type.DRAW_PLATE):
+	if lv.can_lored_emote(LORED.Type.DRAW_PLATE):
 		d.append(1)
 	match d[randi() % d.size()]:
 		0:
@@ -1016,7 +1021,7 @@ func RANDOM_TREES() -> void:
 
 func TREES0_REPLY():
 	var d = [0,1,]
-	if lv.is_lored_unlocked(LORED.Type.SOIL):
+	if lv.can_lored_emote(LORED.Type.SOIL):
 		d.append(2)
 	match d[randi() % d.size()]:
 		0:

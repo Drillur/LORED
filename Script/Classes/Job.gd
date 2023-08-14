@@ -3,6 +3,11 @@ extends Resource
 
 
 
+func load_game() -> void:
+	print(key, " load game")
+
+
+
 enum Type {
 	REFUEL, 
 	
@@ -48,8 +53,6 @@ enum Type {
 	PLANT_SEED,
 	SIFT_SEEDS,
 }
-
-var TYPE_KEYS := Type.keys()
 
 signal became_workable
 signal began_working
@@ -99,7 +102,7 @@ var fuel_cost: Attribute
 
 func _init(_type: int) -> void:
 	type = _type
-	key = TYPE_KEYS[type]
+	key = Type.keys()[type]
 	
 	call("init_" + key)
 	
@@ -109,6 +112,8 @@ func _init(_type: int) -> void:
 	has_produced_currencies = not produced_currencies.is_empty()
 	
 	hookup_required_currencies()
+	
+	SaveManager.connect("game_loaded", load_game)
 
 
 

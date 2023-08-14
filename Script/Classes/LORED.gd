@@ -3,6 +3,16 @@ extends Resource
 
 
 
+var saved_vars := [
+	"times_purchased",
+	"time_spent_asleep",
+	"unlocked",
+	"purchased",
+	"asleep",
+	"cost_increase",
+	"level",
+]
+
 enum Type {
 	STONE, # 0
 	COAL,
@@ -55,8 +65,6 @@ enum ReasonCannotWork {
 	INSUFFICIENT_CURRENCIES,
 }
 
-var TYPE_KEYS := Type.keys()
-
 signal became_unable_to_work
 signal completed_job
 signal stopped_working
@@ -81,7 +89,6 @@ var fuel_currency_type: int
 var fuel_currency: Currency
 var time_spent_asleep := 0.0
 var reason_cannot_work := 0
-var pending_attribute_changes := 0
 
 var produced_currencies := []
 var required_currencies := []
@@ -163,7 +170,7 @@ var crit := Attribute.new(0, false)
 
 func _init(_type: int) -> void:
 	type = _type
-	key = TYPE_KEYS[type]
+	key = Type.keys()[type]
 	
 	call("init_" + key)
 	

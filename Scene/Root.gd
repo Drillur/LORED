@@ -11,6 +11,8 @@ extends MarginContainer
 @onready var menu = $Menu
 @onready var menu_button = %"Menu Button"
 @onready var upgrades_button = %"Upgrades Button"
+@onready var wallet = $Wallet as WalletVico
+@onready var wallet_button = %"Wallet Button"
 
 @onready var tooltip_position_display = $"Control/Tooltip/Tooltip Position Display"
 
@@ -20,7 +22,6 @@ func _ready():
 	if not gv.dev_mode:
 		tooltip_position_display.queue_free()
 	
-	
 	gv.tooltip_parent = tooltip_parent
 	gv.texts_parent = control
 	lv.lored_container = lored_container
@@ -29,18 +30,24 @@ func _ready():
 	wi.random_wish_container = random_wishes
 	
 	menu_button.modulate = gv.game_color
-	menu_button.set_icon(preload("res://Sprites/Hud/Menu.png"))
+	menu_button.set_icon(load("res://Sprites/Hud/Menu.png"))
 	menu_button.remove_check().remove_icon_shadow()
 	
 	upgrades_button.modulate = up.get_menu_color(UpgradeMenu.Type.NORMAL)
-	upgrades_button.set_icon(preload("res://Sprites/Hud/upgrades.png"))
+	upgrades_button.set_icon(load("res://Sprites/Hud/upgrades.png"))
 	upgrades_button.remove_check().remove_icon_shadow()
 	upgrade_container.connect("upgrade_menu_tab_changed", update_upgrades_button_color)
 	
-	if SaveManager.can_load_game():
-		load_game()
-	else:
-		new_game()
+	wallet_button.modulate = gv.get_stage_color(1)
+	wallet_button.set_icon(load("res://Sprites/Hud/ResourceViewer.png"))
+	wallet_button.remove_check().remove_icon_shadow()
+	gv.connect("stage_changed", stage_changed)
+	
+	new_game()
+#	if aveManager.can_load_game():
+#		load_game()
+#	else:
+#		new_game()
 	
 	display_and_repeatedly_flash_upgrades_button()
 
@@ -53,17 +60,23 @@ func _input(event):
 	var esc_pressed = Input.is_action_just_pressed("ESC")
 	var left_clicked = Input.is_action_just_pressed("LeftClick")
 	
-	if (left_clicked and event.get("position")) or esc_pressed:
+	if ((left_clicked and event.get("position")) or esc_pressed) and should_hide_a_menu():
+		var node
+		var button
 		if menu.visible:
-			if esc_pressed or (not gv.node_has_point(menu, event.position) and not gv.node_has_point(menu_button, event.position)):
-				menu.hide()
-				gv.clear_tooltip()
-				return
+			node = menu
+			button = menu_button
 		elif upgrade_container.visible:
-			if esc_pressed or (not gv.node_has_point(upgrade_container, event.position) and not gv.node_has_point(upgrades_button, event.position)):
-				upgrade_container.hide()
-				gv.clear_tooltip()
-				return
+			node = upgrade_container
+			button = upgrades_button
+		elif wallet.visible:
+			node = wallet
+			button = wallet_button
+		
+		if esc_pressed or (not gv.node_has_point(node, event.position) and not gv.node_has_point(button, event.position)):
+			node.hide()
+			gv.clear_tooltip()
+			return
 	
 	if esc_pressed and not menu.visible:
 		menu.show()
@@ -94,6 +107,9 @@ func _input(event):
 		return
 
 
+func should_hide_a_menu() -> bool:
+	return menu.visible or upgrade_container.visible or wallet.visible
+
 
 func _on_menu_button_pressed():
 	if menu.visible:
@@ -107,6 +123,13 @@ func _on_upgrades_button_pressed():
 		upgrade_container.hide()
 	else:
 		upgrade_container.show()
+
+
+func _on_wallet_button_pressed():
+	if wallet.visible:
+		wallet.hide()
+	else:
+		wallet.show()
 
 
 
@@ -137,6 +160,11 @@ func _on_random_wishes_sort_children():
 
 func update_upgrades_button_color(upgrade_menu_tab: int) -> void:
 	upgrades_button.modulate = up.get_menu_color(upgrade_menu_tab)
+
+
+func stage_changed(stage: int) -> void:
+	wallet_button.modulate = gv.get_stage_color(stage)
+
 
 
 
@@ -189,7 +217,7 @@ func select_upgrade_menu_tab(tab: int, _show = true) -> void:
 
 
 
-
+@onready var dev_text = $Left/Dev/RichTextLabel
 
 var i = 0
 func _on_dev_pressed():
@@ -198,12 +226,26 @@ func _on_dev_pressed():
 	wa.add(Currency.Type.COAL, 10)
 
 func _on_dev_2_pressed():
-	lv.get_lored(LORED.Type.IRON).purchase()
-	lv.get_lored(LORED.Type.COPPER).purchase()
-	lv.get_lored(LORED.Type.COPPER_ORE).purchase()
-	lv.get_lored(LORED.Type.IRON_ORE).purchase()
+	SaveManager.save_game()
+#	lv.get_lored(LORED.Type.IRON).purchase()
+#	lv.get_lored(LORED.Type.COPPER).purchase()
+#	lv.get_lored(LORED.Type.COPPER_ORE).purchase()
+#	lv.get_lored(LORED.Type.IRON_ORE).purchase()
+
+
+func _on_dev_4_pressed():
+	pass # Replace with function body.
+
 
 func _on_dev_3_pressed():
-	wi.find_new_random_wish()
+	SaveManager.load_game()
+#	wi.find_new_random_wish()
+	#dev_text.text = SaveManager.data["big"].toString()
+
+
+
+func _on_dev_5_pressed():
+	pass # Replace with function body.
+
 
 

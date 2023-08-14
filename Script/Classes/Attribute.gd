@@ -3,6 +3,10 @@ extends Resource
 
 
 
+var saved_vars := [
+	"total", # current is added below
+]
+
 signal filled
 signal emptied
 
@@ -19,26 +23,10 @@ var notify_if_changed_immediately: Array
 
 
 
-func save() -> String:
-	var data := {}
-	data["total"] = total.save()
-	if uses_current:
-		data["current"] = current.save()
-	return var_to_str(data)
-
-
-func _load(data: Dictionary) -> void:
-	total._load(str_to_var(data["total"]))
-	if "current" in data.keys():
-		uses_current = true
-		current = Value.new(0)
-		current._load(str_to_var(data["current"]))
-
-
-
-func _init(base_value, will_use_current := true) -> void:
+func _init(base_value = 0, will_use_current := true) -> void:
 	uses_current = will_use_current
 	if uses_current:
+		saved_vars.append("current")
 		current = Value.new(base_value)
 	total = Value.new(base_value)
 

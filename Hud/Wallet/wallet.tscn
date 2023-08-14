@@ -1,0 +1,156 @@
+[gd_scene load_steps=5 format=3 uid="uid://dg6lv67h5eiuj"]
+
+[ext_resource type="Script" path="res://Hud/Wallet/wallet.gd" id="1_0m8tw"]
+[ext_resource type="Theme" uid="uid://b8t7tkhvril5g" path="res://Theme/Standard.tres" id="1_kpejk"]
+[ext_resource type="Theme" uid="uid://bl4v2v143rihi" path="res://Theme/Background.tres" id="2_kwqxg"]
+[ext_resource type="Theme" uid="uid://8dmfgxdrr5yh" path="res://Theme/Title.tres" id="2_vv1x8"]
+
+[node name="Wallet" type="MarginContainer"]
+custom_minimum_size = Vector2(277, 383)
+offset_right = 277.0
+offset_bottom = 383.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+script = ExtResource("1_0m8tw")
+
+[node name="bg" type="Panel" parent="."]
+layout_mode = 2
+theme = ExtResource("2_kwqxg")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="title bg" type="Panel" parent="VBoxContainer/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("2_vv1x8")
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="Title" type="RichTextLabel" parent="VBoxContainer/MarginContainer/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+theme = ExtResource("2_vv1x8")
+bbcode_enabled = true
+text = "Wallet"
+fit_content = true
+autowrap_mode = 0
+
+[node name="Tabs" type="TabContainer" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+theme = ExtResource("1_kpejk")
+theme_override_colors/font_selected_color = Color(0.937255, 0.32549, 0, 1)
+tab_alignment = 1
+
+[node name="Stage 1" type="MarginContainer" parent="VBoxContainer/Tabs"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/Tabs/Stage 1"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="MarginContainer2" type="MarginContainer" parent="VBoxContainer/Tabs/Stage 1/ScrollContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="Stage 1 Container" type="VBoxContainer" parent="VBoxContainer/Tabs/Stage 1/ScrollContainer/MarginContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Stage 2" type="MarginContainer" parent="VBoxContainer/Tabs"]
+visible = false
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/Tabs/Stage 2"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="MarginContainer2" type="MarginContainer" parent="VBoxContainer/Tabs/Stage 2/ScrollContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="Stage 2 Container" type="VBoxContainer" parent="VBoxContainer/Tabs/Stage 2/ScrollContainer/MarginContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Stage 3" type="MarginContainer" parent="VBoxContainer/Tabs"]
+visible = false
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/Tabs/Stage 3"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="MarginContainer2" type="MarginContainer" parent="VBoxContainer/Tabs/Stage 3/ScrollContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="Stage 3 Container" type="VBoxContainer" parent="VBoxContainer/Tabs/Stage 3/ScrollContainer/MarginContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Stage 4" type="MarginContainer" parent="VBoxContainer/Tabs"]
+visible = false
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/Tabs/Stage 4"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="MarginContainer2" type="MarginContainer" parent="VBoxContainer/Tabs/Stage 4/ScrollContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="Stage 4 Container" type="VBoxContainer" parent="VBoxContainer/Tabs/Stage 4/ScrollContainer/MarginContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[connection signal="tab_changed" from="VBoxContainer/Tabs" to="." method="_on_tab_changed"]

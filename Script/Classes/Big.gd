@@ -1,28 +1,14 @@
 class_name Big
-extends RefCounted
-# Big number class for use in idle / incremental games and other games that needs very large numbers
-# Can format large numbers using a variety of notation methods:
-# AA notation like AA, AB, AC etc.
-# Metric symbol notation k, m, G, T etc.
-# Metric name notation kilo, mega, giga, tera etc.
-# Long names like octo-vigin-tillion or millia-nongen-quin-vigin-tillion (based on work by Landon Curt Noll)
-# Scientic notation like 13e37 or 42e42
-# Long strings like 4200000000 or 13370000000000000000000000000000
-# Please note that this class has limited precision and does not fully support negative exponents
-# Integer division warnings should be disabled in Project Settings
+extends Resource
+
+
+
+var saved_vars := [
+	"mantissa", "exponent",
+]
 
 var mantissa: float = 0.0
 var exponent: int = 1
-
-const postfixes_metric_symbol = {"0":"", "1":"k", "2":"M", "3":"G", "4":"T", "5":"P", "6":"E", "7":"Z", "8":"Y", "9":"R", "10":"Q"}
-const postfixes_metric_name = {"0":"", "1":"kilo", "2":"mega", "3":"giga", "4":"tera", "5":"peta", "6":"exa", "7":"zetta", "8":"yotta", "9":"ronna", "10":"quetta"}
-static var postfixes_aa = {"0":"", "1":"k", "2":"m", "3":"b", "4":"t", "5":"aa", "6":"ab", "7":"ac", "8":"ad", "9":"ae", "10":"af", "11":"ag", "12":"ah", "13":"ai", "14":"aj", "15":"ak", "16":"al", "17":"am", "18":"an", "19":"ao", "20":"ap", "21":"aq", "22":"ar", "23":"as", "24":"at", "25":"au", "26":"av", "27":"aw", "28":"ax", "29":"ay", "30":"az", "31":"ba", "32":"bb", "33":"bc", "34":"bd", "35":"be", "36":"bf", "37":"bg", "38":"bh", "39":"bi", "40":"bj", "41":"bk", "42":"bl", "43":"bm", "44":"bn", "45":"bo", "46":"bp", "47":"bq", "48":"br", "49":"bs", "50":"bt", "51":"bu", "52":"bv", "53":"bw", "54":"bx", "55":"by", "56":"bz", "57":"ca"}
-const alphabet_aa: Array[String] = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]
-
-const latin_ones: Array[String] = ["", "un", "duo", "tre", "quattuor", "quin", "sex", "septen", "octo", "novem"]
-const latin_tens: Array[String] = ["", "dec", "vigin", "trigin", "quadragin", "quinquagin", "sexagin", "septuagin", "octogin", "nonagin"]
-const latin_hundreds: Array[String] = ["", "cen", "duocen", "trecen", "quadringen", "quingen", "sescen", "septingen", "octingen", "nongen"]
-const latin_special: Array[String] = ["", "mi", "bi", "tri", "quadri", "quin", "sex", "sept", "oct", "non"]
 
 static var other = {"dynamic_decimals":true, "dynamic_numbers":4, "small_decimals":2, "thousand_decimals":2, "big_decimals":2, "scientific_decimals": 2, "logarithmic_decimals":2, "thousand_separator":".", "decimal_separator":",", "postfix_separator":"", "reading_separator":"", "thousand_name":"thousand"}
 
@@ -31,6 +17,7 @@ const MANTISSA_PRECISSION = 0.0000001
 
 const MIN_INTEGER: int = -9223372036854775807
 const MAX_INTEGER: int = 9223372036854775806
+
 
 func _init(m = 1.0, e := 0):
 	if m is String:
@@ -438,7 +425,7 @@ func get_big_float_text(value: float) -> String:
 	return output # 342,945
 
 func toScientific():
-	return get_float_text(mantissa) + "e" + get_float_text(exponent)
+	return get_float_text(mantissa) + "e" + format_exponent(exponent)
 
 func toEngineering():
 	var mod = exponent % 3

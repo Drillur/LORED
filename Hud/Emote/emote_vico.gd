@@ -7,7 +7,6 @@ extends MarginContainer
 @onready var flocket = $Flocket
 @onready var pose = %Pose
 @onready var pose_shadow = %"Pose Shadow"
-@onready var dialogue_container = %"Dialogue Container"
 @onready var dialogue_text = %"Dialogue Text"
 @onready var timer = $Timer
 @onready var pose_only_bg = %"pose only bg"
@@ -15,6 +14,8 @@ extends MarginContainer
 
 var emote: Emote
 
+var standard_interval := 0.05
+var punctuation_interval := 0.25
 
 
 
@@ -37,13 +38,16 @@ func setup(_emote: Emote) -> void:
 	
 	if emote.has_dialogue():
 		dialogue_text.text = "[center][i]" + emote.dialogue
-		dialogue_container.show()
+		var text_length = dialogue_text.get_parsed_text().length()
+		dialogue_text.custom_minimum_size.x = min(180, 30 + (text_length * 3))
+		dialogue_text.show()
+		await dialogue_text.finished
+		var line_count = dialogue_text.get_line_count()
+		dialogue_text.custom_minimum_size.y = min(45, line_count * 15)
+		#printt(line_count, dialogue_text.custom_minimum_size, emote.dialogue)
+		custom_minimum_size.y = max(52, dialogue_text.custom_minimum_size.y + 20)
 	else:
-		dialogue_container.hide()
-	
-	var text_length = emote.dialogue.length()
-	dialogue_text.custom_minimum_size.x = min(180, max(40 + text_length * 2.1, custom_minimum_size.x))
-	custom_minimum_size.y = snapped(max(32, min(48, text_length * 2)), 15) + 20
+		dialogue_text.hide()
 	
 	start()
 
@@ -54,7 +58,7 @@ func start() -> void:
 		display_text_timer.queue_free()
 	else:
 		display_text()
-		await emote.just_fully_displayed
+		await emote.text_display_finished
 	timer.start(emote.duration)
 	await timer.timeout
 	emote.emit_signal("finished_emoting")
@@ -67,19 +71,20 @@ func display_text() -> void:
 		return
 	
 	dialogue_text.visible_characters = 0
+	var parsed_text: String = dialogue_text.get_parsed_text()
 	
 	while not is_queued_for_deletion():
 		dialogue_text.visible_characters += 1
 		if dialogue_text.visible_ratio == 1:
 			break
+		#if emote.speaker.key == "COPPER_ORE":
 		
-		if dialogue_text.text[dialogue_text.visible_characters - 1] in ["!", ",", ".", "?"]:
-			display_text_timer.start(0.25)
+		if parsed_text[dialogue_text.visible_characters - 1] in ["!", ",", ".", "?"]:
+			display_text_timer.start(punctuation_interval)
 		else:
-			display_text_timer.start(0.04)
+			display_text_timer.start(standard_interval)
 		
 		await display_text_timer.timeout
 	
 	display_text_timer.queue_free()
-	
-	emote.emit_signal("just_fully_displayed")
+	emote.emit_signal("text_display_finished")

@@ -1,0 +1,78 @@
+[gd_scene load_steps=5 format=3 uid="uid://cjgpt5qrjdsk"]
+
+[ext_resource type="Theme" uid="uid://cwt08llwihqii" path="res://Theme/ShadowText.tres" id="1_nssax"]
+[ext_resource type="Script" path="res://Hud/Wallet/wallet_currency.gd" id="1_xil3y"]
+[ext_resource type="Theme" uid="uid://b8t7tkhvril5g" path="res://Theme/Standard.tres" id="2_8v640"]
+[ext_resource type="Theme" uid="uid://dt7rd31blnvth" path="res://Theme/Invis.tres" id="4_sok8h"]
+
+[node name="Wallet Currency" type="MarginContainer"]
+offset_right = 58.0
+offset_bottom = 15.0
+mouse_filter = 2
+script = ExtResource("1_xil3y")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Check" type="CheckBox" parent="MarginContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+theme = ExtResource("2_8v640")
+button_pressed = true
+
+[node name="Icon and Name" type="RichTextLabel" parent="MarginContainer/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(86, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 8
+mouse_filter = 2
+theme = ExtResource("1_nssax")
+bbcode_enabled = true
+text = "[img=<15>]res://Sprites/Currency/axe.png[/img] Axes"
+fit_content = true
+autowrap_mode = 0
+
+[node name="Count" type="RichTextLabel" parent="MarginContainer/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 8
+mouse_filter = 2
+theme = ExtResource("1_nssax")
+bbcode_enabled = true
+text = "123e123"
+fit_content = true
+autowrap_mode = 0
+
+[node name="Rate" type="RichTextLabel" parent="MarginContainer/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 8
+mouse_filter = 2
+theme = ExtResource("1_nssax")
+bbcode_enabled = true
+text = "143e123/s"
+fit_content = true
+autowrap_mode = 0
+
+[node name="Button" type="Button" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+mouse_default_cursor_shape = 2
+theme = ExtResource("4_sok8h")
+
+[connection signal="pressed" from="Button" to="." method="_on_button_pressed"]

@@ -4,10 +4,11 @@ extends Node
 
 
 var saved_vars := [
-	"completed_wishes", "completed_random_wishes", 
+	"wishes",
+	"completed_wishes",
+	"completed_random_wishes",
+	"random_wish_limit",
 ]
-
-
 
 signal wish_completed(type)
 
@@ -17,17 +18,23 @@ var pending_wish_vico := preload("res://Hud/Wish/wish_pending.tscn")
 var main_wish_container: VBoxContainer
 var random_wish_container: VBoxContainer
 
-var completed_wishes: Array
-var completed_random_wishes := 0
-
 var active_main_wishes := 0
 var active_wish_types := []
 var active_random_wishes := 0
+
+var wishes := []
+var completed_wishes: Array
+var completed_random_wishes := 0
 var random_wish_limit := 0:
 	set(val):
 		random_wish_limit = val
 		for i in val:
 			find_new_random_wish()
+
+
+func loaded() -> void:
+	for wish in wishes:
+		create_wish_vico(wish)
 
 
 
@@ -56,11 +63,14 @@ func find_new_main_wish() -> void:
 		return
 	
 	var wish = await Wish.new(select_main_wish())
+	wishes.append(wish)
 	create_wish_vico(wish)
 	if wish.has_pair():
 		for x in wish.pair:
 			if not is_wish_begun_or_completed(x):
-				create_wish_vico(await Wish.new(x))
+				var paired_wish = await Wish.new(x)
+				wishes.append(paired_wish)
+				create_wish_vico(paired_wish)
 
 
 func select_main_wish() -> int:
@@ -74,6 +84,7 @@ func select_main_wish() -> int:
 
 func find_new_random_wish() -> void:
 	var wish = await Wish.new(Wish.Type.RANDOM)
+	wishes.append(wish)
 	create_wish_vico(wish)
 
 
@@ -111,6 +122,7 @@ func create_wish_vico(wish: Wish) -> void:
 
 func start_new_wish_after_wish_completed(wish: Wish) -> void:
 	await wish.just_ended
+	wishes.erase(wish)
 	if wish.is_main_wish():
 		active_wish_types.erase(wish.type)
 		completed_wishes.append(wish.type)

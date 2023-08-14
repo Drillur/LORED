@@ -2,6 +2,12 @@ extends Node
 
 
 
+var saved_vars := [
+	"currency",
+]
+
+
+
 var currency := {}
 
 var unlocked_currencies := []
@@ -15,8 +21,10 @@ signal currency_just_unlocked(cur)
 func _ready():
 	for cur in Currency.Type.values():
 		currency[cur] = Currency.new(cur)
-
-
+		#SaveManager.add_saved_var("currency " + currency[cur].key, currency[cur])
+	
+	for _currency in currency.values():
+		gv.add_object_to_stage(_currency.stage, _currency)
 
 
 
@@ -126,3 +134,7 @@ func get_icon_and_name_text(cur: int) -> String:
 
 func is_current_rate_positive(cur: int) -> bool:
 	return get_currency(cur).positive_current_rate
+
+
+func get_currencies_in_stage(stage: int) -> Array:
+	return gv.get_currencies_in_stage(stage)

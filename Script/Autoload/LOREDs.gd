@@ -5,6 +5,7 @@ extends Node
 var saved_vars := [
 	"sleep_unlocked",
 	"jobs_unlocked",
+	"loreds",
 ]
 
 const FUEL_WARNING := 0.5
@@ -92,10 +93,6 @@ var loreds_are_initialized := false
 var sleep_unlocked := false
 var jobs_unlocked := false
 
-var stage_1_loreds := {}
-var stage_2_loreds := {}
-var stage_3_loreds := {}
-var stage_4_loreds := {}
 var unlocked := []
 var active := []
 var active_and_awake := []
@@ -110,15 +107,7 @@ func _ready():
 	
 	for lored in loreds.values():
 		lored.loreds_initialized()
-		match lored.stage:
-			1:
-				stage_1_loreds[lored.type] = lored
-			2:
-				stage_2_loreds[lored.type] = lored
-			3:
-				stage_3_loreds[lored.type] = lored
-			4:
-				stage_4_loreds[lored.type] = lored
+		gv.add_object_to_stage(lored.stage, lored)
 
 
 func new_game_start() -> void:
@@ -220,11 +209,7 @@ func get_random_awake_lored() -> LORED:
 
 
 func get_loreds_in_stage(stage: int) -> Array:
-	return get("stage_" + str(stage) + "_loreds").values()
-
-
-func get_lored_types_in_stage(stage: int) -> Array:
-	return get("stage_" + str(stage) + "_loreds").keys()
+	return gv.get_loreds_in_stage(stage)
 
 
 func all_loreds_are_active() -> bool:
@@ -237,6 +222,11 @@ func purchased_every_unlocked_lored_once() -> bool:
 
 func is_lored_unlocked(lored: int) -> bool:
 	return get_lored(lored).unlocked
+
+
+func can_lored_emote(lored_type: int) -> bool:
+	var lored = get_lored(lored_type)
+	return lored.unlocked and lored in active_and_awake
 
 
 func get_active_lored_count() -> int:

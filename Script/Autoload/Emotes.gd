@@ -57,7 +57,7 @@ func start_random_emotes() -> void:
 	while random_emotes_allowed:
 		if in_emote_chain:
 			await emote_chain_finished
-		await gv.get_tree().create_timer(randi() % 20 + 20).timeout # 20-40
+		await gv.get_tree().create_timer(1).timeout#randi() % 20 + 20).timeout # 20-40
 		var lored := lv.get_random_awake_lored() as LORED
 		var emote_key = "RANDOM_" + lored.key
 		var emote_type = Emote.Type.get(emote_key)
@@ -85,7 +85,7 @@ func emote(emote_type: int) -> void:
 		var wait_time = _emote.duration
 		if _emote.has_dialogue():
 			wait_time = 1.0
-			await _emote.just_fully_displayed
+			await _emote.text_display_finished
 		await get_tree().create_timer(wait_time).timeout
 		emote(_emote.reply)
 	else:

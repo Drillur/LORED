@@ -87,6 +87,7 @@ func _ready():
 		connect("upgrade_purchased", upgrade_menus[type].add_purchased_upgrade)
 	for type in Upgrade.Type.values():
 		upgrades[type] = Upgrade.new(type)
+		gv.add_object_to_stage(upgrades[type].stage, upgrades[type])
 	emit_signal("all_upgrades_initialized")
 
 

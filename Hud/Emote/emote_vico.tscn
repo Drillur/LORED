@@ -32,8 +32,8 @@ corner_radius_bottom_left = 10
 
 [node name="EmoteVico" type="MarginContainer"]
 custom_minimum_size = Vector2(75, 52)
-offset_right = 168.0
-offset_bottom = 89.0
+offset_right = 76.0
+offset_bottom = 52.0
 size_flags_horizontal = 8
 size_flags_vertical = 8
 mouse_filter = 2
@@ -76,6 +76,7 @@ mouse_filter = 2
 
 [node name="Pose" type="TextureRect" parent="MarginContainer/HBoxContainer"]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 size_flags_vertical = 4
 mouse_filter = 2
@@ -105,31 +106,28 @@ grow_vertical = 2
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_hwjl0")
 
-[node name="Dialogue Container" type="ScrollContainer" parent="MarginContainer/HBoxContainer"]
-unique_name_in_owner = true
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer"]
+clip_contents = true
 layout_mode = 2
 size_flags_horizontal = 3
 mouse_filter = 2
-horizontal_scroll_mode = 0
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer/Dialogue Container"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-mouse_filter = 2
-
-[node name="Dialogue Text" type="RichTextLabel" parent="MarginContainer/HBoxContainer/Dialogue Container/MarginContainer"]
+[node name="Dialogue Text" type="RichTextLabel" parent="MarginContainer/HBoxContainer/MarginContainer"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(20, 0)
+custom_minimum_size = Vector2(20, 15)
 layout_mode = 2
 size_flags_vertical = 4
 mouse_filter = 2
 theme = ExtResource("4_ob3if")
+theme_override_constants/shadow_outline_size = 0
+theme_override_constants/line_separation = 0
+theme_override_constants/text_highlight_v_padding = 0
 bbcode_enabled = true
-text = "[i]Boy do I sure have "
-fit_content = true
-visible_characters_behavior = 1
+text = "[center][i]Mmm! Gith ith good!"
+scroll_following = true
 
 [node name="Timer" type="Timer" parent="."]
 
 [node name="display_text_timer" type="Timer" parent="."]
+
+[connection signal="resized" from="MarginContainer/HBoxContainer/MarginContainer/Dialogue Text" to="." method="_on_dialogue_text_resized"]

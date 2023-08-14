@@ -1,374 +1,192 @@
 extends Node
 
 
-var rt = 0
 
+var saved_vars := [
+	"save_file_color",
+	"game_version",
+]
 
-# items will save in multiple ways:
-# 1. Every 30 sec.
-# 2. On value change.
-# 3. On _load.
+enum SaveMethod {
+	TO_FILE,
+	TO_CLIPBOARD,
+	TO_CONSOLE,
+}
 
+enum LoadMethod {
+	FROM_FILE,
+	FROM_CLIPBOARD,
+}
 
-var save_path: String
-var save_data := {}
+const SAVE_BASE_PATH := "user://"
+const SAVE_EXTENSION := ".lored"
 
-var saved_vars := ["save_file_color",]
-var game_version := "" # the game version according to the last file loaded from
+const RANDOM_PATH_POOL := [
+	"PaperPilot",
+	"Carl",
+	"MEE6",
+	"Captain Succ",
+	"Cullect",
+	"Ohtil",
+	"Buhthul",
+	"Stangmouse",
+	"Stonkmaus",
+	"Baby Shark", # kill me
+	"And a little bonus for Merp. Fock you, Stangmouse",
+	"CrimsonFrost",
+	"CryptoGrounds",
+	"CGGamesLLCInc.Company.Com",
+	"Dimelsondr",
+	"Raptors",
+	"Srotpar",
+	"Merp",
+	"SteelDusk",
+	"Water",
+	"Flamemaster",
+	"VoidCloud",
+	"Peekabluu",
+	"Peekambluu",
+	"vgCollosus",
+	"Aylienne",
+	"Kam",
+	"Master Polaris",
+	"YouTube Superstar",
+	"Dread Dude",
+	"Blood4All",
+	"Pizza",
+	"PacBrad",
+	"Univenon",
+	"Wintermaul Wars",
+	"SSJ10",
+	"Pent",
+	"Pent",
+	"Semicolon",
+	"ASMR",
+	"Magic Hag",
+	"retchleaf",
+]
 
+signal save_game_finished
+signal load_game_finished
+
+var default_save_method := SaveMethod.TO_FILE
+var default_load_method := LoadMethod.FROM_FILE
+
+var save_path: String = "Drillur"
 var save_file_color: Color
 
+var game_version := 3.00
+var last_save_clock: float
 var patched := false
 
-signal gameSaved
+var loaded_data := {}
 
 
 
 
+func _ready():
+	pass
 
-func save(path := save_path, type := "normal"):
-	
-	if path != save_path:
-		path = getFormattedPath(path)
-		save_path = path
-	
+
+func save_game(method := default_save_method) -> void:
 	var data := {}
-	
-	data["file"] = save_fileSpecificInfo()
-	data["stats"] = gv.save()
-	if gv.active_scene == gv.Scene.ROOT:
-		data["root"] = rt.save()
-	
+	data["SaveManager"] = save_vars(self)
+	data["Overseer"] = save_vars(gv)
+	data["Wallet"] = save_vars(wa)
+	data["LOREDs"] = save_vars(lv)
 	var save_text = var_to_str(data)
-	var save_file := FileAccess.open(path, FileAccess.WRITE)
 	
-	#type = "debug" #note
-	match type:
-		"normal":
-			# create SAVE
+	match method:
+		SaveMethod.TO_FILE:
+			var save_file := FileAccess.open_encrypted_with_pass(get_save_path(), FileAccess.WRITE, "for finding this, you deserve to have it decrypted")
 			save_file.store_line(Marshalls.variant_to_base64(save_text))
-			save_file.close()
-		
-		"export":
-			
-			# create SAVE
-			save_file.store_line(Marshalls.variant_to_base64(save_text))
-			save_file.close()
-		
-		"print to console":
+		SaveMethod.TO_CLIPBOARD:
+			DisplayServer.clipboard_set(save_text)
+		SaveMethod.TO_CONSOLE:
 			print("Your LORED save data is below! Click Expand, if necessary, for your save may be very large, and then save it in any text document!")
 			print(Marshalls.variant_to_base64(save_text))
-		
-		"debug":
-			save_file.store_line(save_text)
-			save_file.close()
 	
-	emit_signal("gameSaved")
-	gv.lastSaveClock = Time.get_unix_time_from_system()
+	last_save_clock = Time.get_unix_time_from_system()
+	emit_signal("save_game_finished")
 
-func _load(path := save_path) -> bool:
-	
-	# returns successful _load
-	
-	save_path = path
-	
-	var data := getSaveData(path)
-	
-	if not dataIsCompatibleSave(data):
+
+
+func load_game(method := default_load_method) -> void:
+	# by here, save exists and is compatible.
+	var data := get_save_data()
+	print(data)
+
+
+func delete_save(filename: String):
+	DirAccess.remove_absolute(get_save_path())
+
+
+func duplicate_save(path := save_path) -> void:
+	var new_path = get_unique_path(path + " (Copy)")
+	DirAccess.copy_absolute(path, new_path)
+
+
+func rename_path(path: String, new_path: String):
+	DirAccess.rename_absolute(get_save_path(path), get_unique_path(new_path))
+
+
+
+# - Get
+
+func get_save_data() -> Dictionary:
+	var data: String
+	var save_file := FileAccess.open_encrypted_with_pass(get_save_path(), FileAccess.READ, "for finding this, you deserve to have it decrypted")
+	data = Marshalls.base64_to_variant(save_file.get_line())
+	return str_to_var(data)
+
+
+func save_exists(path := get_save_path()) -> bool:
+	return FileAccess.file_exists(get_save_path(path))
+
+
+func is_compatible_save(data: Dictionary) -> bool:
+	if data == {}:
 		return false
-	
-	load_fileSpecificInfo(str_to_var(data["file"]))
-	
-	gv._load(str_to_var(data["stats"]))
-	rt._load(str_to_var(data["root"]))
-	
+	if not "SaveManager" in data.keys():
+		return false
+	if not "Overseer" in data.keys():
+		return false
+	if not "Wallet" in data.keys():
+		return false
+	if not "LOREDs" in data.keys():
+		return false
 	return true
 
 
 func can_load_game(path = save_path) -> bool:
-	if not FileAccess.file_exists(path):
+	if not save_exists():
 		return false
-	var data := getSaveData(path)
-	return dataIsCompatibleSave(data)
+	var data := get_save_data()
+	return is_compatible_save(data)
 
 
-func loadNewGame(filename: String, _saveFileColor: Color):
-	loadGame(filename, _saveFileColor)
-	
-	var t = Timer.new()
-	add_child(t)
-	t.start(1)
-	await t.timeout
-	t.queue_free()
-	
-	save()
-func loadGame(filename: String, _saveFileColor: Color):
-	
-	setSavePath(filename)
-	setSaveFileColor(_saveFileColor)
-	
-	gv.changeScene(gv.Scene.ROOT)
+func is_version_changed_since_save(save_version: float) -> bool:
+	return save_version < game_version
 
 
-func save_fileSpecificInfo() -> String:
-	
-	var data := {}
-	
-	data["game version"] = ProjectSettings.get_setting("application/config/Version")
-	
-	for x in saved_vars:
-		if get(x) is Big:
-			data[x] = get(x).save()
-		else:
-			data[x] = var_to_str(get(x))
-	
-	#data["difficulty"] = diff.save()
-	
-	return var_to_str(data)
-
-func load_fileSpecificInfo(data: Dictionary):
-	
-	game_version = data["game version"]
-	
-	#diff._load(str_to_var(data["difficulty"]))
-	
-	for x in saved_vars:
-		
-		if not x in data.keys():
-			continue
-		
-		if get(x) is Big:
-			get(x)._load(data[x])
-		else:
-			set(x, str_to_var(data[x]))
+func get_save_path(path := save_path) -> String:
+	return SAVE_BASE_PATH + path + SAVE_EXTENSION
 
 
-func textIsConvertibleToSave(text: String) -> bool:
-	
-	var marshalledText = deMarshmallowedText(text)
-	if marshalledText == null:
-		return false
-	if marshalledText is Dictionary:
-		return false
-	
-	var textAsVar = str_to_var(marshalledText)
-	if not textAsVar is Dictionary:
-		return false
-	return dataIsCompatibleSave(textAsVar)
-func dataIsCompatibleSave(data: Dictionary) -> bool:
-	
-	if data == {}:
-		return false
-	if not "root" in data.keys():
-		return false
-	if not "stats" in data.keys():
-		return false
-	
-	return true
-	
-
-func getSaveData(path: String) -> Dictionary:
-	
-	var data: String
-	
-	if not FileAccess.file_exists(path):
-		return {}
-	
-	var save_file := FileAccess.open(path, FileAccess.READ)
-	
-	data = deMarshmallowedText(save_file.get_line())
-	
-	save_file.close()
-	
-	return str_to_var(data)
-
-func getSaveText(path: String) -> String:
-	
-	# is not unmarshmallowed
-	path = getFormattedPath(path)
-	
-	var file := FileAccess.open(path, FileAccess.READ)
-	
-	var rawData = file.get_line()
-	
-	file.close()
-	
-	return rawData
-
-func deMarshmallowedText(text: String) -> String:
-	return Marshalls.base64_to_variant(text)
-
-
-
-
-
-
-func versionOlderThan(_save_version: String, _version: String) -> bool:
-	
-	# _version == the version at hand, to be compared with _save version
-	
-	var _save_version_split = _save_version.split(".")
-	var _version_split = _version.split(".")
-	
-	var _save = {x = int(_save_version_split[0]), y = int(_save_version_split[1]), z = int(_save_version_split[2])}
-	var version = {x = int(_version_split[0]), y = int(_version_split[1]), z = int(_version_split[2])}
-	
-	# save version is either OLDER than version, or EQUAL to version.
-	# returns TRUE if OLDER, FALSE if EQUAL
-	
-	if _save.x < version.x:
-		return true
-	if _save.y < version.y:
-		return true
-	if _save.z < version.z:
-		return true
-	
-	return false
-
-func fileExists(path: String) -> bool:
-	path = getFormattedPath(path)
-	return FileAccess.file_exists(path)
-
-func getFormattedPath(path: String) -> String:
-	return path if "user://" in path else "user://" + path
-func LOREDifyFilename(filename: String) -> String:
-	if filename.ends_with(".lored"):
-		return filename
-	if filename.ends_with(".loredd"):
-		return filename.split(".lored")[0] + ".lored"
-	if filename.ends_with(".lore"):
-		return filename + "d"
-	return filename + ".lored"
-
-
-func setSavePath(path: String) -> void:
-	path = getFormattedPath(path)
-	save_path = path
-
-func setRT():
-	rt = get_node("/root/Root")
-
-func setSaveFileColor(color: Color):
-	save_file_color = color
-
-
-func duplicateSave(filename: String):
-	var path = getFormattedPath(filename)
-	var workshopPath = getUniqueFilename(filename.split(".lored")[0] + " (Copy)")
-	var newPath = getFormattedPath(LOREDifyFilename(workshopPath))
-	DirAccess.copy_absolute(path, newPath)
-
-func deleteSave(filename: String):
-	
-	filename = getFormattedPath(filename)
-	DirAccess.remove_absolute(filename)
-
-func importSave(rawSaveText: String, saveName := getRandomSaveFileName(), saveColor := gv.getRandomColor()):
-	
-	var path: String = getFormattedPath(saveName)
-	
-	setSaveFileColor(saveColor)
-	
-	var deMarshalledSave = deMarshmallowedText(rawSaveText)
-	
-	var data: Dictionary = str_to_var(deMarshalledSave)
-	
-	data["file"] = save_fileSpecificInfo()
-	
-	var save_text = var_to_str(data)
-	var save_file = FileAccess.open(path, FileAccess.WRITE)
-	save_file.store_line(Marshalls.variant_to_base64(save_text))
-	save_file.close()
-
-func getUniqueFilename(filename: String) -> String:
-	
-	var newFilename: String
-	if filename.ends_with(".lored"):
-		newFilename = filename.split(".lored")[0]
-	else:
-		newFilename = filename
-	
-	var i = 0
-	while true:
-		if i == 20:
-			return "Are you trying to break the game?.lored"
-		if fileExists(newFilename + ".lored"):
-			newFilename += str(Time.get_unix_time_from_system())
-			i += 1
-			continue
-		newFilename = LOREDifyFilename(newFilename)
-		break
-	
-	return newFilename
-
-func getRandomSaveFileName() -> String:
-	
-	var filenamePool = [
-		"PaperPilot",
-		"Carl",
-		"MEE6",
-		"Captain Succ",
-		"Cullect",
-		"Ohtil",
-		"Buhthul",
-		"Stangmouse",
-		"Stonkmaus",
-		"Baby Shark", # kill me
-		"And a little bonus for Merp. Fock you, Stangmouse",
-		"CrimsonFrost",
-		"CryptoGrounds",
-		"CGGamesLLCInc.Company.Com",
-		"Dimelsondr",
-		"Raptors",
-		"Srotpar",
-		"Merp",
-		"SteelDusk",
-		"Water",
-		"Flamemaster",
-		"VoidCloud",
-		"Peekabluu",
-		"Peekambluu",
-		"vgCollosus",
-		"Aylienne",
-		"Kam",
-		"Master Polaris",
-		"YouTube Superstar",
-		"Dread Dude",
-		"Blood4All",
-		"Pizza",
-		"PacBrad",
-		"Univenon",
-		"Wintermaul Wars",
-		"SSJ10",
-	]
-	
+func get_unique_path(path: String) -> String:
 	randomize()
-	
-	var baseFilename = filenamePool[randi() % filenamePool.size()]
-	
-	baseFilename = getUniqueFilename(baseFilename)
-	
-	return baseFilename
-
-func renameFile(filename: String, newFilename: String):
-	var path = getFormattedPath(filename)
-	var newPath = getFormattedPath(newFilename)
-	
-	if fileExists(newPath):
-		newPath = getUniqueFilename(newPath)
-	
-	DirAccess.rename_absolute(path, newPath)
-
-func importedFileIsCompatible(path: String) -> bool:
-	
-	var rawText := getSaveText(path)
-	
-	if not textIsConvertibleToSave(rawText):
-		return false
-	
-	return true
+	var new_path := path
+	while save_exists(new_path):
+		new_path += str(Time.get_unix_time_from_system() + randi())
+	return new_path
 
 
+func get_random_path() -> String:
+	return get_unique_path(RANDOM_PATH_POOL[randi() % RANDOM_PATH_POOL.size()])
+
+
+
+# - Save Vars
 
 func save_vars(object) -> String:
 	
@@ -383,11 +201,11 @@ func save_vars(object) -> String:
 			data[var_key] = save_dictionary(x)
 		elif x is Array:
 			data[var_key] = save_array(x)
-		elif x is Resource:
-			if x.has_method("save"):
-				data[var_key] = x.save()
+		elif x is Object:
+			if x.get("saved_vars") != null:
+				data[var_key] = save_vars(x)
 			else:
-				save_vars(x)
+				printerr(var_key, " does not have saved_vars variable. 1")
 		else:
 			data[var_key] = var_to_str(x)
 	
@@ -403,11 +221,11 @@ func save_dictionary(dictionary: Dictionary) -> String:
 			data[key] = save_dictionary(dictionary[key])
 		elif dictionary[key] is Array:
 			data[key] = save_array(dictionary[key])
-		elif dictionary[key] is Resource:
-			if dictionary[key].has_method("save"):
-				data[key] = dictionary[key].save()
-			else:
+		elif dictionary[key] is Object:
+			if dictionary[key].get("saved_vars") != null:
 				data[key] = save_vars(dictionary[key])
+			else:
+				printerr(key, " does not have saved_vars variable. 2")
 		else:
 			data[key] = var_to_str(dictionary[key])
 	
@@ -422,11 +240,11 @@ func save_array(array: Array) -> String:
 	for x in array:
 		if x is Array:
 			data[i] = save_array(x)
-		elif x is Resource:
-			var _class: String
-			if x is Big:
-				_class = "Big"
-				data[_class + str(i)] = x.save()
+		elif x is Object:
+			if x.get("saved_vars") != null:
+				data[i] = save_vars(x)
+			else:
+				printerr(i, " does not have saved_vars variable. 3")
 		else:
 			data[i] = var_to_str(x)
 		i += 1

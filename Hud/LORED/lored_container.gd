@@ -35,7 +35,7 @@ func _input(_event) -> void:
 
 func _on_tab_container_tab_changed(tab):
 	gv.selected_stage = tab + 1
-	var color = gv.STAGE_COLORS[gv.selected_stage]
+	var color = gv.get_stage_color(gv.selected_stage)
 	tab_container.add_theme_color_override("font_selected_color", color)
 	gv.clear_tooltip()
 

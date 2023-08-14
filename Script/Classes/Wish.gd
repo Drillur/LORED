@@ -3,7 +3,24 @@ extends Resource
 
 
 
+var saved_vars := [
+	"rewards",
+	"objective",
+	"type",
+	"ready_to_start",
+	"ready_to_turn_in",
+	"help_icon",
+	"thank_icon",
+]
+
 class Reward:
+	
+	var saved_vars := [
+		"type", # set key on load
+		"text", # might be able to set this on load!
+		"object_type",
+	]
+	
 	enum Type {
 		CURRENCY,
 		NEW_LORED,
@@ -11,8 +28,6 @@ class Reward:
 		UPGRADE_MENU,
 		INCREASED_RANDOM_WISH_LIMIT,
 	}
-	
-	var TYPE_KEYS := Type.keys()
 	
 	signal completed
 	
@@ -23,15 +38,21 @@ class Reward:
 	var amount: Big
 	var currency: Currency
 	var lored: LORED
-	var unlocked_feature: String
-	var upgrade_menu_type: int
+	var object_type := -1
 	
 	
 	func _init(_type: int, data: Dictionary) -> void:
 		type = _type
-		key = TYPE_KEYS[type]
+		key = Type.keys()[type]
 		
 		call("init_" + key, data)
+		
+		if amount != null:
+			saved_vars.append("amount")
+		if currency != null:
+			object_type = currency.type
+		elif lored != null:
+			object_type = lored.type
 	
 	
 	func init_CURRENCY(data: Dictionary) -> void:
@@ -54,8 +75,8 @@ class Reward:
 	
 	
 	func init_UPGRADE_MENU(data: Dictionary) -> void:
-		upgrade_menu_type = data["menu"]
-		var upgrade_menu: UpgradeMenu = up.get_upgrade_menu(upgrade_menu_type)
+		object_type = data["menu"]
+		var upgrade_menu: UpgradeMenu = up.get_upgrade_menu(object_type)
 		text = upgrade_menu.icon_and_name_text() + " Upgrade Menu"
 	
 	
@@ -82,7 +103,7 @@ class Reward:
 	
 	
 	func receive_UPGRADE_MENU() -> void:
-		up.unlock_menu(upgrade_menu_type)
+		up.unlock_menu(object_type)
 	
 	
 	
@@ -103,6 +124,15 @@ class Reward:
 
 class Objective:
 	
+	var saved_vars := [
+		"type", # make sure to set key based on type
+		"icon",
+		"color",
+		"text", # might be able to set this on load
+		"progress",
+		"object_type",
+	]
+	
 	enum Type {
 		LORED_LEVELED_UP,
 		UPGRADE_PURCHASED,
@@ -110,8 +140,6 @@ class Objective:
 		COLLECT_CURRENCY,
 		SLEEP,
 	}
-	
-	var TYPE_KEYS := Type.keys()
 	
 	signal completed
 	
@@ -123,21 +151,31 @@ class Objective:
 	
 	var progress: Attribute
 	
-	var currency: Currency
 	var lored: LORED
-	var lored_was_already_asleep: bool
 	var upgrade: Upgrade
+	var currency: Currency
+	
+	var object_type := -1
+	
+	var lored_was_already_asleep := false
 	
 	
 	
 	func _init(_type: int, data: Dictionary) -> void:
 		type = _type
-		key = TYPE_KEYS[type]
+		key = Type.keys()[type]
 		
 		call("init_" + key, data)
 		
 		progress.change_base(0)
 		progress.set_to(0)
+		
+		if lored != null:
+			object_type = lored.type
+		elif upgrade != null:
+			object_type = upgrade.type
+		elif currency != null:
+			object_type = currency.type
 	
 	
 	func init_LORED_LEVELED_UP(data: Dictionary) -> void:
@@ -260,7 +298,6 @@ class Objective:
 
 
 
-
 enum Type {
 	RANDOM,
 	STUFF,
@@ -300,8 +337,6 @@ enum Type {
 	TO_DA_LIMIT,
 }
 
-var TYPE_KEYS := Type.keys()
-
 signal became_ready_to_turn_in
 signal just_turned_in
 signal just_dismissed
@@ -311,12 +346,6 @@ signal became_ready_to_start
 var type: int
 var pair := []
 var key: String
-
-var vico:
-	set(val):
-		vico = val
-		has_vico = true
-var has_vico := false
 
 var turned_in := false
 var ready_to_start := false
@@ -331,19 +360,29 @@ var help_icon: Texture
 var thank_icon: Texture
 
 var giver: LORED
+var giver_type: int
 
 var rewards := []
 
 var objective: Objective
+
+var vico:
+	set(val):
+		vico = val
+		has_vico = true
+var has_vico := false
 
 
 
 
 func _init(_type: int) -> void:
 	type = _type
-	key = TYPE_KEYS[type]
+	key = Type.keys()[type]
 	
 	call("init_" + key)
+	
+	giver_type = giver.type
+	
 	objective.connect("completed", objective_completed)
 	
 	if not has_method("await_" + key):
@@ -587,6 +626,9 @@ func init_JOBS() -> void:
 	})
 	rewards.append(Reward.new(Reward.Type.JUST_TEXT, {
 		"text": "You can view LOREDs' Jobs and their details!"
+	}))
+	rewards.append(Reward.new(Reward.Type.JUST_TEXT, {
+		"text": "You gain access to the Wallet! Hotkey: T"
 	}))
 
 

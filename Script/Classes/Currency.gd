@@ -2,6 +2,13 @@ class_name Currency
 extends Resource
 
 
+var saved_vars := [
+	"count",
+	"pending",
+	"subtracted_by_loreds",
+	"subtracted_by_player",
+	"added_by_loreds",
+]
 
 enum Type {
 	STONE,
@@ -57,10 +64,6 @@ enum Type {
 	GRIEF,
 }
 
-var TYPE_KEYS := Type.keys()
-
-var saved_vars := ["count", "pending", "subtracted_by_loreds", "subtracted_by_player", "added_by_loreds"]
-
 signal increased(amount)
 signal just_unlocked
 
@@ -81,14 +84,6 @@ var icon: Texture
 var count: Attribute
 var pending := Attribute.new(0, false)
 
-var positive_current_rate := true
-var positive_total_rate := true
-var net_rate := Attribute.new(0)
-var gain_rate := Attribute.new(0)
-var loss_rate := Attribute.new(0)
-
-var weight := 1
-
 var subtracted_by_loreds := Attribute.new(0, false)
 var subtracted_by_player := Attribute.new(0, false)
 var added_by_loreds := Attribute.new(0, false)
@@ -98,24 +93,27 @@ var unlocked := false:
 		unlocked = val
 		emit_signal("just_unlocked")
 
+var positive_current_rate := true
+var positive_total_rate := true
+var net_rate := Attribute.new(0)
+var gain_rate := Attribute.new(0)
+var loss_rate := Attribute.new(0)
+
+var weight := 1
+
 var produced_by := []
 
 
-
-func save() -> String:
-	return SaveManager.save_vars(self)
-
-
-func _load(data: Dictionary) -> void:
-	SaveManager.load_vars(self, data)
-	count.add(pending.get_value())
-	pending.reset()
+#func _load(data: Dictionary) -> void:
+#	SaveManager.load_vars(self, data)
+#	count.add(pending.get_value())
+#	pending.reset()
 
 
 
-func _init(_type: int) -> void:
+func _init(_type: int = 0) -> void:
 	type = _type
-	key = TYPE_KEYS[type]
+	key = Type.keys()[type]
 	name = key.replace("_", " ").capitalize()
 	net_rate.do_not_cap_current()
 	gain_rate.do_not_cap_current()

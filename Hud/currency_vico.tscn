@@ -68,6 +68,7 @@ autowrap_mode = 0
 
 [node name="Threshold" type="RichTextLabel" parent="HBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 theme = ExtResource("3_ifira")
 bbcode_enabled = true

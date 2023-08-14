@@ -5,6 +5,7 @@ extends Resource
 
 var saved_vars := [
 	"base",
+	"current",
 	"added",
 	"subtracted",
 	"multiplied",
@@ -35,18 +36,8 @@ var text: String: get = get_text
 
 
 
-func save() -> String:
-	sync()
-	return SaveManager.save_vars(self)
 
-
-func _load(data: Dictionary) -> void:
-	SaveManager.load_vars(self, data)
-	sync()
-
-
-
-func _init(base_value) -> void:
+func _init(base_value = 0) -> void:
 	base = Big.new(base_value)
 	current = Big.new(base_value)
 

@@ -3,6 +3,12 @@ extends Resource
 
 
 
+var saved_vars := [
+	"cost",
+	"purchased",
+]
+
+
 signal became_affordable
 signal became_unaffordable
 signal affordable_changed(affordable)
