@@ -43,13 +43,20 @@ func _ready():
 	wallet_button.remove_check().remove_icon_shadow()
 	gv.connect("stage_changed", stage_changed)
 	
-	new_game()
-#	if aveManager.can_load_game():
-#		load_game()
-#	else:
-#		new_game()
-	
 	display_and_repeatedly_flash_upgrades_button()
+	
+	print("root done")
+	gv.root_ready = true
+	
+	if SaveManager.loaded:
+		return
+	new_game() # delete
+	
+	return # delete later
+	if SaveManager.can_load_game():
+		SaveManager.load_game()
+	else:
+		new_game()
 
 
 
@@ -60,7 +67,10 @@ func _input(event):
 	var esc_pressed = Input.is_action_just_pressed("ESC")
 	var left_clicked = Input.is_action_just_pressed("LeftClick")
 	
-	if ((left_clicked and event.get("position")) or esc_pressed) and should_hide_a_menu():
+	if (
+		((left_clicked and event.get("position")) or esc_pressed)
+		and should_hide_a_menu()
+	):
 		var node
 		var button
 		if menu.visible:
@@ -73,7 +83,12 @@ func _input(event):
 			node = wallet
 			button = wallet_button
 		
-		if esc_pressed or (not gv.node_has_point(node, event.position) and not gv.node_has_point(button, event.position)):
+		if (esc_pressed
+			or (
+				not gv.node_has_point(node, event.position)
+				and not gv.node_has_point(button, event.position)
+			)
+		):
 			node.hide()
 			gv.clear_tooltip()
 			return
@@ -218,31 +233,33 @@ func select_upgrade_menu_tab(tab: int, _show = true) -> void:
 
 
 @onready var dev_text = $Left/Dev/RichTextLabel
-
+var gay = Attribute.new(1)
+var gayer = Value.new(1)
+var gayest = Big.new(1)
 var i = 0
 func _on_dev_pressed():
 	i += 1
 	wa.add(Currency.Type.STONE, 10)
 	wa.add(Currency.Type.COAL, 10)
+	SaveManager.add_saved_var(self, "gay")
+	SaveManager.add_saved_var(self, "gayer")
+	SaveManager.add_saved_var(self, "gayest")
 
+var test_data: String
 func _on_dev_2_pressed():
-	SaveManager.save_game()
+	SaveManager.save_game(SaveManager.SaveMethod.TEST)
 #	lv.get_lored(LORED.Type.IRON).purchase()
 #	lv.get_lored(LORED.Type.COPPER).purchase()
 #	lv.get_lored(LORED.Type.COPPER_ORE).purchase()
 #	lv.get_lored(LORED.Type.IRON_ORE).purchase()
 
-
 func _on_dev_4_pressed():
 	pass # Replace with function body.
 
-
 func _on_dev_3_pressed():
-	SaveManager.load_game()
+	SaveManager.load_game(SaveManager.LoadMethod.TEST)
 #	wi.find_new_random_wish()
 	#dev_text.text = SaveManager.data["big"].toString()
-
-
 
 func _on_dev_5_pressed():
 	pass # Replace with function body.

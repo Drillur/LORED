@@ -2,11 +2,31 @@ extends Node
 
 
 
-var saved_vars := [
-	"session_duration",
-	"wallet_unlocked",
-	"stage0", "stage1", "stage2", "stage3", "stage4",
-]
+signal save_finished
+signal load_finished
+
+
+func save() -> String:
+	var data := {}
+	data["session_duration"] = var_to_str(session_duration)
+	data["total_duration_played"] = var_to_str(total_duration_played)
+	for i in range(0, 5):
+		var stage = get("stage" + str(i))
+		data["Stage" + str(i)] = stage.save()
+	emit_signal("save_finished")
+	return var_to_str(data)
+
+
+func load_data(data_str: String) -> void:
+	var data: Dictionary = str_to_var(data_str)
+	session_duration = str_to_var(data["session_duration"])
+	total_duration_played = str_to_var(data["total_duration_played"])
+	for i in range(0, 5):
+		var stage = get("stage" + str(i))
+		stage.load_data(data["Stage" + str(i)])
+	emit_signal("load_finished")
+
+
 
 enum Platform {PC, HTML,}
 
@@ -43,12 +63,7 @@ const TEXTURES := {
 	"Level": preload("res://Sprites/Hud/Level.png"),
 }
 
-signal game_color_changed(color)
-var game_color := Color(1, 0, 0.235):
-	set(val):
-		if game_color != val:
-			game_color = val
-			emit_signal("game_color_changed", game_color)
+const game_color := Color(1, 0, 0.235)
 
 var texts_parent: Control
 
@@ -98,6 +113,7 @@ signal clock_updated
 var last_clock: float
 var current_clock: float
 var session_duration: int
+var total_duration_played: int
 
 func _notification(what) -> void:
 	if what == MainLoop.NOTIFICATION_APPLICATION_FOCUS_OUT:
@@ -125,6 +141,40 @@ func session_tracker() -> void:
 
 
 # - Handy
+
+signal root_ready_finished
+var root_ready := false:
+	set(val):
+		root_ready = val
+		if val:
+			emit_signal("root_ready_finished")
+
+
+func reload_scene() -> void:
+	root_ready = false
+	get_tree().reload_current_scene()
+
+
+func close_all() -> void:
+	close()
+	up.close()
+	wa.close()
+	lv.close()
+
+
+func close() -> void:
+	last_clock = 0.0
+	current_clock = 0.0
+	session_duration = 0
+	total_duration_played = 0
+	selected_stage = 1
+	last_reset_stage = 1
+	update_queue.clear()
+	update_cooldown.clear()
+	for i in range(0, 5):
+		get_node("stage" + str(i)).close()
+
+
 
 func node_has_point(node: Node, point: Vector2) -> bool:
 	return node.get_global_rect().has_point(point)
@@ -403,20 +453,13 @@ var stage4: Stage
 signal just_reset
 signal just_complete_reset
 signal stage_changed(stage)
-signal wallet_just_unlocked
 
 var selected_stage := 1:
 	set(val):
 		if selected_stage != val:
 			selected_stage = val
 			emit_signal("stage_changed", selected_stage)
-
-var last_reset_stage: int
-var wallet_unlocked := false:
-	set(val):
-		if wallet_unlocked != val:
-			wallet_unlocked = val
-			emit_signal("wallet_just_unlocked")
+var last_reset_stage := 1
 
 
 
@@ -426,14 +469,17 @@ func reset(stage: int) -> void:
 	emit_signal("just_reset")
 
 
-func add_object_to_stage(_stage: int, object) -> void:
-	var stage = get("stage" + str(_stage)) as Stage
-	if object is LORED:
-		stage.add_lored(object)
-	elif object is Upgrade:
-		stage.add_upgrade(object)
-	elif object is Currency:
-		stage.add_currency(object)
+func add_currency_to_stage(stage: int, currency: int) -> void:
+	get("stage" + str(stage)).add_currency(currency)
+
+
+func add_upgrade_to_stage(stage: int, upgrade: int) -> void:
+	get("stage" + str(stage)).add_upgrade(upgrade)
+
+
+func add_lored_to_stage(stage: int, lored: int) -> void:
+	get("stage" + str(stage)).add_lored(lored)
+
 
 
 func get_stage_color(stage: int) -> Color:

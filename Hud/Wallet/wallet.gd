@@ -29,8 +29,7 @@ func _on_tab_changed(tab):
 
 
 func add_stage_currencies(stage: int) -> void:
-	for currency in wa.get_currencies_in_stage(stage):
-		var cur = currency.type
+	for cur in wa.get_currencies_in_stage(stage):
 		content[cur] = wallet_currency_node.instantiate()
 		content[cur].setup(cur)
 		get("stage_" + str(stage) + "_container").add_child(content[cur])

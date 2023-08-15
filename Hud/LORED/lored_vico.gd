@@ -75,6 +75,9 @@ func _ready():
 	active_buffs.hide()
 	sleep.hide()
 	view_special.hide()
+	
+	#SaveManager.connect("load_started", load_started)
+
 
 
 func set_icons() -> void:
@@ -111,6 +114,10 @@ func attach_lored(_lored: LORED) -> void:
 	lored.connect("went_to_sleep", go_to_sleep)
 	lored.cost.connect("became_affordable", flash_level_up_button)
 	lored.connect("leveled_up", flash_on_level_up)
+	lored.connect("just_unlocked", show)
+	if lored.key == "STONE":
+		print("def connected")
+	lored.connect("just_locked", hide)
 	
 	info.button.connect("mouse_entered", show_info_tooltip)
 	info.button.connect("mouse_exited", gv.clear_tooltip)
@@ -146,10 +153,7 @@ func attach_lored(_lored: LORED) -> void:
 	lored_name.text = lored.name
 	lored_icon.texture = lored.icon
 	
-	if not lored.unlocked:
-		hide()
-		await lored.just_unlocked
-		show()
+	hide()
 
 
 
@@ -221,6 +225,14 @@ func job_completed() -> void:
 	if current_job.has_produced_currencies:
 		gv.throw_texts_by_dictionary(output_texts, current_job.last_production)
 	stop_progress_bar()
+
+
+func unlocked() -> void:
+	show()
+	
+	if not lored.unlocked:
+		hide()
+		await lored.just_unlocked
 
 
 func job_cut_short() -> void:
@@ -325,3 +337,8 @@ func emote(_emote: Emote) -> void:
 	var emote_vico = em.emote_vico.instantiate() as EmoteVico
 	emote_vico.setup(_emote)
 	emote_container.add_child(emote_vico)
+
+
+
+#func load_started() -> void:
+#	start_idle()

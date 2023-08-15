@@ -3,10 +3,25 @@ extends Resource
 
 
 
-var saved_vars := [
-	"unlocked",
-	"times_reset",
-]
+signal save_finished
+signal load_finished
+
+
+func save() -> String:
+	var data := {}
+	data["unlocked"] = var_to_str(unlocked)
+	data["times_reset"] = var_to_str(times_reset)
+	emit_signal("save_finished")
+	return var_to_str(data)
+
+
+func load_data(data_str: String) -> void:
+	var data: Dictionary = str_to_var(data_str)
+	unlocked = str_to_var(data["unlocked"])
+	times_reset = str_to_var(data["times_reset"])
+	emit_signal("load_finished")
+
+
 
 enum Type {
 	NO_STAGE,
@@ -16,7 +31,7 @@ enum Type {
 	STAGE4,
 }
 
-signal just_unlocked
+signal stage_unlocked_changed(unlocked)
 signal just_reset
 
 var type: int
@@ -32,12 +47,11 @@ var icon_and_name_text: String
 var times_reset := 0
 var unlocked := false:
 	set(val):
-		if unlocked == val:
-			return
-		unlocked = val
-		if val:
-			emit_signal("just_unlocked")
+		if unlocked != val:
+			unlocked = val
+			emit_signal("stage_unlocked_changed", val)
 
+ # types only, no references
 var loreds := []
 var upgrades := []
 var currencies := []
@@ -51,6 +65,12 @@ func _init(_type: int) -> void:
 	icon_text = "[img=<15>]" + icon.get_path() + "[/img]"
 	color_text = "[color=#" + color.to_html() + "]%s[/color]"
 	icon_and_name_text = icon_text + " " + name
+
+
+
+func close() -> void:
+	times_reset = 0
+	unlocked = false
 
 
 
@@ -83,17 +103,17 @@ func STAGE4():
 
 # - Actions
 
-func add_lored(lored: LORED) -> void:
+func add_lored(lored: int) -> void:
 	if not lored in loreds:
 		loreds.append(lored)
 
 
-func add_upgrade(upgrade: Upgrade) -> void:
+func add_upgrade(upgrade: int) -> void:
 	if not upgrade in upgrades:
 		upgrades.append(upgrade)
 
 
-func add_currency(currency: Currency) -> void:
+func add_currency(currency: int) -> void:
 	if not currency in currencies:
 		currencies.append(currency)
 

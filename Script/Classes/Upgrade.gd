@@ -3,6 +3,49 @@ extends Resource
 
 
 
+signal save_finished
+signal load_finished
+
+func save() -> String:
+	var data := {}
+	data["unlocked"] = var_to_str(unlocked)
+	data["times_purchased"] = var_to_str(times_purchased)
+	data["purchased"] = var_to_str(purchased)
+	if purchased:
+		data["effect_applied"] = var_to_str(effect_applied)
+		data["will_apply_effect"] = var_to_str(will_apply_effect)
+		if effect_applied:
+			data["effect"] = effect.save()
+	emit_signal("save_finished")
+	return var_to_str(data)
+
+
+func load_data(data_str: String) -> void:
+	var data: Dictionary = str_to_var(data_str)
+	unlocked = str_to_var(data["unlocked"])
+	times_purchased = str_to_var(data["times_purchased"])
+	purchased = str_to_var(data["purchased"])
+	if purchased:
+		effect_applied = str_to_var(data["effect_applied"])
+		will_apply_effect = str_to_var(data["will_apply_effect"])
+		if will_apply_effect:
+			# this is like saving the game after buying a Malig upgrade
+			# but exiting the game before resetting Stage 1.
+			# so
+			# refund it and do not apply effects
+			refund()
+			will_apply_effect = false
+		if effect_applied:
+			effect.load_data(str_to_var(data["effect"]))
+	emit_signal("load_finished")
+	
+	if not gv.root_ready:
+		await gv.root_ready_finished
+	if purchased:
+		emit_signal("just_unlocked")
+
+
+
 enum Type {
 	MECHANICAL, # S2 M
 	LIMIT_BREAK,
@@ -244,6 +287,29 @@ enum Type {
 
 class Effect:
 	
+	signal save_finished
+	signal load_finished
+	
+	func save() -> String:
+		var data := {}
+		data["effect"] = effect.save()
+		if effect2 != null:
+			data["effect2"] = effect2.save()
+		emit_signal("save_finished")
+		return var_to_str(data)
+
+
+	func load_data(data_str: String) -> void:
+		var data: Dictionary = str_to_var(data_str)
+		effect.load_data(data["effect"])
+		if effect2 != null:
+			effect2.load_data(data["effect2"])
+		emit_signal("load_finished")
+		
+		if not gv.root_ready:
+			await gv.root_ready_finished
+		apply_effects()
+	
 	enum Type {
 		HASTE,
 		OUTPUT_AND_INPUT,
@@ -266,13 +332,13 @@ class Effect:
 	var effect: Attribute
 	var in_hand: Big
 	
+	var effect2: Attribute
+	var in_hand2: Big
+	
 	var apply_methods: Array
 	var remove_methods: Array
 	
 	var effected_input: int
-	
-	var effect2: Attribute
-	var in_hand2: Big
 	
 	
 	
@@ -401,14 +467,12 @@ signal just_unpurchased
 signal purchased_changed
 signal just_reset
 
-var TYPE_KEYS := Type.keys()
 var type: int
+var key: String
 var stage: int
 var upgrade_menu: int
 
-var times_purchased := 0
-var purchase_limit := 1
-var key: String
+@export var times_purchased := 0
 var name: String
 var description: String
 var has_description: bool
@@ -433,7 +497,7 @@ var unlocked := true:
 			emit_signal("just_locked")
 
 var special: bool
-var effects_applied := false
+var effect_applied := false
 var purchased := false:
 	set(val):
 		purchased = val
@@ -468,7 +532,7 @@ var cost: Cost
 
 func _init(_type: int) -> void:
 	type = _type
-	key = TYPE_KEYS[type]
+	key = Type.keys()[type]
 	if type >= Type.AUTOSHOVELER:
 		stage = 1
 		special = type <= Type.ROUTINE
@@ -915,10 +979,11 @@ func purchase() -> void:
 	purchased = true
 	if special:
 		will_apply_effect = true
-		await gv.get("stage_" + str(stage) + "_reset")
-		if not will_apply_effect or purchased:
+		await gv.get("stage" + str(stage)).just_reset
+		if not will_apply_effect or not purchased:
 			return
 	effect.apply()
+	effect_applied = true
 	times_purchased += 1
 	up.emit_signal("upgrade_purchased", type)
 
@@ -929,7 +994,8 @@ func refund() -> void:
 	cost.refund()
 	if special:
 		will_apply_effect = false
-	effect.remove()
+	if effect_applied:
+		effect.remove()
 	purchased = false
 
 

@@ -2,11 +2,32 @@ extends Node
 
 
 
-var saved_vars := [
-	"sleep_unlocked",
-	"jobs_unlocked",
-	"loreds",
-]
+signal save_finished
+signal load_finished
+
+
+func save() -> String:
+	var data := {}
+	data["sleep_unlocked"] = var_to_str(sleep_unlocked)
+	data["jobs_unlocked"] = var_to_str(jobs_unlocked)
+	for type in loreds:
+		var lored = get_lored(type)
+		data[lored.key] = lored.save()
+	emit_signal("save_finished")
+	return var_to_str(data)
+
+
+func load_data(data_str: String) -> void:
+	var data: Dictionary = str_to_var(data_str)
+	sleep_unlocked = str_to_var(data["sleep_unlocked"])
+	jobs_unlocked = str_to_var(data["jobs_unlocked"])
+	for type in loreds:
+		var key = LORED.Type.keys()[type]
+		if key in data.keys():
+			loreds[type].load_data(data[key])
+	emit_signal("load_finished")
+
+
 
 const FUEL_WARNING := 0.5
 const FUEL_DANGER := 0.15
@@ -99,15 +120,31 @@ var active_and_awake := []
 var never_purchased := []
 
 
+
+
+
 func _ready():
 	for lored in LORED.Type.values():
 		loreds[lored] = LORED.new(lored)
+		gv.add_lored_to_stage(loreds[lored].stage, lored)
 	loreds_are_initialized = true
 	emit_signal("loreds_initialized")
 	
 	for lored in loreds.values():
 		lored.loreds_initialized()
-		gv.add_object_to_stage(lored.stage, lored)
+
+
+
+func close() -> void:
+	loreds.clear()
+	unlocked.clear()
+	active.clear()
+	active_and_awake.clear()
+	never_purchased.clear()
+	loreds_are_initialized = false
+	sleep_unlocked = false
+	jobs_unlocked = false
+
 
 
 func new_game_start() -> void:
@@ -175,11 +212,13 @@ func start_job_timer(job: Job) -> void:
 
 func unlock_lored(_lored: int) -> void:
 	var lored = get_lored(_lored) as LORED
+	print(lored.key)
 	lored.unlock()
 	unlocked.append(lored)
-	never_purchased.append(lored)
-	await lored.leveled_up
-	never_purchased.erase(lored)
+	if not lored.purchased:
+		never_purchased.append(lored)
+		await lored.leveled_up
+		never_purchased.erase(lored)
 	if all_loreds_are_active():
 		emit_signal("all_loreds_became_active")
 	if purchased_every_unlocked_lored_once():

@@ -2,20 +2,17 @@ extends Node
 
 
 
-var saved_vars := [
-	"save_file_color",
-	"game_version",
-]
-
 enum SaveMethod {
 	TO_FILE,
 	TO_CLIPBOARD,
 	TO_CONSOLE,
+	TEST,
 }
 
 enum LoadMethod {
 	FROM_FILE,
 	FROM_CLIPBOARD,
+	TEST,
 }
 
 const SAVE_BASE_PATH := "user://"
@@ -66,8 +63,8 @@ const RANDOM_PATH_POOL := [
 	"retchleaf",
 ]
 
-signal save_game_finished
-signal load_game_finished
+signal save_finished
+signal load_finished
 
 var default_save_method := SaveMethod.TO_FILE
 var default_load_method := LoadMethod.FROM_FILE
@@ -78,43 +75,51 @@ var save_file_color: Color
 var game_version := 3.00
 var last_save_clock: float
 var patched := false
+var loaded := false
 
-var loaded_data := {}
+var test_data: String
 
-
-
-
-func _ready():
-	pass
 
 
 func save_game(method := default_save_method) -> void:
 	var data := {}
-	data["SaveManager"] = save_vars(self)
-	data["Overseer"] = save_vars(gv)
-	data["Wallet"] = save_vars(wa)
-	data["LOREDs"] = save_vars(lv)
+	data["save_file_color"] = var_to_str(save_file_color)
+	data["game_version"] = var_to_str(game_version)
+	data["Overseer"] = gv.save()
+	data["Wallet"] = wa.save()
+	data["LOREDs"] = lv.save()
+	data["Upgrades"] = up.save()
 	var save_text = var_to_str(data)
 	
 	match method:
 		SaveMethod.TO_FILE:
-			var save_file := FileAccess.open_encrypted_with_pass(get_save_path(), FileAccess.WRITE, "for finding this, you deserve to have it decrypted")
+			var save_file := FileAccess.open(get_save_path(), FileAccess.WRITE)
 			save_file.store_line(Marshalls.variant_to_base64(save_text))
 		SaveMethod.TO_CLIPBOARD:
 			DisplayServer.clipboard_set(save_text)
 		SaveMethod.TO_CONSOLE:
 			print("Your LORED save data is below! Click Expand, if necessary, for your save may be very large, and then save it in any text document!")
 			print(Marshalls.variant_to_base64(save_text))
+		SaveMethod.TEST:
+			test_data = save_text
 	
 	last_save_clock = Time.get_unix_time_from_system()
-	emit_signal("save_game_finished")
+	emit_signal("save_finished")
 
 
 
 func load_game(method := default_load_method) -> void:
 	# by here, save exists and is compatible.
-	var data := get_save_data()
-	print(data)
+	loaded = true
+	gv.reload_scene()
+	var data := get_save_data(method)
+	save_file_color = str_to_var(data["save_file_color"])
+	game_version = str_to_var(data["game_version"])
+	gv.load_data(data["Overseer"])
+	wa.load_data(data["Wallet"])
+	lv.load_data(data["LOREDs"])
+	up.load_data(data["Upgrades"])
+	emit_signal("load_finished")
 
 
 func delete_save(filename: String):
@@ -133,11 +138,17 @@ func rename_path(path: String, new_path: String):
 
 # - Get
 
-func get_save_data() -> Dictionary:
-	var data: String
-	var save_file := FileAccess.open_encrypted_with_pass(get_save_path(), FileAccess.READ, "for finding this, you deserve to have it decrypted")
-	data = Marshalls.base64_to_variant(save_file.get_line())
-	return str_to_var(data)
+func get_save_data(method := default_load_method) -> Dictionary:
+	match method:
+		LoadMethod.FROM_FILE:
+			var data: String
+			var save_file := FileAccess.open(get_save_path(), FileAccess.READ)
+			data = Marshalls.base64_to_variant(save_file.get_line())
+			return str_to_var(data)
+		LoadMethod.FROM_CLIPBOARD:
+			return str_to_var(Marshalls.base64_to_variant(DisplayServer.clipboard_get()))
+		_: # TEST
+			return str_to_var(test_data)
 
 
 func save_exists(path := get_save_path()) -> bool:
@@ -158,7 +169,7 @@ func is_compatible_save(data: Dictionary) -> bool:
 	return true
 
 
-func can_load_game(path = save_path) -> bool:
+func can_load_game(method := default_load_method, path = save_path) -> bool:
 	if not save_exists():
 		return false
 	var data := get_save_data()
@@ -188,7 +199,7 @@ func get_random_path() -> String:
 
 # - Save Vars
 
-func save_vars(object) -> String:
+func _save_vars(object) -> String:
 	
 	var data := {}
 	var saved_vars_keys = object.get("saved_vars")
@@ -203,7 +214,7 @@ func save_vars(object) -> String:
 			data[var_key] = save_array(x)
 		elif x is Object:
 			if x.get("saved_vars") != null:
-				data[var_key] = save_vars(x)
+				data[var_key] = _save_vars(x)
 			else:
 				printerr(var_key, " does not have saved_vars variable. 1")
 		else:
@@ -223,7 +234,7 @@ func save_dictionary(dictionary: Dictionary) -> String:
 			data[key] = save_array(dictionary[key])
 		elif dictionary[key] is Object:
 			if dictionary[key].get("saved_vars") != null:
-				data[key] = save_vars(dictionary[key])
+				data[key] = _save_vars(dictionary[key])
 			else:
 				printerr(key, " does not have saved_vars variable. 2")
 		else:
@@ -242,7 +253,7 @@ func save_array(array: Array) -> String:
 			data[i] = save_array(x)
 		elif x is Object:
 			if x.get("saved_vars") != null:
-				data[i] = save_vars(x)
+				data[i] = _save_vars(x)
 			else:
 				printerr(i, " does not have saved_vars variable. 3")
 		else:
@@ -387,3 +398,37 @@ func loadSavedVars(_saved_vars: Dictionary, _save_data: Dictionary) -> Dictionar
 
 
 
+
+
+# - New Saved Vars
+
+var saved_vars := []
+
+class SavedVar:
+	var object: Object
+	var key: String
+	
+	var save_method: Callable
+	
+	func _init(_object: Object, _key: String):
+		object = _object
+		key = _key
+		if object.get(key) is Dictionary:
+			save_method = save_dictionary
+	
+	
+	func save_dictionary():
+		pass
+
+
+func add_saved_var(object: Object, key: String) -> void:
+	var variable = object.get(key)
+	if variable is Dictionary:
+		for _key in variable.keys():
+			pass#add_saved_var()
+
+
+func save_vars() -> void:
+	for x in saved_vars:
+		x = x as SavedVar
+		

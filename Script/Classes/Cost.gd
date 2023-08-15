@@ -3,12 +3,6 @@ extends Resource
 
 
 
-var saved_vars := [
-	"cost",
-	"purchased",
-]
-
-
 signal became_affordable
 signal became_unaffordable
 signal affordable_changed(affordable)
@@ -46,7 +40,7 @@ func _init(_cost: Dictionary) -> void:
 	cost = _cost
 	for cur in cost:
 		wa.currency[cur].count.add_notify_increased_method(currency_increased)
-		#wa.currency[cur].count.add_notify_decreased_method(currency_decreased)
+	SaveManager.connect("load_finished", recheck)
 
 
 func notify_if_increased() -> void:
@@ -82,15 +76,20 @@ func currency_decreased() -> void:
 		notify_if_increased()
 
 
-func throw_texts(parent_node: Node) -> void:
-	var data := {}
-	for cur in cost:
-		data[cur] = cost[cur].get_value()
-	gv.throw_texts_by_dictionary(parent_node, data, "-")
-
-
 
 # - Action
+
+func recheck() -> void:
+	for cur in cost:
+		wa.currency[cur].count.remove_notify_method(currency_decreased)
+		wa.currency[cur].count.remove_notify_method(currency_increased)
+	if can_afford():
+		affordable = true
+		notify_if_decreased()
+	else:
+		affordable = false
+		notify_if_increased()
+
 
 func spend(from_player: bool) -> void:
 	if from_player:
@@ -132,6 +131,14 @@ func remove_cost(currency: int) -> void:
 	if currency in cost.keys():
 		cost[currency].remove_notify_method(currency_increased)
 		cost.erase(currency)
+
+
+
+func throw_texts(parent_node: Node) -> void:
+	var data := {}
+	for cur in cost:
+		data[cur] = cost[cur].get_value()
+	gv.throw_texts_by_dictionary(parent_node, data, "-")
 
 
 

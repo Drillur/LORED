@@ -3,15 +3,44 @@ extends Resource
 
 
 
-var saved_vars := [
-	"times_purchased",
-	"time_spent_asleep",
-	"unlocked",
-	"purchased",
-	"asleep",
-	"cost_increase",
-	"level",
-]
+signal save_finished
+signal load_finished
+
+func save() -> String:
+	var data := {}
+	data["unlocked"] = var_to_str(unlocked)
+	data["level"] = var_to_str(level)
+	if unlocked:
+		data["purchased"] = var_to_str(purchased)
+		if purchased:
+			data["fuel"] = fuel.save_current()
+			data["asleep"] = var_to_str(asleep)
+			data["times_purchased"] = var_to_str(times_purchased)
+			data["time_spent_asleep"] = var_to_str(time_spent_asleep)
+	emit_signal("save_finished")
+	return var_to_str(data)
+
+
+func load_data(data_str: String) -> void:
+	var data: Dictionary = str_to_var(data_str)
+	unlocked = str_to_var(data["unlocked"])
+	set_level_to(str_to_var(data["level"]))
+	if unlocked:
+		purchased = str_to_var(data["purchased"])
+		if purchased:
+			fuel.load_current(data["fuel"])
+			asleep = str_to_var(data["asleep"])
+			times_purchased = str_to_var(data["times_purchased"])
+			time_spent_asleep = str_to_var(data["time_spent_asleep"])
+	emit_signal("load_finished")
+	
+	if not gv.root_ready:
+		await gv.root_ready_finished
+	if unlocked:
+		emit_signal("just_unlocked")
+		lv.unlock_lored(type)
+
+
 
 enum Type {
 	STONE, # 0
@@ -75,6 +104,7 @@ signal woke_up
 signal asleep_changed(asleep)
 signal plan_to_sleep
 signal just_unlocked
+signal just_locked
 signal second_passed_while_asleep
 signal finished_emoting
 signal purchased_changed(purchased)
@@ -95,18 +125,28 @@ var required_currencies := []
 var upgrades := []
 var unpurchased_upgrades := []
 
-var unlocked := false
+var unlocked := false:
+	set(val):
+		if unlocked == val:
+			return
+		unlocked = val
+		if val:
+			emit_signal("just_unlocked")
+		else:
+			emit_signal("just_locked")
 var purchased := false:
 	set(val):
 		if purchased == val:
 			return
 		purchased = val
 		if val:
-			lv.active.append(self)
+			if not self in lv.active:
+				lv.active.append(self)
 			if not asleep:
 				lv.active_and_awake.append(self)
 		else:
-			lv.active.erase(self)
+			if self in lv.active:
+				lv.active.erase(self)
 			if self in lv.active_and_awake:
 				lv.active_and_awake.erase(self)
 		emit_signal("purchased_changed", val)
@@ -185,9 +225,9 @@ func _init(_type: int) -> void:
 		faded_color = color
 	color_text = "[color=#" + color.to_html() + "]%s[/color]"
 	
+	#SaveManager.connect("load_started", load_started)
 	connect("began_working", add_current_fuel_rate)
 	connect("stopped_working", subtract_current_fuel_rate)
-	
 	connect("woke_up", work)
 	connect("completed_job", work)
 	
@@ -926,7 +966,6 @@ func set_level_to(_level: int) -> void:
 
 func unlock() -> void:
 	unlocked = true
-	emit_signal("just_unlocked")
 
 
 
@@ -984,6 +1023,12 @@ func add_influencing_upgrade(upgrade: Upgrade) -> void:
 				unpurchased_upgrades.append(upgrade)
 				await upgrade.just_purchased
 				unpurchased_upgrades.erase(upgrade)
+
+
+
+#func load_started() -> void:
+#	purchased = false
+#	stop_job()
 
 
 

@@ -3,9 +3,44 @@ extends Resource
 
 
 
-var saved_vars := [
-	"total", # current is added below
-]
+signal save_finished
+signal load_finished
+
+
+func save() -> String:
+	var data := {}
+	data["total"] = total.save()
+	if uses_current:
+		data["current"] = current.save()
+	emit_signal("save_finished")
+	return var_to_str(data)
+
+
+func save_current() -> String:
+	if not uses_current:
+		printerr("You done did mcfucked up")
+		return ""
+	var data := {}
+	data["current"] = current.save()
+	emit_signal("save_finished")
+	return var_to_str(data)
+
+
+func load_data(data_str: String) -> void:
+	var data: Dictionary = str_to_var(data_str)
+	total.load_data(data["total"])
+	if uses_current:
+		current.load_data(data["current"])
+	emit_signal("load_finished")
+	notify_all()
+
+
+func load_current(data_str: String) -> void:
+	var data: Dictionary = str_to_var(data_str)
+	current.load_data(data["current"])
+	emit_signal("load_finished")
+	notify_all()
+
 
 signal filled
 signal emptied
@@ -26,7 +61,6 @@ var notify_if_changed_immediately: Array
 func _init(base_value = 0, will_use_current := true) -> void:
 	uses_current = will_use_current
 	if uses_current:
-		saved_vars.append("current")
 		current = Value.new(base_value)
 	total = Value.new(base_value)
 

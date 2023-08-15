@@ -151,6 +151,7 @@ mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_ge2kb")
 
 [node name="Wallet" parent="." instance=ExtResource("6_pdtq1")]
+visible = false
 layout_mode = 2
 
 [node name="Menu" parent="." instance=ExtResource("4_y1gq0")]

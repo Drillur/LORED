@@ -2,20 +2,28 @@ extends Node
 
 
 
-var upgrade_container: UpgradeContainer:
-	set(val):
-		upgrade_container = val
-		for upgrade in upgrades.values():
-			if upgrade.type > Upgrade.Type.RED_GOOPY_BOY:
-				break
-			upgrade_container.set_vico(upgrade)
+signal save_finished
+signal load_finished
 
-signal all_upgrades_initialized
-signal menu_unlocked(menu)
-signal upgrade_purchased(type)
 
-var upgrades := {}
-var upgrade_menus := {}
+func save() -> String:
+	var data := {}
+	for type in upgrades:
+		var upgrade = get_upgrade(type)
+		data[upgrade.key] = upgrade.save()
+	emit_signal("save_finished")
+	return var_to_str(data)
+
+
+func load_data(data_str: String) -> void:
+	var data: Dictionary = str_to_var(data_str)
+	for type in upgrades:
+		var key = Upgrade.Type.keys()[type]
+		if key in data.keys():
+			upgrades[type].load_data(data[key])
+	emit_signal("load_finished")
+
+
 
 const RANDOM_UPGRADE_DESCRIPTION := [
 	"Black mold is now properly digested once entering the human body. Inhaled spores come back out as a booger instead of 6 months of bronchitis. Isn't that gonna be nice?",
@@ -79,6 +87,21 @@ const RANDOM_UPGRADE_DESCRIPTION := [
 	"Who the frick knows what this does?",
 ]
 
+var upgrade_container: UpgradeContainer:
+	set(val):
+		upgrade_container = val
+		for upgrade in upgrades.values():
+			if upgrade.type > Upgrade.Type.RED_GOOPY_BOY:
+				break
+			upgrade_container.set_vico(upgrade)
+
+signal all_upgrades_initialized
+signal menu_unlocked(menu)
+signal upgrade_purchased(type)
+
+var upgrades := {}
+var upgrade_menus := {}
+
 
 
 func _ready():
@@ -87,8 +110,14 @@ func _ready():
 		connect("upgrade_purchased", upgrade_menus[type].add_purchased_upgrade)
 	for type in Upgrade.Type.values():
 		upgrades[type] = Upgrade.new(type)
-		gv.add_object_to_stage(upgrades[type].stage, upgrades[type])
+		gv.add_upgrade_to_stage(upgrades[type].stage, type)
 	emit_signal("all_upgrades_initialized")
+
+
+
+func close() -> void:
+	upgrades.clear()
+	upgrade_menus.clear()
 
 
 

@@ -3,17 +3,24 @@ extends Resource
 
 
 
-var saved_vars := [
-	"base",
-	"current",
-	"added",
-	"subtracted",
-	"multiplied",
-	"divided",
-	"from_level",
-	"d_from_lored",
-	"m_from_lored",
-]
+signal save_finished
+signal load_finished
+
+
+func save() -> String:
+	var data := {}
+	data["current"] = current.save()
+	emit_signal("save_finished")
+	return var_to_str(data)
+
+
+func load_data(data_str: String) -> void:
+	var data: Dictionary = str_to_var(data_str)
+	current.load_data(data["current"])
+	text_requires_update = true
+	emit_signal("load_finished")
+
+
 
 var base: Big
 

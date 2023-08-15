@@ -7,7 +7,7 @@ res://Theme/Background.tres
 res://Theme/ShadowText.tres
 res://Theme/Subtle Background.tres
 res://Theme/Title.tres
-res://Script/Classes/Wish.gd
+res://Scene/Root.gd
 res://Hud/LORED/lored_vico.tscn
 res://Hud/Wish/wish_vico.tscn
 res://Hud/Upgrade/upgrade_vico.tscn
@@ -16,20 +16,13 @@ res://Hud/Wish/Tooltip/wish_tooltip.tscn
 res://Hud/currency_vico.tscn
 res://Hud/Wallet/wallet.tscn
 res://Hud/Wallet/wallet_currency.tscn
-res://Script/Autoload/Wishes.gd
-res://Script/Autoload/SaveManager.gd
-res://Scene/Root.gd
-res://Script/Classes/Value.gd
-res://Script/Classes/UpgradeMenu.gd
-res://Script/Classes/Currency.gd
-res://Script/Classes/Stage.gd
-res://Script/Autoload/SaveGame.gd
-res://Script/Autoload/Save.gd
 res://Script/Autoload/LOREDs.gd
-res://Script/Autoload/Wallet.gd
+res://Script/Autoload/SaveManager.gd
 res://Script/Autoload/Overseer.gd
-res://Script/Classes/Attribute.gd
-res://Script/Classes/Job.gd
 res://Script/Classes/LORED.gd
-res://Script/Classes/Big.gd
-res://Script/Classes/Cost.gd
+res://Hud/LORED/lored_vico.gd
+res://Script/Autoload/Wallet.gd
+res://Script/Autoload/Upgrades.gd
+res://Script/Classes/Stage.gd
+res://Script/Classes/Upgrade.gd
+res://Hud/Wallet/wallet.gd

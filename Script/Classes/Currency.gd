@@ -2,13 +2,42 @@ class_name Currency
 extends Resource
 
 
-var saved_vars := [
-	"count",
-	"pending",
-	"subtracted_by_loreds",
-	"subtracted_by_player",
-	"added_by_loreds",
-]
+
+signal save_finished
+signal load_finished
+
+
+func save() -> String:
+	var data := {}
+	data["unlocked"] = var_to_str(unlocked)
+	if unlocked:
+		data["count"] = count.save()
+		data["pending"] = pending.save()
+		data["subtracted_by_loreds"] = subtracted_by_loreds.save()
+		data["subtracted_by_player"] = subtracted_by_player.save()
+		data["added_by_loreds"] = added_by_loreds.save()
+	emit_signal("save_finished")
+	return var_to_str(data)
+
+
+func load_data(data_str: String) -> void:
+	var data: Dictionary = str_to_var(data_str)
+	unlocked = str_to_var(data["unlocked"])
+	if unlocked:
+		count.load_data(data["count"])
+		pending.load_data(data["pending"])
+		subtracted_by_loreds.load_data(data["subtracted_by_loreds"])
+		subtracted_by_player.load_data(data["subtracted_by_player"])
+		added_by_loreds.load_data(data["added_by_loreds"])
+	emit_signal("load_finished")
+	
+	var pending_amount = pending.get_value()
+	if pending_amount.greater(0):
+		count.add(pending_amount)
+		emit_signal("increased", pending_amount)
+		pending.set_to(0)
+
+
 
 enum Type {
 	STONE,

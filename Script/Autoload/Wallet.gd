@@ -2,19 +2,43 @@ extends Node
 
 
 
-var saved_vars := [
-	"currency",
-]
+signal save_finished
+signal load_finished
 
 
+func save() -> String:
+	var data := {}
+	data["wallet_unlocked"] = var_to_str(wallet_unlocked)
+	for cur in currency:
+		var _currency: Currency = currency[cur]
+		data[_currency.key] = _currency.save()
+	emit_signal("save_finished")
+	return var_to_str(data)
+
+
+func load_data(data_str: String) -> void:
+	var data: Dictionary = str_to_var(data_str)
+	wallet_unlocked = str_to_var(data["wallet_unlocked"])
+	for cur in currency:
+		var key = Currency.Type.keys()[cur]
+		if key in data.keys():
+			currency[cur].load_data(data[key])
+	emit_signal("load_finished")
+
+
+
+signal currency_just_unlocked(cur)
+signal wallet_unlocked_changed(unlocked)
 
 var currency := {}
 
 var unlocked_currencies := []
 var total_weight := 0
-
-
-signal currency_just_unlocked(cur)
+var wallet_unlocked := false:
+	set(val):
+		if wallet_unlocked != val:
+			wallet_unlocked = val
+			emit_signal("wallet_unlocked_changed", val)
 
 
 
@@ -23,8 +47,16 @@ func _ready():
 		currency[cur] = Currency.new(cur)
 		#SaveManager.add_saved_var("currency " + currency[cur].key, currency[cur])
 	
-	for _currency in currency.values():
-		gv.add_object_to_stage(_currency.stage, _currency)
+	for cur in currency.keys():
+		gv.add_currency_to_stage(get_currency_stage(cur), cur)
+
+
+
+func close() -> void:
+	currency.clear()
+	unlocked_currencies.clear()
+	total_weight = 0
+	wallet_unlocked = false
 
 
 
@@ -110,6 +142,10 @@ func get_colored_currency_name(cur: int) -> String:
 
 func get_currency(cur: int) -> Currency:
 	return currency[cur]
+
+
+func get_currency_stage(cur: int) -> int:
+	return currency[cur].stage
 
 
 func get_random_unlocked_currency() -> Currency:
