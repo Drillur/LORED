@@ -3,12 +3,45 @@ extends Node
 
 
 
-var saved_vars := [
-	"wishes",
-	"completed_wishes",
-	"completed_random_wishes",
-	"random_wish_limit",
-]
+signal save_finished
+signal load_finished
+var loading := false
+
+
+func save() -> String:
+	var data := {}
+	data["completed_wishes"] = var_to_str(completed_wishes)
+	data["random_wish_limit"] = var_to_str(random_wish_limit)
+	data["completed_random_wishes"] = var_to_str(completed_random_wishes)
+	data["wish count"] = var_to_str(wishes.size())
+	var i = 0
+	for wish in wishes:
+		data["wish " + str(i)] = wish.save()
+		i += 1
+	emit_signal("save_finished")
+	return var_to_str(data)
+
+
+func load_data(data_str: String) -> void:
+	loading = true
+	var data: Dictionary = str_to_var(data_str)
+	completed_wishes = str_to_var(data["completed_wishes"])
+	completed_random_wishes = str_to_var(data["completed_random_wishes"])
+	var wish_count = str_to_var(data["wish count"])
+	for i in wish_count:
+		var wish_data = str_to_var(data["wish " + str(i)])
+		var type = str_to_var(wish_data["type"])
+		var wish = await Wish.new(type)
+		wish.load_data(data["wish " + str(i)])
+		wishes.append(wish)
+	random_wish_limit = str_to_var(data["random_wish_limit"])
+	
+	for wish in wishes:
+		create_wish_vico(wish)
+	
+	loading = false
+	emit_signal("load_finished")
+
 
 signal wish_completed(type)
 
@@ -28,19 +61,29 @@ var completed_random_wishes := 0
 var random_wish_limit := 0:
 	set(val):
 		random_wish_limit = val
+		if loading:
+			await load_finished
 		for i in val:
 			find_new_random_wish()
 
 
-func loaded() -> void:
-	for wish in wishes:
-		create_wish_vico(wish)
 
+func close() -> void:
+	wishes.clear()
+	completed_wishes.clear()
+	active_wish_types.clear()
+	random_wish_limit = 0
+	active_main_wishes = 0
+	active_random_wishes = 0
+	completed_random_wishes = 0
+
+
+func open() -> void:
+	pass
 
 
 
 func new_game_start() -> void:
-	create_wish_vico(await Wish.new(Wish.Type.STUFF))
 	start()
 
 
@@ -50,15 +93,20 @@ func loaded_game_start() -> void:
 
 
 func start() -> void:
-	skip_STUFF_wish()
-	find_new_main_wish()
+	if not is_wish_completed(Wish.Type.STUFF):
+		create_wish_vico(await Wish.new(Wish.Type.STUFF))
+		skip_STUFF_wish()
+	else:
+		find_new_main_wish()
 
 
 
 func find_new_main_wish() -> void:
+	if not gv.root_ready:
+		await gv.root_ready_finished
+	
 	if not lv.purchased_every_unlocked_lored_once():
 		await lv.purchased_every_lored_once
-	
 	if active_main_wishes > 0:
 		return
 	
@@ -83,14 +131,20 @@ func select_main_wish() -> int:
 
 
 func find_new_random_wish() -> void:
-	var wish = await Wish.new(Wish.Type.RANDOM)
-	wishes.append(wish)
-	create_wish_vico(wish)
+	if active_random_wishes < random_wish_limit:
+		var wish = await Wish.new(Wish.Type.RANDOM)
+		wishes.append(wish)
+		create_wish_vico(wish)
 
 
 func create_wish_vico(wish: Wish) -> void:
+	if not gv.root_ready:
+		await gv.root_ready_finished
+	var my_pass = gv.password
 	if not wish.ready_to_start:
 		await wish.became_ready_to_start
+		if my_pass != gv.password:
+			return
 		if wish.skip_wish:
 			if active_main_wishes == 0:
 				find_new_main_wish()
@@ -98,9 +152,9 @@ func create_wish_vico(wish: Wish) -> void:
 	
 	var container: VBoxContainer
 	
+	active_wish_types.append(wish.type)
 	if wish.is_main_wish():
 		container = main_wish_container
-		active_wish_types.append(wish.type)
 		active_main_wishes += 1
 	else:
 		container = random_wish_container
@@ -110,7 +164,10 @@ func create_wish_vico(wish: Wish) -> void:
 	pending_vico.setup(wish)
 	container.add_child(pending_vico)
 	var pending_vico_index = pending_vico.get_index()
+	
 	await pending_vico.tree_exited
+	if my_pass != gv.password:
+		return
 	
 	var vico = wish_vico.instantiate()
 	vico.setup(wish)
@@ -122,9 +179,10 @@ func create_wish_vico(wish: Wish) -> void:
 
 func start_new_wish_after_wish_completed(wish: Wish) -> void:
 	await wish.just_ended
+	print(0)
 	wishes.erase(wish)
+	active_wish_types.erase(wish.type)
 	if wish.is_main_wish():
-		active_wish_types.erase(wish.type)
 		completed_wishes.append(wish.type)
 		active_main_wishes -= 1
 		if active_main_wishes == 0:

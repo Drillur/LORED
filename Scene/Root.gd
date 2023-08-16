@@ -45,11 +45,12 @@ func _ready():
 	
 	display_and_repeatedly_flash_upgrades_button()
 	
-	print("root done")
 	gv.root_ready = true
 	
 	if SaveManager.loaded:
+		load_game()
 		return
+	
 	new_game() # delete
 	
 	return # delete later
@@ -206,12 +207,6 @@ func new_game() -> void:
 
 
 func load_game() -> void:
-	#loreds
-	#upgrades
-	#wi.load
-	#em.load
-	
-	# after all autoload nodes have loaded, start all of them.
 	lv.loaded_game_start()
 	wi.loaded_game_start()
 	em.loaded_game_start()
@@ -241,17 +236,14 @@ func _on_dev_pressed():
 	i += 1
 	wa.add(Currency.Type.STONE, 10)
 	wa.add(Currency.Type.COAL, 10)
-	SaveManager.add_saved_var(self, "gay")
-	SaveManager.add_saved_var(self, "gayer")
-	SaveManager.add_saved_var(self, "gayest")
+	lv.get_lored(LORED.Type.IRON).purchase()
+	lv.get_lored(LORED.Type.COPPER).purchase()
+	lv.get_lored(LORED.Type.COPPER_ORE).purchase()
+	lv.get_lored(LORED.Type.IRON_ORE).purchase()
 
 var test_data: String
 func _on_dev_2_pressed():
 	SaveManager.save_game(SaveManager.SaveMethod.TEST)
-#	lv.get_lored(LORED.Type.IRON).purchase()
-#	lv.get_lored(LORED.Type.COPPER).purchase()
-#	lv.get_lored(LORED.Type.COPPER_ORE).purchase()
-#	lv.get_lored(LORED.Type.IRON_ORE).purchase()
 
 func _on_dev_4_pressed():
 	pass # Replace with function body.

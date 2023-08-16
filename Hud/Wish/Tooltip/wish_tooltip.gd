@@ -8,6 +8,9 @@ extends MarginContainer
 @onready var text = %text
 @onready var rewards = %Rewards
 @onready var reward_details = %RewardDetails
+@onready var info = %Info
+@onready var lucky_multiplier = %lucky_multiplier
+@onready var info_title_bg = %"info title bg"
 
 var label := preload("res://Hud/rich_text_label.tscn")
 
@@ -23,6 +26,8 @@ var color: Color:
 		color = val
 		if wish.has_rewards():
 			rewards_title_bg.modulate = val
+		if not wish.is_main_wish():
+			info_title_bg.modulate = val
 
 var wish: Wish
 
@@ -34,14 +39,19 @@ func setup(data: Dictionary) -> void:
 		await ready
 	
 	color = wish.get_color()
-	giver.text = wish.giver.colored_name
-	face.modulate = wish.giver.color
+	giver.text = lv.get_lored(wish.giver).colored_name
+	face.modulate = lv.get_color(wish.giver)
 	
 	set_text(wish.help_text)
 	set_face(wish.help_icon)
 	setup_reward_text()
 	
 	set_to_thank_text_when_ready()
+	
+	if wish.is_main_wish():
+		info.queue_free()
+	else:
+		lucky_multiplier.text = "[center][i]Lucky multiplier: [b]" + Big.get_float_text(wish.lucky_multiplier)
 
 
 func set_to_thank_text_when_ready() -> void:

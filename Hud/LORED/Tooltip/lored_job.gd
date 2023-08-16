@@ -23,7 +23,7 @@ func setup(_job: Job) -> void:
 	prepare_produced_currencies()
 	prepare_required_currencies()
 	
-	glow.self_modulate = job.lored.faded_color
+	glow.self_modulate = lv.get_lored(job.lored).faded_color
 	job.connect("stopped_working", hide_glow)
 	job.connect("began_working", show_glow)
 	if job.working:
@@ -36,7 +36,7 @@ func setup(_job: Job) -> void:
 func prepare_produced_currencies() -> void:
 	if job.type == Job.Type.REFUEL:
 		var x = label.instantiate()
-		x.text = "+" + job.lored.fuel.get_x_percent_text(0.5) + " fuel"
+		x.text = "+" + lv.get_lored(job.lored).fuel.get_x_percent_text(0.5) + " fuel"
 		produced_currencies_parent.add_child(x)
 	elif not job.has_produced_currencies:
 		produced_currencies_parent.queue_free()

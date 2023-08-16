@@ -49,8 +49,8 @@ func setup(data: Dictionary) -> void:
 	
 	fuel_text.setup(lored.fuel)
 	color = lored.color
-	fuel_title_bg.self_modulate = lored.fuel_currency.color
-	fuel_currency_text.text = lored.fuel_currency.icon_and_name_text
+	fuel_title_bg.self_modulate = wa.get_color(lored.fuel_currency)
+	fuel_currency_text.text = wa.get_icon_and_name_text(lored.fuel_currency)
 	lored.fuel_cost.add_notify_change_method(update_fuel_cost, true)
 
 

@@ -63,6 +63,80 @@ bbcode_enabled = true
 text = "Sometimes I have quite a lot to say! Really, it's pretty insane!"
 fit_content = true
 
+[node name="Info" type="VBoxContainer" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Top" type="MarginContainer" parent="VBoxContainer/Info"]
+layout_mode = 2
+
+[node name="info title bg" type="Panel" parent="VBoxContainer/Info/Top"]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("4_ciwtp")
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Info/Top"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="Title" type="RichTextLabel" parent="VBoxContainer/Info/Top/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme = ExtResource("4_ciwtp")
+bbcode_enabled = true
+text = "Info"
+fit_content = true
+autowrap_mode = 0
+
+[node name="Content" type="MarginContainer" parent="VBoxContainer/Info"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="RewardDetails" type="VBoxContainer" parent="VBoxContainer/Info/Content"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="lucky_multiplier" type="RichTextLabel" parent="VBoxContainer/Info/Content/RewardDetails"]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("2_mjtoi")
+bbcode_enabled = true
+text = "[center][i]Lucky multiplier: [b]7"
+fit_content = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/Info/Content/RewardDetails"]
+layout_mode = 2
+
+[node name="RichTextLabel3" type="RichTextLabel" parent="VBoxContainer/Info/Content/RewardDetails/VBoxContainer"]
+layout_mode = 2
+theme = ExtResource("2_mjtoi")
+bbcode_enabled = true
+text = "[center]Fulfilling Wishes grants [img=<15>]res://Sprites/Currency/Joy.png[/img] Joy!"
+fit_content = true
+autowrap_mode = 0
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="VBoxContainer/Info/Content/RewardDetails/VBoxContainer"]
+layout_mode = 2
+theme = ExtResource("2_mjtoi")
+bbcode_enabled = true
+text = "Denying Wishes grants [img=<15>]res://Sprites/Currency/Grief.png[/img] Grief."
+fit_content = true
+autowrap_mode = 0
+
+[node name="RichTextLabel4" type="RichTextLabel" parent="VBoxContainer/Info/Content/RewardDetails"]
+layout_mode = 2
+theme = ExtResource("2_mjtoi")
+bbcode_enabled = true
+text = "[center]Right-click to deny a Wish."
+fit_content = true
+
 [node name="Rewards" type="VBoxContainer" parent="VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2

@@ -82,6 +82,7 @@ var test_data: String
 
 
 func save_game(method := default_save_method) -> void:
+	loaded = false
 	var data := {}
 	data["save_file_color"] = var_to_str(save_file_color)
 	data["game_version"] = var_to_str(game_version)
@@ -89,6 +90,7 @@ func save_game(method := default_save_method) -> void:
 	data["Wallet"] = wa.save()
 	data["LOREDs"] = lv.save()
 	data["Upgrades"] = up.save()
+	data["Wishes"] = wi.save()
 	var save_text = var_to_str(data)
 	
 	match method:
@@ -112,6 +114,10 @@ func load_game(method := default_load_method) -> void:
 	# by here, save exists and is compatible.
 	loaded = true
 	gv.reload_scene()
+	if gv.reloading:
+		print("awaiting closure")
+		await gv.reload_finished
+	print("-----------saving continue")
 	var data := get_save_data(method)
 	save_file_color = str_to_var(data["save_file_color"])
 	game_version = str_to_var(data["game_version"])
@@ -119,6 +125,7 @@ func load_game(method := default_load_method) -> void:
 	wa.load_data(data["Wallet"])
 	lv.load_data(data["LOREDs"])
 	up.load_data(data["Upgrades"])
+	wi.load_data(data["Wishes"])
 	emit_signal("load_finished")
 
 
@@ -196,239 +203,3 @@ func get_random_path() -> String:
 	return get_unique_path(RANDOM_PATH_POOL[randi() % RANDOM_PATH_POOL.size()])
 
 
-
-# - Save Vars
-
-func _save_vars(object) -> String:
-	
-	var data := {}
-	var saved_vars_keys = object.get("saved_vars")
-	
-	for var_key in saved_vars_keys:
-		
-		var x = object.get(var_key)
-		
-		if x is Dictionary:
-			data[var_key] = save_dictionary(x)
-		elif x is Array:
-			data[var_key] = save_array(x)
-		elif x is Object:
-			if x.get("saved_vars") != null:
-				data[var_key] = _save_vars(x)
-			else:
-				printerr(var_key, " does not have saved_vars variable. 1")
-		else:
-			data[var_key] = var_to_str(x)
-	
-	return var_to_str(data)
-
-
-func save_dictionary(dictionary: Dictionary) -> String:
-	
-	var data := {}
-	
-	for key in dictionary:
-		if dictionary[key] is Dictionary:
-			data[key] = save_dictionary(dictionary[key])
-		elif dictionary[key] is Array:
-			data[key] = save_array(dictionary[key])
-		elif dictionary[key] is Object:
-			if dictionary[key].get("saved_vars") != null:
-				data[key] = _save_vars(dictionary[key])
-			else:
-				printerr(key, " does not have saved_vars variable. 2")
-		else:
-			data[key] = var_to_str(dictionary[key])
-	
-	return var_to_str(data)
-
-
-func save_array(array: Array) -> String:
-	
-	var data := {}
-	
-	var i = 0
-	for x in array:
-		if x is Array:
-			data[i] = save_array(x)
-		elif x is Object:
-			if x.get("saved_vars") != null:
-				data[i] = _save_vars(x)
-			else:
-				printerr(i, " does not have saved_vars variable. 3")
-		else:
-			data[i] = var_to_str(x)
-		i += 1
-	
-	return var_to_str(data)
-
-
-
-func load_vars(object, _save_data: Dictionary):
-	
-	for var_key in object.get("saved_vars"):
-		
-		if not var_key in _save_data.keys():
-			continue
-		
-		var x = object.get(var_key)
-		var saved_x = str_to_var(_save_data[var_key])
-		
-		if x is Dictionary:
-			object.set(var_key, load_dictionary(saved_x, x))
-		elif x is Array:
-			object.set(var_key, load_empty_array(saved_x))
-		elif x is Resource:
-			if x.has_method("_load"):
-				if object.get(var_key) is Big:
-					object.get(var_key)._load(_save_data[var_key])
-				elif object.get(var_key) is Attribute:
-					object.get(var_key)._load(_save_data[var_key])
-				else:
-					object.get(var_key)._load(saved_x)
-			else:
-				load_vars(object.get(var_key), saved_x)
-		else:
-			object.set(var_key, saved_x)
-
-
-func load_dictionary(loaded_dictionary: Dictionary, actual_dictionary: Dictionary) -> Dictionary:
-	
-	for key in actual_dictionary:
-		
-		if not key in loaded_dictionary.keys():
-			continue
-		
-		var x = actual_dictionary[key]
-		var saved_x = str_to_var(loaded_dictionary[key])
-		
-		if x is Dictionary:
-			actual_dictionary[key] = load_dictionary(saved_x, x)
-		elif x is Array:
-			actual_dictionary[key] = load_empty_array(saved_x)
-		elif x is Resource:
-			if x.has_method("_load"):
-				if x is Big:
-					actual_dictionary[key]._load(loaded_dictionary[key])
-				elif x is Attribute:
-					actual_dictionary[key]._load(loaded_dictionary[key])
-				else:
-					actual_dictionary[key]._load(saved_x)
-			else:
-				load_vars(actual_dictionary[key], saved_x)
-		else:
-			actual_dictionary[key] = saved_x
-	
-	return actual_dictionary
-
-
-const REF_CLASSES := ["FlowerSeed", "Big", "Num"]
-
-func load_empty_array(loaded_dictionary: Dictionary) -> Array:
-	
-	var array := []
-	
-	for key in loaded_dictionary:
-		
-		var saved_x = str_to_var(loaded_dictionary[key])
-		var _class = key.rstrip("0123456789")
-		
-		if (_class in REF_CLASSES) or (saved_x is Resource):
-			array.append(new_reference_by_save_data(_class, saved_x))
-		elif saved_x is Array:
-			array.append(load_empty_array(saved_x))
-		else:
-			array.append(saved_x)
-	
-	return array
-
-
-func new_reference_by_save_data(_class: String, saved_x):
-	var new_thing
-	
-	if _class == "Big":
-		new_thing = Big.new()
-		new_thing._load(saved_x)
-	elif _class == "Attribute":
-		new_thing = Attribute.new(0)
-		new_thing._load(saved_x)
-	
-	return new_thing
-
-
-
-
-
-
-func loadSavedVars(_saved_vars: Dictionary, _save_data: Dictionary) -> Dictionary:
-	
-	# this is still used in some funcs.
-	# It's the first version of the newer load_vars() method
-	
-	var loadedVars := {}
-	
-	for x in _saved_vars:
-		
-		if not x in _save_data.keys():
-			continue
-		
-		if _saved_vars[x] is Big:
-			loadedVars[x] = Big.new(_save_data[x])
-			continue
-		
-		if _saved_vars[x] is Dictionary:
-			loadedVars[x] = str_to_var(_save_data[x])
-			for key in _saved_vars[x]:
-				if _saved_vars[x][key] is Dictionary:
-					for sub_key in _saved_vars[x][key]:
-						if not sub_key in loadedVars[x][key]:
-							loadedVars[x][key][sub_key] = _saved_vars[x][key][sub_key]
-				else:
-					if not key in loadedVars[x]:
-						loadedVars[x][key] = _saved_vars[x][key]
-				# if the code above fails, this is what it used to be:
-				# just delete everything with this indentation until "for key in saved_vars[x]"
-#				if not key in loadedVars[x]:
-#					loadedVars[x][key] = saved_vars[x][key]
-			continue
-		
-		loadedVars[x] = str_to_var(_save_data[x])
-	
-	return loadedVars
-
-
-
-
-
-# - New Saved Vars
-
-var saved_vars := []
-
-class SavedVar:
-	var object: Object
-	var key: String
-	
-	var save_method: Callable
-	
-	func _init(_object: Object, _key: String):
-		object = _object
-		key = _key
-		if object.get(key) is Dictionary:
-			save_method = save_dictionary
-	
-	
-	func save_dictionary():
-		pass
-
-
-func add_saved_var(object: Object, key: String) -> void:
-	var variable = object.get(key)
-	if variable is Dictionary:
-		for _key in variable.keys():
-			pass#add_saved_var()
-
-
-func save_vars() -> void:
-	for x in saved_vars:
-		x = x as SavedVar
-		

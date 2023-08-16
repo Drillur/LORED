@@ -45,8 +45,8 @@ func setup(data: Dictionary) -> void:
 	purchased_changed()
 	
 	if upgrade.has_required_upgrade:
-		required_upgrade.text = "[b][i]" + upgrade.required_upgrade.icon_and_name_text()
-		required_upgrade_title_bg.modulate = upgrade.required_upgrade.color
+		required_upgrade.text = "[b][i]" + up.get_icon_and_name_text(upgrade.required_upgrade)
+		required_upgrade_title_bg.modulate = up.get_color(upgrade.required_upgrade)
 	
 	show_locked_or_unlocked()
 	

@@ -73,6 +73,10 @@ func close() -> void:
 	unlocked = false
 
 
+func open() -> void:
+	pass
+
+
 
 func NO_STAGE():
 	name = "No Stage"

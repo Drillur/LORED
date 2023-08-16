@@ -33,6 +33,12 @@ enum Platform {PC, HTML,}
 var dev_mode := true#false
 const PLATFORM := Platform.PC
 
+signal reload_finished
+var reloading := false:
+	set(val):
+		reloading = val
+		if not val:
+			emit_signal("reload_finished")
 
 var icon_awake := preload("res://Sprites/Hud/awake.png")
 var icon_asleep := preload("res://Sprites/Hud/Halt.png")
@@ -70,6 +76,7 @@ var texts_parent: Control
 
 
 func _ready() -> void:
+	open()
 	for i in range(0, 5):
 		set("stage" + str(i), Stage.new(i))
 	
@@ -142,6 +149,8 @@ func session_tracker() -> void:
 
 # - Handy
 
+var password := 0.0
+
 signal root_ready_finished
 var root_ready := false:
 	set(val):
@@ -151,18 +160,32 @@ var root_ready := false:
 
 
 func reload_scene() -> void:
+	reloading = true
 	root_ready = false
+	close_all()
 	get_tree().reload_current_scene()
+	open_all()
+	reloading = false
 
 
 func close_all() -> void:
-	close()
+	wi.close()
 	up.close()
-	wa.close()
 	lv.close()
+	wa.close()
+	close()
+
+
+func open_all() -> void:
+	open()
+	wa.open()
+	lv.open()
+	up.open()
+	wi.open()
 
 
 func close() -> void:
+	password = 0.0
 	last_clock = 0.0
 	current_clock = 0.0
 	session_duration = 0
@@ -172,7 +195,13 @@ func close() -> void:
 	update_queue.clear()
 	update_cooldown.clear()
 	for i in range(0, 5):
-		get_node("stage" + str(i)).close()
+		get("stage" + str(i)).close()
+
+
+func open() -> void:
+	password = Time.get_unix_time_from_system()
+	# don't need to open stage0 - stage4 as of now
+	pass
 
 
 
@@ -282,6 +311,7 @@ var update_cooldown := []
 
 
 func update(method: Callable) -> void:
+	var my_pass := gv.password
 	
 	if method in update_cooldown:
 		if not method in update_queue:
@@ -297,6 +327,10 @@ func update(method: Callable) -> void:
 	if obj.has_signal("visibility_changed"):
 		if not method.get_object().visible:
 			await method.get_object().showed_or_removed
+			
+			if my_pass != gv.password:
+				return
+			
 			if not method.is_valid():
 				if method in update_queue:
 					update_queue.erase(method)
@@ -305,8 +339,14 @@ func update(method: Callable) -> void:
 	if method in update_queue:
 		update_queue.erase(method)
 	
+	if my_pass != gv.password:
+		return
+	
 	method.call()
 	await get_tree().create_timer(0.016).timeout
+	
+	if my_pass != gv.password:
+		return
 	
 	update_cooldown.erase(method)
 	if method in update_queue:

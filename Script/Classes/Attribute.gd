@@ -10,8 +10,16 @@ signal load_finished
 func save() -> String:
 	var data := {}
 	data["total"] = total.save()
+	data["pending"] = pending.save()
 	if uses_current:
 		data["current"] = current.save()
+	emit_signal("save_finished")
+	return var_to_str(data)
+
+
+func save_as_big() -> String:
+	var data := {}
+	data["total"] = total.current.save()
 	emit_signal("save_finished")
 	return var_to_str(data)
 
@@ -22,6 +30,7 @@ func save_current() -> String:
 		return ""
 	var data := {}
 	data["current"] = current.save()
+	data["pending"] = pending.save()
 	emit_signal("save_finished")
 	return var_to_str(data)
 
@@ -29,6 +38,7 @@ func save_current() -> String:
 func load_data(data_str: String) -> void:
 	var data: Dictionary = str_to_var(data_str)
 	total.load_data(data["total"])
+	pending.load_data(data["pending"])
 	if uses_current:
 		current.load_data(data["current"])
 	emit_signal("load_finished")
@@ -38,8 +48,19 @@ func load_data(data_str: String) -> void:
 func load_current(data_str: String) -> void:
 	var data: Dictionary = str_to_var(data_str)
 	current.load_data(data["current"])
+	pending.load_data(data["pending"])
 	emit_signal("load_finished")
 	notify_all()
+
+
+func load_finished_pending() -> void: # called automatically
+	if pending.greater(0):
+		if uses_current:
+			current.add(pending)
+		else:
+			total.add(pending)
+		notify_changed_and_increased()
+		pending = Big.new(0)
 
 
 signal filled
@@ -49,6 +70,7 @@ var uses_current: bool
 var cap_current := true
 var current: Value
 var total: Value
+var pending := Big.new(0)
 
 var notify_if_changed: Array
 var notify_if_increased: Array
@@ -59,6 +81,7 @@ var notify_if_changed_immediately: Array
 
 
 func _init(base_value = 0, will_use_current := true) -> void:
+	connect("load_finished", load_finished_pending)
 	uses_current = will_use_current
 	if uses_current:
 		current = Value.new(base_value)
@@ -175,6 +198,7 @@ func reset():
 	if uses_current:
 		current.reset()
 	total.reset()
+	pending = Big.new(0)
 	notify_changed_and_decreased()
 	notify_total_change()
 
@@ -221,6 +245,15 @@ func subtract(amount) -> void:
 func add_percent(percent: float) -> void:
 	var amount = Big.new(percent).m(get_total())
 	add(amount)
+
+
+
+func add_pending(amount: Big) -> void:
+	pending.a(amount)
+
+
+func subtract_pending(amount: Big) -> void:
+	pending.s(amount)
 
 
 

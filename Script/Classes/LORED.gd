@@ -9,14 +9,13 @@ signal load_finished
 func save() -> String:
 	var data := {}
 	data["unlocked"] = var_to_str(unlocked)
+	data["purchased"] = var_to_str(purchased)
 	data["level"] = var_to_str(level)
-	if unlocked:
-		data["purchased"] = var_to_str(purchased)
-		if purchased:
-			data["fuel"] = fuel.save_current()
-			data["asleep"] = var_to_str(asleep)
-			data["times_purchased"] = var_to_str(times_purchased)
-			data["time_spent_asleep"] = var_to_str(time_spent_asleep)
+	if unlocked and purchased:
+		data["fuel"] = fuel.save_current()
+		data["asleep"] = var_to_str(asleep)
+		data["times_purchased"] = var_to_str(times_purchased)
+		data["time_spent_asleep"] = var_to_str(time_spent_asleep)
 	emit_signal("save_finished")
 	return var_to_str(data)
 
@@ -24,14 +23,13 @@ func save() -> String:
 func load_data(data_str: String) -> void:
 	var data: Dictionary = str_to_var(data_str)
 	unlocked = str_to_var(data["unlocked"])
+	purchased = str_to_var(data["purchased"])
 	set_level_to(str_to_var(data["level"]))
-	if unlocked:
-		purchased = str_to_var(data["purchased"])
-		if purchased:
-			fuel.load_current(data["fuel"])
-			asleep = str_to_var(data["asleep"])
-			times_purchased = str_to_var(data["times_purchased"])
-			time_spent_asleep = str_to_var(data["time_spent_asleep"])
+	if unlocked and purchased:
+		fuel.load_current(data["fuel"])
+		asleep = str_to_var(data["asleep"])
+		times_purchased = str_to_var(data["times_purchased"])
+		time_spent_asleep = str_to_var(data["time_spent_asleep"])
 	emit_signal("load_finished")
 	
 	if not gv.root_ready:
@@ -39,6 +37,8 @@ func load_data(data_str: String) -> void:
 	if unlocked:
 		emit_signal("just_unlocked")
 		lv.unlock_lored(type)
+	if purchased:
+		emit_signal("leveled_up", level)
 
 
 
@@ -110,13 +110,14 @@ signal finished_emoting
 signal purchased_changed(purchased)
 signal job_started(job)
 
+var killed := false
+
 var type: int
 var stage: int
 var last_job: Job
 var times_purchased := 0
 var primary_currency: int
-var fuel_currency_type: int
-var fuel_currency: Currency
+var fuel_currency: int
 var time_spent_asleep := 0.0
 var reason_cannot_work := 0
 
@@ -140,15 +141,15 @@ var purchased := false:
 			return
 		purchased = val
 		if val:
-			if not self in lv.active:
-				lv.active.append(self)
+			if not type in lv.active:
+				lv.active.append(type)
 			if not asleep:
-				lv.active_and_awake.append(self)
+				lv.active_and_awake.append(type)
 		else:
-			if self in lv.active:
-				lv.active.erase(self)
-			if self in lv.active_and_awake:
-				lv.active_and_awake.erase(self)
+			if type in lv.active:
+				lv.active.erase(type)
+			if type in lv.active_and_awake:
+				lv.active_and_awake.erase(type)
 		emit_signal("purchased_changed", val)
 var working := false
 var asleep := false:
@@ -188,7 +189,10 @@ var cost: Cost
 var cost_increase := Attribute.new(3, false)
 
 var has_vico := false
-var vico: LOREDVico
+var vico: LOREDVico:
+	set(val):
+		vico = val
+		has_vico = true
 
 var jobs := {}
 var sorted_jobs := []
@@ -214,7 +218,6 @@ func _init(_type: int) -> void:
 	
 	call("init_" + key)
 	
-	fuel_currency = wa.get_currency(fuel_currency_type)
 	required_currencies.append(fuel_currency)
 	add_job(Job.Type.REFUEL)
 	
@@ -225,7 +228,6 @@ func _init(_type: int) -> void:
 		faded_color = color
 	color_text = "[color=#" + color.to_html() + "]%s[/color]"
 	
-	#SaveManager.connect("load_started", load_started)
 	connect("began_working", add_current_fuel_rate)
 	connect("stopped_working", subtract_current_fuel_rate)
 	connect("woke_up", work)
@@ -247,7 +249,7 @@ func _init(_type: int) -> void:
 		var base_fuel_cost = 0.1
 		if job.has_required_currencies:
 			base_fuel_cost += (0.05 * job.required_currencies.cost.size())
-		var modifier = 1 if fuel_currency_type == Currency.Type.COAL else 2
+		var modifier = 1 if fuel_currency == Currency.Type.COAL else 2
 		fuel_cost = Attribute.new(base_fuel_cost * modifier, false)
 	else:
 		fuel_cost = Attribute.new(0.5, false)
@@ -276,7 +278,7 @@ func init_STONE() -> void:
 	})
 	color = Color(0.79, 0.79, 0.79)
 	faded_color = Color(0.788235, 0.788235, 0.788235)
-	fuel_currency_type = Currency.Type.COAL
+	fuel_currency = Currency.Type.COAL
 	icon = preload("res://Sprites/Currency/stone.png")
 	description = "Likes rocks. Has a bottomless bag."
 	primary_currency = Currency.Type.STONE
@@ -289,7 +291,7 @@ func init_COAL() -> void:
 	})
 	color = Color(0.7, 0, 1)
 	faded_color = Color(0.9, 0.3, 1)
-	fuel_currency_type = Currency.Type.COAL
+	fuel_currency = Currency.Type.COAL
 	icon = preload("res://Sprites/Currency/coal.png")
 	description = "Plays support in every game."
 	primary_currency = Currency.Type.COAL
@@ -302,7 +304,7 @@ func init_IRON_ORE() -> void:
 	})
 	color = Color(0, 0.517647, 0.905882)
 	faded_color = Color(0.5, 0.788732, 1)
-	fuel_currency_type = Currency.Type.COAL
+	fuel_currency = Currency.Type.COAL
 	icon = preload("res://Sprites/Currency/irono.png")
 	description = "Is actually evil."
 	primary_currency = Currency.Type.IRON_ORE
@@ -315,7 +317,7 @@ func init_COPPER_ORE() -> void:
 	})
 	color = Color(0.7, 0.33, 0)
 	faded_color = Color(0.695313, 0.502379, 0.334076)
-	fuel_currency_type = Currency.Type.COAL
+	fuel_currency = Currency.Type.COAL
 	icon = preload("res://Sprites/Currency/copo.png")
 	description = "Trapped in a dead-end job. Literally."
 	primary_currency = Currency.Type.COPPER_ORE
@@ -329,7 +331,7 @@ func init_IRON() -> void:
 	})
 	color = Color(0.07, 0.89, 1)
 	faded_color = Color(0.496094, 0.940717, 1)
-	fuel_currency_type = Currency.Type.COAL
+	fuel_currency = Currency.Type.COAL
 	icon = preload("res://Sprites/Currency/iron.png")
 	description = "Wants everyone to succeed."
 	primary_currency = Currency.Type.IRON
@@ -343,7 +345,7 @@ func init_COPPER() -> void:
 	})
 	color = Color(1, 0.74, 0.05)
 	faded_color = Color(1, 0.862001, 0.496094)
-	fuel_currency_type = Currency.Type.COAL
+	fuel_currency = Currency.Type.COAL
 	icon = preload("res://Sprites/Currency/cop.png")
 	description = "Loves s'mores."
 	primary_currency = Currency.Type.COPPER
@@ -356,7 +358,7 @@ func init_GROWTH() -> void:
 	})
 	color = Color(0.79, 1, 0.05)
 	faded_color = Color(0.890041, 1, 0.5)
-	fuel_currency_type = Currency.Type.JOULES
+	fuel_currency = Currency.Type.JOULES
 	icon = preload("res://Sprites/Currency/growth.png")
 	description = "Is in an unfortunate situation."
 	primary_currency = Currency.Type.GROWTH
@@ -369,7 +371,7 @@ func init_JOULES() -> void:
 	})
 	color = Color(1, 0.98, 0)
 	faded_color = Color(1, 0.9572, 0.503906)
-	fuel_currency_type = Currency.Type.COAL
+	fuel_currency = Currency.Type.COAL
 	icon = preload("res://Sprites/Currency/jo.png")
 	description = "Follows Tesla on [s]Twitter[/s] X."
 	primary_currency = Currency.Type.JOULES
@@ -383,7 +385,7 @@ func init_CONCRETE() -> void:
 	})
 	color = Color(0.35, 0.35, 0.35)
 	faded_color = Color(0.6, 0.6, 0.6)
-	fuel_currency_type = Currency.Type.COAL
+	fuel_currency = Currency.Type.COAL
 	icon = preload("res://Sprites/Currency/conc.png")
 	description = "Laughs about everything."
 	primary_currency = Currency.Type.CONCRETE
@@ -397,7 +399,7 @@ func init_OIL() -> void:
 	})
 	color = Color(0.65, 0.3, 0.66)
 	faded_color = Color(0.647059, 0.298039, 0.658824)
-	fuel_currency_type = Currency.Type.COAL
+	fuel_currency = Currency.Type.COAL
 	icon = preload("res://Sprites/Currency/oil.png")
 	description = "Is a big baby."
 	primary_currency = Currency.Type.OIL
@@ -411,7 +413,7 @@ func init_TARBALLS() -> void:
 	})
 	color = Color(0.56, 0.44, 1)
 	faded_color = Color(0.560784, 0.439216, 1)
-	fuel_currency_type = Currency.Type.JOULES
+	fuel_currency = Currency.Type.JOULES
 	icon = preload("res://Sprites/Currency/tar.png")
 	description = "Quiet science guy."
 	primary_currency = Currency.Type.TARBALLS
@@ -426,7 +428,7 @@ func init_MALIGNANCY() -> void:
 	})
 	color = Color(0.88, 0.12, 0.35)
 	faded_color = Color(0.882353, 0.121569, 0.352941)
-	fuel_currency_type = Currency.Type.JOULES
+	fuel_currency = Currency.Type.JOULES
 	icon = preload("res://Sprites/Currency/malig.png")
 	description = "Infinite clones."
 	primary_currency = Currency.Type.MALIGNANCY
@@ -441,7 +443,7 @@ func init_WATER() -> void:
 	})
 	color = Color(0, 0.647059, 1)
 	faded_color = Color(0.570313, 0.859009, 1)
-	fuel_currency_type = Currency.Type.COAL
+	fuel_currency = Currency.Type.COAL
 	icon = preload("res://Sprites/Currency/water.png")
 	description = "Likes his pool."
 	primary_currency = Currency.Type.WATER
@@ -456,7 +458,7 @@ func init_HUMUS() -> void:
 	})
 	color = Color(0.458824, 0.25098, 0)
 	faded_color = Color(0.6, 0.3, 0)
-	fuel_currency_type = Currency.Type.JOULES
+	fuel_currency = Currency.Type.JOULES
 	icon = preload("res://Sprites/Currency/humus.png")
 	description = "The shittest character in the game."
 	primary_currency = Currency.Type.HUMUS
@@ -469,7 +471,7 @@ func init_SOIL() -> void:
 		Currency.Type.HARDWOOD: Attribute.new(40, false),
 	})
 	color = Color(0.737255, 0.447059, 0)
-	fuel_currency_type = Currency.Type.COAL
+	fuel_currency = Currency.Type.COAL
 	icon = preload("res://Sprites/Currency/soil.png")
 	description = "#note."
 	primary_currency = Currency.Type.SOIL
@@ -484,7 +486,7 @@ func init_TREES() -> void:
 	})
 	color = Color(0.772549, 1, 0.247059)
 	faded_color = Color(0.864746, 0.988281, 0.679443)
-	fuel_currency_type = Currency.Type.JOULES
+	fuel_currency = Currency.Type.JOULES
 	icon = preload("res://Sprites/Currency/tree.png")
 	description = "God-mode."
 	primary_currency = Currency.Type.TREES
@@ -499,7 +501,7 @@ func init_SEEDS() -> void:
 	})
 	color = Color(1, 0.878431, 0.431373)
 	faded_color = Color(.8,.8,.8)
-	fuel_currency_type = Currency.Type.COAL
+	fuel_currency = Currency.Type.COAL
 	icon = preload("res://Sprites/Currency/seed.png")
 	description = "Keeps beesy."
 	primary_currency = Currency.Type.SEEDS
@@ -513,7 +515,7 @@ func init_GALENA() -> void:
 	})
 	color = Color(0.701961, 0.792157, 0.929412)
 	faded_color = Color(0.701961, 0.792157, 0.929412)
-	fuel_currency_type = Currency.Type.COAL
+	fuel_currency = Currency.Type.COAL
 	icon = preload("res://Sprites/Currency/gale.png")
 	description = "#note."
 	primary_currency = Currency.Type.GALENA
@@ -526,7 +528,7 @@ func init_LEAD() -> void:
 		Currency.Type.GROWTH: Attribute.new(800, false),
 	})
 	color = Color(0.53833, 0.714293, 0.984375)
-	fuel_currency_type = Currency.Type.COAL
+	fuel_currency = Currency.Type.COAL
 	icon = preload("res://Sprites/Currency/lead.png")
 	description = "#note."
 	primary_currency = Currency.Type.LEAD
@@ -539,7 +541,7 @@ func init_WOOD_PULP() -> void:
 		Currency.Type.GLASS: Attribute.new(30, false),
 	})
 	color = Color(0.94902, 0.823529, 0.54902)
-	fuel_currency_type = Currency.Type.JOULES
+	fuel_currency = Currency.Type.JOULES
 	icon = preload("res://Sprites/Currency/pulp.png")
 	description = "#note."
 	primary_currency = Currency.Type.WOOD_PULP
@@ -552,7 +554,7 @@ func init_PAPER() -> void:
 		Currency.Type.STEEL: Attribute.new(15, false),
 	})
 	color = Color(0.792157, 0.792157, 0.792157)
-	fuel_currency_type = Currency.Type.COAL
+	fuel_currency = Currency.Type.COAL
 	icon = preload("res://Sprites/Currency/paper.png")
 	description = "Was in the boy scouts for 25 years."
 	primary_currency = Currency.Type.PAPER
@@ -566,7 +568,7 @@ func init_TOBACCO() -> void:
 	})
 	color = Color(0.639216, 0.454902, 0.235294)
 	faded_color = Color(0.85, 0.75, 0.63)
-	fuel_currency_type = Currency.Type.COAL
+	fuel_currency = Currency.Type.COAL
 	icon = preload("res://Sprites/Currency/toba.png")
 	description = "Thinks vapes are dangerous."
 	primary_currency = Currency.Type.TOBACCO
@@ -580,7 +582,7 @@ func init_CIGARETTES() -> void:
 	})
 	color = Color(0.929412, 0.584314, 0.298039)
 	faded_color = Color(0.97, 0.8, 0.6)
-	fuel_currency_type = Currency.Type.JOULES
+	fuel_currency = Currency.Type.JOULES
 	icon = preload("res://Sprites/Currency/ciga.png")
 	description = "On his 45th smoke break this shift."
 	primary_currency = Currency.Type.CIGARETTES
@@ -594,7 +596,7 @@ func init_PETROLEUM() -> void:
 		Currency.Type.GLASS: Attribute.new(130, false),
 	})
 	color = Color(0.76, 0.53, 0.14)
-	fuel_currency_type = Currency.Type.COAL
+	fuel_currency = Currency.Type.COAL
 	icon = preload("res://Sprites/Currency/pet.png")
 	description = "#note."
 	primary_currency = Currency.Type.PETROLEUM
@@ -607,7 +609,7 @@ func init_PLASTIC() -> void:
 		Currency.Type.TARBALLS: Attribute.new(700, false),
 	})
 	color = Color(0.85, 0.85, 0.85)
-	fuel_currency_type = Currency.Type.JOULES
+	fuel_currency = Currency.Type.JOULES
 	icon = preload("res://Sprites/Currency/plast.png")
 	description = "#note."
 	primary_currency = Currency.Type.PLASTIC
@@ -622,7 +624,7 @@ func init_CARCINOGENS() -> void:
 		Currency.Type.LEAD: Attribute.new(800, false),
 	})
 	color = Color(0.772549, 0.223529, 0.192157)
-	fuel_currency_type = Currency.Type.JOULES
+	fuel_currency = Currency.Type.JOULES
 	icon = preload("res://Sprites/Currency/carc.png")
 	description = "#note."
 	primary_currency = Currency.Type.CARCINOGENS
@@ -636,7 +638,7 @@ func init_LIQUID_IRON() -> void:
 	})
 	color = Color(0.27, 0.888, .9)
 	faded_color = Color(0.7, 0.94, .985)
-	fuel_currency_type = Currency.Type.JOULES
+	fuel_currency = Currency.Type.JOULES
 	icon = preload("res://Sprites/Currency/liq.png")
 	description = "Likes soup."
 	primary_currency = Currency.Type.LIQUID_IRON
@@ -651,7 +653,7 @@ func init_STEEL() -> void:
 	})
 	color = Color(0.607843, 0.802328, 0.878431)
 	faded_color = Color(0.823529, 0.898039, 0.92549)
-	fuel_currency_type = Currency.Type.JOULES
+	fuel_currency = Currency.Type.JOULES
 	icon = preload("res://Sprites/Currency/steel.png")
 	description = "Is as strong as Guts."
 	primary_currency = Currency.Type.STEEL
@@ -664,7 +666,7 @@ func init_SAND() -> void:
 		Currency.Type.COPPER: Attribute.new(2850, false),
 	})
 	color = Color(.87, .70, .45)
-	fuel_currency_type = Currency.Type.COAL
+	fuel_currency = Currency.Type.COAL
 	icon = preload("res://Sprites/Currency/sand.png")
 	description = "Didn't get DisneyPlus-ed."
 	primary_currency = Currency.Type.SAND
@@ -679,7 +681,7 @@ func init_GLASS() -> void:
 	})
 	color = Color(0.81, 0.93, 1.0)
 	faded_color = Color(0.81, 0.93, 1.0)
-	fuel_currency_type = Currency.Type.JOULES
+	fuel_currency = Currency.Type.JOULES
 	icon = preload("res://Sprites/Currency/glass.png")
 	description = "Vaporizes people for fun."
 	primary_currency = Currency.Type.GLASS
@@ -692,7 +694,7 @@ func init_WIRE() -> void:
 		Currency.Type.GLASS: Attribute.new(30, false),
 	})
 	color = Color(0.9, 0.6, 0.14)
-	fuel_currency_type = Currency.Type.JOULES
+	fuel_currency = Currency.Type.JOULES
 	icon = preload("res://Sprites/Currency/wire.png")
 	description = "Loves her grandchildren."
 	primary_currency = Currency.Type.WIRE
@@ -707,7 +709,7 @@ func init_DRAW_PLATE() -> void:
 		Currency.Type.WIRE: Attribute.new(20, false),
 	})
 	color = Color(0.333333, 0.639216, 0.811765)
-	fuel_currency_type = Currency.Type.COAL
+	fuel_currency = Currency.Type.COAL
 	icon = preload("res://Sprites/Currency/draw.png")
 	description = "Can run really fast."
 	primary_currency = Currency.Type.DRAW_PLATE
@@ -720,7 +722,7 @@ func init_AXES() -> void:
 		Currency.Type.HARDWOOD: Attribute.new(55, false),
 	})
 	color = Color(0.691406, 0.646158, 0.586075)
-	fuel_currency_type = Currency.Type.JOULES
+	fuel_currency = Currency.Type.JOULES
 	icon = preload("res://Sprites/Currency/axe.png")
 	description = "IN THE YEAR 202070707020. I AM WAKAKO."
 	primary_currency = Currency.Type.AXES
@@ -734,7 +736,7 @@ func init_WOOD() -> void:
 	})
 	color = Color(0.545098, 0.372549, 0.015686)
 	faded_color = Color(0.77, 0.68, 0.6)
-	fuel_currency_type = Currency.Type.JOULES
+	fuel_currency = Currency.Type.JOULES
 	icon = preload("res://Sprites/Currency/wood.png")
 	description = "Is just Goku."
 	primary_currency = Currency.Type.WOOD
@@ -748,7 +750,7 @@ func init_HARDWOOD() -> void:
 		Currency.Type.WIRE: Attribute.new(35, false),
 	})
 	color = Color(0.92549, 0.690196, 0.184314)
-	fuel_currency_type = Currency.Type.JOULES
+	fuel_currency = Currency.Type.JOULES
 	icon = preload("res://Sprites/Currency/hard.png")
 	description = "Potentially problematic."
 	primary_currency = Currency.Type.HARDWOOD
@@ -763,7 +765,7 @@ func init_TUMORS() -> void:
 		Currency.Type.STEEL: Attribute.new(100, false),
 	})
 	color = Color(1, .54, .54)
-	fuel_currency_type = Currency.Type.JOULES
+	fuel_currency = Currency.Type.JOULES
 	icon = preload("res://Sprites/Currency/tum.png")
 	description = "#note."
 	primary_currency = Currency.Type.TUMORS
@@ -778,7 +780,7 @@ func init_WITCH() -> void:
 		Currency.Type.STEEL: Attribute.new(100, false),
 	})
 	color = Color(0.937255, 0.501961, 0.776471)
-	fuel_currency_type = Currency.Type.COAL
+	fuel_currency = Currency.Type.COAL
 	icon = preload("res://Sprites/upgrades/thewitchofloredelith.png")
 	description = "Loves her garden. In good favor with Aurus."
 	primary_currency = Currency.Type.FLOWER_SEED
@@ -809,12 +811,10 @@ func add_job(_job: int) -> void:
 	
 	for cur in jobs[_job].get_produced_currencies():
 		if not cur in produced_currencies:
-			var currency = wa.get_currency(cur)
-			produced_currencies.append(currency)
+			produced_currencies.append(cur)
 	for cur in jobs[_job].get_required_currency_types():
 		if not cur in required_currencies:
-			var currency = wa.get_currency(cur)
-			required_currencies.append(currency)
+			required_currencies.append(cur)
 	
 	if not lv.loreds_are_initialized:
 		await lv.loreds_initialized
@@ -848,15 +848,10 @@ func set_female_pronouns() -> void:
 func attach_vico(_vico: LOREDVico) -> void:
 	vico = _vico
 	vico.attach_lored(self)
-	has_vico = true
 
 
 
 # - Signal Shit
-
-func loreds_initialized() -> void:
-	pass
-
 
 func lored_vicos_ready() -> void:
 	if purchased:
@@ -866,25 +861,25 @@ func lored_vicos_ready() -> void:
 func add_current_fuel_rate() -> void:
 	if not current_fuel_rate_added:
 		current_fuel_rate_added = true
-		fuel_currency.add_current_loss_rate(fuel_cost.get_value())
+		wa.add_current_loss_rate(fuel_currency, fuel_cost.get_value())
 
 
 func subtract_current_fuel_rate() -> void:
 	if current_fuel_rate_added:
 		current_fuel_rate_added = false
-		fuel_currency.subtract_current_loss_rate(fuel_cost.get_value())
+		wa.subtract_current_loss_rate(fuel_currency, fuel_cost.get_value())
 
 
 func add_total_fuel_rate() -> void:
 	if not total_fuel_rate_added:
 		total_fuel_rate_added = true
-		fuel_currency.add_total_loss_rate(fuel_cost.get_value())
+		wa.add_total_loss_rate(fuel_currency, fuel_cost.get_value())
 
 
 func subtract_total_fuel_rate() -> void:
 	if total_fuel_rate_added:
 		total_fuel_rate_added = false
-		fuel_currency.subtract_total_loss_rate(fuel_cost.get_value())
+		wa.subtract_total_loss_rate(fuel_currency, fuel_cost.get_value())
 
 
 
@@ -901,6 +896,22 @@ func reset():
 	cost.reset()
 	set_level_to(0)
 	purchased = true if type == Type.STONE else false
+
+
+
+func kill() -> void:
+	killed = true
+	for job in jobs.values():
+		job.disconnect("became_workable", work)
+		job.disconnect("completed", job_completed)
+		job.disconnect("cut_short", job_cut_short)
+		job.kill()
+	jobs.clear()
+	cost.kill()
+	disconnect("began_working", add_current_fuel_rate)
+	disconnect("stopped_working", subtract_current_fuel_rate)
+	disconnect("woke_up", work)
+	disconnect("completed_job", work)
 
 
 
@@ -935,7 +946,7 @@ func first_purchase() -> void:
 		return
 	purchased = true
 	for currency in produced_currencies:
-		wa.unlock_currency(currency.type)
+		wa.unlock_currency(currency)
 	await leveled_up
 	work()
 
@@ -958,7 +969,8 @@ func set_level_to(_level: int) -> void:
 	fuel_cost.set_from_level(Big.new(2).power(_level - 1))
 	if working:
 		add_current_fuel_rate()
-	add_total_fuel_rate()
+	if purchased:
+		add_total_fuel_rate()
 	
 	level = _level
 
@@ -993,13 +1005,14 @@ func wake_up() -> void:
 		time_spent_asleep += time_in_bed
 	if asleep or will_go_to_sleep:
 		will_go_to_sleep = false
-		lv.active_and_awake.append(self)
+		lv.active_and_awake.append(type)
 		asleep = false
 		emit_signal("woke_up")
 
 
 
 func emote(_emote: Emote) -> void:
+	var my_pass := gv.password
 	if not unlocked:
 		return
 	if not _emote.ready_to_emote:
@@ -1007,6 +1020,10 @@ func emote(_emote: Emote) -> void:
 	while emoting:
 		await finished_emoting
 		await gv.get_tree().create_timer(1).timeout
+	
+	if my_pass != gv.password or killed:
+		return
+	
 	emoting = true
 	vico.emote(_emote)
 	await _emote.finished_emoting
@@ -1015,20 +1032,15 @@ func emote(_emote: Emote) -> void:
 
 
 
-func add_influencing_upgrade(upgrade: Upgrade) -> void:
+func add_influencing_upgrade(upgrade: int) -> void:
 	if not upgrade in upgrades:
 		upgrades.append(upgrade)
-		if not upgrade.purchased:
+		if not up.is_upgrade_purchased(upgrade):
 			if not upgrade in unpurchased_upgrades:
 				unpurchased_upgrades.append(upgrade)
-				await upgrade.just_purchased
+				await up.get_upgrade(upgrade).just_purchased
 				unpurchased_upgrades.erase(upgrade)
 
-
-
-#func load_started() -> void:
-#	purchased = false
-#	stop_job()
 
 
 
@@ -1039,7 +1051,9 @@ func work(job_type: int = get_next_job_automatically()) -> void:
 		return
 	if working or asleep or will_go_to_sleep:
 		return
-	if job_type == -1:
+	if job_type > -1:
+		start_job(job_type)
+	else:
 		if type == Type.COAL:
 			var cur_fuel = fuel.get_current()
 			if cur_fuel.greater_equal(jobs[Job.Type.COAL].get_fuel_cost()):
@@ -1048,8 +1062,6 @@ func work(job_type: int = get_next_job_automatically()) -> void:
 				start_job(Job.Type.REFUEL)
 		else:
 			determine_why_cannot_work()
-	else:
-		start_job(job_type)
 
 
 func get_next_job_automatically() -> int:
@@ -1065,6 +1077,8 @@ func start_job(_type: int) -> void:
 	working = true
 	last_job = jobs[_type]
 	last_job.start()
+	if vico == null:
+		return
 	vico.start_job(last_job)
 	emit_signal("began_working")
 	emit_signal("job_started", last_job)
@@ -1104,8 +1118,8 @@ func cannot_work(reason: int) -> void:
 	match reason:
 		ReasonCannotWork.INSUFFICIENT_FUEL:
 			vico.set_status_and_currency(
-				"Awaiting " + fuel_currency.icon_and_name_text + ".",
-				 fuel_currency_type
+				"Awaiting " + wa.get_icon_and_name_text(fuel_currency) + ".",
+				 fuel_currency
 			)
 		ReasonCannotWork.INSUFFICIENT_CURRENCIES:
 			if stage in [1, 2]:
@@ -1119,8 +1133,8 @@ func cannot_work(reason: int) -> void:
 
 # - Wish
 
-var wished_upgrade: Upgrade
-var wished_currency: Currency
+var wished_upgrade: int
+var wished_currency: int
 
 func get_wish() -> String:
 	randomize()
@@ -1145,7 +1159,7 @@ func get_wish() -> String:
 		total_weight += 50
 	else:
 		if wi.random_wish_limit >= 2 and randi() % 100 < 10:
-			wished_currency = wa.get_currency(Currency.Type.JOY)
+			wished_currency = Currency.Type.JOY
 			possible_types["COLLECT_CURRENCY"] = 10
 			total_weight += 10
 		else:
@@ -1154,10 +1168,10 @@ func get_wish() -> String:
 			total_weight += 30
 	
 	for upgrade in unpurchased_upgrades:
-		var upgrade_eta = upgrade.cost.get_eta()
+		var upgrade_eta = up.get_eta(upgrade)
 		if upgrade_eta.equal(0):
 			continue
-		if upgrade.unlocked and upgrade_eta.less_equal(60):
+		if up.is_upgrade_unlocked(upgrade) and upgrade_eta.less_equal(60):
 			wished_upgrade = upgrade
 			possible_types["UPGRADE_PURCHASED"] = 30
 			total_weight += 30

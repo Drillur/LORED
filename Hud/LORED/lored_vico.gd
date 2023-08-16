@@ -75,8 +75,6 @@ func _ready():
 	active_buffs.hide()
 	sleep.hide()
 	view_special.hide()
-	
-	#SaveManager.connect("load_started", load_started)
 
 
 
@@ -115,8 +113,6 @@ func attach_lored(_lored: LORED) -> void:
 	lored.cost.connect("became_affordable", flash_level_up_button)
 	lored.connect("leveled_up", flash_on_level_up)
 	lored.connect("just_unlocked", show)
-	if lored.key == "STONE":
-		print("def connected")
 	lored.connect("just_locked", hide)
 	
 	info.button.connect("mouse_entered", show_info_tooltip)
@@ -135,7 +131,7 @@ func attach_lored(_lored: LORED) -> void:
 	$bg.self_modulate = lored.color
 	progress_bar.color = lored.color
 	progress_bar.modulate.a = 0.25
-	fuel_bar.color = lored.fuel_currency.color
+	fuel_bar.color = wa.get_color(lored.fuel_currency)
 	fuel_bar.modulate = Color(0.75, 0.75, 0.75)
 	lored_name.modulate = lored.color
 	info.color = lored.faded_color
@@ -340,5 +336,3 @@ func emote(_emote: Emote) -> void:
 
 
 
-#func load_started() -> void:
-#	start_idle()

@@ -94,7 +94,7 @@ func purchase() -> void:
 		elif upgrade.unlocked:
 			gv.get_tooltip().get_price_node().flash()
 		else:
-			upgrade.required_upgrade.vico.flash()
+			up.get_vico(upgrade.required_upgrade).flash()
 
 
 func show_check() -> void:

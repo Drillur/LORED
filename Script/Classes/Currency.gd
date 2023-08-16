@@ -12,7 +12,6 @@ func save() -> String:
 	data["unlocked"] = var_to_str(unlocked)
 	if unlocked:
 		data["count"] = count.save()
-		data["pending"] = pending.save()
 		data["subtracted_by_loreds"] = subtracted_by_loreds.save()
 		data["subtracted_by_player"] = subtracted_by_player.save()
 		data["added_by_loreds"] = added_by_loreds.save()
@@ -25,17 +24,10 @@ func load_data(data_str: String) -> void:
 	unlocked = str_to_var(data["unlocked"])
 	if unlocked:
 		count.load_data(data["count"])
-		pending.load_data(data["pending"])
 		subtracted_by_loreds.load_data(data["subtracted_by_loreds"])
 		subtracted_by_player.load_data(data["subtracted_by_player"])
 		added_by_loreds.load_data(data["added_by_loreds"])
 	emit_signal("load_finished")
-	
-	var pending_amount = pending.get_value()
-	if pending_amount.greater(0):
-		count.add(pending_amount)
-		emit_signal("increased", pending_amount)
-		pending.set_to(0)
 
 
 
@@ -111,7 +103,6 @@ var color_text: String
 var icon: Texture
 
 var count: Attribute
-var pending := Attribute.new(0, false)
 
 var subtracted_by_loreds := Attribute.new(0, false)
 var subtracted_by_player := Attribute.new(0, false)
@@ -420,7 +411,8 @@ func init_GRIEF() -> void:
 
 func reset():
 	count.reset()
-	pending.reset()
+
+
 
 
 func unlock() -> void:
@@ -453,17 +445,9 @@ func subtract_from_player(amount) -> void:
 	subtracted_by_player.add(amount)
 
 
-func add_producer(lored: LORED) -> void:
+func add_producer(lored: int) -> void:
 	if not lored in produced_by:
 		produced_by.append(lored)
-
-
-func add_pending(amount) -> void:
-	pending.add(amount)
-
-
-func subtract_pending(amount) -> void:
-	pending.subtract(amount)
 
 
 
@@ -538,6 +522,15 @@ func sync_total_net_rate() -> void:
 
 
 
+func add_pending(amount: Big) -> void:
+	count.add_pending(amount)
+
+
+func subtract_pending(amount: Big) -> void:
+	count.subtract_pending(amount)
+
+
+
 
 # - Get
 
@@ -545,16 +538,8 @@ func get_count() -> Big:
 	return count.get_value()
 
 
-func get_pending() -> Big:
-	return pending.get_value()
-
-
 func get_count_text() -> String:
 	return count.get_text()
-
-
-func get_pending_text() -> String:
-	return pending.get_text()
 
 
 func is_unlocked() -> bool:
@@ -563,10 +548,6 @@ func is_unlocked() -> bool:
 
 func is_locked() -> bool:
 	return not is_unlocked()
-
-
-func has_pending_resources() -> bool:
-	return pending.get_value().greater(0)
 
 
 func get_icon_path() -> String:

@@ -370,7 +370,8 @@ class Effect:
 	
 	# - Actions
 	
-	func add_effected_lored(lored: LORED) -> void:
+	func add_effected_lored(lored_type: int) -> void:
+		var lored = lv.get_lored(lored_type)
 		match type:
 			Type.SPECIFIC_INPUT:
 				for att in lored.get_attributes_by_currency(effected_input):
@@ -472,7 +473,7 @@ var key: String
 var stage: int
 var upgrade_menu: int
 
-@export var times_purchased := 0
+var times_purchased := 0
 var name: String
 var description: String
 var has_description: bool
@@ -483,6 +484,7 @@ var icon: Texture:
 		icon = val
 		icon_text = "[img=<15>]" + icon.get_path() + "[/img]"
 var icon_text: String
+var icon_and_name_text: String
 var color: Color
 var loreds: Array
 var effected_loreds_text: String
@@ -518,13 +520,13 @@ var vico: UpgradeVico:
 var effect: Effect
 
 var has_required_upgrade := false
-var required_upgrade: Upgrade:
+var required_upgrade: int:
 	set(val):
 		has_required_upgrade = true
 		required_upgrade = val
-		required_upgrade.connect("just_purchased", required_upgrade_purchased)
-		required_upgrade.connect("just_unpurchased", required_upgrade_unpurchased)
-		unlocked = required_upgrade.purchased
+		up.get_upgrade(required_upgrade).connect("just_purchased", required_upgrade_purchased)
+		up.get_upgrade(required_upgrade).connect("just_unpurchased", required_upgrade_unpurchased)
+		unlocked = up.is_upgrade_purchased(required_upgrade)
 
 var cost: Cost
 
@@ -566,11 +568,13 @@ func _init(_type: int) -> void:
 				upgrade_menu = UpgradeMenu.Type.S4M
 	
 	if type != Type.ROUTINE:
-		up.add_upgrade_to_menu(upgrade_menu, self)
+		up.add_upgrade_to_menu(upgrade_menu, type)
 	
 	if not has_method("init_" + key):
 		return
 	call("init_" + key)
+	
+	icon_and_name_text = icon_text + " " + name
 	
 	effected_loreds_text = get_effected_loreds_text()
 	
@@ -580,12 +584,12 @@ func _init(_type: int) -> void:
 			var i = 0
 			var ok = 0
 			for x in loreds:
-				if x.type > highest:
-					highest = x.type
+				if x > highest:
+					highest = x
 					ok = i
 				i += 1
-			icon = loreds[ok].icon
-			color = loreds[ok].color
+			icon = lv.get_icon(loreds[ok])
+			color = lv.get_color(loreds[ok])
 	
 	has_description = description != ""
 
@@ -608,7 +612,7 @@ func init_LIGHTER_SHOVEL() -> void:
 		Currency.Type.COPPER: Attribute.new(155, false),
 	})
 	await up.all_upgrades_initialized
-	required_upgrade = up.get_upgrade(Type.GRINDER)
+	required_upgrade = Type.GRINDER
 
 
 func init_TEXAS() -> void:
@@ -620,7 +624,7 @@ func init_TEXAS() -> void:
 		Currency.Type.COPPER: Attribute.new(400, false),
 	})
 	await up.all_upgrades_initialized
-	required_upgrade = up.get_upgrade(Type.RYE)
+	required_upgrade = Type.RYE
 
 
 func init_RYE() -> void:
@@ -632,7 +636,7 @@ func init_RYE() -> void:
 		Currency.Type.IRON: Attribute.new(100, false),
 	})
 	await up.all_upgrades_initialized
-	required_upgrade = up.get_upgrade(Type.GRINDER)
+	required_upgrade = Type.GRINDER
 
 
 func init_GRANDER() -> void:
@@ -643,7 +647,7 @@ func init_GRANDER() -> void:
 		Currency.Type.COAL: Attribute.new(400, false),
 	})
 	await up.all_upgrades_initialized
-	required_upgrade = up.get_upgrade(Type.GRINDER)
+	required_upgrade = Type.GRINDER
 
 
 func init_SAALNDT() -> void:
@@ -656,7 +660,7 @@ func init_SAALNDT() -> void:
 		Currency.Type.COPPER_ORE: Attribute.new(1500, false),
 	})
 	await up.all_upgrades_initialized
-	required_upgrade = up.get_upgrade(Type.GRINDER)
+	required_upgrade = Type.GRINDER
 
 
 func init_SALT() -> void:
@@ -667,7 +671,7 @@ func init_SALT() -> void:
 		Currency.Type.GROWTH: Attribute.new(150, false),
 	})
 	await up.all_upgrades_initialized
-	required_upgrade = up.get_upgrade(Type.TEXAS)
+	required_upgrade = Type.TEXAS
 
 
 func init_SAND() -> void:
@@ -678,7 +682,7 @@ func init_SAND() -> void:
 		Currency.Type.GROWTH: Attribute.new(200, false),
 	})
 	await up.all_upgrades_initialized
-	required_upgrade = up.get_upgrade(Type.RYE)
+	required_upgrade = Type.RYE
 
 
 func init_GRANDMA() -> void:
@@ -691,7 +695,7 @@ func init_GRANDMA() -> void:
 		Currency.Type.CONCRETE: Attribute.new(20, false),
 	})
 	await up.all_upgrades_initialized
-	required_upgrade = up.get_upgrade(Type.GRANDER)
+	required_upgrade = Type.GRANDER
 
 
 func init_MIXER() -> void:
@@ -702,7 +706,7 @@ func init_MIXER() -> void:
 		Currency.Type.CONCRETE: Attribute.new(11, false),
 	})
 	await up.all_upgrades_initialized
-	required_upgrade = up.get_upgrade(Type.RYE)
+	required_upgrade = Type.RYE
 
 
 func init_FLANK() -> void:
@@ -713,7 +717,7 @@ func init_FLANK() -> void:
 		Currency.Type.MALIGNANCY: Attribute.new(125, false),
 	})
 	await up.all_upgrades_initialized
-	required_upgrade = up.get_upgrade(Type.SALT)
+	required_upgrade = Type.SALT
 
 
 func init_RIB() -> void:
@@ -724,7 +728,7 @@ func init_RIB() -> void:
 		Currency.Type.MALIGNANCY: Attribute.new(125, false),
 	})
 	await up.all_upgrades_initialized
-	required_upgrade = up.get_upgrade(Type.SALT)
+	required_upgrade = Type.SALT
 
 
 func init_GRANDPA() -> void:
@@ -736,7 +740,7 @@ func init_GRANDPA() -> void:
 		Currency.Type.COPPER: Attribute.new(2500, false),
 	})
 	await up.all_upgrades_initialized
-	required_upgrade = up.get_upgrade(Type.GRANDMA)
+	required_upgrade = Type.GRANDMA
 
 
 func init_WATT() -> void:
@@ -748,7 +752,7 @@ func init_WATT() -> void:
 		Currency.Type.COPPER: Attribute.new(3500, false),
 	})
 	await up.all_upgrades_initialized
-	required_upgrade = up.get_upgrade(Type.MIXER)
+	required_upgrade = Type.MIXER
 
 
 func init_SWIRLER() -> void:
@@ -760,7 +764,7 @@ func init_SWIRLER() -> void:
 		Currency.Type.STONE: Attribute.new(6000, false),
 	})
 	await up.all_upgrades_initialized
-	required_upgrade = up.get_upgrade(Type.MIXER)
+	required_upgrade = Type.MIXER
 
 
 func init_GEARED_OILS() -> void:
@@ -771,7 +775,7 @@ func init_GEARED_OILS() -> void:
 		Currency.Type.IRON: Attribute.new("6e6", false),
 	})
 	await up.all_upgrades_initialized
-	required_upgrade = up.get_upgrade(Type.CHEEKS)
+	required_upgrade = Type.CHEEKS
 
 
 func init_CHEEKS() -> void:
@@ -789,7 +793,7 @@ func init_CHEEKS() -> void:
 		Currency.Type.OIL: Attribute.new(1, false),
 	})
 	await up.all_upgrades_initialized
-	required_upgrade = up.get_upgrade(Type.SALT)
+	required_upgrade = Type.SALT
 
 
 func init_GROUNDER() -> void:
@@ -801,7 +805,7 @@ func init_GROUNDER() -> void:
 		Currency.Type.JOULES: Attribute.new(100, false),
 	})
 	await up.all_upgrades_initialized
-	required_upgrade = up.get_upgrade(Type.GRANDPA)
+	required_upgrade = Type.GRANDPA
 
 
 func init_MAXER() -> void:
@@ -812,7 +816,7 @@ func init_MAXER() -> void:
 		Currency.Type.GROWTH: Attribute.new(400, false),
 	})
 	await up.all_upgrades_initialized
-	required_upgrade = up.get_upgrade(Type.SWIRLER)
+	required_upgrade = Type.SWIRLER
 
 
 func init_THYME() -> void:
@@ -825,7 +829,7 @@ func init_THYME() -> void:
 		Currency.Type.MALIGNANCY: Attribute.new(35000, false),
 	})
 	await up.all_upgrades_initialized
-	required_upgrade = up.get_upgrade(Type.FLANK)
+	required_upgrade = Type.FLANK
 
 
 func init_PEPPER() -> void:
@@ -837,7 +841,7 @@ func init_PEPPER() -> void:
 		Currency.Type.MALIGNANCY: Attribute.new("15e6", false),
 	})
 	await up.all_upgrades_initialized
-	required_upgrade = up.get_upgrade(Type.ANCHOVE_COVE)
+	required_upgrade = Type.ANCHOVE_COVE
 
 
 func init_ANCHOVE_COVE() -> void:
@@ -850,7 +854,7 @@ func init_ANCHOVE_COVE() -> void:
 		Currency.Type.COPPER_ORE: Attribute.new(450000, false),
 	})
 	await up.all_upgrades_initialized
-	required_upgrade = up.get_upgrade(Type.SAALNDT)
+	required_upgrade = Type.SAALNDT
 
 
 func init_GARLIC() -> void:
@@ -862,7 +866,7 @@ func init_GARLIC() -> void:
 		Currency.Type.MALIGNANCY: Attribute.new("15e6", false),
 	})
 	await up.all_upgrades_initialized
-	required_upgrade = up.get_upgrade(Type.ANCHOVE_COVE)
+	required_upgrade = Type.ANCHOVE_COVE
 
 
 func init_MUD() -> void:
@@ -875,7 +879,7 @@ func init_MUD() -> void:
 		Currency.Type.MALIGNANCY: Attribute.new(35000, false),
 	})
 	await up.all_upgrades_initialized
-	required_upgrade = up.get_upgrade(Type.RIB)
+	required_upgrade = Type.RIB
 
 
 func init_SLOP() -> void:
@@ -886,7 +890,7 @@ func init_SLOP() -> void:
 		Currency.Type.STONE: Attribute.new("1e6", false),
 	})
 	await up.all_upgrades_initialized
-	required_upgrade = up.get_upgrade(Type.SLIMER)
+	required_upgrade = Type.SLIMER
 
 
 func init_SLIMER() -> void:
@@ -897,7 +901,7 @@ func init_SLIMER() -> void:
 		Currency.Type.MALIGNANCY: Attribute.new(150, false),
 	})
 	await up.all_upgrades_initialized
-	required_upgrade = up.get_upgrade(Type.RYE)
+	required_upgrade = Type.RYE
 
 
 func init_STICKYTAR() -> void:
@@ -909,7 +913,7 @@ func init_STICKYTAR() -> void:
 		Currency.Type.OIL: Attribute.new(75, false),
 	})
 	await up.all_upgrades_initialized
-	required_upgrade = up.get_upgrade(Type.SLIMER)
+	required_upgrade = Type.SLIMER
 
 
 func init_INJECT() -> void:
@@ -920,7 +924,7 @@ func init_INJECT() -> void:
 		Currency.Type.TUMORS: Attribute.new(100, false),
 	})
 	await up.all_upgrades_initialized
-	required_upgrade = up.get_upgrade(Type.STICKYTAR)
+	required_upgrade = Type.STICKYTAR
 
 
 func init_RED_GOOPY_BOY() -> void:
@@ -933,7 +937,7 @@ func init_RED_GOOPY_BOY() -> void:
 		Currency.Type.MALIGNANCY: Attribute.new(50, false),
 	})
 	await up.all_upgrades_initialized
-	required_upgrade = up.get_upgrade(Type.STICKYTAR)
+	required_upgrade = Type.STICKYTAR
 
 
 
@@ -944,11 +948,11 @@ func set_effect(_type: int, base_value: float, effected_input = -1) -> void:
 	})
 
 
-func add_effected_lored(_type: int) -> void:
-	var lored = lv.get_lored(_type)
+func add_effected_lored(lored: int) -> void:
 	loreds.append(lored)
 	effect.add_effected_lored(lored)
-	lored.add_influencing_upgrade(self)
+	await up.all_upgrades_initialized
+	lv.get_lored(lored).add_influencing_upgrade(type)
 
 
 func add_effected_stage(_stage: int) -> void:
@@ -1012,9 +1016,5 @@ func get_effected_loreds_text() -> String:
 		return effected_loreds_text
 	var arr := []
 	for lored in loreds:
-		arr.append(lored.colored_name)
+		arr.append(lv.get_lored(lored).colored_name)
 	return "[i]for [/i]" + gv.get_list_text_from_array(arr).replace("and", "[i]and[/i]")
-
-
-func icon_and_name_text() -> String:
-	return icon_text + " " + name

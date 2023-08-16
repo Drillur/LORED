@@ -124,18 +124,15 @@ var never_purchased := []
 
 
 func _ready():
+	open()
 	for lored in LORED.Type.values():
-		loreds[lored] = LORED.new(lored)
 		gv.add_lored_to_stage(loreds[lored].stage, lored)
-	loreds_are_initialized = true
-	emit_signal("loreds_initialized")
-	
-	for lored in loreds.values():
-		lored.loreds_initialized()
 
 
 
 func close() -> void:
+	for lored in loreds:
+		get_lored(lored).kill()
 	loreds.clear()
 	unlocked.clear()
 	active.clear()
@@ -144,6 +141,13 @@ func close() -> void:
 	loreds_are_initialized = false
 	sleep_unlocked = false
 	jobs_unlocked = false
+
+
+func open() -> void:
+	for lored in LORED.Type.values():
+		loreds[lored] = LORED.new(lored)
+	loreds_are_initialized = true
+	emit_signal("loreds_initialized")
 
 
 
@@ -187,6 +191,10 @@ func unlock_jobs() -> void:
 
 
 
+
+
+
+
 # - Handy
 
 func start_sleep_emitter(lored: LORED) -> void:
@@ -204,25 +212,35 @@ func start_sleep_emitter(lored: LORED) -> void:
 func start_job_timer(job: Job) -> void:
 	job.work_pass = Time.get_unix_time_from_system()
 	job.clock_in_time = job.work_pass
-	var my_pass = job.work_pass
+	var my_pass = gv.password
+	var job_pass = job.work_pass
 	await get_tree().create_timer(job.duration.get_as_float()).timeout
-	if my_pass == job.work_pass:
+	if (
+		my_pass == gv.password
+		and job_pass == job.work_pass
+	):
 		job.complete()
 
 
 func unlock_lored(_lored: int) -> void:
-	var lored = get_lored(_lored) as LORED
-	print(lored.key)
-	lored.unlock()
-	unlocked.append(lored)
-	if not lored.purchased:
-		never_purchased.append(lored)
-		await lored.leveled_up
-		never_purchased.erase(lored)
+	get_lored(_lored).unlock()
+	unlocked.append(_lored)
+	if not is_lored_purchased(_lored):
+		never_purchased.append(_lored)
+		await get_lored(_lored).leveled_up
+		never_purchased.erase(_lored)
+	
+	if not gv.root_ready:
+		await gv.root_ready_finished
+	
 	if all_loreds_are_active():
 		emit_signal("all_loreds_became_active")
 	if purchased_every_unlocked_lored_once():
 		emit_signal("purchased_every_lored_once")
+
+
+func emote(emote: Emote) -> void:
+	get_lored(emote.speaker).emote(emote)
 
 
 
@@ -239,12 +257,24 @@ func get_lored(lored: int) -> LORED:
 	return loreds[lored]
 
 
-func get_random_active_lored() -> LORED:
+func get_random_active_lored() -> int:
 	return active[randi() % active.size()]
 
 
-func get_random_awake_lored() -> LORED:
+func get_random_awake_lored() -> int:
 	return active_and_awake[randi() % active_and_awake.size()]
+
+
+func get_vico(lored: int) -> LOREDVico:
+	return get_lored(lored).vico
+
+
+func get_icon(lored: int) -> Texture:
+	return get_lored(lored).icon
+
+
+func get_color(lored: int) -> Color:
+	return get_lored(lored).color
 
 
 func get_loreds_in_stage(stage: int) -> Array:
@@ -263,6 +293,10 @@ func is_lored_unlocked(lored: int) -> bool:
 	return get_lored(lored).unlocked
 
 
+func is_lored_purchased(lored: int) -> bool:
+	return get_lored(lored).purchased
+
+
 func can_lored_emote(lored_type: int) -> bool:
 	var lored = get_lored(lored_type)
 	return lored.unlocked and lored in active_and_awake
@@ -272,5 +306,17 @@ func get_active_lored_count() -> int:
 	return active.size()
 
 
+func get_fuel_percent(lored: int) -> float:
+	return get_lored(lored).fuel.get_current_percent()
+
+
 func get_icon_and_name_text(lored: int) -> String:
 	return get_lored(lored).icon_and_name_text
+
+
+func get_lored_name(lored: int) -> String:
+	return get_lored(lored).name
+
+
+func get_key(lored: int) -> String:
+	return LORED.Type.keys()[lored]

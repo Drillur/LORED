@@ -1,12 +1,11 @@
-Node2D
-RichTextLabel
 MarginContainer
+VBoxContainer
+RichTextLabel
 Button
 HBoxContainer
 CheckBox
 ScrollContainer
 HScrollBar
-VBoxContainer
 Panel
 TextureRect
 Control

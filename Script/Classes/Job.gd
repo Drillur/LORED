@@ -3,11 +3,6 @@ extends Resource
 
 
 
-func load_game() -> void:
-	print(key, " load game")
-
-
-
 enum Type {
 	REFUEL, 
 	
@@ -60,8 +55,10 @@ signal stopped_working
 signal completed
 signal cut_short
 
+var killed := false
+
 var type: int
-var lored: LORED
+var lored: int
 
 var crit: Attribute
 
@@ -112,8 +109,6 @@ func _init(_type: int) -> void:
 	has_produced_currencies = not produced_currencies.is_empty()
 	
 	hookup_required_currencies()
-	
-	SaveManager.connect("game_loaded", load_game)
 
 
 
@@ -482,33 +477,34 @@ func init_TUMORS() -> void:
 	})
 
 
-func assign_lored(_lored: LORED) -> void:
+func assign_lored(_lored: int) -> void:
 	lored = _lored
-	crit = lored.crit
-	lored.fuel.add_notify_increased_method(fuel_increased)
-	lored.fuel.add_notify_decreased_method(fuel_decreased)
+	crit = lv.get_lored(lored).crit
+	lv.get_lored(lored).fuel.add_notify_increased_method(fuel_increased)
+	lv.get_lored(lored).fuel.add_notify_decreased_method(fuel_decreased)
 	if type == Type.REFUEL:
-		var half = Big.new(lored.fuel.get_total()).d(2).toFloat()
+		var half = Big.new(lv.get_lored(lored).fuel.get_total()).d(2).toFloat()
 		has_required_currencies = true
 		required_currencies = Cost.new({
-			lored.fuel_currency_type: Attribute.new(half, false)
+			lv.get_lored(lored).fuel_currency: Attribute.new(half, false)
 		})
 		hookup_required_currencies()
 		animation_key = "refuel"
 	else:
-		animation_key = lored.key
+		animation_key = lv.get_lored(lored).key
 	
-	lored.connect("job_started", another_job_started)
-	lored.connect("stopped_working", subtract_current_rate)
+	lv.get_lored(lored).connect("job_started", another_job_started)
+	lv.get_lored(lored).connect("stopped_working", subtract_current_rate)
 	
 	if has_produced_currencies:
 		for cur in produced_currencies:
-			wa.add_producer(cur, lored)
+			wa.add_producer(cur, lv.get_lored(lored).type)
 
 
 func hookup_required_currencies() -> void:
 	if has_required_currencies:
 		required_currencies.connect("became_affordable", required_currency_became_affordable)
+
 
 func add_produced_currency(currency: int, amount: float) -> void:
 	produced_currencies[currency] = Attribute.new(amount, false)
@@ -520,26 +516,26 @@ func add_produced_currency(currency: int, amount: float) -> void:
 func lored_output_changed() -> void:
 	subtract_rates()
 	for x in produced_currencies.values():
-		x.set_m_from_lored(lored.get_output())
+		x.set_m_from_lored(lv.get_lored(lored).get_output())
 	add_rates()
 
 
 func lored_input_changed() -> void:
 	subtract_rates()
-	required_currencies.increase_m_from_lored(lored.get_input())
+	required_currencies.increase_m_from_lored(lv.get_lored(lored).get_input())
 	add_rates()
 
 
 func lored_haste_changed() -> void:
 	subtract_rates()
-	duration.set_d_from_lored(lored.get_haste())
-	fuel_cost.set_d_from_lored(lored.get_haste())
+	duration.set_d_from_lored(lv.get_lored(lored).get_haste())
+	fuel_cost.set_d_from_lored(lv.get_lored(lored).get_haste())
 	add_rates()
 
 
 func lored_fuel_cost_changed() -> void:
-	fuel_cost.set_m_from_lored(lored.get_fuel_cost())
-	has_sufficient_fuel = lored.fuel.get_current().greater_equal(fuel_cost.get_value())
+	fuel_cost.set_m_from_lored(lv.get_lored(lored).get_fuel_cost())
+	has_sufficient_fuel = lv.get_lored(lored).fuel.get_current().greater_equal(fuel_cost.get_value())
 
 
 func required_currency_became_affordable() -> void:
@@ -549,14 +545,14 @@ func required_currency_became_affordable() -> void:
 func fuel_increased() -> void:
 	if has_sufficient_fuel:
 		return
-	if lored.fuel.get_current().greater_equal(fuel_cost.get_value()):
+	if lv.get_lored(lored).fuel.get_current().greater_equal(fuel_cost.get_value()):
 		has_sufficient_fuel = true
 
 
 func fuel_decreased() -> void:
 	if not has_sufficient_fuel:
 		return
-	if lored.fuel.get_current().less(fuel_cost.get_value()):
+	if lv.get_lored(lored).fuel.get_current().less(fuel_cost.get_value()):
 		has_sufficient_fuel = false
 
 
@@ -568,8 +564,18 @@ func another_job_started(job: Job) -> void:
 
 # - Actions
 
+func kill() -> void:
+	killed = true
+	lv.get_lored(lored).disconnect("job_started", another_job_started)
+	lv.get_lored(lored).disconnect("stopped_working", subtract_current_rate)
+	if has_required_currencies:
+		required_currencies.kill()
+		required_currencies.disconnect("became_affordable", required_currency_became_affordable)
+		required_currencies = null
+
+
 func can_start() -> bool:
-	if lored.fuel.get_current_percent() <= lv.FUEL_DANGER and type != Type.REFUEL:
+	if lv.get_lored(lored).fuel.get_current_percent() <= lv.FUEL_DANGER and type != Type.REFUEL:
 		return false
 	if has_method("can_start_job_special_requirements_" + key):
 		if not call("can_start_job_special_requirements_" + key):
@@ -581,9 +587,9 @@ func can_start() -> bool:
 
 
 func can_start_job_special_requirements_REFUEL() -> bool:
-	if lored.fuel.get_current_percent() > lv.FUEL_WARNING:
+	if lv.get_lored(lored).fuel.get_current_percent() > lv.FUEL_WARNING:
 		return false
-	if lored.type != LORED.Type.COAL:
+	if lv.get_lored(lored).type != LORED.Type.COAL:
 		if lv.get_lored(LORED.Type.COAL).fuel.get_current_percent() <= lv.FUEL_WARNING:
 			return false
 	return true
@@ -596,7 +602,7 @@ func subtract_rates() -> void:
 
 
 func add_rates() -> void:
-	if not lored.purchased:
+	if not lv.get_lored(lored).purchased:
 		return
 	add_current_rate()
 	add_total_rate()
@@ -710,6 +716,9 @@ func start() -> void:
 		for cur in produced_currencies:
 			in_hand_output[cur] = produced_currencies[cur].get_value()
 			wa.add_pending(cur, in_hand_output[cur])
+	elif type == Type.REFUEL:
+		in_hand_output["REFUEL"] = lv.get_lored(lored).fuel.get_x_percent(0.5)
+		lv.get_lored(lored).fuel.add_pending(in_hand_output["REFUEL"])
 	if has_required_currencies:
 		required_currencies.spend(false)
 		in_hand_input.clear()
@@ -720,7 +729,7 @@ func start() -> void:
 	starting = false
 	working = true
 	
-	lored.fuel.subtract(fuel_cost.get_total())
+	lv.get_lored(lored).fuel.subtract(fuel_cost.get_total())
 	lv.start_job_timer(self)
 	emit_signal("began_working")
 
@@ -751,11 +760,13 @@ func no_longer_working() -> void:
 	if has_produced_currencies:
 		for cur in produced_currencies:
 			wa.subtract_pending(cur, in_hand_output[cur])
+	elif type == Type.REFUEL:
+		lv.get_lored(lored).fuel.subtract_pending(in_hand_output["REFUEL"])
 	emit_signal("stopped_working")
 
 
 func complete_REFUEL() -> void:
-	lored.fuel.add_percent(0.5)
+	lv.get_lored(lored).fuel.add(in_hand_output["REFUEL"])
 
 
 
@@ -784,7 +795,7 @@ func get_primary_currency() -> int:
 		return produced_currencies.keys()[0]
 	elif has_required_currencies:
 		return required_currencies.cost.keys()[0]
-	return lored.primary_currency
+	return lv.get_lored(lored).primary_currency
 
 
 func get_fuel_cost() -> Big:

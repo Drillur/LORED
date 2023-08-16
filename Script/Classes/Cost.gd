@@ -7,10 +7,14 @@ signal became_affordable
 signal became_unaffordable
 signal affordable_changed(affordable)
 
+var killed := false
+
 var cost := {}
 var affordable := false:
 	set(val):
 		affordable = val
+		if killed:
+			return
 		if val:
 			emit_signal("became_affordable")
 		else:
@@ -78,6 +82,15 @@ func currency_decreased() -> void:
 
 
 # - Action
+
+func kill() -> void:
+	killed = true
+	SaveManager.disconnect("load_finished", recheck)
+	for cur in cost:
+		wa.currency[cur].count.remove_notify_method(currency_decreased)
+		wa.currency[cur].count.remove_notify_method(currency_increased)
+
+
 
 func recheck() -> void:
 	for cur in cost:
@@ -154,9 +167,7 @@ func can_afford() -> bool:
 func get_text() -> Array:
 	var text := []
 	for cur in cost:
-		text.append(
-			cost[cur].get_total_text()
-		)
+		text.append(cost[cur].get_total_text())
 	return text
 
 

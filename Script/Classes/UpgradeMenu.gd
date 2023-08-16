@@ -3,10 +3,26 @@ extends Resource
 
 
 
-var saved_vars := [
-	"unlocked",
-	"times_reset",
-]
+signal save_finished
+signal load_finished
+
+
+func save() -> String:
+	var data := {}
+	data["unlocked"] = var_to_str(unlocked)
+	data["times_reset"] = var_to_str(times_reset)
+	emit_signal("save_finished")
+	return var_to_str(data)
+
+
+func load_data(data_str: String) -> void:
+	var data: Dictionary = str_to_var(data_str)
+	unlocked = str_to_var(data["unlocked"])
+	times_reset = str_to_var(data["times_reset"])
+	emit_signal("load_finished")
+
+
+
 enum Type {
 	NORMAL,
 	MALIGNANT,
@@ -20,20 +36,20 @@ enum Type {
 
 signal just_unlocked
 
-@export var type: int
-@export var key: String
+var type: int
+var key: String
 
-@export var name: String
-@export var icon: Texture
-@export var icon_text: String
-@export var color: Color
-@export var color_text: String
+var name: String
+var icon: Texture
+var icon_text: String
+var color: Color
+var color_text: String
 
-@export var times_reset := 0
-@export var unlocked := false
+var times_reset := 0
+var unlocked := false
 
-@export var upgrades := []
-@export var purchased_upgrades := []
+var upgrades := []
+var purchased_upgrades := []
 
 
 
@@ -46,6 +62,17 @@ func _init(_type: int) -> void:
 		icon_text = "[img=<15>]" + icon.get_path() + "[/img]"
 	if color != null:
 		color_text = "[color=#" + color.to_html() + "]%s[/color]"
+
+
+func close() -> void:
+	times_reset = 0
+	unlocked = false
+	upgrades.clear()
+	purchased_upgrades.clear()
+
+
+func open() -> void:
+	pass
 
 
 
@@ -77,8 +104,8 @@ func S4M():
 func add_purchased_upgrade(upgrade_type: int) -> void:
 	var upgrade = up.get_upgrade(upgrade_type)
 	if upgrade.upgrade_menu == type:
-		if not upgrade in purchased_upgrades:
-			purchased_upgrades.append(upgrade)
+		if not upgrade_type in purchased_upgrades:
+			purchased_upgrades.append(upgrade_type)
 
 
 
@@ -91,7 +118,7 @@ func reset() -> void:
 
 
 
-func add_upgrade(upgrade: Upgrade) -> void:
+func add_upgrade(upgrade: int) -> void:
 	if not upgrade in upgrades:
 		upgrades.append(upgrade)
 

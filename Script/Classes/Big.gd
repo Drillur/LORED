@@ -36,27 +36,27 @@ const MIN_INTEGER: int = -9223372036854775807
 const MAX_INTEGER: int = 9223372036854775806
 
 
-func _init(m = 1.0, e := 0):
-	if m is String:
-		var scientific = m.split("e")
+func _init(mant = 1.0, e := 0):
+	if mant is String:
+		var scientific = mant.split("e")
 		mantissa = float(scientific[0])
 		if scientific.size() > 1:
 			exponent = int(scientific[1])
 		else:
 			exponent = 0
-	elif m is Big:
-		mantissa = m.mantissa
-		exponent = m.exponent
+	elif mant is Big:
+		mantissa = mant.mantissa
+		exponent = mant.exponent
 	else:
-		_sizeCheck(m)
-		mantissa = m
+		_sizeCheck(mant)
+		mantissa = mant
 		exponent = e
 	calculate(self)
 	pass
 
 
-func _sizeCheck(m):
-	if m > MAX_MANTISSA:
+func _sizeCheck(mant):
+	if mant > MAX_MANTISSA:
 		printerr("BIG ERROR: MANTISSA TOO LARGE, PLEASE USE EXPONENT OR SCIENTIFIC NOTATION")
 
 
@@ -361,41 +361,6 @@ static func setReadingSeparator(separator):
 	pass
 
 
-static func setDynamicDecimals(d):
-	other.dynamic_decimals = bool(d)
-	pass
-
-
-static func setDynamicNumbers(d):
-	other.dynamic_numbers = int(d)
-	pass
-
-
-static func setSmallDecimals(d):
-	other.small_decimals = int(d)
-	pass
-
-
-static func setThousandDecimals(d):
-	other.thousand_decimals = int(d)
-	pass
-
-
-static func setBigDecimals(d):
-	other.big_decimals = int(d)
-	pass
-
-
-static func setScientificDecimals(d):
-	other.scientific_decimals = int(d)
-	pass
-
-
-static func setLogarithmicDecimals(d):
-	other.logarithmic_decimals = int(d)
-	pass
-
-
 
 func toFloat() -> float:
 	return snappedf(float(str(mantissa) + "e" + str(exponent)),0.01)
@@ -412,7 +377,7 @@ func toString() -> String:
 	return toLog()
 
 
-func get_float_text(value: float) -> String:
+static func get_float_text(value: float) -> String:
 	if value >= 1000:
 		return get_big_float_text(value)
 	if is_zero_approx(value):
@@ -426,7 +391,7 @@ func get_float_text(value: float) -> String:
 	return str(round(value))
 
 
-func get_big_float_text(value: float) -> String:
+static func get_big_float_text(value: float) -> String:
 	
 	# for numbers > 1,000 and < 1,000,000
 	

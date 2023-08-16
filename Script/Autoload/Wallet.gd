@@ -43,10 +43,7 @@ var wallet_unlocked := false:
 
 
 func _ready():
-	for cur in Currency.Type.values():
-		currency[cur] = Currency.new(cur)
-		#SaveManager.add_saved_var("currency " + currency[cur].key, currency[cur])
-	
+	open()
 	for cur in currency.keys():
 		gv.add_currency_to_stage(get_currency_stage(cur), cur)
 
@@ -57,6 +54,11 @@ func close() -> void:
 	unlocked_currencies.clear()
 	total_weight = 0
 	wallet_unlocked = false
+
+
+func open() -> void:
+	for cur in Currency.Type.values():
+		currency[cur] = Currency.new(cur)
 
 
 
@@ -70,7 +72,7 @@ func subtract(cur: int, amount) -> void:
 	currency[cur].subtract(amount)
 
 
-func add_pending(cur: int, amount) -> void:
+func add_pending(cur: int, amount: Big) -> void:
 	currency[cur].add_pending(amount)
 
 
@@ -78,7 +80,7 @@ func subtract_pending(cur: int, amount) -> void:
 	currency[cur].subtract_pending(amount)
 
 
-func add_producer(cur: int, lored: LORED) -> void:
+func add_producer(cur: int, lored: int) -> void:
 	currency[cur].add_producer(lored)
 
 
@@ -97,12 +99,34 @@ func subtract_from_player(cur: int, amount) -> void:
 
 func unlock_currency(cur: int) -> void:
 	var _currency := get_currency(cur)
-	if _currency in unlocked_currencies:
+	if cur in unlocked_currencies:
 		return
 	_currency.unlock()
-	unlocked_currencies.append(_currency)
+	unlocked_currencies.append(cur)
 	total_weight += _currency.weight
 	emit_signal("currency_just_unlocked", cur)
+
+
+
+func add_current_loss_rate(cur: int, amount) -> void:
+	var currency = get_currency(cur)
+	currency.add_current_loss_rate(amount)
+
+
+func subtract_current_loss_rate(cur: int, amount) -> void:
+	var currency = get_currency(cur)
+	currency.subtract_current_loss_rate(amount)
+
+
+func add_total_loss_rate(cur: int, amount) -> void:
+	var currency = get_currency(cur)
+	currency.add_total_loss_rate(amount)
+
+
+func subtract_total_loss_rate(cur: int, amount) -> void:
+	var currency = get_currency(cur)
+	currency.subtract_total_loss_rate(amount)
+
 
 
 
@@ -112,16 +136,8 @@ func get_count(cur: int) -> Big:
 	return currency[cur].get_count()
 
 
-func get_pending(cur: int) -> Big:
-	return currency[cur].get_pending()
-
-
 func get_count_text(cur: int) -> String:
 	return currency[cur].get_count_text()
-
-
-func get_pending_text(cur: int) -> String:
-	return currency[cur].get_pending_text()
 
 
 func get_color(cur: int) -> Color:
@@ -144,22 +160,27 @@ func get_currency(cur: int) -> Currency:
 	return currency[cur]
 
 
+func get_currency_weight(cur: int) -> int:
+	return get_currency(cur).weight
+
+
 func get_currency_stage(cur: int) -> int:
 	return currency[cur].stage
 
 
-func get_random_unlocked_currency() -> Currency:
+func get_random_unlocked_currency() -> int:
 	return unlocked_currencies[randi() % unlocked_currencies.size()]
 
 
-func get_weighted_random_currency() -> Currency:
+func get_weighted_random_currency() -> int:
 	var roll = randi() % total_weight
 	var shuffled_pool = unlocked_currencies
 	shuffled_pool.shuffle()
-	for _currency in shuffled_pool:
-		if roll < _currency.weight:
-			return _currency
-		roll -= _currency.weight
+	for cur in shuffled_pool:
+		var weight = get_currency_weight(cur)
+		if roll < weight:
+			return cur
+		roll -= weight
 	print_debug("May be an issue with total_weight (", total_weight, "). pool size: ", shuffled_pool.size())
 	return get_random_unlocked_currency()
 

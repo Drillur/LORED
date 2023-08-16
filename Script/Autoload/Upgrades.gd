@@ -11,6 +11,8 @@ func save() -> String:
 	for type in upgrades:
 		var upgrade = get_upgrade(type)
 		data[upgrade.key] = upgrade.save()
+	for upgrade_menu in upgrade_menus.values():
+		data[upgrade_menu.key + " Upgrade Menu"] = upgrade_menu.save()
 	emit_signal("save_finished")
 	return var_to_str(data)
 
@@ -21,6 +23,10 @@ func load_data(data_str: String) -> void:
 		var key = Upgrade.Type.keys()[type]
 		if key in data.keys():
 			upgrades[type].load_data(data[key])
+	for type in upgrade_menus:
+		var key = UpgradeMenu.Type.keys()[type]
+		if key in data.keys():
+			upgrade_menus[type].load_data(data[key])
 	emit_signal("load_finished")
 
 
@@ -105,19 +111,24 @@ var upgrade_menus := {}
 
 
 func _ready():
-	for type in UpgradeMenu.Type.values():
-		upgrade_menus[type] = UpgradeMenu.new(type) as UpgradeMenu
-		connect("upgrade_purchased", upgrade_menus[type].add_purchased_upgrade)
+	open()
 	for type in Upgrade.Type.values():
-		upgrades[type] = Upgrade.new(type)
 		gv.add_upgrade_to_stage(upgrades[type].stage, type)
-	emit_signal("all_upgrades_initialized")
 
 
 
 func close() -> void:
 	upgrades.clear()
 	upgrade_menus.clear()
+
+
+func open() -> void:
+	for type in UpgradeMenu.Type.values():
+		upgrade_menus[type] = UpgradeMenu.new(type) as UpgradeMenu
+		connect("upgrade_purchased", upgrade_menus[type].add_purchased_upgrade)
+	for type in Upgrade.Type.values():
+		upgrades[type] = Upgrade.new(type)
+	emit_signal("all_upgrades_initialized")
 
 
 
@@ -128,7 +139,7 @@ func unlock_menu(menu: int) -> void:
 	emit_signal("menu_unlocked", menu)
 
 
-func add_upgrade_to_menu(menu: int, upgrade: Upgrade) -> void:
+func add_upgrade_to_menu(menu: int, upgrade: int) -> void:
 	upgrade_menus[menu].add_upgrade(upgrade)
 
 
@@ -144,12 +155,40 @@ func get_upgrade_menu(menu: int) -> UpgradeMenu:
 	return upgrade_menus[menu]
 
 
+func get_vico(upgrade: int) -> UpgradeVico:
+	return upgrades[upgrade].vico
+
+
+func get_cost(upgrade: int) -> Cost:
+	return upgrades[upgrade].cost
+
+
+func get_eta(upgrade: int) -> Big:
+	return get_cost(upgrade).get_eta()
+
+
 func get_menu_color(menu: int) -> Color:
 	return upgrade_menus[menu].color
 
 
+func get_color(upgrade: int) -> Color:
+	return upgrades[upgrade].color
+
+
+func get_icon(upgrade: int) -> Texture:
+	return upgrades[upgrade].icon
+
+
+func get_upgrade_name(upgrade: int) -> String:
+	return upgrades[upgrade].name
+
+
 func get_menu_color_text(menu: int) -> String:
 	return upgrade_menus[menu].color_text
+
+
+func get_icon_and_name_text(upgrade: int) -> String:
+	return upgrades[upgrade].icon_and_name_text
 
 
 func get_menu_name(menu: int) -> String:
@@ -182,3 +221,11 @@ func get_upgrade_total_in_menu(menu: int) -> int:
 
 func is_menu_unlocked(menu: int) -> bool:
 	return upgrade_menus[menu].unlocked
+
+
+func is_upgrade_purchased(upgrade: int) -> bool:
+	return upgrades[upgrade].purchased
+
+
+func is_upgrade_unlocked(upgrade: int) -> bool:
+	return upgrades[upgrade].unlocked

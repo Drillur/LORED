@@ -57,14 +57,14 @@ func start_random_emotes() -> void:
 	while random_emotes_allowed:
 		if in_emote_chain:
 			await emote_chain_finished
-		await gv.get_tree().create_timer(1).timeout#randi() % 20 + 20).timeout # 20-40
-		var lored := lv.get_random_awake_lored() as LORED
-		var emote_key = "RANDOM_" + lored.key
+		await gv.get_tree().create_timer(randi() % 20 + 20).timeout # 20-40
+		var lored := lv.get_random_awake_lored()
+		var emote_key = "RANDOM_" + lv.get_key(lored)
 		var emote_type = Emote.Type.get(emote_key)
 		if emote_type:
 			emote(emote_type)
 		else:
-			print_debug(lored.key, " cannot random emote. emote_key: ", emote_key)
+			print_debug(lv.get_key(lored), " cannot random emote. emote_key: ", emote_key)
 
 
 
@@ -76,7 +76,7 @@ func emote(emote_type: int) -> void:
 		return
 	
 	var _emote = await Emote.new(emote_type)
-	_emote.speaker.emote(_emote)
+	lv.emote(_emote)
 	
 	if _emote.has_reply():
 		in_emote_chain = true
