@@ -60,7 +60,8 @@ func setup(data: Dictionary) -> void:
 	else:
 		description.hide()
 		recipients.text = upgrade.get_effected_loreds_text()
-		upgrade.effect.effect.add_notify_change_method(update_effect_text, true) 
+		upgrade.effect.effect.connect("changed", update_effect_text) 
+		update_effect_text()
 		recipients.show()
 		effect.show()
 

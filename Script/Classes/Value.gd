@@ -3,28 +3,19 @@ extends Resource
 
 
 
-signal save_finished
-signal load_finished
+var saved_vars := [
+	"current",
+]
 
+signal increased
+signal decreased
 
-func save() -> String:
-	var data := {}
-	data["current"] = current.save()
-	emit_signal("save_finished")
-	return var_to_str(data)
-
-
-func load_data(data_str: String) -> void:
-	var data: Dictionary = str_to_var(data_str)
-	current.load_data(data["current"])
-	text_requires_update = true
-	emit_signal("load_finished")
-
-
-
-var base: Big
-
-var requires_sync := false
+var requires_sync := false:
+	set(val):
+		if requires_sync != val:
+			requires_sync = val
+			if requires_sync:
+				emit_signal("changed")
 var current: Big:
 	get:
 		sync()
@@ -38,45 +29,55 @@ var from_level := Big.new(1)
 var m_from_lored := Big.new(1)
 var d_from_lored := Big.new(1)
 
-var text_requires_update := true
-var text: String: get = get_text
 
 
-
-
-func _init(base_value = 0) -> void:
-	base = Big.new(base_value)
+func _init(base_value = 0.0) -> void:
 	current = Big.new(base_value)
+	current.connect("increased", emit_increase)
+	current.connect("decreased", emit_decrease)
+	current.connect("changed", emit_changed)
 
 
+func emit_increase() -> void:
+	emit_signal("increased")
+
+
+func emit_decrease() -> void:
+	emit_signal("decreased")
 
 
 func set_to(amount) -> void:
-	current = Big.new(amount)
-	text_requires_update = true
+	current.set_to(amount)
+
+
+func change_base(new_base: float) -> void:
+	current.change_base(new_base)
 
 
 func add(amount) -> void:
 	current.a(amount)
-	text_requires_update = true
 
 
 func subtract(amount: Big) -> void:
 	if amount.greater_equal(current):
-		current = Big.new(0)
+		current.set_to(0)
 	else:
 		current.s(amount)
-		if current.equal(0):
-			current = Big.new(0)
-	text_requires_update = true
+
+
+func add_pending(amount: Big) -> void:
+	current.add_pending(amount)
+
+
+func subtract_pending(amount: Big) -> void:
+	current.subtract_pending(amount)
 
 
 
 func sync() -> void:
 	if requires_sync:
 		requires_sync = false
-		text_requires_update = true
-		current = Big.new(base)
+		current.reset()
 		current.a(added)
 		current.s(subtracted)
 		current.m(multiplied)
@@ -87,87 +88,84 @@ func sync() -> void:
 
 
 func get_text() -> String:
-	if text_requires_update:
-		text = current.toString()
-		text_requires_update = false
-	return text
+	return current.text
+
+
+func get_value() -> Big:
+	return current
 
 
 
 func increase_added(amount) -> void:
 	added.a(amount)
 	requires_sync = true
-	text_requires_update = true
 
 
 func decrease_added(amount) -> void:
 	added.s(amount)
 	requires_sync = true
-	text_requires_update = true
 
 
 func increase_subtracted(amount) -> void:
 	subtracted.a(amount)
 	requires_sync = true
-	text_requires_update = true
 
 
 func decrease_subtracted(amount) -> void:
 	subtracted.s(amount)
 	requires_sync = true
-	text_requires_update = true
 
 
 func increase_multiplied(amount) -> void:
 	multiplied.m(amount)
 	requires_sync = true
-	text_requires_update = true
 
 
 func decrease_multiplied(amount) -> void:
 	multiplied.d(amount)
 	requires_sync = true
-	text_requires_update = true
 
 
 func increase_divided(amount) -> void:
 	divided.m(amount)
 	requires_sync = true
-	text_requires_update = true
 
 
 func decrease_divided(amount) -> void:
 	divided.d(amount)
 	requires_sync = true
-	text_requires_update = true
 
 
 func set_from_level(amount) -> void:
-	from_level = Big.new(amount)
+	from_level.set_to(amount)
 	requires_sync = true
-	text_requires_update = true
 
 
 func set_d_from_lored(amount) -> void:
-	d_from_lored = Big.new(amount)
+	d_from_lored.set_to(amount)
 	requires_sync = true
-	text_requires_update = true
 
 
 func set_m_from_lored(amount) -> void:
-	m_from_lored = Big.new(amount)
+	m_from_lored.set_to(amount)
 	requires_sync = true
-	text_requires_update = true
 
 
 
 func reset():
-	added = Big.new(0)
-	subtracted = Big.new(0)
-	multiplied = Big.new(1)
-	divided = Big.new(1)
-	from_level = Big.new(1)
-	d_from_lored = Big.new(1)
-	m_from_lored = Big.new(1)
-	current = Big.new(base)
+	added.reset()
+	subtracted.reset()
+	multiplied.reset()
+	divided.reset()
+	from_level.reset()
+	d_from_lored.reset()
+	m_from_lored.reset()
+	current.reset()
 
+
+
+
+# - Get
+
+func get_as_float() -> float:
+	return current.toFloat()

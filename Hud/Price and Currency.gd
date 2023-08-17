@@ -11,7 +11,7 @@ extends MarginContainer
 signal currency_changed
 
 var currency: Currency
-var cost: Attribute
+var cost: Value
 
 
 
@@ -21,7 +21,7 @@ func _ready():
 
 
 
-func setup(_currency: int, _cost: Attribute) -> void:
+func setup(_currency: int, _cost: Value) -> void:
 	currency = wa.get_currency(_currency)
 	cost = _cost
 	if not is_node_ready():
@@ -29,8 +29,11 @@ func setup(_currency: int, _cost: Attribute) -> void:
 	
 	h_box_container.modulate = currency.color
 	currency_name.text = currency.icon_text + " " + currency.name
-	currency.count.add_notify_change_method(set_currency_text, true) # true if in tooltip
-	cost.add_notify_change_method(set_cost_text, true)
+	currency.count.connect("changed", set_currency_text)
+	cost.connect("changed", set_cost_text)
+	
+	set_currency_text()
+	set_cost_text()
 
 
 

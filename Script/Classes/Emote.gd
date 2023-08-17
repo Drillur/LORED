@@ -524,7 +524,7 @@ func RANDOM_IRON_ORE() -> void:
 			reply = Type.IRON_ORE14_REPLY
 		17:
 			var text = lv.get_icon_and_name_text(LORED.Type.JOULES)
-			dialogue = "%s upsells you when you go in for only an oil change, he is [b]proud[/b] of it."
+			dialogue = "%s upsells you when you go in for only an oil change, he is [b]proud[/b] of it." % text
 		16: dialogue = "That baby is absolutely, positively [b]disgusting[/b]."
 		15:
 			var text = lv.get_icon_and_name_text(LORED.Type.TARBALLS)
@@ -690,7 +690,7 @@ func RANDOM_COPPER() -> void:
 			dialogue = "Oh, shit!! They on X-games mode, bruh!!! What the hell even is that?! %s you are freaking me the fuh-reak out, bro!!" % text
 		9:
 			var text = lv.get_icon_and_name_text(LORED.Type.TARBALLS)
-			dialogue = "%s and I have a playdate scheduled. We're gonna compare the English and Japanese dubs for the final episode of Death Note. Siiiick!"
+			dialogue = "%s and I have a playdate scheduled. We're gonna compare the English and Japanese dubs for the final episode of Death Note. Siiiick!" % text
 		8: dialogue = "I literally can't stop laughing at that baby, yo!!"
 		0: dialogue = "This stuff's the bee's knees!"
 		1: pose_texture = load("res://Sprites/reactions/COPPER1.png")

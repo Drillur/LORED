@@ -3,11 +3,11 @@ extends MarginContainer
 
 
 
-@onready var icon = %Icon
-@onready var content_parent = %"Content Parent"
 @onready var price_and_currency = preload("res://Hud/price_and_currency.tscn")
+@onready var content_parent = %"Content Parent"
 @onready var check = %Check
 @onready var title_bg = %"title bg"
+@onready var bar = %Bar as Bar
 
 
 var content := {}
@@ -19,6 +19,8 @@ var color: Color:
 		color = val
 		check.self_modulate = color
 		title_bg.self_modulate = color
+		bar.color = color
+		bar.color.a = 0.25
 
 var cost: Cost
 
@@ -33,17 +35,29 @@ func setup(_cost: Cost) -> void:
 		content[cur].setup(cur, cost.cost[cur])
 		content_parent.add_child(content[cur])
 		content[cur].connect("currency_changed", set_eta_text)
+		content[cur].connect("currency_changed", update_progress_bar)
+	bar.hide_background().remove_markers()
+	bar.set_initial_progress(cost.get_progress_percent())
+	
 	content.values()[content.size() - 1].get_node("MarginContainer").add_theme_constant_override("margin_bottom", 0)
 	cost.connect("became_affordable", flash_became_affordable)
 	cost.connect("affordable_changed", affordable_changed)
 	affordable_changed(cost.affordable)
 	set_eta_text()
+	
+	await get_tree().physics_frame
+	await get_tree().physics_frame
+	await get_tree().physics_frame
+	bar.animating_changes = true
 
 
 func reconnect() -> void:
 	for node in content.values():
 		node.connect("currency_changed", set_eta_text)
 
+
+func update_progress_bar() -> void:
+	bar.progress = cost.get_progress_percent()
 
 
 func set_eta_text() -> void:

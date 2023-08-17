@@ -3,81 +3,51 @@ extends Resource
 
 
 
-signal save_finished
-signal load_finished
+var saved_vars := [
+	"type", 
+	"ready_to_start", 
+	"ready_to_turn_in", 
+]
 
 
-func save() -> String:
-	var data := {}
-	data["type"] = var_to_str(type)
-	data["ready_to_start"] = var_to_str(ready_to_start)
-	data["ready_to_turn_in"] = var_to_str(ready_to_turn_in)
-	
-	if type == Type.RANDOM:
-		data["giver"] = var_to_str(giver)
-		data["lucky_multiplier"] = var_to_str(lucky_multiplier)
-		data["help_icon"] = var_to_str(help_icon)
-		data["thank_icon"] = var_to_str(thank_icon)
-		data["objective"] = objective.save()
-		data["reward count"] = rewards.size()
-		for i in rewards.size():
-			data["reward " + str(i)] = rewards[i].save()
-	
-	emit_signal("save_finished")
-	return var_to_str(data)
+func load_started() -> void:
+	kill()
 
 
-func load_data(data_str: String) -> void:
-	var data: Dictionary = str_to_var(data_str)
-	ready_to_start = str_to_var(data["ready_to_start"])
-	ready_to_turn_in = str_to_var(data["ready_to_turn_in"])
-	
-	if type == Type.RANDOM:
-		giver = str_to_var(data["giver"])
-		lucky_multiplier = str_to_var(data["lucky_multiplier"])
-		help_icon = str_to_var(data["help_icon"])
-		thank_icon = str_to_var(data["thank_icon"])
-		
-		var obj_data = str_to_var(data["objective"])
-		var obj_type = str_to_var(obj_data["type"])
-		var obj_data_arg = {"object_type": str_to_var(obj_data["object_type"])}
-		match obj_type:
-			Objective.Type.COLLECT_CURRENCY, Objective.Type.SLEEP:
-				var att = Attribute.new(1)
-				att.load_data(obj_data["progress"])
-				obj_data_arg["amount"] = att.get_total()
-		objective = Objective.new(obj_type, obj_data_arg)
-		objective.load_data(obj_data)
-		
-		var reward_count = data["reward count"]
-		for i in reward_count:
-			var rew_data = str_to_var(data["reward " + str(i)])
-			var amount = Big.new(0)
-			amount.load_data(rew_data["amount"])
-			var rew_data_arg = {
-				"amount": amount,
-				"object_type": str_to_var(rew_data["object_type"]),
-			}
-			rewards.append(Reward.new(Reward.Type.CURRENCY, rew_data_arg))
-	
-	emit_signal("load_finished")
+
+#func load_data(data_str: String) -> void:
+#	if type == Type.RANDOM:
+#		var obj_data = str_to_var(data["objective"])
+#		var obj_type = str_to_var(obj_data["type"])
+#		var obj_data_arg = {"object_type": str_to_var(obj_data["object_type"])}
+#		match obj_type:
+#			Objective.Type.COLLECT_CURRENCY, Objective.Type.SLEEP:
+#				var att = Attribute.new(1)
+#				att.load_data(obj_data["progress"])
+#				obj_data_arg["amount"] = att.get_total()
+#		objective = Objective.new(obj_type, obj_data_arg)
+#		objective.load_data(obj_data)
+#
+#		var reward_count = data["reward count"]
+#		for i in reward_count:
+#			var rew_data = str_to_var(data["reward " + str(i)])
+#			var amount = Big.new(0)
+#			amount.load_data(rew_data["amount"])
+#			var rew_data_arg = {
+#				"amount": amount,
+#				"object_type": str_to_var(rew_data["object_type"]),
+#			}
+#			add_reward(Reward.new(Reward.Type.CURRENCY, rew_data_arg))
 
 
 
 class Reward:
 	
-	
-	signal save_finished
-	
-	
-	func save() -> String:
-		var data := {}
-		data["amount"] = amount.save()
-		data["object_type"] = var_to_str(object_type)
-		emit_signal("save_finished")
-		return var_to_str(data)
-	
-	
+	var saved_vars := [ this is kinda done. do it for Objective. then scroll up. uncomment the commented shit
+		"type",
+		"amount", 
+		"object_type", 
+	]
 	
 	enum Type {
 		CURRENCY,
@@ -120,11 +90,11 @@ class Reward:
 	
 	func init_INCREASED_RANDOM_WISH_LIMIT(data: Dictionary) -> void:
 		amount = Big.new(data["amount"])
-		text = "+" + amount.toString() + " Random Wish Limit"
+		text = "+" + amount.text + " Random Wish Limit"
 	
 	
 	func init_UPGRADE_MENU(data: Dictionary) -> void:
-		object_type = data["menu"]
+		object_type = data["object_type"]
 		var upgrade_menu: UpgradeMenu = up.get_upgrade_menu(object_type)
 		text = upgrade_menu.icon_and_name_text() + " Upgrade Menu"
 	
@@ -167,16 +137,11 @@ class Reward:
 	
 	
 	func get_text_CURRENCY() -> String:
-		return text % amount.toString()
+		return text % amount.text
 
 
 
 class Objective:
-	
-	
-	signal save_finished
-	signal load_finished
-	
 	
 	func save() -> String:
 		var data := {}
@@ -184,14 +149,12 @@ class Objective:
 		data["progress"] = progress.save_current()
 		data["object_type"] = var_to_str(object_type)
 		
-		emit_signal("save_finished")
 		return var_to_str(data)
 	
 	
 	func load_data(data_str: String) -> void:
 		var data: Dictionary = str_to_var(data_str)
 		progress.load_current(data["progress"])
-		emit_signal("load_finished")
 	
 	
 	
@@ -292,9 +255,8 @@ class Objective:
 	func already_completed_ACCEPTABLE_FUEL() -> bool:
 		return lv.get_lored(object_type).fuel.get_current_percent() >= 0.75
 	func start_ACCEPTABLE_FUEL() -> void:
-		lv.get_lored(object_type).fuel.add_notify_change_method(update_ACCEPTABLE_FUEL)
-		await completed
-		lv.get_lored(object_type).fuel.remove_notify_method(update_ACCEPTABLE_FUEL)
+		lv.get_lored(object_type).fuel.connect("changed", update_ACCEPTABLE_FUEL)
+		update_ACCEPTABLE_FUEL()
 	func update_ACCEPTABLE_FUEL() -> void:
 		progress.set_to(lv.get_lored(object_type).fuel.get_current_percent() * 100)
 	
@@ -411,11 +373,20 @@ var thank_text: String
 var discord_state: String
 
 var help_icon: Texture
+var help_icon_path: String:
+	set(val):
+		help_icon_path = val
+		help_icon = load(help_icon_path)
 var thank_icon: Texture
+var thank_icon_path: String:
+	set(val):
+		thank_icon_path = val
+		thank_icon = load(thank_icon_path)
 
 var giver: int
 
 var rewards := []
+var reward_count := 0
 
 var objective: Objective
 
@@ -445,12 +416,14 @@ func _init(_type: int) -> void:
 		ready_to_start = true
 	
 	if help_icon == null:
-		help_icon = load("res://Sprites/reactions/Angry.png")
+		help_icon_path = "res://Sprites/reactions/Angry.png"
 	if thank_icon == null:
-		thank_icon = load("res://Sprites/reactions/Test.png")
+		thank_icon_path = "res://Sprites/reactions/Test.png"
 	
 	if not skip_wish:
 		start()
+	
+	SaveManager.connect("load_started", load_started)
 
 
 
@@ -512,21 +485,28 @@ func init_RANDOM() -> void:
 	rewards_modifier *= lucky_multiplier
 	
 	var cur_keys := {}
-	var i = 0
 	for reward in reward_count:
 		var amount: Big
 		var currency: Currency = wa.get_currency(wa.get_weighted_random_currency())
 		amount = Big.new(currency.gain_rate.get_total()).m(rewards_modifier).roundDown()
 		if amount.less(1):
-			amount = Big.new(1)
+			amount.set_to(1)
 		if currency.type in cur_keys:
 			rewards[cur_keys[currency.type]].amount.a(amount)
 		else:
-			cur_keys[currency.type] = rewards.size()
-			rewards.append(Reward.new(Reward.Type.CURRENCY, {
+			cur_keys[currency.type] = reward_count
+			add_reward(Reward.new(Reward.Type.CURRENCY, {
 				"object_type": currency.type,
 				"amount": amount,
 			}))
+	
+	saved_vars.append("giver")
+	saved_vars.append("lucky_multiplier")
+	saved_vars.append("help_icon")
+	saved_vars.append("thank_icon")
+	saved_vars.append("objective")
+	saved_vars.append("reward_count")
+	saved_vars.append("rewards")
 
 
 
@@ -549,7 +529,7 @@ func init_FUEL() -> void:
 	objective = Objective.new(Objective.Type.ACCEPTABLE_FUEL, {
 		"object_type": LORED.Type.STONE,
 	})
-	rewards.append(Reward.new(Reward.Type.CURRENCY, {
+	add_reward(Reward.new(Reward.Type.CURRENCY, {
 		"object_type": Currency.Type.STONE,
 		"amount": 15,
 	}))
@@ -564,16 +544,16 @@ func init_COLLECTION() -> void:
 		"object_type": Currency.Type.STONE,
 		"amount": 10,
 	})
-	rewards.append(Reward.new(Reward.Type.NEW_LORED, {
+	add_reward(Reward.new(Reward.Type.NEW_LORED, {
 		"object_type": LORED.Type.IRON_ORE,
 	}))
-	rewards.append(Reward.new(Reward.Type.NEW_LORED, {
+	add_reward(Reward.new(Reward.Type.NEW_LORED, {
 		"object_type": LORED.Type.COPPER_ORE,
 	}))
-	rewards.append(Reward.new(Reward.Type.NEW_LORED, {
+	add_reward(Reward.new(Reward.Type.NEW_LORED, {
 		"object_type": LORED.Type.IRON,
 	}))
-	rewards.append(Reward.new(Reward.Type.NEW_LORED, {
+	add_reward(Reward.new(Reward.Type.NEW_LORED, {
 		"object_type": LORED.Type.COPPER,
 	}))
 
@@ -586,11 +566,11 @@ func init_IMPORTANCE_OF_COAL() -> void:
 		"object_type": Currency.Type.COAL,
 		"amount": 25,
 	})
-	rewards.append(Reward.new(Reward.Type.CURRENCY, {
+	add_reward(Reward.new(Reward.Type.CURRENCY, {
 		"object_type": Currency.Type.COAL,
 		"amount": 50,
 	}))
-	rewards.append(Reward.new(Reward.Type.CURRENCY, {
+	add_reward(Reward.new(Reward.Type.CURRENCY, {
 		"object_type": Currency.Type.IRON,
 		"amount": 10,
 	}))
@@ -605,11 +585,11 @@ func init_UPGRADE_STONE() -> void:
 	objective = Objective.new(Objective.Type.LORED_LEVELED_UP, {
 		"object_type": LORED.Type.STONE,
 	})
-	rewards.append(Reward.new(Reward.Type.CURRENCY, {
+	add_reward(Reward.new(Reward.Type.CURRENCY, {
 		"object_type": Currency.Type.STONE,
 		"amount": 50,
 	}))
-	rewards.append(Reward.new(Reward.Type.JUST_TEXT, {
+	add_reward(Reward.new(Reward.Type.JUST_TEXT, {
 		"text": "LOREDs can sleep!"
 	}))
 	pair.append(Type.IMPORTANCE_OF_COAL)
@@ -624,10 +604,10 @@ func init_TEST_SLEEP() -> void:
 		"object_type": LORED.Type.COPPER,
 		"amount": 15,
 	})
-	rewards.append(Reward.new(Reward.Type.UPGRADE_MENU, {
-		"menu": UpgradeMenu.Type.NORMAL
+	add_reward(Reward.new(Reward.Type.UPGRADE_MENU, {
+		"object_type": UpgradeMenu.Type.NORMAL
 	}))
-	rewards.append(Reward.new(Reward.Type.CURRENCY, {
+	add_reward(Reward.new(Reward.Type.CURRENCY, {
 		"object_type": Currency.Type.COPPER,
 		"amount": 15,
 	}))
@@ -641,15 +621,15 @@ func init_GRINDER() -> void:
 	objective = Objective.new(Objective.Type.UPGRADE_PURCHASED, {
 		"object_type": Upgrade.Type.GRINDER,
 	})
-	rewards.append(Reward.new(Reward.Type.CURRENCY, {
+	add_reward(Reward.new(Reward.Type.CURRENCY, {
 		"object_type": Currency.Type.IRON,
 		"amount": 30,
 	}))
-	rewards.append(Reward.new(Reward.Type.CURRENCY, {
+	add_reward(Reward.new(Reward.Type.CURRENCY, {
 		"object_type": Currency.Type.COPPER,
 		"amount": 30,
 	}))
-	rewards.append(Reward.new(Reward.Type.INCREASED_RANDOM_WISH_LIMIT, {
+	add_reward(Reward.new(Reward.Type.INCREASED_RANDOM_WISH_LIMIT, {
 		"amount": 1,
 	}))
 
@@ -663,7 +643,7 @@ func init_JOY() -> void:
 		"object_type": Currency.Type.JOY,
 		"amount": 3,
 	})
-	rewards.append(Reward.new(Reward.Type.NEW_LORED, {
+	add_reward(Reward.new(Reward.Type.NEW_LORED, {
 		"object_type": LORED.Type.GROWTH,
 	}))
 
@@ -677,10 +657,10 @@ func init_JOBS() -> void:
 		"object_type": Currency.Type.GRIEF,
 		"amount": 3,
 	})
-	rewards.append(Reward.new(Reward.Type.JUST_TEXT, {
+	add_reward(Reward.new(Reward.Type.JUST_TEXT, {
 		"text": "You can view LOREDs' Jobs and their details!"
 	}))
-	rewards.append(Reward.new(Reward.Type.JUST_TEXT, {
+	add_reward(Reward.new(Reward.Type.JUST_TEXT, {
 		"text": "You gain access to the Wallet! Hotkey: T"
 	}))
 
@@ -693,10 +673,10 @@ func init_RYE() -> void:
 	objective = Objective.new(Objective.Type.UPGRADE_PURCHASED, {
 		"object_type": Upgrade.Type.RYE,
 	})
-	rewards.append(Reward.new(Reward.Type.NEW_LORED, {
+	add_reward(Reward.new(Reward.Type.NEW_LORED, {
 		"object_type": LORED.Type.JOULES,
 	}))
-	rewards.append(Reward.new(Reward.Type.NEW_LORED, {
+	add_reward(Reward.new(Reward.Type.NEW_LORED, {
 		"object_type": LORED.Type.CONCRETE,
 	}))
 
@@ -709,13 +689,13 @@ func init_SAND() -> void:
 	objective = Objective.new(Objective.Type.UPGRADE_PURCHASED, {
 		"object_type": Upgrade.Type.SAND,
 	})
-	rewards.append(Reward.new(Reward.Type.NEW_LORED, {
+	add_reward(Reward.new(Reward.Type.NEW_LORED, {
 		"object_type": LORED.Type.OIL,
 	}))
-	rewards.append(Reward.new(Reward.Type.NEW_LORED, {
+	add_reward(Reward.new(Reward.Type.NEW_LORED, {
 		"object_type": LORED.Type.TARBALLS,
 	}))
-	rewards.append(Reward.new(Reward.Type.NEW_LORED, {
+	add_reward(Reward.new(Reward.Type.NEW_LORED, {
 		"object_type": LORED.Type.MALIGNANCY,
 	}))
 
@@ -729,8 +709,8 @@ func init_MALIGNANCY() -> void:
 		"object_type": Currency.Type.MALIGNANCY,
 		"amount": "3e3",
 	})
-	rewards.append(Reward.new(Reward.Type.UPGRADE_MENU, {
-		"menu": UpgradeMenu.Type.MALIGNANT
+	add_reward(Reward.new(Reward.Type.UPGRADE_MENU, {
+		"object_type": UpgradeMenu.Type.MALIGNANT
 	}))
 
 
@@ -742,10 +722,16 @@ func init_SOCCER_DUDE() -> void:
 	objective = Objective.new(Objective.Type.UPGRADE_PURCHASED, {
 		"object_type": Upgrade.Type.SOCCER_DUDE,
 	})
-	rewards.append(Reward.new(Reward.Type.CURRENCY, {
+	add_reward(Reward.new(Reward.Type.CURRENCY, {
 		"object_type": Currency.Type.MALIGNANCY,
 		"amount": "1e3",
 	}))
+
+
+
+func add_reward(reward: Reward) -> void:
+	rewards.append(reward)
+	reward_count = rewards.size()
 
 
 
@@ -779,6 +765,12 @@ func dismiss() -> void:
 	objective.wake_up_sleeping_lored()
 	wa.add(Currency.Type.GRIEF, 1)
 	emit_signal("just_dismissed")
+	emit_signal("just_ended")
+
+
+func kill() -> void:
+	objective.wake_up_sleeping_lored()
+	vico.queue_free()
 	emit_signal("just_ended")
 
 
@@ -830,7 +822,7 @@ func has_pair() -> bool:
 
 
 func has_rewards() -> bool:
-	return rewards.size() > 0
+	return reward_count > 0
 
 
 func is_main_wish() -> bool:

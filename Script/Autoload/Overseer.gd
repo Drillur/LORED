@@ -2,29 +2,16 @@ extends Node
 
 
 
-signal save_finished
-signal load_finished
-
-
-func save() -> String:
-	var data := {}
-	data["session_duration"] = var_to_str(session_duration)
-	data["total_duration_played"] = var_to_str(total_duration_played)
-	for i in range(0, 5):
-		var stage = get("stage" + str(i))
-		data["Stage" + str(i)] = stage.save()
-	emit_signal("save_finished")
-	return var_to_str(data)
-
-
-func load_data(data_str: String) -> void:
-	var data: Dictionary = str_to_var(data_str)
-	session_duration = str_to_var(data["session_duration"])
-	total_duration_played = str_to_var(data["total_duration_played"])
-	for i in range(0, 5):
-		var stage = get("stage" + str(i))
-		stage.load_data(data["Stage" + str(i)])
-	emit_signal("load_finished")
+var saved_vars := [
+	"current_clock",
+	"session_duration",
+	"total_duration_played",
+	"stage0",
+	"stage1",
+	"stage2",
+	"stage3",
+	"stage4",
+]
 
 
 
@@ -32,13 +19,6 @@ enum Platform {PC, HTML,}
 
 var dev_mode := true#false
 const PLATFORM := Platform.PC
-
-signal reload_finished
-var reloading := false:
-	set(val):
-		reloading = val
-		if not val:
-			emit_signal("reload_finished")
 
 var icon_awake := preload("res://Sprites/Hud/awake.png")
 var icon_asleep := preload("res://Sprites/Hud/Halt.png")
@@ -143,6 +123,7 @@ func session_tracker() -> void:
 		t.start(1)
 		await t.timeout
 		session_duration += 1
+		total_duration_played += 1
 	t.queue_free()
 
 
@@ -160,17 +141,16 @@ var root_ready := false:
 
 
 func reload_scene() -> void:
-	reloading = true
 	root_ready = false
 	close_all()
 	get_tree().reload_current_scene()
 	open_all()
-	reloading = false
 
 
 func close_all() -> void:
-	wi.close()
-	up.close()
+	password = 0.0
+	#wi.close()
+	#up.close()
 	lv.close()
 	wa.close()
 	close()
@@ -178,30 +158,18 @@ func close_all() -> void:
 
 func open_all() -> void:
 	open()
-	wa.open()
-	lv.open()
-	up.open()
-	wi.open()
+#	wa.open()
+#	lv.open()
+#	up.open()
+#	wi.open()
 
 
 func close() -> void:
 	password = 0.0
-	last_clock = 0.0
-	current_clock = 0.0
-	session_duration = 0
-	total_duration_played = 0
-	selected_stage = 1
-	last_reset_stage = 1
-	update_queue.clear()
-	update_cooldown.clear()
-	for i in range(0, 5):
-		get("stage" + str(i)).close()
 
 
 func open() -> void:
 	password = Time.get_unix_time_from_system()
-	# don't need to open stage0 - stage4 as of now
-	pass
 
 
 
@@ -238,7 +206,7 @@ func throw_texts_by_dictionary(parent: Node, _data: Dictionary, prepended_text :
 	for cur in _data:
 		var currency := wa.get_currency(cur) as Currency
 		var data = {
-			"text": prepended_text + _data[cur].toString(),
+			"text": prepended_text + _data[cur].text,
 			"color": currency.color,
 			"icon": currency.icon,
 		}
@@ -257,7 +225,7 @@ func throw_texts(parent: Node, _data: Dictionary, prepended_text := "+") -> void
 	for cur in _data:
 		var currency := wa.get_currency(cur) as Currency
 		var data = {
-			"text": prepended_text + _data[cur].toString(),
+			"text": prepended_text + _data[cur].text,
 			"color": currency.color,
 			"icon": currency.icon,
 		}
@@ -304,53 +272,53 @@ func update_discord_state(text: String) -> void:
 
 
 
-# - Update Queue
-
-var update_queue := []
-var update_cooldown := []
-
-
-func update(method: Callable) -> void:
-	var my_pass := gv.password
-	
-	if method in update_cooldown:
-		if not method in update_queue:
-			update_queue.append(method)
-		return
-	
-	if not method.is_valid():
-		return
-	
-	update_cooldown.append(method)
-	
-	var obj := method.get_object()
-	if obj.has_signal("visibility_changed"):
-		if not method.get_object().visible:
-			await method.get_object().showed_or_removed
-			
-			if my_pass != gv.password:
-				return
-			
-			if not method.is_valid():
-				if method in update_queue:
-					update_queue.erase(method)
-				return
-	
-	if method in update_queue:
-		update_queue.erase(method)
-	
-	if my_pass != gv.password:
-		return
-	
-	method.call()
-	await get_tree().create_timer(0.016).timeout
-	
-	if my_pass != gv.password:
-		return
-	
-	update_cooldown.erase(method)
-	if method in update_queue:
-		update(method)
+## - Update Queue
+#
+#var update_queue := []
+#var update_cooldown := []
+#
+#
+#func update(method: Callable) -> void:
+#	var my_pass := gv.password
+#
+#	if method in update_cooldown:
+#		if not method in update_queue:
+#			update_queue.append(method)
+#		return
+#
+#	if not method.is_valid():
+#		return
+#
+#	update_cooldown.append(method)
+#
+#	var obj := method.get_object()
+#	if obj.has_signal("visibility_changed"):
+#		if not method.get_object().visible:
+#			await method.get_object().showed_or_removed
+#
+#			if my_pass != gv.password:
+#				return
+#
+#			if not method.is_valid():
+#				if method in update_queue:
+#					update_queue.erase(method)
+#				return
+#
+#	if method in update_queue:
+#		update_queue.erase(method)
+#
+#	if my_pass != gv.password:
+#		return
+#
+#	method.call()
+#	await get_tree().create_timer(0.016).timeout
+#
+#	if my_pass != gv.password:
+#		return
+#
+#	update_cooldown.erase(method)
+#	if method in update_queue:
+#		update(method)
 
 
 
@@ -462,7 +430,7 @@ class TimeUnit:
 				break
 			amount.d(division)
 			type += 1
-		return amount.roundDown().toString() + " " + unit_text(type, amount)
+		return amount.roundDown().text + " " + unit_text(type, amount)
 	
 	static func unit_text(type: int, amount: Big) -> String:
 		if amount.equal(1):
@@ -471,9 +439,9 @@ class TimeUnit:
 
 func parse_time(big: Big) -> String:
 	if big.less(0):
-		big = Big.new(0)
+		big.set_to(0)
 	
-	if big.less(1) or big.toString()[0] == "-":
+	if big.less(1) or big.text[0] == "-":
 		if big.equal(0):
 			return ""
 		return "!"
@@ -532,3 +500,7 @@ func get_currencies_in_stage(stage: int) -> Array:
 
 func get_loreds_in_stage(stage: int) -> Array:
 	return get("stage" + str(stage)).loreds
+
+
+
+

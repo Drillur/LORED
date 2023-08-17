@@ -46,6 +46,11 @@ func _on_resized():
 	right_down.position.x = size.x + 10
 
 
+func _on_visibility_changed():
+	if visible:
+		gv.clear_tooltip()
+
+
 
 # - Signal
 

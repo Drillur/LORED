@@ -19,7 +19,8 @@ func setup(_job: Job) -> void:
 	if not is_node_ready():
 		await ready
 	title.text = job.name
-	job.duration.add_notify_change_method(update_duration_text)
+	job.duration.connect("changed", update_duration_text)
+	update_duration_text()
 	prepare_produced_currencies()
 	prepare_required_currencies()
 	

@@ -40,23 +40,29 @@ func setup(data: Dictionary) -> void:
 	purchased_changed(lored.purchased)
 	lored.connect("purchased_changed", purchased_changed)
 	lored.connect("leveled_up", update_level)
+	lored.output.connect("changed", update_output)
+	lored.input.connect("changed", update_input)
+	lored.haste.connect("changed", update_haste)
+	lored.crit.connect("changed", update_crit)
+	
 	purchased_changed(lored.purchased)
 	update_level(lored.level)
-	lored.output.add_notify_change_method(update_output, true)
-	lored.input.add_notify_change_method(update_input, true)
-	lored.haste.add_notify_change_method(update_haste, true)
-	lored.crit.add_notify_change_method(update_crit, true)
+	update_output()
+	update_input()
+	update_haste()
+	update_crit()
 	
 	fuel_text.setup(lored.fuel)
 	color = lored.color
 	fuel_title_bg.self_modulate = wa.get_color(lored.fuel_currency)
 	fuel_currency_text.text = wa.get_icon_and_name_text(lored.fuel_currency)
-	lored.fuel_cost.add_notify_change_method(update_fuel_cost, true)
+	lored.fuel_cost.connect("changed", update_fuel_cost)
+	update_fuel_cost()
 
 
 
 func update_fuel_cost() -> void:
-	fuel_cost.text = "Fuel cost: [b]" + lored.fuel_cost.get_total_text() + "[/b]/s"
+	fuel_cost.text = "Fuel cost: [b]" + lored.fuel_cost.get_text() + "[/b]/s"
 
 
 

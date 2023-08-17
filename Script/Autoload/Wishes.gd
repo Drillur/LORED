@@ -2,12 +2,6 @@ class_name Wishes
 extends Node
 
 
-
-signal save_finished
-signal load_finished
-var loading := false
-
-
 func save() -> String:
 	var data := {}
 	data["completed_wishes"] = var_to_str(completed_wishes)
@@ -18,12 +12,10 @@ func save() -> String:
 	for wish in wishes:
 		data["wish " + str(i)] = wish.save()
 		i += 1
-	emit_signal("save_finished")
 	return var_to_str(data)
 
 
 func load_data(data_str: String) -> void:
-	loading = true
 	var data: Dictionary = str_to_var(data_str)
 	completed_wishes = str_to_var(data["completed_wishes"])
 	completed_random_wishes = str_to_var(data["completed_random_wishes"])
@@ -39,8 +31,6 @@ func load_data(data_str: String) -> void:
 	for wish in wishes:
 		create_wish_vico(wish)
 	
-	loading = false
-	emit_signal("load_finished")
 
 
 signal wish_completed(type)
@@ -61,8 +51,6 @@ var completed_random_wishes := 0
 var random_wish_limit := 0:
 	set(val):
 		random_wish_limit = val
-		if loading:
-			await load_finished
 		for i in val:
 			find_new_random_wish()
 
@@ -77,9 +65,6 @@ func close() -> void:
 	active_random_wishes = 0
 	completed_random_wishes = 0
 
-
-func open() -> void:
-	pass
 
 
 
@@ -178,8 +163,10 @@ func create_wish_vico(wish: Wish) -> void:
 
 
 func start_new_wish_after_wish_completed(wish: Wish) -> void:
+	var my_pass := gv.password
 	await wish.just_ended
-	print(0)
+	if my_pass != gv.password:
+		return
 	wishes.erase(wish)
 	active_wish_types.erase(wish.type)
 	if wish.is_main_wish():

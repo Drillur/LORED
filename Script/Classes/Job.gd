@@ -60,7 +60,7 @@ var killed := false
 var type: int
 var lored: int
 
-var crit: Attribute
+var crit: Value
 
 var work_pass := -1.0
 var clock_in_time: float
@@ -92,8 +92,8 @@ var required_rates := {}
 
 var last_production := {}
 
-var duration: Attribute
-var fuel_cost: Attribute
+var duration: Value
+var fuel_cost: Value
 
 
 
@@ -103,7 +103,7 @@ func _init(_type: int) -> void:
 	
 	call("init_" + key)
 	
-	fuel_cost = Attribute.new(duration.get_as_float(), false)
+	fuel_cost = Value.new(duration.get_as_float())
 	
 	has_required_currencies = required_currencies != null
 	has_produced_currencies = not produced_currencies.is_empty()
@@ -114,121 +114,121 @@ func _init(_type: int) -> void:
 
 func init_REFUEL() -> void:
 	name = "Refuel"
-	duration = Attribute.new(4, false)
+	duration = Value.new(4)
 	status_text = "Refueling!"
 	animation = preload("res://Sprites/animations/Refuel.tres")
 
 
 func init_STONE() -> void:
 	name = "Pick Up"
-	duration = Attribute.new(2.5, false)
+	duration = Value.new(2.5)
 	animation = preload("res://Sprites/animations/stone.tres")
 	add_produced_currency(Currency.Type.STONE, 1)
 
 
 func init_COAL() -> void:
 	name = "Dig"
-	duration = Attribute.new(3.25, false)
+	duration = Value.new(3.25)
 	animation = preload("res://Sprites/animations/coal.tres")
 	add_produced_currency(Currency.Type.COAL, 1)
 
 
 func init_IRON_ORE() -> void:
 	name = "Shoot"
-	duration = Attribute.new(4, false)
+	duration = Value.new(4)
 	animation = preload("res://Sprites/animations/irono.tres")
 	add_produced_currency(Currency.Type.IRON_ORE, 1)
 
 
 func init_COPPER_ORE() -> void:
 	name = "Mine"
-	duration = Attribute.new(4, false)
+	duration = Value.new(4)
 	animation = preload("res://Sprites/animations/copo.tres")
 	add_produced_currency(Currency.Type.COPPER_ORE, 1)
 
 
 func init_IRON() -> void:
 	name = "Toast"
-	duration = Attribute.new(5, false)
+	duration = Value.new(5)
 	animation = preload("res://Sprites/animations/iron.tres")
 	add_produced_currency(Currency.Type.IRON, 1)
 	required_currencies = Cost.new({
-		Currency.Type.IRON_ORE: Attribute.new(1, false)
+		Currency.Type.IRON_ORE: Value.new(1)
 	})
 
 
 func init_COPPER() -> void:
 	name = "Cook"
-	duration = Attribute.new(5, false)
+	duration = Value.new(5)
 	animation = preload("res://Sprites/animations/cop.tres")
 	add_produced_currency(Currency.Type.COPPER, 1)
 	required_currencies = Cost.new({
-		Currency.Type.COPPER_ORE: Attribute.new(1, false)
+		Currency.Type.COPPER_ORE: Value.new(1)
 	})
 
 
 func init_GROWTH() -> void:
 	name = "Pop"
-	duration = Attribute.new(6.5, false)
+	duration = Value.new(6.5)
 	animation = preload("res://Sprites/animations/growth.tres")
 	add_produced_currency(Currency.Type.GROWTH, 1)
 	required_currencies = Cost.new({
-		Currency.Type.IRON: Attribute.new(1, false),
-		Currency.Type.COPPER: Attribute.new(1, false),
+		Currency.Type.IRON: Value.new(1),
+		Currency.Type.COPPER: Value.new(1),
 	})
 
 
 func init_JOULES() -> void:
 	name = "Redirect"
-	duration = Attribute.new(8.25, false)
+	duration = Value.new(8.25)
 	animation = preload("res://Sprites/animations/jo.tres")
 	add_produced_currency(Currency.Type.JOULES, 1)
 	required_currencies = Cost.new({
-		Currency.Type.COAL: Attribute.new(1, false),
+		Currency.Type.COAL: Value.new(1),
 	})
 
 
 func init_CONCRETE() -> void:
 	name = "Mash"
-	duration = Attribute.new(10, false)
+	duration = Value.new(10)
 	animation = preload("res://Sprites/animations/conc.tres")
 	add_produced_currency(Currency.Type.CONCRETE, 1)
 	required_currencies = Cost.new({
-		Currency.Type.STONE: Attribute.new(1, false)
+		Currency.Type.STONE: Value.new(1)
 	})
 
 
 func init_OIL() -> void:
 	name = "Succ"
-	duration = Attribute.new(0.5, false)
+	duration = Value.new(0.5)
 	animation = preload("res://Sprites/animations/oil.tres")
 	add_produced_currency(Currency.Type.OIL, 0.075)
 
 
 func init_TARBALLS() -> void:
 	name = "Mutate"
-	duration = Attribute.new(4, false)
+	duration = Value.new(4)
 	animation = preload("res://Sprites/animations/tar.tres")
 	add_produced_currency(Currency.Type.TARBALLS, 1)
 	required_currencies = Cost.new({
-		Currency.Type.OIL: Attribute.new(1, false)
+		Currency.Type.OIL: Value.new(1)
 	})
 
 
 func init_MALIGNANCY() -> void:
 	name = "Manifest"
-	duration = Attribute.new(5, false)
+	duration = Value.new(5)
 	animation = preload("res://Sprites/animations/malig.tres")
 	add_produced_currency(Currency.Type.MALIGNANCY, 1)
 	required_currencies = Cost.new({
-		Currency.Type.TARBALLS: Attribute.new(1, false),
-		Currency.Type.GROWTH: Attribute.new(1, false),
+		Currency.Type.TARBALLS: Value.new(1),
+		Currency.Type.GROWTH: Value.new(1),
 	})
 
 
 func init_WATER() -> void:
 	name = "Splish-Splash"
-	duration = Attribute.new(3.25, false)
+	duration = Value.new(3.25)
 	animation = preload("res://Sprites/animations/water.tres")
 	two_part_animation = true
 	add_produced_currency(Currency.Type.WATER, 1)
@@ -236,257 +236,257 @@ func init_WATER() -> void:
 
 func init_HUMUS() -> void:
 	name = "Shit"
-	duration = Attribute.new(4.575, false)
+	duration = Value.new(4.575)
 	animation = preload("res://Sprites/animations/humus.tres")
 	add_produced_currency(Currency.Type.HUMUS, 1)
 	required_currencies = Cost.new({
-		Currency.Type.GROWTH: Attribute.new(0.5, false),
-		Currency.Type.WATER: Attribute.new(1, false),
+		Currency.Type.GROWTH: Value.new(0.5),
+		Currency.Type.WATER: Value.new(1),
 	})
 
 
 func init_TREES() -> void:
 	name = "Grow"
-	duration = Attribute.new(20, false)
+	duration = Value.new(20)
 	animation = preload("res://Sprites/animations/tree.tres")
 	add_produced_currency(Currency.Type.TREES, 1)
 	required_currencies = Cost.new({
-		Currency.Type.WATER: Attribute.new(6, false),
-		Currency.Type.SEEDS: Attribute.new(1, false),
+		Currency.Type.WATER: Value.new(6),
+		Currency.Type.SEEDS: Value.new(1),
 	})
 
 
 func init_SEEDS() -> void:
 	name = "Pollenate"
-	duration = Attribute.new(5, false)
+	duration = Value.new(5)
 	animation = preload("res://Sprites/animations/seed.tres")
 	two_part_animation = true
 	add_produced_currency(Currency.Type.SEEDS, 1)
 	required_currencies = Cost.new({
-		Currency.Type.WATER: Attribute.new(1.5, false),
+		Currency.Type.WATER: Value.new(1.5),
 	})
 
 
 func init_SOIL() -> void:
 	name = "Scrape"
-	duration = Attribute.new(5, false)
+	duration = Value.new(5)
 	animation = preload("res://Sprites/animations/soil.tres")
 	add_produced_currency(Currency.Type.SOIL, 1)
 	required_currencies = Cost.new({
-		Currency.Type.HUMUS: Attribute.new(1.5, false),
+		Currency.Type.HUMUS: Value.new(1.5),
 	})
 
 
 func init_AXES() -> void:
 	name = "Assemble"
-	duration = Attribute.new(7, false)
+	duration = Value.new(7)
 	animation = preload("res://Sprites/animations/axe.tres")
 	add_produced_currency(Currency.Type.AXES, 1)
 	required_currencies = Cost.new({
-		Currency.Type.HARDWOOD: Attribute.new(0.8, false),
-		Currency.Type.STEEL: Attribute.new(0.25, false),
+		Currency.Type.HARDWOOD: Value.new(0.8),
+		Currency.Type.STEEL: Value.new(0.25),
 	})
 
 
 func init_WOOD() -> void:
 	name = "Obliterate"
-	duration = Attribute.new(5, false)
+	duration = Value.new(5)
 	animation = preload("res://Sprites/animations/wood.tres")
 	add_produced_currency(Currency.Type.WOOD, 25)
 	required_currencies = Cost.new({
-		Currency.Type.AXES: Attribute.new(5, false),
-		Currency.Type.TREES: Attribute.new(1, false),
+		Currency.Type.AXES: Value.new(5),
+		Currency.Type.TREES: Value.new(1),
 	})
 
 
 func init_HARDWOOD() -> void:
 	name = "Seduce"
-	duration = Attribute.new(4.58333, false)
+	duration = Value.new(4.58333)
 	animation = preload("res://Sprites/animations/hard.tres")
 	add_produced_currency(Currency.Type.HARDWOOD, 1)
 	required_currencies = Cost.new({
-		Currency.Type.WOOD: Attribute.new(2, false),
-		Currency.Type.CONCRETE: Attribute.new(1, false),
+		Currency.Type.WOOD: Value.new(2),
+		Currency.Type.CONCRETE: Value.new(1),
 	})
 
 
 func init_LIQUID_IRON() -> void:
 	name = "Stew"
-	duration = Attribute.new(4, false)
+	duration = Value.new(4)
 	animation = preload("res://Sprites/animations/liq.tres")
 	add_produced_currency(Currency.Type.LIQUID_IRON, 1)
 	required_currencies = Cost.new({
-		Currency.Type.IRON: Attribute.new(10, false),
+		Currency.Type.IRON: Value.new(10),
 	})
 
 
 func init_STEEL() -> void:
 	name = "Slam"
-	duration = Attribute.new(13 + (1.0/3), false)
+	duration = Value.new(13 + (1.0/3))
 	animation = preload("res://Sprites/animations/steel.tres")
 	add_produced_currency(Currency.Type.STEEL, 1)
 	required_currencies = Cost.new({
-		Currency.Type.LIQUID_IRON: Attribute.new(8, false),
+		Currency.Type.LIQUID_IRON: Value.new(8),
 	})
 
 
 func init_SAND() -> void:
 	name = "Levitate"
-	duration = Attribute.new(4, false)
+	duration = Value.new(4)
 	animation = preload("res://Sprites/animations/sand.tres")
 	add_produced_currency(Currency.Type.SAND, 2.5)
 	required_currencies = Cost.new({
-		Currency.Type.HUMUS: Attribute.new(1.5, false),
+		Currency.Type.HUMUS: Value.new(1.5),
 	})
 
 
 func init_GLASS() -> void:
 	name = "Glass"
-	duration = Attribute.new(5.825, false)
+	duration = Value.new(5.825)
 	animation = preload("res://Sprites/animations/glass.tres")
 	add_produced_currency(Currency.Type.GLASS, 1)
 	required_currencies = Cost.new({
-		Currency.Type.SAND: Attribute.new(6, false),
+		Currency.Type.SAND: Value.new(6),
 	})
 
 
 func init_DRAW_PLATE() -> void:
 	name = "Doodle"
-	duration = Attribute.new(10, false)
+	duration = Value.new(10)
 	animation = preload("res://Sprites/animations/draw.tres")
 	add_produced_currency(Currency.Type.DRAW_PLATE, 1)
 	required_currencies = Cost.new({
-		Currency.Type.STEEL: Attribute.new(0.5, false),
+		Currency.Type.STEEL: Value.new(0.5),
 	})
 
 
 func init_WIRE() -> void:
 	name = "Sew"
-	duration = Attribute.new(5, false)
+	duration = Value.new(5)
 	animation = preload("res://Sprites/animations/wire.tres")
 	add_produced_currency(Currency.Type.WIRE, 1)
 	required_currencies = Cost.new({
-		Currency.Type.COPPER: Attribute.new(5, false),
-		Currency.Type.DRAW_PLATE: Attribute.new(0.4, false),
+		Currency.Type.COPPER: Value.new(5),
+		Currency.Type.DRAW_PLATE: Value.new(0.4),
 	})
 
 
 func init_GALENA() -> void:
 	name = "Jackhammer"
-	duration = Attribute.new(4, false)
+	duration = Value.new(4)
 	animation = preload("res://Sprites/animations/gale.tres")
 	add_produced_currency(Currency.Type.GALENA, 1)
 
 
 func init_LEAD() -> void:
 	name = "Filter"
-	duration = Attribute.new(5, false)
+	duration = Value.new(5)
 	animation = preload("res://Sprites/animations/lead.tres")
 	add_produced_currency(Currency.Type.LEAD, 1)
 	required_currencies = Cost.new({
-		Currency.Type.GALENA: Attribute.new(1, false),
+		Currency.Type.GALENA: Value.new(1),
 	})
 
 
 func init_PETROLEUM() -> void:
 	name = "Process"
-	duration = Attribute.new(5, false)
+	duration = Value.new(5)
 	animation = preload("res://Sprites/animations/pet.tres")
 	add_produced_currency(Currency.Type.PETROLEUM, 1)
 	required_currencies = Cost.new({
-		Currency.Type.OIL: Attribute.new(3, false),
+		Currency.Type.OIL: Value.new(3),
 	})
 
 
 func init_WOOD_PULP() -> void:
 	name = "Strip"
-	duration = Attribute.new(6 + (2.0/3), false)
+	duration = Value.new(6 + (2.0/3))
 	animation = preload("res://Sprites/animations/pulp.tres")
 	add_produced_currency(Currency.Type.WOOD_PULP, 5)
 	required_currencies = Cost.new({
-		Currency.Type.STONE: Attribute.new(10, false),
-		Currency.Type.WOOD: Attribute.new(5, false),
+		Currency.Type.STONE: Value.new(10),
+		Currency.Type.WOOD: Value.new(5),
 	})
 
 
 func init_PAPER() -> void:
 	name = "Paperify"
-	duration = Attribute.new(5 + (1.0/3), false)
+	duration = Value.new(5 + (1.0/3))
 	animation = preload("res://Sprites/animations/paper.tres")
 	add_produced_currency(Currency.Type.PAPER, 1)
 	required_currencies = Cost.new({
-		Currency.Type.WOOD_PULP: Attribute.new(0.6, false),
+		Currency.Type.WOOD_PULP: Value.new(0.6),
 	})
 
 
 func init_PLASTIC() -> void:
 	name = "Pollute"
-	duration = Attribute.new(6.25, false)
+	duration = Value.new(6.25)
 	animation = preload("res://Sprites/animations/plast.tres")
 	add_produced_currency(Currency.Type.PLASTIC, 1)
 	required_currencies = Cost.new({
-		Currency.Type.COAL: Attribute.new(5, false),
-		Currency.Type.PETROLEUM: Attribute.new(1, false),
+		Currency.Type.COAL: Value.new(5),
+		Currency.Type.PETROLEUM: Value.new(1),
 	})
 
 
 func init_TOBACCO() -> void:
 	name = "Smoke"
-	duration = Attribute.new(8 + (1.0/3), false)
+	duration = Value.new(8 + (1.0/3))
 	animation = preload("res://Sprites/animations/toba.tres")
 	add_produced_currency(Currency.Type.TOBACCO, 1)
 	required_currencies = Cost.new({
-		Currency.Type.WATER: Attribute.new(2, false),
-		Currency.Type.SEEDS: Attribute.new(1, false),
+		Currency.Type.WATER: Value.new(2),
+		Currency.Type.SEEDS: Value.new(1),
 	})
 
 
 func init_CIGARETTES() -> void:
 	name = "Smoke"
-	duration = Attribute.new(2.583333, false)
+	duration = Value.new(2.583333)
 	animation = preload("res://Sprites/animations/ciga.tres")
 	add_produced_currency(Currency.Type.CIGARETTES, 1)
 	required_currencies = Cost.new({
-		Currency.Type.TARBALLS: Attribute.new(4, false),
-		Currency.Type.TOBACCO: Attribute.new(1, false),
-		Currency.Type.PAPER: Attribute.new(0.25, false),
+		Currency.Type.TARBALLS: Value.new(4),
+		Currency.Type.TOBACCO: Value.new(1),
+		Currency.Type.PAPER: Value.new(0.25),
 	})
 
 
 func init_CARCINOGENS() -> void:
 	name = "#note"
-	duration = Attribute.new(7.5, false)
+	duration = Value.new(7.5)
 	animation = preload("res://Sprites/animations/carc.tres")
 	add_produced_currency(Currency.Type.CARCINOGENS, 1)
 	required_currencies = Cost.new({
-		Currency.Type.MALIGNANCY: Attribute.new(3, false),
-		Currency.Type.CIGARETTES: Attribute.new(6, false),
-		Currency.Type.PLASTIC: Attribute.new(5, false),
+		Currency.Type.MALIGNANCY: Value.new(3),
+		Currency.Type.CIGARETTES: Value.new(6),
+		Currency.Type.PLASTIC: Value.new(5),
 	})
 
 
 func init_TUMORS() -> void:
 	name = "Grow"
-	duration = Attribute.new(16 + (2.0/3), false)
+	duration = Value.new(16 + (2.0/3))
 	animation = preload("res://Sprites/animations/tum.tres")
 	add_produced_currency(Currency.Type.TUMORS, 1)
 	required_currencies = Cost.new({
-		Currency.Type.GROWTH: Attribute.new(10, false),
-		Currency.Type.MALIGNANCY: Attribute.new(5, false),
-		Currency.Type.CARCINOGENS: Attribute.new(3, false),
+		Currency.Type.GROWTH: Value.new(10),
+		Currency.Type.MALIGNANCY: Value.new(5),
+		Currency.Type.CARCINOGENS: Value.new(3),
 	})
 
 
 func assign_lored(_lored: int) -> void:
 	lored = _lored
 	crit = lv.get_lored(lored).crit
-	lv.get_lored(lored).fuel.add_notify_increased_method(fuel_increased)
-	lv.get_lored(lored).fuel.add_notify_decreased_method(fuel_decreased)
+	lv.get_lored(lored).fuel.connect("increased", fuel_increased)
+	lv.get_lored(lored).fuel.connect("decreased", fuel_decreased)
 	if type == Type.REFUEL:
 		var half = Big.new(lv.get_lored(lored).fuel.get_total()).d(2).toFloat()
 		has_required_currencies = true
 		required_currencies = Cost.new({
-			lv.get_lored(lored).fuel_currency: Attribute.new(half, false)
+			lv.get_lored(lored).fuel_currency: Value.new(half)
 		})
 		hookup_required_currencies()
 		animation_key = "refuel"
@@ -507,7 +507,7 @@ func hookup_required_currencies() -> void:
 
 
 func add_produced_currency(currency: int, amount: float) -> void:
-	produced_currencies[currency] = Attribute.new(amount, false)
+	produced_currencies[currency] = Value.new(amount)
 
 
 
@@ -729,7 +729,7 @@ func start() -> void:
 	starting = false
 	working = true
 	
-	lv.get_lored(lored).fuel.subtract(fuel_cost.get_total())
+	lv.get_lored(lored).fuel.subtract(fuel_cost.get_value())
 	lv.start_job_timer(self)
 	emit_signal("began_working")
 
@@ -742,7 +742,6 @@ func stop() -> void:
 
 func complete() -> void:
 	no_longer_working()
-	last_production.clear()
 	if has_produced_currencies:
 		var multiplier := 1.0
 		if randf_range(0, 100) < crit.get_as_float():
@@ -756,6 +755,7 @@ func complete() -> void:
 
 
 func no_longer_working() -> void:
+	last_production.clear()
 	working = false
 	if has_produced_currencies:
 		for cur in produced_currencies:

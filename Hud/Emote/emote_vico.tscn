@@ -129,5 +129,3 @@ scroll_following = true
 [node name="Timer" type="Timer" parent="."]
 
 [node name="display_text_timer" type="Timer" parent="."]
-
-[connection signal="resized" from="MarginContainer/HBoxContainer/MarginContainer/Dialogue Text" to="." method="_on_dialogue_text_resized"]

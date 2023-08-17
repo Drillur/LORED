@@ -2,30 +2,11 @@ extends Node
 
 
 
-signal save_finished
-signal load_finished
-
-
-func save() -> String:
-	var data := {}
-	data["sleep_unlocked"] = var_to_str(sleep_unlocked)
-	data["jobs_unlocked"] = var_to_str(jobs_unlocked)
-	for type in loreds:
-		var lored = get_lored(type)
-		data[lored.key] = lored.save()
-	emit_signal("save_finished")
-	return var_to_str(data)
-
-
-func load_data(data_str: String) -> void:
-	var data: Dictionary = str_to_var(data_str)
-	sleep_unlocked = str_to_var(data["sleep_unlocked"])
-	jobs_unlocked = str_to_var(data["jobs_unlocked"])
-	for type in loreds:
-		var key = LORED.Type.keys()[type]
-		if key in data.keys():
-			loreds[type].load_data(data[key])
-	emit_signal("load_finished")
+var saved_vars := [
+	"sleep_unlocked",
+	"jobs_unlocked",
+	"loreds_by_key",
+]
 
 
 
@@ -102,15 +83,19 @@ const ANIMATION_FRAMES := {
 }
 
 signal purchased_every_lored_once
-signal all_loreds_became_active
 signal loreds_initialized
 signal sleep_became_unlocked
 signal jobs_just_unlocked
 
 var loreds := {}
+var loreds_by_key := {}
 var lored_container: LOREDContainer
 
-var loreds_are_initialized := false
+var loreds_are_initialized := false:
+	set(val):
+		if loreds_are_initialized != val:
+			loreds_are_initialized = val
+			emit_signal("loreds_initialized")
 var sleep_unlocked := false
 var jobs_unlocked := false
 
@@ -124,30 +109,19 @@ var never_purchased := []
 
 
 func _ready():
-	open()
+	for lored in LORED.Type.values():
+		loreds[lored] = LORED.new(lored)
+		loreds_by_key[loreds[lored].key] = loreds[lored]
+	loreds_are_initialized = true
 	for lored in LORED.Type.values():
 		gv.add_lored_to_stage(loreds[lored].stage, lored)
 
 
 
 func close() -> void:
-	for lored in loreds:
-		get_lored(lored).kill()
-	loreds.clear()
 	unlocked.clear()
 	active.clear()
 	active_and_awake.clear()
-	never_purchased.clear()
-	loreds_are_initialized = false
-	sleep_unlocked = false
-	jobs_unlocked = false
-
-
-func open() -> void:
-	for lored in LORED.Type.values():
-		loreds[lored] = LORED.new(lored)
-	loreds_are_initialized = true
-	emit_signal("loreds_initialized")
 
 
 
@@ -207,6 +181,7 @@ func start_sleep_emitter(lored: LORED) -> void:
 			lored.emit_signal("second_passed_while_asleep")
 
 
+
 # - Actions
 
 func start_job_timer(job: Job) -> void:
@@ -224,23 +199,16 @@ func start_job_timer(job: Job) -> void:
 
 func unlock_lored(_lored: int) -> void:
 	get_lored(_lored).unlock()
-	unlocked.append(_lored)
-	if not is_lored_purchased(_lored):
-		never_purchased.append(_lored)
-		await get_lored(_lored).leveled_up
-		never_purchased.erase(_lored)
-	
-	if not gv.root_ready:
-		await gv.root_ready_finished
-	
-	if all_loreds_are_active():
-		emit_signal("all_loreds_became_active")
+
+
+func erase_lored_from_never_purchased(lored: int) -> void:
+	never_purchased.erase(lored)
 	if purchased_every_unlocked_lored_once():
 		emit_signal("purchased_every_lored_once")
 
 
-func emote(emote: Emote) -> void:
-	get_lored(emote.speaker).emote(emote)
+func emote(_emote: Emote) -> void:
+	get_lored(_emote.speaker).emote(_emote)
 
 
 

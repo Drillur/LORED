@@ -38,8 +38,10 @@ func setup(cur: int) -> void:
 		await currency.just_unlocked
 	
 	show()
-	currency.count.add_notify_change_method(update_count)
-	currency.net_rate.add_notify_change_method(update_rate)
+	currency.count.connect("changed", update_count)
+	currency.net_rate.connect("changed", update_rate)
+	update_count()
+	update_rate()
 
 
 

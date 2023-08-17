@@ -26,32 +26,33 @@ var display_rate := true
 
 
 
-func setup(_currency: int, _threshold: Attribute = Attribute.new(0)) -> void:
+func setup(_currency: int) -> void:
 	if not first_setup:
 		if _currency == currency.type:
 			return
-		currency.count.remove_notify_method(update_count)
-		currency.net_rate.remove_notify_method(update_rate)
+		currency.count.disconnect("changed", update_count)
+		currency.net_rate.disconnect("changed", update_rate)
 	
 	first_setup = false
 	currency = wa.get_currency(_currency) as Currency
 	icon.texture = currency.icon
 	icon_shadow.texture = icon.texture
-	currency.count.add_notify_change_method(update_count)
-	currency.net_rate.add_notify_change_method(update_rate)
 	count.self_modulate = currency.color
+	currency.count.connect("changed", update_count)
+	currency.net_rate.connect("changed", update_rate)
 	
-	if _threshold.total.current.greater(0):
-		threshold = _threshold
-		threshold_text.show()
-		threshold.add_notify_change_method(update_threshold)
+	SaveManager.connect("load_finished", update_count)
+	SaveManager.connect("load_finished", update_rate)
+	
+	update_count()
+	update_rate()
 
 
 
 func hide_rate():
 	display_rate = false
 	rate.queue_free()
-	currency.net_rate.remove_notify_method(update_rate)
+	currency.net_rate.disconnect("changed", update_rate)
 	return self
 
 

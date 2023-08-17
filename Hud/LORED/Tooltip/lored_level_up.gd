@@ -39,12 +39,17 @@ func setup(data: Dictionary) -> void:
 	
 	lored.connect("leveled_up", adjust_if_not_purchased)
 	lored.connect("leveled_up", set_level_text)
+	lored.output.connect("changed", set_output_text)
+	lored.input.connect("changed", set_input_text)
+	lored.fuel_cost.connect("changed", set_fuel_cost_text)
+	lored.fuel.connect("total_changed", set_max_fuel_text)
+	
 	adjust_if_not_purchased(lored.level)
 	set_level_text(lored.level)
-	lored.output.add_notify_change_method(set_output_text, true)
-	lored.input.add_notify_change_method(set_input_text, true)
-	lored.fuel_cost.add_notify_change_method(set_fuel_cost_text, true)
-	lored.fuel.add_notify_total_change_method(set_max_fuel_text, true)
+	set_output_text()
+	set_input_text()
+	set_fuel_cost_text()
+	set_max_fuel_text()
 	
 	flash_allowed = true
 

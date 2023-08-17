@@ -47,10 +47,6 @@ func _ready():
 	
 	gv.root_ready = true
 	
-	if SaveManager.loaded:
-		load_game()
-		return
-	
 	new_game() # delete
 	
 	return # delete later
@@ -225,33 +221,28 @@ func select_upgrade_menu_tab(tab: int, _show = true) -> void:
 # - Get
 
 
-
-
 @onready var dev_text = $Left/Dev/RichTextLabel
-var gay = Attribute.new(1)
-var gayer = Value.new(1)
-var gayest = Big.new(1)
 var i = 0
 func _on_dev_pressed():
 	i += 1
 	wa.add(Currency.Type.STONE, 10)
 	wa.add(Currency.Type.COAL, 10)
-	lv.get_lored(LORED.Type.IRON).purchase()
-	lv.get_lored(LORED.Type.COPPER).purchase()
-	lv.get_lored(LORED.Type.COPPER_ORE).purchase()
-	lv.get_lored(LORED.Type.IRON_ORE).purchase()
+#	lv.get_lored(LORED.Type.IRON).purchase()
+#	lv.get_lored(LORED.Type.COPPER).purchase()
+#	lv.get_lored(LORED.Type.COPPER_ORE).purchase()
+#	lv.get_lored(LORED.Type.IRON_ORE).purchase()
 
 var test_data: String
 func _on_dev_2_pressed():
 	SaveManager.save_game(SaveManager.SaveMethod.TEST)
+	pass
 
 func _on_dev_4_pressed():
 	pass # Replace with function body.
 
 func _on_dev_3_pressed():
 	SaveManager.load_game(SaveManager.LoadMethod.TEST)
-#	wi.find_new_random_wish()
-	#dev_text.text = SaveManager.data["big"].toString()
+	pass
 
 func _on_dev_5_pressed():
 	pass # Replace with function body.

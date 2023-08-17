@@ -7,14 +7,10 @@ signal became_affordable
 signal became_unaffordable
 signal affordable_changed(affordable)
 
-var killed := false
-
 var cost := {}
 var affordable := false:
 	set(val):
 		affordable = val
-		if killed:
-			return
 		if val:
 			emit_signal("became_affordable")
 		else:
@@ -28,37 +24,40 @@ var purchased := false:
 		purchased = val
 		if val:
 			for cur in cost:
-				wa.currency[cur].count.remove_notify_method(currency_increased)
-				wa.currency[cur].count.remove_notify_method(currency_decreased)
+				wa.currency[cur].count.disconnect("increased", currency_increased)
+				wa.currency[cur].count.disconnect("decreased", currency_decreased)
 		else:
 			if can_afford():
 				for cur in cost:
-					wa.currency[cur].count.add_notify_decreased_method(currency_increased)
+					wa.currency[cur].count.connect("decreased", currency_increased)
 			else:
 				for cur in cost:
-					wa.currency[cur].count.add_notify_increased_method(currency_increased)
+					wa.currency[cur].count.connect("increased", currency_increased)
 
 
 
 func _init(_cost: Dictionary) -> void:
 	cost = _cost
 	for cur in cost:
-		wa.currency[cur].count.add_notify_increased_method(currency_increased)
+		wa.currency[cur].count.connect("increased", currency_increased)
+	currency_increased()
 	SaveManager.connect("load_finished", recheck)
 
 
 func notify_if_increased() -> void:
 	if not purchased:
 		for cur in cost:
-			wa.currency[cur].count.remove_notify_method(currency_decreased)
-			wa.currency[cur].count.add_notify_increased_method(currency_increased)
+			if wa.currency[cur].count.is_connected("decreased", currency_decreased):
+				wa.currency[cur].count.disconnect("decreased", currency_decreased)
+			wa.currency[cur].count.connect("increased", currency_increased)
 
 
 func notify_if_decreased() -> void:
 	if not purchased:
 		for cur in cost:
-			wa.currency[cur].count.remove_notify_method(currency_increased)
-			wa.currency[cur].count.add_notify_decreased_method(currency_decreased)
+			if wa.currency[cur].count.is_connected("increased", currency_increased):
+				wa.currency[cur].count.disconnect("increased", currency_increased)
+			wa.currency[cur].count.connect("decreased", currency_decreased)
 
 
 
@@ -72,6 +71,7 @@ func currency_increased() -> void:
 		notify_if_decreased()
 
 
+
 func currency_decreased() -> void:
 	if not affordable:
 		return
@@ -83,24 +83,14 @@ func currency_decreased() -> void:
 
 # - Action
 
-func kill() -> void:
-	killed = true
-	SaveManager.disconnect("load_finished", recheck)
-	for cur in cost:
-		wa.currency[cur].count.remove_notify_method(currency_decreased)
-		wa.currency[cur].count.remove_notify_method(currency_increased)
-
-
-
 func recheck() -> void:
 	for cur in cost:
-		wa.currency[cur].count.remove_notify_method(currency_decreased)
-		wa.currency[cur].count.remove_notify_method(currency_increased)
-	if can_afford():
-		affordable = true
+		wa.currency[cur].count.disconnect("increased", currency_increased)
+		wa.currency[cur].count.disconnect("decreased", currency_decreased)
+	affordable = can_afford()
+	if affordable:
 		notify_if_decreased()
 	else:
-		affordable = false
 		notify_if_increased()
 
 
@@ -142,7 +132,7 @@ func increase_m_from_lored(amount) -> void:
 
 func remove_cost(currency: int) -> void:
 	if currency in cost.keys():
-		cost[currency].remove_notify_method(currency_increased)
+		cost[currency].disconnect("increased", currency_increased)
 		cost.erase(currency)
 
 
@@ -191,3 +181,17 @@ func get_eta() -> Big:
 			eta = i_eta
 	return eta
 
+
+func get_progress_percent() -> float:
+	var total_percent = cost.size()
+	var percent := 0.0
+	for cur in cost:
+		percent += get_single_progress_percent(cur)
+	return percent / total_percent
+
+
+func get_single_progress_percent(cur: int) -> float:
+	return min(
+		1,
+		wa.get_count(cur).percent(cost[cur].get_value())
+	)

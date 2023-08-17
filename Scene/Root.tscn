@@ -97,7 +97,7 @@ text = "Save 1
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
-text = "Save 2"
+text = "0"
 
 [node name="Dev3" type="Button" parent="Left/Dev"]
 unique_name_in_owner = true

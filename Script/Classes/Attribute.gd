@@ -3,192 +3,90 @@ extends Resource
 
 
 
-signal save_finished
-signal load_finished
+var saved_vars := [
+	"total",
+]
 
 
-func save() -> String:
-	var data := {}
-	data["total"] = total.save()
-	data["pending"] = pending.save()
-	if uses_current:
-		data["current"] = current.save()
-	emit_signal("save_finished")
-	return var_to_str(data)
+signal increased
+signal decreased
 
-
-func save_as_big() -> String:
-	var data := {}
-	data["total"] = total.current.save()
-	emit_signal("save_finished")
-	return var_to_str(data)
-
-
-func save_current() -> String:
-	if not uses_current:
-		printerr("You done did mcfucked up")
-		return ""
-	var data := {}
-	data["current"] = current.save()
-	data["pending"] = pending.save()
-	emit_signal("save_finished")
-	return var_to_str(data)
-
-
-func load_data(data_str: String) -> void:
-	var data: Dictionary = str_to_var(data_str)
-	total.load_data(data["total"])
-	pending.load_data(data["pending"])
-	if uses_current:
-		current.load_data(data["current"])
-	emit_signal("load_finished")
-	notify_all()
-
-
-func load_current(data_str: String) -> void:
-	var data: Dictionary = str_to_var(data_str)
-	current.load_data(data["current"])
-	pending.load_data(data["pending"])
-	emit_signal("load_finished")
-	notify_all()
-
-
-func load_finished_pending() -> void: # called automatically
-	if pending.greater(0):
-		if uses_current:
-			current.add(pending)
-		else:
-			total.add(pending)
-		notify_changed_and_increased()
-		pending = Big.new(0)
-
+signal current_changed
+signal current_increased
+signal current_decreased
+signal total_changed
+signal total_increased
+signal total_decreased
 
 signal filled
 signal emptied
 
-var uses_current: bool
+var uses_current: bool:
+	set(val):
+		if uses_current != val:
+			uses_current = val
+			if val:
+				saved_vars.append("current")
+			else:
+				saved_vars.erase("current")
 var cap_current := true
 var current: Value
 var total: Value
-var pending := Big.new(0)
-
-var notify_if_changed: Array
-var notify_if_increased: Array
-var notify_if_decreased: Array
-var notify_if_total_changed: Array
-var notify_if_changed_immediately: Array
 
 
 
-func _init(base_value = 0, will_use_current := true) -> void:
-	connect("load_finished", load_finished_pending)
+func _init(base_value = 0.0, will_use_current := true) -> void:
 	uses_current = will_use_current
 	if uses_current:
 		current = Value.new(base_value)
+		current.connect("increased", emit_increase)
+		current.connect("increased", emit_current_increase)
+		current.connect("decreased", emit_decrease)
+		current.connect("decreased", emit_current_decrease)
+		current.connect("changed", emit_changed)
+		current.connect("changed", emit_current_changed)
 	total = Value.new(base_value)
+	total.connect("increased", emit_increase)
+	total.connect("increased", emit_total_increase)
+	total.connect("decreased", emit_decrease)
+	total.connect("decreased", emit_total_decrease)
+	total.connect("changed", emit_changed)
+	total.connect("changed", emit_total_changed)
 
 
 
-# - Notify and Update
+# - Signals
 
-func add_notify_change_method(method: Callable, remove_automatically := false) -> void:
-	if not method in notify_if_changed:
-		notify_if_changed.append(method)
-		gv.update(method)
-		if remove_automatically:
-			remove_notify_method_if_obj_freed(method)
+func emit_increase() -> void:
+	emit_signal("increased")
 
 
-func add_immediate_notify_method(method: Callable, remove_automatically := false) -> void:
-	if not method in notify_if_changed_immediately:
-		notify_if_changed_immediately.append(method)
-		method.call()
-		if remove_automatically:
-			remove_notify_method_if_obj_freed(method)
+func emit_decrease() -> void:
+	emit_signal("decreased")
 
 
-func add_notify_increased_method(method: Callable, remove_automatically := false) -> void:
-	if not method in notify_if_increased:
-		notify_if_increased.append(method)
-		gv.update(method)
-		if remove_automatically:
-			remove_notify_method_if_obj_freed(method)
+func emit_current_changed() -> void:
+	emit_signal("current_changed")
 
 
-func add_notify_decreased_method(method: Callable, remove_automatically := false) -> void:
-	if not method in notify_if_decreased:
-		notify_if_decreased.append(method)
-		gv.update(method)
-		if remove_automatically:
-			remove_notify_method_if_obj_freed(method)
+func emit_current_increase() -> void:
+	emit_signal("current_increased")
 
 
-func add_notify_total_change_method(method: Callable, remove_automatically := false) -> void:
-	if not method in notify_if_total_changed:
-		notify_if_total_changed.append(method)
-		gv.update(method)
-		if remove_automatically:
-			remove_notify_method_if_obj_freed(method)
+func emit_current_decrease() -> void:
+	emit_signal("current_decreased")
 
 
-func remove_notify_method_if_obj_freed(method: Callable) -> void:
-	await method.get_object().tree_exiting
-	##printt(method, " removed automatically")
-	remove_notify_method(method)
+func emit_total_changed() -> void:
+	emit_signal("total_changed")
 
 
-func remove_notify_method(method: Callable) -> void:
-	notify_if_changed.erase(method)
-	notify_if_increased.erase(method)
-	notify_if_decreased.erase(method)
-	notify_if_total_changed.erase(method)
-	notify_if_changed_immediately.erase(method)
+func emit_total_increase() -> void:
+	emit_signal("total_increased")
 
 
-func notify_change() -> void:
-	for method in notify_if_changed_immediately:
-		method.call()
-	for method in notify_if_changed:
-		gv.update(method)
-
-
-func notify_increase() -> void:
-	for method in notify_if_increased:
-		gv.update(method)
-
-
-func notify_decrease() -> void:
-	for method in notify_if_decreased:
-		gv.update(method)
-
-
-func notify_total_change() -> void:
-	for method in notify_if_total_changed:
-		gv.update(method)
-
-
-func notify_changed_and_increased() -> void:
-	for method in notify_if_changed_immediately:
-		method.call()
-	for method in notify_if_changed + notify_if_increased:
-		gv.update(method)
-
-
-func notify_changed_and_decreased() -> void:
-	for method in notify_if_changed_immediately:
-		method.call()
-	for method in notify_if_changed + notify_if_decreased:
-		gv.update(method)
-
-
-func notify_increased_and_decreased() -> void:
-	for method in notify_if_increased + notify_if_decreased:
-		gv.update(method)
-
-
-func notify_all() -> void:
-	for method in get_all_notify_lists():
-		gv.update(method)
+func emit_total_decrease() -> void:
+	emit_signal("total_decreased")
 
 
 
@@ -198,18 +96,13 @@ func reset():
 	if uses_current:
 		current.reset()
 	total.reset()
-	pending = Big.new(0)
-	notify_changed_and_decreased()
-	notify_total_change()
 
 
 func change_base(new_base_value: float) -> void:
 	if uses_current:
-		current.base = Big.new(new_base_value)
-		notify_change()
+		current.change_base(new_base_value)
 	else:
-		total.base = Big.new(new_base_value)
-		notify_total_change()
+		total.change_base(new_base_value)
 
 
 func do_not_cap_current() -> void:
@@ -225,21 +118,17 @@ func add(amount) -> void:
 			emit_signal("filled")
 	else:
 		total.add(amount)
-		notify_total_change()
-	notify_changed_and_increased()
 
 
 func subtract(amount) -> void:
+	if not amount is Big:
+		amount = Big.new(amount)
 	if uses_current:
-		if not amount is Big:
-			amount = Big.new(amount)
 		current.subtract(amount)
 		if get_current().equal(0):
 			emit_signal("emptied")
 	else:
 		total.subtract(amount)
-		notify_total_change()
-	notify_changed_and_decreased()
 
 
 func add_percent(percent: float) -> void:
@@ -249,11 +138,17 @@ func add_percent(percent: float) -> void:
 
 
 func add_pending(amount: Big) -> void:
-	pending.a(amount)
+	if uses_current:
+		current.add_pending(amount)
+	else:
+		total.add_pending(amount)
 
 
 func subtract_pending(amount: Big) -> void:
-	pending.s(amount)
+	if uses_current:
+		current.subtract_pending(amount)
+	else:
+		total.subtract_pending(amount)
 
 
 
@@ -273,91 +168,52 @@ func set_amount_to_deficit_if_necessary(amount) -> Big:
 
 func increase_added(amount) -> void:
 	total.increase_added(amount)
-	notify_changed_and_increased()
-	notify_total_change()
 
 
 func decrease_added(amount) -> void:
 	total.decrease_added(amount)
-	notify_changed_and_decreased()
-	notify_total_change()
 
 
 func increase_subtracted(amount) -> void:
 	total.increase_subtracted(amount)
-	notify_changed_and_decreased()
-	notify_total_change()
 
 
 func decrease_subtracted(amount) -> void:
 	total.decrease_subtracted(amount)
-	notify_changed_and_increased()
-	notify_total_change()
 
 
 func increase_multiplied(amount) -> void:
 	total.increase_multiplied(amount)
-	notify_changed_and_increased()
-	notify_total_change()
 
 
 func decrease_multiplied(amount) -> void:
 	total.decrease_multiplied(amount)
-	notify_changed_and_decreased()
-	notify_total_change()
 
 
 func increase_divided(amount) -> void:
 	total.increase_divided(amount)
-	notify_changed_and_decreased()
 
 
 func decrease_divided(amount) -> void:
 	total.decrease_divided(amount)
-	notify_changed_and_increased()
-	notify_total_change()
 
 
 func set_from_level(amount) -> void:
 	if not amount is Big:
 		amount = Big.new(amount)
-	var greater_equal = amount.greater_equal(total.from_level)
-	
-	total.set_from_level(Big.new(amount))
-	
-	notify_total_change()
-	if greater_equal:
-		notify_changed_and_increased()
-	else:
-		notify_changed_and_decreased()
+	total.set_from_level(amount)
 
 
 func set_d_from_lored(amount) -> void:
 	if not amount is Big:
 		amount = Big.new(amount)
-	var greater_equal = amount.less(total.d_from_lored)
-	
-	total.set_d_from_lored(Big.new(amount))
-	
-	notify_total_change()
-	if greater_equal:
-		notify_changed_and_increased()
-	else:
-		notify_changed_and_decreased()
+	total.set_d_from_lored(amount)
 
 
 func set_m_from_lored(amount) -> void:
 	if not amount is Big:
 		amount = Big.new(amount)
-	var greater_equal = amount.greater_equal(total.m_from_lored)
-	
-	total.set_m_from_lored(Big.new(amount))
-	
-	notify_total_change()
-	if greater_equal:
-		notify_changed_and_increased()
-	else:
-		notify_changed_and_decreased()
+	total.set_m_from_lored(amount)
 
 
 func set_to(amount) -> void:
@@ -371,15 +227,12 @@ func set_to(amount) -> void:
 			emit_signal("filled")
 	else:
 		total.set_to(amount)
-		notify_total_change()
-	notify_all()
 
 
 func set_to_percent(percent: float, with_random_range := false) -> void:
 	var multiplier := randf_range(0.8, 1.2) if with_random_range else 1.0
 	multiplier *= percent
 	set_to(Big.new(get_total()).m(multiplier))
-	notify_all()
 
 
 
@@ -400,7 +253,7 @@ func get_x_percent(percent: float) -> Big:
 
 
 func get_x_percent_text(percent: float) -> String:
-	return get_x_percent(percent).toString()
+	return get_x_percent(percent).text
 
 
 func get_randomized_total(min_range := 0.8, max_range := 1.2) -> Big:
@@ -417,7 +270,7 @@ func get_total_text() -> String:
 
 
 func get_as_float() -> float:
-	return total.current.toFloat()
+	return total.get_as_float()
 
 
 func get_as_int() -> int:
@@ -447,11 +300,11 @@ func get_base() -> Big:
 
 
 func get_deficit_text() -> String:
-	return get_deficit().toString()
+	return get_deficit().text
 
 
 func get_deficit_text_plus_one() -> String:
-	return get_deficit().a(1).toString()
+	return get_deficit().a(1).text
 
 
 func get_text() -> String:
@@ -470,7 +323,3 @@ func is_not_full() -> bool:
 
 func is_empty() -> bool:
 	return get_current().equal(0)
-
-
-func get_all_notify_lists() -> Array:
-	return notify_if_changed + notify_if_increased + notify_if_decreased + notify_if_total_changed + notify_if_changed_immediately

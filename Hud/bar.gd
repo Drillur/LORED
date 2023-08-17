@@ -28,7 +28,7 @@ var color: Color:
 
 var using_texts := true
 var markers_present := true
-var animate_changes := true
+var animating_changes := false
 var progress: float:
 	set(val):
 		progress = val
@@ -51,7 +51,7 @@ func _on_resized():
 	if progress_bar.size.x > size.x:
 		progress_bar.size.x = size.x
 	progress_bar.size.y = size.y
-	if animate_changes:
+	if animating_changes:
 		delta_bar.size.y = size.y
 
 
@@ -63,12 +63,13 @@ func _ready() -> void:
 	if using_texts:
 		if text.text == "":
 			remove_texts()
+	if not animating_changes:
+		delta_bar.queue_free()
 
 
 
-func do_not_animate_changes():
-	animate_changes = false
-	delta_bar.queue_free()
+func animate_changes():
+	animating_changes = true
 	return self
 
 
@@ -87,27 +88,35 @@ func remove_texts():
 
 func show_background():
 	$bg.theme = gv.theme_standard
+	return self
+
+
+func hide_background():
+	$bg.theme = gv.theme_invis
+	return self
 
 
 func attach_attribute(_attribute: Attribute) -> void:
 	attribute = _attribute
 	has_attribute = true
-	attribute.add_notify_change_method(set_progress)
+	attribute.connect("changed", set_progress)
+	set_progress()
 
 
 func display_texts() -> void:
-	attribute.add_notify_change_method(update_text)
+	attribute.connect("changed", update_text)
+	update_text()
 	texts.show()
 
 
 func set_progress() -> void:
 	if not is_node_ready():
-		return
+		await ready
 	if has_attribute:
 		progress_bar.size.x = min(attribute.get_current_percent() * size.x, size.x)
 	else:
 		progress_bar.size.x = min(progress * size.x, size.x)
-	if animate_changes:
+	if animating_changes:
 		new_delta_animation()
 		previous_progress = progress_bar.size.x
 
@@ -176,3 +185,16 @@ func update_text() -> void:
 	else:
 		text.modulate = Color(1, 1, 1)
 
+
+
+func set_initial_progress(value: float):
+	await get_tree().physics_frame
+	await get_tree().physics_frame
+	progress_bar.size = Vector2(
+		value * size.x,
+		size.y
+	)
+	previous_progress = progress_bar.size.x
+	delta_bar.hide()
+	delta_bar.size.y = size.y
+	delta_pass = 0.0

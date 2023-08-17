@@ -3,42 +3,27 @@ extends Resource
 
 
 
-signal save_finished
-signal load_finished
+var saved_vars := [
+	"unlocked",
+	"purchased",
+	"level",
+	#asleep - based on an option, append or erase this from this array
+]
 
-func save() -> String:
-	var data := {}
-	data["unlocked"] = var_to_str(unlocked)
-	data["purchased"] = var_to_str(purchased)
-	data["level"] = var_to_str(level)
-	if unlocked and purchased:
-		data["fuel"] = fuel.save_current()
-		data["asleep"] = var_to_str(asleep)
-		data["times_purchased"] = var_to_str(times_purchased)
-		data["time_spent_asleep"] = var_to_str(time_spent_asleep)
-	emit_signal("save_finished")
-	return var_to_str(data)
+func load_started() -> void:
+	stop_job()
 
 
-func load_data(data_str: String) -> void:
-	var data: Dictionary = str_to_var(data_str)
-	unlocked = str_to_var(data["unlocked"])
-	purchased = str_to_var(data["purchased"])
-	set_level_to(str_to_var(data["level"]))
-	if unlocked and purchased:
-		fuel.load_current(data["fuel"])
-		asleep = str_to_var(data["asleep"])
-		times_purchased = str_to_var(data["times_purchased"])
-		time_spent_asleep = str_to_var(data["time_spent_asleep"])
-	emit_signal("load_finished")
-	
-	if not gv.root_ready:
-		await gv.root_ready_finished
+func load_finished() -> void:
 	if unlocked:
 		emit_signal("just_unlocked")
-		lv.unlock_lored(type)
 	if purchased:
-		emit_signal("leveled_up", level)
+		#emit_signal("leveled_up", level)
+		if times_purchased > 0:
+			work()
+		for currency in produced_currencies:
+			wa.unlock_currency(currency)
+	set_level_to(level)
 
 
 
@@ -115,7 +100,11 @@ var killed := false
 var type: int
 var stage: int
 var last_job: Job
-var times_purchased := 0
+var times_purchased := 0:
+	set(val):
+		times_purchased = val
+		if val == 1:
+			first_purchase()
 var primary_currency: int
 var fuel_currency: int
 var time_spent_asleep := 0.0
@@ -128,29 +117,44 @@ var unpurchased_upgrades := []
 
 var unlocked := false:
 	set(val):
-		if unlocked == val:
-			return
-		unlocked = val
-		if val:
-			emit_signal("just_unlocked")
-		else:
-			emit_signal("just_locked")
+		if unlocked != val:
+			unlocked = val
+			if val:
+				if not type in lv.unlocked:
+					lv.unlocked.append(type)
+				if not type in lv.never_purchased:
+					lv.never_purchased.append(type)
+				emit_signal("just_unlocked")
+				saved_vars.append("fuel")
+				saved_vars.append("asleep")
+				saved_vars.append("times_purchased")
+				saved_vars.append("time_spent_asleep")
+			else:
+				lv.unlocked.erase(type)
+				emit_signal("just_locked")
+				saved_vars.erase("fuel")
+				saved_vars.erase("asleep")
+				saved_vars.erase("times_purchased")
+				saved_vars.erase("time_spent_asleep")
+
+
+
 var purchased := false:
 	set(val):
-		if purchased == val:
-			return
-		purchased = val
-		if val:
-			if not type in lv.active:
-				lv.active.append(type)
-			if not asleep:
-				lv.active_and_awake.append(type)
-		else:
-			if type in lv.active:
-				lv.active.erase(type)
-			if type in lv.active_and_awake:
-				lv.active_and_awake.erase(type)
-		emit_signal("purchased_changed", val)
+		if purchased != val:
+			purchased = val
+			if val:
+				lv.erase_lored_from_never_purchased(type)
+				if not type in lv.active:
+					lv.active.append(type)
+				if not asleep:
+					lv.active_and_awake.append(type)
+			else:
+				if type in lv.active:
+					lv.active.erase(type)
+				if type in lv.active_and_awake:
+					lv.active_and_awake.erase(type)
+			emit_signal("purchased_changed", val)
 var working := false
 var asleep := false:
 	set(val):
@@ -186,7 +190,7 @@ var icon_text: String
 var icon_and_name_text: String
 
 var cost: Cost
-var cost_increase := Attribute.new(3, false)
+var cost_increase := Value.new(3)
 
 var has_vico := false
 var vico: LOREDVico:
@@ -204,11 +208,11 @@ var level := 0:
 		level = val
 		emit_signal("leveled_up", level)
 var fuel: Attribute
-var fuel_cost: Attribute
-var output := Attribute.new(1, false)
-var input := Attribute.new(1, false)
-var haste := Attribute.new(1, false)
-var crit := Attribute.new(0, false)
+var fuel_cost: Value
+var output := Value.new(1)
+var input := Value.new(1)
+var haste := Value.new(1)
+var crit := Value.new(0)
 
 
 
@@ -233,6 +237,9 @@ func _init(_type: int) -> void:
 	connect("woke_up", work)
 	connect("completed_job", work)
 	
+	SaveManager.connect("load_finished", load_finished)
+	SaveManager.connect("load_started", load_started)
+	
 	# stage and fuel
 	if type <= Type.OIL:
 		stage = 1
@@ -250,12 +257,12 @@ func _init(_type: int) -> void:
 		if job.has_required_currencies:
 			base_fuel_cost += (0.05 * job.required_currencies.cost.size())
 		var modifier = 1 if fuel_currency == Currency.Type.COAL else 2
-		fuel_cost = Attribute.new(base_fuel_cost * modifier, false)
+		fuel_cost = Value.new(base_fuel_cost * modifier)
 	else:
-		fuel_cost = Attribute.new(0.5, false)
+		fuel_cost = Value.new(0.5)
 	
 	if type in [Type.MALIGNANCY, Type.TUMORS]:
-		fuel_cost = Attribute.new(0.5 * stage, false)
+		fuel_cost = Value.new(0.5 * stage)
 	fuel = Attribute.new(Big.new(fuel_cost.get_value()).m(100))
 	if type == Type.STONE:
 		fuel.change_base(1.0)
@@ -273,8 +280,8 @@ func _init(_type: int) -> void:
 func init_STONE() -> void:
 	add_job(Job.Type.STONE)
 	cost = Cost.new({
-		Currency.Type.IRON: Attribute.new(25.0 / 3, false),
-		Currency.Type.COPPER: Attribute.new(15.0 / 3, false),
+		Currency.Type.IRON: Value.new(25.0 / 3),
+		Currency.Type.COPPER: Value.new(15.0 / 3),
 	})
 	color = Color(0.79, 0.79, 0.79)
 	faded_color = Color(0.788235, 0.788235, 0.788235)
@@ -287,7 +294,7 @@ func init_STONE() -> void:
 func init_COAL() -> void:
 	add_job(Job.Type.COAL)
 	cost = Cost.new({
-		Currency.Type.STONE: Attribute.new(5, false),
+		Currency.Type.STONE: Value.new(5),
 	})
 	color = Color(0.7, 0, 1)
 	faded_color = Color(0.9, 0.3, 1)
@@ -300,7 +307,7 @@ func init_COAL() -> void:
 func init_IRON_ORE() -> void:
 	add_job(Job.Type.IRON_ORE)
 	cost = Cost.new({
-		Currency.Type.STONE: Attribute.new(8, false),
+		Currency.Type.STONE: Value.new(8),
 	})
 	color = Color(0, 0.517647, 0.905882)
 	faded_color = Color(0.5, 0.788732, 1)
@@ -313,7 +320,7 @@ func init_IRON_ORE() -> void:
 func init_COPPER_ORE() -> void:
 	add_job(Job.Type.COPPER_ORE)
 	cost = Cost.new({
-		Currency.Type.STONE: Attribute.new(8, false),
+		Currency.Type.STONE: Value.new(8),
 	})
 	color = Color(0.7, 0.33, 0)
 	faded_color = Color(0.695313, 0.502379, 0.334076)
@@ -326,8 +333,8 @@ func init_COPPER_ORE() -> void:
 func init_IRON() -> void:
 	add_job(Job.Type.IRON)
 	cost = Cost.new({
-		Currency.Type.STONE: Attribute.new(9, false),
-		Currency.Type.COPPER: Attribute.new(8, false),
+		Currency.Type.STONE: Value.new(9),
+		Currency.Type.COPPER: Value.new(8),
 	})
 	color = Color(0.07, 0.89, 1)
 	faded_color = Color(0.496094, 0.940717, 1)
@@ -340,8 +347,8 @@ func init_IRON() -> void:
 func init_COPPER() -> void:
 	add_job(Job.Type.COPPER)
 	cost = Cost.new({
-		Currency.Type.STONE: Attribute.new(9, false),
-		Currency.Type.IRON: Attribute.new(8, false),
+		Currency.Type.STONE: Value.new(9),
+		Currency.Type.IRON: Value.new(8),
 	})
 	color = Color(1, 0.74, 0.05)
 	faded_color = Color(1, 0.862001, 0.496094)
@@ -354,7 +361,7 @@ func init_COPPER() -> void:
 func init_GROWTH() -> void:
 	add_job(Job.Type.GROWTH)
 	cost = Cost.new({
-		Currency.Type.STONE: Attribute.new(900, false),
+		Currency.Type.STONE: Value.new(900),
 	})
 	color = Color(0.79, 1, 0.05)
 	faded_color = Color(0.890041, 1, 0.5)
@@ -367,7 +374,7 @@ func init_GROWTH() -> void:
 func init_JOULES() -> void:
 	add_job(Job.Type.JOULES)
 	cost = Cost.new({
-		Currency.Type.CONCRETE: Attribute.new(25, false),
+		Currency.Type.CONCRETE: Value.new(25),
 	})
 	color = Color(1, 0.98, 0)
 	faded_color = Color(1, 0.9572, 0.503906)
@@ -380,8 +387,8 @@ func init_JOULES() -> void:
 func init_CONCRETE() -> void:
 	add_job(Job.Type.CONCRETE)
 	cost = Cost.new({
-		Currency.Type.IRON: Attribute.new(90, false),
-		Currency.Type.COPPER: Attribute.new(150, false),
+		Currency.Type.IRON: Value.new(90),
+		Currency.Type.COPPER: Value.new(150),
 	})
 	color = Color(0.35, 0.35, 0.35)
 	faded_color = Color(0.6, 0.6, 0.6)
@@ -394,8 +401,8 @@ func init_CONCRETE() -> void:
 func init_OIL() -> void:
 	add_job(Job.Type.OIL)
 	cost = Cost.new({
-		Currency.Type.COPPER: Attribute.new(160, false),
-		Currency.Type.CONCRETE: Attribute.new(250, false),
+		Currency.Type.COPPER: Value.new(160),
+		Currency.Type.CONCRETE: Value.new(250),
 	})
 	color = Color(0.65, 0.3, 0.66)
 	faded_color = Color(0.647059, 0.298039, 0.658824)
@@ -408,8 +415,8 @@ func init_OIL() -> void:
 func init_TARBALLS() -> void:
 	add_job(Job.Type.TARBALLS)
 	cost = Cost.new({
-		Currency.Type.IRON: Attribute.new(350, false),
-		Currency.Type.MALIGNANCY: Attribute.new(10, false),
+		Currency.Type.IRON: Value.new(350),
+		Currency.Type.MALIGNANCY: Value.new(10),
 	})
 	color = Color(0.56, 0.44, 1)
 	faded_color = Color(0.560784, 0.439216, 1)
@@ -422,9 +429,9 @@ func init_TARBALLS() -> void:
 func init_MALIGNANCY() -> void:
 	add_job(Job.Type.MALIGNANCY)
 	cost = Cost.new({
-		Currency.Type.IRON: Attribute.new(900, false),
-		Currency.Type.COPPER: Attribute.new(900, false),
-		Currency.Type.CONCRETE: Attribute.new(50, false),
+		Currency.Type.IRON: Value.new(900),
+		Currency.Type.COPPER: Value.new(900),
+		Currency.Type.CONCRETE: Value.new(50),
 	})
 	color = Color(0.88, 0.12, 0.35)
 	faded_color = Color(0.882353, 0.121569, 0.352941)
@@ -438,8 +445,8 @@ func init_WATER() -> void:
 	add_job(Job.Type.WATER)
 	name = "Gatorade"
 	cost = Cost.new({
-		Currency.Type.STONE: Attribute.new(2500, false),
-		Currency.Type.WOOD: Attribute.new(80, false),
+		Currency.Type.STONE: Value.new(2500),
+		Currency.Type.WOOD: Value.new(80),
 	})
 	color = Color(0, 0.647059, 1)
 	faded_color = Color(0.570313, 0.859009, 1)
@@ -452,9 +459,9 @@ func init_WATER() -> void:
 func init_HUMUS() -> void:
 	add_job(Job.Type.HUMUS)
 	cost = Cost.new({
-		Currency.Type.IRON: Attribute.new(600, false),
-		Currency.Type.COPPER: Attribute.new(600, false),
-		Currency.Type.GLASS: Attribute.new(30, false),
+		Currency.Type.IRON: Value.new(600),
+		Currency.Type.COPPER: Value.new(600),
+		Currency.Type.GLASS: Value.new(30),
 	})
 	color = Color(0.458824, 0.25098, 0)
 	faded_color = Color(0.6, 0.3, 0)
@@ -467,8 +474,8 @@ func init_HUMUS() -> void:
 func init_SOIL() -> void:
 	add_job(Job.Type.SOIL)
 	cost = Cost.new({
-		Currency.Type.CONCRETE: Attribute.new(1000, false),
-		Currency.Type.HARDWOOD: Attribute.new(40, false),
+		Currency.Type.CONCRETE: Value.new(1000),
+		Currency.Type.HARDWOOD: Value.new(40),
 	})
 	color = Color(0.737255, 0.447059, 0)
 	fuel_currency = Currency.Type.COAL
@@ -481,8 +488,8 @@ func init_SOIL() -> void:
 func init_TREES() -> void:
 	add_job(Job.Type.TREES)
 	cost = Cost.new({
-		Currency.Type.GROWTH: Attribute.new(150, false),
-		Currency.Type.SOIL: Attribute.new(25, false),
+		Currency.Type.GROWTH: Value.new(150),
+		Currency.Type.SOIL: Value.new(25),
 	})
 	color = Color(0.772549, 1, 0.247059)
 	faded_color = Color(0.864746, 0.988281, 0.679443)
@@ -496,8 +503,8 @@ func init_SEEDS() -> void:
 	add_job(Job.Type.SEEDS)
 	name = "Maybe"
 	cost = Cost.new({
-		Currency.Type.COPPER: Attribute.new(800, false),
-		Currency.Type.TREES: Attribute.new(2, false),
+		Currency.Type.COPPER: Value.new(800),
+		Currency.Type.TREES: Value.new(2),
 	})
 	color = Color(1, 0.878431, 0.431373)
 	faded_color = Color(.8,.8,.8)
@@ -510,8 +517,8 @@ func init_SEEDS() -> void:
 func init_GALENA() -> void:
 	add_job(Job.Type.GALENA)
 	cost = Cost.new({
-		Currency.Type.STONE: Attribute.new(1100, false),
-		Currency.Type.WIRE: Attribute.new(200, false),
+		Currency.Type.STONE: Value.new(1100),
+		Currency.Type.WIRE: Value.new(200),
 	})
 	color = Color(0.701961, 0.792157, 0.929412)
 	faded_color = Color(0.701961, 0.792157, 0.929412)
@@ -524,8 +531,8 @@ func init_GALENA() -> void:
 func init_LEAD() -> void:
 	add_job(Job.Type.LEAD)
 	cost = Cost.new({
-		Currency.Type.STONE: Attribute.new(400, false),
-		Currency.Type.GROWTH: Attribute.new(800, false),
+		Currency.Type.STONE: Value.new(400),
+		Currency.Type.GROWTH: Value.new(800),
 	})
 	color = Color(0.53833, 0.714293, 0.984375)
 	fuel_currency = Currency.Type.COAL
@@ -537,8 +544,8 @@ func init_LEAD() -> void:
 func init_WOOD_PULP() -> void:
 	add_job(Job.Type.WOOD_PULP)
 	cost = Cost.new({
-		Currency.Type.WIRE: Attribute.new(15, false),
-		Currency.Type.GLASS: Attribute.new(30, false),
+		Currency.Type.WIRE: Value.new(15),
+		Currency.Type.GLASS: Value.new(30),
 	})
 	color = Color(0.94902, 0.823529, 0.54902)
 	fuel_currency = Currency.Type.JOULES
@@ -550,8 +557,8 @@ func init_WOOD_PULP() -> void:
 func init_PAPER() -> void:
 	add_job(Job.Type.PAPER)
 	cost = Cost.new({
-		Currency.Type.CONCRETE: Attribute.new(1200, false),
-		Currency.Type.STEEL: Attribute.new(15, false),
+		Currency.Type.CONCRETE: Value.new(1200),
+		Currency.Type.STEEL: Value.new(15),
 	})
 	color = Color(0.792157, 0.792157, 0.792157)
 	fuel_currency = Currency.Type.COAL
@@ -563,8 +570,8 @@ func init_PAPER() -> void:
 func init_TOBACCO() -> void:
 	add_job(Job.Type.TOBACCO)
 	cost = Cost.new({
-		Currency.Type.SOIL: Attribute.new(3, false),
-		Currency.Type.HARDWOOD: Attribute.new(15, false),
+		Currency.Type.SOIL: Value.new(3),
+		Currency.Type.HARDWOOD: Value.new(15),
 	})
 	color = Color(0.639216, 0.454902, 0.235294)
 	faded_color = Color(0.85, 0.75, 0.63)
@@ -577,8 +584,8 @@ func init_TOBACCO() -> void:
 func init_CIGARETTES() -> void:
 	add_job(Job.Type.CIGARETTES)
 	cost = Cost.new({
-		Currency.Type.HARDWOOD: Attribute.new(50, false),
-		Currency.Type.WIRE: Attribute.new(120, false),
+		Currency.Type.HARDWOOD: Value.new(50),
+		Currency.Type.WIRE: Value.new(120),
 	})
 	color = Color(0.929412, 0.584314, 0.298039)
 	faded_color = Color(0.97, 0.8, 0.6)
@@ -591,9 +598,9 @@ func init_CIGARETTES() -> void:
 func init_PETROLEUM() -> void:
 	add_job(Job.Type.PETROLEUM)
 	cost = Cost.new({
-		Currency.Type.IRON: Attribute.new(3000, false),
-		Currency.Type.COPPER: Attribute.new(4000, false),
-		Currency.Type.GLASS: Attribute.new(130, false),
+		Currency.Type.IRON: Value.new(3000),
+		Currency.Type.COPPER: Value.new(4000),
+		Currency.Type.GLASS: Value.new(130),
 	})
 	color = Color(0.76, 0.53, 0.14)
 	fuel_currency = Currency.Type.COAL
@@ -605,8 +612,8 @@ func init_PETROLEUM() -> void:
 func init_PLASTIC() -> void:
 	add_job(Job.Type.PLASTIC)
 	cost = Cost.new({
-		Currency.Type.STONE: Attribute.new(10000, false),
-		Currency.Type.TARBALLS: Attribute.new(700, false),
+		Currency.Type.STONE: Value.new(10000),
+		Currency.Type.TARBALLS: Value.new(700),
 	})
 	color = Color(0.85, 0.85, 0.85)
 	fuel_currency = Currency.Type.JOULES
@@ -618,10 +625,10 @@ func init_PLASTIC() -> void:
 func init_CARCINOGENS() -> void:
 	add_job(Job.Type.CARCINOGENS)
 	cost = Cost.new({
-		Currency.Type.GROWTH: Attribute.new(8500, false),
-		Currency.Type.CONCRETE: Attribute.new(2000, false),
-		Currency.Type.STEEL: Attribute.new(150, false),
-		Currency.Type.LEAD: Attribute.new(800, false),
+		Currency.Type.GROWTH: Value.new(8500),
+		Currency.Type.CONCRETE: Value.new(2000),
+		Currency.Type.STEEL: Value.new(150),
+		Currency.Type.LEAD: Value.new(800),
 	})
 	color = Color(0.772549, 0.223529, 0.192157)
 	fuel_currency = Currency.Type.JOULES
@@ -633,8 +640,8 @@ func init_CARCINOGENS() -> void:
 func init_LIQUID_IRON() -> void:
 	add_job(Job.Type.LIQUID_IRON)
 	cost = Cost.new({
-		Currency.Type.CONCRETE: Attribute.new(30, false),
-		Currency.Type.STEEL: Attribute.new(25, false),
+		Currency.Type.CONCRETE: Value.new(30),
+		Currency.Type.STEEL: Value.new(25),
 	})
 	color = Color(0.27, 0.888, .9)
 	faded_color = Color(0.7, 0.94, .985)
@@ -647,9 +654,9 @@ func init_LIQUID_IRON() -> void:
 func init_STEEL() -> void:
 	add_job(Job.Type.STEEL)
 	cost = Cost.new({
-		Currency.Type.IRON: Attribute.new(15000, false),
-		Currency.Type.COPPER: Attribute.new(3000, false),
-		Currency.Type.HARDWOOD: Attribute.new(35, false),
+		Currency.Type.IRON: Value.new(15000),
+		Currency.Type.COPPER: Value.new(3000),
+		Currency.Type.HARDWOOD: Value.new(35),
 	})
 	color = Color(0.607843, 0.802328, 0.878431)
 	faded_color = Color(0.823529, 0.898039, 0.92549)
@@ -662,8 +669,8 @@ func init_STEEL() -> void:
 func init_SAND() -> void:
 	add_job(Job.Type.SAND)
 	cost = Cost.new({
-		Currency.Type.IRON: Attribute.new(700, false),
-		Currency.Type.COPPER: Attribute.new(2850, false),
+		Currency.Type.IRON: Value.new(700),
+		Currency.Type.COPPER: Value.new(2850),
 	})
 	color = Color(.87, .70, .45)
 	fuel_currency = Currency.Type.COAL
@@ -676,8 +683,8 @@ func init_SAND() -> void:
 func init_GLASS() -> void:
 	add_job(Job.Type.GLASS)
 	cost = Cost.new({
-		Currency.Type.COPPER: Attribute.new(6000, false),
-		Currency.Type.STEEL: Attribute.new(40, false),
+		Currency.Type.COPPER: Value.new(6000),
+		Currency.Type.STEEL: Value.new(40),
 	})
 	color = Color(0.81, 0.93, 1.0)
 	faded_color = Color(0.81, 0.93, 1.0)
@@ -690,8 +697,8 @@ func init_GLASS() -> void:
 func init_WIRE() -> void:
 	add_job(Job.Type.WIRE)
 	cost = Cost.new({
-		Currency.Type.STONE: Attribute.new(13000, false),
-		Currency.Type.GLASS: Attribute.new(30, false),
+		Currency.Type.STONE: Value.new(13000),
+		Currency.Type.GLASS: Value.new(30),
 	})
 	color = Color(0.9, 0.6, 0.14)
 	fuel_currency = Currency.Type.JOULES
@@ -704,9 +711,9 @@ func init_WIRE() -> void:
 func init_DRAW_PLATE() -> void:
 	add_job(Job.Type.DRAW_PLATE)
 	cost = Cost.new({
-		Currency.Type.IRON: Attribute.new(900, false),
-		Currency.Type.CONCRETE: Attribute.new(300, false),
-		Currency.Type.WIRE: Attribute.new(20, false),
+		Currency.Type.IRON: Value.new(900),
+		Currency.Type.CONCRETE: Value.new(300),
+		Currency.Type.WIRE: Value.new(20),
 	})
 	color = Color(0.333333, 0.639216, 0.811765)
 	fuel_currency = Currency.Type.COAL
@@ -718,8 +725,8 @@ func init_DRAW_PLATE() -> void:
 func init_AXES() -> void:
 	add_job(Job.Type.AXES)
 	cost = Cost.new({
-		Currency.Type.IRON: Attribute.new(1000, false),
-		Currency.Type.HARDWOOD: Attribute.new(55, false),
+		Currency.Type.IRON: Value.new(1000),
+		Currency.Type.HARDWOOD: Value.new(55),
 	})
 	color = Color(0.691406, 0.646158, 0.586075)
 	fuel_currency = Currency.Type.JOULES
@@ -731,8 +738,8 @@ func init_AXES() -> void:
 func init_WOOD() -> void:
 	add_job(Job.Type.WOOD)
 	cost = Cost.new({
-		Currency.Type.COPPER: Attribute.new(4500, false),
-		Currency.Type.WIRE: Attribute.new(15, false),
+		Currency.Type.COPPER: Value.new(4500),
+		Currency.Type.WIRE: Value.new(15),
 	})
 	color = Color(0.545098, 0.372549, 0.015686)
 	faded_color = Color(0.77, 0.68, 0.6)
@@ -745,9 +752,9 @@ func init_WOOD() -> void:
 func init_HARDWOOD() -> void:
 	add_job(Job.Type.HARDWOOD)
 	cost = Cost.new({
-		Currency.Type.IRON: Attribute.new(3500, false),
-		Currency.Type.CONCRETE: Attribute.new(350, false),
-		Currency.Type.WIRE: Attribute.new(35, false),
+		Currency.Type.IRON: Value.new(3500),
+		Currency.Type.CONCRETE: Value.new(350),
+		Currency.Type.WIRE: Value.new(35),
 	})
 	color = Color(0.92549, 0.690196, 0.184314)
 	fuel_currency = Currency.Type.JOULES
@@ -759,10 +766,10 @@ func init_HARDWOOD() -> void:
 func init_TUMORS() -> void:
 	add_job(Job.Type.TUMORS)
 	cost = Cost.new({
-		Currency.Type.HARDWOOD: Attribute.new(50, false),
-		Currency.Type.WIRE: Attribute.new(150, false),
-		Currency.Type.GLASS: Attribute.new(150, false),
-		Currency.Type.STEEL: Attribute.new(100, false),
+		Currency.Type.HARDWOOD: Value.new(50),
+		Currency.Type.WIRE: Value.new(150),
+		Currency.Type.GLASS: Value.new(150),
+		Currency.Type.STEEL: Value.new(100),
 	})
 	color = Color(1, .54, .54)
 	fuel_currency = Currency.Type.JOULES
@@ -774,10 +781,10 @@ func init_TUMORS() -> void:
 func init_WITCH() -> void:
 	name = "Circe"
 	cost = Cost.new({
-		Currency.Type.HARDWOOD: Attribute.new(50, false),
-		Currency.Type.WIRE: Attribute.new(150, false),
-		Currency.Type.GLASS: Attribute.new(150, false),
-		Currency.Type.STEEL: Attribute.new(100, false),
+		Currency.Type.HARDWOOD: Value.new(50),
+		Currency.Type.WIRE: Value.new(150),
+		Currency.Type.GLASS: Value.new(150),
+		Currency.Type.STEEL: Value.new(100),
 	})
 	color = Color(0.937255, 0.501961, 0.776471)
 	fuel_currency = Currency.Type.COAL
@@ -790,10 +797,10 @@ func init_WITCH() -> void:
 func init_BLOOD() -> void:
 	name = "Charity"
 	cost = Cost.new({
-		Currency.Type.HARDWOOD: Attribute.new(50, false),
-		Currency.Type.WIRE: Attribute.new(150, false),
-		Currency.Type.GLASS: Attribute.new(150, false),
-		Currency.Type.STEEL: Attribute.new(100, false),
+		Currency.Type.HARDWOOD: Value.new(50),
+		Currency.Type.WIRE: Value.new(150),
+		Currency.Type.GLASS: Value.new(150),
+		Currency.Type.STEEL: Value.new(100),
 	})
 	color = Color(1, 0, 0)
 	faded_color = Color(1, 0.4, 0.4)
@@ -818,13 +825,18 @@ func add_job(_job: int) -> void:
 	
 	if not lv.loreds_are_initialized:
 		await lv.loreds_initialized
-	jobs[_job].assign_lored(self)
+	jobs[_job].assign_lored(type)
 	
-	output.add_immediate_notify_method(jobs[_job].lored_output_changed)
-	haste.add_immediate_notify_method(jobs[_job].lored_haste_changed)
-	fuel_cost.add_immediate_notify_method(jobs[_job].lored_fuel_cost_changed)
+	output.connect("changed", jobs[_job].lored_output_changed)
+	haste.connect("changed", jobs[_job].lored_haste_changed)
+	fuel_cost.connect("changed", jobs[_job].lored_fuel_cost_changed)
 	if jobs[_job].has_required_currencies:
-		input.add_immediate_notify_method(jobs[_job].lored_input_changed)
+		input.connect("changed", jobs[_job].lored_input_changed)
+		jobs[_job].lored_input_changed()
+	
+	jobs[_job].lored_output_changed()
+	jobs[_job].lored_haste_changed()
+	jobs[_job].lored_fuel_cost_changed()
 	
 	jobs[_job].connect("became_workable", work)
 	jobs[_job].connect("completed", job_completed)
@@ -895,7 +907,7 @@ func reset():
 	fuel_cost.reset()
 	cost.reset()
 	set_level_to(0)
-	purchased = true if type == Type.STONE else false
+	#purchased = true if type == Type.STONE else false
 
 
 
@@ -942,8 +954,6 @@ func purchase() -> void:
 
 
 func first_purchase() -> void:
-	if times_purchased > 1:
-		return
 	purchased = true
 	for currency in produced_currencies:
 		wa.unlock_currency(currency)
@@ -1035,11 +1045,17 @@ func emote(_emote: Emote) -> void:
 func add_influencing_upgrade(upgrade: int) -> void:
 	if not upgrade in upgrades:
 		upgrades.append(upgrade)
-		if not up.is_upgrade_purchased(upgrade):
-			if not upgrade in unpurchased_upgrades:
-				unpurchased_upgrades.append(upgrade)
-				await up.get_upgrade(upgrade).just_purchased
-				unpurchased_upgrades.erase(upgrade)
+		unpurchased_upgrades.append(upgrade)
+		up.get_upgrade(upgrade).connect("just_purchased", remove_unpurchased_upgrade)
+		up.get_upgrade(upgrade).connect("just_unpurchased", add_unpurchased_upgrade)
+
+
+func remove_unpurchased_upgrade(upgrade: int) -> void:
+	unpurchased_upgrades.erase(upgrade)
+
+
+func add_unpurchased_upgrade(upgrade: int) -> void:
+	unpurchased_upgrades.append(upgrade)
 
 
 
@@ -1087,6 +1103,7 @@ func start_job(_type: int) -> void:
 func stop_job() -> void:
 	if working:
 		last_job.stop()
+	working = false
 
 
 func job_completed() -> void:
@@ -1097,7 +1114,6 @@ func job_completed() -> void:
 
 func job_cut_short() -> void:
 	working = false
-	emit_signal("completed_job")
 
 
 
@@ -1222,7 +1238,7 @@ func get_output_text() -> String:
 
 
 func get_next_output_text() -> String:
-	return Big.new(output.get_value()).m(2).toString()
+	return Big.new(output.get_value()).m(2).text
 
 
 func get_input() -> Big:
@@ -1234,7 +1250,7 @@ func get_input_text() -> String:
 
 
 func get_next_input_text() -> String:
-	return Big.new(input.get_value()).m(2).toString()
+	return Big.new(input.get_value()).m(2).text
 
 
 func get_haste() -> Big:
@@ -1254,7 +1270,7 @@ func get_fuel_cost_text() -> String:
 
 
 func get_next_fuel_cost_text() -> String:
-	return Big.new(fuel_cost.get_value()).m(2).toString()
+	return Big.new(fuel_cost.get_value()).m(2).text
 
 
 func get_max_fuel_text() -> String:
@@ -1262,7 +1278,7 @@ func get_max_fuel_text() -> String:
 
 
 func get_next_max_fuel_text() -> String:
-	return Big.new(fuel.get_total()).m(2).toString()
+	return Big.new(fuel.get_total()).m(2).text
 
 
 func get_crit() -> Big:

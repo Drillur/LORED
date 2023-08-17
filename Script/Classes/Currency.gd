@@ -2,33 +2,9 @@ class_name Currency
 extends Resource
 
 
-
-signal save_finished
-signal load_finished
-
-
-func save() -> String:
-	var data := {}
-	data["unlocked"] = var_to_str(unlocked)
-	if unlocked:
-		data["count"] = count.save()
-		data["subtracted_by_loreds"] = subtracted_by_loreds.save()
-		data["subtracted_by_player"] = subtracted_by_player.save()
-		data["added_by_loreds"] = added_by_loreds.save()
-	emit_signal("save_finished")
-	return var_to_str(data)
-
-
-func load_data(data_str: String) -> void:
-	var data: Dictionary = str_to_var(data_str)
-	unlocked = str_to_var(data["unlocked"])
-	if unlocked:
-		count.load_data(data["count"])
-		subtracted_by_loreds.load_data(data["subtracted_by_loreds"])
-		subtracted_by_player.load_data(data["subtracted_by_player"])
-		added_by_loreds.load_data(data["added_by_loreds"])
-	emit_signal("load_finished")
-
+var saved_vars := [
+	"unlocked",
+]
 
 
 enum Type {
@@ -102,32 +78,37 @@ var color_text: String
 
 var icon: Texture
 
-var count: Attribute
+var count: Big
 
-var subtracted_by_loreds := Attribute.new(0, false)
-var subtracted_by_player := Attribute.new(0, false)
-var added_by_loreds := Attribute.new(0, false)
+var subtracted_by_loreds := Big.new(0)
+var subtracted_by_player := Big.new(0)
+var added_by_loreds := Big.new(0)
 
 var unlocked := false:
 	set(val):
-		unlocked = val
-		emit_signal("just_unlocked")
+		if unlocked != val:
+			unlocked = val
+			if val:
+				emit_signal("just_unlocked")
+				saved_vars.append("count")
+				saved_vars.append("subtracted_by_loreds")
+				saved_vars.append("subtracted_by_player")
+				saved_vars.append("added_by_loreds")
+			else:
+				saved_vars.erase("count")
+				saved_vars.erase("subtracted_by_loreds")
+				saved_vars.erase("subtracted_by_player")
+				saved_vars.erase("added_by_loreds")
 
-var positive_current_rate := true
+var positive_current_rate := true #connect all 5 of these vars here
 var positive_total_rate := true
 var net_rate := Attribute.new(0)
 var gain_rate := Attribute.new(0)
 var loss_rate := Attribute.new(0)
 
-var weight := 1
+var weight := 1 #connect
 
-var produced_by := []
-
-
-#func _load(data: Dictionary) -> void:
-#	SaveManager.load_vars(self, data)
-#	count.add(pending.get_value())
-#	pending.reset()
+var produced_by := [] #connect
 
 
 
@@ -141,7 +122,7 @@ func _init(_type: int = 0) -> void:
 	init_stage()
 	call("init_" + key)
 	if count == null:
-		count = Attribute.new(0, false)
+		count = Big.new(0)
 	color_text = "[color=#" + color.to_html() + "]%s[/color]"
 	colored_name = "[color=#" + color.to_html() + "]" + name + "[/color]"
 	if icon == null:
@@ -164,7 +145,7 @@ func init_stage() -> void:
 
 
 func init_STONE() -> void:
-	count = Attribute.new(5, false)
+	count = Big.new(5, false)
 	color = Color(0.79, 0.79, 0.79)
 	icon = preload("res://Sprites/Currency/stone.png")
 	weight = 3
@@ -187,14 +168,14 @@ func init_COPPER_ORE() -> void:
 
 
 func init_IRON() -> void:
-	count = Attribute.new(8, false)
+	count = Big.new(8)
 	color = Color(0.07, 0.89, 1)
 	icon = preload("res://Sprites/Currency/iron.png")
 	weight = 3
 
 
 func init_COPPER() -> void:
-	count = Attribute.new(8, false)
+	count = Big.new(8)
 	color = Color(1, 0.74, 0.05)
 	icon = preload("res://Sprites/Currency/cop.png")
 	weight = 3
@@ -219,7 +200,7 @@ func init_CONCRETE() -> void:
 
 
 func init_MALIGNANCY() -> void:
-	count = Attribute.new(10, false)
+	count = Big.new(10)
 	color = Color(0.88, .12, .35)
 	icon = preload("res://Sprites/Currency/malig.png")
 
@@ -247,7 +228,7 @@ func init_HUMUS() -> void:
 
 
 func init_SEEDS() -> void:
-	count = Attribute.new(2, false)
+	count = Big.new(2)
 	color = Color(1, 0.878431, 0.431373)
 	icon = preload("res://Sprites/Currency/seed.png")
 
@@ -258,25 +239,25 @@ func init_TREES() -> void:
 
 
 func init_SOIL() -> void:
-	count = Attribute.new(25, false)
+	count = Big.new(25)
 	color = Color(0.737255, 0.447059, 0)
 	icon = preload("res://Sprites/Currency/soil.png")
 
 
 func init_AXES() -> void:
-	count = Attribute.new(5, false)
+	count = Big.new(5)
 	color = Color(0.691406, 0.646158, 0.586075)
 	icon = preload("res://Sprites/Currency/axe.png")
 
 
 func init_WOOD() -> void:
-	count = Attribute.new(80, false)
+	count = Big.new(80)
 	color = Color(0.545098, 0.372549, 0.015686)
 	icon = preload("res://Sprites/Currency/wood.png")
 
 
 func init_HARDWOOD() -> void:
-	count = Attribute.new(95, false)
+	count = Big.new(95)
 	color = Color(0.92549, 0.690196, 0.184314)
 	icon = preload("res://Sprites/Currency/hard.png")
 	weight = 3
@@ -288,20 +269,20 @@ func init_LIQUID_IRON() -> void:
 
 
 func init_STEEL() -> void:
-	count = Attribute.new(25, false)
+	count = Big.new(25)
 	color = Color(0.607843, 0.802328, 0.878431)
 	icon = preload("res://Sprites/Currency/steel.png")
 	weight = 3
 
 
 func init_SAND() -> void:
-	count = Attribute.new(250, false)
+	count = Big.new(250)
 	color = Color(.87, .70, .45)
 	icon = preload("res://Sprites/Currency/sand.png")
 
 
 func init_GLASS() -> void:
-	count = Attribute.new(30, false)
+	count = Big.new(30)
 	color = Color(0.81, 0.93, 1.0)
 	icon = preload("res://Sprites/Currency/glass.png")
 	weight = 3
@@ -313,7 +294,7 @@ func init_DRAW_PLATE() -> void:
 
 
 func init_WIRE() -> void:
-	count = Attribute.new(20, false)
+	count = Big.new(20)
 	color = Color(0.9, 0.6, 0.14)
 	icon = preload("res://Sprites/Currency/wire.png")
 	weight = 3
@@ -422,27 +403,27 @@ func unlock() -> void:
 func add(amount) -> void:
 	if not amount is Big:
 		amount = Big.new(amount)
-	count.add(amount)
+	count.a(amount)
 	emit_signal("increased", amount)
 
 
 func add_from_lored(amount) -> void:
 	add(amount)
-	added_by_loreds.add(amount)
+	added_by_loreds.a(amount)
 
 
 func subtract(amount) -> void:
-	count.subtract(amount)
+	count.s(amount)
 
 
 func subtract_from_lored(amount) -> void:
 	subtract(amount)
-	subtracted_by_loreds.add(amount)
+	subtracted_by_loreds.a(amount)
 
 
 func subtract_from_player(amount) -> void:
 	subtract(amount)
-	subtracted_by_player.add(amount)
+	subtracted_by_player.a(amount)
 
 
 func add_producer(lored: int) -> void:
@@ -453,13 +434,11 @@ func add_producer(lored: int) -> void:
 
 func add_current_gain_rate(amount) -> void:
 	gain_rate.current.increase_added(amount)
-	gain_rate.notify_changed_and_increased()
 	sync_current_net_rate()
 
 
 func subtract_current_gain_rate(amount) -> void:
 	gain_rate.current.decrease_added(amount)
-	gain_rate.notify_changed_and_decreased()
 	sync_current_net_rate()
 
 
@@ -475,13 +454,11 @@ func subtract_total_gain_rate(amount) -> void:
 
 func add_current_loss_rate(amount) -> void:
 	loss_rate.current.increase_added(amount)
-	loss_rate.notify_changed_and_increased()
 	sync_current_net_rate()
 
 
 func subtract_current_loss_rate(amount) -> void:
 	loss_rate.current.decrease_added(amount)
-	loss_rate.notify_changed_and_decreased()
 	sync_current_net_rate()
 
 
@@ -506,7 +483,6 @@ func sync_current_net_rate() -> void:
 		positive_current_rate = false
 	if net_rate.get_current().equal(0):
 		positive_current_rate = true
-	net_rate.notify_change()
 
 
 func sync_total_net_rate() -> void:
@@ -518,7 +494,6 @@ func sync_total_net_rate() -> void:
 	else:
 		net_rate.total.set_to(Big.new(loss).s(gain))
 		positive_total_rate = false
-	net_rate.notify_change()
 
 
 
@@ -534,12 +509,9 @@ func subtract_pending(amount: Big) -> void:
 
 # - Get
 
-func get_count() -> Big:
-	return count.get_value()
-
 
 func get_count_text() -> String:
-	return count.get_text()
+	return count.text
 
 
 func is_unlocked() -> bool:
@@ -555,11 +527,11 @@ func get_icon_path() -> String:
 
 
 func get_eta(threshold: Big) -> Big:
-	if count.get_value().greater_equal(threshold):
+	if count.greater_equal(threshold):
 		return Big.new(0)
 	if net_rate.get_current().equal(0):
 		return Big.new(0)
-	var deficit = Big.new(threshold).s(count.get_value())
+	var deficit = Big.new(threshold).s(count)
 	return deficit.d(net_rate.get_current())
 
 

@@ -9,7 +9,7 @@ extends MarginContainer
 @onready var pose_shadow = %"Pose Shadow"
 @onready var dialogue_text = %"Dialogue Text"
 @onready var timer = $Timer
-@onready var pose_only_bg = %"pose only bg"
+@onready var pose_only_bg = %"pose bg"
 @onready var display_text_timer = $display_text_timer
 
 var emote: Emote

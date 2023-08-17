@@ -3,45 +3,19 @@ extends Resource
 
 
 
-signal save_finished
-signal load_finished
+var saved_vars := [
+	"unlocked",
+	"times_purchased",
+	"purchased",
+]
 
-func save() -> String:
-	var data := {}
-	data["unlocked"] = var_to_str(unlocked)
-	data["times_purchased"] = var_to_str(times_purchased)
-	data["purchased"] = var_to_str(purchased)
+
+func load_finished() -> void:
 	if purchased:
-		data["effect_applied"] = var_to_str(effect_applied)
-		data["will_apply_effect"] = var_to_str(will_apply_effect)
-		if effect_applied:
-			data["effect"] = effect.save()
-	emit_signal("save_finished")
-	return var_to_str(data)
-
-
-func load_data(data_str: String) -> void:
-	var data: Dictionary = str_to_var(data_str)
-	unlocked = str_to_var(data["unlocked"])
-	times_purchased = str_to_var(data["times_purchased"])
-	purchased = str_to_var(data["purchased"])
-	if purchased:
-		effect_applied = str_to_var(data["effect_applied"])
-		will_apply_effect = str_to_var(data["will_apply_effect"])
 		if will_apply_effect:
-			# this is like saving the game after buying a Malig upgrade
-			# but exiting the game before resetting Stage 1.
-			# so
-			# refund it and do not apply effects
 			refund()
-			will_apply_effect = false
-		if effect_applied:
-			effect.load_data(str_to_var(data["effect"]))
-	emit_signal("load_finished")
-	
-	if not gv.root_ready:
-		await gv.root_ready_finished
-	if purchased:
+		elif effect_applied:
+			apply()
 		emit_signal("just_unlocked")
 
 
@@ -285,30 +259,17 @@ enum Type {
 	RED_GOOPY_BOY,
 }
 
+
 class Effect:
 	
-	signal save_finished
-	signal load_finished
+	var saved_vars := [
+		"effect",
+	]
 	
-	func save() -> String:
-		var data := {}
-		data["effect"] = effect.save()
-		if effect2 != null:
-			data["effect2"] = effect2.save()
-		emit_signal("save_finished")
-		return var_to_str(data)
-
-
-	func load_data(data_str: String) -> void:
-		var data: Dictionary = str_to_var(data_str)
-		effect.load_data(data["effect"])
-		if effect2 != null:
-			effect2.load_data(data["effect2"])
-		emit_signal("load_finished")
-		
-		if not gv.root_ready:
-			await gv.root_ready_finished
-		apply_effects()
+	
+	func load_started() -> void:
+		remove()
+	
 	
 	enum Type {
 		HASTE,
@@ -321,18 +282,16 @@ class Effect:
 		ITS_GROWIN_ON_ME,
 	}
 	
-	var TYPE_KEYS := Type.keys()
-	
 	var type: int
 	var key: String
 	var text: String
 	
 	var applied := false
 	
-	var effect: Attribute
+	var effect: Value
 	var in_hand: Big
 	
-	var effect2: Attribute
+	var effect2: Value
 	var in_hand2: Big
 	
 	var apply_methods: Array
@@ -344,15 +303,20 @@ class Effect:
 	
 	func _init(_type: int, details: Dictionary) -> void:
 		type = _type
-		key = TYPE_KEYS[type]
+		key = Type.keys()[type]
 		
-		effect = Attribute.new(details["effect value"], false)
+		effect = Value.new(details["effect value"])
 		if details["effected_input"] >= 0:
 			effected_input = details["effected_input"]
 		if type == Type.ITS_GROWIN_ON_ME:
-			effect2 = Attribute.new(details["effect value"], false)
+			effect2 = Value.new(details["effect value"])
+		
+		if effect2 != null:
+			saved_vars.append("effect2")
 		
 		set_base_text()
+		
+		SaveManager.connect("load_started", load_started)
 	
 	
 	
@@ -401,17 +365,18 @@ class Effect:
 	
 	func apply() -> void:
 		if not applied:
-			effect.add_notify_change_method(refresh)
+			effect.connect("changed", refresh)
 			if type == Type.ITS_GROWIN_ON_ME:
-				effect2.add_notify_change_method(refresh)
+				effect2.connect("changed", refresh)
+			refresh()
 	
 	
 	func remove() -> void:
 		if applied:
-			effect.remove_notify_method(refresh)
-			remove_effects()
+			effect.disconnect("changed", refresh)
 			if type == Type.ITS_GROWIN_ON_ME:
-				effect2.remove_notify_method(refresh)
+				effect2.disonnect("changed", refresh)
+			remove_effects()
 	
 	
 	func refresh() -> void:
@@ -499,15 +464,27 @@ var unlocked := true:
 			emit_signal("just_locked")
 
 var special: bool
-var effect_applied := false
+
+var effect_applied := false:
+	set(val):
+		if effect_applied != val:
+			effect_applied = val
+			if val:
+				saved_vars.append("effect")
+			else:
+				saved_vars.erase("effect")
+
 var purchased := false:
 	set(val):
-		purchased = val
-		emit_signal("purchased_changed")
-		if val:
-			emit_signal("just_purchased")
-		else:
-			emit_signal("just_unpurchased")
+		if purchased != val:
+			purchased = val
+			emit_signal("purchased_changed")
+			if val:
+				emit_signal("just_purchased")
+				saved_vars.append("effect_applied")
+				saved_vars.append("will_apply_effect")
+			else:
+				emit_signal("just_unpurchased")
 
 var will_apply_effect := false
 
@@ -592,6 +569,8 @@ func _init(_type: int) -> void:
 			color = lv.get_color(loreds[ok])
 	
 	has_description = description != ""
+	
+	SaveManager.connect("load_finished", load_finished)
 
 
 
@@ -600,7 +579,7 @@ func init_GRINDER() -> void:
 	set_effect(Effect.Type.HASTE, 1.25)
 	add_effected_lored(LORED.Type.STONE)
 	cost = Cost.new({
-		Currency.Type.STONE: Attribute.new(90, false),
+		Currency.Type.STONE: Value.new(90),
 	})
 
 
@@ -609,7 +588,7 @@ func init_LIGHTER_SHOVEL() -> void:
 	set_effect(Effect.Type.HASTE, 1.2)
 	add_effected_lored(LORED.Type.COAL)
 	cost = Cost.new({
-		Currency.Type.COPPER: Attribute.new(155, false),
+		Currency.Type.COPPER: Value.new(155),
 	})
 	await up.all_upgrades_initialized
 	required_upgrade = Type.GRINDER
@@ -620,8 +599,8 @@ func init_TEXAS() -> void:
 	set_effect(Effect.Type.HASTE, 1.25)
 	add_effected_lored(LORED.Type.IRON)
 	cost = Cost.new({
-		Currency.Type.GROWTH: Attribute.new(30, false),
-		Currency.Type.COPPER: Attribute.new(400, false),
+		Currency.Type.GROWTH: Value.new(30),
+		Currency.Type.COPPER: Value.new(400),
 	})
 	await up.all_upgrades_initialized
 	required_upgrade = Type.RYE
@@ -632,8 +611,8 @@ func init_RYE() -> void:
 	set_effect(Effect.Type.HASTE, 1.25)
 	add_effected_lored(LORED.Type.COPPER)
 	cost = Cost.new({
-		Currency.Type.GROWTH: Attribute.new(3, false),
-		Currency.Type.IRON: Attribute.new(100, false),
+		Currency.Type.GROWTH: Value.new(3),
+		Currency.Type.IRON: Value.new(100),
 	})
 	await up.all_upgrades_initialized
 	required_upgrade = Type.GRINDER
@@ -644,7 +623,7 @@ func init_GRANDER() -> void:
 	set_effect(Effect.Type.HASTE, 1.3)
 	add_effected_lored(LORED.Type.STONE)
 	cost = Cost.new({
-		Currency.Type.COAL: Attribute.new(400, false),
+		Currency.Type.COAL: Value.new(400),
 	})
 	await up.all_upgrades_initialized
 	required_upgrade = Type.GRINDER
@@ -656,8 +635,8 @@ func init_SAALNDT() -> void:
 	add_effected_lored(LORED.Type.IRON_ORE)
 	add_effected_lored(LORED.Type.COPPER_ORE)
 	cost = Cost.new({
-		Currency.Type.IRON_ORE: Attribute.new(1500, false),
-		Currency.Type.COPPER_ORE: Attribute.new(1500, false),
+		Currency.Type.IRON_ORE: Value.new(1500),
+		Currency.Type.COPPER_ORE: Value.new(1500),
 	})
 	await up.all_upgrades_initialized
 	required_upgrade = Type.GRINDER
@@ -668,7 +647,7 @@ func init_SALT() -> void:
 	set_effect(Effect.Type.OUTPUT_AND_INPUT, 1.25)
 	add_effected_lored(LORED.Type.IRON)
 	cost = Cost.new({
-		Currency.Type.GROWTH: Attribute.new(150, false),
+		Currency.Type.GROWTH: Value.new(150),
 	})
 	await up.all_upgrades_initialized
 	required_upgrade = Type.TEXAS
@@ -679,7 +658,7 @@ func init_SAND() -> void:
 	set_effect(Effect.Type.HASTE, 1.25)
 	add_effected_lored(LORED.Type.COPPER)
 	cost = Cost.new({
-		Currency.Type.GROWTH: Attribute.new(200, false),
+		Currency.Type.GROWTH: Value.new(200),
 	})
 	await up.all_upgrades_initialized
 	required_upgrade = Type.RYE
@@ -690,9 +669,9 @@ func init_GRANDMA() -> void:
 	set_effect(Effect.Type.HASTE, 1.3)
 	add_effected_lored(LORED.Type.STONE)
 	cost = Cost.new({
-		Currency.Type.IRON: Attribute.new(400, false),
-		Currency.Type.COPPER: Attribute.new(400, false),
-		Currency.Type.CONCRETE: Attribute.new(20, false),
+		Currency.Type.IRON: Value.new(400),
+		Currency.Type.COPPER: Value.new(400),
+		Currency.Type.CONCRETE: Value.new(20),
 	})
 	await up.all_upgrades_initialized
 	required_upgrade = Type.GRANDER
@@ -703,7 +682,7 @@ func init_MIXER() -> void:
 	set_effect(Effect.Type.HASTE, 1.5)
 	add_effected_lored(LORED.Type.CONCRETE)
 	cost = Cost.new({
-		Currency.Type.CONCRETE: Attribute.new(11, false),
+		Currency.Type.CONCRETE: Value.new(11),
 	})
 	await up.all_upgrades_initialized
 	required_upgrade = Type.RYE
@@ -714,7 +693,7 @@ func init_FLANK() -> void:
 	set_effect(Effect.Type.HASTE, 1.4)
 	add_effected_lored(LORED.Type.IRON)
 	cost = Cost.new({
-		Currency.Type.MALIGNANCY: Attribute.new(125, false),
+		Currency.Type.MALIGNANCY: Value.new(125),
 	})
 	await up.all_upgrades_initialized
 	required_upgrade = Type.SALT
@@ -725,7 +704,7 @@ func init_RIB() -> void:
 	set_effect(Effect.Type.OUTPUT_AND_INPUT, 1.4)
 	add_effected_lored(LORED.Type.COPPER)
 	cost = Cost.new({
-		Currency.Type.MALIGNANCY: Attribute.new(125, false),
+		Currency.Type.MALIGNANCY: Value.new(125),
 	})
 	await up.all_upgrades_initialized
 	required_upgrade = Type.SALT
@@ -736,8 +715,8 @@ func init_GRANDPA() -> void:
 	set_effect(Effect.Type.OUTPUT_AND_INPUT, 1.35)
 	add_effected_lored(LORED.Type.STONE)
 	cost = Cost.new({
-		Currency.Type.IRON: Attribute.new(2500, false),
-		Currency.Type.COPPER: Attribute.new(2500, false),
+		Currency.Type.IRON: Value.new(2500),
+		Currency.Type.COPPER: Value.new(2500),
 	})
 	await up.all_upgrades_initialized
 	required_upgrade = Type.GRANDMA
@@ -748,8 +727,8 @@ func init_WATT() -> void:
 	set_effect(Effect.Type.OUTPUT_AND_INPUT, 1.45)
 	add_effected_lored(LORED.Type.JOULES)
 	cost = Cost.new({
-		Currency.Type.IRON: Attribute.new(3500, false),
-		Currency.Type.COPPER: Attribute.new(3500, false),
+		Currency.Type.IRON: Value.new(3500),
+		Currency.Type.COPPER: Value.new(3500),
 	})
 	await up.all_upgrades_initialized
 	required_upgrade = Type.MIXER
@@ -760,8 +739,8 @@ func init_SWIRLER() -> void:
 	set_effect(Effect.Type.HASTE, 1.5)
 	add_effected_lored(LORED.Type.CONCRETE)
 	cost = Cost.new({
-		Currency.Type.COAL: Attribute.new(9500, false),
-		Currency.Type.STONE: Attribute.new(6000, false),
+		Currency.Type.COAL: Value.new(9500),
+		Currency.Type.STONE: Value.new(6000),
 	})
 	await up.all_upgrades_initialized
 	required_upgrade = Type.MIXER
@@ -772,7 +751,7 @@ func init_GEARED_OILS() -> void:
 	set_effect(Effect.Type.OUTPUT_AND_INPUT, 2.0)
 	add_effected_lored(LORED.Type.OIL)
 	cost = Cost.new({
-		Currency.Type.IRON: Attribute.new("6e6", false),
+		Currency.Type.IRON: Value.new("6e6"),
 	})
 	await up.all_upgrades_initialized
 	required_upgrade = Type.CHEEKS
@@ -783,14 +762,14 @@ func init_CHEEKS() -> void:
 	set_effect(Effect.Type.OUTPUT_AND_INPUT, 1.5)
 	add_effected_lored(LORED.Type.OIL)
 	cost = Cost.new({
-		Currency.Type.STONE: Attribute.new(200000, false),
-		Currency.Type.IRON: Attribute.new(120000, false),
-		Currency.Type.COPPER: Attribute.new(40000, false),
-		Currency.Type.COAL: Attribute.new(30000, false),
-		Currency.Type.GROWTH: Attribute.new(5000, false),
-		Currency.Type.CONCRETE: Attribute.new(1500, false),
-		Currency.Type.MALIGNANCY: Attribute.new(15, false),
-		Currency.Type.OIL: Attribute.new(1, false),
+		Currency.Type.STONE: Value.new(200000),
+		Currency.Type.IRON: Value.new(120000),
+		Currency.Type.COPPER: Value.new(40000),
+		Currency.Type.COAL: Value.new(30000),
+		Currency.Type.GROWTH: Value.new(5000),
+		Currency.Type.CONCRETE: Value.new(1500),
+		Currency.Type.MALIGNANCY: Value.new(15),
+		Currency.Type.OIL: Value.new(1),
 	})
 	await up.all_upgrades_initialized
 	required_upgrade = Type.SALT
@@ -801,8 +780,8 @@ func init_GROUNDER() -> void:
 	set_effect(Effect.Type.HASTE, 1.35)
 	add_effected_lored(LORED.Type.STONE)
 	cost = Cost.new({
-		Currency.Type.GROWTH: Attribute.new(100, false),
-		Currency.Type.JOULES: Attribute.new(100, false),
+		Currency.Type.GROWTH: Value.new(100),
+		Currency.Type.JOULES: Value.new(100),
 	})
 	await up.all_upgrades_initialized
 	required_upgrade = Type.GRANDPA
@@ -813,7 +792,7 @@ func init_MAXER() -> void:
 	set_effect(Effect.Type.OUTPUT_AND_INPUT, 1.4)
 	add_effected_lored(LORED.Type.CONCRETE)
 	cost = Cost.new({
-		Currency.Type.GROWTH: Attribute.new(400, false),
+		Currency.Type.GROWTH: Value.new(400),
 	})
 	await up.all_upgrades_initialized
 	required_upgrade = Type.SWIRLER
@@ -825,8 +804,8 @@ func init_THYME() -> void:
 	add_effected_lored(LORED.Type.COPPER_ORE)
 	add_effected_lored(LORED.Type.COPPER)
 	cost = Cost.new({
-		Currency.Type.IRON: Attribute.new("2e6", false),
-		Currency.Type.MALIGNANCY: Attribute.new(35000, false),
+		Currency.Type.IRON: Value.new("2e6"),
+		Currency.Type.MALIGNANCY: Value.new(35000),
 	})
 	await up.all_upgrades_initialized
 	required_upgrade = Type.FLANK
@@ -837,8 +816,8 @@ func init_PEPPER() -> void:
 	set_effect(Effect.Type.OUTPUT_AND_INPUT, 10)
 	add_effected_lored(LORED.Type.IRON_ORE)
 	cost = Cost.new({
-		Currency.Type.COPPER: Attribute.new("25e9", false),
-		Currency.Type.MALIGNANCY: Attribute.new("15e6", false),
+		Currency.Type.COPPER: Value.new("25e9"),
+		Currency.Type.MALIGNANCY: Value.new("15e6"),
 	})
 	await up.all_upgrades_initialized
 	required_upgrade = Type.ANCHOVE_COVE
@@ -850,8 +829,8 @@ func init_ANCHOVE_COVE() -> void:
 	add_effected_lored(LORED.Type.IRON_ORE)
 	add_effected_lored(LORED.Type.COPPER_ORE)
 	cost = Cost.new({
-		Currency.Type.IRON_ORE: Attribute.new(450000, false),
-		Currency.Type.COPPER_ORE: Attribute.new(450000, false),
+		Currency.Type.IRON_ORE: Value.new(450000),
+		Currency.Type.COPPER_ORE: Value.new(450000),
 	})
 	await up.all_upgrades_initialized
 	required_upgrade = Type.SAALNDT
@@ -862,8 +841,8 @@ func init_GARLIC() -> void:
 	set_effect(Effect.Type.OUTPUT_AND_INPUT, 10)
 	add_effected_lored(LORED.Type.COPPER_ORE)
 	cost = Cost.new({
-		Currency.Type.IRON: Attribute.new("25e9", false),
-		Currency.Type.MALIGNANCY: Attribute.new("15e6", false),
+		Currency.Type.IRON: Value.new("25e9"),
+		Currency.Type.MALIGNANCY: Value.new("15e6"),
 	})
 	await up.all_upgrades_initialized
 	required_upgrade = Type.ANCHOVE_COVE
@@ -875,8 +854,8 @@ func init_MUD() -> void:
 	add_effected_lored(LORED.Type.IRON_ORE)
 	add_effected_lored(LORED.Type.IRON)
 	cost = Cost.new({
-		Currency.Type.COPPER: Attribute.new("2e6", false),
-		Currency.Type.MALIGNANCY: Attribute.new(35000, false),
+		Currency.Type.COPPER: Value.new("2e6"),
+		Currency.Type.MALIGNANCY: Value.new(35000),
 	})
 	await up.all_upgrades_initialized
 	required_upgrade = Type.RIB
@@ -887,7 +866,7 @@ func init_SLOP() -> void:
 	set_effect(Effect.Type.HASTE, 1.95)
 	add_effected_lored(LORED.Type.GROWTH)
 	cost = Cost.new({
-		Currency.Type.STONE: Attribute.new("1e6", false),
+		Currency.Type.STONE: Value.new("1e6"),
 	})
 	await up.all_upgrades_initialized
 	required_upgrade = Type.SLIMER
@@ -898,7 +877,7 @@ func init_SLIMER() -> void:
 	set_effect(Effect.Type.HASTE, 1.5)
 	add_effected_lored(LORED.Type.GROWTH)
 	cost = Cost.new({
-		Currency.Type.MALIGNANCY: Attribute.new(150, false),
+		Currency.Type.MALIGNANCY: Value.new(150),
 	})
 	await up.all_upgrades_initialized
 	required_upgrade = Type.RYE
@@ -909,8 +888,8 @@ func init_STICKYTAR() -> void:
 	set_effect(Effect.Type.SPECIFIC_INPUT, 0.5, Currency.Type.TARBALLS)
 	add_effected_lored(LORED.Type.MALIGNANCY)
 	cost = Cost.new({
-		Currency.Type.GROWTH: Attribute.new(1400, false),
-		Currency.Type.OIL: Attribute.new(75, false),
+		Currency.Type.GROWTH: Value.new(1400),
+		Currency.Type.OIL: Value.new(75),
 	})
 	await up.all_upgrades_initialized
 	required_upgrade = Type.SLIMER
@@ -921,7 +900,7 @@ func init_INJECT() -> void:
 	set_effect(Effect.Type.OUTPUT_AND_INPUT, 2)
 	add_effected_lored(LORED.Type.TARBALLS)
 	cost = Cost.new({
-		Currency.Type.TUMORS: Attribute.new(100, false),
+		Currency.Type.TUMORS: Value.new(100),
 	})
 	await up.all_upgrades_initialized
 	required_upgrade = Type.STICKYTAR
@@ -932,9 +911,9 @@ func init_RED_GOOPY_BOY() -> void:
 	set_effect(Effect.Type.OUTPUT_AND_INPUT, 1.4)
 	add_effected_lored(LORED.Type.MALIGNANCY)
 	cost = Cost.new({
-		Currency.Type.IRON: Attribute.new(30000, false),
-		Currency.Type.COPPER: Attribute.new(30000, false),
-		Currency.Type.MALIGNANCY: Attribute.new(50, false),
+		Currency.Type.IRON: Value.new(30000),
+		Currency.Type.COPPER: Value.new(30000),
+		Currency.Type.MALIGNANCY: Value.new(50),
 	})
 	await up.all_upgrades_initialized
 	required_upgrade = Type.STICKYTAR
@@ -953,6 +932,7 @@ func add_effected_lored(lored: int) -> void:
 	effect.add_effected_lored(lored)
 	await up.all_upgrades_initialized
 	lv.get_lored(lored).add_influencing_upgrade(type)
+	lv.get_lored(lored).unpurchased_upgrades.append(type)
 
 
 func add_effected_stage(_stage: int) -> void:
@@ -983,13 +963,21 @@ func purchase() -> void:
 	purchased = true
 	if special:
 		will_apply_effect = true
+		var my_pass = gv.password
 		await gv.get("stage" + str(stage)).just_reset
-		if not will_apply_effect or not purchased:
+		if (
+			not will_apply_effect or not purchased
+			or my_pass != gv.password
+		):
 			return
-	effect.apply()
-	effect_applied = true
+	apply()
 	times_purchased += 1
 	up.emit_signal("upgrade_purchased", type)
+
+
+func apply() -> void:
+	effect.apply()
+	effect_applied = true
 
 
 func refund() -> void:

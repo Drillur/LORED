@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://dky60pdpk0ffa"]
+[gd_scene load_steps=6 format=3 uid="uid://dky60pdpk0ffa"]
 
 [ext_resource type="Theme" uid="uid://b8t7tkhvril5g" path="res://Theme/Standard.tres" id="1_3vkne"]
 [ext_resource type="Texture2D" uid="uid://de68iry5swvex" path="res://Sprites/Hud/price-tag-3-fill.png" id="1_7cws7"]
 [ext_resource type="Script" path="res://Hud/Price.gd" id="1_ncutb"]
 [ext_resource type="Theme" uid="uid://8dmfgxdrr5yh" path="res://Theme/Title.tres" id="2_f5oma"]
+[ext_resource type="PackedScene" uid="uid://exe3ppvvv74m" path="res://Hud/bar.tscn" id="5_o7b2f"]
 
 [node name="Price" type="MarginContainer"]
 offset_right = 60.0
@@ -55,14 +56,21 @@ mouse_filter = 2
 theme = ExtResource("1_3vkne")
 text = "44 seconds"
 
-[node name="MarginContainer2" type="MarginContainer" parent="VBoxContainer"]
+[node name="MarginContainer3" type="MarginContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="Bar" parent="VBoxContainer/MarginContainer3" instance=ExtResource("5_o7b2f")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="MarginContainer2" type="MarginContainer" parent="VBoxContainer/MarginContainer3"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="Content Parent" type="VBoxContainer" parent="VBoxContainer/MarginContainer2"]
+[node name="Content Parent" type="VBoxContainer" parent="VBoxContainer/MarginContainer3/MarginContainer2"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 0

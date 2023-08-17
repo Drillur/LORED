@@ -2,8 +2,10 @@ extends Node
 
 
 
-signal save_finished
-signal load_finished
+var saved_vars := [
+	"upgrades_by_key",
+	"upgrade_menus",
+]
 
 
 func save() -> String:
@@ -13,7 +15,6 @@ func save() -> String:
 		data[upgrade.key] = upgrade.save()
 	for upgrade_menu in upgrade_menus.values():
 		data[upgrade_menu.key + " Upgrade Menu"] = upgrade_menu.save()
-	emit_signal("save_finished")
 	return var_to_str(data)
 
 
@@ -27,7 +28,6 @@ func load_data(data_str: String) -> void:
 		var key = UpgradeMenu.Type.keys()[type]
 		if key in data.keys():
 			upgrade_menus[type].load_data(data[key])
-	emit_signal("load_finished")
 
 
 
@@ -50,7 +50,7 @@ const RANDOM_UPGRADE_DESCRIPTION := [
 	"Makes the development and sale of Battle Passes punishable by death.",
 	"Sends curry chicken ramen directly to your door, for free!",
 	"Nintendo accepts their fans for who they are and release all of their first party games on PC with Steam Workshop and mod support.",
-	"Your favorite candy is now the healthiest food in the world for humans to consume. However, mega corps purchase the rights to selling it, and, aware of the levels of demand, boost the price to unreasonable levels. Finally united against the greed of mega corps around the world, every country fights to destroy all mega corps. Country leaders, backed by the mega corps, step down honorably. Power returns to the people. Chaos ensues. Walmart shelves are empty. Toilet paper castles appear in backyards. Best Buy goes completely unaffected. Nintendo still hasn't revealed the N64 2. But, in the end, your favorite candy becomes affordable, so congratulations.",
+	"Your favorite candy is now the healthiest food in the world for humans to consume. However, mega corps purchase the rights to selling it, and, aware of the levels of demand, boost the price to unreasonable levels.\n\nFinally united against the greed of mega corps around the world, every country fights to destroy all mega corps. Country leaders, backed by the mega corps, step down honorably. Power returns to the people. Chaos ensues. Walmart shelves are empty. Toilet paper castles appear in backyards. Best Buy goes completely unaffected. Nintendo still hasn't revealed the N64 2. But, in the end, your favorite candy becomes affordable, so congratulations.",
 	"Your muscles no longer decay over time. Instead, they decay by 5% every day you use Head & Shoulders 2 in 1 shampoo/conditioner.",
 	"Instantly deletes your sugar and caffeine addictions, and fills your fridge with water bottles.",
 	"Stocks your bathroom cabinets with flushable wipes.",
@@ -106,12 +106,20 @@ signal menu_unlocked(menu)
 signal upgrade_purchased(type)
 
 var upgrades := {}
+var upgrades_by_key := {}
 var upgrade_menus := {}
 
 
 
 func _ready():
-	open()
+	for type in UpgradeMenu.Type.values():
+		upgrade_menus[type] = UpgradeMenu.new(type) as UpgradeMenu
+		connect("upgrade_purchased", upgrade_menus[type].add_purchased_upgrade)
+	for type in Upgrade.Type.values():
+		upgrades[type] = Upgrade.new(type)
+		upgrades_by_key[upgrades[type].key] = upgrades[type]
+	emit_signal("all_upgrades_initialized")
+	
 	for type in Upgrade.Type.values():
 		gv.add_upgrade_to_stage(upgrades[type].stage, type)
 
@@ -121,14 +129,6 @@ func close() -> void:
 	upgrades.clear()
 	upgrade_menus.clear()
 
-
-func open() -> void:
-	for type in UpgradeMenu.Type.values():
-		upgrade_menus[type] = UpgradeMenu.new(type) as UpgradeMenu
-		connect("upgrade_purchased", upgrade_menus[type].add_purchased_upgrade)
-	for type in Upgrade.Type.values():
-		upgrades[type] = Upgrade.new(type)
-	emit_signal("all_upgrades_initialized")
 
 
 

@@ -3,24 +3,10 @@ extends Resource
 
 
 
-signal save_finished
-signal load_finished
-
-
-func save() -> String:
-	var data := {}
-	data["unlocked"] = var_to_str(unlocked)
-	data["times_reset"] = var_to_str(times_reset)
-	emit_signal("save_finished")
-	return var_to_str(data)
-
-
-func load_data(data_str: String) -> void:
-	var data: Dictionary = str_to_var(data_str)
-	unlocked = str_to_var(data["unlocked"])
-	times_reset = str_to_var(data["times_reset"])
-	emit_signal("load_finished")
-
+var saved_vars := [
+	"unlocked",
+	"times_reset",
+]
 
 
 enum Type {
@@ -72,9 +58,6 @@ func close() -> void:
 	times_reset = 0
 	unlocked = false
 
-
-func open() -> void:
-	pass
 
 
 

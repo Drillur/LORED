@@ -321,4 +321,5 @@ offset_right = 370.0
 offset_bottom = -10.0
 
 [connection signal="resized" from="." to="." method="_on_resized"]
+[connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]
 [connection signal="tab_changed" from="MarginContainer/VBoxContainer/Tabs" to="." method="_on_tab_changed"]

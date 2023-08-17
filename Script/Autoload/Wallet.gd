@@ -2,35 +2,17 @@ extends Node
 
 
 
-signal save_finished
-signal load_finished
-
-
-func save() -> String:
-	var data := {}
-	data["wallet_unlocked"] = var_to_str(wallet_unlocked)
-	for cur in currency:
-		var _currency: Currency = currency[cur]
-		data[_currency.key] = _currency.save()
-	emit_signal("save_finished")
-	return var_to_str(data)
-
-
-func load_data(data_str: String) -> void:
-	var data: Dictionary = str_to_var(data_str)
-	wallet_unlocked = str_to_var(data["wallet_unlocked"])
-	for cur in currency:
-		var key = Currency.Type.keys()[cur]
-		if key in data.keys():
-			currency[cur].load_data(data[key])
-	emit_signal("load_finished")
-
+var saved_vars := [
+	"wallet_unlocked",
+	"currency_by_key",
+]
 
 
 signal currency_just_unlocked(cur)
 signal wallet_unlocked_changed(unlocked)
 
 var currency := {}
+var currency_by_key := {}
 
 var unlocked_currencies := []
 var total_weight := 0
@@ -43,22 +25,17 @@ var wallet_unlocked := false:
 
 
 func _ready():
-	open()
+	for cur in Currency.Type.values():
+		currency[cur] = Currency.new(cur)
+		currency_by_key[currency[cur].key] = currency[cur]
 	for cur in currency.keys():
 		gv.add_currency_to_stage(get_currency_stage(cur), cur)
 
 
 
 func close() -> void:
-	currency.clear()
 	unlocked_currencies.clear()
 	total_weight = 0
-	wallet_unlocked = false
-
-
-func open() -> void:
-	for cur in Currency.Type.values():
-		currency[cur] = Currency.new(cur)
 
 
 
@@ -109,23 +86,19 @@ func unlock_currency(cur: int) -> void:
 
 
 func add_current_loss_rate(cur: int, amount) -> void:
-	var currency = get_currency(cur)
-	currency.add_current_loss_rate(amount)
+	get_currency(cur).add_current_loss_rate(amount)
 
 
 func subtract_current_loss_rate(cur: int, amount) -> void:
-	var currency = get_currency(cur)
-	currency.subtract_current_loss_rate(amount)
+	get_currency(cur).subtract_current_loss_rate(amount)
 
 
 func add_total_loss_rate(cur: int, amount) -> void:
-	var currency = get_currency(cur)
-	currency.add_total_loss_rate(amount)
+	get_currency(cur).add_total_loss_rate(amount)
 
 
 func subtract_total_loss_rate(cur: int, amount) -> void:
-	var currency = get_currency(cur)
-	currency.subtract_total_loss_rate(amount)
+	get_currency(cur).subtract_total_loss_rate(amount)
 
 
 
@@ -133,7 +106,7 @@ func subtract_total_loss_rate(cur: int, amount) -> void:
 # - Get
 
 func get_count(cur: int) -> Big:
-	return currency[cur].get_count()
+	return currency[cur].count
 
 
 func get_count_text(cur: int) -> String:

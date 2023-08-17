@@ -63,11 +63,10 @@ func _ready():
 	# ref
 	status.hide()
 	progress_bar.hide()
-	progress_bar.do_not_animate_changes()
 	progress_bar.remove_markers()
-	#fuel_bar.show_background()
 	fuel_bar.size.x = size.x
 	fuel_bar.delta_bar.hide()
+	fuel_bar.animate_changes()
 	set_icons()
 	remove_checks()
 	
@@ -75,6 +74,8 @@ func _ready():
 	active_buffs.hide()
 	sleep.hide()
 	view_special.hide()
+	SaveManager.connect("load_finished", load_finished)
+	SaveManager.connect("load_started", load_started)
 
 
 
@@ -184,12 +185,25 @@ func get_preferred_side() -> Node:
 
 # - Ref Shit
 
+func load_finished() -> void:
+	visible = lored.unlocked
+	lored_leveled_up(lored.level)
+
+
+func load_started() -> void:
+	animation.sleep()
+	stop_progress_bar()
+
+
+
 func lored_leveled_up(_level: int) -> void:
 	if not lored.purchased:
 		jobs.hide()
 		active_buffs.hide()
 		sleep.hide()
 		view_special.hide()
+		currency.hide()
+		name_and_icon.show()
 		return
 	
 	if lored.times_purchased == 1:
@@ -221,14 +235,6 @@ func job_completed() -> void:
 	if current_job.has_produced_currencies:
 		gv.throw_texts_by_dictionary(output_texts, current_job.last_production)
 	stop_progress_bar()
-
-
-func unlocked() -> void:
-	show()
-	
-	if not lored.unlocked:
-		hide()
-		await lored.just_unlocked
 
 
 func job_cut_short() -> void:
@@ -273,8 +279,8 @@ func start_job(_job: Job) -> void:
 
 
 func stop_progress_bar() -> void:
-	if not lored.working:
-		progress_bar.stop()
+	#if not lored.working:
+	progress_bar.stop()
 
 
 func set_status_and_currency(_status: String, _currency: int) -> void:

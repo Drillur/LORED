@@ -33,6 +33,8 @@ mouse_filter = 2
 texture = ExtResource("3_mevru")
 expand_mode = 2
 stretch_mode = 3
+metadata/_edit_lock_ = true
+metadata/_edit_group_ = true
 
 [node name="Lock Shadow" type="TextureRect" parent="Lock"]
 modulate = Color(0, 0, 0, 1)
@@ -49,8 +51,10 @@ stretch_mode = 3
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 2
+mouse_filter = 2
 theme_override_constants/margin_left = 2
 theme_override_constants/margin_bottom = 2
+metadata/_edit_lock_ = true
 
 [node name="CheckBox" type="CheckBox" parent="MarginContainer"]
 unique_name_in_owner = true

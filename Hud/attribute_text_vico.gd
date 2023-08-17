@@ -20,10 +20,18 @@ func setup(_att: Attribute, _prepended_text := "") -> void:
 			await ready
 		current.queue_free()
 		slash.queue_free()
-	attribute.add_notify_change_method(update, true)
-
-
-func update() -> void:
+	
 	if attribute.uses_current:
-		current.text = attribute.get_current_text()
+		attribute.connect("current_changed", update_current)
+	attribute.connect("total_changed", update_total)
+	
+	update_current()
+	update_total()
+
+
+func update_total() -> void:
 	total.text = prepended_text + attribute.get_total_text()
+
+
+func update_current() -> void:
+	current.text = attribute.get_current_text()

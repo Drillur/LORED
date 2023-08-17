@@ -36,7 +36,7 @@ func setup(_wish: Wish) -> void:
 	if not is_node_ready():
 		await ready
 	
-	bar.remove_markers().remove_texts()
+	bar.remove_markers().remove_texts().animate_changes()
 	bar.attach_attribute(wish.objective.progress)
 	
 	icon.texture = wish.get_icon()
@@ -49,10 +49,12 @@ func setup(_wish: Wish) -> void:
 	
 	
 	update_objective_text()
-	wish.objective.progress.add_notify_change_method(update_progress_text)
+	wish.objective.progress.connect("changed", update_progress_text)
 	button.connect("mouse_entered", show_tooltip)
 	button.connect("mouse_exited", gv.clear_tooltip)
 	button.connect("gui_input", button_input)
+	
+	update_progress_text()
 	
 	wish.vico = self
 	
@@ -81,7 +83,7 @@ func await_ready() -> void:
 	if not wish.ready_to_turn_in:
 		await wish.became_ready_to_turn_in
 	ready_border.show()
-	wish.objective.progress.remove_notify_method(update_progress_text)
+	wish.objective.progress.disconnect("changed", update_progress_text)
 	progress_text.text = "Complete!"
 	
 	while not is_queued_for_deletion():

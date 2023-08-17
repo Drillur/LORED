@@ -3,29 +3,73 @@ extends Resource
 
 
 
+var saved_vars := [
+	"mantissa",
+	"exponent",
+]
 
-signal save_finished
-signal load_finished
+signal increased
+signal decreased
 
+signal change_cooldown_finished
+signal increase_cooldown_finished
+signal decrease_cooldown_finished
 
-func save() -> String:
-	var data := {}
-	data["mantissa"] = var_to_str(mantissa)
-	data["exponent"] = var_to_str(exponent)
-	emit_signal("save_finished")
-	return var_to_str(data)
+var increase_on_cooldown := false:
+	set(val):
+		increase_on_cooldown = val
+		if val:
+			if not gv.root_ready:
+				await gv.root_ready_finished
+			await gv.get_tree().physics_frame
+			increase_on_cooldown = false
+			emit_signal("increase_cooldown_finished")
+var increase_queued := false
 
+var decrease_on_cooldown := false:
+	set(val):
+		decrease_on_cooldown = val
+		if val:
+			if not gv.root_ready:
+				await gv.root_ready_finished
+			await gv.get_tree().physics_frame
+			decrease_on_cooldown = false
+			emit_signal("decrease_cooldown_finished")
+var decrease_queued := false
 
-func load_data(data_str: String) -> void:
-	var data: Dictionary = str_to_var(data_str)
-	mantissa = str_to_var(data["mantissa"])
-	exponent = str_to_var(data["exponent"])
-	emit_signal("load_finished")
+var change_on_cooldown := false:
+	set(val):
+		change_on_cooldown = val
+		if val:
+			if not gv.root_ready:
+				await gv.root_ready_finished
+			await gv.get_tree().physics_frame
+			change_on_cooldown = false
+			emit_signal("change_cooldown_finished")
+var change_queued := false
 
-
-
-var mantissa: float = 0.0
-var exponent: int = 1
+var mantissa: float = 0.0:
+	set(val):
+		if mantissa != val:
+			mantissa = val
+			text_requires_update = true
+var exponent: int = 1:
+	set(val):
+		if exponent != val:
+			exponent = val
+			text_requires_update = true
+var text: String:
+	set(val):
+		text = val
+		text_requires_update = false
+	get:
+		if text_requires_update:
+			if exponent < 6:
+				text = Big.get_float_text(toFloat())
+			else:
+				text = toLog()
+		return text
+var text_requires_update := true
 
 static var other = {"dynamic_decimals":true, "dynamic_numbers":4, "small_decimals":2, "thousand_decimals":2, "big_decimals":2, "scientific_decimals": 2, "logarithmic_decimals":2, "thousand_separator":".", "decimal_separator":",", "postfix_separator":"", "reading_separator":"", "thousand_name":"thousand"}
 
@@ -34,6 +78,9 @@ const MANTISSA_PRECISSION = 0.0000001
 
 const MIN_INTEGER: int = -9223372036854775807
 const MAX_INTEGER: int = 9223372036854775806
+
+var base := {"mantissa": 1.0, "exponent": 0}
+var pending := {"mantissa": 1.0, "exponent": 0}
 
 
 func _init(mant = 1.0, e := 0):
@@ -51,8 +98,62 @@ func _init(mant = 1.0, e := 0):
 		_sizeCheck(mant)
 		mantissa = mant
 		exponent = e
+	
+	base.mantissa = mantissa
+	base.exponent = exponent
+	
+	calculate(base)
 	calculate(self)
-	pass
+
+
+
+func reset() -> void:
+	mantissa = base.mantissa
+	exponent = base.exponent
+	pending.mantissa = 0.0
+	pending.exponent = 0
+	emit_decrease()
+	calculate(self)
+
+
+func change_base(new_base: float) -> void:
+	base.mantissa = new_base
+	base.exponent = 0
+	calculate(base)
+
+
+func emit_change() -> void:
+	if change_queued:
+		return
+	if change_on_cooldown:
+		change_queued = true
+		await change_cooldown_finished
+		change_queued = false
+	emit_changed()
+	change_on_cooldown = true
+
+
+func emit_increase() -> void:
+	if increase_queued:
+		return
+	if increase_on_cooldown:
+		increase_queued = true
+		await increase_cooldown_finished
+		increase_queued = false
+	emit_signal("increased")
+	increase_on_cooldown = true
+
+
+func emit_decrease() -> void:
+	if decrease_queued:
+		return
+	if decrease_on_cooldown:
+		decrease_queued = true
+		await decrease_cooldown_finished
+		decrease_queued = false
+	emit_signal("decreased")
+	decrease_on_cooldown = true
+
 
 
 func _sizeCheck(mant):
@@ -72,6 +173,8 @@ func _typeCheck(n):
 
 func a(n) -> Big:
 	n = _typeCheck(n)
+	if n.mantissa == 0.0 and n.exponent == 0:
+		return self
 	_sizeCheck(n.mantissa)
 	var exp_diff = n.exponent - exponent
 	if exp_diff < 248:
@@ -81,13 +184,16 @@ func a(n) -> Big:
 		mantissa = n.mantissa #when difference between values is big, throw away small number
 		exponent = n.exponent
 	calculate(self)
+	emit_increase()
 	return self
 
 
 func s(n) -> Big:
 	n = _typeCheck(n)
+	if n.mantissa == 0.0 and n.exponent == 0:
+		return self
 	_sizeCheck(n.mantissa)
-	var exp_diff = n.exponent - exponent #abs?
+	var exp_diff = n.exponent - exponent
 	if exp_diff < 248:
 		var scaled_mantissa = n.mantissa * pow(10, exp_diff)
 		mantissa -= scaled_mantissa
@@ -95,11 +201,14 @@ func s(n) -> Big:
 		mantissa = -MANTISSA_PRECISSION
 		exponent = n.exponent
 	calculate(self)
+	emit_decrease()
 	return self
 
 
 func m(n) -> Big:
 	n = _typeCheck(n)
+	if n.mantissa == 1.0 and n.exponent == 0:
+		return self
 	_sizeCheck(n.mantissa)
 	var new_exponent = n.exponent + exponent
 	var new_mantissa = n.mantissa * mantissa
@@ -109,11 +218,17 @@ func m(n) -> Big:
 	mantissa = new_mantissa
 	exponent = new_exponent
 	calculate(self)
+	if n.mantissa > 1 or n.exponent > 0:
+		emit_increase()
+	elif n.exponent < 0:
+		emit_decrease()
 	return self
 
 
 func d(n) -> Big:
 	n = _typeCheck(n)
+	if n.mantissa == 1.0 and n.exponent == 0:
+		return self
 	_sizeCheck(n.mantissa)
 	if n.mantissa == 0:
 		printerr("BIG ERROR: d BY ZERO OR LESS THAN " + str(MANTISSA_PRECISSION))
@@ -126,7 +241,62 @@ func d(n) -> Big:
 	mantissa = new_mantissa
 	exponent = new_exponent
 	calculate(self)
+	emit_decrease()
 	return self
+
+
+func set_to(n) -> Big:
+	n = _typeCheck(n)
+	_sizeCheck(n.mantissa)
+	var new_exponent = n.exponent
+	var new_mantissa = n.mantissa
+	if new_exponent == exponent and new_mantissa == mantissa:
+		return self
+	var bigger: bool = (
+		new_exponent > exponent
+		or (new_exponent == exponent and new_mantissa > mantissa)
+	)
+	var smaller := false
+	if not bigger:
+		smaller = (
+			new_exponent < exponent
+			or (new_exponent == exponent and new_mantissa < mantissa)
+		)
+	mantissa = n.mantissa
+	exponent = n.exponent
+	
+	calculate(self)
+	if bigger:
+		emit_increase()
+	elif smaller:
+		emit_decrease()
+	return self
+
+
+func add_pending(n) -> void:
+	n = _typeCheck(n)
+	_sizeCheck(n.mantissa)
+	var exp_diff = n.exponent - exponent
+	if exp_diff < 248:
+		var scaled_mantissa = n.mantissa * pow(10, exp_diff)
+		pending.mantissa += scaled_mantissa
+	elif less(n):
+		pending.mantissa = n.mantissa #when difference between values is big, throw away small number
+		pending.exponent = n.exponent
+	calculate(pending)
+
+
+func subtract_pending(n) -> void:
+	n = _typeCheck(n)
+	_sizeCheck(n.mantissa)
+	var exp_diff = n.exponent - exponent #abs?
+	if exp_diff < 248:
+		var scaled_mantissa = n.mantissa * pow(10, exp_diff)
+		pending.mantissa -= scaled_mantissa
+	elif less(n):
+		pending.mantissa = -MANTISSA_PRECISSION
+		pending.exponent = n.exponent
+	calculate(pending)
 
 
 func percent(n):
@@ -159,33 +329,34 @@ func powerInt(n: int):
 		mantissa = 1.0
 		exponent = 0
 		return self
-
+	
 	var y_mantissa = 1
 	var y_exponent = 0
-
+	
 	while n > 1:
 		calculate(self)
-		if n % 2 == 0: #n is even
+		if n % 2 == 0:
 			exponent = exponent + exponent
 			mantissa = mantissa * mantissa
-			n = n / 2  # warning-ignore:integer_division
+			n = n / 2
 		else:
 			y_mantissa = mantissa * y_mantissa
 			y_exponent = exponent + y_exponent
 			exponent = exponent + exponent
 			mantissa = mantissa * mantissa
-			n = (n-1) / 2  # warning-ignore:integer_division
+			n = (n-1) / 2
 
 	exponent = y_exponent + exponent
 	mantissa = y_mantissa * mantissa
 	calculate(self)
+	emit_increase()
 	return self
 
 
 func power(n: float) -> Big:
 	if mantissa == 0:
 		return self
-
+	
 	# fast track
 	var temp:float = exponent * n
 	if round(n) == n and temp < MAX_INTEGER and temp > MIN_INTEGER and temp != INF and temp != -INF:
@@ -194,8 +365,9 @@ func power(n: float) -> Big:
 			mantissa = newMantissa
 			exponent = int(temp)
 			calculate(self)
+			emit_increase()
 			return self
-
+	
 	# a bit slower, still supports floats
 	var newExponent:int = int(temp)
 	var residue:float = temp - newExponent
@@ -204,11 +376,12 @@ func power(n: float) -> Big:
 		mantissa = newMantissa
 		exponent = newExponent
 		calculate(self)
+		emit_increase()
 		return self
-
+	
 	if round(n) != n:
 		printerr("BIG ERROR: POWER FUNCTION DOES NOT SUPPORT LARGE FLOATS, USE INTEGERS!")
-
+	
 	return powerInt(int(n))
 
 
@@ -253,7 +426,11 @@ func calculate(big):
 		big.mantissa = 0.0
 		big.exponent = 0
 	big.mantissa = snapped(big.mantissa, MANTISSA_PRECISSION)
-	pass
+	if big.mantissa < 0:
+		big.mantissa = 0.0
+		big.exponent = 0
+	if big is Big and big == self:
+		emit_change() 
 
 
 func equal(n) -> bool:
@@ -296,10 +473,6 @@ func less_equal(n) -> bool:
 	return false
 
 
-static func absValue(n) -> Big:
-	n.mantissa = abs(n.mantissa)
-	return n
-
 
 func roundDown() -> Big:
 	if exponent == 0:
@@ -327,39 +500,13 @@ func ln():
 	return 2.302585092994045 * logN(10)
 
 
-func logN(base):
-	return (2.302585092994046 / log(base)) * (exponent + log10(mantissa))
+func logN(n):
+	return (2.302585092994046 / log(n)) * (exponent + log10(mantissa))
 
 
 func pow10(value:int):
 	mantissa = pow(10, value % 1)
 	exponent = int(value)
-
-
-static func setThousandName(name):
-	other.thousand_name = name
-	pass
-
-
-static func setThousandSeparator(separator):
-	other.thousand_separator = separator
-	pass
-
-
-static func setDecimalSeparator(separator):
-	other.decimal_separator = separator
-	pass
-
-
-static func setPostfixSeparator(separator):
-	other.postfix_separator = separator
-	pass
-
-
-static func setReadingSeparator(separator):
-	other.reading_separator = separator
-	pass
-
 
 
 func toFloat() -> float:
@@ -370,11 +517,6 @@ func toInt() -> int:
 	return int(round(mantissa * pow(10, exponent)))
 
 
-
-func toString() -> String:
-	if exponent < 6:
-		return get_float_text(toFloat())
-	return toLog()
 
 
 static func get_float_text(value: float) -> String:
@@ -407,11 +549,11 @@ static func get_big_float_text(value: float) -> String:
 	return output # 342,945
 
 func toScientific():
-	return get_float_text(mantissa) + "e" + format_exponent(exponent)
+	return Big.get_float_text(mantissa) + "e" + format_exponent(exponent)
 
 func toEngineering():
 	var mod = exponent % 3
-	return get_float_text(mantissa * pow(10, mod)) + "e" + get_float_text(exponent - mod)
+	return Big.get_float_text(mantissa * pow(10, mod)) + "e" + Big.get_float_text(exponent - mod)
 
 func toLog():
 	var exponent_text := "e" + format_exponent(exponent)
