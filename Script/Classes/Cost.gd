@@ -1,5 +1,5 @@
 class_name Cost
-extends Resource
+extends RefCounted
 
 
 
@@ -183,15 +183,14 @@ func get_eta() -> Big:
 
 
 func get_progress_percent() -> float:
-	var total_percent = cost.size()
-	var percent := 0.0
+	var total := Big.new(0).do_not_emit()
+	var current := Big.new(0).do_not_emit()
 	for cur in cost:
-		percent += get_single_progress_percent(cur)
-	return percent / total_percent
-
-
-func get_single_progress_percent(cur: int) -> float:
-	return min(
-		1,
-		wa.get_count(cur).percent(cost[cur].get_value())
-	)
+		var count = wa.get_count(cur)
+		var _cost = cost[cur].get_value()
+		if count.greater_equal(_cost):
+			current.a(_cost)
+		else:
+			current.a(count)
+		total.a(_cost)
+	return min(1, current.percent(total))

@@ -81,6 +81,7 @@ const MAX_INTEGER: int = 9223372036854775806
 
 var base := {"mantissa": 1.0, "exponent": 0}
 var pending := {"mantissa": 1.0, "exponent": 0}
+var emit_changes := true
 
 
 func _init(mant = 1.0, e := 0):
@@ -116,6 +117,11 @@ func reset() -> void:
 	calculate(self)
 
 
+func do_not_emit() -> Big:
+	emit_changes = false
+	return self
+
+
 func change_base(new_base: float) -> void:
 	base.mantissa = new_base
 	base.exponent = 0
@@ -123,7 +129,7 @@ func change_base(new_base: float) -> void:
 
 
 func emit_change() -> void:
-	if change_queued:
+	if change_queued or not emit_changes:
 		return
 	if change_on_cooldown:
 		change_queued = true
@@ -134,7 +140,7 @@ func emit_change() -> void:
 
 
 func emit_increase() -> void:
-	if increase_queued:
+	if increase_queued or not emit_changes:
 		return
 	if increase_on_cooldown:
 		increase_queued = true
@@ -145,7 +151,7 @@ func emit_increase() -> void:
 
 
 func emit_decrease() -> void:
-	if decrease_queued:
+	if decrease_queued or not emit_changes:
 		return
 	if decrease_on_cooldown:
 		decrease_queued = true

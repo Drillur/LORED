@@ -1,5 +1,5 @@
 class_name Wish
-extends Resource
+extends RefCounted
 
 
 
@@ -15,35 +15,9 @@ func load_started() -> void:
 
 
 
-#func load_data(data_str: String) -> void:
-#	if type == Type.RANDOM:
-#		var obj_data = str_to_var(data["objective"])
-#		var obj_type = str_to_var(obj_data["type"])
-#		var obj_data_arg = {"object_type": str_to_var(obj_data["object_type"])}
-#		match obj_type:
-#			Objective.Type.COLLECT_CURRENCY, Objective.Type.SLEEP:
-#				var att = Attribute.new(1)
-#				att.load_data(obj_data["progress"])
-#				obj_data_arg["amount"] = att.get_total()
-#		objective = Objective.new(obj_type, obj_data_arg)
-#		objective.load_data(obj_data)
-#
-#		var reward_count = data["reward count"]
-#		for i in reward_count:
-#			var rew_data = str_to_var(data["reward " + str(i)])
-#			var amount = Big.new(0)
-#			amount.load_data(rew_data["amount"])
-#			var rew_data_arg = {
-#				"amount": amount,
-#				"object_type": str_to_var(rew_data["object_type"]),
-#			}
-#			add_reward(Reward.new(Reward.Type.CURRENCY, rew_data_arg))
-
-
-
 class Reward:
 	
-	var saved_vars := [ this is kinda done. do it for Objective. then scroll up. uncomment the commented shit
+	var saved_vars := [
 		"type",
 		"amount", 
 		"object_type", 
@@ -143,22 +117,18 @@ class Reward:
 
 class Objective:
 	
-	func save() -> String:
-		var data := {}
-		data["type"] = var_to_str(type)
-		data["progress"] = progress.save_current()
-		data["object_type"] = var_to_str(object_type)
-		
-		return var_to_str(data)
-	
-	
-	func load_data(data_str: String) -> void:
-		var data: Dictionary = str_to_var(data_str)
-		progress.load_current(data["progress"])
-	
+	var saved_vars := [
+		"type",
+		"progress",
+		"object_type",
+		"color",
+		"icon_path",
+		"text",
+	]
 	
 	
 	enum Type {
+		LOADED_OBJECTIVE,
 		LORED_LEVELED_UP,
 		UPGRADE_PURCHASED,
 		ACCEPTABLE_FUEL,
@@ -171,6 +141,10 @@ class Objective:
 	var type: int
 	var key: String
 	var icon: Texture
+	var icon_path: String:
+		set(val):
+			icon_path = val
+			icon = load(icon_path)
 	var color: Color
 	var text: String
 	
@@ -192,10 +166,14 @@ class Objective:
 		progress.set_to(0)
 	
 	
+	func init_LOADED_OBJECTIVE(data: Dictionary) -> void:
+		progress = Attribute.new(1)
+	
+	
 	func init_LORED_LEVELED_UP(data: Dictionary) -> void:
 		progress = Attribute.new(1)
 		object_type = data["object_type"]
-		icon = lv.get_icon(object_type)
+		icon_path = lv.get_icon(object_type).get_path()
 		color = lv.get_color(object_type)
 		text = "Level Up"
 	
@@ -203,7 +181,7 @@ class Objective:
 	func init_ACCEPTABLE_FUEL(data: Dictionary) -> void:
 		progress = Attribute.new(75)
 		object_type = data["object_type"]
-		icon = lv.get_icon(object_type)
+		icon_path = lv.get_icon(object_type).get_path()
 		color = lv.get_color(object_type)
 		text = lv.get_lored_name(object_type) + " 75% Fuel"
 	
@@ -211,7 +189,7 @@ class Objective:
 	func init_COLLECT_CURRENCY(data: Dictionary) -> void:
 		progress = Attribute.new(data["amount"])
 		object_type = data["object_type"]
-		icon = wa.get_icon(object_type)
+		icon_path = wa.get_icon(object_type).get_path()
 		color = wa.get_color(object_type)
 		text = "Collect " + wa.get_currency_name(object_type)
 	
@@ -220,7 +198,7 @@ class Objective:
 		progress = Attribute.new(data["amount"])
 		object_type = data["object_type"]
 		lored_was_already_asleep = lv.get_lored(object_type).asleep
-		icon = lv.get_icon(object_type)
+		icon_path = lv.get_icon(object_type).get_path()
 		color = lv.get_color(object_type)
 		text = "Sleep"
 	
@@ -228,7 +206,7 @@ class Objective:
 	func init_UPGRADE_PURCHASED(data: Dictionary) -> void:
 		progress = Attribute.new(1)
 		object_type = data["object_type"]
-		icon = up.get_icon(object_type)
+		icon_path = up.get_icon(object_type).get_path()
 		color = up.get_color(object_type)
 		text = up.get_upgrade_name(object_type) + " Purchased"
 	
@@ -242,6 +220,8 @@ class Objective:
 				progress.set_to_percent(1)
 				emit_signal("completed")
 				return
+		if has_method("stop_"  + key):
+			connect("completed", get("stop_" + key))
 		call("start_" + key)
 		await progress.filled
 		emit_signal("completed")
@@ -259,6 +239,9 @@ class Objective:
 		update_ACCEPTABLE_FUEL()
 	func update_ACCEPTABLE_FUEL() -> void:
 		progress.set_to(lv.get_lored(object_type).fuel.get_current_percent() * 100)
+	func stop_ACCEPTABLE_FUEL() -> void:
+		lv.get_lored(object_type).fuel.disconnect("changed", update_ACCEPTABLE_FUEL)
+		
 	
 	
 	func start_COLLECT_CURRENCY() -> void:
@@ -271,13 +254,13 @@ class Objective:
 	
 	func start_SLEEP() -> void:
 		while progress.is_not_full():
-			await lv.get_lored(object_type).second_passed_while_asleep
+			await lv.get_lored(object_type).spent_one_second_asleep
 			progress.add(1)
 		wake_up_sleeping_lored()
 	
 	func wake_up_sleeping_lored() -> void:
 		if type == Type.SLEEP and not lored_was_already_asleep:
-			lv.get_lored(object_type).wake_up()
+			lv.get_lored(object_type).dequeue_sleep()
 	
 	
 	func already_completed_UPGRADE_PURCHASED() -> bool:
@@ -367,6 +350,7 @@ var turned_in := false
 var ready_to_start := false
 var ready_to_turn_in := false
 var skip_wish := false
+var killed := false
 
 var help_text: String
 var thank_text: String
@@ -390,18 +374,21 @@ var reward_count := 0
 
 var objective: Objective
 
-var vico:
-	set(val):
-		vico = val
-		has_vico = true
-var has_vico := false
+var vico: Node
 
 
 
 
-func _init(_type: int) -> void:
+func _init(_type: int, do_not_init := false) -> void:
 	type = _type
 	key = Type.keys()[type]
+	
+	SaveManager.connect("load_started", load_started)
+	
+	if do_not_init:
+		objective = Objective.new(Objective.Type.LOADED_OBJECTIVE, {})
+		append_random_saved_vars()
+		return
 	
 	call("init_" + key)
 	
@@ -423,7 +410,6 @@ func _init(_type: int) -> void:
 	if not skip_wish:
 		start()
 	
-	SaveManager.connect("load_started", load_started)
 
 
 
@@ -431,7 +417,7 @@ func await_STUFF() -> void:
 	await gv.get_tree().create_timer(5).timeout
 	if lv.get_lored(LORED.Type.COAL).purchased:
 		skip_wish = true
-		wi.completed_wishes.append(type)
+		wi.complete_wish(type)
 	emit_signal("became_ready_to_start")
 
 
@@ -484,29 +470,24 @@ func init_RANDOM() -> void:
 	lucky_multiplier = 1 + (randf() * reward_count) # if 7 rewards, x 1-8
 	rewards_modifier *= lucky_multiplier
 	
-	var cur_keys := {}
+	var amounts := {}
 	for reward in reward_count:
 		var amount: Big
 		var currency: Currency = wa.get_currency(wa.get_weighted_random_currency())
 		amount = Big.new(currency.gain_rate.get_total()).m(rewards_modifier).roundDown()
 		if amount.less(1):
 			amount.set_to(1)
-		if currency.type in cur_keys:
-			rewards[cur_keys[currency.type]].amount.a(amount)
+		if currency.type in amounts:
+			amounts[currency.type].a(amount)
 		else:
-			cur_keys[currency.type] = reward_count
-			add_reward(Reward.new(Reward.Type.CURRENCY, {
-				"object_type": currency.type,
-				"amount": amount,
-			}))
+			amounts[currency.type] = Big.new(amount)
+	for cur in amounts:
+		add_reward(Reward.new(Reward.Type.CURRENCY, {
+			"object_type": cur,
+			"amount": amounts[cur],
+		}))
 	
-	saved_vars.append("giver")
-	saved_vars.append("lucky_multiplier")
-	saved_vars.append("help_icon")
-	saved_vars.append("thank_icon")
-	saved_vars.append("objective")
-	saved_vars.append("reward_count")
-	saved_vars.append("rewards")
+	append_random_saved_vars()
 
 
 
@@ -734,6 +715,16 @@ func add_reward(reward: Reward) -> void:
 	reward_count = rewards.size()
 
 
+func append_random_saved_vars() -> void:
+	saved_vars.append("giver")
+	saved_vars.append("lucky_multiplier")
+	saved_vars.append("help_icon_path")
+	saved_vars.append("thank_icon_path")
+	saved_vars.append("objective")
+	saved_vars.append("reward_count")
+	saved_vars.append("rewards")
+
+
 
 
 
@@ -770,7 +761,9 @@ func dismiss() -> void:
 
 func kill() -> void:
 	objective.wake_up_sleeping_lored()
-	vico.queue_free()
+	if is_instance_valid(vico):
+		vico.queue_free()
+	killed = true
 	emit_signal("just_ended")
 
 

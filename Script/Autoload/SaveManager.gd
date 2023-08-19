@@ -93,6 +93,8 @@ var test_data: String
 
 func save_game(method := default_save_method) -> void:
 	var packed_vars = pack_all_saved_vars()
+	if method == SaveMethod.TEST:
+		print(packed_vars["Wishes"])
 	var save_text = JSON.stringify(packed_vars)
 	
 	match method:
@@ -107,7 +109,7 @@ func save_game(method := default_save_method) -> void:
 		SaveMethod.TEST:
 			test_data = save_text
 			print("- * - GAME SAVED - * -")
-			print(save_text)
+			#print(save_text)
 	
 	last_save_clock = Time.get_unix_time_from_system()
 	emit_signal("save_finished")
@@ -118,6 +120,8 @@ func load_game(method := default_load_method) -> void:
 	gv.close_all()
 	emit_signal("load_started")
 	var data := get_save_data(method)
+	if method == LoadMethod.TEST:
+		print(data["Wishes"])
 	unpack_data(data)
 	gv.open_all()
 	emit_signal("load_finished")
@@ -155,7 +159,6 @@ func get_save_text(method := default_load_method, path := save_name) -> String:
 			save_text = DisplayServer.clipboard_get()
 		LoadMethod.TEST:
 			print("- * - LOADING GAME - * -")
-			print(test_data)
 			save_text = test_data
 	return save_text
 
@@ -229,7 +232,7 @@ func pack_all_saved_vars() -> Dictionary:
 	data["Wallet"] = pack_saved_vars(wa)
 	data["LOREDs"] = pack_saved_vars(lv)
 	data["Upgrades"] = pack_saved_vars(up)
-	#data["Wishes"] = pack_saved_vars(wi)
+	data["Wishes"] = pack_saved_vars(wi)
 	return data
 
 
@@ -239,7 +242,7 @@ func unpack_data(data: Dictionary) -> void:
 	unpack_vars(wa, data["Wallet"])
 	unpack_vars(lv, data["LOREDs"])
 	unpack_vars(up, data["Upgrades"])
-	#unpack_vars(wi, data["Wishes"])
+	unpack_vars(wi, data["Wishes"])
 
 
 
@@ -249,8 +252,8 @@ func pack_saved_vars(object) -> Dictionary:
 		var variable = object.get(variable_name)
 		if variable is Dictionary:
 			data[variable_name] = pack_dictionary(variable)
-		elif variable is Array:
-			data[variable_name] = pack_array(variable)
+#		elif variable is Array:
+#			data[variable_name] = pack_array(variable)
 		elif variable is Object:
 			data[variable_name] = pack_saved_vars(variable)
 		elif variable is Color:
@@ -285,30 +288,31 @@ func pack_dictionary(dictionary: Dictionary) -> Dictionary:
 	return data
 
 
-func pack_array(array: Array) -> Dictionary:
-	var data := {}
-	var i := 0
-	for value in array:
-		if value is Array:
-			data[i] = pack_array(value)
-		elif value is Object:
-			var variable_class: String
-			if value is Wish:
-				variable_class = "Wish"
-			elif value is Wish.Reward:
-				variable_class = "Reward"
-			data[variable_class + str(i)] = pack_saved_vars(value)
-		elif value is Color:
-			data[i] = {
-				"r": value.r,
-				"g": value.g,
-				"b": value.b,
-				"a": value.a,
-			}
-		else:
-			data[i] = value
-		i += 1
-	return data
+#func pack_array(array: Array) -> Dictionary:
+#	var data := {}
+#	var i := 0
+#	for value in array:
+#		if value is Array:
+#			data[i] = pack_array(value)
+#		elif value is Object:
+#			var variable_class: String
+#			if value is Wish:
+#				variable_class = "Wish"
+#				print("value is Wish")
+#			elif value is Wish.Reward:
+#				variable_class = "Reward"
+#			data[variable_class + str(i)] = pack_saved_vars(value)
+#		elif value is Color:
+#			data[i] = {
+#				"r": value.r,
+#				"g": value.g,
+#				"b": value.b,
+#				"a": value.a,
+#			}
+#		else:
+#			data[i] = value
+#		i += 1
+#	return data
 
 
 
@@ -321,8 +325,8 @@ func unpack_vars(object, packed_vars: Dictionary) -> void:
 		
 		if variable is Dictionary:
 			object.set(variable_name, unpack_dictionary(variable, packed_variable))
-		elif variable is Array:
-			object.set(variable_name, await unpack_array(packed_variable))
+#		elif variable is Array:
+#			object.set(variable_name, await unpack_array(packed_variable))
 		elif variable is Object:
 			unpack_vars(object.get(variable_name), packed_variable)
 			if variable is Big:
@@ -363,20 +367,30 @@ func unpack_dictionary(dictionary: Dictionary, packed_dictionary: Dictionary) ->
 	return dictionary
 
 
-func unpack_array(packed_array: Dictionary) -> Array:
-	var array := []
-	for key in packed_array:
-		var data = packed_array[key]
-		var variable_class = key.rstrip("0123456789")
-		if variable_class == "Wish":
-			var wish = await Wish.new(data["type"])
-			array.append(wish)
-		elif variable_class == "Reward":
-			print(data.keys())
-			#var reward = Wish.Reward.new(data["type"],)
-			#array.append(reward)
-			pass
-	return array
+#func unpack_array(packed_array: Dictionary) -> Array:
+#	var array := []
+#	for key in packed_array:
+#		var data = packed_array[key]
+#		var variable_class = key.rstrip("0123456789")
+#
+#		if variable_class == "Wish":
+#			var init = true if data["type"] > Wish.Type.RANDOM else false
+#			var wish = await Wish.new(data["type"], init)
+#			print("unpacking wish. Data:\n", data)
+#			unpack_vars(wish, data)
+#			array.append(wish)
+#
+#		elif variable_class == "Reward":
+#			var reward = Wish.Reward.new(data["type"], {
+#				"object_type": data["object_type"],
+#				"amount": data["amount"],
+#			})
+#			unpack_vars(reward, data)
+#			array.append(reward)
+#
+#		else:
+#			array.append(data)
+#	return array
 
 
 

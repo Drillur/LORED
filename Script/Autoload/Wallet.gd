@@ -84,6 +84,11 @@ func unlock_currency(cur: int) -> void:
 	emit_signal("currency_just_unlocked", cur)
 
 
+func unlock_currencies(curs: Array) -> void:
+	for cur in curs:
+		unlock_currency(cur)
+
+
 
 func add_current_loss_rate(cur: int, amount) -> void:
 	get_currency(cur).add_current_loss_rate(amount)

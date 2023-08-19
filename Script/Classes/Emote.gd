@@ -1,5 +1,5 @@
 class_name Emote
-extends Resource
+extends RefCounted
 
 
 
@@ -95,16 +95,20 @@ enum Type {
 	SOIL5_HUMUS0,
 }
 
-signal became_ready_to_emote
-signal finished_emoting
-signal text_display_finished
+signal just_ready(emote)
+signal finished(emote)
+signal text_display_finished(emote)
 
 var TYPE_KEYS := Type.keys()
 
 var type: int
 var key: String
 
-var ready_to_emote := false
+var ready := false:
+	set(val):
+		ready = val
+		if val:
+			emit_signal("just_ready", self)
 
 var speaker: int
 var dialogue: String
@@ -145,38 +149,44 @@ func _init(_type: int) -> void:
 	posing = pose_texture != null
 	
 	if duration == 0:
-		var automatic_duration = 6 #(float(dialogue.length()) / 50) + (3 if posing else 0)
+		var automatic_duration = 4 #(float(dialogue.length()) / 50) + (3 if posing else 0)
 		duration = automatic_duration
 	
 	if not has_method("await_" + key):
-		ready_to_emote = true
-		emit_signal("became_ready_to_emote")
+		ready = true
 	else:
 		call("await_" + key)
-		await became_ready_to_emote
-		ready_to_emote = true
 	
-	if type < Type.RANDOM_STONE:
-		await finished_emoting
+	connect("finished", emote_finished)
+
+
+func emote_finished() -> void:
+	if not is_random():
 		em.completed_emotes.append(type)
 
 
 
 func await_COAL_GREET() -> void:
-	await lv.get_lored(LORED.Type.COAL).leveled_up
-	emit_signal("became_ready_to_emote")
+	lv.get_lored(LORED.Type.COAL).connect("just_purchased", connect_COAL_GREET)
+func connect_COAL_GREET() -> void:
+	ready = true
+	lv.get_lored(LORED.Type.COAL).disconnect("just_purchased", connect_COAL_GREET)
 
 
 func await_COAL_WHOA() -> void:
-	while await lv.get_lored(LORED.Type.COAL).leveled_up != 2:
-		pass
-	emit_signal("became_ready_to_emote")
+	lv.get_lored(LORED.Type.COAL).connect("leveled_up", connect_COAL_WHOA)
+func connect_COAL_WHOA(level: int) -> void:
+	if level == 2:
+		ready = true
+		lv.get_lored(LORED.Type.COAL).disconnect("leveled_up", connect_COAL_WHOA)
 
 
 func await_STONE_HAPPY() -> void:
-	while await wi.wish_completed != Wish.Type.FUEL:
-		pass
-	emit_signal("became_ready_to_emote")
+	wi.connect("wish_completed", connect_STONE_HAPPY)
+func connect_STONE_HAPPY(wish_type: int) -> void:
+	if wish_type == Wish.Type.FUEL:
+		ready = true
+		wi.disconnect("wish_completed", connect_STONE_HAPPY)
 
 
 
@@ -1121,6 +1131,16 @@ func DRAW_PLATE7_REPLY_REPLY_REPLY_REPLY() -> void:
 
 
 
+# - Signal
+
+func finished_displaying_text() -> void:
+	emit_signal("text_display_finished", self)
+
+
+func finish() -> void:
+	emit_signal("finished", self)
+
+
 # - Get
 
 func has_dialogue() -> bool:
@@ -1129,3 +1149,7 @@ func has_dialogue() -> bool:
 
 func has_reply() -> bool:
 	return reply != -1
+
+
+func is_random() -> bool:
+	return type >= Type.RANDOM_STONE

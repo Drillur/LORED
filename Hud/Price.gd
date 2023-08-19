@@ -34,8 +34,8 @@ func setup(_cost: Cost) -> void:
 		content[cur] = price_and_currency.instantiate()
 		content[cur].setup(cur, cost.cost[cur])
 		content_parent.add_child(content[cur])
-		content[cur].connect("currency_changed", set_eta_text)
-		content[cur].connect("currency_changed", update_progress_bar)
+	connect_calls()
+	
 	bar.hide_background().remove_markers()
 	bar.set_initial_progress(cost.get_progress_percent())
 	
@@ -45,19 +45,48 @@ func setup(_cost: Cost) -> void:
 	affordable_changed(cost.affordable)
 	set_eta_text()
 	
+	if cost.affordable:
+		became_affordable()
+	
+	cost.connect("became_affordable", became_affordable)
+	cost.connect("became_unaffordable", became_unaffordable)
+	
 	await get_tree().physics_frame
 	await get_tree().physics_frame
 	await get_tree().physics_frame
 	bar.animating_changes = true
 
 
-func reconnect() -> void:
-	for node in content.values():
-		node.connect("currency_changed", set_eta_text)
-
 
 func update_progress_bar() -> void:
+	var progress_percent = cost.get_progress_percent()
 	bar.progress = cost.get_progress_percent()
+
+
+func became_affordable() -> void:
+	bar.progress = 1.0
+	bar.hide_edge()
+	disconnect_calls()
+
+
+func became_unaffordable() -> void:
+	bar.show_edge()
+	connect_calls()
+	set_eta_text()
+	update_progress_bar()
+
+
+func connect_calls() -> void:
+	for cur in cost.cost:
+		content[cur].connect("currency_changed", set_eta_text)
+		content[cur].connect("currency_changed", update_progress_bar)
+
+
+func disconnect_calls() -> void:
+	for cur in cost.cost:
+		content[cur].disconnect("currency_changed", set_eta_text)
+		content[cur].disconnect("currency_changed", update_progress_bar)
+
 
 
 func set_eta_text() -> void:

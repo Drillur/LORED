@@ -21,11 +21,12 @@ extends MarginContainer
 @onready var lored_name = %"LORED Name"
 @onready var animation = %AnimatedSprite2D as LOREDAnimation
 @onready var emote_container = %"Emote Container"
+@onready var sleep_text_timer = $"Sleep Text Timer"
+@onready var sleep_timer = $"Sleep Timer"
 
 var level_icon = preload("res://Sprites/Hud/Level.png")
 
 var prefer_left_down: bool
-var spewing_sleep_text := false
 var has_lored := false
 var lored: LORED
 var current_job: Job
@@ -74,6 +75,12 @@ func _ready():
 	active_buffs.hide()
 	sleep.hide()
 	view_special.hide()
+	
+	sleep_text_timer.connect("timeout", spew_sleep_text)
+	sleep_text_timer.connect("timeout", start_spewing_sleep_text)
+	sleep_timer.connect("timeout", spent_one_second_asleep)
+	sleep_timer.connect("timeout", start_sleep_timer)
+	
 	SaveManager.connect("load_finished", load_finished)
 	SaveManager.connect("load_started", load_started)
 
@@ -111,6 +118,7 @@ func attach_lored(_lored: LORED) -> void:
 	fuel_bar.attach_attribute(lored.fuel)
 	lored.connect("became_unable_to_work", start_idle)
 	lored.connect("went_to_sleep", go_to_sleep)
+	lored.connect("woke_up", wake_up)
 	lored.cost.connect("became_affordable", flash_level_up_button)
 	lored.connect("leveled_up", flash_on_level_up)
 	lored.connect("just_unlocked", show)
@@ -214,10 +222,10 @@ func lored_leveled_up(_level: int) -> void:
 			sleep.show()
 		else:
 			lv.connect("sleep_became_unlocked", sleep_became_unlocked)
-		if lv.jobs_unlocked:
+		if lv.advanced_details_unlocked:
 			jobs.show()
 		else:
-			lv.connect("jobs_just_unlocked", jobs_just_unlocked)
+			lv.connect("advanced_details_just_unlocked", advanced_details_just_unlocked)
 	
 	if not lored.last_purchase_forced:
 		gv.throw_text_from_parent(
@@ -255,8 +263,8 @@ func sleep_became_unlocked() -> void:
 	gv.flash(sleep, lored.color)
 
 
-func jobs_just_unlocked() -> void:
-	lv.disconnect("jobs_just_unlocked", jobs_just_unlocked)
+func advanced_details_just_unlocked() -> void:
+	lv.disconnect("advanced_details_just_unlocked", advanced_details_just_unlocked)
 	jobs.show()
 	gv.flash(jobs, lored.color)
 
@@ -295,11 +303,11 @@ func set_status_and_currency(_status: String, _currency: int) -> void:
 
 
 func sleep_clicked() -> void:
-	if lored.asleep or lored.will_go_to_sleep:
-		lored.wake_up()
+	if lored.will_go_to_sleep():
+		lored.dequeue_sleep()
 		sleep_changed(false)
 	else:
-		lored.go_to_sleep()
+		lored.enqueue_sleep()
 		sleep_changed(true)
 
 
@@ -316,23 +324,41 @@ func start_idle() -> void:
 	animation.sleep()
 
 
+func wake_up() -> void:
+	sleep_text_timer.stop()
+	sleep_timer.stop()
+
+
 func go_to_sleep() -> void:
 	set_status_and_currency("[wave amp=20 freq=1]Sleeping.", lored.primary_currency)
 	animation.sleep()
-	if spewing_sleep_text:
-		return
-	spewing_sleep_text = true
-	await get_tree().create_timer(randf_range(3, 6)).timeout
-	while lored.asleep:
-		gv.throw_text_from_parent(
-			output_texts, 
-			{
-				"text": sleep_text_pool[randi() % sleep_text_pool.size()],
-				"color": lored.color,
-			}
-		)
-		await get_tree().create_timer(randf_range(3, 6)).timeout
-	spewing_sleep_text = false
+	start_spewing_sleep_text()
+	start_sleep_timer()
+
+
+func start_sleep_timer() -> void:
+	if lored.asleep and sleep_timer.is_stopped():
+		sleep_timer.start(1)
+
+
+func spent_one_second_asleep() -> void:
+	lored.emit_signal("spent_one_second_asleep")
+
+
+func start_spewing_sleep_text() -> void:
+	if lored.asleep and sleep_text_timer.is_stopped():
+		sleep_text_timer.start(randf_range(3, 6))
+
+
+func spew_sleep_text() -> void:
+	gv.throw_text_from_parent(
+		output_texts, 
+		{
+			"text": sleep_text_pool[randi() % sleep_text_pool.size()],
+			"color": lored.color,
+		}
+	)
+
 
 
 func emote(_emote: Emote) -> void:

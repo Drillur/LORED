@@ -15,14 +15,8 @@ var prepended_text: String
 func setup(_att: Attribute, _prepended_text := "") -> void:
 	attribute = _att
 	prepended_text = _prepended_text
-	if not attribute.uses_current:
-		if not is_node_ready():
-			await ready
-		current.queue_free()
-		slash.queue_free()
 	
-	if attribute.uses_current:
-		attribute.connect("current_changed", update_current)
+	attribute.connect("current_changed", update_current)
 	attribute.connect("total_changed", update_total)
 	
 	update_current()

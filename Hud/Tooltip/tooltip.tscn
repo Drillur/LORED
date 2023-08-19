@@ -7,7 +7,7 @@
 offset_right = 52.0
 offset_bottom = 58.0
 size_flags_horizontal = 4
-size_flags_vertical = 4
+size_flags_vertical = 0
 script = ExtResource("1_e14g4")
 
 [node name="bg" type="Panel" parent="."]

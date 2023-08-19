@@ -4,6 +4,7 @@ extends Resource
 
 
 var saved_vars := [
+	"current",
 	"total",
 ]
 
@@ -21,30 +22,20 @@ signal total_decreased
 signal filled
 signal emptied
 
-var uses_current: bool:
-	set(val):
-		if uses_current != val:
-			uses_current = val
-			if val:
-				saved_vars.append("current")
-			else:
-				saved_vars.erase("current")
 var cap_current := true
 var current: Value
 var total: Value
 
 
 
-func _init(base_value = 0.0, will_use_current := true) -> void:
-	uses_current = will_use_current
-	if uses_current:
-		current = Value.new(base_value)
-		current.connect("increased", emit_increase)
-		current.connect("increased", emit_current_increase)
-		current.connect("decreased", emit_decrease)
-		current.connect("decreased", emit_current_decrease)
-		current.connect("changed", emit_changed)
-		current.connect("changed", emit_current_changed)
+func _init(base_value = 0.0) -> void:
+	current = Value.new(base_value)
+	current.connect("increased", emit_increase)
+	current.connect("increased", emit_current_increase)
+	current.connect("decreased", emit_decrease)
+	current.connect("decreased", emit_current_decrease)
+	current.connect("changed", emit_changed)
+	current.connect("changed", emit_current_changed)
 	total = Value.new(base_value)
 	total.connect("increased", emit_increase)
 	total.connect("increased", emit_total_increase)
@@ -93,16 +84,12 @@ func emit_total_decrease() -> void:
 # - Actions
 
 func reset():
-	if uses_current:
-		current.reset()
+	current.reset()
 	total.reset()
 
 
 func change_base(new_base_value: float) -> void:
-	if uses_current:
-		current.change_base(new_base_value)
-	else:
-		total.change_base(new_base_value)
+	current.change_base(new_base_value)
 
 
 func do_not_cap_current() -> void:
@@ -111,24 +98,18 @@ func do_not_cap_current() -> void:
 
 
 func add(amount) -> void:
-	if uses_current:
-		amount = set_amount_to_deficit_if_necessary(amount)
-		current.add(amount)
-		if get_current().greater_equal(get_total()):
-			emit_signal("filled")
-	else:
-		total.add(amount)
+	amount = set_amount_to_deficit_if_necessary(amount)
+	current.add(amount)
+	if get_current().greater_equal(get_total()):
+		emit_signal("filled")
 
 
 func subtract(amount) -> void:
 	if not amount is Big:
 		amount = Big.new(amount)
-	if uses_current:
-		current.subtract(amount)
-		if get_current().equal(0):
-			emit_signal("emptied")
-	else:
-		total.subtract(amount)
+	current.subtract(amount)
+	if get_current().equal(0):
+		emit_signal("emptied")
 
 
 func add_percent(percent: float) -> void:
@@ -138,23 +119,15 @@ func add_percent(percent: float) -> void:
 
 
 func add_pending(amount: Big) -> void:
-	if uses_current:
-		current.add_pending(amount)
-	else:
-		total.add_pending(amount)
+	current.add_pending(amount)
 
 
 func subtract_pending(amount: Big) -> void:
-	if uses_current:
-		current.subtract_pending(amount)
-	else:
-		total.subtract_pending(amount)
+	current.subtract_pending(amount)
 
 
 
 func set_amount_to_deficit_if_necessary(amount) -> Big:
-	if not uses_current:
-		return
 	if not cap_current:
 		return
 	var deficit = get_deficit()
@@ -217,16 +190,13 @@ func set_m_from_lored(amount) -> void:
 
 
 func set_to(amount) -> void:
-	if uses_current:
-		if not amount is Big:
-			amount = Big.new(amount)
-		current.set_to(amount)
-		if get_current().greater_equal(get_total()):
-			if cap_current:
-				current.set_to(get_total())
-			emit_signal("filled")
-	else:
-		total.set_to(amount)
+	if not amount is Big:
+		amount = Big.new(amount)
+	current.set_to(amount)
+	if get_current().greater_equal(get_total()):
+		if cap_current:
+			current.set_to(get_total())
+		emit_signal("filled")
 
 
 func set_to_percent(percent: float, with_random_range := false) -> void:
@@ -239,9 +209,7 @@ func set_to_percent(percent: float, with_random_range := false) -> void:
 # - Get
 
 func get_value() -> Big:
-	if uses_current:
-		return get_current()
-	return get_total()
+	return get_current()
 
 
 func get_current_percent() -> float:
@@ -308,9 +276,7 @@ func get_deficit_text_plus_one() -> String:
 
 
 func get_text() -> String:
-	if uses_current:
-		return get_current_text() + "/" + get_total_text()
-	return get_total_text()
+	return get_current_text() + "/" + get_total_text()
 
 
 func is_full() -> bool:

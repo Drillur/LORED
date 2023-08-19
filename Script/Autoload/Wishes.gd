@@ -2,35 +2,19 @@ class_name Wishes
 extends Node
 
 
-func save() -> String:
-	var data := {}
-	data["completed_wishes"] = var_to_str(completed_wishes)
-	data["random_wish_limit"] = var_to_str(random_wish_limit)
-	data["completed_random_wishes"] = var_to_str(completed_random_wishes)
-	data["wish count"] = var_to_str(wishes.size())
-	var i = 0
-	for wish in wishes:
-		data["wish " + str(i)] = wish.save()
-		i += 1
-	return var_to_str(data)
+
+var saved_vars := [
+	"completed_wishes",
+	"random_wish_limit",
+	"completed_random_wishes",
+	"wishes",
+]
 
 
-func load_data(data_str: String) -> void:
-	var data: Dictionary = str_to_var(data_str)
-	completed_wishes = str_to_var(data["completed_wishes"])
-	completed_random_wishes = str_to_var(data["completed_random_wishes"])
-	var wish_count = str_to_var(data["wish count"])
-	for i in wish_count:
-		var wish_data = str_to_var(data["wish " + str(i)])
-		var type = str_to_var(wish_data["type"])
-		var wish = await Wish.new(type)
-		wish.load_data(data["wish " + str(i)])
-		wishes.append(wish)
-	random_wish_limit = str_to_var(data["random_wish_limit"])
-	
+func load_finished() -> void:
 	for wish in wishes:
 		create_wish_vico(wish)
-	
+	print(completed_wishes)
 
 
 signal wish_completed(type)
@@ -46,13 +30,18 @@ var active_wish_types := []
 var active_random_wishes := 0
 
 var wishes := []
-var completed_wishes: Array
+var completed_wishes := []
 var completed_random_wishes := 0
 var random_wish_limit := 0:
 	set(val):
 		random_wish_limit = val
 		for i in val:
 			find_new_random_wish()
+
+
+
+func _ready() -> void:
+	SaveManager.connect("load_finished", load_finished)
 
 
 
@@ -151,7 +140,7 @@ func create_wish_vico(wish: Wish) -> void:
 	var pending_vico_index = pending_vico.get_index()
 	
 	await pending_vico.tree_exited
-	if my_pass != gv.password:
+	if my_pass != gv.password or wish.killed:
 		return
 	
 	var vico = wish_vico.instantiate()
@@ -170,7 +159,7 @@ func start_new_wish_after_wish_completed(wish: Wish) -> void:
 	wishes.erase(wish)
 	active_wish_types.erase(wish.type)
 	if wish.is_main_wish():
-		completed_wishes.append(wish.type)
+		complete_wish(wish.type)
 		active_main_wishes -= 1
 		if active_main_wishes == 0:
 			find_new_main_wish()
@@ -186,10 +175,18 @@ func start_new_wish_after_wish_completed(wish: Wish) -> void:
 func skip_STUFF_wish() -> void:
 	if is_wish_begun_or_completed(Wish.Type.FUEL):
 		return
+	var my_pass = gv.password
 	await lv.get_lored(LORED.Type.COAL).leveled_up
+	if my_pass != gv.password:
+		return
 	if active_main_wishes == 0 and not is_wish_begun_or_completed(Wish.Type.FUEL):
 		create_wish_vico(await Wish.new(Wish.Type.FUEL))
-		completed_wishes.append(Wish.Type.STUFF)
+		complete_wish(Wish.Type.STUFF)
+
+
+func complete_wish(type: int) -> void:
+	if not type in completed_wishes:
+		completed_wishes.append(type)
 
 
 

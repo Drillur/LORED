@@ -1,5 +1,5 @@
 class_name LORED
-extends Resource
+extends RefCounted
 
 
 
@@ -17,13 +17,12 @@ func load_started() -> void:
 func load_finished() -> void:
 	if unlocked:
 		emit_signal("just_unlocked")
+	set_level_to(level)
 	if purchased:
 		#emit_signal("leveled_up", level)
-		if times_purchased > 0:
-			work()
 		for currency in produced_currencies:
 			wa.unlock_currency(currency)
-	set_level_to(level)
+		work()
 
 
 
@@ -87,13 +86,16 @@ signal leveled_up(level)
 signal went_to_sleep
 signal woke_up
 signal asleep_changed(asleep)
-signal plan_to_sleep
+signal sleep_just_enqueued
+signal sleep_just_dequeued
 signal just_unlocked
 signal just_locked
-signal second_passed_while_asleep
-signal finished_emoting
 signal purchased_changed(purchased)
+signal just_purchased
 signal job_started(job)
+signal finished_emoting
+signal spent_one_second_asleep
+
 
 var killed := false
 
@@ -114,59 +116,63 @@ var produced_currencies := []
 var required_currencies := []
 var upgrades := []
 var unpurchased_upgrades := []
+var emote_queue := []
 
 var unlocked := false:
 	set(val):
 		if unlocked != val:
 			unlocked = val
 			if val:
-				if not type in lv.unlocked:
-					lv.unlocked.append(type)
-				if not type in lv.never_purchased:
-					lv.never_purchased.append(type)
+				lv.lored_unlocked(type)
 				emit_signal("just_unlocked")
 				saved_vars.append("fuel")
 				saved_vars.append("asleep")
 				saved_vars.append("times_purchased")
 				saved_vars.append("time_spent_asleep")
 			else:
-				lv.unlocked.erase(type)
+				lv.lored_locked(type)
 				emit_signal("just_locked")
 				saved_vars.erase("fuel")
 				saved_vars.erase("asleep")
 				saved_vars.erase("times_purchased")
 				saved_vars.erase("time_spent_asleep")
 
-
-
 var purchased := false:
 	set(val):
 		if purchased != val:
 			purchased = val
 			if val:
-				lv.erase_lored_from_never_purchased(type)
-				if not type in lv.active:
-					lv.active.append(type)
-				if not asleep:
-					lv.active_and_awake.append(type)
+				lv.lored_became_active(type)
+				emit_signal("just_purchased")
 			else:
-				if type in lv.active:
-					lv.active.erase(type)
-				if type in lv.active_and_awake:
-					lv.active_and_awake.erase(type)
+				lv.lored_became_inactive(type)
 			emit_signal("purchased_changed", val)
 var working := false
 var asleep := false:
 	set(val):
-		if asleep == val:
-			return
-		asleep = val
-		emit_signal("asleep_changed", asleep)
-var will_go_to_sleep := false
-var time_went_to_bed: float
+		if asleep != val:
+			asleep = val
+			if val:
+				time_went_to_bed = Time.get_unix_time_from_system()
+				lv.lored_went_to_sleep(type)
+				emit_signal("went_to_sleep")
+			else:
+				if time_went_to_bed != 0:
+					calculate_time_in_bed()
+				lv.lored_woke_up(type)
+				emit_signal("woke_up")
+			emit_signal("asleep_changed", asleep)
+var time_went_to_bed := 0.0
 var current_fuel_rate_added := false
 var total_fuel_rate_added := false
-var emoting := false
+var emoting := false:
+	set(val):
+		if emoting != val:
+			emoting = val
+			if val:
+				pass
+			else:
+				emit_signal("finished_emoting")
 var last_purchase_automatic := false
 var last_purchase_forced := false
 
@@ -239,6 +245,7 @@ func _init(_type: int) -> void:
 	
 	SaveManager.connect("load_finished", load_finished)
 	SaveManager.connect("load_started", load_started)
+	SaveManager.connect("load_started", clear_emote_queue)
 	
 	# stage and fuel
 	if type <= Type.OIL:
@@ -822,25 +829,26 @@ func add_job(_job: int) -> void:
 	for cur in jobs[_job].get_required_currency_types():
 		if not cur in required_currencies:
 			required_currencies.append(cur)
-	
-	if not lv.loreds_are_initialized:
-		await lv.loreds_initialized
-	jobs[_job].assign_lored(type)
-	
-	output.connect("changed", jobs[_job].lored_output_changed)
-	haste.connect("changed", jobs[_job].lored_haste_changed)
-	fuel_cost.connect("changed", jobs[_job].lored_fuel_cost_changed)
-	if jobs[_job].has_required_currencies:
-		input.connect("changed", jobs[_job].lored_input_changed)
-		jobs[_job].lored_input_changed()
-	
-	jobs[_job].lored_output_changed()
-	jobs[_job].lored_haste_changed()
-	jobs[_job].lored_fuel_cost_changed()
-	
-	jobs[_job].connect("became_workable", work)
-	jobs[_job].connect("completed", job_completed)
-	jobs[_job].connect("cut_short", job_cut_short)
+
+
+func loreds_initialized() -> void:
+	for job in jobs.values():
+		job.assign_lored(type)
+		
+		output.connect("changed", job.lored_output_changed)
+		haste.connect("changed", job.lored_haste_changed)
+		fuel_cost.connect("changed", job.lored_fuel_cost_changed)
+		if job.has_required_currencies:
+			input.connect("changed", job.lored_input_changed)
+			job.lored_input_changed()
+		
+		job.lored_output_changed()
+		job.lored_haste_changed()
+		job.lored_fuel_cost_changed()
+		
+		job.connect("became_workable", work)
+		job.connect("completed", job_completed)
+		job.connect("cut_short", job_cut_short)
 
 
 func sort_jobs():
@@ -892,6 +900,13 @@ func subtract_total_fuel_rate() -> void:
 	if total_fuel_rate_added:
 		total_fuel_rate_added = false
 		wa.subtract_total_loss_rate(fuel_currency, fuel_cost.get_value())
+
+
+
+# - Signals
+
+func clear_emote_queue() -> void:
+	emote_queue.clear()
 
 
 
@@ -949,16 +964,15 @@ func automatic_purchase() -> void:
 
 func purchase() -> void:
 	times_purchased += 1
-	first_purchase()
 	level_up()
+	first_purchase()
 
 
 func first_purchase() -> void:
-	purchased = true
-	for currency in produced_currencies:
-		wa.unlock_currency(currency)
-	await leveled_up
-	work()
+	if not purchased:
+		purchased = true
+		wa.unlock_currencies(produced_currencies)
+		work()
 
 
 func level_up() -> void:
@@ -991,72 +1005,93 @@ func unlock() -> void:
 
 
 
-func go_to_sleep() -> void:
-	if asleep or will_go_to_sleep:
+func enqueue_sleep() -> void:
+	if asleep or is_connected("completed_job", go_to_sleep):
 		return
-	emit_signal("plan_to_sleep")
+	emit_signal("sleep_just_enqueued")
 	if working:
-		will_go_to_sleep = true
-		await completed_job
-		if not will_go_to_sleep:
-			return
-	will_go_to_sleep = false
+		connect("completed_job", go_to_sleep)
+	else:
+		go_to_sleep()
+
+
+func go_to_sleep() -> void:
 	asleep = true
-	time_went_to_bed = Time.get_unix_time_from_system()
-	lv.start_sleep_emitter(self)
-	lv.active_and_awake.erase(self)
 	emit_signal("stopped_working")
-	emit_signal("went_to_sleep")
+	if is_connected("completed_job", go_to_sleep):
+		disconnect("completed_job", go_to_sleep)
+
+
+func dequeue_sleep() -> void:
+	if asleep:
+		wake_up()
+	else:
+		emit_signal("sleep_just_dequeued")
+		if is_connected("completed_job", go_to_sleep):
+			disconnect("completed_job", go_to_sleep)
 
 
 func wake_up() -> void:
-	if asleep:
-		var time_in_bed = Time.get_unix_time_from_system() - time_went_to_bed
-		time_spent_asleep += time_in_bed
-	if asleep or will_go_to_sleep:
-		will_go_to_sleep = false
-		lv.active_and_awake.append(type)
-		asleep = false
-		emit_signal("woke_up")
+	asleep = false
+	emit_signal("woke_up")
+	if is_connected("completed_job", go_to_sleep):
+		disconnect("completed_job", go_to_sleep)
+
+
+func calculate_time_in_bed() -> void:
+	var time_in_bed = Time.get_unix_time_from_system() - time_went_to_bed
+	time_spent_asleep += time_in_bed
+	time_went_to_bed = 0.0
 
 
 
-func emote(_emote: Emote) -> void:
-	var my_pass := gv.password
-	if not unlocked:
-		return
-	if not _emote.ready_to_emote:
-		await _emote.became_ready_to_emote
-	while emoting:
-		await finished_emoting
-		await gv.get_tree().create_timer(1).timeout
-	
-	if my_pass != gv.password or killed:
-		return
-	
+
+func emote_now(emote: Emote) -> void:
 	emoting = true
-	vico.emote(_emote)
-	await _emote.finished_emoting
+	vico.emote(emote)
+	emote.connect("finished", emote_finished)
+
+
+func emote_finished(emote: Emote) -> void:
 	emoting = false
-	emit_signal("finished_emoting")
 
 
 
 func add_influencing_upgrade(upgrade: int) -> void:
 	if not upgrade in upgrades:
 		upgrades.append(upgrade)
-		unpurchased_upgrades.append(upgrade)
-		up.get_upgrade(upgrade).connect("just_purchased", remove_unpurchased_upgrade)
-		up.get_upgrade(upgrade).connect("just_unpurchased", add_unpurchased_upgrade)
+		up.get_upgrade(upgrade).connect("purchased_changed", influencing_upgrade_purchased_changed)
+		influencing_upgrade_purchased_changed(up.get_upgrade(upgrade))
 
 
-func remove_unpurchased_upgrade(upgrade: int) -> void:
-	unpurchased_upgrades.erase(upgrade)
+func influencing_upgrade_purchased_changed(upgrade: Upgrade) -> void:
+	if upgrade.purchased:
+		unpurchased_upgrades.erase(upgrade.type)
+	else:
+		if not upgrade.type in unpurchased_upgrades:
+			unpurchased_upgrades.append(upgrade.type)
 
 
-func add_unpurchased_upgrade(upgrade: int) -> void:
-	unpurchased_upgrades.append(upgrade)
 
+func enqueue_emote(emote: Emote) -> void:
+	emote_queue.append(emote)
+	if not is_connected("finished_emoting", emote_next_in_line):
+		connect("finished_emoting", emote_next_in_line)
+
+
+func emote_next_in_line() -> void:
+	if emoting:
+		return
+	
+	if emote_queue.size() > 0:
+		var emote: Emote = emote_queue[0]
+		em.emote_now(emote)
+		emote_queue.erase(emote)
+		if emote_queue.size() > 0:
+			return
+	
+	if is_connected("finished_emoting", emote_next_in_line):
+		disconnect("finished_emoting", emote_next_in_line)
 
 
 
@@ -1065,7 +1100,7 @@ func add_unpurchased_upgrade(upgrade: int) -> void:
 func work(job_type: int = get_next_job_automatically()) -> void:
 	if not purchased or not unlocked:
 		return
-	if working or asleep or will_go_to_sleep:
+	if working or will_go_to_sleep():
 		return
 	if job_type > -1:
 		start_job(job_type)
@@ -1210,6 +1245,12 @@ func get_wish() -> String:
 
 
 # - Get
+
+func will_go_to_sleep() -> bool:
+	if asleep:
+		return true
+	return is_connected("completed_job", go_to_sleep)
+
 
 func is_visible() -> bool:
 	if lv.lored_container.current_tab + 1 != stage:

@@ -149,6 +149,7 @@ func reload_scene() -> void:
 
 func close_all() -> void:
 	password = 0.0
+	em.close()
 	#wi.close()
 	#up.close()
 	lv.close()
@@ -162,6 +163,7 @@ func open_all() -> void:
 #	lv.open()
 #	up.open()
 #	wi.open()
+	em.open()
 
 
 func close() -> void:

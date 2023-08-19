@@ -14,8 +14,14 @@ extends MarginContainer
 
 var emote: Emote
 
-var standard_interval := 0.05
-var punctuation_interval := 0.25
+const standard_interval := 0.035
+const punctuation_interval := 0.25
+const PUNCTUATION_MARKS := ["!", ",", ".", "?"]
+
+
+
+func _ready() -> void:
+	timer.connect("timeout", timer_finished)
 
 
 
@@ -49,27 +55,30 @@ func setup(_emote: Emote) -> void:
 	else:
 		dialogue_text.hide()
 	
-	start()
-
-
-
-func start() -> void:
-	if not emote.has_dialogue():
-		display_text_timer.queue_free()
-	else:
+	
+	if emote.has_dialogue():
+		emote.connect("text_display_finished", start_timer)
 		display_text()
-		await emote.text_display_finished
+	else:
+		display_text_timer.queue_free()
+		start_timer(emote)
+
+
+func start_timer(_emote: Emote) -> void:
 	timer.start(emote.duration)
-	await timer.timeout
-	emote.emit_signal("finished_emoting")
-	queue_free()
+
+
+func timer_finished() -> void:
+	if visible:
+		hide()
+		timer.start(1)
+	else:
+		emote.finish()
+		queue_free()
 
 
 
 func display_text() -> void:
-	if not emote.has_dialogue():
-		return
-	
 	dialogue_text.visible_characters = 0
 	var parsed_text: String = dialogue_text.get_parsed_text()
 	
@@ -77,9 +86,8 @@ func display_text() -> void:
 		dialogue_text.visible_characters += 1
 		if dialogue_text.visible_ratio == 1:
 			break
-		#if emote.speaker.key == "COPPER_ORE":
 		
-		if parsed_text[dialogue_text.visible_characters - 1] in ["!", ",", ".", "?"]:
+		if parsed_text[dialogue_text.visible_characters - 1] in PUNCTUATION_MARKS:
 			display_text_timer.start(punctuation_interval)
 		else:
 			display_text_timer.start(standard_interval)
@@ -87,4 +95,5 @@ func display_text() -> void:
 		await display_text_timer.timeout
 	
 	display_text_timer.queue_free()
-	emote.emit_signal("text_display_finished")
+	await get_tree().create_timer(1).timeout
+	emote.finished_displaying_text()

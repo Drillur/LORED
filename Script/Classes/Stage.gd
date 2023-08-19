@@ -1,5 +1,5 @@
 class_name Stage
-extends Resource
+extends RefCounted
 
 
 

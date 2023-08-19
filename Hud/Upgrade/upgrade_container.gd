@@ -3,7 +3,7 @@ extends MarginContainer
 
 
 
-@onready var right_down = %RightDown
+@onready var right_down = %Right
 @onready var tabs = %Tabs
 @onready var bg = $bg
 @onready var title_bg = %"title bg"
@@ -43,7 +43,7 @@ func _on_tab_changed(tab):
 func _on_resized():
 	if not is_node_ready():
 		await ready
-	right_down.position.x = size.x + 10
+	right_down.position = Vector2(size.x + 10, -10)
 
 
 func _on_visibility_changed():

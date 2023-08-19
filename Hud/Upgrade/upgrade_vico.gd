@@ -40,7 +40,7 @@ func setup(_upgrade: Upgrade):
 	
 	upgrade.connect("purchased_changed", purchased_changed)
 	upgrade.connect("unlocked_changed", unlocked_changed)
-	purchased_changed()
+	purchased_changed(upgrade)
 	unlocked_changed()
 
 
@@ -58,7 +58,7 @@ func cost_update(affordable: bool) -> void:
 		gv.flash(check, Color(0, 1, 0))
 
 
-func purchased_changed() -> void:
+func purchased_changed(_upgrade: Upgrade) -> void:
 	bg.visible = upgrade.purchased
 	if upgrade.purchased:
 		button.button.mouse_default_cursor_shape = Control.CURSOR_ARROW

@@ -1,5 +1,5 @@
 class_name Job
-extends Resource
+extends RefCounted
 
 
 

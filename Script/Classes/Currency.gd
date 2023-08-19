@@ -1,5 +1,5 @@
 class_name Currency
-extends Resource
+extends RefCounted
 
 
 var saved_vars := [

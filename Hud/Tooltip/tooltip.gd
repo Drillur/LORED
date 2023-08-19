@@ -40,3 +40,5 @@ func _on_tooltip_content_item_rect_changed():
 		size_flags_vertical = Control.SIZE_SHRINK_BEGIN
 		tooltip_parent.position.y = parent.global_position.y
 		tooltip_parent.position.y = clamp(tooltip_parent.position.y, 10, get_viewport().size.y - size.y - 10)
+	else:
+		tooltip_parent.position.y = parent.global_position.y

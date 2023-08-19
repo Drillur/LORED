@@ -19,6 +19,7 @@ func _on_tree_exited():
 @onready var texts = %Texts
 @onready var text = %Text
 @onready var texts_container = %TextsContainer
+@onready var edge = %Edge
 
 var color: Color:
 	set(val):
@@ -94,6 +95,14 @@ func show_background():
 func hide_background():
 	$bg.theme = gv.theme_invis
 	return self
+
+
+func hide_edge() -> void:
+	edge.hide()
+
+
+func show_edge() -> void:
+	edge.show()
 
 
 func attach_attribute(_attribute: Attribute) -> void:

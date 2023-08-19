@@ -4,8 +4,8 @@ extends Node
 
 var saved_vars := [
 	"sleep_unlocked",
-	"jobs_unlocked",
 	"loreds_by_key",
+	"advanced_details_unlocked",
 ]
 
 
@@ -85,7 +85,7 @@ const ANIMATION_FRAMES := {
 signal purchased_every_lored_once
 signal loreds_initialized
 signal sleep_became_unlocked
-signal jobs_just_unlocked
+signal advanced_details_just_unlocked
 
 var loreds := {}
 var loreds_by_key := {}
@@ -97,7 +97,7 @@ var loreds_are_initialized := false:
 			loreds_are_initialized = val
 			emit_signal("loreds_initialized")
 var sleep_unlocked := false
-var jobs_unlocked := false
+var advanced_details_unlocked := false # includes jobs and level_up tooltip
 
 var unlocked := []
 var active := []
@@ -112,16 +112,17 @@ func _ready():
 	for lored in LORED.Type.values():
 		loreds[lored] = LORED.new(lored)
 		loreds_by_key[loreds[lored].key] = loreds[lored]
+		connect("loreds_initialized", loreds[lored].loreds_initialized)
 	loreds_are_initialized = true
 	for lored in LORED.Type.values():
 		gv.add_lored_to_stage(loreds[lored].stage, lored)
 
 
 
-func close() -> void:
-	unlocked.clear()
-	active.clear()
-	active_and_awake.clear()
+#func close() -> void:
+#	unlocked.clear()
+#	active.clear()
+#	active_and_awake.clear()
 
 
 
@@ -157,28 +158,11 @@ func unlock_sleep() -> void:
 
 
 func unlock_jobs() -> void:
-	if not jobs_unlocked:
+	if not advanced_details_unlocked:
 		while await wi.wish_completed != Wish.Type.JOBS:
 			pass
-		jobs_unlocked = true
-		emit_signal("jobs_just_unlocked")
-
-
-
-
-
-
-
-# - Handy
-
-func start_sleep_emitter(lored: LORED) -> void:
-	var my_pass = lored.time_went_to_bed
-	while lored.asleep:
-		await get_tree().create_timer(1).timeout
-		if my_pass != lored.time_went_to_bed:
-			return
-		if lored.asleep:
-			lored.emit_signal("second_passed_while_asleep")
+		advanced_details_unlocked = true
+		emit_signal("advanced_details_just_unlocked")
 
 
 
@@ -201,14 +185,26 @@ func unlock_lored(_lored: int) -> void:
 	get_lored(_lored).unlock()
 
 
+func lored_unlocked(lored: int) -> void:
+	if not lored in unlocked:
+		unlocked.append(lored)
+		never_purchased.append(lored)
+
+
+func lored_locked(lored: int) -> void:
+	unlocked.erase(lored)
+	erase_lored_from_never_purchased(lored)
+
+
+func add_lored_to_never_purchased(lored: int) -> void:
+	if not lored in never_purchased:
+		never_purchased.append(lored)
+
+
 func erase_lored_from_never_purchased(lored: int) -> void:
 	never_purchased.erase(lored)
 	if purchased_every_unlocked_lored_once():
 		emit_signal("purchased_every_lored_once")
-
-
-func emote(_emote: Emote) -> void:
-	get_lored(_emote.speaker).emote(_emote)
 
 
 
@@ -217,12 +213,39 @@ func reset() -> void:
 	active_and_awake.clear()
 
 
+func lored_became_active(lored: int) -> void:
+	if not lored in active:
+		active.append(lored)
+		active_and_awake.append(lored)
+	erase_lored_from_never_purchased(lored)
+
+
+func lored_became_inactive(lored: int) -> void:
+	active.erase(lored)
+	active_and_awake.erase(lored)
+
+
+
+func lored_went_to_sleep(lored: int) -> void:
+	if lored in active_and_awake:
+		active_and_awake.erase(lored)
+
+
+func lored_woke_up(lored: int) -> void:
+	if not lored in active_and_awake:
+		active_and_awake.append(lored)
+
+
 
 
 # - Get
 
 func get_lored(lored: int) -> LORED:
 	return loreds[lored]
+
+
+func lored_is_emoting(lored: int) -> bool:
+	return get_lored(lored).emoting
 
 
 func get_random_active_lored() -> int:

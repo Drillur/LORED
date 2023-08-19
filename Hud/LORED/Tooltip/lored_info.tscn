@@ -101,14 +101,15 @@ text = "Level 14"
 fit_content = true
 autowrap_mode = 0
 
-[node name="VBoxContainer" type="GridContainer" parent="VBoxContainer/MarginContainer2/Details"]
+[node name="Advanced Details" type="GridContainer" parent="VBoxContainer/MarginContainer2/Details"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_constants/h_separation = 8
 theme_override_constants/v_separation = 8
 columns = 2
 
-[node name="output" type="RichTextLabel" parent="VBoxContainer/MarginContainer2/Details/VBoxContainer"]
+[node name="output" type="RichTextLabel" parent="VBoxContainer/MarginContainer2/Details/Advanced Details"]
 unique_name_in_owner = true
 layout_mode = 2
 theme = ExtResource("2_tohh5")
@@ -117,7 +118,7 @@ text = "Output: [b]14"
 fit_content = true
 autowrap_mode = 0
 
-[node name="input" type="RichTextLabel" parent="VBoxContainer/MarginContainer2/Details/VBoxContainer"]
+[node name="input" type="RichTextLabel" parent="VBoxContainer/MarginContainer2/Details/Advanced Details"]
 unique_name_in_owner = true
 layout_mode = 2
 theme = ExtResource("2_tohh5")
@@ -126,7 +127,7 @@ text = "Input: [b]14"
 fit_content = true
 autowrap_mode = 0
 
-[node name="haste" type="RichTextLabel" parent="VBoxContainer/MarginContainer2/Details/VBoxContainer"]
+[node name="haste" type="RichTextLabel" parent="VBoxContainer/MarginContainer2/Details/Advanced Details"]
 unique_name_in_owner = true
 layout_mode = 2
 theme = ExtResource("2_tohh5")
@@ -135,7 +136,7 @@ text = "Haste: [b]14"
 fit_content = true
 autowrap_mode = 0
 
-[node name="crit" type="RichTextLabel" parent="VBoxContainer/MarginContainer2/Details/VBoxContainer"]
+[node name="crit" type="RichTextLabel" parent="VBoxContainer/MarginContainer2/Details/Advanced Details"]
 unique_name_in_owner = true
 layout_mode = 2
 theme = ExtResource("2_tohh5")
@@ -182,12 +183,18 @@ theme_override_constants/margin_bottom = 10
 
 [node name="VBoxContainer2" type="VBoxContainer" parent="VBoxContainer/Fuel/MarginContainer4"]
 layout_mode = 2
+theme_override_constants/separation = 8
 
 [node name="Fuel Text" parent="VBoxContainer/Fuel/MarginContainer4/VBoxContainer2" instance=ExtResource("5_x3hn5")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Fuel Cost" type="RichTextLabel" parent="VBoxContainer/Fuel/MarginContainer4/VBoxContainer2"]
+[node name="Advanced Fuel Details" type="VBoxContainer" parent="VBoxContainer/Fuel/MarginContainer4/VBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Fuel Cost" type="RichTextLabel" parent="VBoxContainer/Fuel/MarginContainer4/VBoxContainer2/Advanced Fuel Details"]
 unique_name_in_owner = true
 layout_mode = 2
 theme = ExtResource("2_tohh5")
@@ -196,10 +203,10 @@ text = "Fuel Cost: [b]14[/b]/s"
 fit_content = true
 autowrap_mode = 0
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/Fuel/MarginContainer4/VBoxContainer2"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/Fuel/MarginContainer4/VBoxContainer2/Advanced Fuel Details"]
 layout_mode = 2
 
-[node name="Label" type="RichTextLabel" parent="VBoxContainer/Fuel/MarginContainer4/VBoxContainer2/HBoxContainer"]
+[node name="Label" type="RichTextLabel" parent="VBoxContainer/Fuel/MarginContainer4/VBoxContainer2/Advanced Fuel Details/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 0
 theme = ExtResource("2_tohh5")
@@ -208,16 +215,16 @@ text = "Fuel resource:"
 fit_content = true
 autowrap_mode = 0
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/Fuel/MarginContainer4/VBoxContainer2/HBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/Fuel/MarginContainer4/VBoxContainer2/Advanced Fuel Details/HBoxContainer"]
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/Fuel/MarginContainer4/VBoxContainer2/HBoxContainer/HBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/Fuel/MarginContainer4/VBoxContainer2/Advanced Fuel Details/HBoxContainer/HBoxContainer"]
 layout_mode = 2
 theme_override_constants/separation = 0
 alignment = 1
 
-[node name="Fuel Currency" type="RichTextLabel" parent="VBoxContainer/Fuel/MarginContainer4/VBoxContainer2/HBoxContainer/HBoxContainer/VBoxContainer"]
+[node name="Fuel Currency" type="RichTextLabel" parent="VBoxContainer/Fuel/MarginContainer4/VBoxContainer2/Advanced Fuel Details/HBoxContainer/HBoxContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 theme = ExtResource("2_tohh5")

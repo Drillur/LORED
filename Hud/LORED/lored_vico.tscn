@@ -208,6 +208,12 @@ grow_horizontal = 0
 grow_vertical = 0
 mouse_filter = 2
 
+[node name="Sleep Text Timer" type="Timer" parent="."]
+one_shot = true
+
+[node name="Sleep Timer" type="Timer" parent="."]
+one_shot = true
+
 [connection signal="item_rect_changed" from="." to="." method="_on_item_rect_changed"]
 [connection signal="tree_exited" from="." to="." method="_on_tree_exited"]
 [connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]

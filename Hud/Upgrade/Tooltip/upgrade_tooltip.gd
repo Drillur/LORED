@@ -35,20 +35,25 @@ func setup(data: Dictionary) -> void:
 	upgrade = data["upgrade"]
 	if not is_node_ready():
 		await ready
-	
 	title.text = upgrade.name
 	color = upgrade.color
 	
 	upgrade.connect("purchased_changed", purchased_changed)
+	upgrade.connect("just_locked", upgrade_just_locked)
+	upgrade.connect("just_unlocked", upgrade_just_unlocked)
+	
+	if upgrade.unlocked:
+		upgrade_just_unlocked()
+	else:
+		upgrade_just_locked()
+	
 	price.setup(upgrade.cost)
 	price.color = upgrade.color
-	purchased_changed()
+	purchased_changed(upgrade)
 	
 	if upgrade.has_required_upgrade:
-		required_upgrade.text = "[b][i]" + up.get_icon_and_name_text(upgrade.required_upgrade)
+		required_upgrade.text = "[center][b][i]" + up.get_icon_and_name_text(upgrade.required_upgrade)
 		required_upgrade_title_bg.modulate = up.get_color(upgrade.required_upgrade)
-	
-	show_locked_or_unlocked()
 	
 	if upgrade.has_description:
 		effect.hide()
@@ -70,22 +75,19 @@ func update_effect_text() -> void:
 	effect.text = upgrade.get_effect_text()
 
 
-func purchased_changed() -> void:
+func purchased_changed(_upgrade: Upgrade) -> void:
 	price.visible = not upgrade.purchased
 
 
+func upgrade_just_unlocked() -> void:
+	unlocked.show()
+	locked.hide()
 
-func show_locked_or_unlocked() -> void:
-	while not is_queued_for_deletion():
-		if upgrade.unlocked:
-			unlocked.show()
-			locked.hide()
-			await upgrade.just_locked
-		else:
-			unlocked.hide()
-			locked.show()
-			set_random_upgrade_description()
-			await upgrade.just_unlocked
+
+func upgrade_just_locked() -> void:
+	unlocked.hide()
+	locked.show()
+	set_random_upgrade_description()
 
 
 func set_random_upgrade_description() -> void:

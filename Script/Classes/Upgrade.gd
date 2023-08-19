@@ -1,5 +1,5 @@
 class_name Upgrade
-extends Resource
+extends RefCounted
 
 
 
@@ -429,8 +429,7 @@ signal just_unlocked
 signal just_locked
 signal unlocked_changed
 signal just_purchased
-signal just_unpurchased
-signal purchased_changed
+signal purchased_changed(upgrade)
 signal just_reset
 
 var type: int
@@ -478,13 +477,11 @@ var purchased := false:
 	set(val):
 		if purchased != val:
 			purchased = val
-			emit_signal("purchased_changed")
 			if val:
 				emit_signal("just_purchased")
 				saved_vars.append("effect_applied")
 				saved_vars.append("will_apply_effect")
-			else:
-				emit_signal("just_unpurchased")
+			emit_signal("purchased_changed", self)
 
 var will_apply_effect := false
 

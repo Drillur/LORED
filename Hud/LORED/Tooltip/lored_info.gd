@@ -21,6 +21,10 @@ extends MarginContainer
 @onready var fuel_cost = %"Fuel Cost"
 @onready var fuel_title_bg = %"fuel title bg"
 
+@onready var advanced_details = %"Advanced Details"
+@onready var advanced_fuel_details = %"Advanced Fuel Details"
+
+
 var lored: LORED
 
 var color: Color:
@@ -37,27 +41,30 @@ func setup(data: Dictionary) -> void:
 	color = lored.color
 	icon.texture = lored.icon
 	icon_shadow.texture = icon.texture
-	purchased_changed(lored.purchased)
-	lored.connect("purchased_changed", purchased_changed)
+	lored.connect("just_purchased", just_purchased)
 	lored.connect("leveled_up", update_level)
-	lored.output.connect("changed", update_output)
-	lored.input.connect("changed", update_input)
-	lored.haste.connect("changed", update_haste)
-	lored.crit.connect("changed", update_crit)
-	
-	purchased_changed(lored.purchased)
+	just_purchased()
 	update_level(lored.level)
-	update_output()
-	update_input()
-	update_haste()
-	update_crit()
+	if lv.advanced_details_unlocked:
+		advanced_details.show()
+		advanced_fuel_details.show()
+		lored.output.connect("changed", update_output)
+		lored.input.connect("changed", update_input)
+		lored.haste.connect("changed", update_haste)
+		lored.crit.connect("changed", update_crit)
+		lored.fuel_cost.connect("changed", update_fuel_cost)
+		update_output()
+		update_input()
+		update_haste()
+		update_crit()
+		update_fuel_cost()
+		fuel_currency_text.text = wa.get_icon_and_name_text(lored.fuel_currency)
+	else:
+		advanced_details.hide()
+		advanced_fuel_details.hide()
 	
 	fuel_text.setup(lored.fuel)
-	color = lored.color
 	fuel_title_bg.self_modulate = wa.get_color(lored.fuel_currency)
-	fuel_currency_text.text = wa.get_icon_and_name_text(lored.fuel_currency)
-	lored.fuel_cost.connect("changed", update_fuel_cost)
-	update_fuel_cost()
 
 
 
@@ -70,8 +77,8 @@ func update_level(_level: int) -> void:
 	level.text = "Level " + "[b]" + lored.get_level_text()
 
 
-func purchased_changed(purchased: bool) -> void:
-	if purchased:
+func just_purchased() -> void:
+	if lored.purchased:
 		details.show()
 		description.hide()
 		fuel.show()

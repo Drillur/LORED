@@ -227,10 +227,10 @@ func _on_dev_pressed():
 	i += 1
 	wa.add(Currency.Type.STONE, 10)
 	wa.add(Currency.Type.COAL, 10)
-#	lv.get_lored(LORED.Type.IRON).purchase()
-#	lv.get_lored(LORED.Type.COPPER).purchase()
-#	lv.get_lored(LORED.Type.COPPER_ORE).purchase()
-#	lv.get_lored(LORED.Type.IRON_ORE).purchase()
+	lv.get_lored(LORED.Type.IRON).purchase()
+	lv.get_lored(LORED.Type.COPPER).purchase()
+	lv.get_lored(LORED.Type.COPPER_ORE).purchase()
+	lv.get_lored(LORED.Type.IRON_ORE).purchase()
 
 var test_data: String
 func _on_dev_2_pressed():

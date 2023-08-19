@@ -18,6 +18,8 @@ extends MarginContainer
 @onready var cost_increase = %"Cost Increase"
 @onready var details = %Details
 @onready var description = %Description
+@onready var advanced_details = %"Advanced Details"
+@onready var details_container = %"Details Container"
 
 var flash_allowed := false
 var lored: LORED
@@ -37,24 +39,29 @@ func setup(data: Dictionary) -> void:
 	price.setup(lored.cost)
 	price.color = lored.color
 	
-	lored.connect("leveled_up", adjust_if_not_purchased)
+	lored.connect("just_purchased", just_purchased)
 	lored.connect("leveled_up", set_level_text)
-	lored.output.connect("changed", set_output_text)
-	lored.input.connect("changed", set_input_text)
-	lored.fuel_cost.connect("changed", set_fuel_cost_text)
-	lored.fuel.connect("total_changed", set_max_fuel_text)
 	
-	adjust_if_not_purchased(lored.level)
+	just_purchased()
+	
 	set_level_text(lored.level)
-	set_output_text()
-	set_input_text()
-	set_fuel_cost_text()
-	set_max_fuel_text()
+	if lv.advanced_details_unlocked:
+		advanced_details.show()
+		lored.output.connect("changed", set_output_text)
+		lored.input.connect("changed", set_input_text)
+		lored.fuel_cost.connect("changed", set_fuel_cost_text)
+		lored.fuel.connect("total_changed", set_max_fuel_text)
+		set_output_text()
+		set_input_text()
+		set_fuel_cost_text()
+		set_max_fuel_text()
+	else:
+		advanced_details.hide()
 	
 	flash_allowed = true
 
 
-func adjust_if_not_purchased(_level: int) -> void:
+func just_purchased() -> void:
 	if not lored.purchased:
 		details.hide()
 		title.text = "Invite"
@@ -79,44 +86,34 @@ func adjust_if_not_purchased(_level: int) -> void:
 		details.show()
 		description.hide()
 		title.text = "Level Up"
-		lored.disconnect("leveled_up", adjust_if_not_purchased)
+		lored.disconnect("just_purchased", just_purchased)
 
 
 func set_level_text(_level: int) -> void:
 	current_level.text = lored.get_level_text()
 	next_level.text = lored.get_next_level_text()
-	flash_green(current_level, next_level)
+	if flash_allowed:
+		gv.flash(details_container, lored.color)
 
 
 func set_output_text() -> void:
 	current_output.text = lored.get_output_text()# + "x"
 	next_output.text = lored.get_next_output_text()# + "x"
-	flash_green(current_output, next_output)
 
 
 func set_input_text() -> void:
 	current_input.text = lored.get_input_text()# + "x"
 	next_input.text = lored.get_next_input_text()# + "x"
-	flash_green(current_input, next_input)
 
 
 func set_fuel_cost_text() -> void:
 	current_fuel_cost.text = lored.get_fuel_cost_text()# + "x"
 	next_fuel_cost.text = lored.get_next_fuel_cost_text()# + "x"
-	flash_green(current_fuel_cost, next_fuel_cost)
 
 
 func set_max_fuel_text() -> void:
 	current_max_fuel.text = lored.get_max_fuel_text()
 	next_max_fuel.text = lored.get_next_max_fuel_text()
-	flash_green(current_max_fuel, next_max_fuel)
-
-
-
-func flash_green(node1: Node, node2: Node) -> void:
-	if flash_allowed:
-		gv.flash(node1, Color(0, 1, 0))
-		gv.flash(node2, Color(0, 1, 0))
 
 
 
