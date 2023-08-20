@@ -83,6 +83,11 @@ func _ready():
 	
 	SaveManager.connect("load_finished", load_finished)
 	SaveManager.connect("load_started", load_started)
+	
+	lv.connect("sleep_just_unlocked", sleep_lock)
+	lv.connect("advanced_details_just_unlocked", advanced_details_lock)
+	sleep_lock(false)
+	advanced_details_lock(false)
 
 
 
@@ -217,15 +222,6 @@ func lored_leveled_up(_level: int) -> void:
 	if lored.times_purchased == 1:
 		name_and_icon.hide()
 		currency.show()
-		
-		if lv.sleep_unlocked:
-			sleep.show()
-		else:
-			lv.connect("sleep_became_unlocked", sleep_became_unlocked)
-		if lv.advanced_details_unlocked:
-			jobs.show()
-		else:
-			lv.connect("advanced_details_just_unlocked", advanced_details_just_unlocked)
 	
 	if not lored.last_purchase_forced:
 		gv.throw_text_from_parent(
@@ -257,16 +253,16 @@ func flash_on_level_up(_level: int) -> void:
 	gv.flash(self, lored.color)
 
 
-func sleep_became_unlocked() -> void:
-	lv.disconnect("sleep_became_unlocked", sleep_became_unlocked)
-	sleep.show()
-	gv.flash(sleep, lored.color)
+func sleep_lock(unlocked: bool) -> void:
+	sleep.visible = unlocked
+	if unlocked:
+		gv.flash(sleep, lored.color)
 
 
-func advanced_details_just_unlocked() -> void:
-	lv.disconnect("advanced_details_just_unlocked", advanced_details_just_unlocked)
-	jobs.show()
-	gv.flash(jobs, lored.color)
+func advanced_details_lock(unlocked: bool) -> void:
+	jobs.visible = unlocked
+	if unlocked:
+		gv.flash(jobs, lored.color)
 
 
 

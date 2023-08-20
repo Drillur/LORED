@@ -4,8 +4,15 @@ extends RefCounted
 
 
 var saved_vars := [
-	"type", 
-	"ready_to_turn_in", 
+	"type",
+	"ready_to_turn_in",
+	"objective",
+	"giver",
+	"lucky_multiplier",
+	"help_icon_path",
+	"thank_icon_path",
+	"reward_count",
+	"rewards",
 ]
 
 
@@ -141,7 +148,10 @@ class Objective:
 	
 	signal completed
 	
-	var type: int
+	var type: int:
+		set(val):
+			type = val
+			key = Type.keys()[val]
 	var key: String
 	var icon: Texture
 	var icon_path: String:
@@ -161,7 +171,6 @@ class Objective:
 	
 	func _init(_type: int, data: Dictionary) -> void:
 		type = _type
-		key = Type.keys()[type]
 		
 		call("init_" + key, data)
 		
@@ -408,15 +417,15 @@ var container: VBoxContainer
 
 
 
-func _init(_type: int, do_not_init := false) -> void:
+func _init(_type: int, init := true) -> void:
 	type = _type
 	key = Type.keys()[type]
 	
 	SaveManager.connect("load_started", load_started)
 	
-	if do_not_init:
+	if not init:
 		objective = Objective.new(Objective.Type.LOADED_OBJECTIVE, {})
-		append_random_saved_vars()
+		objective.connect("completed", objective_completed)
 		return
 	
 	call("init_" + key)
@@ -494,8 +503,6 @@ func init_RANDOM() -> void:
 			"object_type": cur,
 			"amount": amounts[cur],
 		}))
-	
-	append_random_saved_vars()
 
 
 
@@ -721,18 +728,6 @@ func init_SOCCER_DUDE() -> void:
 func add_reward(reward: Reward) -> void:
 	rewards.append(reward)
 	reward_count = rewards.size()
-
-
-func append_random_saved_vars() -> void:
-	saved_vars.append("giver")
-	saved_vars.append("lucky_multiplier")
-	saved_vars.append("help_icon_path")
-	saved_vars.append("thank_icon_path")
-	saved_vars.append("objective")
-	saved_vars.append("reward_count")
-	saved_vars.append("rewards")
-
-
 
 
 

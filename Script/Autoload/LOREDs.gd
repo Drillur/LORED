@@ -84,8 +84,8 @@ const ANIMATION_FRAMES := {
 
 signal purchased_every_lored_once
 signal loreds_initialized
-signal sleep_became_unlocked
-signal advanced_details_just_unlocked
+signal sleep_just_unlocked(unlocked)
+signal advanced_details_just_unlocked(unlocked)
 
 var loreds := {}
 var loreds_by_key := {}
@@ -96,8 +96,16 @@ var loreds_are_initialized := false:
 		if loreds_are_initialized != val:
 			loreds_are_initialized = val
 			emit_signal("loreds_initialized")
-var sleep_unlocked := false
-var advanced_details_unlocked := false # includes jobs and level_up tooltip
+var sleep_unlocked := false:
+	set(val):
+		if sleep_unlocked != val:
+			sleep_unlocked = val
+			sleep_just_unlocked.emit(val)
+var advanced_details_unlocked := false: # includes jobs and level_up tooltip
+	set(val):
+		if advanced_details_unlocked != val:
+			advanced_details_unlocked = val
+			advanced_details_just_unlocked.emit(val)
 
 var unlocked := []
 var active := []
@@ -116,13 +124,19 @@ func _ready():
 	loreds_are_initialized = true
 	for lored in LORED.Type.values():
 		gv.add_lored_to_stage(loreds[lored].stage, lored)
+	
+	wi.wish_completed.connect(sleep_lock)
+	wi.wish_uncompleted.connect(sleep_lock)
+	wi.wish_completed.connect(job_lock)
+	wi.wish_uncompleted.connect(job_lock)
 
 
 
-#func close() -> void:
-#	unlocked.clear()
-#	active.clear()
-#	active_and_awake.clear()
+func close() -> void:
+	unlocked.clear()
+	active.clear()
+	active_and_awake.clear()
+	never_purchased.clear()
 
 
 
@@ -142,27 +156,20 @@ func loaded_game_start() -> void:
 
 
 func start() -> void:
-	unlock_sleep()
-	unlock_jobs()
+	pass
 
 
 
 # - Signal
 
-func unlock_sleep() -> void:
-	if not sleep_unlocked:
-		while await wi.wish_completed != Wish.Type.UPGRADE_STONE:
-			pass
-		sleep_unlocked = true
-		emit_signal("sleep_became_unlocked")
+func sleep_lock(wish: int) -> void:
+	if wish == Wish.Type.UPGRADE_STONE:
+		sleep_unlocked = wi.is_wish_completed(wish)
 
 
-func unlock_jobs() -> void:
-	if not advanced_details_unlocked:
-		while await wi.wish_completed != Wish.Type.JOBS:
-			pass
-		advanced_details_unlocked = true
-		emit_signal("advanced_details_just_unlocked")
+func job_lock(wish: int) -> void:
+	if wish == Wish.Type.JOBS:
+		advanced_details_unlocked = wi.is_wish_completed(wish)
 
 
 
@@ -188,7 +195,8 @@ func unlock_lored(_lored: int) -> void:
 func lored_unlocked(lored: int) -> void:
 	if not lored in unlocked:
 		unlocked.append(lored)
-		never_purchased.append(lored)
+		if not is_lored_purchased(lored):
+			never_purchased.append(lored)
 
 
 func lored_locked(lored: int) -> void:

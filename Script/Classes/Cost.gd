@@ -85,8 +85,10 @@ func currency_decreased() -> void:
 
 func recheck() -> void:
 	for cur in cost:
-		wa.currency[cur].count.disconnect("increased", currency_increased)
-		wa.currency[cur].count.disconnect("decreased", currency_decreased)
+		if wa.currency[cur].count.increased.is_connected(currency_increased):
+			wa.currency[cur].count.disconnect("increased", currency_increased)
+		if wa.currency[cur].count.decreased.is_connected(currency_decreased):
+			wa.currency[cur].count.disconnect("decreased", currency_decreased)
 	affordable = can_afford()
 	if affordable:
 		notify_if_decreased()

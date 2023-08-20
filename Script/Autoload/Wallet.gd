@@ -8,7 +8,7 @@ var saved_vars := [
 ]
 
 
-signal currency_just_unlocked(cur)
+signal currency_just_unlocked(cur, unlocked)
 signal wallet_unlocked_changed(unlocked)
 
 var currency := {}
@@ -34,6 +34,7 @@ func _ready():
 
 
 func close() -> void:
+	wallet_unlocked = false
 	unlocked_currencies.clear()
 	total_weight = 0
 
@@ -75,13 +76,13 @@ func subtract_from_player(cur: int, amount) -> void:
 
 
 func unlock_currency(cur: int) -> void:
-	var _currency := get_currency(cur)
 	if cur in unlocked_currencies:
 		return
+	var _currency := get_currency(cur)
 	_currency.unlock()
 	unlocked_currencies.append(cur)
 	total_weight += _currency.weight
-	emit_signal("currency_just_unlocked", cur)
+	currency_just_unlocked.emit(cur, true)
 
 
 func unlock_currencies(curs: Array) -> void:

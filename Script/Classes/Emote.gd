@@ -157,10 +157,10 @@ func _init(_type: int) -> void:
 	else:
 		call("await_" + key)
 	
-	connect("finished", emote_finished)
+	finished.connect(emote_finished)
 
 
-func emote_finished() -> void:
+func emote_finished(_emote: Emote) -> void:
 	if not is_random():
 		em.completed_emotes.append(type)
 
@@ -775,7 +775,8 @@ func RANDOM_JOULES() -> void:
 		5: dialogue = "Cars! Cars! Cars! Cars! Cars! Cars! Cars!"
 		6:
 			dialogue = "Anyone need an oil change?"
-			reply = Type.JOULES6_OIL0
+			if lv.is_lored_unlocked(LORED.Type.OIL):
+				reply = Type.JOULES6_OIL0
 		7: dialogue = "Have you heard about the new Mazda Corada Tesla Chevy Chevy Tahoe Master Blaster Zipper Street Crippler with an all-electric diesel 50,000 horse power V90 engine capable of 1 to 60 in 0.13 giggywiggynano seconds? They just announced it. It will hit the market in 2420, or even sooner! I already sent a downpayment on it, I know it will be the future of all cars."
 
 
@@ -1138,7 +1139,7 @@ func finished_displaying_text() -> void:
 
 
 func finish() -> void:
-	emit_signal("finished", self)
+	finished.emit(self)
 
 
 # - Get

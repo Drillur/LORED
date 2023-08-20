@@ -46,19 +46,14 @@ func setup(_cost: Cost) -> void:
 	
 	if cost.affordable:
 		bar.hide_edge()
-		bar.progress = 1.0
-		await get_tree().physics_frame
-		bar.progress = 1.0
+		bar.set_deferred("progress", 1.0)
 	else:
 		connect_calls()
 	
 	cost.connect("became_affordable", became_affordable)
 	cost.connect("became_unaffordable", became_unaffordable)
 	
-	for i in 3:
-		await get_tree().physics_frame
-	
-	bar.animating_changes = true
+	bar.set_deferred("animating_changes", true)
 
 
 

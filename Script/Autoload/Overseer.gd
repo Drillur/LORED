@@ -150,10 +150,9 @@ func reload_scene() -> void:
 
 
 func close_all() -> void:
-	password = 0.0
-	em.close()
-	#wi.close()
-	#up.close()
+	#em.close()
+	wi.close()
+	#up.close() doesnt exist
 	lv.close()
 	wa.close()
 	close()
@@ -161,11 +160,11 @@ func close_all() -> void:
 
 func open_all() -> void:
 	open()
-#	wa.open()
-#	lv.open()
-#	up.open()
-#	wi.open()
-	em.open()
+	#wa.open() doesnt exist
+	#lv.open() same
+	#up.open() yup
+	#wi.open()
+#	em.open()
 
 
 func close() -> void:
@@ -274,56 +273,6 @@ func update_discord_details(text: String) -> void:
 func update_discord_state(text: String) -> void:
 	discord_sdk.state = text
 	discord_sdk.refresh()
-
-
-
-## - Update Queue
-#
-#var update_queue := []
-#var update_cooldown := []
-#
-#
-#func update(method: Callable) -> void:
-#	var my_pass := gv.password
-#
-#	if method in update_cooldown:
-#		if not method in update_queue:
-#			update_queue.append(method)
-#		return
-#
-#	if not method.is_valid():
-#		return
-#
-#	update_cooldown.append(method)
-#
-#	var obj := method.get_object()
-#	if obj.has_signal("visibility_changed"):
-#		if not method.get_object().visible:
-#			await method.get_object().showed_or_removed
-#
-#			if my_pass != gv.password:
-#				return
-#
-#			if not method.is_valid():
-#				if method in update_queue:
-#					update_queue.erase(method)
-#				return
-#
-#	if method in update_queue:
-#		update_queue.erase(method)
-#
-#	if my_pass != gv.password:
-#		return
-#
-#	method.call()
-#	await get_tree().create_timer(0.016).timeout
-#
-#	if my_pass != gv.password:
-#		return
-#
-#	update_cooldown.erase(method)
-#	if method in update_queue:
-#		update(method)
 
 
 
@@ -439,7 +388,7 @@ class TimeUnit:
 			if amount.less(division):
 				break
 			amount.d(division)
-			type += 1
+			type = type + 1
 		return amount.roundDown().text + " " + unit_text(type, amount)
 	
 	static func unit_text(type: int, amount: Big) -> String:

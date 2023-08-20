@@ -101,7 +101,7 @@ var upgrade_container: UpgradeContainer:
 			upgrade_container.set_vico(upgrade)
 
 signal all_upgrades_initialized
-signal menu_unlocked(menu)
+signal menu_unlocked_changed(menu, unlocked)
 signal upgrade_purchased(type)
 
 var upgrades := {}
@@ -124,18 +124,10 @@ func _ready():
 
 
 
-func close() -> void:
-	upgrades.clear()
-	upgrade_menus.clear()
-
-
-
-
 # - Action
 
 func unlock_menu(menu: int) -> void:
 	upgrade_menus[menu].unlock()
-	emit_signal("menu_unlocked", menu)
 
 
 func add_upgrade_to_menu(menu: int, upgrade: int) -> void:

@@ -28,14 +28,19 @@ func _ready():
 	_on_tab_changed(0)
 	
 	up.connect("upgrade_purchased", update_count)
-	up.get_upgrade_menu(UpgradeMenu.Type.MALIGNANT).unlocked_changed.connect(malignant_upgrade_menu_unlocked_changed)
-	malignant_upgrade_menu_unlocked_changed(up.is_upgrade_menu_unlocked(UpgradeMenu.Type.MALIGNANT))
+	up.menu_unlocked_changed.connect(menu_unlocked_changed)
+	
+	for i in UpgradeMenu.Type.size():
+		menu_unlocked_changed(i, false)
+	
 	s1n.connect("mouse_entered", show_s1n_avatar_tooltip)
 	s1n.connect("mouse_exited", gv.clear_tooltip)
 
 
-func malignant_upgrade_menu_unlocked_changed(unlocked: bool) -> void:
-	tabs.tabs_visible = unlocked
+func menu_unlocked_changed(menu: int, unlocked: bool) -> void:
+	if menu == UpgradeMenu.Type.MALIGNANT:
+		tabs.tabs_visible = unlocked
+	tabs.set_tab_hidden(menu, not unlocked)
 
 
 func _on_tab_changed(tab):

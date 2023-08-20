@@ -544,6 +544,9 @@ func _init(_type: int) -> void:
 			else:
 				upgrade_menu = UpgradeMenu.Type.S4M
 	
+	if special:
+		gv.get("stage" + str(stage)).just_reset.connect(finalize_purchase)
+	
 	if type != Type.ROUTINE:
 		up.add_upgrade_to_menu(upgrade_menu, type)
 	
@@ -962,13 +965,11 @@ func purchase() -> void:
 	purchased = true
 	if special:
 		will_apply_effect = true
-		var my_pass = gv.password
-		await gv.get("stage" + str(stage)).just_reset
-		if (
-			not will_apply_effect or not purchased
-			or my_pass != gv.password
-		):
-			return
+	else:
+		finalize_purchase()
+
+
+func finalize_purchase() -> void:
 	apply()
 	times_purchased += 1
 	up.emit_signal("upgrade_purchased", type)

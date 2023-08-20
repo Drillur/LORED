@@ -4,25 +4,34 @@ extends RefCounted
 
 
 var saved_vars := [
-	"unlocked",
 	"purchased",
+	"unlocked",
 	"level",
 	#asleep - based on an option, append or erase this from this array
 ]
 
 func load_started() -> void:
 	stop_job()
+	unlocked = false
+	purchased = false
 
 
 func load_finished() -> void:
 	if unlocked:
-		emit_signal("just_unlocked")
+		lv.lored_unlocked(type)
+		just_unlocked.emit()
+	else:
+		lv.lored_locked(type)
+		just_locked.emit()
 	set_level_to(level)
 	if purchased:
 		#emit_signal("leveled_up", level)
 		for currency in produced_currencies:
 			wa.unlock_currency(currency)
 		work()
+		lv.lored_became_active(type)
+	else:
+		lv.lored_became_inactive(type)
 
 
 

@@ -33,17 +33,22 @@ func setup(cur: int) -> void:
 	
 	icon_and_name.text = currency.icon_text + " " + currency.colored_name
 	
-	if not currency.unlocked:
+	currency.unlocked_changed.connect(display_and_update)
+	display_and_update(currency.unlocked)
+
+
+func display_and_update(unlocked: bool) -> void:
+	if unlocked:
+		show()
+		currency.count.connect("changed", update_count)
+		currency.net_rate.connect("changed", update_rate)
+		update_count()
+		update_rate()
+	else:
 		hide()
-		currency.just_unlocked.connect(display_and_update)
-
-
-func display_and_update() -> void:
-	show()
-	currency.count.connect("changed", update_count)
-	currency.net_rate.connect("changed", update_rate)
-	update_count()
-	update_rate()
+		if currency.count.changed.is_connected(update_count):
+			currency.count.disconnect("changed", update_count)
+			currency.net_rate.disconnect("changed", update_rate)
 
 
 

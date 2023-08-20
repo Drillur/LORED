@@ -92,7 +92,7 @@ func _init(mant = 1.0, e := 0):
 			exponent = int(scientific[1])
 		else:
 			exponent = 0
-	elif mant is Big:
+	elif mant is Big or mant is Dictionary:
 		mantissa = mant.mantissa
 		exponent = mant.exponent
 	else:

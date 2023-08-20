@@ -8,15 +8,24 @@ var saved_vars := [
 	"random_wish_limit",
 	"completed_random_wishes",
 	"wishes",
+	"active_random_wishes",
 ]
 
 
 func load_finished() -> void:
 	for wish in wishes:
 		new_pending_wish(wish)
+	
+	wish_ended.connect(find_new_main_wish)
+	wish_ended.connect(find_new_random_wish)
+	
+	for i in random_wish_limit:
+		find_new_random_wish()
 
 
+signal wish_ended
 signal wish_completed(type)
+signal wish_uncompleted(type)
 
 var wish_vico := preload("res://Hud/Wish/wish_vico.tscn")
 var pending_wish_vico := preload("res://Hud/Wish/wish_pending.tscn")
@@ -35,23 +44,23 @@ var completed_random_wishes := 0
 var random_wish_limit := 0:
 	set(val):
 		random_wish_limit = val
-		for i in val:
-			find_new_random_wish()
 
 
 
 func _ready() -> void:
 	SaveManager.connect("load_finished", load_finished)
 	lv.purchased_every_lored_once.connect(find_new_main_wish)
-	wish_completed.connect(find_new_main_wish)
-	wish_completed.connect(find_new_random_wish)
+	wish_ended.connect(find_new_main_wish)
+	wish_ended.connect(find_new_random_wish)
 
 
 
 func close() -> void:
+	wish_ended.disconnect(find_new_main_wish)
+	wish_ended.disconnect(find_new_random_wish)
 	wishes.clear()
-	completed_wishes.clear()
 	active_wish_types.clear()
+	uncomplete_all_wishes()
 	random_wish_limit = 0
 	active_random_wishes = 0
 	completed_random_wishes = 0
@@ -79,7 +88,7 @@ func start() -> void:
 
 # - Actions
 
-func find_new_main_wish(_nothing = 0) -> void:
+func find_new_main_wish(_nothing = null) -> void:
 	if not lv.purchased_every_unlocked_lored_once():
 		return
 	if main_wish_container.get_child_count() > 0:
@@ -115,7 +124,7 @@ func select_main_wish() -> int:
 	return -1
 
 
-func find_new_random_wish(_nothing = 0) -> void:
+func find_new_random_wish(_nothing = null) -> void:
 	if active_random_wishes < random_wish_limit:
 		var wish = Wish.new(Wish.Type.RANDOM)
 		wishes.append(wish)
@@ -148,13 +157,14 @@ func new_wish_vico(wish: Wish, pending_vico_index: int) -> void:
 func start_new_wish_after_wish_completed(wish: Wish) -> void:
 	wishes.erase(wish)
 	active_wish_types.erase(wish.type)
-	if wish.is_main_wish():
-		complete_wish(wish.type)
-	else:
-		active_random_wishes -= 1
-		if wish.turned_in:
+	if wish.turned_in:
+		if wish.is_main_wish():
+			complete_wish(wish.type)
+		else:
 			completed_random_wishes += 1
-	wish_completed.emit(wish.type)
+	if not wish.is_main_wish():
+		active_random_wishes -= 1
+	wish_ended.emit()
 
 
 
@@ -162,6 +172,13 @@ func start_new_wish_after_wish_completed(wish: Wish) -> void:
 func complete_wish(type: int) -> void:
 	if not type in completed_wishes:
 		completed_wishes.append(type)
+		wish_completed.emit(type)
+
+
+func uncomplete_all_wishes() -> void:
+	for type in completed_wishes:
+		wish_uncompleted.emit(type)
+	completed_wishes.clear()
 
 
 

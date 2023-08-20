@@ -55,8 +55,6 @@ signal stopped_working
 signal completed
 signal cut_short
 
-var killed := false
-
 var type: int
 var lored: int
 
@@ -483,7 +481,7 @@ func assign_lored(_lored: int) -> void:
 	lv.get_lored(lored).fuel.connect("increased", fuel_increased)
 	lv.get_lored(lored).fuel.connect("decreased", fuel_decreased)
 	if type == Type.REFUEL:
-		var half = Big.new(lv.get_lored(lored).fuel.get_total()).d(2).toFloat()
+		var half = Big.new(lv.get_lored(lored).fuel.get_total()).do_not_emit().d(2).toFloat()
 		has_required_currencies = true
 		required_currencies = Cost.new({
 			lv.get_lored(lored).fuel_currency: Value.new(half)
@@ -564,15 +562,6 @@ func another_job_started(job: Job) -> void:
 
 # - Actions
 
-func kill() -> void:
-	killed = true
-	lv.get_lored(lored).disconnect("job_started", another_job_started)
-	lv.get_lored(lored).disconnect("stopped_working", subtract_current_rate)
-	if has_required_currencies:
-		required_currencies.kill()
-		required_currencies.disconnect("became_affordable", required_currency_became_affordable)
-		required_currencies = null
-
 
 func can_start() -> bool:
 	if lv.get_lored(lored).fuel.get_current_percent() <= lv.FUEL_DANGER and type != Type.REFUEL:
@@ -587,11 +576,15 @@ func can_start() -> bool:
 
 
 func can_start_job_special_requirements_REFUEL() -> bool:
-	if lv.get_lored(lored).fuel.get_current_percent() > lv.FUEL_WARNING:
+	var _lored = lv.get_lored(lored)
+	if _lored.fuel.get_current_percent() > lv.FUEL_WARNING:
 		return false
-	if lv.get_lored(lored).type != LORED.Type.COAL:
-		if lv.get_lored(LORED.Type.COAL).fuel.get_current_percent() <= lv.FUEL_WARNING:
-			return false
+	if (
+		_lored.fuel_currency == Currency.Type.COAL
+		and _lored.type != LORED.Type.COAL
+		and lv.get_lored(LORED.Type.COAL).fuel.get_current_percent() <= lv.FUEL_WARNING
+	):
+		return false
 	return true
 
 
@@ -824,9 +817,3 @@ func produces_currency(cur: int) -> bool:
 	return cur in produced_currencies.keys()
 
 
-func get_produced_rates() -> Dictionary:
-	if not added_total_rate:
-		print_debug("This is apparently possible. You need to create and then await signal just_added_total_rate")
-	var arr = []
-	
-	return arr

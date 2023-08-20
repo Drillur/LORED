@@ -15,7 +15,7 @@ extends MarginContainer
 @onready var dismiss_node = %Dismiss
 @onready var ready_flash_timer = $"Ready Flash Timer"
 
-signal ended(wish)
+signal ended(wish, successful_completion)
 
 var wish: Wish
 
@@ -66,6 +66,8 @@ func setup(_wish: Wish) -> void:
 	
 	if not wish.ready_to_turn_in:
 		wish.became_ready_to_turn_in.connect(wish_is_ready)
+	else:
+		wish_is_ready()
 
 
 

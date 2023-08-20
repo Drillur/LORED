@@ -6,6 +6,10 @@ var saved_vars := [
 	"unlocked",
 ]
 
+func load_finished() -> void:
+	if unlocked:
+		wa.unlock_currency(type)
+
 
 enum Type {
 	STONE,
@@ -62,7 +66,7 @@ enum Type {
 }
 
 signal increased(amount)
-signal just_unlocked
+signal unlocked_changed(unlocked)
 
 var type: int
 var stage: int
@@ -88,8 +92,8 @@ var unlocked := false:
 	set(val):
 		if unlocked != val:
 			unlocked = val
+			unlocked_changed.emit(val)
 			if val:
-				emit_signal("just_unlocked")
 				saved_vars.append("count")
 				saved_vars.append("subtracted_by_loreds")
 				saved_vars.append("subtracted_by_player")
@@ -129,6 +133,8 @@ func _init(_type: int = 0) -> void:
 		icon = preload("res://Sprites/Hud/Delete.png")
 	icon_text = "[img=<15>]" + icon.get_path() + "[/img]"
 	icon_and_name_text = icon_text + " " + name
+	
+	SaveManager.load_finished.connect(load_finished)
 
 
 func init_stage() -> void:

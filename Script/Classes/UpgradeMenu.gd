@@ -37,6 +37,7 @@ var unlocked := false:
 		if unlocked != val:
 			unlocked = val
 			unlocked_changed.emit(val)
+			up.menu_unlocked_changed.emit(type, val)
 
 var upgrades := []
 var purchased_upgrades := []

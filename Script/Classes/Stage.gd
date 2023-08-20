@@ -54,13 +54,6 @@ func _init(_type: int) -> void:
 
 
 
-func close() -> void:
-	times_reset = 0
-	unlocked = false
-
-
-
-
 func NO_STAGE():
 	name = "No Stage"
 	color = gv.game_color

@@ -24,8 +24,8 @@ func _ready():
 	
 	upgrades_button.hide()
 	
-	up.menu_unlocked.connect(flash_upgrade_button)
-	up.menu_unlocked.connect(display_upgrades_button)
+	up.menu_unlocked_changed.connect(flash_upgrade_button)
+	up.menu_unlocked_changed.connect(display_upgrades_button)
 	
 	gv.tooltip_parent = tooltip_parent
 	gv.texts_parent = control
@@ -185,15 +185,15 @@ func stage_changed(stage: int) -> void:
 
 # - Ref
 
-func display_upgrades_button(_menu: int) -> void:
-	upgrades_button.show()
-	if up.menu_unlocked.is_connected(display_upgrades_button):
-		up.menu_unlocked.disconnect(display_upgrades_button)
+func display_upgrades_button(_menu: int, unlocked: bool) -> void:
+	if _menu == UpgradeMenu.Type.NORMAL:
+		upgrades_button.visible = unlocked
 
 
-func flash_upgrade_button(unlocked_menu: int) -> void:
-	select_upgrade_menu_tab(unlocked_menu, false)
-	gv.flash(upgrades_button, up.get_menu_color(unlocked_menu))
+func flash_upgrade_button(_menu: int, unlocked: bool) -> void:
+	if unlocked:
+		select_upgrade_menu_tab(_menu, false)
+		gv.flash(upgrades_button, up.get_menu_color(_menu))
 
 
 
@@ -214,7 +214,7 @@ func load_game() -> void:
 
 
 func select_upgrade_menu_tab(tab: int, _show = true) -> void:
-	if up.is_menu_unlocked(tab) or gv.dev_mode:
+	if up.is_menu_unlocked(tab):# or gv.dev_mode:
 		if _show:
 			upgrade_container.show()
 			menu.hide()
