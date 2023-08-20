@@ -11,6 +11,7 @@ extends MarginContainer
 @onready var timer = $Timer
 @onready var pose_only_bg = %"pose bg"
 @onready var display_text_timer = $display_text_timer
+@onready var dialogue_container = %"Dialogue Container"
 
 var emote: Emote
 
@@ -43,6 +44,7 @@ func setup(_emote: Emote) -> void:
 		pose.hide()
 	
 	if emote.has_dialogue():
+		dialogue_container.show()
 		dialogue_text.text = "[center][i]" + emote.dialogue
 		var text_length = dialogue_text.get_parsed_text().length()
 		dialogue_text.custom_minimum_size.x = min(180, 30 + (text_length * 3))
@@ -53,7 +55,7 @@ func setup(_emote: Emote) -> void:
 		#printt(line_count, dialogue_text.custom_minimum_size, emote.dialogue)
 		custom_minimum_size.y = max(52, dialogue_text.custom_minimum_size.y + 20)
 	else:
-		dialogue_text.hide()
+		dialogue_container.hide()
 	
 	
 	if emote.has_dialogue():

@@ -43,7 +43,6 @@ const RANDOM_UPGRADE_DESCRIPTION := [
 	"Diablo 4 is deleted.",
 	"Reminds you to drink water!",
 	"peepee vagina",
-	"poopy fart doodoo",
 	"Texas Roadhouse announces the Wholly Honest Organization, a world-wide collaboration and agreement by every restaurant which states that excessive customer service is forthwith banned. If a customer wants a refund for their half-eaten sandwich, the restaurant will now have the right to ask the customer if \"their mother ever loved them.\" If a party of 6 or more arrive without a reservation, the restaurant shall owe it to the world to tell the party to \"get bent.\" If a customer states that he or she is going to be \"posting this on Yelp,\" the premises reserves the right to ask them if they \"have any friends in real life\". This plan is expected to arrive at every restaurant by 2025.",
 	"Kentaro Miura returns to our mortal plane in the form of Skull Knight until his life's work is completed.",
 	"Removes your enthusiasm ceiling. You can now enjoy things like you did when you were 13.",
@@ -64,7 +63,7 @@ const RANDOM_UPGRADE_DESCRIPTION := [
 	"Jeremy Soule creates a 30-hour soundtrack for a little game called LORED.",
 	"This upgrade could do ANYTHING. It could unlock the WIN command. You don't know.",
 	"Improves the quality of every animation.",
-	"LORED dev Haste x2. Next update will come much sooner.",
+	"LORED dev Haste [b]x2[/b]. Next update will come much sooner.",
 	"Fuel is cancelled.",
 	"Unlocks the MINE feature. Enter the mine, deal damage to ores, and collect your loot!",
 	"Unlocks the REALISTIC feature. The game ends.",
@@ -229,3 +228,7 @@ func is_upgrade_purchased(upgrade: int) -> bool:
 
 func is_upgrade_unlocked(upgrade: int) -> bool:
 	return upgrades[upgrade].unlocked
+
+
+func is_upgrade_menu_unlocked(menu: int) -> bool:
+	return upgrade_menus[menu].unlocked

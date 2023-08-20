@@ -963,9 +963,10 @@ func automatic_purchase() -> void:
 
 
 func purchase() -> void:
-	times_purchased += 1
-	level_up()
-	first_purchase()
+	if unlocked:
+		times_purchased += 1
+		level_up()
+		first_purchase()
 
 
 func first_purchase() -> void:
@@ -1052,7 +1053,7 @@ func emote_now(emote: Emote) -> void:
 	emote.connect("finished", emote_finished)
 
 
-func emote_finished(emote: Emote) -> void:
+func emote_finished(_emote: Emote) -> void:
 	emoting = false
 
 
@@ -1084,7 +1085,7 @@ func emote_next_in_line() -> void:
 		return
 	
 	if emote_queue.size() > 0:
-		var emote: Emote = emote_queue[0]
+		var emote: Emote = emote_queue[emote_queue.size() - 1]
 		em.emote_now(emote)
 		emote_queue.erase(emote)
 		if emote_queue.size() > 0:

@@ -12,8 +12,10 @@ extends MarginContainer
 @onready var button = %Button
 @onready var right = %RightUp
 @onready var top_center = %TopCenter
-
 @onready var dismiss_node = %Dismiss
+@onready var ready_flash_timer = $"Ready Flash Timer"
+
+signal ended(wish)
 
 var wish: Wish
 
@@ -22,6 +24,8 @@ var wish: Wish
 func _ready() -> void:
 	_on_resized()
 	dismiss_node.hide()
+	ready_flash_timer.timeout.connect(ready_flash)
+	tree_exited.connect(die)
 
 
 func _on_resized() -> void:
@@ -60,7 +64,8 @@ func setup(_wish: Wish) -> void:
 	
 	gv.flash(self, wish.objective.color)
 	
-	await_ready()
+	if not wish.ready_to_turn_in:
+		wish.became_ready_to_turn_in.connect(wish_is_ready)
 
 
 
@@ -79,16 +84,16 @@ func update_progress_text() -> void:
 	progress_text.text = wish.objective.progress.get_text()
 
 
-func await_ready() -> void:
-	if not wish.ready_to_turn_in:
-		await wish.became_ready_to_turn_in
+func wish_is_ready() -> void:
 	ready_border.show()
 	wish.objective.progress.disconnect("changed", update_progress_text)
 	progress_text.text = "Complete!"
-	
-	while not is_queued_for_deletion():
-		await gv.get_tree().create_timer(10).timeout
-		gv.flash(self, wish.objective.color)
+	ready_flash_timer.start()
+	ready_flash()
+
+
+func ready_flash() -> void:
+	gv.flash(self, wish.objective.color)
 
 
 
@@ -127,3 +132,7 @@ func dismiss() -> void:
 		dismiss_node.show()
 		await get_tree().create_timer(2).timeout
 		dismiss_node.hide()
+
+
+func die() -> void:
+	ended.emit(wish)

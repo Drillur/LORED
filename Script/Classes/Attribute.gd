@@ -26,9 +26,23 @@ var cap_current := true
 var current: Value
 var total: Value
 
+var full := false:
+	set(val):
+		if full != val:
+			full = val
+			if val:
+				filled.emit()
+
+var empty := false:
+	set(val):
+		if empty != val:
+			empty = val
+			if val:
+				emptied.emit()
 
 
-func _init(base_value = 0.0) -> void:
+
+func _init(base_value = 1.0) -> void:
 	current = Value.new(base_value)
 	current.connect("increased", emit_increase)
 	current.connect("increased", emit_current_increase)
@@ -43,6 +57,9 @@ func _init(base_value = 0.0) -> void:
 	total.connect("decreased", emit_total_decrease)
 	total.connect("changed", emit_changed)
 	total.connect("changed", emit_total_changed)
+	
+	current.connect("changed", check_if_full)
+	current.connect("changed", check_if_empty)
 
 
 
@@ -81,6 +98,21 @@ func emit_total_decrease() -> void:
 
 
 
+func check_if_full() -> void:
+	if current.current.greater_equal(total.current):
+		full = true
+	else:
+		full = false
+
+
+func check_if_empty() -> void:
+	if current.current.equal(0):
+		empty = true
+	else:
+		empty = false
+
+
+
 # - Actions
 
 func reset():
@@ -100,16 +132,13 @@ func do_not_cap_current() -> void:
 func add(amount) -> void:
 	amount = set_amount_to_deficit_if_necessary(amount)
 	current.add(amount)
-	if get_current().greater_equal(get_total()):
-		emit_signal("filled")
 
 
 func subtract(amount) -> void:
 	if not amount is Big:
 		amount = Big.new(amount)
 	current.subtract(amount)
-	if get_current().equal(0):
-		emit_signal("emptied")
+	full = false
 
 
 func add_percent(percent: float) -> void:
@@ -193,10 +222,8 @@ func set_to(amount) -> void:
 	if not amount is Big:
 		amount = Big.new(amount)
 	current.set_to(amount)
-	if get_current().greater_equal(get_total()):
-		if cap_current:
-			current.set_to(get_total())
-		emit_signal("filled")
+	if full and cap_current:
+		current.set_to(get_total())
 
 
 func set_to_percent(percent: float, with_random_range := false) -> void:
@@ -277,14 +304,6 @@ func get_deficit_text_plus_one() -> String:
 
 func get_text() -> String:
 	return get_current_text() + "/" + get_total_text()
-
-
-func is_full() -> bool:
-	return get_current().greater_equal(get_total())
-
-
-func is_not_full() -> bool:
-	return get_current().less(get_total())
 
 
 func is_empty() -> bool:

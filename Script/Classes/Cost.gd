@@ -183,14 +183,12 @@ func get_eta() -> Big:
 
 
 func get_progress_percent() -> float:
-	var total := Big.new(0).do_not_emit()
-	var current := Big.new(0).do_not_emit()
+	var lowest_percent := 1.0
 	for cur in cost:
 		var count = wa.get_count(cur)
 		var _cost = cost[cur].get_value()
-		if count.greater_equal(_cost):
-			current.a(_cost)
-		else:
-			current.a(count)
-		total.a(_cost)
-	return min(1, current.percent(total))
+		if count.less(_cost):
+			var percent = count.percent(_cost)
+			if percent < lowest_percent:
+				lowest_percent = percent
+	return lowest_percent

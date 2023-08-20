@@ -34,7 +34,6 @@ func setup(_cost: Cost) -> void:
 		content[cur] = price_and_currency.instantiate()
 		content[cur].setup(cur, cost.cost[cur])
 		content_parent.add_child(content[cur])
-	connect_calls()
 	
 	bar.hide_background().remove_markers()
 	bar.set_initial_progress(cost.get_progress_percent())
@@ -46,25 +45,28 @@ func setup(_cost: Cost) -> void:
 	set_eta_text()
 	
 	if cost.affordable:
-		became_affordable()
+		bar.hide_edge()
+		bar.progress = 1.0
+		await get_tree().physics_frame
+		bar.progress = 1.0
+	else:
+		connect_calls()
 	
 	cost.connect("became_affordable", became_affordable)
 	cost.connect("became_unaffordable", became_unaffordable)
 	
-	await get_tree().physics_frame
-	await get_tree().physics_frame
-	await get_tree().physics_frame
+	for i in 3:
+		await get_tree().physics_frame
+	
 	bar.animating_changes = true
 
 
 
 func update_progress_bar() -> void:
-	var progress_percent = cost.get_progress_percent()
 	bar.progress = cost.get_progress_percent()
 
 
 func became_affordable() -> void:
-	bar.progress = 1.0
 	bar.hide_edge()
 	disconnect_calls()
 

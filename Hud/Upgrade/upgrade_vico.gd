@@ -63,6 +63,7 @@ func purchased_changed(_upgrade: Upgrade) -> void:
 	if upgrade.purchased:
 		button.button.mouse_default_cursor_shape = Control.CURSOR_ARROW
 		button.set_theme_invis()
+		check.hide()
 	else:
 		button.button.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 		button.set_theme_standard()

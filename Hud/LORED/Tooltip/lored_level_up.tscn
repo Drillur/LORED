@@ -100,7 +100,7 @@ text = "4"
 fit_content = true
 autowrap_mode = 0
 
-[node name="Level2" type="RichTextLabel" parent="VBoxContainer/Details Container/MarginContainer/VBoxContainer/Details"]
+[node name="Level" type="RichTextLabel" parent="VBoxContainer/Details Container/MarginContainer/VBoxContainer/Details"]
 layout_mode = 2
 size_flags_horizontal = 0
 theme = ExtResource("1_b4267")
@@ -119,15 +119,7 @@ text = "[b]5"
 fit_content = true
 autowrap_mode = 0
 
-[node name="Advanced Details" type="GridContainer" parent="VBoxContainer/Details Container/MarginContainer/VBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 4
-theme_override_constants/h_separation = 10
-theme_override_constants/v_separation = 8
-columns = 4
-
-[node name="Output" type="RichTextLabel" parent="VBoxContainer/Details Container/MarginContainer/VBoxContainer/Advanced Details"]
+[node name="Output" type="RichTextLabel" parent="VBoxContainer/Details Container/MarginContainer/VBoxContainer/Details"]
 layout_mode = 2
 size_flags_horizontal = 0
 theme = ExtResource("1_b4267")
@@ -136,7 +128,7 @@ text = "Output"
 fit_content = true
 autowrap_mode = 0
 
-[node name="Current Output" type="RichTextLabel" parent="VBoxContainer/Details Container/MarginContainer/VBoxContainer/Advanced Details"]
+[node name="Current Output" type="RichTextLabel" parent="VBoxContainer/Details Container/MarginContainer/VBoxContainer/Details"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 0
@@ -146,7 +138,7 @@ text = "4"
 fit_content = true
 autowrap_mode = 0
 
-[node name="Level3" type="RichTextLabel" parent="VBoxContainer/Details Container/MarginContainer/VBoxContainer/Advanced Details"]
+[node name="x" type="RichTextLabel" parent="VBoxContainer/Details Container/MarginContainer/VBoxContainer/Details"]
 layout_mode = 2
 size_flags_horizontal = 0
 theme = ExtResource("1_b4267")
@@ -155,7 +147,7 @@ text = "x2"
 fit_content = true
 autowrap_mode = 0
 
-[node name="Next Output" type="RichTextLabel" parent="VBoxContainer/Details Container/MarginContainer/VBoxContainer/Advanced Details"]
+[node name="Next Output" type="RichTextLabel" parent="VBoxContainer/Details Container/MarginContainer/VBoxContainer/Details"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 0
@@ -165,7 +157,7 @@ text = "[b]8"
 fit_content = true
 autowrap_mode = 0
 
-[node name="Input" type="RichTextLabel" parent="VBoxContainer/Details Container/MarginContainer/VBoxContainer/Advanced Details"]
+[node name="Input" type="RichTextLabel" parent="VBoxContainer/Details Container/MarginContainer/VBoxContainer/Details"]
 layout_mode = 2
 size_flags_horizontal = 0
 theme = ExtResource("1_b4267")
@@ -174,7 +166,7 @@ text = "Input"
 fit_content = true
 autowrap_mode = 0
 
-[node name="Current Input" type="RichTextLabel" parent="VBoxContainer/Details Container/MarginContainer/VBoxContainer/Advanced Details"]
+[node name="Current Input" type="RichTextLabel" parent="VBoxContainer/Details Container/MarginContainer/VBoxContainer/Details"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 0
@@ -184,7 +176,7 @@ text = "4"
 fit_content = true
 autowrap_mode = 0
 
-[node name="Level4" type="RichTextLabel" parent="VBoxContainer/Details Container/MarginContainer/VBoxContainer/Advanced Details"]
+[node name="x3" type="RichTextLabel" parent="VBoxContainer/Details Container/MarginContainer/VBoxContainer/Details"]
 layout_mode = 2
 size_flags_horizontal = 0
 theme = ExtResource("1_b4267")
@@ -193,7 +185,7 @@ text = "x2"
 fit_content = true
 autowrap_mode = 0
 
-[node name="Next Input" type="RichTextLabel" parent="VBoxContainer/Details Container/MarginContainer/VBoxContainer/Advanced Details"]
+[node name="Next Input" type="RichTextLabel" parent="VBoxContainer/Details Container/MarginContainer/VBoxContainer/Details"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 0
@@ -203,7 +195,7 @@ text = "[b]8"
 fit_content = true
 autowrap_mode = 0
 
-[node name="Fuel Cost" type="RichTextLabel" parent="VBoxContainer/Details Container/MarginContainer/VBoxContainer/Advanced Details"]
+[node name="Fuel Cost" type="RichTextLabel" parent="VBoxContainer/Details Container/MarginContainer/VBoxContainer/Details"]
 layout_mode = 2
 size_flags_horizontal = 0
 theme = ExtResource("1_b4267")
@@ -212,7 +204,7 @@ text = "Fuel Cost"
 fit_content = true
 autowrap_mode = 0
 
-[node name="Current Fuel Cost" type="RichTextLabel" parent="VBoxContainer/Details Container/MarginContainer/VBoxContainer/Advanced Details"]
+[node name="Current Fuel Cost" type="RichTextLabel" parent="VBoxContainer/Details Container/MarginContainer/VBoxContainer/Details"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 0
@@ -222,7 +214,7 @@ text = "4"
 fit_content = true
 autowrap_mode = 0
 
-[node name="Level5" type="RichTextLabel" parent="VBoxContainer/Details Container/MarginContainer/VBoxContainer/Advanced Details"]
+[node name="x4" type="RichTextLabel" parent="VBoxContainer/Details Container/MarginContainer/VBoxContainer/Details"]
 layout_mode = 2
 size_flags_horizontal = 0
 theme = ExtResource("1_b4267")
@@ -231,7 +223,7 @@ text = "x2"
 fit_content = true
 autowrap_mode = 0
 
-[node name="Next Fuel Cost" type="RichTextLabel" parent="VBoxContainer/Details Container/MarginContainer/VBoxContainer/Advanced Details"]
+[node name="Next Fuel Cost" type="RichTextLabel" parent="VBoxContainer/Details Container/MarginContainer/VBoxContainer/Details"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 0
@@ -241,7 +233,7 @@ text = "[b]8"
 fit_content = true
 autowrap_mode = 0
 
-[node name="Fuel Cost2" type="RichTextLabel" parent="VBoxContainer/Details Container/MarginContainer/VBoxContainer/Advanced Details"]
+[node name="Fuel Cost2" type="RichTextLabel" parent="VBoxContainer/Details Container/MarginContainer/VBoxContainer/Details"]
 layout_mode = 2
 size_flags_horizontal = 0
 theme = ExtResource("1_b4267")
@@ -250,7 +242,7 @@ text = "Max Fuel"
 fit_content = true
 autowrap_mode = 0
 
-[node name="Current Max Fuel" type="RichTextLabel" parent="VBoxContainer/Details Container/MarginContainer/VBoxContainer/Advanced Details"]
+[node name="Current Max Fuel" type="RichTextLabel" parent="VBoxContainer/Details Container/MarginContainer/VBoxContainer/Details"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 0
@@ -260,7 +252,7 @@ text = "4"
 fit_content = true
 autowrap_mode = 0
 
-[node name="Level6" type="RichTextLabel" parent="VBoxContainer/Details Container/MarginContainer/VBoxContainer/Advanced Details"]
+[node name="x5" type="RichTextLabel" parent="VBoxContainer/Details Container/MarginContainer/VBoxContainer/Details"]
 layout_mode = 2
 size_flags_horizontal = 0
 theme = ExtResource("1_b4267")
@@ -269,7 +261,7 @@ text = "x2"
 fit_content = true
 autowrap_mode = 0
 
-[node name="Next Max Fuel" type="RichTextLabel" parent="VBoxContainer/Details Container/MarginContainer/VBoxContainer/Advanced Details"]
+[node name="Next Max Fuel" type="RichTextLabel" parent="VBoxContainer/Details Container/MarginContainer/VBoxContainer/Details"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 0
@@ -279,7 +271,7 @@ text = "[b]8"
 fit_content = true
 autowrap_mode = 0
 
-[node name="Fuel Cost3" type="RichTextLabel" parent="VBoxContainer/Details Container/MarginContainer/VBoxContainer/Advanced Details"]
+[node name="Fuel Cost3" type="RichTextLabel" parent="VBoxContainer/Details Container/MarginContainer/VBoxContainer/Details"]
 layout_mode = 2
 size_flags_horizontal = 0
 theme = ExtResource("1_b4267")
@@ -288,7 +280,7 @@ text = "Cost"
 fit_content = true
 autowrap_mode = 0
 
-[node name="Current Max Fuel2" type="RichTextLabel" parent="VBoxContainer/Details Container/MarginContainer/VBoxContainer/Advanced Details"]
+[node name="Current Max Fuel2" type="RichTextLabel" parent="VBoxContainer/Details Container/MarginContainer/VBoxContainer/Details"]
 layout_mode = 2
 size_flags_horizontal = 0
 theme = ExtResource("1_b4267")
@@ -296,7 +288,7 @@ bbcode_enabled = true
 fit_content = true
 autowrap_mode = 0
 
-[node name="Cost Increase" type="RichTextLabel" parent="VBoxContainer/Details Container/MarginContainer/VBoxContainer/Advanced Details"]
+[node name="Cost Increase" type="RichTextLabel" parent="VBoxContainer/Details Container/MarginContainer/VBoxContainer/Details"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 0
@@ -306,7 +298,7 @@ text = "x3"
 fit_content = true
 autowrap_mode = 0
 
-[node name="Next Max Fuel2" type="RichTextLabel" parent="VBoxContainer/Details Container/MarginContainer/VBoxContainer/Advanced Details"]
+[node name="Next Max Fuel2" type="RichTextLabel" parent="VBoxContainer/Details Container/MarginContainer/VBoxContainer/Details"]
 layout_mode = 2
 size_flags_horizontal = 0
 theme = ExtResource("1_b4267")

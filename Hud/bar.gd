@@ -81,6 +81,7 @@ func remove_markers():
 	return self
 
 
+
 func remove_texts():
 	using_texts = false
 	texts.queue_free()
@@ -197,8 +198,8 @@ func update_text() -> void:
 
 
 func set_initial_progress(value: float):
-	await get_tree().physics_frame
-	await get_tree().physics_frame
+	for i in 2:
+		await get_tree().physics_frame
 	progress_bar.size = Vector2(
 		value * size.x,
 		size.y

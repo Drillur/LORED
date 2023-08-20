@@ -95,11 +95,14 @@ func _ready() -> void:
 
 # - Clock
 
-signal clock_updated
+signal session_incremented(session)
 
 var last_clock: float
 var current_clock: float
-var session_duration: int
+var session_duration: int:
+	set(val):
+		session_duration = val
+		session_incremented.emit(session_duration)
 var total_duration_played: int
 
 func _notification(what) -> void:
@@ -119,7 +122,6 @@ func session_tracker() -> void:
 	add_child(t)
 	while true:
 		current_clock = Time.get_unix_time_from_system()
-		emit_signal("clock_updated")
 		t.start(1)
 		await t.timeout
 		session_duration += 1
@@ -172,6 +174,7 @@ func close() -> void:
 
 func open() -> void:
 	password = Time.get_unix_time_from_system()
+	session_tracker()
 
 
 
@@ -375,6 +378,11 @@ func get_tooltip() -> Node:
 		if is_instance_valid(tooltip_content):
 			return tooltip_content
 	return null
+
+
+
+func get_timer(duration: float) -> SceneTreeTimer:
+	return get_tree().create_timer(duration)
 
 
 

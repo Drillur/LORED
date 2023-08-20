@@ -46,7 +46,10 @@ func setup(data: Dictionary) -> void:
 	set_face(wish.help_icon)
 	setup_reward_text()
 	
-	set_to_thank_text_when_ready()
+	if not wish.ready_to_turn_in:
+		wish.became_ready_to_turn_in.connect(set_to_thank_text)
+	else:
+		set_to_thank_text()
 	
 	if wish.is_main_wish():
 		info.queue_free()
@@ -54,9 +57,7 @@ func setup(data: Dictionary) -> void:
 		lucky_multiplier.text = "[center][i]Lucky multiplier: [b]" + Big.get_float_text(wish.lucky_multiplier)
 
 
-func set_to_thank_text_when_ready() -> void:
-	if not wish.ready_to_turn_in:
-		await wish.became_ready_to_turn_in
+func set_to_thank_text() -> void:
 	set_text(wish.thank_text)
 	set_face(wish.thank_icon)
 

@@ -35,8 +35,10 @@ func setup(cur: int) -> void:
 	
 	if not currency.unlocked:
 		hide()
-		await currency.just_unlocked
-	
+		currency.just_unlocked.connect(display_and_update)
+
+
+func display_and_update() -> void:
 	show()
 	currency.count.connect("changed", update_count)
 	currency.net_rate.connect("changed", update_rate)

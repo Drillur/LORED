@@ -167,18 +167,17 @@ func _sizeCheck(mant):
 		printerr("BIG ERROR: MANTISSA TOO LARGE, PLEASE USE EXPONENT OR SCIENTIFIC NOTATION")
 
 
-func _typeCheck(n):
-	if typeof(n) == TYPE_INT or typeof(n) == TYPE_FLOAT:
+func type_check(n):
+	if n is int or n is float:
 		return {"mantissa":float(n), "exponent":int(0)}
-	elif typeof(n) == TYPE_STRING:
+	elif n is String:
 		var split = n.split("e")
 		return {"mantissa":float(split[0]), "exponent":int(0 if split.size() == 1 else split[1])}
-	else:
-		return n
+	return n
 
 
 func a(n) -> Big:
-	n = _typeCheck(n)
+	n = type_check(n)
 	if n.mantissa == 0.0 and n.exponent == 0:
 		return self
 	_sizeCheck(n.mantissa)
@@ -195,7 +194,7 @@ func a(n) -> Big:
 
 
 func s(n) -> Big:
-	n = _typeCheck(n)
+	n = type_check(n)
 	if n.mantissa == 0.0 and n.exponent == 0:
 		return self
 	_sizeCheck(n.mantissa)
@@ -212,7 +211,7 @@ func s(n) -> Big:
 
 
 func m(n) -> Big:
-	n = _typeCheck(n)
+	n = type_check(n)
 	if n.mantissa == 1.0 and n.exponent == 0:
 		return self
 	_sizeCheck(n.mantissa)
@@ -232,7 +231,7 @@ func m(n) -> Big:
 
 
 func d(n) -> Big:
-	n = _typeCheck(n)
+	n = type_check(n)
 	if n.mantissa == 1.0 and n.exponent == 0:
 		return self
 	_sizeCheck(n.mantissa)
@@ -252,7 +251,7 @@ func d(n) -> Big:
 
 
 func set_to(n) -> Big:
-	n = _typeCheck(n)
+	n = type_check(n)
 	_sizeCheck(n.mantissa)
 	var new_exponent = n.exponent
 	var new_mantissa = n.mantissa
@@ -280,7 +279,7 @@ func set_to(n) -> Big:
 
 
 func add_pending(n) -> void:
-	n = _typeCheck(n)
+	n = type_check(n)
 	_sizeCheck(n.mantissa)
 	var exp_diff = n.exponent - exponent
 	if exp_diff < 248:
@@ -293,7 +292,7 @@ func add_pending(n) -> void:
 
 
 func subtract_pending(n) -> void:
-	n = _typeCheck(n)
+	n = type_check(n)
 	_sizeCheck(n.mantissa)
 	var exp_diff = n.exponent - exponent #abs?
 	if exp_diff < 248:
@@ -305,14 +304,17 @@ func subtract_pending(n) -> void:
 	calculate(pending)
 
 
-func percent(n):
-	
-	# gets self's percent of n
-	
-	n = _typeCheck(n)
-	
+func percent(n) -> float:
+	n = type_check(n)
 	if is_zero_approx(n.mantissa):
-		# prevents division of 0
+		printerr("Don't divide by 0 you fucking stupid bastard")
+		return 0.0
+	
+	if exponent > n.exponent:
+		return 1.0
+	
+	var exp_diff = n.exponent - exponent
+	if exp_diff > 9:
 		return 0.0
 	
 	var bla = {"mantissa": float(mantissa), "exponent": int(exponent)}
@@ -322,7 +324,7 @@ func percent(n):
 	
 	calculate(bla)
 	
-	return max(0.0, bla.mantissa * pow(10, bla.exponent))
+	return clampf(bla.mantissa * pow(10, bla.exponent), 0.0, 1.0)
 
 
 func powerInt(n: int):
@@ -403,7 +405,7 @@ func squareRoot() -> Big:
 
 
 func modulo(n) -> Big:
-	n = _typeCheck(n)
+	n = type_check(n)
 	_sizeCheck(n.mantissa)
 	var big = {"mantissa":mantissa, "exponent":exponent}
 	d(n)
@@ -440,7 +442,7 @@ func calculate(big):
 
 
 func equal(n) -> bool:
-	n = _typeCheck(n)
+	n = type_check(n)
 	calculate(n)
 	return n.exponent == exponent and is_equal_approx(n.mantissa, mantissa)
 
@@ -454,7 +456,7 @@ func greater_equal(n) -> bool:
 
 
 func less(n) -> bool:
-	n = _typeCheck(n)
+	n = type_check(n)
 	calculate(n)
 	if mantissa == 0 and (n.mantissa > MANTISSA_PRECISSION or mantissa < MANTISSA_PRECISSION) and n.mantissa == 0:
 		return false
@@ -470,7 +472,7 @@ func less(n) -> bool:
 
 
 func less_equal(n) -> bool:
-	n = _typeCheck(n)
+	n = type_check(n)
 	calculate(n)
 	if less(n):
 		return true

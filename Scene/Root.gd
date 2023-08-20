@@ -22,6 +22,11 @@ func _ready():
 	if not gv.dev_mode:
 		tooltip_position_display.queue_free()
 	
+	upgrades_button.hide()
+	
+	up.menu_unlocked.connect(flash_upgrade_button)
+	up.menu_unlocked.connect(display_upgrades_button)
+	
 	gv.tooltip_parent = tooltip_parent
 	gv.texts_parent = control
 	lv.lored_container = lored_container
@@ -42,8 +47,6 @@ func _ready():
 	wallet_button.set_icon(load("res://Sprites/Hud/ResourceViewer.png"))
 	wallet_button.remove_check().remove_icon_shadow()
 	gv.connect("stage_changed", stage_changed)
-	
-	display_and_repeatedly_flash_upgrades_button()
 	
 	gv.root_ready = true
 	
@@ -182,14 +185,15 @@ func stage_changed(stage: int) -> void:
 
 # - Ref
 
-func display_and_repeatedly_flash_upgrades_button() -> void:
-	if not up.is_menu_unlocked(UpgradeMenu.Type.NORMAL):
-		upgrades_button.hide()
-		while true:
-			var _menu = await up.menu_unlocked
-			upgrades_button.show()
-			select_upgrade_menu_tab(_menu, false)
-			gv.flash(upgrades_button, up.get_menu_color(_menu))
+func display_upgrades_button(_menu: int) -> void:
+	upgrades_button.show()
+	if up.menu_unlocked.is_connected(display_upgrades_button):
+		up.menu_unlocked.disconnect(display_upgrades_button)
+
+
+func flash_upgrade_button(unlocked_menu: int) -> void:
+	select_upgrade_menu_tab(unlocked_menu, false)
+	gv.flash(upgrades_button, up.get_menu_color(unlocked_menu))
 
 
 

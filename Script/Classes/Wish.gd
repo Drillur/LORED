@@ -5,7 +5,6 @@ extends RefCounted
 
 var saved_vars := [
 	"type", 
-	"ready_to_start", 
 	"ready_to_turn_in", 
 ]
 
@@ -70,7 +69,11 @@ class Reward:
 	func init_UPGRADE_MENU(data: Dictionary) -> void:
 		object_type = data["object_type"]
 		var upgrade_menu: UpgradeMenu = up.get_upgrade_menu(object_type)
-		text = upgrade_menu.icon_and_name_text() + " Upgrade Menu"
+		if object_type == UpgradeMenu.Type.NORMAL:
+			text = "[img=<15>]res://Sprites/Hud/upgrades.png[/img] Upgrade Menu"
+		else:
+			text = upgrade_menu.icon_and_name_text() + " Upgrade Menu"
+		text = upgrade_menu.color_text % text
 	
 	
 	func init_JUST_TEXT(data: Dictionary) -> void:
@@ -166,7 +169,7 @@ class Objective:
 		progress.set_to(0)
 	
 	
-	func init_LOADED_OBJECTIVE(data: Dictionary) -> void:
+	func init_LOADED_OBJECTIVE(_data: Dictionary) -> void:
 		progress = Attribute.new(1)
 	
 	
@@ -215,30 +218,43 @@ class Objective:
 	# - Actions
 	
 	func start() -> void:
-		if has_method("already_completed_" + key):
-			if call("already_completed_" + key):
-				progress.set_to_percent(1)
-				emit_signal("completed")
-				return
-		if has_method("stop_"  + key):
-			connect("completed", get("stop_" + key))
-		call("start_" + key)
-		await progress.filled
-		emit_signal("completed")
+		progress.filled.connect(progress_filled)
+		if has_method("already_completed_" + key) and call("already_completed_" + key):
+			progress.set_to_percent(1)
+		else:
+			if has_method("stop_"  + key):
+				connect("completed", get("stop_" + key))
+			call("start_" + key)
+	
+	
+	func progress_filled() -> void:
+		completed.emit()
+	
 	
 	
 	func start_LORED_LEVELED_UP() -> void:
-		await lv.get_lored(object_type).leveled_up
+		lv.get_lored(object_type).leveled_up.connect(update_LORED_LEVELED_UP)
+	
+	
+	func update_LORED_LEVELED_UP(_level: int) -> void:
 		progress.add(1)
+		lv.get_lored(object_type).leveled_up.disconnect(update_LORED_LEVELED_UP)
+	
 	
 	
 	func already_completed_ACCEPTABLE_FUEL() -> bool:
 		return lv.get_lored(object_type).fuel.get_current_percent() >= 0.75
+	
+	
 	func start_ACCEPTABLE_FUEL() -> void:
 		lv.get_lored(object_type).fuel.connect("changed", update_ACCEPTABLE_FUEL)
 		update_ACCEPTABLE_FUEL()
+	
+	
 	func update_ACCEPTABLE_FUEL() -> void:
 		progress.set_to(lv.get_lored(object_type).fuel.get_current_percent() * 100)
+	
+	
 	func stop_ACCEPTABLE_FUEL() -> void:
 		lv.get_lored(object_type).fuel.disconnect("changed", update_ACCEPTABLE_FUEL)
 		
@@ -246,17 +262,26 @@ class Objective:
 	
 	func start_COLLECT_CURRENCY() -> void:
 		wa.get_currency(object_type).connect("increased", update_COLLECT_CURRENCY)
-		await completed
-		wa.get_currency(object_type).disconnect("increased", update_COLLECT_CURRENCY)
+	
+	
 	func update_COLLECT_CURRENCY(amount_increased: Big) -> void:
 		progress.add(amount_increased)
+		if progress.full:
+			wa.get_currency(object_type).disconnect("increased", update_COLLECT_CURRENCY)
+	
 	
 	
 	func start_SLEEP() -> void:
-		while progress.is_not_full():
-			await lv.get_lored(object_type).spent_one_second_asleep
-			progress.add(1)
-		wake_up_sleeping_lored()
+		lv.get_lored(object_type).spent_one_second_asleep.connect(update_SLEEP)
+	
+	
+	func update_SLEEP() -> void:
+		progress.add(1)
+		if progress.full:
+			lv.get_lored(object_type).spent_one_second_asleep.connect(update_SLEEP)
+			wake_up_sleeping_lored()
+	
+	
 	
 	func wake_up_sleeping_lored() -> void:
 		if type == Type.SLEEP and not lored_was_already_asleep:
@@ -266,9 +291,14 @@ class Objective:
 	func already_completed_UPGRADE_PURCHASED() -> bool:
 		return up.is_upgrade_purchased(object_type)
 	
+	
 	func start_UPGRADE_PURCHASED() -> void:
-		await up.get_upgrade(object_type).just_purchased
+		up.get_upgrade(object_type).just_purchased.connect(update_UPGRADE_PURCHASED)
+	
+	
+	func update_UPGRADE_PURCHASED() -> void:
 		progress.set_to(1)
+		up.get_upgrade(object_type).just_purchased.disconnect(update_UPGRADE_PURCHASED)
 	
 	
 	
@@ -337,7 +367,7 @@ enum Type {
 signal became_ready_to_turn_in
 signal just_turned_in
 signal just_dismissed
-signal just_ended
+signal just_ended(wish)
 signal became_ready_to_start
 
 var type: int
@@ -347,9 +377,7 @@ var key: String
 var lucky_multiplier := 1.0
 
 var turned_in := false
-var ready_to_start := false
 var ready_to_turn_in := false
-var skip_wish := false
 var killed := false
 
 var help_text: String
@@ -376,6 +404,7 @@ var objective: Objective
 
 var vico: Node
 
+var container: VBoxContainer
 
 
 
@@ -394,31 +423,10 @@ func _init(_type: int, do_not_init := false) -> void:
 	
 	objective.connect("completed", objective_completed)
 	
-	if not has_method("await_" + key):
-		ready_to_start = true
-		emit_signal("became_ready_to_start")
-	else:
-		call("await_" + key)
-		await became_ready_to_start
-		ready_to_start = true
-	
 	if help_icon == null:
 		help_icon_path = "res://Sprites/reactions/Angry.png"
 	if thank_icon == null:
 		thank_icon_path = "res://Sprites/reactions/Test.png"
-	
-	if not skip_wish:
-		start()
-	
-
-
-
-func await_STUFF() -> void:
-	await gv.get_tree().create_timer(5).timeout
-	if lv.get_lored(LORED.Type.COAL).purchased:
-		skip_wish = true
-		wi.complete_wish(type)
-	emit_signal("became_ready_to_start")
 
 
 func idk(x: float) -> float:
@@ -463,15 +471,15 @@ func init_RANDOM() -> void:
 	objective = Objective.new(obj_type, data)
 	
 	
-	var reward_count = 1
+	var _reward_count = 1
 	while randi() % 100 < 40:
-		reward_count += 1
-	rewards_modifier /= reward_count
-	lucky_multiplier = 1 + (randf() * reward_count) # if 7 rewards, x 1-8
+		_reward_count += 1
+	rewards_modifier /= _reward_count
+	lucky_multiplier = 1 + (randf() * _reward_count) # if 7 rewards, x 1-8
 	rewards_modifier *= lucky_multiplier
 	
 	var amounts := {}
-	for reward in reward_count:
+	for reward in _reward_count:
 		var amount: Big
 		var currency: Currency = wa.get_currency(wa.get_weighted_random_currency())
 		amount = Big.new(currency.gain_rate.get_total()).m(rewards_modifier).roundDown()
@@ -748,15 +756,14 @@ func turn_in() -> void:
 		rew.receive()
 	wa.add(Currency.Type.JOY, 1)
 	turned_in = true
-	emit_signal("just_turned_in")
-	emit_signal("just_ended")
+	end()
 
 
 func dismiss() -> void:
 	objective.wake_up_sleeping_lored()
 	wa.add(Currency.Type.GRIEF, 1)
 	emit_signal("just_dismissed")
-	emit_signal("just_ended")
+	end()
 
 
 func kill() -> void:
@@ -764,7 +771,11 @@ func kill() -> void:
 	if is_instance_valid(vico):
 		vico.queue_free()
 	killed = true
-	emit_signal("just_ended")
+	end()
+
+
+func end() -> void:
+	just_ended.emit(self)
 
 
 
@@ -777,6 +788,10 @@ func flash_something() -> void:
 
 
 # - Get
+
+static func get_key(_type: int) -> String:
+	return Type.keys()[_type]
+
 
 func get_color() -> Color:
 	return objective.color

@@ -599,7 +599,7 @@ func RANDOM_COPPER_ORE() -> void:
 		6:
 			var text = lv.get_icon_and_name_text(LORED.Type.COPPER)
 			var text2 = lv.get_icon_and_name_text(LORED.Type.IRON_ORE)
-			dialogue = "%s, stop! Ah, see? Now a fire's started. See, that's now fixing to consume what little oxygen we have left down here, boss. Yep, takes a real man to brave these absolute twisted work conditions, boss. Complete and total, unspeakably-twisted work conditions. Just have %s shoot me now, boss, just have him shoot me now." % [text, text2]
+			dialogue = "%s, stop! Ah, see? Now a fire's started. See, that's now fixing to consume what little oxygen we have left down here, boss. Yep, takes a real man to brave these absolute twisted work conditions, boss. Complete and totally, unspeakably-twisted work conditions. Just have %s shoot me now, boss, just have him shoot me now." % [text, text2]
 			reply = Type.COPPER_ORE6_REPLY
 		5:
 			var text = lv.get_icon_and_name_text(LORED.Type.IRON_ORE)

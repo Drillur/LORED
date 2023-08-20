@@ -20,7 +20,7 @@ enum Type {
 	S4M,
 }
 
-signal just_unlocked
+signal unlocked_changed(unlocked)
 
 var type: int
 var key: String
@@ -32,7 +32,11 @@ var color: Color
 var color_text: String
 
 var times_reset := 0
-var unlocked := false
+var unlocked := false:
+	set(val):
+		if unlocked != val:
+			unlocked = val
+			unlocked_changed.emit(val)
 
 var upgrades := []
 var purchased_upgrades := []
@@ -101,7 +105,6 @@ func add_upgrade(upgrade: int) -> void:
 
 func unlock() -> void:
 	unlocked = true
-	emit_signal("just_unlocked")
 
 
 # - Get

@@ -429,6 +429,7 @@ signal just_unlocked
 signal just_locked
 signal unlocked_changed
 signal just_purchased
+signal just_unpurchased
 signal purchased_changed(upgrade)
 signal just_reset
 
@@ -481,6 +482,8 @@ var purchased := false:
 				emit_signal("just_purchased")
 				saved_vars.append("effect_applied")
 				saved_vars.append("will_apply_effect")
+			else:
+				just_unpurchased.emit()
 			emit_signal("purchased_changed", self)
 
 var will_apply_effect := false
@@ -929,7 +932,6 @@ func add_effected_lored(lored: int) -> void:
 	effect.add_effected_lored(lored)
 	await up.all_upgrades_initialized
 	lv.get_lored(lored).add_influencing_upgrade(type)
-	lv.get_lored(lored).unpurchased_upgrades.append(type)
 
 
 func add_effected_stage(_stage: int) -> void:

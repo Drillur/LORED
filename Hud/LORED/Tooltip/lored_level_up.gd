@@ -18,7 +18,6 @@ extends MarginContainer
 @onready var cost_increase = %"Cost Increase"
 @onready var details = %Details
 @onready var description = %Description
-@onready var advanced_details = %"Advanced Details"
 @onready var details_container = %"Details Container"
 
 var flash_allowed := false
@@ -45,18 +44,6 @@ func setup(data: Dictionary) -> void:
 	just_purchased()
 	
 	set_level_text(lored.level)
-	if lv.advanced_details_unlocked:
-		advanced_details.show()
-		lored.output.connect("changed", set_output_text)
-		lored.input.connect("changed", set_input_text)
-		lored.fuel_cost.connect("changed", set_fuel_cost_text)
-		lored.fuel.connect("total_changed", set_max_fuel_text)
-		set_output_text()
-		set_input_text()
-		set_fuel_cost_text()
-		set_max_fuel_text()
-	else:
-		advanced_details.hide()
 	
 	flash_allowed = true
 
@@ -64,6 +51,7 @@ func setup(data: Dictionary) -> void:
 func just_purchased() -> void:
 	if not lored.purchased:
 		details.hide()
+		show_advanced_details(false)
 		title.text = "Invite"
 		description.show()
 		description.text = "[center]Ask " + lored.colored_name + " to join you!"
@@ -87,6 +75,23 @@ func just_purchased() -> void:
 		description.hide()
 		title.text = "Level Up"
 		lored.disconnect("just_purchased", just_purchased)
+		if lv.advanced_details_unlocked:
+			lored.output.connect("changed", set_output_text)
+			lored.input.connect("changed", set_input_text)
+			lored.fuel_cost.connect("changed", set_fuel_cost_text)
+			lored.fuel.connect("total_changed", set_max_fuel_text)
+			set_output_text()
+			set_input_text()
+			set_fuel_cost_text()
+			set_max_fuel_text()
+		else:
+			show_advanced_details(false)
+
+
+func show_advanced_details(_show: bool) -> void:
+	for node in details.get_children():
+		if not "Level" in node.name:
+			node.visible = _show
 
 
 func set_level_text(_level: int) -> void:
