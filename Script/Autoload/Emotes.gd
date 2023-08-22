@@ -7,6 +7,16 @@ var saved_vars := [
 	"random_emotes_allowed",
 ]
 
+
+
+func load_finished() -> void:
+	refresh_emote_timer()
+	start_all_main_emotes()
+	if random_emotes_allowed:
+		emote_cooldown_timer.start(randi() % 5 + 5) # 5-10
+
+
+
 var emote_vico := preload("res://Hud/Emote/emote_vico.tscn")
 
 var emote_cooldown_timer: Timer
@@ -17,9 +27,7 @@ var random_emotes_allowed := false:
 	set(val):
 		if random_emotes_allowed != val:
 			random_emotes_allowed = val
-			if val:
-				new_random_emote()
-			else:
+			if not val:
 				if emote_cooldown_timer.is_connected("timeout", new_random_emote):
 					emote_cooldown_timer.disconnect("timeout", new_random_emote)
 
@@ -27,13 +35,13 @@ var random_emotes_allowed := false:
 
 func _ready():
 	wi.connect("wish_completed", unlock_random_emotes)
-
-
-func open():
 	emote_cooldown_timer = Timer.new()
 	emote_cooldown_timer.one_shot = true
 	add_child(emote_cooldown_timer)
 	emote_cooldown_timer.connect("timeout", new_random_emote)
+	
+	SaveManager.load_finished.connect(load_finished)
+
 
 
 func close():
@@ -44,19 +52,7 @@ func close():
 
 # - Start
 
-func new_game_start() -> void:
-	
-	start()
-
-
-func loaded_game_start() -> void:
-	
-	start()
-
-
-
 func start() -> void:
-	open()
 	start_all_main_emotes()
 
 
@@ -65,11 +61,6 @@ func start_all_main_emotes() -> void:
 	emote_when_ready(Emote.Type.COAL_GREET)
 	emote_when_ready(Emote.Type.COAL_WHOA)
 	emote_when_ready(Emote.Type.STONE_HAPPY)
-
-
-
-# - Signal
-
 
 
 
@@ -131,6 +122,7 @@ func keep_emote(emote: Emote) -> void:
 func unlock_random_emotes(wish_type: int) -> void:
 	if wish_type == Wish.Type.COLLECTION:
 		random_emotes_allowed = true
+		emote_cooldown_timer.start(randi() % 5 + 5) # 5-10
 
 
 
@@ -140,6 +132,16 @@ func emote_when_ready(type: int) -> void:
 		emote.connect("just_ready", emote_now)
 		keep_emote(emote)
 
+
+
+func refresh_emote_timer() -> void:
+	if is_instance_valid(emote_cooldown_timer):
+		emote_cooldown_timer.stop()
+		emote_cooldown_timer.queue_free()
+	emote_cooldown_timer = Timer.new()
+	emote_cooldown_timer.one_shot = true
+	add_child(emote_cooldown_timer)
+	emote_cooldown_timer.connect("timeout", new_random_emote)
 
 
 # - Get

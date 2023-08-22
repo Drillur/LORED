@@ -67,22 +67,11 @@ func close() -> void:
 
 
 
-
-func new_game_start() -> void:
-	start()
-
-
-func loaded_game_start() -> void:
-	
-	start()
-
-
 func start() -> void:
 	if not Wish.Type.STUFF in completed_wishes:
 		new_wish_considering_conditions(Wish.Type.STUFF)
 	else:
 		find_new_main_wish()
-
 
 
 

@@ -23,6 +23,7 @@ var currency: Currency
 
 func setup(cur: int) -> void:
 	currency = wa.get_currency(cur) as Currency
+	name = currency.name
 	
 	if not is_node_ready():
 		await ready
@@ -54,6 +55,7 @@ func display_and_update(unlocked: bool) -> void:
 
 func _on_button_pressed():
 	check.button_pressed = not check.button_pressed
+	currency.use_allowed = check.button_pressed
 
 
 

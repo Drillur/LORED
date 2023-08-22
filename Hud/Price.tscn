@@ -1,6 +1,5 @@
-[gd_scene load_steps=6 format=3 uid="uid://dky60pdpk0ffa"]
+[gd_scene load_steps=5 format=3 uid="uid://dky60pdpk0ffa"]
 
-[ext_resource type="Theme" uid="uid://b8t7tkhvril5g" path="res://Theme/Standard.tres" id="1_3vkne"]
 [ext_resource type="Texture2D" uid="uid://de68iry5swvex" path="res://Sprites/Hud/price-tag-3-fill.png" id="1_7cws7"]
 [ext_resource type="Script" path="res://Hud/Price.gd" id="1_ncutb"]
 [ext_resource type="Theme" uid="uid://8dmfgxdrr5yh" path="res://Theme/Title.tres" id="2_f5oma"]
@@ -53,7 +52,7 @@ size_flags_horizontal = 4
 size_flags_vertical = 8
 focus_mode = 0
 mouse_filter = 2
-theme = ExtResource("1_3vkne")
+theme = ExtResource("2_f5oma")
 text = "44 seconds"
 
 [node name="MarginContainer3" type="MarginContainer" parent="VBoxContainer"]

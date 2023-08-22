@@ -17,7 +17,7 @@ enum Type {
 	STAGE4,
 }
 
-signal stage_unlocked_changed(unlocked)
+signal stage_unlocked_changed(stage, unlocked)
 signal just_reset
 
 var type: int
@@ -35,7 +35,7 @@ var unlocked := false:
 	set(val):
 		if unlocked != val:
 			unlocked = val
-			emit_signal("stage_unlocked_changed", val)
+			emit_signal("stage_unlocked_changed", type, val)
 
  # types only, no references
 var loreds := []

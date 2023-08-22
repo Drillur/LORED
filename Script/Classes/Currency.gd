@@ -67,6 +67,7 @@ enum Type {
 
 signal increased(amount)
 signal unlocked_changed(unlocked)
+signal use_allowed_changed(allowed)
 
 var type: int
 var stage: int
@@ -103,6 +104,12 @@ var unlocked := false:
 				saved_vars.erase("subtracted_by_loreds")
 				saved_vars.erase("subtracted_by_player")
 				saved_vars.erase("added_by_loreds")
+
+var use_allowed := true:
+	set(val):
+		if use_allowed != val:
+			use_allowed = val
+			use_allowed_changed.emit(val)
 
 var positive_current_rate := true #connect all 5 of these vars here
 var positive_total_rate := true

@@ -1,23 +1,30 @@
-[gd_resource type="Theme" load_steps=9 format=3 uid="uid://8dmfgxdrr5yh"]
+[gd_resource type="Theme" load_steps=7 format=3 uid="uid://8dmfgxdrr5yh"]
 
 [ext_resource type="FontFile" uid="uid://caej2ljgikhb3" path="res://Fonts/Roboto-Medium.ttf" id="1_af45c"]
 [ext_resource type="FontFile" uid="uid://cubavfw1lomep" path="res://Fonts/Roboto-Black.ttf" id="1_rxjx6"]
 [ext_resource type="FontFile" uid="uid://d2cepijgbnmb1" path="res://Fonts/Roboto-BlackItalic.ttf" id="2_pb77h"]
 [ext_resource type="FontFile" uid="uid://1w6nq6sovkc2" path="res://Fonts/Roboto-MediumItalic.ttf" id="3_5o8o2"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kolcj"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_q73hr"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_04l6q"]
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_u8ked"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_10oex"]
 bg_color = Color(0.662745, 0.662745, 0.662745, 1)
 
 [resource]
-CheckBox/styles/hover = SubResource("StyleBoxFlat_kolcj")
-CheckBox/styles/normal = SubResource("StyleBoxFlat_q73hr")
-CheckBox/styles/pressed = SubResource("StyleBoxFlat_04l6q")
+CheckBox/colors/font_color = Color(0, 0, 0, 1)
+CheckBox/colors/font_hover_color = Color(0, 0, 0, 1)
+CheckBox/colors/font_hover_pressed_color = Color(0, 0, 0, 1)
+CheckBox/colors/font_pressed_color = Color(0, 0, 0, 1)
+CheckBox/font_sizes/font_size = 12
+CheckBox/fonts/font = ExtResource("1_af45c")
+CheckBox/styles/hover = SubResource("StyleBoxEmpty_u8ked")
+CheckBox/styles/hover_pressed = SubResource("StyleBoxEmpty_u8ked")
+CheckBox/styles/normal = SubResource("StyleBoxEmpty_u8ked")
+CheckBox/styles/pressed = SubResource("StyleBoxEmpty_u8ked")
 Panel/styles/panel = SubResource("StyleBoxFlat_10oex")
 RichTextLabel/colors/default_color = Color(0, 0, 0, 1)
 RichTextLabel/font_sizes/bold_font_size = 12

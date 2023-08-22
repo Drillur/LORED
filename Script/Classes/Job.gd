@@ -502,6 +502,7 @@ func assign_lored(_lored: int) -> void:
 func hookup_required_currencies() -> void:
 	if has_required_currencies:
 		required_currencies.connect("became_affordable", required_currency_became_affordable)
+		required_currencies.use_allowed_changed.connect(required_currency_use_allowed_changed)
 
 
 func add_produced_currency(currency: int, amount: float) -> void:
@@ -537,7 +538,13 @@ func lored_fuel_cost_changed() -> void:
 
 
 func required_currency_became_affordable() -> void:
-	emit_signal("became_workable")
+	if required_currencies.use_allowed and required_currencies.affordable:
+		emit_signal("became_workable")
+
+
+func required_currency_use_allowed_changed(allowed: bool) -> void:
+	if allowed and required_currencies.affordable:
+		became_workable.emit()
 
 
 func fuel_increased() -> void:
@@ -570,7 +577,10 @@ func can_start() -> bool:
 		if not call("can_start_job_special_requirements_" + key):
 			return false
 	if has_required_currencies:
-		if not required_currencies.affordable:
+		if (
+			not required_currencies.use_allowed
+			or not required_currencies.affordable
+		):
 			return false
 	return has_sufficient_fuel
 

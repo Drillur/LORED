@@ -15,9 +15,8 @@ func _ready():
 	
 	hamburger.set_icon(preload("res://Sprites/Hud/Menu.png"))
 	hamburger.remove_check().remove_icon_shadow()
-	
-	
 	hamburger.modulate = Color(0, 0, 0)
+	
 	discord.color = gv.game_color
 	godot.color = Color(0.376, 0.741, 0.992)
 	

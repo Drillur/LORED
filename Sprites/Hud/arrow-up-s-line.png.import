@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://celp2jji11jdm"
-path="res://.godot/imported/Expand_right.png-5fe2c93eced6507386635a09196e7d9b.ctex"
+uid="uid://c81tbq6j5hhl6"
+path="res://.godot/imported/arrow-up-s-line.png-ac81248ba529362e35c3d3c0e2eecd82.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Sprites/Hud/Expand_right.png"
-dest_files=["res://.godot/imported/Expand_right.png-5fe2c93eced6507386635a09196e7d9b.ctex"]
+source_file="res://Sprites/Hud/arrow-up-s-line.png"
+dest_files=["res://.godot/imported/arrow-up-s-line.png-ac81248ba529362e35c3d3c0e2eecd82.ctex"]
 
 [params]
 

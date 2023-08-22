@@ -6,6 +6,7 @@ extends RefCounted
 signal became_affordable
 signal became_unaffordable
 signal affordable_changed(affordable)
+signal use_allowed_changed(allowed)
 
 var cost := {}
 var affordable := false:
@@ -16,7 +17,11 @@ var affordable := false:
 		else:
 			emit_signal("became_unaffordable")
 		emit_signal("affordable_changed", affordable)
-
+var use_allowed := true:
+	set(val):
+		if use_allowed != val:
+			use_allowed = val
+			use_allowed_changed.emit(val)
 var purchased := false:
 	set(val):
 		if purchased == val:
@@ -38,10 +43,11 @@ var purchased := false:
 
 func _init(_cost: Dictionary) -> void:
 	cost = _cost
-	for cur in cost:
-		wa.currency[cur].count.connect("increased", currency_increased)
+	notify_if_increased()
 	currency_increased()
 	SaveManager.connect("load_finished", recheck)
+	for cur in cost:
+		wa.get_currency(cur).use_allowed_changed.connect(currency_use_allowed_changed)
 
 
 func notify_if_increased() -> void:
@@ -58,6 +64,17 @@ func notify_if_decreased() -> void:
 			if wa.currency[cur].count.is_connected("increased", currency_increased):
 				wa.currency[cur].count.disconnect("increased", currency_increased)
 			wa.currency[cur].count.connect("decreased", currency_decreased)
+
+
+
+func currency_use_allowed_changed(allowed: bool) -> void:
+	if not allowed:
+		use_allowed = false
+	else:
+		for cur in cost:
+			if not wa.is_use_allowed(cur):
+				return
+		use_allowed = true
 
 
 

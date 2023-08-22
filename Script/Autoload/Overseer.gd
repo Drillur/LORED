@@ -28,6 +28,9 @@ var theme_invis := preload("res://Theme/Invis.tres")
 var theme_text_button := preload("res://Theme/TextButton.tres")
 var theme_text_button_alternate := preload("res://Theme/TextButtonAlternate.tres")
 
+var ascending_icon: Texture = preload("res://Sprites/Hud/arrow-up-s-line.png")
+var descending_icon: Texture = preload("res://Sprites/Hud/arrow-down-s-line.png")
+
 var control_node := preload("res://Hud/control.tscn")
 
 const SRC := {
@@ -59,6 +62,7 @@ func _ready() -> void:
 	open()
 	for i in range(0, 5):
 		set("stage" + str(i), Stage.new(i))
+		get("stage" + str(i)).stage_unlocked_changed.connect(emit_stage_unlocked)
 	
 	discord_sdk.app_id = 1139940673747951696
 	
@@ -419,6 +423,7 @@ var stage4: Stage
 
 signal just_reset
 signal just_complete_reset
+signal stage_unlocked(stage, unlocked)
 signal stage_changed(stage)
 
 var selected_stage := 1:
@@ -461,5 +466,7 @@ func get_loreds_in_stage(stage: int) -> Array:
 	return get("stage" + str(stage)).loreds
 
 
+func emit_stage_unlocked(stage: int, unlocked: bool) -> void:
+	stage_unlocked.emit(stage, unlocked)
 
 

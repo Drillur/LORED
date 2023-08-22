@@ -23,6 +23,9 @@ func _ready():
 		tooltip_position_display.queue_free()
 	
 	upgrades_button.hide()
+	wallet_button.hide()
+	
+	wa.wallet_unlocked_changed.connect(display_wallet_button)
 	
 	up.menu_unlocked_changed.connect(flash_upgrade_button)
 	up.menu_unlocked_changed.connect(display_upgrades_button)
@@ -33,6 +36,7 @@ func _ready():
 	up.upgrade_container = upgrade_container
 	wi.main_wish_container = main_wishes
 	wi.random_wish_container = random_wishes
+	wa.wallet = wallet
 	
 	menu_button.modulate = gv.game_color
 	menu_button.set_icon(load("res://Sprites/Hud/Menu.png"))
@@ -50,13 +54,13 @@ func _ready():
 	
 	gv.root_ready = true
 	
-	new_game() # delete
+	gv.update_discord_details("Just began a new game!")
+	lv.start()
+	wi.start()
+	em.start()
 	
-	return # delete later
 	if SaveManager.can_load_game():
 		SaveManager.load_game()
-	else:
-		new_game()
 
 
 
@@ -114,6 +118,9 @@ func _input(event):
 	elif Input.is_action_just_pressed("F"):
 		select_upgrade_menu_tab(7)
 	
+	if Input.is_action_just_pressed("T"):
+		open_wallet(not wallet.visible)
+	
 	if Input.is_action_just_pressed("Mouse Wheel Down"):
 		gv.clear_tooltip()
 		return
@@ -141,10 +148,7 @@ func _on_upgrades_button_pressed():
 
 
 func _on_wallet_button_pressed():
-	if wallet.visible:
-		wallet.hide()
-	else:
-		wallet.show()
+	open_wallet(not wallet.visible)
 
 
 
@@ -185,6 +189,12 @@ func stage_changed(stage: int) -> void:
 
 # - Ref
 
+func display_wallet_button(unlocked: bool) -> void:
+	wallet_button.visible = unlocked
+	if unlocked:
+		gv.flash(wallet_button, wallet.color)
+
+
 func display_upgrades_button(_menu: int, unlocked: bool) -> void:
 	if _menu == UpgradeMenu.Type.NORMAL:
 		upgrades_button.visible = unlocked
@@ -199,26 +209,22 @@ func flash_upgrade_button(_menu: int, unlocked: bool) -> void:
 
 # - Actions
 
-func new_game() -> void:
-	gv.update_discord_details("Just began a new game!")
-	lv.new_game_start()
-	wi.new_game_start()
-	em.new_game_start()
-
-
-func load_game() -> void:
-	lv.loaded_game_start()
-	wi.loaded_game_start()
-	em.loaded_game_start()
-
+func open_wallet(_show: bool) -> void:
+	if wa.wallet_unlocked or gv.dev_mode:
+		wallet.visible = _show
+		upgrade_container.hide()
+		menu.hide()
+		gv.clear_tooltip()
 
 
 func select_upgrade_menu_tab(tab: int, _show = true) -> void:
-	if up.is_menu_unlocked(tab):# or gv.dev_mode:
+	if up.is_menu_unlocked(tab) or gv.dev_mode:
 		if _show:
 			upgrade_container.show()
 			menu.hide()
+			wallet.hide()
 		upgrade_container.select_tab(tab)
+		gv.clear_tooltip()
 
 
 

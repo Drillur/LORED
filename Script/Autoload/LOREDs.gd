@@ -140,23 +140,10 @@ func close() -> void:
 
 
 
-func new_game_start() -> void:
+func start() -> void:
 	unlock_lored(LORED.Type.COAL)
 	unlock_lored(LORED.Type.STONE)
 	get_lored(LORED.Type.STONE).force_purchase()
-	start()
-
-
-func loaded_game_start() -> void:
-	# when loading loreds, 
-	# if they are purchased, append to active
-	# elif they are unlocked, append to unlocked
-	# else don't append anywhere
-	start()
-
-
-func start() -> void:
-	pass
 
 
 

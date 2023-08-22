@@ -5,11 +5,14 @@ extends Node
 var saved_vars := [
 	"wallet_unlocked",
 	"currency_by_key",
+	"keep_wallet_sorted",
 ]
 
 
 signal currency_just_unlocked(cur, unlocked)
 signal wallet_unlocked_changed(unlocked)
+signal save_wallet_sort_changed(save_sort)
+signal keep_wallet_sorted_changed(keep_sorted)
 
 var currency := {}
 var currency_by_key := {}
@@ -21,6 +24,19 @@ var wallet_unlocked := false:
 		if wallet_unlocked != val:
 			wallet_unlocked = val
 			emit_signal("wallet_unlocked_changed", val)
+
+var keep_wallet_sorted := false:
+	set(val):
+		if keep_wallet_sorted != val:
+			keep_wallet_sorted = val
+			keep_wallet_sorted_changed.emit(val)
+var save_wallet_sort := false:
+	set(val):
+		if save_wallet_sort != val:
+			save_wallet_sort = val
+			save_wallet_sort_changed.emit(val)
+
+var wallet: WalletVico
 
 
 
@@ -37,6 +53,7 @@ func close() -> void:
 	wallet_unlocked = false
 	unlocked_currencies.clear()
 	total_weight = 0
+	wallet.hide_tabs()
 
 
 
@@ -107,6 +124,10 @@ func subtract_total_loss_rate(cur: int, amount) -> void:
 	get_currency(cur).subtract_total_loss_rate(amount)
 
 
+func set_use_allowed(cur: int, allowed: bool) -> void:
+	get_currency(cur).use_allowed = allowed
+
+
 
 
 # - Get
@@ -170,6 +191,10 @@ func get_icon_and_name_text(cur: int) -> String:
 
 func is_current_rate_positive(cur: int) -> bool:
 	return get_currency(cur).positive_current_rate
+
+
+func is_use_allowed(cur: int) -> bool:
+	return get_currency(cur).use_allowed
 
 
 func get_currencies_in_stage(stage: int) -> Array:
