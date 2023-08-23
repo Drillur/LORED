@@ -162,19 +162,6 @@ func job_lock(wish: int) -> void:
 
 # - Actions
 
-func start_job_timer(job: Job) -> void:
-	job.work_pass = Time.get_unix_time_from_system()
-	job.clock_in_time = job.work_pass
-	var my_pass = gv.password
-	var job_pass = job.work_pass
-	await get_tree().create_timer(job.duration.get_as_float()).timeout
-	if (
-		my_pass == gv.password
-		and job_pass == job.work_pass
-	):
-		job.complete()
-
-
 func unlock_lored(_lored: int) -> void:
 	get_lored(_lored).unlock()
 

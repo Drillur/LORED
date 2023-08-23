@@ -25,6 +25,9 @@ extends MarginContainer
 @onready var keep_wallet_sorted = %keep_wallet_sorted
 @onready var save_wallet_sort = %save_wallet_sort
 
+@onready var right_down = $Control/Right
+
+
 var ascending_icon: Texture = preload("res://Sprites/Hud/arrow-up-s-line.png")
 var descending_icon: Texture = preload("res://Sprites/Hud/arrow-down-s-line.png")
 
@@ -96,6 +99,7 @@ func _ready():
 	sort = Sort.NAME_ASCENDING
 	hamburger_2.pressed.connect(options.hide)
 	hamburger.pressed.connect(options.show)
+	visibility_changed.connect(_on_visibility_changed)
 
 
 
@@ -107,9 +111,14 @@ func _on_visibility_changed():
 	if visible:
 		if not sort in [Sort.NAME_ASCENDING, Sort.NAME_DESCENDING]:
 			sort_tab()
+		if wa.keep_wallet_sorted:
+			if sort in [Sort.COUNT_ASCENDING, Sort.COUNT_DESCENDING]:
+				connect_count()
+			elif sort in [Sort.RATE_ASCENDING, Sort.RATE_DESCENDING]:
+				connect_rate()
 	else:
-		if not is_node_ready():
-			await ready
+		disconnect_count()
+		disconnect_rate()
 		options.hide()
 
 
@@ -150,6 +159,11 @@ func check_save_sort(save_sort: bool) -> void:
 
 
 
+func currency_mouse_entered(cur: int) -> void:
+	gv.new_tooltip(gv.Tooltip.WALLET_CURRENCY, right_down, {"currency": cur})
+
+
+
 
 # - Actions
 
@@ -164,6 +178,7 @@ func add_stage_currencies(stage: int) -> void:
 		content[cur] = wallet_currency_node.instantiate()
 		content[cur].setup(cur)
 		get("stage_" + str(stage) + "_container").add_child(content[cur])
+		content[cur].mouse_entered_custom.connect(currency_mouse_entered)
 
 
 func select_tab(tab: int) -> void:
@@ -270,31 +285,33 @@ func sort_tab(tab := str(tabs.current_tab + 1)) -> void:
 					return a.name.naturalnocasecmp_to(b.name) < 0
 				Sort.NAME_DESCENDING:
 					return a.name.naturalnocasecmp_to(b.name) > 0
-				Sort.COUNT_ASCENDING:
-					return a.currency.count.greater(b.currency.count)
-				Sort.COUNT_DESCENDING:
-					return a.currency.count.less_equal(b.currency.count)
+				Sort.COUNT_ASCENDING, Sort.COUNT_DESCENDING:
+					if a.currency.count.equal(b.currency.count):
+						return a.name.naturalnocasecmp_to(b.name) < 0
+					if sort == Sort.COUNT_ASCENDING:
+						return a.currency.count.greater(b.currency.count)
+					return a.currency.count.less(b.currency.count)
 				Sort.RATE_ASCENDING, Sort.RATE_DESCENDING:
 					if (
 						not a.currency.positive_total_rate
 						and not b.currency.positive_total_rate
 					):
+						if a.currency.net_rate.get_total().equal(b.currency.net_rate.get_total()):
+							return a.name.naturalnocasecmp_to(b.name) < 0
 						if sort == Sort.RATE_ASCENDING:
-							return a.currency.net_rate.get_total().less_equal(b.currency.net_rate.get_total())
+							return a.currency.net_rate.get_total().less(b.currency.net_rate.get_total())
 						else:
 							return a.currency.net_rate.get_total().greater(b.currency.net_rate.get_total())
 					elif not a.currency.positive_total_rate:
-						if sort == Sort.RATE_ASCENDING:
-							return false
-						return true
+						return sort == Sort.RATE_DESCENDING
 					elif not b.currency.positive_total_rate:
-						if sort == Sort.RATE_ASCENDING:
-							return true
-						return false
+						return sort == Sort.RATE_ASCENDING
 					else:
+						if a.currency.net_rate.get_total().equal(b.currency.net_rate.get_total()):
+							return a.name.naturalnocasecmp_to(b.name) < 0
 						if sort == Sort.RATE_ASCENDING:
 							return a.currency.net_rate.get_total().greater(b.currency.net_rate.get_total())
-						return a.currency.net_rate.get_total().less_equal(b.currency.net_rate.get_total())
+						return a.currency.net_rate.get_total().less(b.currency.net_rate.get_total())
 	)
 	for node in container.get_children():
 		container.remove_child(node)

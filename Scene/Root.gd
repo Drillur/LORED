@@ -121,10 +121,17 @@ func _input(event):
 	if Input.is_action_just_pressed("T"):
 		open_wallet(not wallet.visible)
 	
-	if Input.is_action_just_pressed("Mouse Wheel Down"):
+	
+	if Input.is_action_pressed("Shift"):
+		if Input.is_action_just_released("Mouse Wheel Up"):
+			gv.scroll_tooltip(-1)
+		elif Input.is_action_just_released("Mouse Wheel Down"):
+			gv.scroll_tooltip(1)
+		return
+	elif Input.is_action_just_pressed("Mouse Wheel Down"):
 		gv.clear_tooltip()
 		return
-	if Input.is_action_just_pressed("Mouse Wheel Up"):
+	elif Input.is_action_just_pressed("Mouse Wheel Up"):
 		gv.clear_tooltip()
 		return
 

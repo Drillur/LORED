@@ -1,0 +1,220 @@
+[gd_scene load_steps=7 format=3 uid="uid://bh8m80txsxbxg"]
+
+[ext_resource type="Theme" uid="uid://b8t7tkhvril5g" path="res://Theme/Standard.tres" id="1_aeq4m"]
+[ext_resource type="Script" path="res://Hud/Wallet/wallet_currency_tooltip.gd" id="1_uho0y"]
+[ext_resource type="Theme" uid="uid://8dmfgxdrr5yh" path="res://Theme/Title.tres" id="2_u0p5t"]
+[ext_resource type="Theme" uid="uid://cwt08llwihqii" path="res://Theme/ShadowText.tres" id="3_u2nac"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_sh4p1"]
+content_margin_right = 5.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_b26ic"]
+
+[node name="WalletCurrencyTooltip" type="MarginContainer"]
+offset_right = 139.0
+offset_bottom = 203.0
+script = ExtResource("1_uho0y")
+
+[node name="bg" type="Panel" parent="."]
+layout_mode = 2
+theme = ExtResource("1_aeq4m")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="title bg" type="Panel" parent="VBoxContainer/MarginContainer/VBoxContainer/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("2_u0p5t")
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/MarginContainer/VBoxContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="Title" type="RichTextLabel" parent="VBoxContainer/MarginContainer/VBoxContainer/MarginContainer/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+theme = ExtResource("2_u0p5t")
+bbcode_enabled = true
+text = "Coal"
+fit_content = true
+autowrap_mode = 0
+
+[node name="MarginContainer2" type="MarginContainer" parent="VBoxContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/MarginContainer/VBoxContainer/MarginContainer2"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Current Income" type="RichTextLabel" parent="VBoxContainer/MarginContainer/VBoxContainer/MarginContainer2/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+mouse_filter = 2
+theme = ExtResource("3_u2nac")
+bbcode_enabled = true
+text = "Current: [b]14/s"
+fit_content = true
+autowrap_mode = 0
+
+[node name="Total Income" type="RichTextLabel" parent="VBoxContainer/MarginContainer/VBoxContainer/MarginContainer2/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+mouse_filter = 2
+theme = ExtResource("3_u2nac")
+bbcode_enabled = true
+text = "Maximum: [b]123e123/s"
+fit_content = true
+autowrap_mode = 0
+
+[node name="useAllowed" type="RichTextLabel" parent="VBoxContainer/MarginContainer/VBoxContainer/MarginContainer2/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 8
+mouse_filter = 2
+theme = ExtResource("3_u2nac")
+bbcode_enabled = true
+text = "This resource is [b]blocked[/b] and may [b]not[/b] be used by LOREDs."
+fit_content = true
+
+[node name="Producers" type="MarginContainer" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/Producers"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Producers/VBoxContainer"]
+layout_mode = 2
+
+[node name="producers title bg" type="Panel" parent="VBoxContainer/Producers/VBoxContainer/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("2_u0p5t")
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Producers/VBoxContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="Title" type="RichTextLabel" parent="VBoxContainer/Producers/VBoxContainer/MarginContainer/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme = ExtResource("2_u0p5t")
+bbcode_enabled = true
+text = "Producers"
+fit_content = true
+autowrap_mode = 0
+
+[node name="MarginContainer2" type="MarginContainer" parent="VBoxContainer/Producers/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="Producers Container" type="VBoxContainer" parent="VBoxContainer/Producers/VBoxContainer/MarginContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Users" type="MarginContainer" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/Users"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Users/VBoxContainer"]
+layout_mode = 2
+
+[node name="users title bg" type="Panel" parent="VBoxContainer/Users/VBoxContainer/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("2_u0p5t")
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Users/VBoxContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="Title" type="RichTextLabel" parent="VBoxContainer/Users/VBoxContainer/MarginContainer/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme = ExtResource("2_u0p5t")
+bbcode_enabled = true
+text = "Users"
+fit_content = true
+autowrap_mode = 0
+
+[node name="MarginContainer2" type="MarginContainer" parent="VBoxContainer/Users/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/Users/VBoxContainer/MarginContainer2"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="UsersScrollContainer" type="ScrollContainer" parent="VBoxContainer/Users/VBoxContainer/MarginContainer2/VBoxContainer"]
+unique_name_in_owner = true
+self_modulate = Color(1, 0, 0, 1)
+custom_minimum_size = Vector2(0, 61)
+layout_mode = 2
+theme = ExtResource("1_aeq4m")
+theme_override_styles/panel = SubResource("StyleBoxEmpty_sh4p1")
+horizontal_scroll_mode = 0
+
+[node name="Users Container" type="VBoxContainer" parent="VBoxContainer/Users/VBoxContainer/MarginContainer2/VBoxContainer/UsersScrollContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="breaker" type="Panel" parent="VBoxContainer/Users/VBoxContainer/MarginContainer2/VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 2)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_b26ic")
+
+[node name="scroll hint" type="RichTextLabel" parent="VBoxContainer/Users/VBoxContainer/MarginContainer2/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+mouse_filter = 2
+theme = ExtResource("3_u2nac")
+bbcode_enabled = true
+text = "[img=<15>]res://Sprites/Hud/Info.png[/img] [i]Hold shift to scroll."
+fit_content = true
+autowrap_mode = 0

@@ -13,7 +13,7 @@ signal pressed
 var color: Color:
 	set(val):
 		color = val
-		$MarginContainer.modulate = val
+		icon.self_modulate = val
 		button.modulate = val
 
 

@@ -9,7 +9,6 @@ extends MarginContainer
 @onready var glow = $glow
 
 var lored_job_entry := preload("res://Hud/LORED/Tooltip/lored_job_entry.tscn")
-var label := preload("res://Hud/rich_text_label.tscn")
 var job: Job
 
 
@@ -36,7 +35,7 @@ func setup(_job: Job) -> void:
 
 func prepare_produced_currencies() -> void:
 	if job.type == Job.Type.REFUEL:
-		var x = label.instantiate()
+		var x = gv.label.instantiate()
 		x.text = "+" + lv.get_lored(job.lored).fuel.get_x_percent_text(0.5) + " fuel"
 		produced_currencies_parent.add_child(x)
 	elif not job.has_produced_currencies:
@@ -54,7 +53,7 @@ func prepare_required_currencies() -> void:
 			var x = lored_job_entry.instantiate()
 			x.setup(job.required_currencies.cost[cur], cur, false)
 			required_currencies_parent.add_child(x)
-	var x = label.instantiate()
+	var x = gv.label.instantiate()
 	x.text = "-" + job.fuel_cost.get_text() + " fuel"
 	required_currencies_parent.add_child(x)
 

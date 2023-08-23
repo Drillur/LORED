@@ -80,4 +80,5 @@ focus_mode = 0
 mouse_default_cursor_shape = 2
 theme = ExtResource("4_sok8h")
 
+[connection signal="mouse_entered" from="Button" to="." method="_on_mouse_entered"]
 [connection signal="pressed" from="Button" to="." method="_on_button_pressed"]

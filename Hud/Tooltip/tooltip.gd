@@ -26,6 +26,8 @@ func _on_tooltip_content_item_rect_changed():
 		will_adjust_position = true
 		await ready
 	will_adjust_position = false
+	if not is_instance_valid(parent):
+		return
 	if "Right" in parent.name:
 		size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 		tooltip_parent.position.x = parent.global_position.x

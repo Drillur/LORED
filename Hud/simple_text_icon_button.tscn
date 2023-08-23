@@ -25,6 +25,7 @@ theme_override_constants/margin_bottom = 6
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
 layout_mode = 2
 mouse_filter = 2
+alignment = 1
 
 [node name="Icon" type="TextureRect" parent="MarginContainer/HBoxContainer"]
 unique_name_in_owner = true

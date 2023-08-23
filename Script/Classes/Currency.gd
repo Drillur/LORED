@@ -111,15 +111,16 @@ var use_allowed := true:
 			use_allowed = val
 			use_allowed_changed.emit(val)
 
-var positive_current_rate := true #connect all 5 of these vars here
+var positive_current_rate := true
 var positive_total_rate := true
 var net_rate := Attribute.new(0)
 var gain_rate := Attribute.new(0)
 var loss_rate := Attribute.new(0)
 
-var weight := 1 #connect
+var weight := 1
 
-var produced_by := [] #connect
+var produced_by := []
+var used_by := []
 
 
 
@@ -439,9 +440,22 @@ func subtract_from_player(amount) -> void:
 	subtracted_by_player.a(amount)
 
 
-func add_producer(lored: int) -> void:
+func append_producer(lored: int) -> void:
 	if not lored in produced_by:
 		produced_by.append(lored)
+
+
+func append_user(lored: int) -> void:
+	if not lored in used_by:
+		used_by.append(lored)
+
+
+func erase_producer(lored: int) -> void:
+	produced_by.erase(lored)
+
+
+func erase_user(lored: int) -> void:
+	used_by.erase(lored)
 
 
 

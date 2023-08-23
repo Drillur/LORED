@@ -7,6 +7,7 @@ var saved_vars := [
 	"purchased",
 	"unlocked",
 	"level",
+	"unlocked_jobs",
 	#asleep - based on an option, append or erase this from this array
 ]
 
@@ -215,6 +216,7 @@ var vico: LOREDVico:
 
 var jobs := {}
 var sorted_jobs := []
+var unlocked_jobs := []
 
 var level := 0:
 	set(val):
@@ -238,7 +240,7 @@ func _init(_type: int) -> void:
 	call("init_" + key)
 	
 	required_currencies.append(fuel_currency)
-	add_job(Job.Type.REFUEL)
+	add_job(Job.Type.REFUEL, true)
 	
 	if name == "":
 		name = key.replace("_", " ").capitalize()
@@ -294,7 +296,7 @@ func _init(_type: int) -> void:
 
 
 func init_STONE() -> void:
-	add_job(Job.Type.STONE)
+	add_job(Job.Type.STONE, true)
 	cost = Cost.new({
 		Currency.Type.IRON: Value.new(25.0 / 3),
 		Currency.Type.COPPER: Value.new(15.0 / 3),
@@ -308,7 +310,7 @@ func init_STONE() -> void:
 
 
 func init_COAL() -> void:
-	add_job(Job.Type.COAL)
+	add_job(Job.Type.COAL, true)
 	cost = Cost.new({
 		Currency.Type.STONE: Value.new(5),
 	})
@@ -321,7 +323,7 @@ func init_COAL() -> void:
 
 
 func init_IRON_ORE() -> void:
-	add_job(Job.Type.IRON_ORE)
+	add_job(Job.Type.IRON_ORE, true)
 	cost = Cost.new({
 		Currency.Type.STONE: Value.new(8),
 	})
@@ -334,7 +336,7 @@ func init_IRON_ORE() -> void:
 
 
 func init_COPPER_ORE() -> void:
-	add_job(Job.Type.COPPER_ORE)
+	add_job(Job.Type.COPPER_ORE, true)
 	cost = Cost.new({
 		Currency.Type.STONE: Value.new(8),
 	})
@@ -347,7 +349,7 @@ func init_COPPER_ORE() -> void:
 
 
 func init_IRON() -> void:
-	add_job(Job.Type.IRON)
+	add_job(Job.Type.IRON, true)
 	cost = Cost.new({
 		Currency.Type.STONE: Value.new(9),
 		Currency.Type.COPPER: Value.new(8),
@@ -361,7 +363,7 @@ func init_IRON() -> void:
 
 
 func init_COPPER() -> void:
-	add_job(Job.Type.COPPER)
+	add_job(Job.Type.COPPER, true)
 	cost = Cost.new({
 		Currency.Type.STONE: Value.new(9),
 		Currency.Type.IRON: Value.new(8),
@@ -375,7 +377,7 @@ func init_COPPER() -> void:
 
 
 func init_GROWTH() -> void:
-	add_job(Job.Type.GROWTH)
+	add_job(Job.Type.GROWTH, true)
 	cost = Cost.new({
 		Currency.Type.STONE: Value.new(900),
 	})
@@ -388,7 +390,7 @@ func init_GROWTH() -> void:
 
 
 func init_JOULES() -> void:
-	add_job(Job.Type.JOULES)
+	add_job(Job.Type.JOULES, true)
 	cost = Cost.new({
 		Currency.Type.CONCRETE: Value.new(25),
 	})
@@ -401,7 +403,7 @@ func init_JOULES() -> void:
 
 
 func init_CONCRETE() -> void:
-	add_job(Job.Type.CONCRETE)
+	add_job(Job.Type.CONCRETE, true)
 	cost = Cost.new({
 		Currency.Type.IRON: Value.new(90),
 		Currency.Type.COPPER: Value.new(150),
@@ -415,7 +417,7 @@ func init_CONCRETE() -> void:
 
 
 func init_OIL() -> void:
-	add_job(Job.Type.OIL)
+	add_job(Job.Type.OIL, true)
 	cost = Cost.new({
 		Currency.Type.COPPER: Value.new(160),
 		Currency.Type.CONCRETE: Value.new(250),
@@ -429,7 +431,7 @@ func init_OIL() -> void:
 
 
 func init_TARBALLS() -> void:
-	add_job(Job.Type.TARBALLS)
+	add_job(Job.Type.TARBALLS, true)
 	cost = Cost.new({
 		Currency.Type.IRON: Value.new(350),
 		Currency.Type.MALIGNANCY: Value.new(10),
@@ -443,7 +445,7 @@ func init_TARBALLS() -> void:
 
 
 func init_MALIGNANCY() -> void:
-	add_job(Job.Type.MALIGNANCY)
+	add_job(Job.Type.MALIGNANCY, true)
 	cost = Cost.new({
 		Currency.Type.IRON: Value.new(900),
 		Currency.Type.COPPER: Value.new(900),
@@ -458,7 +460,7 @@ func init_MALIGNANCY() -> void:
 
 
 func init_WATER() -> void:
-	add_job(Job.Type.WATER)
+	add_job(Job.Type.WATER, true)
 	name = "Gatorade"
 	cost = Cost.new({
 		Currency.Type.STONE: Value.new(2500),
@@ -473,7 +475,7 @@ func init_WATER() -> void:
 
 
 func init_HUMUS() -> void:
-	add_job(Job.Type.HUMUS)
+	add_job(Job.Type.HUMUS, true)
 	cost = Cost.new({
 		Currency.Type.IRON: Value.new(600),
 		Currency.Type.COPPER: Value.new(600),
@@ -488,7 +490,7 @@ func init_HUMUS() -> void:
 
 
 func init_SOIL() -> void:
-	add_job(Job.Type.SOIL)
+	add_job(Job.Type.SOIL, true)
 	cost = Cost.new({
 		Currency.Type.CONCRETE: Value.new(1000),
 		Currency.Type.HARDWOOD: Value.new(40),
@@ -502,7 +504,7 @@ func init_SOIL() -> void:
 
 
 func init_TREES() -> void:
-	add_job(Job.Type.TREES)
+	add_job(Job.Type.TREES, true)
 	cost = Cost.new({
 		Currency.Type.GROWTH: Value.new(150),
 		Currency.Type.SOIL: Value.new(25),
@@ -516,7 +518,7 @@ func init_TREES() -> void:
 
 
 func init_SEEDS() -> void:
-	add_job(Job.Type.SEEDS)
+	add_job(Job.Type.SEEDS, true)
 	name = "Maybe"
 	cost = Cost.new({
 		Currency.Type.COPPER: Value.new(800),
@@ -531,7 +533,7 @@ func init_SEEDS() -> void:
 
 
 func init_GALENA() -> void:
-	add_job(Job.Type.GALENA)
+	add_job(Job.Type.GALENA, true)
 	cost = Cost.new({
 		Currency.Type.STONE: Value.new(1100),
 		Currency.Type.WIRE: Value.new(200),
@@ -545,7 +547,7 @@ func init_GALENA() -> void:
 
 
 func init_LEAD() -> void:
-	add_job(Job.Type.LEAD)
+	add_job(Job.Type.LEAD, true)
 	cost = Cost.new({
 		Currency.Type.STONE: Value.new(400),
 		Currency.Type.GROWTH: Value.new(800),
@@ -558,7 +560,7 @@ func init_LEAD() -> void:
 
 
 func init_WOOD_PULP() -> void:
-	add_job(Job.Type.WOOD_PULP)
+	add_job(Job.Type.WOOD_PULP, true)
 	cost = Cost.new({
 		Currency.Type.WIRE: Value.new(15),
 		Currency.Type.GLASS: Value.new(30),
@@ -571,7 +573,7 @@ func init_WOOD_PULP() -> void:
 
 
 func init_PAPER() -> void:
-	add_job(Job.Type.PAPER)
+	add_job(Job.Type.PAPER, true)
 	cost = Cost.new({
 		Currency.Type.CONCRETE: Value.new(1200),
 		Currency.Type.STEEL: Value.new(15),
@@ -584,7 +586,7 @@ func init_PAPER() -> void:
 
 
 func init_TOBACCO() -> void:
-	add_job(Job.Type.TOBACCO)
+	add_job(Job.Type.TOBACCO, true)
 	cost = Cost.new({
 		Currency.Type.SOIL: Value.new(3),
 		Currency.Type.HARDWOOD: Value.new(15),
@@ -598,7 +600,7 @@ func init_TOBACCO() -> void:
 
 
 func init_CIGARETTES() -> void:
-	add_job(Job.Type.CIGARETTES)
+	add_job(Job.Type.CIGARETTES, true)
 	cost = Cost.new({
 		Currency.Type.HARDWOOD: Value.new(50),
 		Currency.Type.WIRE: Value.new(120),
@@ -612,7 +614,7 @@ func init_CIGARETTES() -> void:
 
 
 func init_PETROLEUM() -> void:
-	add_job(Job.Type.PETROLEUM)
+	add_job(Job.Type.PETROLEUM, true)
 	cost = Cost.new({
 		Currency.Type.IRON: Value.new(3000),
 		Currency.Type.COPPER: Value.new(4000),
@@ -626,7 +628,7 @@ func init_PETROLEUM() -> void:
 
 
 func init_PLASTIC() -> void:
-	add_job(Job.Type.PLASTIC)
+	add_job(Job.Type.PLASTIC, true)
 	cost = Cost.new({
 		Currency.Type.STONE: Value.new(10000),
 		Currency.Type.TARBALLS: Value.new(700),
@@ -639,7 +641,7 @@ func init_PLASTIC() -> void:
 
 
 func init_CARCINOGENS() -> void:
-	add_job(Job.Type.CARCINOGENS)
+	add_job(Job.Type.CARCINOGENS, true)
 	cost = Cost.new({
 		Currency.Type.GROWTH: Value.new(8500),
 		Currency.Type.CONCRETE: Value.new(2000),
@@ -654,7 +656,7 @@ func init_CARCINOGENS() -> void:
 
 
 func init_LIQUID_IRON() -> void:
-	add_job(Job.Type.LIQUID_IRON)
+	add_job(Job.Type.LIQUID_IRON, true)
 	cost = Cost.new({
 		Currency.Type.CONCRETE: Value.new(30),
 		Currency.Type.STEEL: Value.new(25),
@@ -668,7 +670,7 @@ func init_LIQUID_IRON() -> void:
 
 
 func init_STEEL() -> void:
-	add_job(Job.Type.STEEL)
+	add_job(Job.Type.STEEL, true)
 	cost = Cost.new({
 		Currency.Type.IRON: Value.new(15000),
 		Currency.Type.COPPER: Value.new(3000),
@@ -683,7 +685,7 @@ func init_STEEL() -> void:
 
 
 func init_SAND() -> void:
-	add_job(Job.Type.SAND)
+	add_job(Job.Type.SAND, true)
 	cost = Cost.new({
 		Currency.Type.IRON: Value.new(700),
 		Currency.Type.COPPER: Value.new(2850),
@@ -697,7 +699,7 @@ func init_SAND() -> void:
 
 
 func init_GLASS() -> void:
-	add_job(Job.Type.GLASS)
+	add_job(Job.Type.GLASS, true)
 	cost = Cost.new({
 		Currency.Type.COPPER: Value.new(6000),
 		Currency.Type.STEEL: Value.new(40),
@@ -711,7 +713,7 @@ func init_GLASS() -> void:
 
 
 func init_WIRE() -> void:
-	add_job(Job.Type.WIRE)
+	add_job(Job.Type.WIRE, true)
 	cost = Cost.new({
 		Currency.Type.STONE: Value.new(13000),
 		Currency.Type.GLASS: Value.new(30),
@@ -725,7 +727,7 @@ func init_WIRE() -> void:
 
 
 func init_DRAW_PLATE() -> void:
-	add_job(Job.Type.DRAW_PLATE)
+	add_job(Job.Type.DRAW_PLATE, true)
 	cost = Cost.new({
 		Currency.Type.IRON: Value.new(900),
 		Currency.Type.CONCRETE: Value.new(300),
@@ -739,7 +741,7 @@ func init_DRAW_PLATE() -> void:
 
 
 func init_AXES() -> void:
-	add_job(Job.Type.AXES)
+	add_job(Job.Type.AXES, true)
 	cost = Cost.new({
 		Currency.Type.IRON: Value.new(1000),
 		Currency.Type.HARDWOOD: Value.new(55),
@@ -752,7 +754,7 @@ func init_AXES() -> void:
 
 
 func init_WOOD() -> void:
-	add_job(Job.Type.WOOD)
+	add_job(Job.Type.WOOD, true)
 	cost = Cost.new({
 		Currency.Type.COPPER: Value.new(4500),
 		Currency.Type.WIRE: Value.new(15),
@@ -766,7 +768,7 @@ func init_WOOD() -> void:
 
 
 func init_HARDWOOD() -> void:
-	add_job(Job.Type.HARDWOOD)
+	add_job(Job.Type.HARDWOOD, true)
 	cost = Cost.new({
 		Currency.Type.IRON: Value.new(3500),
 		Currency.Type.CONCRETE: Value.new(350),
@@ -780,7 +782,7 @@ func init_HARDWOOD() -> void:
 
 
 func init_TUMORS() -> void:
-	add_job(Job.Type.TUMORS)
+	add_job(Job.Type.TUMORS, true)
 	cost = Cost.new({
 		Currency.Type.HARDWOOD: Value.new(50),
 		Currency.Type.WIRE: Value.new(150),
@@ -827,8 +829,9 @@ func init_BLOOD() -> void:
 
 
 
-func add_job(_job: int) -> void:
+func add_job(_job: int, unlocked_by_default := false) -> void:
 	jobs[_job] = Job.new(_job) as Job
+	jobs[_job].unlocked_by_default = unlocked_by_default
 	if jobs.size() == 1:
 		default_frames = jobs[_job].animation
 	
@@ -858,6 +861,21 @@ func loreds_initialized() -> void:
 		job.connect("became_workable", work)
 		job.connect("completed", job_completed)
 		job.connect("cut_short", job_cut_short)
+		
+		if job.unlocked_by_default:
+			unlock_job(job.type)
+
+
+func unlock_job(job_type: int) -> void:
+	if not job_type in unlocked_jobs:
+		unlocked_jobs.append(job_type)
+		jobs[job_type].unlocked = true
+
+
+func lock_job(job_type: int) -> void:
+	if job_type in unlocked_jobs:
+		unlocked_jobs.erase(job_type)
+		jobs[job_type].unlocked = false
 
 
 func sort_jobs():
@@ -1347,9 +1365,42 @@ func get_attributes_by_currency(currency_type: int) -> Array:
 	return arr
 
 
-func get_job_that_produces_currency(cur: int) -> Job:
+
+func get_used_currency_rate(cur: int) -> Big:
+	if cur == Currency.Type.COAL:
+		if type == Type.JOULES:
+			return Big.new(fuel_cost.get_value()).a(
+				jobs[Job.Type.JOULES].required_currencies.cost[cur].get_value()).d(
+					jobs[Job.Type.JOULES].duration.get_as_float()
+				)
+		elif type == Type.PLASTIC:
+			return Big.new(fuel_cost.get_value()).a(
+				jobs[Job.Type.PLASTIC].required_currencies.cost[cur].get_value()).d(
+					jobs[Job.Type.PLASTIC].duration.get_as_float()
+				)
+		if fuel_currency == cur:
+			return Big.new(fuel_cost.get_value())
+	
+	var rate = Big.new(0)
+	for job in jobs.values():
+		if job.uses_currency(cur):
+			rate.a(
+				Big.new(job.required_currencies.cost[cur].get_value()).d(
+					job.duration.get_as_float()
+				).do_not_emit()
+			)
+	return rate
+
+
+func get_produced_currency_rate(cur: int) -> Big:
+	var rate = Big.new(0)
 	for job in jobs.values():
 		if job.produces_currency(cur):
-			return job
-	print_debug("why and how")
-	return Job.new(0)
+			rate.a(
+				Big.new(job.produced_currencies[cur].get_value()).d(
+					job.duration.get_as_float()
+				).do_not_emit()
+			)
+	return rate
+
+

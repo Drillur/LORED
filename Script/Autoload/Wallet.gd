@@ -75,8 +75,20 @@ func subtract_pending(cur: int, amount) -> void:
 	currency[cur].subtract_pending(amount)
 
 
-func add_producer(cur: int, lored: int) -> void:
-	currency[cur].add_producer(lored)
+func append_producer(cur: int, lored: int) -> void:
+	currency[cur].append_producer(lored)
+
+
+func append_user(cur: int, lored: int) -> void:
+	currency[cur].append_user(lored)
+
+
+func erase_producer(cur: int, lored: int) -> void:
+	currency[cur].erase_producer(lored)
+
+
+func erase_user(cur: int, lored: int) -> void:
+	currency[cur].erase_user(lored)
 
 
 func add_from_lored(cur: int, amount) -> void:

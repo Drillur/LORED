@@ -14,12 +14,12 @@ func _on_tree_exited():
 @onready var progress_bar = %"Progress Bar"
 @onready var delta_bar = %"Delta Bar"
 @onready var delta_timer = %Timer
-@onready var marker_33 = $"bg/Marker 33"
-@onready var marker_66 = $"bg/Marker 66"
 @onready var texts = %Texts
 @onready var text = %Text
 @onready var texts_container = %TextsContainer
 @onready var edge = %Edge
+@onready var warning_marker = %"Warning Marker"
+@onready var danger_marker = %"Danger Marker"
 
 var color: Color:
 	set(val):
@@ -54,6 +54,9 @@ func _on_resized():
 	progress_bar.size.y = size.y
 	if animating_changes:
 		delta_bar.size.y = size.y
+#	if markers_present:
+#		warning_marker.rect_size.y = size.y
+#		danger_marker.rect_size.y = size.y
 
 
 
@@ -76,8 +79,8 @@ func animate_changes():
 
 func remove_markers():
 	markers_present = false
-	marker_33.queue_free()
-	marker_66.queue_free()
+	warning_marker.queue_free()
+	danger_marker.queue_free()
 	return self
 
 

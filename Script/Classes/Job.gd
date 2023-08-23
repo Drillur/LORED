@@ -54,13 +54,13 @@ signal began_working
 signal stopped_working
 signal completed
 signal cut_short
+signal unlocked_changed(unlocked)
 
 var type: int
 var lored: int
 
 var crit: Value
 
-var work_pass := -1.0
 var clock_in_time: float
 
 var key: String
@@ -72,6 +72,16 @@ var animation_key: String
 var two_part_animation := false
 var part_one_played := false
 
+var unlocked_by_default := false
+var unlocked := false:
+	set(val):
+		if unlocked != val:
+			unlocked = val
+			if val:
+				append_producer_and_user()
+			else:
+				erase_producer_and_user()
+			unlocked_changed.emit(val)
 var starting := false
 var added_current_rate := false
 var added_total_rate := false
@@ -87,6 +97,8 @@ var has_required_currencies := false
 var in_hand_input := {}
 var required_currencies: Cost
 var required_rates := {}
+
+var timer: Timer
 
 var last_production := {}
 
@@ -105,6 +117,8 @@ func _init(_type: int) -> void:
 	
 	has_required_currencies = required_currencies != null
 	has_produced_currencies = not produced_currencies.is_empty()
+	
+	unlocked_changed.connect(became_unlocked)
 	
 	hookup_required_currencies()
 
@@ -493,15 +507,31 @@ func assign_lored(_lored: int) -> void:
 	
 	lv.get_lored(lored).connect("job_started", another_job_started)
 	lv.get_lored(lored).connect("stopped_working", subtract_current_rate)
-	
+
+
+
+func append_producer_and_user() -> void:
 	if has_produced_currencies:
 		for cur in produced_currencies:
-			wa.add_producer(cur, lv.get_lored(lored).type)
+			wa.append_producer(cur, lored)
+	if has_required_currencies:
+		for cur in required_currencies.cost:
+			wa.append_user(cur, lored)
+
+
+func erase_producer_and_user() -> void:
+	if has_produced_currencies:
+		for cur in produced_currencies:
+			wa.erase_producer(cur, lored)
+	if has_required_currencies:
+		for cur in required_currencies.cost:
+			wa.erase_user(cur, lored)
+
 
 
 func hookup_required_currencies() -> void:
 	if has_required_currencies:
-		required_currencies.connect("became_affordable", required_currency_became_affordable)
+		required_currencies.connect("became_affordable", emit_workable)
 		required_currencies.use_allowed_changed.connect(required_currency_use_allowed_changed)
 
 
@@ -537,13 +567,27 @@ func lored_fuel_cost_changed() -> void:
 	has_sufficient_fuel = lv.get_lored(lored).fuel.get_current().greater_equal(fuel_cost.get_value())
 
 
-func required_currency_became_affordable() -> void:
-	if required_currencies.use_allowed and required_currencies.affordable:
-		emit_signal("became_workable")
-
-
 func required_currency_use_allowed_changed(allowed: bool) -> void:
-	if allowed and required_currencies.affordable:
+	if allowed:
+		emit_workable()
+
+
+func became_unlocked(_unlocked: bool) -> void:
+	if _unlocked:
+		emit_workable()
+
+
+func emit_workable() -> void:
+	if (
+		unlocked
+		and (
+			not has_required_currencies
+			or (
+				required_currencies.use_allowed
+				and required_currencies.affordable
+			)
+		)
+	):
 		became_workable.emit()
 
 
@@ -571,6 +615,8 @@ func another_job_started(job: Job) -> void:
 
 
 func can_start() -> bool:
+	if not unlocked:
+		return false
 	if lv.get_lored(lored).fuel.get_current_percent() <= lv.FUEL_DANGER and type != Type.REFUEL:
 		return false
 	if has_method("can_start_job_special_requirements_" + key):
@@ -733,14 +779,23 @@ func start() -> void:
 	working = true
 	
 	lv.get_lored(lored).fuel.subtract(fuel_cost.get_value())
-	lv.start_job_timer(self)
+	start_timer()
 	emit_signal("began_working")
 
 
+func start_timer() -> void:
+	if not is_instance_valid(timer):
+		timer = Timer.new()
+		timer.one_shot = true
+		lv.add_child(timer)
+		timer.timeout.connect(complete)
+	timer.start(duration.get_as_float())
+
+
 func stop() -> void:
-	work_pass = -1.0
 	no_longer_working()
 	emit_signal("cut_short")
+	timer.stop()
 
 
 func complete() -> void:
@@ -824,6 +879,17 @@ func get_attributes_by_currency(currency: int) -> Array:
 
 
 func produces_currency(cur: int) -> bool:
+	if not unlocked:
+		return false
+	if not produced_currencies:
+		return false
 	return cur in produced_currencies.keys()
 
+
+func uses_currency(cur: int) -> bool:
+	if not unlocked:
+		return false
+	if not has_required_currencies:
+		return false
+	return cur in required_currencies.cost.keys()
 

@@ -17,7 +17,19 @@ func _on_tree_exited():
 @onready var check = %Check
 @onready var button = %Button
 
+signal mouse_entered_custom(cur)
+
 var currency: Currency
+
+
+
+func _ready() -> void:
+	button.mouse_exited.connect(gv.clear_tooltip)
+
+
+
+func _on_mouse_entered():
+	mouse_entered_custom.emit(currency.type)
 
 
 

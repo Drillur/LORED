@@ -325,7 +325,22 @@ focus_mode = 0
 theme = ExtResource("1_kpejk")
 text = "Save sort type"
 
-[connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]
+[node name="Control" type="Control" parent="."]
+layout_mode = 2
+mouse_filter = 2
+metadata/_edit_lock_ = true
+
+[node name="Right" type="Control" parent="Control"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = 10.0
+offset_top = -10.0
+offset_right = 10.0
+offset_bottom = -10.0
+grow_horizontal = 0
+
 [connection signal="tab_changed" from="VBoxContainer/Tabs" to="." method="_on_tab_changed"]
 [connection signal="pressed" from="Options/MarginContainer/VBoxContainer/MarginContainer2/VBoxContainer/keep_wallet_sorted" to="." method="_on_keep_wallet_sorted_pressed"]
 [connection signal="pressed" from="Options/MarginContainer/VBoxContainer/MarginContainer2/VBoxContainer/save_wallet_sort" to="." method="_on_save_wallet_sort_pressed"]

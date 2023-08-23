@@ -68,12 +68,11 @@ func _ready():
 	fuel_bar.size.x = size.x
 	fuel_bar.delta_bar.hide()
 	fuel_bar.animate_changes()
+	fuel_bar.hide_background()
 	set_icons()
 	remove_checks()
 	
-	jobs.hide()
 	active_buffs.hide()
-	sleep.hide()
 	view_special.hide()
 	
 	sleep_text_timer.connect("timeout", spew_sleep_text)
@@ -211,9 +210,7 @@ func load_started() -> void:
 
 func lored_leveled_up(_level: int) -> void:
 	if not lored.purchased:
-		jobs.hide()
 		active_buffs.hide()
-		sleep.hide()
 		view_special.hide()
 		currency.hide()
 		name_and_icon.show()
@@ -260,7 +257,7 @@ func sleep_lock(unlocked: bool) -> void:
 
 
 func advanced_details_lock(unlocked: bool) -> void:
-	jobs.visible = unlocked
+	jobs.visible = unlocked or gv.dev_mode
 	if unlocked:
 		gv.flash(jobs, lored.color)
 

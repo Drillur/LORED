@@ -27,12 +27,12 @@ var theme_standard := preload("res://Theme/Standard.tres")
 var theme_invis := preload("res://Theme/Invis.tres")
 var theme_text_button := preload("res://Theme/TextButton.tres")
 var theme_text_button_alternate := preload("res://Theme/TextButtonAlternate.tres")
+var label := preload("res://Hud/rich_text_label.tscn")
 
 var ascending_icon: Texture = preload("res://Sprites/Hud/arrow-up-s-line.png")
 var descending_icon: Texture = preload("res://Sprites/Hud/arrow-down-s-line.png")
 
 var control_node := preload("res://Hud/control.tscn")
-
 const SRC := {
 	"dtext": preload("res://Hud/dtext.tscn"),
 	"price_and_currency": preload("res://Hud/price_and_currency.tscn"),
@@ -46,6 +46,7 @@ const SRC := {
 	"UPGRADE": preload("res://Hud/Upgrade/Tooltip/upgrade_tooltip.tscn"),
 	"WISH": preload("res://Hud/Wish/Tooltip/wish_tooltip.tscn"),
 	"JUST_TEXT": preload("res://Hud/Tooltip/Just Text.tscn"),
+	"WALLET_CURRENCY": preload("res://Hud/Wallet/wallet_currency_tooltip.tscn"),
 }
 
 const TEXTURES := {
@@ -291,6 +292,7 @@ enum Tooltip {
 	UPGRADE,
 	WISH,
 	JUST_TEXT,
+	WALLET_CURRENCY,
 }
 
 var TOOLTIP_KEYS := Tooltip.keys()
@@ -332,6 +334,14 @@ func get_tooltip() -> Node:
 			return tooltip_content
 	return null
 
+
+func scroll_tooltip(direction: int) -> void:
+	if (
+		tip_filled
+		and is_instance_valid(tooltip_content)
+		and tooltip_content.has_method("scroll")
+	):
+		tooltip_content.scroll(direction)
 
 
 func get_timer(duration: float) -> SceneTreeTimer:

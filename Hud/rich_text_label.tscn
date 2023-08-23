@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://b411lpbrvvmuj"]
+[gd_scene load_steps=3 format=3 uid="uid://b411lpbrvvmuj"]
 
 [ext_resource type="Theme" uid="uid://b8t7tkhvril5g" path="res://Theme/Standard.tres" id="1_kd3uq"]
+[ext_resource type="Script" path="res://Hud/rich_text_label.gd" id="2_7qm6o"]
 
 [node name="RichTextLabel" type="RichTextLabel"]
 unique_name_in_owner = true
@@ -10,3 +11,4 @@ bbcode_enabled = true
 text = "T"
 fit_content = true
 autowrap_mode = 0
+script = ExtResource("2_7qm6o")

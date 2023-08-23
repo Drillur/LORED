@@ -12,8 +12,6 @@ extends MarginContainer
 @onready var lucky_multiplier = %lucky_multiplier
 @onready var info_title_bg = %"info title bg"
 
-var label := preload("res://Hud/rich_text_label.tscn")
-
 signal showed_or_removed
 func _on_visibility_changed():
 	if visible:
@@ -67,7 +65,7 @@ func setup_reward_text() -> void:
 		rewards.queue_free()
 		return
 	for _text in wish.get_reward_texts():
-		var x = label.instantiate()
+		var x = gv.label.instantiate()
 		x.text = _text
 		reward_details.add_child(x)
 
