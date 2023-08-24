@@ -130,6 +130,15 @@ func _on_save_wallet_sort_pressed():
 	wa.save_wallet_sort = not wa.save_wallet_sort
 
 
+func _on_fade_gui_input(event):
+	if (
+		event is InputEventMouseButton
+		and event.is_pressed()
+		and event.button_index == MOUSE_BUTTON_LEFT
+	):
+		options.hide()
+
+
 
 func stage_unlocked(stage: int, unlocked: bool) -> void:
 	if stage == 0:

@@ -342,5 +342,6 @@ offset_bottom = -10.0
 grow_horizontal = 0
 
 [connection signal="tab_changed" from="VBoxContainer/Tabs" to="." method="_on_tab_changed"]
+[connection signal="gui_input" from="Options/fade" to="." method="_on_fade_gui_input"]
 [connection signal="pressed" from="Options/MarginContainer/VBoxContainer/MarginContainer2/VBoxContainer/keep_wallet_sorted" to="." method="_on_keep_wallet_sorted_pressed"]
 [connection signal="pressed" from="Options/MarginContainer/VBoxContainer/MarginContainer2/VBoxContainer/save_wallet_sort" to="." method="_on_save_wallet_sort_pressed"]

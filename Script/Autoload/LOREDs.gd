@@ -112,6 +112,42 @@ var active := []
 var active_and_awake := []
 var never_purchased := []
 
+var key_loreds := [
+	LORED.Type.STONE,
+	LORED.Type.CONCRETE,
+	LORED.Type.MALIGNANCY,
+	LORED.Type.WATER,
+	LORED.Type.LEAD,
+	LORED.Type.TREES,
+	LORED.Type.SOIL,
+	LORED.Type.STEEL,
+	LORED.Type.WIRE,
+	LORED.Type.GLASS,
+	LORED.Type.TUMORS,
+	LORED.Type.WOOD,
+	LORED.Type.IRON,
+	LORED.Type.COPPER,
+	LORED.Type.COAL,
+	LORED.Type.JOULES,
+]
+var loreds_required_for_extra_normal_menu := [
+	LORED.Type.SEEDS,
+	LORED.Type.TREES,
+	LORED.Type.WATER,
+	LORED.Type.SOIL,
+	LORED.Type.HUMUS,
+	LORED.Type.SAND,
+	LORED.Type.GLASS,
+	LORED.Type.LIQUID_IRON,
+	LORED.Type.STEEL,
+	LORED.Type.HARDWOOD,
+	LORED.Type.AXES,
+	LORED.Type.WOOD,
+	LORED.Type.DRAW_PLATE,
+	LORED.Type.WIRE,
+]
+var extra_normal_menu_unlocked := false
+
 
 
 

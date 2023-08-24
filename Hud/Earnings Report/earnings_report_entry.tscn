@@ -1,12 +1,12 @@
-[gd_scene load_steps=3 format=3 uid="uid://q2v7jcdoik5q"]
+[gd_scene load_steps=3 format=3 uid="uid://cy2u42e4tqe3n"]
 
-[ext_resource type="Script" path="res://Hud/LORED/Tooltip/lored_job_entry.gd" id="1_fldbd"]
-[ext_resource type="Theme" uid="uid://b8t7tkhvril5g" path="res://Theme/Standard.tres" id="3_d2fmc"]
+[ext_resource type="Theme" uid="uid://b8t7tkhvril5g" path="res://Theme/Standard.tres" id="1_3r11i"]
+[ext_resource type="Script" path="res://Hud/Earnings Report/earnings_report_entry.gd" id="1_qgwmc"]
 
-[node name="LORED Job Entry" type="MarginContainer"]
+[node name="Earnings Report Entry" type="MarginContainer"]
 offset_right = 200.0
 offset_bottom = 15.0
-script = ExtResource("1_fldbd")
+script = ExtResource("1_qgwmc")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 2
@@ -16,7 +16,7 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 4
-theme = ExtResource("3_d2fmc")
+theme = ExtResource("1_3r11i")
 theme_override_font_sizes/italics_font_size = 12
 bbcode_enabled = true
 text = "123e123"
@@ -28,7 +28,7 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 4
-theme = ExtResource("3_d2fmc")
+theme = ExtResource("1_3r11i")
 theme_override_font_sizes/italics_font_size = 12
 bbcode_enabled = true
 text = "[img=<15>]res://Sprites/Currency/axe.png[/img] Axes"

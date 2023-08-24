@@ -146,7 +146,21 @@ var unlocked := false:
 				saved_vars.erase("asleep")
 				saved_vars.erase("times_purchased")
 				saved_vars.erase("time_spent_asleep")
-
+var key_lored := false
+var autobuy := false:
+	set(val):
+		if autobuy != val:
+			autobuy = val
+			if val:
+				if gv.closed:
+					await gv.opened
+				if not cost.became_affordable.is_connected(autobuy_check):
+					cost.became_affordable.connect(autobuy_check)
+				if can_afford():
+					autobuy_check()
+			else:
+				if cost.became_affordable.is_connected(autobuy_check):
+					cost.became_affordable.disconnect(autobuy_check)
 var purchased := false:
 	set(val):
 		if purchased != val:
@@ -208,11 +222,7 @@ var icon_and_name_text: String
 var cost: Cost
 var cost_increase := Value.new(3)
 
-var has_vico := false
-var vico: LOREDVico:
-	set(val):
-		vico = val
-		has_vico = true
+var vico: LOREDVico
 
 var jobs := {}
 var sorted_jobs := []
@@ -239,6 +249,7 @@ func _init(_type: int) -> void:
 	
 	call("init_" + key)
 	
+	key_lored = type in lv.key_loreds
 	required_currencies.append(fuel_currency)
 	add_job(Job.Type.REFUEL, true)
 	
@@ -835,12 +846,26 @@ func add_job(_job: int, unlocked_by_default := false) -> void:
 	if jobs.size() == 1:
 		default_frames = jobs[_job].animation
 	
-	for cur in jobs[_job].get_produced_currencies():
+	if unlocked_by_default:
+		add_job_produced_and_required_currencies(_job)
+
+
+func add_job_produced_and_required_currencies(job_type: int) -> void:
+	var job = jobs[job_type]
+	for cur in job.get_produced_currencies():
 		if not cur in produced_currencies:
 			produced_currencies.append(cur)
-	for cur in jobs[_job].get_required_currency_types():
+	for cur in job.get_required_currency_types():
 		if not cur in required_currencies:
 			required_currencies.append(cur)
+
+
+func remove_job_produced_and_required_currencies(job_type: int) -> void:
+	var job = jobs[job_type]
+	for cur in job.get_produced_currencies():
+		produced_currencies.erase(cur)
+	for cur in job.get_required_currency_types():
+		required_currencies.erase(cur)
 
 
 func loreds_initialized() -> void:
@@ -870,12 +895,14 @@ func unlock_job(job_type: int) -> void:
 	if not job_type in unlocked_jobs:
 		unlocked_jobs.append(job_type)
 		jobs[job_type].unlocked = true
+		add_job_produced_and_required_currencies(job_type)
 
 
 func lock_job(job_type: int) -> void:
 	if job_type in unlocked_jobs:
 		unlocked_jobs.erase(job_type)
 		jobs[job_type].unlocked = false
+		remove_job_produced_and_required_currencies(job_type)
 
 
 func sort_jobs():
@@ -982,10 +1009,75 @@ func manual_purchase() -> void:
 	purchase()
 
 
+func autobuy_check() -> void:
+	if should_autobuy():
+		automatic_purchase()
+
+
+func should_autobuy() -> bool:
+	if (
+		unlocked
+		and autobuy
+		#and gv.session_duration >= 2
+		and can_afford()
+		and not asleep
+	):
+		if (
+			type == Type.GALENA and not lv.is_lored_purchased(Type.DRAW_PLATE)
+			or type == Type.WOOD and not lv.is_lored_purchased(Type.SEEDS)
+		):
+			return false
+		
+		if (
+			stage == 2
+			and not lv.extra_normal_menu_unlocked
+			and not type in lv.loreds_required_for_extra_normal_menu
+		):
+			return false
+		
+		if not purchased:
+			return true
+		
+		if (
+			(
+				stage == 1
+				and up.is_upgrade_purchased(Upgrade.Type.DONT_TAKE_CANDY_FROM_BABIES)
+				and level < 5
+			) or (
+				type in [Type.MALIGNANCY, Type.IRON, Type.COPPER]
+				and up.is_upgrade_purchased(Upgrade.Type.THE_WITCH_OF_LOREDELITH)
+			)
+			or (
+				type == Type.IRON_ORE
+				and up.is_upgrade_purchased(Upgrade.Type.I_RUN)
+			)
+			or (
+				type == Type.COPPER_ORE
+				and up.is_upgrade_purchased(Upgrade.Type.THE_THIRD)
+			)
+			or (
+				type == Type.COAL
+				and up.is_upgrade_purchased(Upgrade.Type.WAIT_THATS_NOT_FAIR)
+			)
+		):
+			return true
+		
+		if wa.currencies_have_negative_net(required_currencies):
+			return false
+		
+		if key_lored:
+			return true
+		
+		if wa.currencies_have_negative_net(produced_currencies):
+			return true
+	
+	return false
+
+
 func automatic_purchase() -> void:
 	last_purchase_automatic = true
 	last_purchase_forced = false
-	cost.spend(true)
+	cost.spend(false)
 	purchase()
 
 
@@ -1120,6 +1212,15 @@ func emote_next_in_line() -> void:
 	
 	if is_connected("finished_emoting", emote_next_in_line):
 		disconnect("finished_emoting", emote_next_in_line)
+
+
+
+func enable_autobuy() -> void:
+	autobuy = true
+
+
+func disable_autobuy() -> void:
+	autobuy = false
 
 
 

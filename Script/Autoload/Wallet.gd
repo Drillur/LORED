@@ -205,9 +205,35 @@ func is_current_rate_positive(cur: int) -> bool:
 	return get_currency(cur).positive_current_rate
 
 
+func is_total_rate_positive(cur: int) -> bool:
+	return get_currency(cur).positive_total_rate
+
+
+func is_current_rate_negative(cur: int) -> bool:
+	return not is_current_rate_positive(cur)
+
+
+func is_total_rate_negative(cur: int) -> bool:
+	return not is_total_rate_positive(cur)
+
+
 func is_use_allowed(cur: int) -> bool:
 	return get_currency(cur).use_allowed
 
 
 func get_currencies_in_stage(stage: int) -> Array:
 	return gv.get_currencies_in_stage(stage)
+
+
+func currencies_have_positive_net(currencies: Array) -> bool:
+	for cur in currencies:
+		if is_total_rate_negative(cur):
+			return false
+	return true
+
+
+func currencies_have_negative_net(currencies: Array) -> bool:
+	return not currencies_have_positive_net(currencies)
+
+
+

@@ -90,7 +90,7 @@ text = "Buy 4 Loreds"
 [node name="Dev2" type="Button" parent="Left/Dev"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Save 1
+text = "Reset Stage 1
 "
 
 [node name="Dev4" type="Button" parent="Left/Dev"]
@@ -102,8 +102,7 @@ text = "0"
 [node name="Dev3" type="Button" parent="Left/Dev"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Load 1
-"
+text = "Reset Stage 2"
 
 [node name="Dev5" type="Button" parent="Left/Dev"]
 unique_name_in_owner = true

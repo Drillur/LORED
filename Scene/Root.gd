@@ -251,14 +251,14 @@ func _on_dev_pressed():
 
 var test_data: String
 func _on_dev_2_pressed():
-	SaveManager.save_game(SaveManager.SaveMethod.TEST)
+	gv.reset(1)
 	pass
 
 func _on_dev_4_pressed():
 	pass # Replace with function body.
 
 func _on_dev_3_pressed():
-	SaveManager.load_game(SaveManager.LoadMethod.TEST)
+	gv.reset(2)
 	pass
 
 func _on_dev_5_pressed():

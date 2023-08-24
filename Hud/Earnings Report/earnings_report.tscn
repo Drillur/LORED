@@ -1,0 +1,290 @@
+[gd_scene load_steps=9 format=3 uid="uid://c2quvpihdkvj2"]
+
+[ext_resource type="Theme" uid="uid://bl4v2v143rihi" path="res://Theme/Background.tres" id="1_yve1h"]
+[ext_resource type="Theme" uid="uid://8dmfgxdrr5yh" path="res://Theme/Title.tres" id="2_ag71j"]
+[ext_resource type="PackedScene" uid="uid://cb3ej8nlybhvm" path="res://Hud/icon_button.tscn" id="3_5ucbr"]
+[ext_resource type="Theme" uid="uid://b8t7tkhvril5g" path="res://Theme/Standard.tres" id="4_gs7lu"]
+[ext_resource type="Texture2D" uid="uid://jbcyavxupodp" path="res://Sprites/reactions/Test.png" id="4_sbuap"]
+[ext_resource type="PackedScene" uid="uid://cy2u42e4tqe3n" path="res://Hud/Earnings Report/earnings_report_entry.tscn" id="6_aeubw"]
+[ext_resource type="PackedScene" uid="uid://c0518n1uf8jt2" path="res://Hud/text_button.tscn" id="7_u0y7l"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sbtnb"]
+bg_color = Color(0, 0, 0, 0.501961)
+
+[node name="Earnings Report" type="MarginContainer"]
+offset_right = 240.0
+offset_bottom = 366.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="bg" type="Panel" parent="."]
+layout_mode = 2
+theme = ExtResource("1_yve1h")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Title" type="MarginContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="title bg" type="Panel" parent="VBoxContainer/Title"]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("2_ag71j")
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Title"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="Title" type="RichTextLabel" parent="VBoxContainer/Title/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+theme = ExtResource("2_ag71j")
+bbcode_enabled = true
+text = "Earnings Report"
+fit_content = true
+autowrap_mode = 0
+
+[node name="Hamburger" parent="VBoxContainer/Title" instance=ExtResource("3_5ucbr")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+texture = ExtResource("4_sbuap")
+stretch_mode = 3
+
+[node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme = ExtResource("4_gs7lu")
+bbcode_enabled = true
+text = "[i]Hey, buddy! You were gone for [b]12 hours, 34 minutes, and 56 seconds!"
+fit_content = true
+
+[node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme = ExtResource("4_gs7lu")
+bbcode_enabled = true
+text = "[i]Because [img=<15>]res://Sprites/Currency/coal.png[/img] Coal had a negative net output when you left, every single LORED that relies on him for [b]fuel[/b] took a production hit."
+fit_content = true
+
+[node name="RichTextLabel4" type="RichTextLabel" parent="VBoxContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme = ExtResource("4_gs7lu")
+bbcode_enabled = true
+text = "Same for [img=<15>]res://Sprites/Currency/jo.png[/img] Joules, too, unfortunately!"
+fit_content = true
+
+[node name="RichTextLabel5" type="RichTextLabel" parent="VBoxContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme = ExtResource("4_gs7lu")
+bbcode_enabled = true
+text = "So, you lost some resources. Looky here:"
+fit_content = true
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer2" type="GridContainer" parent="VBoxContainer/MarginContainer/VBoxContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/h_separation = 16
+columns = 2
+
+[node name="Earnings Report Entry3" parent="VBoxContainer/MarginContainer/VBoxContainer/MarginContainer/VBoxContainer2" instance=ExtResource("6_aeubw")]
+layout_mode = 2
+
+[node name="Earnings Report Entry2" parent="VBoxContainer/MarginContainer/VBoxContainer/MarginContainer/VBoxContainer2" instance=ExtResource("6_aeubw")]
+layout_mode = 2
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="VBoxContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme = ExtResource("4_gs7lu")
+bbcode_enabled = true
+text = "[i]Besides all that, things went pretty alright! Look, you got all this!"
+fit_content = true
+
+[node name="MarginContainer2" type="MarginContainer" parent="VBoxContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="GridContainer" parent="VBoxContainer/MarginContainer/VBoxContainer/MarginContainer2"]
+layout_mode = 2
+theme_override_constants/h_separation = 16
+columns = 2
+
+[node name="Earnings Report Entry" parent="VBoxContainer/MarginContainer/VBoxContainer/MarginContainer2/VBoxContainer" instance=ExtResource("6_aeubw")]
+layout_mode = 2
+
+[node name="Earnings Report Entry4" parent="VBoxContainer/MarginContainer/VBoxContainer/MarginContainer2/VBoxContainer" instance=ExtResource("6_aeubw")]
+layout_mode = 2
+
+[node name="Earnings Report Entry3" parent="VBoxContainer/MarginContainer/VBoxContainer/MarginContainer2/VBoxContainer" instance=ExtResource("6_aeubw")]
+layout_mode = 2
+
+[node name="Earnings Report Entry5" parent="VBoxContainer/MarginContainer/VBoxContainer/MarginContainer2/VBoxContainer" instance=ExtResource("6_aeubw")]
+layout_mode = 2
+
+[node name="Earnings Report Entry2" parent="VBoxContainer/MarginContainer/VBoxContainer/MarginContainer2/VBoxContainer" instance=ExtResource("6_aeubw")]
+layout_mode = 2
+
+[node name="RichTextLabel3" type="RichTextLabel" parent="VBoxContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme = ExtResource("4_gs7lu")
+bbcode_enabled = true
+text = "[i]I'll spare you the rest, milord, it surely isn't worth your time to consider. Rest assured, [b]you made progress!"
+fit_content = true
+
+[node name="Title2" type="MarginContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="title bg" type="Panel" parent="VBoxContainer/Title2"]
+layout_mode = 2
+theme = ExtResource("2_ag71j")
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Title2"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/Title2/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="Nice" parent="VBoxContainer/Title2/MarginContainer/HBoxContainer" instance=ExtResource("7_u0y7l")]
+layout_mode = 2
+
+[node name="Mean" parent="VBoxContainer/Title2/MarginContainer/HBoxContainer" instance=ExtResource("7_u0y7l")]
+layout_mode = 2
+
+[node name="Options" type="Control" parent="."]
+unique_name_in_owner = true
+visible = false
+clip_contents = true
+layout_mode = 2
+mouse_filter = 2
+
+[node name="fade" type="Panel" parent="Options"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_sbtnb")
+
+[node name="MarginContainer" type="MarginContainer" parent="Options"]
+layout_mode = 1
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_right = 164.0
+grow_vertical = 2
+
+[node name="option bg" type="Panel" parent="Options/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("1_yve1h")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Options/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Title" type="MarginContainer" parent="Options/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="option title bg" type="Panel" parent="Options/MarginContainer/VBoxContainer/Title"]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("2_ag71j")
+
+[node name="MarginContainer" type="MarginContainer" parent="Options/MarginContainer/VBoxContainer/Title"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="Title" type="RichTextLabel" parent="Options/MarginContainer/VBoxContainer/Title/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme = ExtResource("2_ag71j")
+bbcode_enabled = true
+text = "Options"
+fit_content = true
+autowrap_mode = 0
+
+[node name="Hamburger2" parent="Options/MarginContainer/VBoxContainer/Title" instance=ExtResource("3_5ucbr")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="MarginContainer2" type="MarginContainer" parent="Options/MarginContainer/VBoxContainer"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Options/MarginContainer/VBoxContainer/MarginContainer2"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="keep_wallet_sorted" type="CheckBox" parent="Options/MarginContainer/VBoxContainer/MarginContainer2/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("4_gs7lu")
+text = "Keep constantly sorted"
+
+[node name="save_wallet_sort" type="CheckBox" parent="Options/MarginContainer/VBoxContainer/MarginContainer2/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("4_gs7lu")
+text = "Save sort type"
+
+[connection signal="gui_input" from="Options/fade" to="." method="_on_fade_gui_input" flags=18]
+[connection signal="pressed" from="Options/MarginContainer/VBoxContainer/MarginContainer2/VBoxContainer/keep_wallet_sorted" to="." method="_on_keep_wallet_sorted_pressed" flags=18]
+[connection signal="pressed" from="Options/MarginContainer/VBoxContainer/MarginContainer2/VBoxContainer/save_wallet_sort" to="." method="_on_save_wallet_sort_pressed" flags=18]

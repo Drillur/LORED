@@ -60,7 +60,7 @@ var texts_parent: Control
 
 
 func _ready() -> void:
-	open()
+	session_tracker()
 	for i in range(0, 5):
 		set("stage" + str(i), Stage.new(i))
 		get("stage" + str(i)).stage_unlocked_changed.connect(emit_stage_unlocked)
@@ -137,14 +137,14 @@ func session_tracker() -> void:
 
 # - Handy
 
-var password := 0.0
-
+signal opened
 signal root_ready_finished
 var root_ready := false:
 	set(val):
 		root_ready = val
 		if val:
 			emit_signal("root_ready_finished")
+var closed := true
 
 
 func reload_scene() -> void:
@@ -173,12 +173,11 @@ func open_all() -> void:
 
 
 func close() -> void:
-	password = 0.0
+	closed = true
 
 
 func open() -> void:
-	password = Time.get_unix_time_from_system()
-	session_tracker()
+	closed = false
 
 
 
@@ -431,8 +430,7 @@ var stage2: Stage
 var stage3: Stage
 var stage4: Stage
 
-signal just_reset
-signal just_complete_reset
+signal stage_reset(stage)
 signal stage_unlocked(stage, unlocked)
 signal stage_changed(stage)
 
@@ -446,9 +444,11 @@ var last_reset_stage := 1
 
 
 func reset(stage: int) -> void:
-	for i in range(stage, 0, -1):
-		get("stage" + str(i)).reset()
-	emit_signal("just_reset")
+	if stage == 0:
+		stage_reset.emit(0) # complete reset; new game
+	else:
+		for i in range(stage, 0, -1):
+			stage_reset.emit(i)
 
 
 func add_currency_to_stage(stage: int, currency: int) -> void:

@@ -243,7 +243,7 @@ func RANDOM_COAL() -> void:
 		d.append(11)
 	if lv.can_lored_emote(LORED.Type.COPPER_ORE):
 		d.append(12)
-	if not wa.is_current_rate_positive(Currency.Type.COAL):
+	if not wa.is_total_rate_positive(Currency.Type.COAL):
 		d.append(14)
 	if lv.get_fuel_percent(speaker) <= lv.FUEL_WARNING:
 		d.append(17)

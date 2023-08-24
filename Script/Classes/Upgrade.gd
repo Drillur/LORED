@@ -7,6 +7,8 @@ var saved_vars := [
 	"unlocked",
 	"times_purchased",
 	"purchased",
+	"effect",
+	"will_apply_effect",
 ]
 
 
@@ -14,8 +16,6 @@ func load_finished() -> void:
 	if purchased:
 		if will_apply_effect:
 			refund()
-		elif effect_applied:
-			apply()
 		emit_signal("just_unlocked")
 
 
@@ -263,12 +263,18 @@ enum Type {
 class Effect:
 	
 	var saved_vars := [
-		"effect",
+		"applied",
 	]
 	
 	
 	func load_started() -> void:
 		remove()
+	
+	
+	func load_finished() -> void:
+		if applied:
+			applied = false
+			apply()
 	
 	
 	enum Type {
@@ -280,6 +286,7 @@ class Effect:
 		FUEL,
 		FUEL_COST,
 		ITS_GROWIN_ON_ME,
+		AUTOBUYER,
 	}
 	
 	var type: int
@@ -287,6 +294,7 @@ class Effect:
 	var text: String
 	
 	var applied := false
+	var dynamic := false
 	
 	var effect: Value
 	var in_hand: Big
@@ -311,12 +319,16 @@ class Effect:
 		if type == Type.ITS_GROWIN_ON_ME:
 			effect2 = Value.new(details["effect value"])
 		
-		if effect2 != null:
-			saved_vars.append("effect2")
+		dynamic = "dynamic" in details.keys()
+		if dynamic:
+			saved_vars.append("effect")
+			if effect2 != null:
+				saved_vars.append("effect2")
 		
 		set_base_text()
 		
 		SaveManager.connect("load_started", load_started)
+		SaveManager.connect("load_finished", load_finished)
 	
 	
 	
@@ -337,6 +349,8 @@ class Effect:
 	func add_effected_lored(lored_type: int) -> void:
 		var lored = lv.get_lored(lored_type)
 		match type:
+			Type.AUTOBUYER:
+				pass
 			Type.SPECIFIC_INPUT:
 				for att in lored.get_attributes_by_currency(effected_input):
 					apply_methods.append(att.increase_multiplied)
@@ -465,23 +479,12 @@ var unlocked := true:
 
 var special: bool
 
-var effect_applied := false:
-	set(val):
-		if effect_applied != val:
-			effect_applied = val
-			if val:
-				saved_vars.append("effect")
-			else:
-				saved_vars.erase("effect")
-
 var purchased := false:
 	set(val):
 		if purchased != val:
 			purchased = val
 			if val:
 				emit_signal("just_purchased")
-				saved_vars.append("effect_applied")
-				saved_vars.append("will_apply_effect")
 			else:
 				just_unpurchased.emit()
 			emit_signal("purchased_changed", self)
@@ -521,6 +524,8 @@ func _init(_type: int) -> void:
 	else: #s4
 		stage = 3
 		special = false #s3
+	
+	gv.stage_reset.connect(reset)
 	
 	match stage:
 		1:
@@ -922,12 +927,25 @@ func init_RED_GOOPY_BOY() -> void:
 	required_upgrade = Type.STICKYTAR
 
 
-
-func set_effect(_type: int, base_value: float, effected_input = -1) -> void:
-	effect = Effect.new(_type, {
-		"effect value": base_value,
-		"effected_input": effected_input,
+func init_AUTOSHOVELER() -> void:
+	name = "Auto-Shoveler"
+	set_effect(Effect.Type.AUTOBUYER)
+	add_effected_lored(LORED.Type.COAL)
+	cost = Cost.new({
+		Currency.Type.MALIGNANCY: Value.new(1500),
 	})
+#	await up.all_upgrades_initialized
+#	required_upgrade = Type.STICKYTAR
+
+
+
+func set_effect(_type: int, base_value := -1.0, effected_input = -1) -> void:
+	var data := {}
+	if base_value != -1:
+		data["effect value"] = base_value
+	if effected_input != -1:
+		data["effected_input"] = effected_input
+	effect = Effect.new(_type, data)
 
 
 func add_effected_lored(lored: int) -> void:
@@ -977,18 +995,32 @@ func finalize_purchase() -> void:
 
 func apply() -> void:
 	effect.apply()
-	effect_applied = true
 
 
 func refund() -> void:
 	if not purchased:
 		return
 	cost.refund()
-	if special:
-		will_apply_effect = false
-	if effect_applied:
+	remove()
+
+
+func remove() -> void:
+	if purchased:
+		if special:
+			will_apply_effect = false
 		effect.remove()
-	purchased = false
+		purchased = false
+
+
+
+func reset(_stage: int) -> void:
+	if _stage == stage:
+		if will_apply_effect:
+			apply()
+		elif not special:
+			remove()
+	elif _stage > stage:
+		remove()
 
 
 
