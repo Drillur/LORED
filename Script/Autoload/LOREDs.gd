@@ -82,6 +82,7 @@ const ANIMATION_FRAMES := {
 	"refuel1": 27,
 }
 
+signal started
 signal purchased_every_lored_once
 signal loreds_initialized
 signal sleep_just_unlocked(unlocked)
@@ -177,9 +178,7 @@ func close() -> void:
 
 
 func start() -> void:
-	unlock_lored(LORED.Type.COAL)
-	unlock_lored(LORED.Type.STONE)
-	get_lored(LORED.Type.STONE).force_purchase()
+	started.emit()
 
 
 
@@ -321,6 +320,14 @@ func get_fuel_percent(lored: int) -> float:
 
 func get_icon_and_name_text(lored: int) -> String:
 	return get_lored(lored).icon_and_name_text
+
+
+func get_colored_icon_and_name(lored: int) -> String:
+	return get_lored(lored).color_text % get_icon_and_name_text(lored)
+
+
+func get_colored_name(lored: int) -> String:
+	return get_lored(lored).color_text % get_lored_name(lored)
 
 
 func get_lored_name(lored: int) -> String:

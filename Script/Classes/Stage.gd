@@ -103,3 +103,10 @@ func unlock() -> void:
 
 
 # - Get
+
+func get_colored_name() -> String:
+	return color_text % name
+
+
+func get_colored_icon_and_name() -> String:
+	return color_text % icon_and_name_text

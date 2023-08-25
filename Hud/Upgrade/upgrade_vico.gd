@@ -71,6 +71,7 @@ func purchased_changed(_upgrade: Upgrade) -> void:
 
 func unlocked_changed() -> void:
 	if upgrade.unlocked:
+		print(upgrade.key)
 		if not upgrade.cost.affordable_changed.is_connected(cost_update):
 			upgrade.cost.connect("affordable_changed", cost_update)
 		cost_update(upgrade.cost.affordable)

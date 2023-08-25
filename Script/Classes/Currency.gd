@@ -65,7 +65,9 @@ enum Type {
 	GRIEF,
 }
 
+signal increased_by_lored(amount)
 signal increased(amount)
+signal decreased_by_lored(amount)
 signal unlocked_changed(unlocked)
 signal use_allowed_changed(allowed)
 
@@ -418,12 +420,15 @@ func add(amount) -> void:
 	if not amount is Big:
 		amount = Big.new(amount)
 	count.a(amount)
-	emit_signal("increased", amount)
+	increased.emit(amount)
 
 
 func add_from_lored(amount) -> void:
+	if not amount is Big:
+		amount = Big.new(amount)
 	add(amount)
 	added_by_loreds.a(amount)
+	increased_by_lored.emit(amount)
 
 
 func subtract(amount) -> void:
@@ -431,8 +436,11 @@ func subtract(amount) -> void:
 
 
 func subtract_from_lored(amount) -> void:
+	if not amount is Big:
+		amount = Big.new(amount).do_not_emit()
 	subtract(amount)
 	subtracted_by_loreds.a(amount)
+	decreased_by_lored.emit(amount)
 
 
 func subtract_from_player(amount) -> void:

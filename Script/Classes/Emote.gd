@@ -678,7 +678,7 @@ func IRON4_REPLY():
 
 func RANDOM_COPPER() -> void:
 	speaker = LORED.Type.COPPER
-	var d = [0, 1, 2, 3, 4, 5, 6, 7,12,13,]
+	var d = [0, 1, 2, 3, 4, 5, 6, 7,12,13,14,]
 	if lv.can_lored_emote(LORED.Type.OIL):
 		d.append(8)
 		d.append(9)
@@ -686,6 +686,7 @@ func RANDOM_COPPER() -> void:
 	if lv.get_fuel_percent(speaker) < lv.FUEL_DANGER:
 		d.append(11)
 	match d[randi() % d.size()]:
+		14: dialogue = "C'mere n get yourself s'more... S'more s'mooches!"
 		13: dialogue = "I found an extra piece of graham cracker in the bottom of the box!"
 		12:
 			dialogue = "I dreamt a future where there were no trees, no campsites. The air was poisonous. The bio balance of life was out of sorts. Farm food rotted, billions died. Marshmallow factories went bankrupt, as there were no campers to buy marshmallows. [b]S'mores[/b]... more like [b]n'mores[/b]. We followed soon after. I was the only one left, in a desert, my lips chapped, unable to move, as the lack of any moisture left my skin taut and crusty. I sat before a circle of rocks, a rod in my hand... with no wood for a fire, nothing stuck on the rod, and no one to share any of it with anyway. I waited for death, but it never came."

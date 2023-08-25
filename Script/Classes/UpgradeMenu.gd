@@ -30,6 +30,7 @@ var icon: Texture
 var icon_text: String
 var color: Color
 var color_text: String
+var icon_and_name_text: String
 
 var times_reset := 0
 var unlocked := false:
@@ -53,6 +54,7 @@ func _init(_type: int) -> void:
 		icon_text = "[img=<15>]" + icon.get_path() + "[/img]"
 	if color != null:
 		color_text = "[color=#" + color.to_html() + "]%s[/color]"
+	icon_and_name_text = icon_text + " " + name
 
 
 
@@ -116,7 +118,3 @@ func get_total_upgrade_count() -> int:
 
 func get_current_upgrade_count() -> int:
 	return purchased_upgrades.size()
-
-
-func icon_and_name_text() -> String:
-	return icon_text + " " + name

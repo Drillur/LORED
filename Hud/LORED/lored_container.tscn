@@ -23,101 +23,102 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/Stage 1"]
+[node name="ScrollContainer1" type="ScrollContainer" parent="TabContainer/Stage 1"]
+unique_name_in_owner = true
 layout_mode = 2
 horizontal_scroll_mode = 0
 
-[node name="MarginContainer" type="MarginContainer" parent="TabContainer/Stage 1/ScrollContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="TabContainer/Stage 1/ScrollContainer1"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/margin_top = 250
 theme_override_constants/margin_bottom = 250
 
-[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Stage 1/ScrollContainer/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Stage 1/ScrollContainer1/MarginContainer"]
 layout_mode = 2
 theme_override_constants/separation = 30
 
-[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Stage 1/ScrollContainer/MarginContainer/VBoxContainer"]
-layout_mode = 2
-theme_override_constants/separation = 30
-alignment = 1
-
-[node name="MALIGNANCY" parent="TabContainer/Stage 1/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer" groups=["Stage 1"] instance=ExtResource("1_4k0y7")]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="HBoxContainer2" type="HBoxContainer" parent="TabContainer/Stage 1/ScrollContainer/MarginContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Stage 1/ScrollContainer1/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/separation = 30
 alignment = 1
 
-[node name="TARBALLS" parent="TabContainer/Stage 1/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer2" groups=["Stage 1"] instance=ExtResource("1_4k0y7")]
+[node name="MALIGNANCY" parent="TabContainer/Stage 1/ScrollContainer1/MarginContainer/VBoxContainer/HBoxContainer" groups=["Stage 1"] instance=ExtResource("1_4k0y7")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="GROWTH" parent="TabContainer/Stage 1/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer2" groups=["Stage 1"] instance=ExtResource("1_4k0y7")]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="HBoxContainer3" type="HBoxContainer" parent="TabContainer/Stage 1/ScrollContainer/MarginContainer/VBoxContainer"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="TabContainer/Stage 1/ScrollContainer1/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/separation = 30
 alignment = 1
 
-[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Stage 1/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer3"]
+[node name="TARBALLS" parent="TabContainer/Stage 1/ScrollContainer1/MarginContainer/VBoxContainer/HBoxContainer2" groups=["Stage 1"] instance=ExtResource("1_4k0y7")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="GROWTH" parent="TabContainer/Stage 1/ScrollContainer1/MarginContainer/VBoxContainer/HBoxContainer2" groups=["Stage 1"] instance=ExtResource("1_4k0y7")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="TabContainer/Stage 1/ScrollContainer1/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 30
+alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Stage 1/ScrollContainer1/MarginContainer/VBoxContainer/HBoxContainer3"]
 layout_mode = 2
 theme_override_constants/separation = 30
 
-[node name="CONCRETE" parent="TabContainer/Stage 1/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer3/VBoxContainer" groups=["Stage 1"] instance=ExtResource("1_4k0y7")]
+[node name="CONCRETE" parent="TabContainer/Stage 1/ScrollContainer1/MarginContainer/VBoxContainer/HBoxContainer3/VBoxContainer" groups=["Stage 1"] instance=ExtResource("1_4k0y7")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="OIL" parent="TabContainer/Stage 1/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer3/VBoxContainer" groups=["Stage 1"] instance=ExtResource("1_4k0y7")]
+[node name="OIL" parent="TabContainer/Stage 1/ScrollContainer1/MarginContainer/VBoxContainer/HBoxContainer3/VBoxContainer" groups=["Stage 1"] instance=ExtResource("1_4k0y7")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="JOULES" parent="TabContainer/Stage 1/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer3/VBoxContainer" groups=["Stage 1"] instance=ExtResource("1_4k0y7")]
+[node name="JOULES" parent="TabContainer/Stage 1/ScrollContainer1/MarginContainer/VBoxContainer/HBoxContainer3/VBoxContainer" groups=["Stage 1"] instance=ExtResource("1_4k0y7")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="TabContainer/Stage 1/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer3"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="TabContainer/Stage 1/ScrollContainer1/MarginContainer/VBoxContainer/HBoxContainer3"]
 layout_mode = 2
 theme_override_constants/separation = 30
 
-[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Stage 1/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer3/VBoxContainer2"]
+[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Stage 1/ScrollContainer1/MarginContainer/VBoxContainer/HBoxContainer3/VBoxContainer2"]
 layout_mode = 2
 theme_override_constants/separation = 30
 
-[node name="IRON" parent="TabContainer/Stage 1/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer3/VBoxContainer2/HBoxContainer" groups=["Stage 1"] instance=ExtResource("1_4k0y7")]
+[node name="IRON" parent="TabContainer/Stage 1/ScrollContainer1/MarginContainer/VBoxContainer/HBoxContainer3/VBoxContainer2/HBoxContainer" groups=["Stage 1"] instance=ExtResource("1_4k0y7")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="COPPER" parent="TabContainer/Stage 1/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer3/VBoxContainer2/HBoxContainer" groups=["Stage 1"] instance=ExtResource("1_4k0y7")]
+[node name="COPPER" parent="TabContainer/Stage 1/ScrollContainer1/MarginContainer/VBoxContainer/HBoxContainer3/VBoxContainer2/HBoxContainer" groups=["Stage 1"] instance=ExtResource("1_4k0y7")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="TabContainer/Stage 1/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer3/VBoxContainer2"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="TabContainer/Stage 1/ScrollContainer1/MarginContainer/VBoxContainer/HBoxContainer3/VBoxContainer2"]
 layout_mode = 2
 theme_override_constants/separation = 30
 
-[node name="IRON_ORE" parent="TabContainer/Stage 1/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer3/VBoxContainer2/HBoxContainer2" groups=["Stage 1"] instance=ExtResource("1_4k0y7")]
+[node name="IRON_ORE" parent="TabContainer/Stage 1/ScrollContainer1/MarginContainer/VBoxContainer/HBoxContainer3/VBoxContainer2/HBoxContainer2" groups=["Stage 1"] instance=ExtResource("1_4k0y7")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="COPPER_ORE" parent="TabContainer/Stage 1/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer3/VBoxContainer2/HBoxContainer2" groups=["Stage 1"] instance=ExtResource("1_4k0y7")]
+[node name="COPPER_ORE" parent="TabContainer/Stage 1/ScrollContainer1/MarginContainer/VBoxContainer/HBoxContainer3/VBoxContainer2/HBoxContainer2" groups=["Stage 1"] instance=ExtResource("1_4k0y7")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="HBoxContainer3" type="HBoxContainer" parent="TabContainer/Stage 1/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer3/VBoxContainer2"]
+[node name="HBoxContainer3" type="HBoxContainer" parent="TabContainer/Stage 1/ScrollContainer1/MarginContainer/VBoxContainer/HBoxContainer3/VBoxContainer2"]
 layout_mode = 2
 theme_override_constants/separation = 30
 
-[node name="COAL" parent="TabContainer/Stage 1/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer3/VBoxContainer2/HBoxContainer3" groups=["Stage 1"] instance=ExtResource("1_4k0y7")]
+[node name="COAL" parent="TabContainer/Stage 1/ScrollContainer1/MarginContainer/VBoxContainer/HBoxContainer3/VBoxContainer2/HBoxContainer3" groups=["Stage 1"] instance=ExtResource("1_4k0y7")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="STONE" parent="TabContainer/Stage 1/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer3/VBoxContainer2/HBoxContainer3" groups=["Stage 1"] instance=ExtResource("1_4k0y7")]
+[node name="STONE" parent="TabContainer/Stage 1/ScrollContainer1/MarginContainer/VBoxContainer/HBoxContainer3/VBoxContainer2/HBoxContainer3" groups=["Stage 1"] instance=ExtResource("1_4k0y7")]
 unique_name_in_owner = true
 layout_mode = 2
 
@@ -129,164 +130,165 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/Stage 2"]
+[node name="ScrollContainer2" type="ScrollContainer" parent="TabContainer/Stage 2"]
+unique_name_in_owner = true
 layout_mode = 2
 horizontal_scroll_mode = 0
 
-[node name="MarginContainer" type="MarginContainer" parent="TabContainer/Stage 2/ScrollContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="TabContainer/Stage 2/ScrollContainer2"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/margin_top = 250
 theme_override_constants/margin_bottom = 250
 
-[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Stage 2/ScrollContainer/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Stage 2/ScrollContainer2/MarginContainer"]
 layout_mode = 2
 theme_override_constants/separation = 30
 
-[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Stage 2/ScrollContainer/MarginContainer/VBoxContainer"]
-layout_mode = 2
-theme_override_constants/separation = 30
-alignment = 1
-
-[node name="CARCINOGENS" parent="TabContainer/Stage 2/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer" groups=["Stage 2"] instance=ExtResource("1_4k0y7")]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="TUMORS" parent="TabContainer/Stage 2/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer" groups=["Stage 2"] instance=ExtResource("1_4k0y7")]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="HBoxContainer2" type="HBoxContainer" parent="TabContainer/Stage 2/ScrollContainer/MarginContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Stage 2/ScrollContainer2/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/separation = 30
 alignment = 1
 
-[node name="PLASTIC" parent="TabContainer/Stage 2/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer2" groups=["Stage 2"] instance=ExtResource("1_4k0y7")]
+[node name="CARCINOGENS" parent="TabContainer/Stage 2/ScrollContainer2/MarginContainer/VBoxContainer/HBoxContainer" groups=["Stage 2"] instance=ExtResource("1_4k0y7")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="TOBACCO" parent="TabContainer/Stage 2/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer2" groups=["Stage 2"] instance=ExtResource("1_4k0y7")]
+[node name="TUMORS" parent="TabContainer/Stage 2/ScrollContainer2/MarginContainer/VBoxContainer/HBoxContainer" groups=["Stage 2"] instance=ExtResource("1_4k0y7")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="CIGARETTES" parent="TabContainer/Stage 2/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer2" groups=["Stage 2"] instance=ExtResource("1_4k0y7")]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="HBoxContainer4" type="HBoxContainer" parent="TabContainer/Stage 2/ScrollContainer/MarginContainer/VBoxContainer"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="TabContainer/Stage 2/ScrollContainer2/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/separation = 30
 alignment = 1
 
-[node name="PETROLEUM" parent="TabContainer/Stage 2/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer4" groups=["Stage 2"] instance=ExtResource("1_4k0y7")]
+[node name="PLASTIC" parent="TabContainer/Stage 2/ScrollContainer2/MarginContainer/VBoxContainer/HBoxContainer2" groups=["Stage 2"] instance=ExtResource("1_4k0y7")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="WOOD_PULP" parent="TabContainer/Stage 2/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer4" groups=["Stage 2"] instance=ExtResource("1_4k0y7")]
+[node name="TOBACCO" parent="TabContainer/Stage 2/ScrollContainer2/MarginContainer/VBoxContainer/HBoxContainer2" groups=["Stage 2"] instance=ExtResource("1_4k0y7")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="PAPER" parent="TabContainer/Stage 2/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer4" groups=["Stage 2"] instance=ExtResource("1_4k0y7")]
+[node name="CIGARETTES" parent="TabContainer/Stage 2/ScrollContainer2/MarginContainer/VBoxContainer/HBoxContainer2" groups=["Stage 2"] instance=ExtResource("1_4k0y7")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="HBoxContainer5" type="HBoxContainer" parent="TabContainer/Stage 2/ScrollContainer/MarginContainer/VBoxContainer"]
+[node name="HBoxContainer4" type="HBoxContainer" parent="TabContainer/Stage 2/ScrollContainer2/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/separation = 30
 alignment = 1
 
-[node name="GALENA" parent="TabContainer/Stage 2/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer5" groups=["Stage 2"] instance=ExtResource("1_4k0y7")]
+[node name="PETROLEUM" parent="TabContainer/Stage 2/ScrollContainer2/MarginContainer/VBoxContainer/HBoxContainer4" groups=["Stage 2"] instance=ExtResource("1_4k0y7")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="LEAD" parent="TabContainer/Stage 2/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer5" groups=["Stage 2"] instance=ExtResource("1_4k0y7")]
+[node name="WOOD_PULP" parent="TabContainer/Stage 2/ScrollContainer2/MarginContainer/VBoxContainer/HBoxContainer4" groups=["Stage 2"] instance=ExtResource("1_4k0y7")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="HBoxContainer6" type="HBoxContainer" parent="TabContainer/Stage 2/ScrollContainer/MarginContainer/VBoxContainer"]
+[node name="PAPER" parent="TabContainer/Stage 2/ScrollContainer2/MarginContainer/VBoxContainer/HBoxContainer4" groups=["Stage 2"] instance=ExtResource("1_4k0y7")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer5" type="HBoxContainer" parent="TabContainer/Stage 2/ScrollContainer2/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/separation = 30
 alignment = 1
 
-[node name="DRAW_PLATE" parent="TabContainer/Stage 2/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer6" groups=["Stage 2"] instance=ExtResource("1_4k0y7")]
+[node name="GALENA" parent="TabContainer/Stage 2/ScrollContainer2/MarginContainer/VBoxContainer/HBoxContainer5" groups=["Stage 2"] instance=ExtResource("1_4k0y7")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="WIRE" parent="TabContainer/Stage 2/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer6" groups=["Stage 2"] instance=ExtResource("1_4k0y7")]
+[node name="LEAD" parent="TabContainer/Stage 2/ScrollContainer2/MarginContainer/VBoxContainer/HBoxContainer5" groups=["Stage 2"] instance=ExtResource("1_4k0y7")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="HBoxContainer7" type="HBoxContainer" parent="TabContainer/Stage 2/ScrollContainer/MarginContainer/VBoxContainer"]
+[node name="HBoxContainer6" type="HBoxContainer" parent="TabContainer/Stage 2/ScrollContainer2/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/separation = 30
 alignment = 1
 
-[node name="SAND" parent="TabContainer/Stage 2/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer7" groups=["Stage 2"] instance=ExtResource("1_4k0y7")]
+[node name="DRAW_PLATE" parent="TabContainer/Stage 2/ScrollContainer2/MarginContainer/VBoxContainer/HBoxContainer6" groups=["Stage 2"] instance=ExtResource("1_4k0y7")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="GLASS" parent="TabContainer/Stage 2/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer7" groups=["Stage 2"] instance=ExtResource("1_4k0y7")]
+[node name="WIRE" parent="TabContainer/Stage 2/ScrollContainer2/MarginContainer/VBoxContainer/HBoxContainer6" groups=["Stage 2"] instance=ExtResource("1_4k0y7")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="HBoxContainer8" type="HBoxContainer" parent="TabContainer/Stage 2/ScrollContainer/MarginContainer/VBoxContainer"]
+[node name="HBoxContainer7" type="HBoxContainer" parent="TabContainer/Stage 2/ScrollContainer2/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/separation = 30
 alignment = 1
 
-[node name="LIQUID_IRON" parent="TabContainer/Stage 2/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer8" groups=["Stage 2"] instance=ExtResource("1_4k0y7")]
+[node name="SAND" parent="TabContainer/Stage 2/ScrollContainer2/MarginContainer/VBoxContainer/HBoxContainer7" groups=["Stage 2"] instance=ExtResource("1_4k0y7")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="STEEL" parent="TabContainer/Stage 2/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer8" groups=["Stage 2"] instance=ExtResource("1_4k0y7")]
+[node name="GLASS" parent="TabContainer/Stage 2/ScrollContainer2/MarginContainer/VBoxContainer/HBoxContainer7" groups=["Stage 2"] instance=ExtResource("1_4k0y7")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="HBoxContainer9" type="HBoxContainer" parent="TabContainer/Stage 2/ScrollContainer/MarginContainer/VBoxContainer"]
+[node name="HBoxContainer8" type="HBoxContainer" parent="TabContainer/Stage 2/ScrollContainer2/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/separation = 30
 alignment = 1
 
-[node name="AXES" parent="TabContainer/Stage 2/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer9" groups=["Stage 2"] instance=ExtResource("1_4k0y7")]
+[node name="LIQUID_IRON" parent="TabContainer/Stage 2/ScrollContainer2/MarginContainer/VBoxContainer/HBoxContainer8" groups=["Stage 2"] instance=ExtResource("1_4k0y7")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="WOOD" parent="TabContainer/Stage 2/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer9" groups=["Stage 2"] instance=ExtResource("1_4k0y7")]
+[node name="STEEL" parent="TabContainer/Stage 2/ScrollContainer2/MarginContainer/VBoxContainer/HBoxContainer8" groups=["Stage 2"] instance=ExtResource("1_4k0y7")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="HARDWOOD" parent="TabContainer/Stage 2/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer9" groups=["Stage 2"] instance=ExtResource("1_4k0y7")]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="HBoxContainer10" type="HBoxContainer" parent="TabContainer/Stage 2/ScrollContainer/MarginContainer/VBoxContainer"]
+[node name="HBoxContainer9" type="HBoxContainer" parent="TabContainer/Stage 2/ScrollContainer2/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/separation = 30
 alignment = 1
 
-[node name="SEEDS" parent="TabContainer/Stage 2/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer10" groups=["Stage 2"] instance=ExtResource("1_4k0y7")]
+[node name="AXES" parent="TabContainer/Stage 2/ScrollContainer2/MarginContainer/VBoxContainer/HBoxContainer9" groups=["Stage 2"] instance=ExtResource("1_4k0y7")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="TREES" parent="TabContainer/Stage 2/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer10" groups=["Stage 2"] instance=ExtResource("1_4k0y7")]
+[node name="WOOD" parent="TabContainer/Stage 2/ScrollContainer2/MarginContainer/VBoxContainer/HBoxContainer9" groups=["Stage 2"] instance=ExtResource("1_4k0y7")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="SOIL" parent="TabContainer/Stage 2/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer10" groups=["Stage 2"] instance=ExtResource("1_4k0y7")]
+[node name="HARDWOOD" parent="TabContainer/Stage 2/ScrollContainer2/MarginContainer/VBoxContainer/HBoxContainer9" groups=["Stage 2"] instance=ExtResource("1_4k0y7")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="HBoxContainer11" type="HBoxContainer" parent="TabContainer/Stage 2/ScrollContainer/MarginContainer/VBoxContainer"]
+[node name="HBoxContainer10" type="HBoxContainer" parent="TabContainer/Stage 2/ScrollContainer2/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/separation = 30
 alignment = 1
 
-[node name="WATER" parent="TabContainer/Stage 2/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer11" groups=["Stage 2"] instance=ExtResource("1_4k0y7")]
+[node name="SEEDS" parent="TabContainer/Stage 2/ScrollContainer2/MarginContainer/VBoxContainer/HBoxContainer10" groups=["Stage 2"] instance=ExtResource("1_4k0y7")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="HUMUS" parent="TabContainer/Stage 2/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer11" groups=["Stage 2"] instance=ExtResource("1_4k0y7")]
+[node name="TREES" parent="TabContainer/Stage 2/ScrollContainer2/MarginContainer/VBoxContainer/HBoxContainer10" groups=["Stage 2"] instance=ExtResource("1_4k0y7")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="SOIL" parent="TabContainer/Stage 2/ScrollContainer2/MarginContainer/VBoxContainer/HBoxContainer10" groups=["Stage 2"] instance=ExtResource("1_4k0y7")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer11" type="HBoxContainer" parent="TabContainer/Stage 2/ScrollContainer2/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 30
+alignment = 1
+
+[node name="WATER" parent="TabContainer/Stage 2/ScrollContainer2/MarginContainer/VBoxContainer/HBoxContainer11" groups=["Stage 2"] instance=ExtResource("1_4k0y7")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HUMUS" parent="TabContainer/Stage 2/ScrollContainer2/MarginContainer/VBoxContainer/HBoxContainer11" groups=["Stage 2"] instance=ExtResource("1_4k0y7")]
 unique_name_in_owner = true
 layout_mode = 2
 
@@ -298,31 +300,65 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/Stage 3"]
+[node name="ScrollContainer3" type="ScrollContainer" parent="TabContainer/Stage 3"]
+unique_name_in_owner = true
 layout_mode = 2
 horizontal_scroll_mode = 0
 
-[node name="MarginContainer" type="MarginContainer" parent="TabContainer/Stage 3/ScrollContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="TabContainer/Stage 3/ScrollContainer3"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/margin_top = 250
 theme_override_constants/margin_bottom = 250
 
-[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Stage 3/ScrollContainer/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Stage 3/ScrollContainer3/MarginContainer"]
 layout_mode = 2
 theme_override_constants/separation = 30
 
-[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Stage 3/ScrollContainer/MarginContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Stage 3/ScrollContainer3/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/separation = 30
 alignment = 1
 
-[node name="BLOOD" parent="TabContainer/Stage 3/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer" instance=ExtResource("1_4k0y7")]
+[node name="BLOOD" parent="TabContainer/Stage 3/ScrollContainer3/MarginContainer/VBoxContainer/HBoxContainer" instance=ExtResource("1_4k0y7")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="WITCH" parent="TabContainer/Stage 3/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer" instance=ExtResource("1_4k0y7")]
+[node name="WITCH" parent="TabContainer/Stage 3/ScrollContainer3/MarginContainer/VBoxContainer/HBoxContainer" instance=ExtResource("1_4k0y7")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Stage 4" type="MarginContainer" parent="TabContainer"]
+visible = false
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="ScrollContainer4" type="ScrollContainer" parent="TabContainer/Stage 4"]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_scroll_mode = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="TabContainer/Stage 4/ScrollContainer4"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_top = 250
+theme_override_constants/margin_bottom = 250
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Stage 4/ScrollContainer4/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 30
+
+[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Stage 4/ScrollContainer4/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 30
+alignment = 1
+
+[node name="S4PLACEHOLDER" parent="TabContainer/Stage 4/ScrollContainer4/MarginContainer/VBoxContainer/HBoxContainer" instance=ExtResource("1_4k0y7")]
 unique_name_in_owner = true
 layout_mode = 2
 

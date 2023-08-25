@@ -80,6 +80,7 @@ enum Type {
 	BLOOD, # leave BLOOD at the bottom. see: init_stage()
 	
 	# put s4 loreds here
+	S4PLACEHOLDER,
 }
 enum ReasonCannotWork {
 	CAN_WORK,
@@ -146,6 +147,16 @@ var unlocked := false:
 				saved_vars.erase("asleep")
 				saved_vars.erase("times_purchased")
 				saved_vars.erase("time_spent_asleep")
+var unlocked_by_default := false:
+	set(val):
+		if unlocked_by_default != val:
+			unlocked_by_default = val
+			if val:
+				if not lv.started.is_connected(unlock):
+					lv.started.connect(unlock)
+			else:
+				if lv.started.is_connected(unlock):
+					lv.started.disconnect(unlock)
 var key_lored := false
 var autobuy := false:
 	set(val):
@@ -171,6 +182,16 @@ var purchased := false:
 			else:
 				lv.lored_became_inactive(type)
 			emit_signal("purchased_changed", val)
+var purchased_by_default := false:
+	set(val):
+		if purchased_by_default != val:
+			purchased_by_default = val
+			if val:
+				if not lv.started.is_connected(force_purchase):
+					lv.started.connect(force_purchase)
+			else:
+				if lv.started.is_connected(force_purchase):
+					lv.started.disconnect(force_purchase)
 var working := false
 var asleep := false:
 	set(val):
@@ -269,6 +290,9 @@ func _init(_type: int) -> void:
 	SaveManager.connect("load_started", load_started)
 	SaveManager.connect("load_started", clear_emote_queue)
 	
+	gv.prestige.connect(prestige)
+	gv.hard_reset.connect(reset)
+	
 	# stage and fuel
 	if type <= Type.OIL:
 		stage = 1
@@ -312,6 +336,8 @@ func init_STONE() -> void:
 		Currency.Type.IRON: Value.new(25.0 / 3),
 		Currency.Type.COPPER: Value.new(15.0 / 3),
 	})
+	purchased_by_default = true
+	unlocked_by_default = true
 	color = Color(0.79, 0.79, 0.79)
 	faded_color = Color(0.788235, 0.788235, 0.788235)
 	fuel_currency = Currency.Type.COAL
@@ -325,6 +351,7 @@ func init_COAL() -> void:
 	cost = Cost.new({
 		Currency.Type.STONE: Value.new(5),
 	})
+	unlocked_by_default = true
 	color = Color(0.7, 0, 1)
 	faded_color = Color(0.9, 0.3, 1)
 	fuel_currency = Currency.Type.COAL
@@ -839,6 +866,15 @@ func init_BLOOD() -> void:
 	set_female_pronouns()
 
 
+func init_S4PLACEHOLDER() -> void:
+	name = "you wouldn't think this would be necessary, but you'd be freakin wrong"
+	cost = Cost.new({Currency.Type.STONE: Value.new(1)})
+	color = Color(1, 0, 0)
+	faded_color = Color(1, 0.4, 0.4)
+	icon = preload("res://Sprites/Currency/axe.png")
+	description = "A real piece of work."
+	primary_currency = Currency.Type.STONE
+
 
 func add_job(_job: int, unlocked_by_default := false) -> void:
 	jobs[_job] = Job.new(_job) as Job
@@ -967,8 +1003,15 @@ func clear_emote_queue() -> void:
 
 # - Actions
 
-func reset():
-	level = 0
+func prestige(_stage: int) -> void:
+	if _stage >= stage:
+		reset(false)
+		
+		if purchased_by_default:
+			force_purchase()
+
+
+func reset(hard: bool):
 	output.reset()
 	input.reset()
 	haste.reset()
@@ -976,7 +1019,20 @@ func reset():
 	fuel_cost.reset()
 	cost.reset()
 	set_level_to(0)
-	#purchased = true if type == Type.STONE else false
+	asleep = false
+	working = false
+	purchased = false
+	
+	if hard:
+		times_purchased = 0
+		time_spent_asleep = 0.0
+		if type != Type.STONE:
+			purchased_by_default = false
+		if not unlocked_by_default:
+			unlocked = false
+		for job in jobs:
+			if not jobs[job].unlocked_by_default:
+				lock_job(job)
 
 
 
@@ -1038,7 +1094,7 @@ func should_autobuy() -> bool:
 		if not purchased:
 			return true
 		
-		if (
+		if ( # upgrade conditions
 			(
 				stage == 1
 				and up.is_upgrade_purchased(Upgrade.Type.DONT_TAKE_CANDY_FROM_BABIES)
@@ -1221,6 +1277,14 @@ func enable_autobuy() -> void:
 
 func disable_autobuy() -> void:
 	autobuy = false
+
+
+func enable_default_purchase() -> void:
+	purchased_by_default = true
+
+
+func disable_default_purchase() -> void:
+	purchased_by_default = false
 
 
 
@@ -1464,6 +1528,8 @@ func get_attributes_by_currency(currency_type: int) -> Array:
 	for job in jobs.values():
 		arr += job.get_attributes_by_currency(currency_type)
 	return arr
+
+
 
 
 

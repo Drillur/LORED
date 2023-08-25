@@ -146,7 +146,7 @@ func init_COAL() -> void:
 
 
 func init_IRON_ORE() -> void:
-	name = "Shoot"
+	name = "Murder"
 	duration = Value.new(4)
 	animation = preload("res://Sprites/animations/irono.tres")
 	add_produced_currency(Currency.Type.IRON_ORE, 1)

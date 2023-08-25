@@ -422,7 +422,7 @@ func parse_time(big: Big) -> String:
 
 
 
-# - Stage and - Reset
+# - Stage
 
 var stage0: Stage
 var stage1: Stage
@@ -430,7 +430,6 @@ var stage2: Stage
 var stage3: Stage
 var stage4: Stage
 
-signal stage_reset(stage)
 signal stage_unlocked(stage, unlocked)
 signal stage_changed(stage)
 
@@ -439,41 +438,58 @@ var selected_stage := 1:
 		if selected_stage != val:
 			selected_stage = val
 			emit_signal("stage_changed", selected_stage)
-var last_reset_stage := 1
 
 
-
-func reset(stage: int) -> void:
-	if stage == 0:
-		stage_reset.emit(0) # complete reset; new game
+func unlock_stage(stage: int) -> void:
+	var _stage = get_stage(stage)
+	if _stage.unlocked:
+		printerr("Stage was already unlocked.")
 	else:
-		for i in range(stage, 0, -1):
-			stage_reset.emit(i)
+		_stage.unlock()
 
 
 func add_currency_to_stage(stage: int, currency: int) -> void:
-	get("stage" + str(stage)).add_currency(currency)
+	get_stage(stage).add_currency(currency)
 
 
 func add_upgrade_to_stage(stage: int, upgrade: int) -> void:
-	get("stage" + str(stage)).add_upgrade(upgrade)
+	get_stage(stage).add_upgrade(upgrade)
 
 
 func add_lored_to_stage(stage: int, lored: int) -> void:
-	get("stage" + str(stage)).add_lored(lored)
+	get_stage(stage).add_lored(lored)
 
+
+
+func get_stage(stage: int) -> Stage:
+	return get("stage" + str(stage))
 
 
 func get_stage_color(stage: int) -> Color:
-	return get("stage" + str(stage)).color
+	return get_stage(stage).color
+
+
+func get_stage_icon(stage: int) -> Texture:
+	return get_stage(stage).icon
+
+
+
+# - Reset
+
+signal hard_reset
+signal prestige(stage)
+var last_reset_stage := 1
+
+func reset(stage: int) -> void:
+	prestige.emit(stage)
 
 
 func get_currencies_in_stage(stage: int) -> Array:
-	return get("stage" + str(stage)).currencies
+	return get_stage(stage).currencies
 
 
 func get_loreds_in_stage(stage: int) -> Array:
-	return get("stage" + str(stage)).loreds
+	return get_stage(stage).loreds
 
 
 func emit_stage_unlocked(stage: int, unlocked: bool) -> void:

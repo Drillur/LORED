@@ -114,8 +114,8 @@ var upgrade_container: UpgradeContainer:
 	set(val):
 		upgrade_container = val
 		for upgrade in upgrades.values():
-			if upgrade.type > Upgrade.Type.RED_GOOPY_BOY:
-				break
+			if upgrade.type < Upgrade.Type.AUTOSHOVELER:
+				continue
 			upgrade_container.set_vico(upgrade)
 
 signal all_upgrades_initialized
@@ -202,6 +202,10 @@ func get_icon_and_name_text(upgrade: int) -> String:
 
 func get_menu_name(menu: int) -> String:
 	return upgrade_menus[menu].name
+
+
+func get_colored_upgrade_menu_icon_and_name(menu: int) -> String:
+	return get_menu_color_text(menu) % get_menu_icon_and_name(menu)
 
 
 func get_menu_icon_and_name(menu: int) -> String:

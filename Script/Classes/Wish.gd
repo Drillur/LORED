@@ -23,17 +23,14 @@ func load_started() -> void:
 
 class Reward:
 	
-	var saved_vars := [
-		"type",
-		"amount", 
-		"object_type", 
-	]
+	var saved_vars := []
 	
 	enum Type {
 		CURRENCY,
 		NEW_LORED,
 		JUST_TEXT,
 		UPGRADE_MENU,
+		STAGE,
 		INCREASED_RANDOM_WISH_LIMIT,
 	}
 	
@@ -79,12 +76,28 @@ class Reward:
 		if object_type == UpgradeMenu.Type.NORMAL:
 			text = "[img=<15>]res://Sprites/Hud/upgrades.png[/img] Upgrade Menu"
 		else:
-			text = upgrade_menu.icon_and_name_text() + " Upgrade Menu"
+			text = upgrade_menu.icon_and_name_text + " Upgrade Menu"
 		text = upgrade_menu.color_text % text
+	
+	
+	func init_STAGE(data: Dictionary) -> void:
+		object_type = data["object_type"]
+		var stage: Stage = gv.get_stage(object_type) as Stage
+		text = stage.color_text % stage.icon_and_name_text
 	
 	
 	func init_JUST_TEXT(data: Dictionary) -> void:
 		text = data["text"]
+	
+	
+	
+	func save_rewards() -> void:
+		if not "type" in saved_vars:
+			saved_vars = [
+				"type",
+				"amount",
+				"object_type",
+			]
 	
 	
 	
@@ -107,6 +120,12 @@ class Reward:
 	
 	func receive_UPGRADE_MENU() -> void:
 		up.unlock_menu(object_type)
+	
+	
+	func receive_STAGE() -> void:
+		gv.unlock_stage(object_type)
+		if object_type == 2:
+			gv.unlock_stage(1)
 	
 	
 	
@@ -499,10 +518,14 @@ func init_RANDOM() -> void:
 		else:
 			amounts[currency.type] = Big.new(amount)
 	for cur in amounts:
-		add_reward(Reward.new(Reward.Type.CURRENCY, {
-			"object_type": cur,
-			"amount": amounts[cur],
-		}))
+		add_reward(
+			Reward.new(
+				Reward.Type.CURRENCY, {
+					"object_type": cur,
+					"amount": amounts[cur],
+				}
+			), true
+		)
 
 
 
@@ -712,7 +735,7 @@ func init_MALIGNANCY() -> void:
 
 func init_SOCCER_DUDE() -> void:
 	giver = LORED.Type.COPPER_ORE
-	help_text = "You've got to reset to get this one, boss, see? But, you don't have to reset right now, boss. Do what you want. You're the boss, boss, see, boss?"
+	help_text = "You've got to reset to get this one, boss, see? But, you don't have to reset right now, bossy boss. Do what you want. You're the boss, boss, see, boss?"
 	thank_text = "Wicked, boss, real wicked. We're rolling with the big cats, now, boss!"
 	discord_state = "About to Metastasize for the first time!"
 	objective = Objective.new(Objective.Type.UPGRADE_PURCHASED, {
@@ -724,10 +747,39 @@ func init_SOCCER_DUDE() -> void:
 	}))
 
 
+func init_JOY2() -> void:
+	giver = LORED.Type.IRON
+	help_text = "This one just came in straight from the developer himself! No, really! Don't believe me? Ask him!"
+	thank_text = "Hey, the developer sent a message for you, as if I were some kind of Post LORED: \"You're a big stinky winky.\"\n\nI swear! It was him!! Not me! I can't believe he made me say that."
+	discord_state = "On their second run of Stage 1!"
+	objective = Objective.new(Objective.Type.COLLECT_CURRENCY, {
+		"object_type": Currency.Type.JOY,
+		"amount": 10,
+	})
+	add_reward(Reward.new(Reward.Type.INCREASED_RANDOM_WISH_LIMIT, {
+		"amount": 1,
+	}))
 
-func add_reward(reward: Reward) -> void:
+
+func init_A_NEW_LEAF() -> void:
+	giver = LORED.Type.WATER
+	help_text = "Whoa!\n\nMaybe, Trees, look! There's others out there! :0 There are so many of them! Whoooooooooooa! Whaaaaat?! !!!!"
+	thank_text = "It's really great to meet you!! I'm Water.\n\nHey, come here! I want to show you my pool!"
+	discord_state = "About to meet a new group of LOREDs!"
+	objective = Objective.new(Objective.Type.UPGRADE_PURCHASED, {
+		"object_type": Upgrade.Type.UPGRADE_NAME,
+	})
+	add_reward(Reward.new(Reward.Type.INCREASED_RANDOM_WISH_LIMIT, {
+		"amount": 1,
+	}))
+
+
+
+func add_reward(reward: Reward, save_rewards := false) -> void:
 	rewards.append(reward)
 	reward_count = rewards.size()
+	if save_rewards:
+		reward.save_rewards()
 
 
 

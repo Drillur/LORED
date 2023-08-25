@@ -23,8 +23,6 @@ script = ExtResource("1_h7r77")
 [node name="LORED Container" parent="." instance=ExtResource("2_egnhq")]
 layout_mode = 2
 
-[node name="Node2D" type="Node2D" parent="LORED Container"]
-
 [node name="Left" type="MarginContainer" parent="."]
 layout_mode = 2
 size_flags_horizontal = 0
@@ -55,6 +53,22 @@ unique_name_in_owner = true
 layout_mode = 2
 
 [node name="Upgrades Button" parent="Left/Left/Menu Buttons" instance=ExtResource("3_agafs")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Stage1" parent="Left/Left/Menu Buttons" instance=ExtResource("3_agafs")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Stage2" parent="Left/Left/Menu Buttons" instance=ExtResource("3_agafs")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Stage3" parent="Left/Left/Menu Buttons" instance=ExtResource("3_agafs")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Stage4" parent="Left/Left/Menu Buttons" instance=ExtResource("3_agafs")]
 unique_name_in_owner = true
 layout_mode = 2
 

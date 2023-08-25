@@ -65,7 +65,8 @@ func setup(data: Dictionary) -> void:
 	else:
 		description.hide()
 		recipients.text = upgrade.get_effected_loreds_text()
-		upgrade.effect.effect.connect("changed", update_effect_text) 
+		if upgrade.effect.effect != null:
+			upgrade.effect.effect.connect("changed", update_effect_text) 
 		update_effect_text()
 		recipients.show()
 		effect.show()

@@ -9,9 +9,9 @@
 [ext_resource type="Texture2D" uid="uid://bdpxtltnk88hw" path="res://Sprites/Hud/Tab/s1m.png" id="7_d5yiu"]
 
 [node name="Upgrade Container" type="MarginContainer"]
-custom_minimum_size = Vector2(300, 500)
+custom_minimum_size = Vector2(424, 500)
 offset_right = 424.0
-offset_bottom = 513.0
+offset_bottom = 500.0
 size_flags_horizontal = 4
 size_flags_vertical = 4
 script = ExtResource("1_t6e5m")
@@ -85,12 +85,13 @@ theme_override_constants/margin_bottom = 10
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/Q"]
 layout_mode = 2
 
-[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer"]
+[node name="ScrollContainer0" type="ScrollContainer" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 horizontal_scroll_mode = 0
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer0"]
 layout_mode = 2
 size_flags_horizontal = 6
 theme_override_constants/margin_left = 10
@@ -98,11 +99,11 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 15
 theme_override_constants/margin_bottom = 10
 
-[node name="Control" type="Control" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer"]
+[node name="Control" type="Control" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer0/MarginContainer"]
 layout_mode = 2
 mouse_filter = 2
 
-[node name="S1N" type="TextureRect" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Control"]
+[node name="S1N" type="TextureRect" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer0/MarginContainer/Control"]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 34.0
@@ -111,172 +112,172 @@ offset_right = 74.0
 offset_bottom = 71.0
 texture = ExtResource("6_rp56p")
 
-[node name="Upgrades" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer"]
+[node name="Upgrades" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer0/MarginContainer"]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 20
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades"]
-layout_mode = 2
-mouse_filter = 2
-theme_override_constants/separation = 20
-alignment = 1
-
-[node name="GRINDER" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer" instance=ExtResource("2_enitg")]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="LIGHTER_SHOVEL" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer" instance=ExtResource("2_enitg")]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades"]
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer0/MarginContainer/Upgrades"]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 20
 alignment = 1
 
-[node name="TEXAS" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer2" instance=ExtResource("2_enitg")]
+[node name="GRINDER" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer0/MarginContainer/Upgrades/HBoxContainer" instance=ExtResource("2_enitg")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="RYE" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer2" instance=ExtResource("2_enitg")]
+[node name="LIGHTER_SHOVEL" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer0/MarginContainer/Upgrades/HBoxContainer" instance=ExtResource("2_enitg")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="GRANDER" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer2" instance=ExtResource("2_enitg")]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="SAALNDT" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer2" instance=ExtResource("2_enitg")]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="HBoxContainer3" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer0/MarginContainer/Upgrades"]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 20
 alignment = 1
 
-[node name="SALT" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer3" instance=ExtResource("2_enitg")]
+[node name="TEXAS" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer0/MarginContainer/Upgrades/HBoxContainer2" instance=ExtResource("2_enitg")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="SAND" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer3" instance=ExtResource("2_enitg")]
+[node name="RYE" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer0/MarginContainer/Upgrades/HBoxContainer2" instance=ExtResource("2_enitg")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="GRANDMA" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer3" instance=ExtResource("2_enitg")]
+[node name="GRANDER" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer0/MarginContainer/Upgrades/HBoxContainer2" instance=ExtResource("2_enitg")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="MIXER" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer3" instance=ExtResource("2_enitg")]
+[node name="SAALNDT" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer0/MarginContainer/Upgrades/HBoxContainer2" instance=ExtResource("2_enitg")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="HBoxContainer4" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades"]
+[node name="HBoxContainer3" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer0/MarginContainer/Upgrades"]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 20
 alignment = 1
 
-[node name="FLANK" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer4" instance=ExtResource("2_enitg")]
+[node name="SALT" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer0/MarginContainer/Upgrades/HBoxContainer3" instance=ExtResource("2_enitg")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="RIB" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer4" instance=ExtResource("2_enitg")]
+[node name="SAND" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer0/MarginContainer/Upgrades/HBoxContainer3" instance=ExtResource("2_enitg")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="GRANDPA" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer4" instance=ExtResource("2_enitg")]
+[node name="GRANDMA" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer0/MarginContainer/Upgrades/HBoxContainer3" instance=ExtResource("2_enitg")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="WATT" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer4" instance=ExtResource("2_enitg")]
+[node name="MIXER" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer0/MarginContainer/Upgrades/HBoxContainer3" instance=ExtResource("2_enitg")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="SWIRLER" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer4" instance=ExtResource("2_enitg")]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="HBoxContainer5" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades"]
+[node name="HBoxContainer4" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer0/MarginContainer/Upgrades"]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 20
 alignment = 1
 
-[node name="GEARED_OILS" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer5" instance=ExtResource("2_enitg")]
+[node name="FLANK" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer0/MarginContainer/Upgrades/HBoxContainer4" instance=ExtResource("2_enitg")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="CHEEKS" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer5" instance=ExtResource("2_enitg")]
+[node name="RIB" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer0/MarginContainer/Upgrades/HBoxContainer4" instance=ExtResource("2_enitg")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="GROUNDER" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer5" instance=ExtResource("2_enitg")]
+[node name="GRANDPA" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer0/MarginContainer/Upgrades/HBoxContainer4" instance=ExtResource("2_enitg")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="MAXER" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer5" instance=ExtResource("2_enitg")]
+[node name="WATT" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer0/MarginContainer/Upgrades/HBoxContainer4" instance=ExtResource("2_enitg")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="HBoxContainer6" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades"]
+[node name="SWIRLER" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer0/MarginContainer/Upgrades/HBoxContainer4" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer5" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer0/MarginContainer/Upgrades"]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 20
 alignment = 1
 
-[node name="THYME" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer6" instance=ExtResource("2_enitg")]
+[node name="GEARED_OILS" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer0/MarginContainer/Upgrades/HBoxContainer5" instance=ExtResource("2_enitg")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="PEPPER" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer6" instance=ExtResource("2_enitg")]
+[node name="CHEEKS" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer0/MarginContainer/Upgrades/HBoxContainer5" instance=ExtResource("2_enitg")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="ANCHOVE_COVE" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer6" instance=ExtResource("2_enitg")]
+[node name="GROUNDER" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer0/MarginContainer/Upgrades/HBoxContainer5" instance=ExtResource("2_enitg")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="GARLIC" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer6" instance=ExtResource("2_enitg")]
+[node name="MAXER" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer0/MarginContainer/Upgrades/HBoxContainer5" instance=ExtResource("2_enitg")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="MUD" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer6" instance=ExtResource("2_enitg")]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="HBoxContainer7" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades"]
+[node name="HBoxContainer6" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer0/MarginContainer/Upgrades"]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 20
 alignment = 1
 
-[node name="SLOP" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer7" instance=ExtResource("2_enitg")]
+[node name="THYME" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer0/MarginContainer/Upgrades/HBoxContainer6" instance=ExtResource("2_enitg")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="SLIMER" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer7" instance=ExtResource("2_enitg")]
+[node name="PEPPER" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer0/MarginContainer/Upgrades/HBoxContainer6" instance=ExtResource("2_enitg")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="STICKYTAR" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer7" instance=ExtResource("2_enitg")]
+[node name="ANCHOVE_COVE" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer0/MarginContainer/Upgrades/HBoxContainer6" instance=ExtResource("2_enitg")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="HBoxContainer8" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades"]
+[node name="GARLIC" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer0/MarginContainer/Upgrades/HBoxContainer6" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="MUD" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer0/MarginContainer/Upgrades/HBoxContainer6" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer7" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer0/MarginContainer/Upgrades"]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 20
 alignment = 1
 
-[node name="INJECT" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer8" instance=ExtResource("2_enitg")]
+[node name="SLOP" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer0/MarginContainer/Upgrades/HBoxContainer7" instance=ExtResource("2_enitg")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="RED_GOOPY_BOY" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer8" instance=ExtResource("2_enitg")]
+[node name="SLIMER" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer0/MarginContainer/Upgrades/HBoxContainer7" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="STICKYTAR" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer0/MarginContainer/Upgrades/HBoxContainer7" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer8" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer0/MarginContainer/Upgrades"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="INJECT" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer0/MarginContainer/Upgrades/HBoxContainer8" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="RED_GOOPY_BOY" parent="MarginContainer/VBoxContainer/Tabs/Q/VBoxContainer/ScrollContainer0/MarginContainer/Upgrades/HBoxContainer8" instance=ExtResource("2_enitg")]
 unique_name_in_owner = true
 layout_mode = 2
 
@@ -290,13 +291,14 @@ theme_override_constants/margin_bottom = 10
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/W"]
 layout_mode = 2
 
-[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer"]
+[node name="ScrollContainer1" type="ScrollContainer" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 theme = ExtResource("1_nf00e")
 horizontal_scroll_mode = 0
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer1"]
 layout_mode = 2
 size_flags_horizontal = 6
 theme_override_constants/margin_left = 10
@@ -304,11 +306,11 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 15
 theme_override_constants/margin_bottom = 10
 
-[node name="Control" type="Control" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer/MarginContainer"]
+[node name="Control" type="Control" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer1/MarginContainer"]
 layout_mode = 2
 mouse_filter = 2
 
-[node name="S1M" type="TextureRect" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer/MarginContainer/Control"]
+[node name="S1M" type="TextureRect" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer1/MarginContainer/Control"]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 292.0
@@ -317,242 +319,242 @@ offset_right = 332.0
 offset_bottom = 709.0
 texture = ExtResource("7_d5yiu")
 
-[node name="Upgrades" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer/MarginContainer"]
+[node name="Upgrades" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer1/MarginContainer"]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 20
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer/MarginContainer/Upgrades"]
-layout_mode = 2
-mouse_filter = 2
-theme_override_constants/separation = 20
-alignment = 1
-
-[node name="AUTOSHOVELER" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer" instance=ExtResource("2_enitg")]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="SOCCER_DUDE" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer" instance=ExtResource("2_enitg")]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer/MarginContainer/Upgrades"]
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades"]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 20
 alignment = 1
 
-[node name="AW" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer2" instance=ExtResource("2_enitg")]
+[node name="AUTOSHOVELER" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer" instance=ExtResource("2_enitg")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="ENTHUSIASM" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer2" instance=ExtResource("2_enitg")]
+[node name="SOCCER_DUDE" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer" instance=ExtResource("2_enitg")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="CON_FRICKIN_CRETE" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer2" instance=ExtResource("2_enitg")]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="HOW_IS_THIS_AN_RPG" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer2" instance=ExtResource("2_enitg")]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="ITS_GROWIN_ON_ME" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer2" instance=ExtResource("2_enitg")]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="HBoxContainer3" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer/MarginContainer/Upgrades"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades"]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 20
 alignment = 1
 
-[node name="AUTOSTONER" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer3" instance=ExtResource("2_enitg")]
+[node name="AW" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer2" instance=ExtResource("2_enitg")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="OREOREUHBOREALICE" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer3" instance=ExtResource("2_enitg")]
+[node name="ENTHUSIASM" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer2" instance=ExtResource("2_enitg")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="YOU_LITTLE_HARD_WORKER_YOU" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer3" instance=ExtResource("2_enitg")]
+[node name="CON_FRICKIN_CRETE" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer2" instance=ExtResource("2_enitg")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="HBoxContainer4" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer/MarginContainer/Upgrades"]
+[node name="HOW_IS_THIS_AN_RPG" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer2" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="ITS_GROWIN_ON_ME" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer2" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades"]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 20
 alignment = 1
 
-[node name="COMPULSORY_JUICE" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer4" instance=ExtResource("2_enitg")]
+[node name="AUTOSTONER" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer3" instance=ExtResource("2_enitg")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="BIG_TOUGH_BOY" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer4" instance=ExtResource("2_enitg")]
+[node name="OREOREUHBOREALICE" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer3" instance=ExtResource("2_enitg")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="HBoxContainer5" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer/MarginContainer/Upgrades"]
+[node name="YOU_LITTLE_HARD_WORKER_YOU" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer3" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades"]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 20
 alignment = 1
 
-[node name="STAY_QUENCHED" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer5" instance=ExtResource("2_enitg")]
+[node name="COMPULSORY_JUICE" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer4" instance=ExtResource("2_enitg")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="OH_BABY_A_TRIPLE" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer5" instance=ExtResource("2_enitg")]
+[node name="BIG_TOUGH_BOY" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer4" instance=ExtResource("2_enitg")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="HBoxContainer6" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer/MarginContainer/Upgrades"]
+[node name="HBoxContainer5" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades"]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 20
 alignment = 1
 
-[node name="AUTOPOLICE" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer6" instance=ExtResource("2_enitg")]
+[node name="STAY_QUENCHED" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer5" instance=ExtResource("2_enitg")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="PIPPENPADDLE_OPPSOCOPOLIS" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer6" instance=ExtResource("2_enitg")]
+[node name="OH_BABY_A_TRIPLE" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer5" instance=ExtResource("2_enitg")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="I_DRINK_YOUR_MILKSHAKE" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer6" instance=ExtResource("2_enitg")]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="ORE_LORD" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer6" instance=ExtResource("2_enitg")]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="HBoxContainer7" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer/MarginContainer/Upgrades"]
+[node name="HBoxContainer6" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades"]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 20
 alignment = 1
 
-[node name="MOIST" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer7" instance=ExtResource("2_enitg")]
+[node name="AUTOPOLICE" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer6" instance=ExtResource("2_enitg")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="THE_THIRD" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer7" instance=ExtResource("2_enitg")]
+[node name="PIPPENPADDLE_OPPSOCOPOLIS" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer6" instance=ExtResource("2_enitg")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="WE_WERE_SO_CLOSE" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer7" instance=ExtResource("2_enitg")]
+[node name="I_DRINK_YOUR_MILKSHAKE" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer6" instance=ExtResource("2_enitg")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="UPGRADE_NAME" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer7" instance=ExtResource("2_enitg")]
+[node name="ORE_LORD" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer6" instance=ExtResource("2_enitg")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="HBoxContainer8" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer/MarginContainer/Upgrades"]
+[node name="HBoxContainer7" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades"]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 20
 alignment = 1
 
-[node name="WTF_IS_THAT_MUSK" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer8" instance=ExtResource("2_enitg")]
+[node name="MOIST" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer7" instance=ExtResource("2_enitg")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="CANCERS_COOL" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer8" instance=ExtResource("2_enitg")]
+[node name="THE_THIRD" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer7" instance=ExtResource("2_enitg")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="I_RUN" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer8" instance=ExtResource("2_enitg")]
+[node name="WE_WERE_SO_CLOSE" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer7" instance=ExtResource("2_enitg")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="COAL_DUDE" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer8" instance=ExtResource("2_enitg")]
+[node name="UPGRADE_NAME" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer7" instance=ExtResource("2_enitg")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="HBoxContainer9" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer/MarginContainer/Upgrades"]
+[node name="HBoxContainer8" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades"]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 20
 alignment = 1
 
-[node name="CANKERITE" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer9" instance=ExtResource("2_enitg")]
+[node name="WTF_IS_THAT_MUSK" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer8" instance=ExtResource("2_enitg")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="SENTIENT_DERRICK" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer9" instance=ExtResource("2_enitg")]
+[node name="CANCERS_COOL" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer8" instance=ExtResource("2_enitg")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="SLAPAPOW" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer9" instance=ExtResource("2_enitg")]
+[node name="I_RUN" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer8" instance=ExtResource("2_enitg")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="SIDIUS_IRON" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer9" instance=ExtResource("2_enitg")]
+[node name="COAL_DUDE" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer8" instance=ExtResource("2_enitg")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="HBoxContainer10" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer/MarginContainer/Upgrades"]
+[node name="HBoxContainer9" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades"]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 20
 alignment = 1
 
-[node name="MOUND" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer10" instance=ExtResource("2_enitg")]
+[node name="CANKERITE" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer9" instance=ExtResource("2_enitg")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="FOOD_TRUCKS" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer10" instance=ExtResource("2_enitg")]
+[node name="SENTIENT_DERRICK" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer9" instance=ExtResource("2_enitg")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="OPPAI_GUY" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer10" instance=ExtResource("2_enitg")]
+[node name="SLAPAPOW" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer9" instance=ExtResource("2_enitg")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="HBoxContainer11" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer/MarginContainer/Upgrades"]
+[node name="SIDIUS_IRON" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer9" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer10" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades"]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 20
 alignment = 1
 
-[node name="MALEVOLENT" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer11" instance=ExtResource("2_enitg")]
+[node name="MOUND" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer10" instance=ExtResource("2_enitg")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="SLUGGER" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer11" instance=ExtResource("2_enitg")]
+[node name="FOOD_TRUCKS" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer10" instance=ExtResource("2_enitg")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="THIS_GAME_IS_SO_ESEY" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer11" instance=ExtResource("2_enitg")]
+[node name="OPPAI_GUY" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer10" instance=ExtResource("2_enitg")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="HBoxContainer12" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer/MarginContainer/Upgrades"]
+[node name="HBoxContainer11" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades"]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 20
 alignment = 1
 
-[node name="WAIT_THATS_NOT_FAIR" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer12" instance=ExtResource("2_enitg")]
+[node name="MALEVOLENT" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer11" instance=ExtResource("2_enitg")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="PROCEDURE" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer12" instance=ExtResource("2_enitg")]
+[node name="SLUGGER" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer11" instance=ExtResource("2_enitg")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="HBoxContainer13" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer/MarginContainer/Upgrades"]
+[node name="THIS_GAME_IS_SO_ESEY" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer11" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer12" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades"]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 20
 alignment = 1
 
-[node name="ROUTINE" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer/MarginContainer/Upgrades/HBoxContainer13" instance=ExtResource("2_enitg")]
+[node name="WAIT_THATS_NOT_FAIR" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer12" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="PROCEDURE" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer12" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer13" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="ROUTINE" parent="MarginContainer/VBoxContainer/Tabs/W/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer13" instance=ExtResource("2_enitg")]
 unique_name_in_owner = true
 layout_mode = 2
 
@@ -567,12 +569,13 @@ theme_override_constants/margin_bottom = 10
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/E"]
 layout_mode = 2
 
-[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer"]
+[node name="ScrollContainer2" type="ScrollContainer" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 horizontal_scroll_mode = 0
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer2"]
 layout_mode = 2
 size_flags_horizontal = 6
 theme_override_constants/margin_left = 10
@@ -580,7 +583,7 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 15
 theme_override_constants/margin_bottom = 10
 
-[node name="Upgrades" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer/MarginContainer"]
+[node name="Upgrades" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer2/MarginContainer"]
 layout_mode = 2
 theme_override_constants/separation = 20
 
@@ -595,12 +598,13 @@ theme_override_constants/margin_bottom = 10
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/R"]
 layout_mode = 2
 
-[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer"]
+[node name="ScrollContainer3" type="ScrollContainer" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 horizontal_scroll_mode = 0
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer3"]
 layout_mode = 2
 size_flags_horizontal = 6
 theme_override_constants/margin_left = 10
@@ -608,7 +612,7 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 15
 theme_override_constants/margin_bottom = 10
 
-[node name="Upgrades" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer/MarginContainer"]
+[node name="Upgrades" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer3/MarginContainer"]
 layout_mode = 2
 theme_override_constants/separation = 20
 
@@ -623,12 +627,13 @@ theme_override_constants/margin_bottom = 10
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/A"]
 layout_mode = 2
 
-[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer/Tabs/A/VBoxContainer"]
+[node name="ScrollContainer4" type="ScrollContainer" parent="MarginContainer/VBoxContainer/Tabs/A/VBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 horizontal_scroll_mode = 0
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/Tabs/A/VBoxContainer/ScrollContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/Tabs/A/VBoxContainer/ScrollContainer4"]
 layout_mode = 2
 size_flags_horizontal = 6
 theme_override_constants/margin_left = 10
@@ -636,7 +641,7 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 15
 theme_override_constants/margin_bottom = 10
 
-[node name="Upgrades" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/A/VBoxContainer/ScrollContainer/MarginContainer"]
+[node name="Upgrades" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/A/VBoxContainer/ScrollContainer4/MarginContainer"]
 layout_mode = 2
 theme_override_constants/separation = 20
 
@@ -651,12 +656,13 @@ theme_override_constants/margin_bottom = 10
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/D"]
 layout_mode = 2
 
-[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer/Tabs/D/VBoxContainer"]
+[node name="ScrollContainer5" type="ScrollContainer" parent="MarginContainer/VBoxContainer/Tabs/D/VBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 horizontal_scroll_mode = 0
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/Tabs/D/VBoxContainer/ScrollContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/Tabs/D/VBoxContainer/ScrollContainer5"]
 layout_mode = 2
 size_flags_horizontal = 6
 theme_override_constants/margin_left = 10
@@ -664,7 +670,7 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 15
 theme_override_constants/margin_bottom = 10
 
-[node name="Upgrades" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/D/VBoxContainer/ScrollContainer/MarginContainer"]
+[node name="Upgrades" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/D/VBoxContainer/ScrollContainer5/MarginContainer"]
 layout_mode = 2
 theme_override_constants/separation = 20
 
@@ -679,12 +685,13 @@ theme_override_constants/margin_bottom = 10
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/S"]
 layout_mode = 2
 
-[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer/Tabs/S/VBoxContainer"]
+[node name="ScrollContainer6" type="ScrollContainer" parent="MarginContainer/VBoxContainer/Tabs/S/VBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 horizontal_scroll_mode = 0
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/Tabs/S/VBoxContainer/ScrollContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/Tabs/S/VBoxContainer/ScrollContainer6"]
 layout_mode = 2
 size_flags_horizontal = 6
 theme_override_constants/margin_left = 10
@@ -692,7 +699,7 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 15
 theme_override_constants/margin_bottom = 10
 
-[node name="Upgrades" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/S/VBoxContainer/ScrollContainer/MarginContainer"]
+[node name="Upgrades" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/S/VBoxContainer/ScrollContainer6/MarginContainer"]
 layout_mode = 2
 theme_override_constants/separation = 20
 
@@ -707,12 +714,13 @@ theme_override_constants/margin_bottom = 10
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/F"]
 layout_mode = 2
 
-[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer/Tabs/F/VBoxContainer"]
+[node name="ScrollContainer7" type="ScrollContainer" parent="MarginContainer/VBoxContainer/Tabs/F/VBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 horizontal_scroll_mode = 0
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/Tabs/F/VBoxContainer/ScrollContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/Tabs/F/VBoxContainer/ScrollContainer7"]
 layout_mode = 2
 size_flags_horizontal = 6
 theme_override_constants/margin_left = 10
@@ -720,7 +728,7 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 15
 theme_override_constants/margin_bottom = 10
 
-[node name="Upgrades" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/F/VBoxContainer/ScrollContainer/MarginContainer"]
+[node name="Upgrades" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/F/VBoxContainer/ScrollContainer7/MarginContainer"]
 layout_mode = 2
 theme_override_constants/separation = 20
 

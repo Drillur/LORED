@@ -9,10 +9,14 @@ extends MarginContainer
 @onready var main_wishes = %"Main Wishes"
 @onready var control = $Control
 @onready var menu = $Menu
-@onready var menu_button = %"Menu Button"
-@onready var upgrades_button = %"Upgrades Button"
+@onready var menu_button = %"Menu Button" as IconButton
+@onready var upgrades_button = %"Upgrades Button" as IconButton
 @onready var wallet = $Wallet as WalletVico
-@onready var wallet_button = %"Wallet Button"
+@onready var wallet_button = %"Wallet Button" as IconButton
+@onready var stage1 = %Stage1 as IconButton
+@onready var stage2 = %Stage2 as IconButton
+@onready var stage3 = %Stage3 as IconButton
+@onready var stage4 = %Stage4 as IconButton
 
 @onready var tooltip_position_display = $"Control/Tooltip/Tooltip Position Display"
 
@@ -37,6 +41,15 @@ func _ready():
 	wi.main_wish_container = main_wishes
 	wi.random_wish_container = random_wishes
 	wa.wallet = wallet
+	
+	for i in range(1, 5):
+		var b = get("stage" + str(i)) as IconButton
+		b.remove_check().remove_icon_shadow()
+		var stage = gv.get_stage(i) as Stage
+		b.set_icon(stage.icon)
+		stage.stage_unlocked_changed.connect(display_stage_button)
+		if not gv.dev_mode:
+			b.hide()
 	
 	menu_button.modulate = gv.game_color
 	menu_button.set_icon(load("res://Sprites/Hud/Menu.png"))
@@ -72,8 +85,11 @@ func _input(event):
 	var left_clicked = Input.is_action_just_pressed("LeftClick")
 	
 	if (
-		((left_clicked and event.get("position")) or esc_pressed)
-		and should_hide_a_menu()
+		should_hide_a_menu()
+		and (
+			(left_clicked and event.get("position"))
+			or esc_pressed
+		)
 	):
 		var node
 		var button
@@ -120,6 +136,16 @@ func _input(event):
 	
 	if Input.is_action_just_pressed("T"):
 		open_wallet(not wallet.visible)
+	
+	
+	if Input.is_action_just_pressed("1"):
+		select_stage(1)
+	elif Input.is_action_just_pressed("2"):
+		select_stage(2)
+	elif Input.is_action_just_pressed("3"):
+		select_stage(3)
+	elif Input.is_action_just_pressed("4"):
+		select_stage(4)
 	
 	
 	if Input.is_action_pressed("Shift"):
@@ -213,6 +239,14 @@ func flash_upgrade_button(_menu: int, unlocked: bool) -> void:
 		gv.flash(upgrades_button, up.get_menu_color(_menu))
 
 
+func display_stage_button(stage: int, unlocked: bool) -> void:
+	var _stage = gv.get_stage(stage)
+	var b = get("stage" + str(stage))
+	b.visible = unlocked
+	if unlocked:
+		gv.flash(b, _stage.color)
+
+
 
 # - Actions
 
@@ -232,6 +266,10 @@ func select_upgrade_menu_tab(tab: int, _show = true) -> void:
 			wallet.hide()
 		upgrade_container.select_tab(tab)
 		gv.clear_tooltip()
+
+
+func select_stage(stage: int) -> void:
+	lored_container.select_stage(stage)
 
 
 
