@@ -7,7 +7,6 @@ extends MarginContainer
 @onready var title_bg = %"title bg"
 @onready var producers_title_bg = %"producers title bg"
 @onready var users_title_bg = %"users title bg"
-@onready var current_income = %"Current Income"
 @onready var total_income = %"Total Income"
 @onready var producers = %Producers
 @onready var producers_container = %"Producers Container"
@@ -46,8 +45,7 @@ func setup(data: Dictionary) -> void:
 	use_allowed_changed(currency.use_allowed)
 	
 	title.text = currency.name
-	current_income.text = "Current: [b]" + currency.net_rate.get_current_text() + "/s"
-	total_income.text = "Total: [b]" + currency.net_rate.get_total_text() + "/s"
+	total_income.text = "Total: [b]" + currency.net_rate.get_text() + "/s"
 	
 	for lored_type in currency.produced_by:
 		var lored := lv.get_lored(lored_type) as LORED
@@ -61,8 +59,8 @@ func setup(data: Dictionary) -> void:
 	
 	for lored_type in currency.used_by:
 		var lored := lv.get_lored(lored_type) as LORED
-#		if not lored.unlocked:
-#			continue
+		if not lored.unlocked:
+			continue
 		var rate = lored.get_used_currency_rate(currency.type)
 		var label = gv.label.instantiate() as RichTextLabel
 		label.name = lored.name

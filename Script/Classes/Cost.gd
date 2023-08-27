@@ -39,6 +39,8 @@ var purchased := false:
 				for cur in cost:
 					wa.currency[cur].count.connect("increased", currency_increased)
 
+var stage: int
+
 
 
 func _init(_cost: Dictionary) -> void:
@@ -84,17 +86,16 @@ func currency_increased() -> void:
 	if affordable:
 		return
 	if can_afford():
-		affordable = true
 		notify_if_decreased()
-
+		affordable = true
 
 
 func currency_decreased() -> void:
 	if not affordable:
 		return
 	if not can_afford():
-		affordable = false
 		notify_if_increased()
+		affordable = false
 
 
 
@@ -136,6 +137,7 @@ func refund() -> void:
 func reset() -> void:
 	for cur in cost:
 		cost[cur].reset()
+	recheck()
 
 
 func increase(times_purchased: int, cost_increase: float) -> void:

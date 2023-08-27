@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://dlt6lvasr6c46"]
+[gd_scene load_steps=9 format=3 uid="uid://dlt6lvasr6c46"]
 
 [ext_resource type="Theme" uid="uid://b8t7tkhvril5g" path="res://Theme/Standard.tres" id="1_nf00e"]
 [ext_resource type="Script" path="res://Hud/Upgrade/upgrade_container.gd" id="1_t6e5m"]
@@ -7,6 +7,7 @@
 [ext_resource type="Theme" uid="uid://8dmfgxdrr5yh" path="res://Theme/Title.tres" id="3_l07lh"]
 [ext_resource type="Texture2D" uid="uid://cu1jwsvhvsxfn" path="res://Sprites/Hud/Tab/s1n.png" id="6_rp56p"]
 [ext_resource type="Texture2D" uid="uid://bdpxtltnk88hw" path="res://Sprites/Hud/Tab/s1m.png" id="7_d5yiu"]
+[ext_resource type="PackedScene" uid="uid://c0518n1uf8jt2" path="res://Hud/text_button.tscn" id="8_f0t26"]
 
 [node name="Upgrade Container" type="MarginContainer"]
 custom_minimum_size = Vector2(424, 500)
@@ -75,7 +76,6 @@ theme_override_colors/font_selected_color = Color(0.937255, 0.32549, 0, 1)
 tab_alignment = 1
 
 [node name="Q" type="MarginContainer" parent="MarginContainer/VBoxContainer/Tabs"]
-visible = false
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
@@ -282,6 +282,7 @@ unique_name_in_owner = true
 layout_mode = 2
 
 [node name="W" type="MarginContainer" parent="MarginContainer/VBoxContainer/Tabs"]
+visible = false
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
@@ -731,6 +732,26 @@ theme_override_constants/margin_bottom = 10
 [node name="Upgrades" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/F/VBoxContainer/ScrollContainer7/MarginContainer"]
 layout_mode = 2
 theme_override_constants/separation = 20
+
+[node name="Prestige" type="MarginContainer" parent="MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="prestige bg" type="Panel" parent="MarginContainer/VBoxContainer/Prestige"]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("3_l07lh")
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/Prestige"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="Prestige Button" parent="MarginContainer/VBoxContainer/Prestige/MarginContainer" instance=ExtResource("8_f0t26")]
+unique_name_in_owner = true
+layout_mode = 2
 
 [node name="Control" type="Control" parent="."]
 layout_mode = 2

@@ -125,11 +125,9 @@ var key_loreds := [
 	LORED.Type.WIRE,
 	LORED.Type.GLASS,
 	LORED.Type.TUMORS,
-	LORED.Type.WOOD,
+	LORED.Type.HARDWOOD, # was originally WOOD. i changed without knowing why it was wood
 	LORED.Type.IRON,
 	LORED.Type.COPPER,
-	LORED.Type.COAL,
-	LORED.Type.JOULES,
 ]
 var loreds_required_for_extra_normal_menu := [
 	LORED.Type.SEEDS,
@@ -314,6 +312,10 @@ func get_active_lored_count() -> int:
 	return active.size()
 
 
+func get_level(lored: int) -> int:
+	return get_lored(lored).level
+
+
 func get_fuel_percent(lored: int) -> float:
 	return get_lored(lored).fuel.get_current_percent()
 
@@ -336,3 +338,20 @@ func get_lored_name(lored: int) -> String:
 
 func get_key(lored: int) -> String:
 	return LORED.Type.keys()[lored]
+
+
+func is_lored_active(lored: int) -> bool:
+	var x = get_lored(lored)
+	return (
+		x.unlocked
+		and x.purchased
+		and x.working
+		and not x.asleep
+	)
+
+
+func any_loreds_in_list_are_active(list: Array) -> bool:
+	for x in list:
+		if is_lored_active(x):
+			return true
+	return false

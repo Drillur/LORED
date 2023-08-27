@@ -26,6 +26,8 @@ var type: int
 var key: String
 
 var name: String
+var colored_name: String
+var prestige_name: String
 var icon: Texture
 var icon_text: String
 var color: Color
@@ -48,13 +50,14 @@ var purchased_upgrades := []
 func _init(_type: int) -> void:
 	type = _type
 	key = Type.keys()[type]
-	name = key.capitalize().replace("_", " ")
+	name = key.capitalize().replace("_", " ") + " Upgrades"
 	call(key)
 	if icon != null:
 		icon_text = "[img=<15>]" + icon.get_path() + "[/img]"
 	if color != null:
 		color_text = "[color=#" + color.to_html() + "]%s[/color]"
 	icon_and_name_text = icon_text + " " + name
+	colored_name = color_text % name
 
 
 
@@ -64,20 +67,24 @@ func NORMAL():
 func MALIGNANT(): 
 	color = Color(0.878431, 0.121569, 0.34902)
 	icon = load("res://Sprites/Hud/Tab/s1m.png")
+	prestige_name = "Metastasize"
 func EXTRA_NORMAL(): 
 	color = Color(0.47451, 0.870588, 0.694118)
 	icon = load("res://Sprites/Hud/Tab/s2n.png")
 func RADIATIVE(): 
 	color = Color(1, 0.541176, 0.541176)
 	icon = load("res://Sprites/Hud/Tab/s2m.png")
+	prestige_name = "Chemotherapy"
 func RUNED_DIAL(): 
 	color = Color(1, 0.541176, 0.541176)
 func SPIRIT(): 
 	color = Color(1, 0.541176, 0.541176)
+	prestige_name = "Don't know don't care"
 func S4N(): 
 	color = Color(1, 0.541176, 0.541176)
 func S4M(): 
 	color = Color(1, 0.541176, 0.541176)
+	prestige_name = "Never gonna happen"
 
 
 

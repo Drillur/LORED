@@ -26,9 +26,6 @@ func load_finished() -> void:
 		just_locked.emit()
 	set_level_to(level)
 	if purchased:
-		#emit_signal("leveled_up", level)
-		for currency in produced_currencies:
-			wa.unlock_currency(currency)
 		work()
 		lv.lored_became_active(type)
 	else:
@@ -106,6 +103,7 @@ signal just_purchased
 signal job_started(job)
 signal finished_emoting
 signal spent_one_second_asleep
+signal autobuy_changed(val)
 
 
 var killed := false
@@ -163,15 +161,17 @@ var autobuy := false:
 		if autobuy != val:
 			autobuy = val
 			if val:
-				if gv.closed:
-					await gv.opened
 				if not cost.became_affordable.is_connected(autobuy_check):
 					cost.became_affordable.connect(autobuy_check)
-				if can_afford():
-					autobuy_check()
+					for cur in produced_currencies:
+						wa.get_currency(cur).total_net_became_negative.connect(autobuy_check)
 			else:
 				if cost.became_affordable.is_connected(autobuy_check):
 					cost.became_affordable.disconnect(autobuy_check)
+					for cur in produced_currencies:
+						wa.get_currency(cur).total_net_became_negative.disconnect(autobuy_check)
+			autobuy_changed.emit(val)
+var autobuy_on_cooldown := false
 var purchased := false:
 	set(val):
 		if purchased != val:
@@ -179,8 +179,15 @@ var purchased := false:
 			if val:
 				lv.lored_became_active(type)
 				emit_signal("just_purchased")
+				for cur in produced_currencies:
+					wa.unlock_currency(cur)
+					wa.set_wish_eligible_currency(cur, true)
+				for job in jobs:
+					jobs[job].add_rate()
 			else:
 				lv.lored_became_inactive(type)
+				for cur in produced_currencies:
+					wa.set_wish_eligible_currency(cur, false)
 			emit_signal("purchased_changed", val)
 var purchased_by_default := false:
 	set(val):
@@ -208,8 +215,7 @@ var asleep := false:
 				emit_signal("woke_up")
 			emit_signal("asleep_changed", asleep)
 var time_went_to_bed := 0.0
-var current_fuel_rate_added := false
-var total_fuel_rate_added := false
+var fuel_rate_added := false
 var emoting := false:
 	set(val):
 		if emoting != val:
@@ -223,6 +229,7 @@ var last_purchase_forced := false
 
 var key: String
 var name := ""
+var title := ""
 var colored_name := ""
 var description := ""
 var pronoun_he := "he"
@@ -267,11 +274,12 @@ var crit := Value.new(0)
 func _init(_type: int) -> void:
 	type = _type
 	key = Type.keys()[type]
+	title = key.replace("_", " ").capitalize() + " LORED"
 	
 	call("init_" + key)
 	
 	key_lored = type in lv.key_loreds
-	required_currencies.append(fuel_currency)
+	
 	add_job(Job.Type.REFUEL, true)
 	
 	if name == "":
@@ -281,8 +289,6 @@ func _init(_type: int) -> void:
 		faded_color = color
 	color_text = "[color=#" + color.to_html() + "]%s[/color]"
 	
-	connect("began_working", add_current_fuel_rate)
-	connect("stopped_working", subtract_current_fuel_rate)
 	connect("woke_up", work)
 	connect("completed_job", work)
 	
@@ -291,6 +297,8 @@ func _init(_type: int) -> void:
 	SaveManager.connect("load_started", clear_emote_queue)
 	
 	gv.prestige.connect(prestige)
+	gv.prestiged.connect(force_purchase)
+	gv.prestiged.connect(autobuy_check)
 	gv.hard_reset.connect(reset)
 	
 	# stage and fuel
@@ -302,6 +310,8 @@ func _init(_type: int) -> void:
 		stage = 3
 	else:
 		stage = 4
+	
+	cost.stage = stage
 	
 	# fuel cost
 	if stage in [1, 2]:
@@ -321,6 +331,8 @@ func _init(_type: int) -> void:
 		fuel.change_base(1.0)
 		fuel.reset()
 	
+	fuel.current_increased.connect(work)
+	
 	level = 0
 	
 	icon_text = "[img=<15>]" + icon.get_path() + "[/img]"
@@ -331,6 +343,7 @@ func _init(_type: int) -> void:
 
 
 func init_STONE() -> void:
+	name = "Scoot"
 	add_job(Job.Type.STONE, true)
 	cost = Cost.new({
 		Currency.Type.IRON: Value.new(25.0 / 3),
@@ -347,6 +360,7 @@ func init_STONE() -> void:
 
 
 func init_COAL() -> void:
+	name = "Carl"
 	add_job(Job.Type.COAL, true)
 	cost = Cost.new({
 		Currency.Type.STONE: Value.new(5),
@@ -361,6 +375,7 @@ func init_COAL() -> void:
 
 
 func init_IRON_ORE() -> void:
+	name = "Ted"
 	add_job(Job.Type.IRON_ORE, true)
 	cost = Cost.new({
 		Currency.Type.STONE: Value.new(8),
@@ -374,6 +389,7 @@ func init_IRON_ORE() -> void:
 
 
 func init_COPPER_ORE() -> void:
+	name = "Eugene"
 	add_job(Job.Type.COPPER_ORE, true)
 	cost = Cost.new({
 		Currency.Type.STONE: Value.new(8),
@@ -387,6 +403,7 @@ func init_COPPER_ORE() -> void:
 
 
 func init_IRON() -> void:
+	name = "Will"
 	add_job(Job.Type.IRON, true)
 	cost = Cost.new({
 		Currency.Type.STONE: Value.new(9),
@@ -401,6 +418,7 @@ func init_IRON() -> void:
 
 
 func init_COPPER() -> void:
+	name = "Ben"
 	add_job(Job.Type.COPPER, true)
 	cost = Cost.new({
 		Currency.Type.STONE: Value.new(9),
@@ -415,6 +433,7 @@ func init_COPPER() -> void:
 
 
 func init_GROWTH() -> void:
+	name = "Percy"
 	add_job(Job.Type.GROWTH, true)
 	cost = Cost.new({
 		Currency.Type.STONE: Value.new(900),
@@ -428,6 +447,7 @@ func init_GROWTH() -> void:
 
 
 func init_JOULES() -> void:
+	name = "Notzuko"
 	add_job(Job.Type.JOULES, true)
 	cost = Cost.new({
 		Currency.Type.CONCRETE: Value.new(25),
@@ -441,6 +461,7 @@ func init_JOULES() -> void:
 
 
 func init_CONCRETE() -> void:
+	name = "Santos"
 	add_job(Job.Type.CONCRETE, true)
 	cost = Cost.new({
 		Currency.Type.IRON: Value.new(90),
@@ -455,6 +476,7 @@ func init_CONCRETE() -> void:
 
 
 func init_OIL() -> void:
+	name = "Odd Lee"
 	add_job(Job.Type.OIL, true)
 	cost = Cost.new({
 		Currency.Type.COPPER: Value.new(160),
@@ -469,6 +491,7 @@ func init_OIL() -> void:
 
 
 func init_TARBALLS() -> void:
+	name = "Jon"
 	add_job(Job.Type.TARBALLS, true)
 	cost = Cost.new({
 		Currency.Type.IRON: Value.new(350),
@@ -483,6 +506,7 @@ func init_TARBALLS() -> void:
 
 
 func init_MALIGNANCY() -> void:
+	name = "Tenant"
 	add_job(Job.Type.MALIGNANCY, true)
 	cost = Cost.new({
 		Currency.Type.IRON: Value.new(900),
@@ -513,6 +537,7 @@ func init_WATER() -> void:
 
 
 func init_HUMUS() -> void:
+	name = "Chip"
 	add_job(Job.Type.HUMUS, true)
 	cost = Cost.new({
 		Currency.Type.IRON: Value.new(600),
@@ -528,6 +553,7 @@ func init_HUMUS() -> void:
 
 
 func init_SOIL() -> void:
+	name = "Mike"
 	add_job(Job.Type.SOIL, true)
 	cost = Cost.new({
 		Currency.Type.CONCRETE: Value.new(1000),
@@ -542,6 +568,7 @@ func init_SOIL() -> void:
 
 
 func init_TREES() -> void:
+	name = "Biby"
 	add_job(Job.Type.TREES, true)
 	cost = Cost.new({
 		Currency.Type.GROWTH: Value.new(150),
@@ -556,8 +583,8 @@ func init_TREES() -> void:
 
 
 func init_SEEDS() -> void:
-	add_job(Job.Type.SEEDS, true)
 	name = "Maybe"
+	add_job(Job.Type.SEEDS, true)
 	cost = Cost.new({
 		Currency.Type.COPPER: Value.new(800),
 		Currency.Type.TREES: Value.new(2),
@@ -571,6 +598,7 @@ func init_SEEDS() -> void:
 
 
 func init_GALENA() -> void:
+	name = "Jack"
 	add_job(Job.Type.GALENA, true)
 	cost = Cost.new({
 		Currency.Type.STONE: Value.new(1100),
@@ -585,6 +613,7 @@ func init_GALENA() -> void:
 
 
 func init_LEAD() -> void:
+	name = "Martin"
 	add_job(Job.Type.LEAD, true)
 	cost = Cost.new({
 		Currency.Type.STONE: Value.new(400),
@@ -598,6 +627,7 @@ func init_LEAD() -> void:
 
 
 func init_WOOD_PULP() -> void:
+	name = ""
 	add_job(Job.Type.WOOD_PULP, true)
 	cost = Cost.new({
 		Currency.Type.WIRE: Value.new(15),
@@ -611,6 +641,7 @@ func init_WOOD_PULP() -> void:
 
 
 func init_PAPER() -> void:
+	name = "Sawyer"
 	add_job(Job.Type.PAPER, true)
 	cost = Cost.new({
 		Currency.Type.CONCRETE: Value.new(1200),
@@ -624,6 +655,7 @@ func init_PAPER() -> void:
 
 
 func init_TOBACCO() -> void:
+	name = "Gondalf"
 	add_job(Job.Type.TOBACCO, true)
 	cost = Cost.new({
 		Currency.Type.SOIL: Value.new(3),
@@ -638,6 +670,7 @@ func init_TOBACCO() -> void:
 
 
 func init_CIGARETTES() -> void:
+	name = "George"
 	add_job(Job.Type.CIGARETTES, true)
 	cost = Cost.new({
 		Currency.Type.HARDWOOD: Value.new(50),
@@ -652,6 +685,7 @@ func init_CIGARETTES() -> void:
 
 
 func init_PETROLEUM() -> void:
+	name = "Daniel"
 	add_job(Job.Type.PETROLEUM, true)
 	cost = Cost.new({
 		Currency.Type.IRON: Value.new(3000),
@@ -666,6 +700,7 @@ func init_PETROLEUM() -> void:
 
 
 func init_PLASTIC() -> void:
+	name = ""
 	add_job(Job.Type.PLASTIC, true)
 	cost = Cost.new({
 		Currency.Type.STONE: Value.new(10000),
@@ -679,6 +714,7 @@ func init_PLASTIC() -> void:
 
 
 func init_CARCINOGENS() -> void:
+	name = "Lamash"
 	add_job(Job.Type.CARCINOGENS, true)
 	cost = Cost.new({
 		Currency.Type.GROWTH: Value.new(8500),
@@ -694,6 +730,7 @@ func init_CARCINOGENS() -> void:
 
 
 func init_LIQUID_IRON() -> void:
+	name = "Boy"
 	add_job(Job.Type.LIQUID_IRON, true)
 	cost = Cost.new({
 		Currency.Type.CONCRETE: Value.new(30),
@@ -708,6 +745,7 @@ func init_LIQUID_IRON() -> void:
 
 
 func init_STEEL() -> void:
+	name = "Ryan"
 	add_job(Job.Type.STEEL, true)
 	cost = Cost.new({
 		Currency.Type.IRON: Value.new(15000),
@@ -723,6 +761,7 @@ func init_STEEL() -> void:
 
 
 func init_SAND() -> void:
+	name = "Herakin"
 	add_job(Job.Type.SAND, true)
 	cost = Cost.new({
 		Currency.Type.IRON: Value.new(700),
@@ -737,6 +776,7 @@ func init_SAND() -> void:
 
 
 func init_GLASS() -> void:
+	name = "Shyuum"
 	add_job(Job.Type.GLASS, true)
 	cost = Cost.new({
 		Currency.Type.COPPER: Value.new(6000),
@@ -751,6 +791,7 @@ func init_GLASS() -> void:
 
 
 func init_WIRE() -> void:
+	name = "Joyce"
 	add_job(Job.Type.WIRE, true)
 	cost = Cost.new({
 		Currency.Type.STONE: Value.new(13000),
@@ -765,6 +806,7 @@ func init_WIRE() -> void:
 
 
 func init_DRAW_PLATE() -> void:
+	name = "Billy"
 	add_job(Job.Type.DRAW_PLATE, true)
 	cost = Cost.new({
 		Currency.Type.IRON: Value.new(900),
@@ -779,6 +821,7 @@ func init_DRAW_PLATE() -> void:
 
 
 func init_AXES() -> void:
+	name = "Assemblotron"
 	add_job(Job.Type.AXES, true)
 	cost = Cost.new({
 		Currency.Type.IRON: Value.new(1000),
@@ -792,6 +835,7 @@ func init_AXES() -> void:
 
 
 func init_WOOD() -> void:
+	name = "Goketa"
 	add_job(Job.Type.WOOD, true)
 	cost = Cost.new({
 		Currency.Type.COPPER: Value.new(4500),
@@ -806,6 +850,7 @@ func init_WOOD() -> void:
 
 
 func init_HARDWOOD() -> void:
+	name = "Rabbit"
 	add_job(Job.Type.HARDWOOD, true)
 	cost = Cost.new({
 		Currency.Type.IRON: Value.new(3500),
@@ -820,6 +865,7 @@ func init_HARDWOOD() -> void:
 
 
 func init_TUMORS() -> void:
+	name = "Jesse"
 	add_job(Job.Type.TUMORS, true)
 	cost = Cost.new({
 		Currency.Type.HARDWOOD: Value.new(50),
@@ -887,6 +933,8 @@ func add_job(_job: int, unlocked_by_default := false) -> void:
 
 
 func add_job_produced_and_required_currencies(job_type: int) -> void:
+	if job_type == Job.Type.REFUEL:
+		return
 	var job = jobs[job_type]
 	for cur in job.get_produced_currencies():
 		if not cur in produced_currencies:
@@ -968,28 +1016,17 @@ func lored_vicos_ready() -> void:
 		work()
 
 
-func add_current_fuel_rate() -> void:
-	if not current_fuel_rate_added:
-		current_fuel_rate_added = true
-		wa.add_current_loss_rate(fuel_currency, fuel_cost.get_value())
+
+func add_fuel_rate() -> void:
+	if not fuel_rate_added:
+		fuel_rate_added = true
+		wa.add_loss_rate(fuel_currency, fuel_cost.get_value())
 
 
-func subtract_current_fuel_rate() -> void:
-	if current_fuel_rate_added:
-		current_fuel_rate_added = false
-		wa.subtract_current_loss_rate(fuel_currency, fuel_cost.get_value())
-
-
-func add_total_fuel_rate() -> void:
-	if not total_fuel_rate_added:
-		total_fuel_rate_added = true
-		wa.add_total_loss_rate(fuel_currency, fuel_cost.get_value())
-
-
-func subtract_total_fuel_rate() -> void:
-	if total_fuel_rate_added:
-		total_fuel_rate_added = false
-		wa.subtract_total_loss_rate(fuel_currency, fuel_cost.get_value())
+func subtract_fuel_rate() -> void:
+	if fuel_rate_added:
+		fuel_rate_added = false
+		wa.subtract_loss_rate(fuel_currency, fuel_cost.get_value())
 
 
 
@@ -999,6 +1036,12 @@ func clear_emote_queue() -> void:
 	emote_queue.clear()
 
 
+func first_second_of_run_autobuy_check(val: int) -> void:
+	if val >= 1:
+		autobuy_check()
+		if gv.run_incremented.is_connected(first_second_of_run_autobuy_check):
+			gv.run_incremented.disconnect(first_second_of_run_autobuy_check)
+
 
 
 # - Actions
@@ -1007,23 +1050,20 @@ func prestige(_stage: int) -> void:
 	if _stage >= stage:
 		reset(false)
 		
-		if purchased_by_default:
-			force_purchase()
+		if not gv.run_incremented.is_connected(first_second_of_run_autobuy_check):
+			gv.run_incremented.connect(first_second_of_run_autobuy_check)
 
 
 func reset(hard: bool):
-	output.reset()
-	input.reset()
-	haste.reset()
-	fuel.reset()
-	fuel_cost.reset()
-	cost.reset()
-	set_level_to(0)
-	asleep = false
-	working = false
 	purchased = false
-	
 	if hard:
+		output.reset()
+		input.reset()
+		haste.reset()
+		fuel.reset()
+		fuel_cost.reset()
+		cost.reset()
+		level = 0
 		times_purchased = 0
 		time_spent_asleep = 0.0
 		if type != Type.STONE:
@@ -1033,29 +1073,41 @@ func reset(hard: bool):
 		for job in jobs:
 			if not jobs[job].unlocked_by_default:
 				lock_job(job)
+	else:
+		set_level_to(0)
+		fuel.fill_up()
+		cost.recheck()
+		if type == Type.STONE:
+			fuel.add(9)
+	asleep = false
+	if working:
+		stop_job()
+	working = false
 
 
 
-func kill() -> void:
-	killed = true
-	for job in jobs.values():
-		job.disconnect("became_workable", work)
-		job.disconnect("completed", job_completed)
-		job.disconnect("cut_short", job_cut_short)
-		job.kill()
-	jobs.clear()
-	cost.kill()
-	disconnect("began_working", add_current_fuel_rate)
-	disconnect("stopped_working", subtract_current_fuel_rate)
-	disconnect("woke_up", work)
-	disconnect("completed_job", work)
+#func kill() -> void:
+#	killed = true
+#	for job in jobs.values():
+#		job.disconnect("became_workable", work)
+#		job.disconnect("completed", job_completed)
+#		job.disconnect("cut_short", job_cut_short)
+#		job.kill()
+#	jobs.clear()
+#	cost.kill()
+#	disconnect("woke_up", work)
+#	disconnect("completed_job", work)
 
 
 
 func force_purchase() -> void:
-	last_purchase_automatic = true
-	last_purchase_forced = true
-	purchase()
+	if purchased_by_default:
+		if not unlocked:
+			unlocked = true
+		last_purchase_automatic = true
+		last_purchase_forced = true
+		purchase()
+		cost.recheck()
 
 
 func manual_purchase() -> void:
@@ -1068,13 +1120,17 @@ func manual_purchase() -> void:
 func autobuy_check() -> void:
 	if should_autobuy():
 		automatic_purchase()
+		autobuy_on_cooldown = true
+		await gv.get_tree().physics_frame
+		autobuy_on_cooldown = false
 
 
 func should_autobuy() -> bool:
 	if (
-		unlocked
-		and autobuy
-		#and gv.session_duration >= 2
+		autobuy
+		and not autobuy_on_cooldown
+		and unlocked
+		and gv.run_duration >= 1
 		and can_afford()
 		and not asleep
 	):
@@ -1118,8 +1174,9 @@ func should_autobuy() -> bool:
 		):
 			return true
 		
-		if wa.currencies_have_negative_net(required_currencies):
-			return false
+		if required_currencies.size() > 0:
+			if wa.currencies_have_negative_net(required_currencies):
+				return false
 		
 		if key_lored:
 			return true
@@ -1138,10 +1195,9 @@ func automatic_purchase() -> void:
 
 
 func purchase() -> void:
-	if unlocked:
-		times_purchased += 1
-		level_up()
-		first_purchase()
+	times_purchased += 1
+	level_up()
+	first_purchase()
 
 
 func first_purchase() -> void:
@@ -1163,14 +1219,10 @@ func set_level_to(_level: int) -> void:
 	fuel.set_from_level(Big.new(2).power(_level - 1))
 	fuel.set_to_percent(fuel_percent)
 	
-	if working:
-		subtract_current_fuel_rate()
-	subtract_total_fuel_rate()
+	subtract_fuel_rate()
 	fuel_cost.set_from_level(Big.new(2).power(_level - 1))
-	if working:
-		add_current_fuel_rate()
 	if purchased:
-		add_total_fuel_rate()
+		add_fuel_rate()
 	
 	level = _level
 
@@ -1281,6 +1333,8 @@ func disable_autobuy() -> void:
 
 func enable_default_purchase() -> void:
 	purchased_by_default = true
+	if key == "COAL":
+		print("purhasuhcuhe by default enabled")
 
 
 func disable_default_purchase() -> void:
@@ -1361,8 +1415,10 @@ func cannot_work(reason: int) -> void:
 	reason_cannot_work = reason
 	match reason:
 		ReasonCannotWork.INSUFFICIENT_FUEL:
+			var _fuel = Big.new(fuel.get_total()).d(2).text
+			var cur = wa.get_icon_and_name_text(fuel_currency)
 			vico.set_status_and_currency(
-				"Awaiting " + wa.get_icon_and_name_text(fuel_currency) + ".",
+				"Awaiting %s %s." % [_fuel, cur],
 				 fuel_currency
 			)
 		ReasonCannotWork.INSUFFICIENT_CURRENCIES:
@@ -1390,7 +1446,11 @@ func get_wish() -> String:
 	
 	var total_weight := 10
 	
-	if fuel.get_current_percent() < lv.FUEL_DANGER and df.fuel.less_equal(2):
+	if (
+		fuel.get_current_percent() < lv.FUEL_DANGER
+		and wa.is_currency_unlocked(fuel_currency)
+		and df.fuel.less_equal(2)
+	):
 		if randi() % 100 < 30:
 			possible_types["ACCEPTABLE_FUEL"] = 50
 		else:
@@ -1407,7 +1467,7 @@ func get_wish() -> String:
 			possible_types["COLLECT_CURRENCY"] = 10
 			total_weight += 10
 		else:
-			wished_currency = wa.get_random_unlocked_currency()
+			wished_currency = wa.get_random_wish_eligible_currency()
 			possible_types["COLLECT_CURRENCY"] = 30
 			total_weight += 30
 	

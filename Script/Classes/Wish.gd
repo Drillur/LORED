@@ -147,12 +147,7 @@ class Reward:
 class Objective:
 	
 	var saved_vars := [
-		"type",
 		"progress",
-		"object_type",
-		"color",
-		"icon_path",
-		"text",
 	]
 	
 	
@@ -183,6 +178,7 @@ class Objective:
 	var progress: Attribute
 	
 	var object_type: int
+	var x: int
 	
 	var lored_was_already_asleep := false
 	
@@ -204,6 +200,7 @@ class Objective:
 	func init_LORED_LEVELED_UP(data: Dictionary) -> void:
 		progress = Attribute.new(1)
 		object_type = data["object_type"]
+		x = data["x"]
 		icon_path = lv.get_icon(object_type).get_path()
 		color = lv.get_color(object_type)
 		text = "Level Up"
@@ -245,6 +242,15 @@ class Objective:
 	
 	# - Actions
 	
+	func save_info() -> void:
+		if not "type" in saved_vars:
+			saved_vars.append("type")
+			saved_vars.append("object_type")
+			saved_vars.append("color")
+			saved_vars.append("icon_path")
+			saved_vars.append("text")
+	
+	
 	func start() -> void:
 		progress.filled.connect(progress_filled)
 		if has_method("already_completed_" + key) and call("already_completed_" + key):
@@ -267,6 +273,10 @@ class Objective:
 	func update_LORED_LEVELED_UP(_level: int) -> void:
 		progress.add(1)
 		lv.get_lored(object_type).leveled_up.disconnect(update_LORED_LEVELED_UP)
+	
+	
+	func already_completed_LORED_LEVELED_UP() -> bool:
+		return lv.get_lored(object_type).level >= x
 	
 	
 	
@@ -477,7 +487,7 @@ func init_RANDOM() -> void:
 			if currency.produced_by.size() == 0:
 				amount = Big.new(randi_range(2, 5))
 			else:
-				amount = Big.new(currency.gain_rate.get_total())
+				amount = Big.new(currency.gain_rate.get_value())
 				var amount_modifier = randf_range(20, 40)
 				amount.m(amount_modifier)
 				#amount.d(experience_modifier)
@@ -486,7 +496,10 @@ func init_RANDOM() -> void:
 				"amount": amount.roundDown(),
 			}
 		"LORED_LEVELED_UP":
-			data = {"object_type": giver}
+			data = {
+				"object_type": giver,
+				"x": lv.get_level(giver) + 1,
+			}
 		"SLEEP":
 			data = {
 				"object_type": giver,
@@ -497,6 +510,7 @@ func init_RANDOM() -> void:
 		"UPGRADE_PURCHASED":
 			data = {"object_type": lv.get_lored(giver).wished_upgrade}
 	objective = Objective.new(obj_type, data)
+	objective.save_info()
 	
 	
 	var _reward_count = 1
@@ -510,7 +524,7 @@ func init_RANDOM() -> void:
 	for reward in _reward_count:
 		var amount: Big
 		var currency: Currency = wa.get_currency(wa.get_weighted_random_currency())
-		amount = Big.new(currency.gain_rate.get_total()).m(rewards_modifier).roundDown()
+		amount = Big.new(currency.gain_rate.get_value()).m(rewards_modifier).roundDown()
 		if amount.less(1):
 			amount.set_to(1)
 		if currency.type in amounts:
@@ -537,6 +551,7 @@ func init_STUFF() -> void:
 	thank_text = "That's the stuff. Thanks!"
 	objective = Objective.new(Objective.Type.LORED_LEVELED_UP, {
 		"object_type": LORED.Type.COAL,
+		"x": lv.get_level(LORED.Type.COAL) + 1,
 	})
 
 
@@ -603,6 +618,7 @@ func init_UPGRADE_STONE() -> void:
 	discord_state = "Getting Stone to Level 2."
 	objective = Objective.new(Objective.Type.LORED_LEVELED_UP, {
 		"object_type": LORED.Type.STONE,
+		"x": lv.get_level(LORED.Type.STONE) + 1,
 	})
 	add_reward(Reward.new(Reward.Type.CURRENCY, {
 		"object_type": Currency.Type.STONE,

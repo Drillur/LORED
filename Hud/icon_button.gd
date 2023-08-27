@@ -9,17 +9,24 @@ signal pressed
 @onready var icon = %Icon
 @onready var button = $Button
 @onready var icon_shadow = %"Icon Shadow"
+@onready var autobuyer = %Autobuyer
 
 var color: Color:
 	set(val):
 		color = val
 		icon.self_modulate = val
 		button.modulate = val
+		if is_instance_valid(autobuyer):
+			autobuyer.modulate = val
 
 
 func _ready():
 	hide_check()
 	set_theme_invis()
+	if name != "Level Up":
+		autobuyer.queue_free()
+	else:
+		autobuyer.hide()
 
 
 

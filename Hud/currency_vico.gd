@@ -3,14 +3,6 @@ extends MarginContainer
 
 
 
-signal showed_or_removed
-func _on_visibility_changed():
-	if visible:
-		emit_signal("showed_or_removed")
-func _on_tree_exited():
-	emit_signal("showed_or_removed")
-
-
 @onready var count = %Count
 @onready var rate = %Rate
 @onready var threshold_text = %Threshold
@@ -66,13 +58,8 @@ func update_count() -> void:
 
 
 func update_rate() -> void:
-	if currency.net_rate.get_total().equal(0):
-		rate.hide()
-		return
-	else:
-		rate.show()
-	var _sign = "" if currency.positive_total_rate else "-"
-	rate.text = "[i]" + _sign + currency.net_rate.get_total_text() + "/s"
+	var _sign = "" if currency.positive_rate else "-"
+	rate.text = "[i]" + _sign + currency.net_rate.get_text() + "/s"
 
 
 func update_threshold() -> void:

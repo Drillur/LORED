@@ -2,6 +2,7 @@ extends MarginContainer
 
 
 
+@onready var name_label = %Name
 @onready var title = %Title
 @onready var title_bg = %"title bg"
 @onready var icon = %Icon
@@ -37,15 +38,14 @@ var color: Color:
 func setup(data: Dictionary) -> void:
 	lored = lv.get_lored(data["lored"])
 	await ready
-	title.text = lored.name
+	name_label.text = lored.name + ","
+	title.text = lored.title
 	color = lored.color
-	icon.texture = lored.icon
-	icon_shadow.texture = icon.texture
 	lored.connect("just_purchased", just_purchased)
 	lored.connect("leveled_up", update_level)
 	just_purchased()
 	update_level(lored.level)
-	if lv.advanced_details_unlocked:
+	if lv.advanced_details_unlocked or gv.dev_mode:
 		advanced_details.show()
 		advanced_fuel_details.show()
 		lored.output.connect("changed", update_output)

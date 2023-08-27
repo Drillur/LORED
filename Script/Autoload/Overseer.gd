@@ -5,6 +5,7 @@ extends Node
 var saved_vars := [
 	"current_clock",
 	"session_duration",
+	"run_duration",
 	"total_duration_played",
 	"stage0",
 	"stage1",
@@ -47,6 +48,7 @@ const SRC := {
 	"WISH": preload("res://Hud/Wish/Tooltip/wish_tooltip.tscn"),
 	"JUST_TEXT": preload("res://Hud/Tooltip/Just Text.tscn"),
 	"WALLET_CURRENCY": preload("res://Hud/Wallet/wallet_currency_tooltip.tscn"),
+	"PRESTIGE": preload("res://Hud/Tooltip/prestige_tooltip.tscn"),
 }
 
 const TEXTURES := {
@@ -101,14 +103,19 @@ func _ready() -> void:
 # - Clock
 
 signal session_incremented(session)
+signal run_incremented(val)
 
 var last_clock: float
-var current_clock: float
+var current_clock: float = Time.get_unix_time_from_system()
 var session_duration: int:
 	set(val):
 		session_duration = val
 		session_incremented.emit(session_duration)
 var total_duration_played: int
+var run_duration: int:
+	set(val):
+		run_duration = val
+		run_incremented.emit(run_duration)
 
 func _notification(what) -> void:
 	if what == MainLoop.NOTIFICATION_APPLICATION_FOCUS_OUT:
@@ -124,14 +131,18 @@ func _notification(what) -> void:
 
 func session_tracker() -> void:
 	var t = Timer.new()
+	t.one_shot = false
+	t.wait_time = 1
 	add_child(t)
-	while true:
-		current_clock = Time.get_unix_time_from_system()
-		t.start(1)
-		await t.timeout
-		session_duration += 1
-		total_duration_played += 1
-	t.queue_free()
+	t.timeout.connect(second_passed)
+	t.start()
+
+
+func second_passed() -> void:
+	current_clock = Time.get_unix_time_from_system()
+	session_duration += 1
+	total_duration_played += 1
+	run_duration += 1
 
 
 
@@ -178,6 +189,7 @@ func close() -> void:
 
 func open() -> void:
 	closed = false
+	opened.emit()
 
 
 
@@ -292,6 +304,7 @@ enum Tooltip {
 	WISH,
 	JUST_TEXT,
 	WALLET_CURRENCY,
+	PRESTIGE,
 }
 
 var TOOLTIP_KEYS := Tooltip.keys()
@@ -478,10 +491,13 @@ func get_stage_icon(stage: int) -> Texture:
 
 signal hard_reset
 signal prestige(stage)
+signal prestiged
 var last_reset_stage := 1
 
-func reset(stage: int) -> void:
+func prestige_now(stage: int) -> void:
+	run_duration = 0
 	prestige.emit(stage)
+	prestiged.emit()
 
 
 func get_currencies_in_stage(stage: int) -> Array:

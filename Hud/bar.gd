@@ -3,14 +3,6 @@ extends MarginContainer
 
 
 
-signal showed_or_removed
-func _on_visibility_changed():
-	if visible:
-		emit_signal("showed_or_removed")
-func _on_tree_exited():
-	emit_signal("showed_or_removed")
-
-
 @onready var progress_bar = %"Progress Bar"
 @onready var delta_bar = %"Delta Bar"
 @onready var delta_timer = %Timer

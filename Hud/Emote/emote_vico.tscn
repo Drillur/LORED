@@ -124,7 +124,7 @@ theme_override_constants/shadow_outline_size = 0
 theme_override_constants/line_separation = 0
 theme_override_constants/text_highlight_v_padding = 0
 bbcode_enabled = true
-text = "[center][i]Mmm! Gith ith good!"
+text = "[i]Mmm! Gith ith good!"
 scroll_following = true
 
 [node name="Timer" type="Timer" parent="."]

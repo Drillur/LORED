@@ -31,8 +31,9 @@ func _ready():
 	
 	wa.wallet_unlocked_changed.connect(display_wallet_button)
 	
-	up.menu_unlocked_changed.connect(flash_upgrade_button)
 	up.menu_unlocked_changed.connect(display_upgrades_button)
+	up.menu_unlocked_changed.connect(flash_upgrade_button)
+	wa.wallet_unlocked_changed.connect(wallet_lock)
 	
 	gv.tooltip_parent = tooltip_parent
 	gv.texts_parent = control
@@ -47,6 +48,7 @@ func _ready():
 		b.remove_check().remove_icon_shadow()
 		var stage = gv.get_stage(i) as Stage
 		b.set_icon(stage.icon)
+		b.button.modulate = stage.color
 		stage.stage_unlocked_changed.connect(display_stage_button)
 		if not gv.dev_mode:
 			b.hide()
@@ -247,6 +249,12 @@ func display_stage_button(stage: int, unlocked: bool) -> void:
 		gv.flash(b, _stage.color)
 
 
+func wallet_lock(unlocked: bool) -> void:
+	wallet_button.visible = unlocked
+	if wallet_button.visible:
+		gv.flash(wallet_button, gv.get_stage_color(1))
+
+
 
 # - Actions
 
@@ -277,15 +285,14 @@ func select_stage(stage: int) -> void:
 
 
 @onready var dev_text = $Left/Dev/RichTextLabel
-var i = 0
 func _on_dev_pressed():
-	i += 1
 	wa.add(Currency.Type.STONE, 10)
 	wa.add(Currency.Type.COAL, 10)
-	lv.get_lored(LORED.Type.IRON).purchase()
-	lv.get_lored(LORED.Type.COPPER).purchase()
-	lv.get_lored(LORED.Type.COPPER_ORE).purchase()
-	lv.get_lored(LORED.Type.IRON_ORE).purchase()
+	if lv.is_lored_unlocked(LORED.Type.IRON):
+		lv.get_lored(LORED.Type.IRON).purchase()
+		lv.get_lored(LORED.Type.COPPER).purchase()
+		lv.get_lored(LORED.Type.COPPER_ORE).purchase()
+		lv.get_lored(LORED.Type.IRON_ORE).purchase()
 
 var test_data: String
 func _on_dev_2_pressed():

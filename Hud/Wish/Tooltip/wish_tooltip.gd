@@ -12,13 +12,6 @@ extends MarginContainer
 @onready var lucky_multiplier = %lucky_multiplier
 @onready var info_title_bg = %"info title bg"
 
-signal showed_or_removed
-func _on_visibility_changed():
-	if visible:
-		emit_signal("showed_or_removed")
-func _on_tree_exited():
-	emit_signal("showed_or_removed")
-
 var color: Color:
 	set(val):
 		color = val

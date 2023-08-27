@@ -83,8 +83,7 @@ var unlocked := false:
 				erase_producer_and_user()
 			unlocked_changed.emit(val)
 var starting := false
-var added_current_rate := false
-var added_total_rate := false
+var added_rate := false
 var working := false
 var added_rate_based_on_inhand: bool
 
@@ -489,24 +488,28 @@ func init_TUMORS() -> void:
 	})
 
 
-func assign_lored(_lored: int) -> void:
-	lored = _lored
-	crit = lv.get_lored(lored).crit
-	lv.get_lored(lored).fuel.connect("increased", fuel_increased)
-	lv.get_lored(lored).fuel.connect("decreased", fuel_decreased)
+func assign_lored(lored_type: int) -> void:
+	lored = lored_type
+	var _lored: LORED = lv.get_lored(lored) as LORED
+	crit = _lored.crit
+	_lored.fuel.connect("increased", fuel_increased)
+	_lored.fuel.connect("decreased", fuel_decreased)
 	if type == Type.REFUEL:
-		var half = Big.new(lv.get_lored(lored).fuel.get_total()).do_not_emit().d(2).toFloat()
+		var half = Big.new(_lored.fuel.get_total()).do_not_emit().d(2).toFloat()
 		has_required_currencies = true
 		required_currencies = Cost.new({
-			lv.get_lored(lored).fuel_currency: Value.new(half)
+			_lored.fuel_currency: Value.new(half)
 		})
 		hookup_required_currencies()
 		animation_key = "refuel"
 	else:
-		animation_key = lv.get_lored(lored).key
+		animation_key = _lored.key
 	
-	lv.get_lored(lored).connect("job_started", another_job_started)
-	lv.get_lored(lored).connect("stopped_working", subtract_current_rate)
+	if has_required_currencies:
+		required_currencies.stage = _lored.stage
+	
+	_lored.connect("job_started", another_job_started)
+	_lored.purchased_changed.connect(lored_purchased_changed)
 
 
 
@@ -543,23 +546,23 @@ func add_produced_currency(currency: int, amount: float) -> void:
 # - Signal
 
 func lored_output_changed() -> void:
-	subtract_rates()
+	subtract_rate()
 	for x in produced_currencies.values():
 		x.set_m_from_lored(lv.get_lored(lored).get_output())
-	add_rates()
+	add_rate()
 
 
 func lored_input_changed() -> void:
-	subtract_rates()
+	subtract_rate()
 	required_currencies.increase_m_from_lored(lv.get_lored(lored).get_input())
-	add_rates()
+	add_rate()
 
 
 func lored_haste_changed() -> void:
-	subtract_rates()
+	subtract_rate()
 	duration.set_d_from_lored(lv.get_lored(lored).get_haste())
 	fuel_cost.set_d_from_lored(lv.get_lored(lored).get_haste())
-	add_rates()
+	add_rate()
 
 
 func lored_fuel_cost_changed() -> void:
@@ -606,8 +609,12 @@ func fuel_decreased() -> void:
 
 
 func another_job_started(job: Job) -> void:
-	if job != self:
-		subtract_current_rate()
+	pass
+
+
+func lored_purchased_changed(purchased: bool) -> void:
+	if not purchased:
+		subtract_rate()
 
 
 
@@ -617,7 +624,7 @@ func another_job_started(job: Job) -> void:
 func can_start() -> bool:
 	if not unlocked:
 		return false
-	if lv.get_lored(lored).fuel.get_current_percent() <= lv.FUEL_DANGER and type != Type.REFUEL:
+	if type != Type.REFUEL and lv.get_lored(lored).fuel.get_current_percent() <= lv.FUEL_DANGER:
 		return false
 	if has_method("can_start_job_special_requirements_" + key):
 		if not call("can_start_job_special_requirements_" + key):
@@ -635,7 +642,7 @@ func can_start_job_special_requirements_REFUEL() -> bool:
 	var _lored = lv.get_lored(lored)
 	if _lored.fuel.get_current_percent() > lv.FUEL_WARNING:
 		return false
-	if (
+	if ( # if coal's fuel < 50%
 		_lored.fuel_currency == Currency.Type.COAL
 		and _lored.type != LORED.Type.COAL
 		and lv.get_lored(LORED.Type.COAL).fuel.get_current_percent() <= lv.FUEL_WARNING
@@ -645,54 +652,18 @@ func can_start_job_special_requirements_REFUEL() -> bool:
 
 
 
-func subtract_rates() -> void:
-	subtract_current_rate()
-	subtract_total_rate()
-
-
-func add_rates() -> void:
-	if not lv.get_lored(lored).purchased:
-		return
-	add_current_rate()
-	add_total_rate()
-
-
-
-func add_current_rate() -> void:
-	if not starting and not working:
-		return
-	if added_current_rate:
-		return
-	added_current_rate = true
-	
-	if not has_produced_currencies and not has_required_currencies:
+func add_rate() -> void:
+	if (
+		added_rate
+		or not lv.get_lored(lored).purchased
+		or (
+			not has_produced_currencies
+			and not has_required_currencies
+		)
+	):
 		return
 	
-	added_rate_based_on_inhand = not working
-	
-	var _duration = duration.get_as_float()
-	if has_produced_currencies:
-		for cur in produced_currencies:
-			var currency = wa.get_currency(cur) as Currency
-			if added_rate_based_on_inhand:
-				currency.add_current_gain_rate(Big.new(in_hand_output[cur]).d(_duration))
-			else:
-				currency.add_current_gain_rate(Big.new(produced_currencies[cur].get_value()).d(_duration))
-	if has_required_currencies and type != Type.REFUEL:
-		for cur in required_currencies.cost:
-			var currency = wa.get_currency(cur) as Currency
-			if added_rate_based_on_inhand:
-				currency.add_current_loss_rate(Big.new(in_hand_input[cur]).d(_duration))
-			else:
-				currency.add_current_loss_rate(Big.new(required_currencies.cost[cur].get_value()).d(_duration))
-
-
-func add_total_rate() -> void:
-	if not has_produced_currencies and not has_required_currencies:
-		return
-	if added_total_rate:
-		return
-	added_total_rate = true
+	added_rate = true
 	
 	var _duration = duration.get_as_float()
 	if has_produced_currencies:
@@ -701,7 +672,7 @@ func add_total_rate() -> void:
 			var currency = wa.get_currency(cur) as Currency
 			var rate = Big.new(produced_currencies[cur].get_value()).d(_duration)
 			
-			currency.add_total_gain_rate(rate)
+			currency.add_gain_rate(rate)
 			produced_rates[cur] = rate
 	
 	if has_required_currencies and type != Type.REFUEL:
@@ -710,51 +681,26 @@ func add_total_rate() -> void:
 			var currency = wa.get_currency(cur) as Currency
 			var rate = Big.new(required_currencies.cost[cur].get_value()).d(_duration)
 			
-			currency.add_total_loss_rate(rate)
+			currency.add_loss_rate(rate)
 			required_rates[cur] = rate
 
 
-func subtract_current_rate() -> void:
-	if not added_current_rate:
+func subtract_rate() -> void:
+	if not added_rate:
 		return
-	added_current_rate = false
-	
 	if not has_produced_currencies and not has_required_currencies:
 		return
+	added_rate = false
 	
 	var _duration = duration.get_as_float()
 	if has_produced_currencies:
 		for cur in produced_currencies:
 			var currency = wa.get_currency(cur) as Currency
-			if added_rate_based_on_inhand:
-				currency.subtract_current_gain_rate(Big.new(in_hand_output[cur]).d(_duration))
-			else:
-				currency.subtract_current_gain_rate(Big.new(produced_currencies[cur].get_value()).d(_duration))
+			currency.subtract_gain_rate(Big.new(produced_currencies[cur].get_value()).d(_duration))
 	if has_required_currencies and type != Type.REFUEL:
 		for cur in required_currencies.cost:
 			var currency = wa.get_currency(cur) as Currency
-			if added_rate_based_on_inhand:
-				currency.subtract_current_loss_rate(Big.new(in_hand_input[cur]).d(_duration))
-			else:
-				currency.subtract_current_loss_rate(Big.new(required_currencies.cost[cur].get_value()).d(_duration))
-
-
-func subtract_total_rate() -> void:
-	if not added_total_rate:
-		return
-	if not has_produced_currencies and not has_required_currencies:
-		return
-	added_total_rate = false
-	
-	var _duration = duration.get_as_float()
-	if has_produced_currencies:
-		for cur in produced_currencies:
-			var currency = wa.get_currency(cur) as Currency
-			currency.subtract_total_gain_rate(Big.new(produced_currencies[cur].get_value()).d(_duration))
-	if has_required_currencies and type != Type.REFUEL:
-		for cur in required_currencies.cost:
-			var currency = wa.get_currency(cur) as Currency
-			currency.subtract_total_loss_rate(Big.new(required_currencies.cost[cur].get_value()).d(_duration))
+			currency.subtract_loss_rate(Big.new(required_currencies.cost[cur].get_value()).d(_duration))
 
 
 
@@ -763,7 +709,7 @@ func start() -> void:
 	if has_produced_currencies:
 		in_hand_output.clear()
 		for cur in produced_currencies:
-			in_hand_output[cur] = produced_currencies[cur].get_value()
+			in_hand_output[cur] = Big.new(produced_currencies[cur].get_value())
 			wa.add_pending(cur, in_hand_output[cur])
 	elif type == Type.REFUEL:
 		in_hand_output["REFUEL"] = lv.get_lored(lored).fuel.get_x_percent(0.5)
@@ -774,7 +720,7 @@ func start() -> void:
 		for cur in required_currencies.cost:
 			in_hand_input[cur] = required_currencies.cost[cur].get_value()
 	
-	add_current_rate()
+	add_rate()
 	starting = false
 	working = true
 	

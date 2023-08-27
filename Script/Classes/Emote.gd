@@ -34,6 +34,7 @@ enum Type {
 	IRON_ORE15_REPLY,
 	
 	RANDOM_COPPER_ORE,
+	COPPER_ORE0_REPLY,
 	COPPER_ORE6_REPLY,
 	COPPER_ORE7_REPLY,
 	
@@ -198,7 +199,8 @@ func TEST():
 
 func STONE_HAPPY():
 	speaker = LORED.Type.STONE
-	dialogue = "I'm so glad to have Coal back again."
+	var name = lv.get_colored_name(LORED.Type.COAL)
+	dialogue = "I'm so glad to have %s back again." % name
 	reply = Type.STONE_HAPPY_COAL0
 
 
@@ -243,7 +245,7 @@ func RANDOM_COAL() -> void:
 		d.append(11)
 	if lv.can_lored_emote(LORED.Type.COPPER_ORE):
 		d.append(12)
-	if not wa.is_total_rate_positive(Currency.Type.COAL):
+	if not wa.is_rate_positive(Currency.Type.COAL):
 		d.append(14)
 	if lv.get_fuel_percent(speaker) <= lv.FUEL_WARNING:
 		d.append(17)
@@ -269,11 +271,11 @@ func RANDOM_COAL() -> void:
 			dialogue = "More %s, more %s! It's simple trickle-down %senomics." % [stone_text, coal_text, coal_text]
 			reply = Type.COAL13_REPLY
 		12:
-			var text = lv.get_icon_and_name_text(LORED.Type.COPPER_ORE)
+			var text = lv.get_colored_name(LORED.Type.COPPER_ORE)
 			dialogue = "%s's mine looks scary." % text
 			reply = Type.COAL12_REPLY
 		11:
-			var text = lv.get_icon_and_name_text(LORED.Type.GROWTH)
+			var text = lv.get_colored_name(LORED.Type.GROWTH)
 			dialogue = "What in tarnation is %s doing? Somebody help him." % text
 			reply = Type.GROWTH_RANDOM_SCREAM
 		10:
@@ -284,14 +286,14 @@ func RANDOM_COAL() -> void:
 				0:
 					dialogue = "I plugged my shovel into a socket, and it was... tee hee hee... [b]ELECTRIFYING!!![/b]"
 				1:
-					var text = lv.get_icon_and_name_text(LORED.Type.JOULES)
+					var text = lv.get_colored_name(LORED.Type.JOULES)
 					dialogue = "Oh, oh!! Hey, %s. I saw you redirect lightning, and I thought it was quite... [b]SHOCKING!!!![/b] :)" % text
 			reply = Type.COAL10_REPLY
 		9:
 			dialogue = "That baby is sucking oil. Now I have truly seen it all."
 			reply = Type.COAL9_REPLY
 		8:
-			var text = lv.get_icon_and_name_text(LORED.Type.TARBALLS)
+			var text = lv.get_colored_name(LORED.Type.TARBALLS)
 			dialogue = "Wow!!! Can %s hack into my ex's Facebook account?" % text
 			reply = Type.COAL8_REPLY
 		7: dialogue = "Why is this stuff purple?"
@@ -339,7 +341,7 @@ func COAL14_REPLY():
 			dialogue = "Whoa."
 		1:
 			speaker = LORED.Type.IRON_ORE
-			var text = lv.get_icon_and_name_text(LORED.Type.COAL)
+			var text = lv.get_colored_name(LORED.Type.COAL)
 			dialogue = "Yes, %s, embrace the dark side." % text
 		2:
 			speaker = LORED.Type.COPPER_ORE
@@ -352,14 +354,14 @@ func COAL14_REPLY():
 			dialogue = "Hey, hey. Chill! Take it easy, brother! This is just a game!"
 		5:
 			speaker = LORED.Type.JOULES
-			var text = lv.get_icon_and_name_text(LORED.Type.COAL)
+			var text = lv.get_colored_name(LORED.Type.COAL)
 			dialogue = "No, %s! You must never give in to despair! Allow yourself to slip down that road, and you surrender to your lowest instincts! In the darkest times, hope is something you give [b]yourself[/b]. That is the meaning of [b]inner strength[/b]." % text
 		6:
 			speaker = LORED.Type.CONCRETE
 			dialogue = "Pinche loco."
 		7:
 			speaker = LORED.Type.TARBALLS
-			var text = lv.get_icon_and_name_text(LORED.Type.COAL)
+			var text = lv.get_colored_name(LORED.Type.COAL)
 			dialogue = "%s's tilted." % text
 		8:
 			speaker = LORED.Type.OIL
@@ -376,7 +378,7 @@ func COAL14_REPLY_REPLY():
 
 func COAL13_REPLY():
 	speaker = LORED.Type.STONE
-	var text = lv.get_icon_and_name_text(LORED.Type.COAL)
+	var text = lv.get_colored_name(LORED.Type.COAL)
 	dialogue = "%s's smart, listen to him!" % text
 
 
@@ -463,11 +465,12 @@ func RANDOM_STONE() -> void:
 			dialogue = "Is it alright that that baby is slurping up %s? Uh... well, I'm sure his parents know what they're doing!" % text
 		9: dialogue = "I like chocolate with peanut butter!"
 		8:
-			var text = lv.get_icon_and_name_text(LORED.Type.TARBALLS)
+			var text = lv.get_colored_name(LORED.Type.TARBALLS)
 			dialogue = "%s seems pretty smart." % text
 			reply = Type.STONE8_REPLY
 		7:
-			dialogue = "I don't like it when Iron Ore shoots rocks."
+			var name = lv.get_colored_name(LORED.Type.IRON_ORE)
+			dialogue = "I don't like it when %s shoots rocks." % name
 			reply = Type.STONE7_REPLY
 		6: dialogue = "I wonder how much this one is worth."
 		5: dialogue = "Gotta go fast!"
@@ -485,7 +488,7 @@ func STONE8_REPLY():
 	match d[randi() % d.size()]:
 		0:
 			speaker = LORED.Type.TARBALLS
-			var text = lv.get_icon_and_name_text(LORED.Type.STONE)
+			var text = lv.get_colored_name(LORED.Type.STONE)
 			dialogue = "%s seems pretty stupid." % text
 
 
@@ -511,21 +514,21 @@ func RANDOM_IRON_ORE() -> void:
 	match d[randi() % d.size()]:
 		25: dialogue = "Joy and Grief are but two emotions on the coin of our brains, except our brains are full of coins. Wait, does that make any cents?"
 		24:
-			var text = lv.get_icon_and_name_text(LORED.Type.COAL)
+			var text = lv.get_colored_name(LORED.Type.COAL)
 			match randi() % 2:
 				0: dialogue = "Are you kidding me? How did I get this low on fuel? Did you upgrade me too quickly? %s better not have a negative net output. I will [b]LOSE[/b] my [b]MIND[/b]. I will [b]FIND YOU[/b]. [b]FUEL ME UP. NOW.[/b]" % text
 				1: dialogue = "I have a very important role in this system. Don't you understand? I [b]CAN'T[/b] have low fuel. [b]FIX IT.[/b]"
 		23:
-			var text = lv.get_icon_and_name_text(LORED.Type.STONE)
+			var text = lv.get_colored_name(LORED.Type.STONE)
 			dialogue = "%s. You're next." % text
 		22:
 			dialogue = "Yes. [b]JAB[/b] that shovel in, [b]real[/b] deep! Excellent!"
 		21:
-			var text = lv.get_icon_and_name_text(LORED.Type.COPPER_ORE)
+			var text = lv.get_colored_name(LORED.Type.COPPER_ORE)
 			dialogue = "%s. That incessant whacking and clanging. [b]I[/b] choose to work [b]smarter[/b]." % text
 		20:
-			var text = lv.get_icon_and_name_text(LORED.Type.IRON)
-			dialogue = "%s LORED. I follow you, my brother. My captain. My king." % text
+			var text = lv.get_lored(LORED.Type.IRON).color_text % lv.get_lored(LORED.Type.IRON).title
+			dialogue = "%s. I follow you, my brother. My captain. My king." % text
 		19:
 			dialogue = "Hey, guess what, buddy? Those [b]aren't[/b] s'mores."
 			reply = Type.IRON_ORE15_REPLY
@@ -533,11 +536,11 @@ func RANDOM_IRON_ORE() -> void:
 			dialogue = "Look at that idiot! Ever heard of chemotherapy, you ding dong?!"
 			reply = Type.IRON_ORE14_REPLY
 		17:
-			var text = lv.get_icon_and_name_text(LORED.Type.JOULES)
+			var text = lv.get_colored_name(LORED.Type.JOULES)
 			dialogue = "%s upsells you when you go in for only an oil change, he is [b]proud[/b] of it." % text
 		16: dialogue = "That baby is absolutely, positively [b]disgusting[/b]."
 		15:
-			var text = lv.get_icon_and_name_text(LORED.Type.TARBALLS)
+			var text = lv.get_colored_name(LORED.Type.TARBALLS)
 			dialogue = "That moron %s thinks he's smart, but all he does is create matter out of oil and cancer juice.\n\nWait, what? He does that? Holy crap. Well, I still don't like him." % text
 		14: dialogue = "I hate existing."
 		13: dialogue = "My ribcage is starting to hurt."
@@ -584,12 +587,18 @@ func IRON_ORE9_REPLY():
 
 func RANDOM_COPPER_ORE() -> void:
 	speaker = LORED.Type.COPPER_ORE
-	var d = [0, 1, 2, 3, 4, 5, 6, ]
+	var d = [0, 1, 2, 3, 4, 5, 6,9,10,11,12,13,14]
 	if lv.get_fuel_percent(speaker) < lv.FUEL_DANGER:
 		d.append(8)
 	if lv.can_lored_emote(LORED.Type.OIL):
 		d.append(7)
 	match d[randi() % d.size()]:
+		14: dialogue = "No escaping the coal dust, boss, no siree!"
+		13: dialogue = "Shaft's unstable as usual, boss, watch your step!"
+		12: dialogue = "You reckon I'll ever see the sun again, boss?"
+		11: dialogue = "My father died in this here mine. Yes he sure did, boss. I was there, saw it with my own two eyes, I did. Soon enough little Jimmy'll be ten and I'll have him in here to see me die as well!"
+		10: dialogue = "Little Jimmy asked for a new dog. Ha, ha, ha... Well, you can guess what I said. Money surely doesn't grow on trees, does it, boss?"
+		9: dialogue = "Can't wait to get home to get my 4 hours of sleep and beat my wife a little!"
 		8:
 			var text = wa.get_icon_and_name_text(Currency.Type.COAL)
 			dialogue = "Hey, we're out of %s in the mine, and out of %s in the game, too! Look at that, boss!" % [text, text]
@@ -597,20 +606,23 @@ func RANDOM_COPPER_ORE() -> void:
 			dialogue = "Good god, look at how young those corporate fat heads have lowered the minimum working age to! It's downright horrific, see! I won't stand for it, boss, I just won't, y'see?!"
 			reply = Type.COPPER_ORE7_REPLY
 		6:
-			var text = lv.get_icon_and_name_text(LORED.Type.COPPER)
-			var text2 = lv.get_icon_and_name_text(LORED.Type.IRON_ORE)
+			var text = lv.get_colored_name(LORED.Type.COPPER)
+			var text2 = lv.get_colored_name(LORED.Type.IRON_ORE)
 			dialogue = "%s, stop! Ah, see? Now a fire's started. See, that's now fixing to consume what little oxygen we have left down here, boss. Yep, takes a real man to brave these absolute twisted work conditions, boss. Complete and totally, unspeakably-twisted work conditions. Just have %s shoot me now, boss, just have him shoot me now." % [text, text2]
 			reply = Type.COPPER_ORE6_REPLY
 		5:
-			var text = lv.get_icon_and_name_text(LORED.Type.IRON_ORE)
+			var text = lv.get_colored_name(LORED.Type.IRON_ORE)
 			dialogue = "Unfortunately, I am seen as the brother or equal of %s, see, and that just ain't right. This fat head would ricochet-murder at least 5 workers in the mine, here, shootin' wild-like like that. No, it's not right at all, boss, not right at all, boss, at all, boss, all boss--hrrgggk.\nWhoa, I just blacked out, there, boss, am I okay?" % text
 		4:
-			var text = lv.get_icon_and_name_text(LORED.Type.COAL)
+			var text = lv.get_colored_name(LORED.Type.COAL)
 			dialogue = "Now, see %s here, boss? This one's the only one who could make it in the mine, here, boss. He's tough, real tough. Of course, I'd never want him to work here. No, this mine should be shut down. But a man's gotta do what a man's gotta do, see?" % text
-		3: dialogue = "It's a working man I am! I've been down underground."
-		2: dialogue = "I swear to god if I ever see the sun, or for any length of time, I can hold it in my mind, I never again will go down underground!"
-		1: dialogue = "In the dark recess of the mine, where you age before your time, and the coal dust lies heavy on your lungs."
-		0: dialogue = "At the age of sixty-four, if I live that long, I'll greet you at the door and gently lead you by the arm. In the dark recess of the mine, I can take you back in time and tell you of the hardships that were there!"
+		3: dialogue = "You gotta be tough as nails to work down in the mines! This ain't no Weenie Hut Jr's, boss!"
+		2: dialogue = "Soon as the mortgage is paid off, I'll be clean out of here for good. Yes, sir, boss. I know it only had 3 years remaining when we re-financed, but there was nothin that could be done about it. 30 more years and I'll be free!"
+		1: dialogue = "Last time I was down this deep alone, my headlamp went out. Yes, it sure did, boss. I would know. I was there. Anyway, they found me a few days later. Wife thought I was off with some broad! I slapped her around a little to let her know she was the only one for me. Overall, all's right as rain, boss!"
+		0:
+			dialogue = "Whatever I need to do to put bread on the table, boss!"
+			if lv.can_lored_emote(LORED.Type.IRON):
+				reply = Type.COPPER_ORE0_REPLY
 
 
 func COPPER_ORE7_REPLY():
@@ -633,6 +645,16 @@ func COPPER_ORE6_REPLY():
 			dialogue = "With [b]extreme[/b] pleasure."
 
 
+func COPPER_ORE0_REPLY():
+	var d = [0]
+#	if lv.can_lored_emote(LORED.Type.DRAW_PLATE):
+#		d.append(1)
+	match d[randi() % d.size()]:
+		0:
+			speaker = LORED.Type.IRON
+			dialogue = "You're going through all that for bread? You should have just come to me!"
+
+
 
 func RANDOM_IRON() -> void:
 	speaker = LORED.Type.IRON
@@ -646,10 +668,12 @@ func RANDOM_IRON() -> void:
 			reply = Type.IRON4_REPLY
 		3: dialogue = "I haven't cleaned this toaster since I bought it!"
 		2:
-			dialogue = "Iron Ore's methods may be extreme, but we need him nonetheless."
+			var name = lv.get_colored_name(LORED.Type.IRON_ORE)
+			dialogue = "%s's methods may be extreme, but we need him nonetheless." % name
 			reply = Type.IRON2_REPLY
 		1:
-			dialogue = "Thank you for working so hard, Stone!"
+			var name = lv.get_colored_name(LORED.Type.STONE)
+			dialogue = "Thank you for working so hard, %s!" % name
 			reply = Type.IRON1_REPLY
 		0: dialogue = "Bread is good, but [b]toast[/b]... Toast is better."
 
@@ -693,19 +717,20 @@ func RANDOM_COPPER() -> void:
 			reply = Type.COPPER12_REPLY
 		11:
 			var icon = lv.get_lored(LORED.Type.COAL).icon_text
-			var text = lv.get_lored(LORED.Type.COAL).color_text % "Coca-Coal"
+			var name = lv.get_colored_name(LORED.Type.COAL)
+			var text = lv.get_lored(LORED.Type.COAL).color_text % ("Coca-Coal %s" % name)
 			dialogue = "%s %s, what's happening, bro? Fill me up, baby! No homo." % [icon, text]
 			
 		10:
-			var text = lv.get_icon_and_name_text(LORED.Type.MALIGNANCY)
+			var text = lv.get_colored_name(LORED.Type.MALIGNANCY)
 			dialogue = "Oh, shit!! They on X-games mode, bruh!!! What the hell even is that?! %s you are freaking me the fuh-reak out, bro!!" % text
 		9:
-			var text = lv.get_icon_and_name_text(LORED.Type.TARBALLS)
+			var text = lv.get_colored_name(LORED.Type.TARBALLS)
 			dialogue = "%s and I have a playdate scheduled. We're gonna compare the English and Japanese dubs for the final episode of Death Note. Siiiick!" % text
 		8: dialogue = "I literally can't stop laughing at that baby, yo!!"
 		0: dialogue = "This stuff's the bee's knees!"
 		1: pose_texture = load("res://Sprites/reactions/COPPER1.png")
-		2: dialogue = "Anyone want sm' more?"
+		2: dialogue = "Anyone want s'more?"
 		3: dialogue = "C'mon 'n rest ya dogs--try one of these bad bad boys!"
 		4:
 			dialogue = "Can I get some firewood?"
@@ -714,7 +739,8 @@ func RANDOM_COPPER() -> void:
 		5: dialogue = "Stay awhile and listen to the fire."
 		6: dialogue = "Mmm! Gith ith good!"
 		7:
-			dialogue = "Copper Ore, these puppies are amazing!"
+			var name = lv.get_colored_name(LORED.Type.COPPER_ORE)
+			dialogue = "%s, these puppies are amazing!" % name
 			reply = Type.COPPER7_REPLY
 
 
@@ -725,7 +751,7 @@ func COPPER12_REPLY():
 	match d[randi() % d.size()]:
 		0:
 			speaker = LORED.Type.IRON
-			var text = lv.get_icon_and_name_text(LORED.Type.COPPER)
+			var text = lv.get_colored_name(LORED.Type.COPPER)
 			dialogue = "Oh, gosh, %s, are you okay?" % text
 			reply = Type.COPPER12_REPLY0_REPLY
 		1:
@@ -764,14 +790,16 @@ func COPPER7_REPLY():
 func RANDOM_JOULES() -> void:
 	speaker = LORED.Type.JOULES
 
-	var d = [0,1,2,3,4,5,6,7,]
+	var d = [0,1,2,3,4,5,6,7,8,]
 	match d[randi() % d.size()]:
+		8: dialogue = "People always pronounce my name wrong. It's Japanese, just like the best cars! It's \"Nots-ko\"!"
 		0: dialogue = "It took me 12 years to be able to redirect lightning!"
 		1: dialogue = "My batteries are shock-full!"
 		2: dialogue = "Anyone's car need a jump-start?"
 		3: dialogue = "I can offer you parts at a reduced price!"
 		4:
-			dialogue = "Thanks for the parts again, Coal. Same time, same place?"
+			var name = lv.get_colored_name(LORED.Type.COAL)
+			dialogue = "Thanks for the parts again, %s. Same time, same place next week?" % name
 			reply = Type.JOULES4_COAL0
 		5: dialogue = "Cars! Cars! Cars! Cars! Cars! Cars! Cars!"
 		6:
@@ -803,7 +831,7 @@ func RANDOM_GROWTH() -> void:
 			dialogue = "Does anyone want some juice?"
 			reply = Type.GROWTH10_REPLY
 		0:
-			var text = lv.get_icon_and_name_text(LORED.Type.OIL)
+			var text = lv.get_colored_name(LORED.Type.OIL)
 			dialogue = "I think %s just made a boom-boom." % text
 			reply = Type.GROWTH0_OIL0
 		1: dialogue = "Oh, your grandma got cancer three times? Must be nice."
@@ -905,7 +933,8 @@ func RANDOM_TARBALLS() -> void:
 		3: dialogue = "I'm glad I'm able to work right now. I'm easily distracted."
 		4: dialogue = "I only live so long. I need to get this right!"
 		5:
-			dialogue = "Thank you for your un-ending donations, Growth."
+			var name = lv.get_colored_name(LORED.Type.GROWTH)
+			dialogue = "Thank you for your un-ending donations, %s." % name
 			reply = Type.TARBALLS5_GROWTH0
 		6: dialogue = "I can't wait for the next chapter of One-Punch Man!"
 		7: dialogue = "I'd like to see you wiggle, wiggle, for sure."
@@ -924,12 +953,16 @@ func RANDOM_MALIGNANCY() -> void:
 	match d[randi() % d.size()]:
 		0: dialogue = "Hiya. I just coalesced out of sticky, oily stuff and cancer juice. How's your day going?"
 		1: dialogue = "Hi. Oh, wow, there are a lot of me."
-		2: dialogue = "Whoa, hello! I'm Malignancy... Oh, so are all of you?"
+		2:
+			var name = lv.get_colored_name(LORED.Type.MALIGNANCY)
+			dialogue = "Whoa, hello! I'm %s... Oh, so are all of you?" % name
 		3: dialogue = "OH GOd--oh, hello."
 		4: dialogue = "Oh, hi! Nice to meet y'all!"
 		5: dialogue = "Wow! So THAT's what being born is like!"
 		6: dialogue = "Literally 1 second ago I did not exist. Isn't that weird to think about?"
-		7: dialogue = "Oop--hi! I'm Malignancy. Nice to meet you."
+		7:
+			var name = lv.get_colored_name(LORED.Type.MALIGNANCY)
+			dialogue = "Oop--hi! I'm %s. Nice to meet you." % name
 		8: dialogue = "Hello!"
 		9: dialogue = "Hi!"
 		10: dialogue = "Hey!"
@@ -1015,7 +1048,8 @@ func RANDOM_TREES() -> void:
 	var d = [0,1,2,3,4,5,6,7,8,]
 	match d[randi() % d.size()]:
 		8:
-			dialogue = "Maybe, these seeds are poppin'!"
+			var name = lv.get_colored_name(LORED.Type.SEEDS)
+			dialogue = "%s, these seeds are poppin'!" % name
 			reply = Type.TREES8_REPLY
 		7: dialogue = "These volatile seeds won't leaf me alone!"
 		6: dialogue = "These sprouts blasting me have given me rock-hard abs!"
@@ -1037,12 +1071,12 @@ func TREES0_REPLY():
 		d.append(2)
 	match d[randi() % d.size()]:
 		0:
-			var text = lv.get_icon_and_name_text(LORED.Type.TREES)
+			var text = lv.get_colored_name(LORED.Type.TREES)
 			speaker = LORED.Type.GROWTH
 			dialogue = "Are you freakin joking me, %s?" % text
 		1:
 			var text1 = wa.get_icon_and_name_text(Currency.Type.TREES)
-			var text2 = lv.get_icon_and_name_text(LORED.Type.TREES)
+			var text2 = lv.get_colored_name(LORED.Type.TREES)
 			speaker = LORED.Type.JOULES
 			dialogue = "This fella must be jokin. Havin a nice time with the %s in the garden, are ya, %s?" % [text1, text2]
 		2:

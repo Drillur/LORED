@@ -100,7 +100,7 @@ const RANDOM_UPGRADE_DESCRIPTION := [
 	"Combines the power of every piece of feedback ever received into an awful abomination of mostly-decent ideas.",
 	"Cures cancer.",
 	"Deletes the most regrettable decision in your life from time, but not your memory.",
-	"Developing free-to-play games with forced, skippable ads is now punishable by up to ten years in maximum-security prison.",
+	"Developing free-to-play games with forced ads is now punishable by up to ten years in maximum-security prison.",
 	"Causes $1 to appear on your head. Time limit: N/A.",
 	"Deletes your insecurities.",
 	"Game of Thrones season 8 is deleted.",
@@ -246,3 +246,7 @@ func is_upgrade_unlocked(upgrade: int) -> bool:
 
 func is_upgrade_menu_unlocked(menu: int) -> bool:
 	return upgrade_menus[menu].unlocked
+
+
+func get_prestige_name(menu: int) -> String:
+	return get_upgrade_menu(menu).prestige_name

@@ -232,6 +232,11 @@ func set_to_percent(percent: float, with_random_range := false) -> void:
 	set_to(Big.new(get_total()).m(multiplier))
 
 
+func fill_up() -> void:
+	if not full:
+		set_to(get_total())
+
+
 
 # - Get
 

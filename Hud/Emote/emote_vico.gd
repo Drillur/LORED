@@ -23,6 +23,9 @@ const PUNCTUATION_MARKS := ["!", ",", ".", "?"]
 
 func _ready() -> void:
 	timer.connect("timeout", timer_finished)
+	var scroll_bar = dialogue_text.get_v_scroll_bar() as VScrollBar
+	scroll_bar.theme = gv.theme_standard
+	gv.prestige.connect(prestige)
 
 
 
@@ -34,6 +37,7 @@ func setup(_emote: Emote) -> void:
 	
 	bg.modulate = emote.color
 	flocket.modulate = emote.color
+	dialogue_text.get_v_scroll_bar().modulate = emote.color
 	
 	if emote.posing:
 		pose.show()
@@ -45,7 +49,7 @@ func setup(_emote: Emote) -> void:
 	
 	if emote.has_dialogue():
 		dialogue_container.show()
-		dialogue_text.text = "[center][i]" + emote.dialogue
+		dialogue_text.text = "[i]" + emote.dialogue #[center]
 		var text_length = dialogue_text.get_parsed_text().length()
 		dialogue_text.custom_minimum_size.x = min(180, 30 + (text_length * 3))
 		dialogue_text.show()
@@ -99,3 +103,11 @@ func display_text() -> void:
 	display_text_timer.queue_free()
 	await get_tree().create_timer(1).timeout
 	emote.finished_displaying_text()
+
+
+
+func prestige(stage: int) -> void:
+	if stage >= lv.get_lored(emote.speaker).stage:
+		if emote in em.emotes:
+			em.emotes.erase(emote)
+		queue_free()

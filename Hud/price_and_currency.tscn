@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://7sj7harw8lg"]
 
 [ext_resource type="Script" path="res://Hud/Price and Currency.gd" id="1_alsmb"]
-[ext_resource type="Theme" uid="uid://b8t7tkhvril5g" path="res://Theme/Standard.tres" id="2_85t62"]
+[ext_resource type="Theme" uid="uid://cwt08llwihqii" path="res://Theme/ShadowText.tres" id="2_ytm1x"]
 
 [node name="MarginContainer" type="MarginContainer"]
 offset_right = 129.0
@@ -35,7 +35,7 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 4
-theme = ExtResource("2_85t62")
+theme = ExtResource("2_ytm1x")
 theme_override_font_sizes/italics_font_size = 12
 bbcode_enabled = true
 text = "123e123"
@@ -46,7 +46,7 @@ autowrap_mode = 0
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 4
-theme = ExtResource("2_85t62")
+theme = ExtResource("2_ytm1x")
 theme_override_font_sizes/italics_font_size = 12
 bbcode_enabled = true
 text = "/"
@@ -58,7 +58,7 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 4
-theme = ExtResource("2_85t62")
+theme = ExtResource("2_ytm1x")
 theme_override_font_sizes/italics_font_size = 12
 bbcode_enabled = true
 text = "123e123"
@@ -70,7 +70,7 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 4
-theme = ExtResource("2_85t62")
+theme = ExtResource("2_ytm1x")
 theme_override_font_sizes/italics_font_size = 12
 bbcode_enabled = true
 text = "bits"

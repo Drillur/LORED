@@ -267,15 +267,15 @@ func disconnect_count() -> void:
 
 
 func connect_rate() -> void:
-	if not current_tab_container.get_child(0).currency.net_rate.total_changed.is_connected(sort_tab):
+	if not current_tab_container.get_child(0).currency.net_rate.changed.is_connected(sort_tab):
 		for node in current_tab_container.get_children():
-			node.currency.net_rate.total_changed.connect(sort_tab)
+			node.currency.net_rate.changed.connect(sort_tab)
 
 
 func disconnect_rate() -> void:
-	if current_tab_container.get_child(0).currency.net_rate.total_changed.is_connected(sort_tab):
+	if current_tab_container.get_child(0).currency.net_rate.changed.is_connected(sort_tab):
 		for node in current_tab_container.get_children():
-			node.currency.net_rate.total_changed.disconnect(sort_tab)
+			node.currency.net_rate.changed.disconnect(sort_tab)
 
 
 
@@ -302,25 +302,25 @@ func sort_tab(tab := str(tabs.current_tab + 1)) -> void:
 					return a.currency.count.less(b.currency.count)
 				Sort.RATE_ASCENDING, Sort.RATE_DESCENDING:
 					if (
-						not a.currency.positive_total_rate
-						and not b.currency.positive_total_rate
+						not a.currency.positive_rate
+						and not b.currency.positive_rate
 					):
-						if a.currency.net_rate.get_total().equal(b.currency.net_rate.get_total()):
+						if a.currency.net_rate.get_value().equal(b.currency.net_rate.get_value()):
 							return a.name.naturalnocasecmp_to(b.name) < 0
 						if sort == Sort.RATE_ASCENDING:
-							return a.currency.net_rate.get_total().less(b.currency.net_rate.get_total())
+							return a.currency.net_rate.get_value().less(b.currency.net_rate.get_value())
 						else:
-							return a.currency.net_rate.get_total().greater(b.currency.net_rate.get_total())
-					elif not a.currency.positive_total_rate:
+							return a.currency.net_rate.get_value().greater(b.currency.net_rate.get_value())
+					elif not a.currency.positive_rate:
 						return sort == Sort.RATE_DESCENDING
-					elif not b.currency.positive_total_rate:
+					elif not b.currency.positive_rate:
 						return sort == Sort.RATE_ASCENDING
 					else:
-						if a.currency.net_rate.get_total().equal(b.currency.net_rate.get_total()):
+						if a.currency.net_rate.get_value().equal(b.currency.net_rate.get_value()):
 							return a.name.naturalnocasecmp_to(b.name) < 0
 						if sort == Sort.RATE_ASCENDING:
-							return a.currency.net_rate.get_total().greater(b.currency.net_rate.get_total())
-						return a.currency.net_rate.get_total().less(b.currency.net_rate.get_total())
+							return a.currency.net_rate.get_value().greater(b.currency.net_rate.get_value())
+						return a.currency.net_rate.get_value().less(b.currency.net_rate.get_value())
 	)
 	for node in container.get_children():
 		container.remove_child(node)

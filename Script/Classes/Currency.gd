@@ -3,12 +3,7 @@ extends RefCounted
 
 
 var saved_vars := [
-	"unlocked",
 ]
-
-func load_finished() -> void:
-	if unlocked:
-		wa.unlock_currency(type)
 
 
 enum Type {
@@ -70,6 +65,8 @@ signal increased(amount)
 signal decreased_by_lored(amount)
 signal unlocked_changed(unlocked)
 signal use_allowed_changed(allowed)
+signal current_net_changed
+signal total_net_became_negative
 
 var type: int
 var stage: int
@@ -106,18 +103,23 @@ var unlocked := false:
 				saved_vars.erase("subtracted_by_loreds")
 				saved_vars.erase("subtracted_by_player")
 				saved_vars.erase("added_by_loreds")
-
+var persists_by_default := false
+var persists := false
 var use_allowed := true:
 	set(val):
 		if use_allowed != val:
 			use_allowed = val
 			use_allowed_changed.emit(val)
 
-var positive_current_rate := true
-var positive_total_rate := true
-var net_rate := Attribute.new(0)
-var gain_rate := Attribute.new(0)
-var loss_rate := Attribute.new(0)
+var positive_rate := true:
+	set(val):
+		if positive_rate != val:
+			positive_rate = val
+			if not val:
+				total_net_became_negative.emit()
+var net_rate := Value.new(0)
+var gain_rate := Value.new(0)
+var loss_rate := Value.new(0)
 
 var weight := 1
 
@@ -130,24 +132,7 @@ func _init(_type: int = 0) -> void:
 	type = _type
 	key = Type.keys()[type]
 	name = key.replace("_", " ").capitalize()
-	net_rate.do_not_cap_current()
-	gain_rate.do_not_cap_current()
-	loss_rate.do_not_cap_current()
-	init_stage()
-	call("init_" + key)
-	if count == null:
-		count = Big.new(0)
-	color_text = "[color=#" + color.to_html() + "]%s[/color]"
-	colored_name = "[color=#" + color.to_html() + "]" + name + "[/color]"
-	if icon == null:
-		icon = preload("res://Sprites/Hud/Delete.png")
-	icon_text = "[img=<15>]" + icon.get_path() + "[/img]"
-	icon_and_name_text = icon_text + " " + name
 	
-	SaveManager.load_finished.connect(load_finished)
-
-
-func init_stage() -> void:
 	if type <= Type.OIL:
 		stage = 1
 	elif type <= Type.TUMORS:
@@ -158,6 +143,23 @@ func init_stage() -> void:
 		stage = 4
 	else:
 		stage = 0
+	
+	call("init_" + key)
+	
+	if not persists_by_default and stage == 0:
+		persists_by_default = true
+	persists = persists_by_default
+	if count == null:
+		count = Big.new(0)
+	color_text = "[color=#" + color.to_html() + "]%s[/color]"
+	colored_name = "[color=#" + color.to_html() + "]" + name + "[/color]"
+	if icon == null:
+		icon = preload("res://Sprites/Hud/Delete.png")
+	icon_text = "[img=<15>]" + icon.get_path() + "[/img]"
+	icon_and_name_text = icon_text + " " + name
+	
+	gv.prestige.connect(prestige)
+
 
 
 func init_STONE() -> void:
@@ -219,6 +221,7 @@ func init_MALIGNANCY() -> void:
 	count = Big.new(10)
 	color = Color(0.88, .12, .35)
 	icon = preload("res://Sprites/Currency/malig.png")
+	persists_by_default = true
 
 
 func init_TARBALLS() -> void:
@@ -371,6 +374,7 @@ func init_EMBRYO() -> void:
 func init_TUMORS() -> void:
 	color = Color(1, .54, .54)
 	icon = preload("res://Sprites/Currency/tum.png")
+	persists_by_default = true
 
 
 func init_FLOWER_SEED() -> void:
@@ -389,19 +393,30 @@ func init_BLOOD() -> void:
 
 func init_SPIRIT() -> void:
 	color = Color(0.88, .12, .35)
+	persists_by_default = true
 
 
 func init_JOY() -> void:
 	color = Color(1, 0.909804, 0)
 	icon = preload("res://Sprites/Currency/Joy.png")
+	persists_by_default = true
 
 
 func init_GRIEF() -> void:
 	color = Color(0.74902, 0.203922, 0.533333)
 	icon = preload("res://Sprites/Currency/Grief.png")
+	persists_by_default = true
 
 
 
+# - Signals
+
+func prestige(_stage: int) -> void:
+	if persists:
+		if stage == 0 or _stage <= stage:
+			return
+	if _stage >= stage:
+		count.reset()
 
 
 # - Actions
@@ -467,68 +482,37 @@ func erase_user(lored: int) -> void:
 
 
 
-func add_current_gain_rate(amount) -> void:
-	gain_rate.current.increase_added(amount)
-	sync_current_net_rate()
-
-
-func subtract_current_gain_rate(amount) -> void:
-	gain_rate.current.decrease_added(amount)
-	sync_current_net_rate()
-
-
-func add_total_gain_rate(amount) -> void:
+func add_gain_rate(amount) -> void:
 	gain_rate.increase_added(amount)
-	sync_total_net_rate()
+	sync_rate()
 
 
-func subtract_total_gain_rate(amount) -> void:
+func subtract_gain_rate(amount) -> void:
 	gain_rate.decrease_added(amount)
-	sync_total_net_rate()
+	sync_rate()
 
 
-func add_current_loss_rate(amount) -> void:
-	loss_rate.current.increase_added(amount)
-	sync_current_net_rate()
-
-
-func subtract_current_loss_rate(amount) -> void:
-	loss_rate.current.decrease_added(amount)
-	sync_current_net_rate()
-
-
-func add_total_loss_rate(amount) -> void:
+func add_loss_rate(amount) -> void:
 	loss_rate.increase_added(amount)
-	sync_total_net_rate()
+	sync_rate()
 
 
-func subtract_total_loss_rate(amount) -> void:
+func subtract_loss_rate(amount) -> void:
 	loss_rate.decrease_added(amount)
-	sync_total_net_rate()
+	sync_rate()
 
 
-func sync_current_net_rate() -> void:
-	var gain = gain_rate.get_current()
-	var loss = loss_rate.get_current()
+func sync_rate() -> void:
+	var gain = gain_rate.get_value()
+	var loss = loss_rate.get_value()
 	if gain.greater_equal(loss):
-		net_rate.current.set_to(Big.new(gain).s(loss))
-		positive_current_rate = true
+		net_rate.set_to(Big.new(gain).s(loss))
+		positive_rate = true
 	else:
-		net_rate.current.set_to(Big.new(loss).s(gain))
-		positive_current_rate = false
-	if net_rate.get_current().equal(0):
-		positive_current_rate = true
-
-
-func sync_total_net_rate() -> void:
-	var gain = gain_rate.get_total()
-	var loss = loss_rate.get_total()
-	if gain.greater_equal(loss):
-		net_rate.total.set_to(Big.new(gain).s(loss))
-		positive_total_rate = true
-	else:
-		net_rate.total.set_to(Big.new(loss).s(gain))
-		positive_total_rate = false
+		net_rate.set_to(Big.new(loss).s(gain))
+		positive_rate = false
+	if net_rate.get_value().equal(0):
+		positive_rate = true
 
 
 
@@ -562,12 +546,15 @@ func get_icon_path() -> String:
 
 
 func get_eta(threshold: Big) -> Big:
-	if count.greater_equal(threshold):
+	if (
+		count.greater_equal(threshold)
+		or net_rate.get_value().equal(0)
+		or not lv.any_loreds_in_list_are_active(produced_by)
+	):
 		return Big.new(0)
-	if net_rate.get_current().equal(0):
-		return Big.new(0)
+	
 	var deficit = Big.new(threshold).s(count)
-	return deficit.d(net_rate.get_current())
+	return deficit.d(net_rate.get_value())
 
 
 func get_eta_text(threshold: Big) -> String:
@@ -577,3 +564,4 @@ func get_eta_text(threshold: Big) -> String:
 
 func get_random_producer() -> LORED:
 	return produced_by[randi() % produced_by.size()]
+

@@ -7,11 +7,10 @@
 [ext_resource type="Theme" uid="uid://cwt08llwihqii" path="res://Theme/ShadowText.tres" id="5_y8pu7"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dtm17"]
-bg_color = Color(0.501961, 0.501961, 0.501961, 1)
+bg_color = Color(0.796078, 0.796078, 0.796078, 1)
 border_color = Color(0.501961, 0.501961, 0.501961, 1)
 corner_detail = 6
 shadow_color = Color(0, 0, 0, 0.54902)
-shadow_size = 2
 anti_aliasing = false
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pr56i"]
@@ -114,4 +113,3 @@ text = ""
 
 [connection signal="resized" from="." to="." method="_on_resized"]
 [connection signal="tree_exited" from="." to="." method="_on_tree_exited"]
-[connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]

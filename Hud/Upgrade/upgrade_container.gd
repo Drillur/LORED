@@ -19,6 +19,9 @@ extends MarginContainer
 @onready var scroll_container_5 = %ScrollContainer5
 @onready var scroll_container_6 = %ScrollContainer6
 @onready var scroll_container_7 = %ScrollContainer7
+@onready var prestige_container = %Prestige
+@onready var prestige_bg = %"prestige bg"
+@onready var prestige_button = %"Prestige Button" as TextButton
 
 signal upgrade_menu_tab_changed(tab)
 
@@ -28,7 +31,9 @@ var color: Color:
 		bg.self_modulate = val
 		tabs.add_theme_color_override("font_selected_color", color)
 		title_bg.modulate = color
+		prestige_bg.modulate = color
 		count.modulate = color
+		prestige_button.color = color
 
 
 
@@ -38,6 +43,11 @@ func _ready():
 	
 	up.connect("upgrade_purchased", update_count)
 	up.menu_unlocked_changed.connect(menu_unlocked_changed)
+	
+	prestige_button.mouse_entered.connect(show_prestige_tooltip)
+	prestige_button.mouse_exited.connect(gv.clear_tooltip)
+	prestige_button.pressed.connect(prestige)
+	
 	
 	for i in UpgradeMenu.Type.size():
 		menu_unlocked_changed(i, false)
@@ -49,8 +59,8 @@ func _ready():
 	s1m.connect("mouse_exited", gv.clear_tooltip)
 	
 	for i in range(0, 8):
-		var color = up.get_menu_color(i)
-		get("scroll_container_" + str(i)).get_v_scroll_bar().modulate = color
+		var _color = up.get_menu_color(i)
+		get("scroll_container_" + str(i)).get_v_scroll_bar().modulate = _color
 
 
 func menu_unlocked_changed(menu: int, unlocked: bool) -> void:
@@ -66,7 +76,12 @@ func _on_tab_changed(tab):
 	if not up.is_upgrade_menu_unlocked(UpgradeMenu.Type.MALIGNANT):
 		title.text = "Upgrades"
 	else:
-		title.text = up.get_menu_name(tab) + " Upgrades"
+		title.text = up.get_menu_name(tab)
+	if tab in [1,3,5,7]:
+		prestige_container.show()
+		prestige_button.text = up.get_prestige_name(tab)
+	else:
+		prestige_container.hide()
 	emit_signal("upgrade_menu_tab_changed", tab)
 
 
@@ -87,6 +102,10 @@ func _on_visibility_changed():
 func update_count(type: int) -> void:
 	if up.get_upgrade(type).upgrade_menu == tabs.current_tab:
 		set_count_text()
+
+
+func show_prestige_tooltip() -> void:
+	gv.new_tooltip(gv.Tooltip.PRESTIGE, right_down, {"menu": tabs.current_tab})
 
 
 
@@ -129,6 +148,19 @@ func show_s1m_avatar_tooltip() -> void:
 		][randi() % 5],
 		"color": color,
 	})
+
+
+func prestige() -> void:
+	gv.clear_tooltip()
+	hide()
+	match tabs.current_tab:
+		1: gv.prestige_now(1)
+		3: gv.prestige_now(2)
+		5: gv.prestige_now(3)
+		7: gv.prestige_now(4)
+
+
+
 
 # - Get
 

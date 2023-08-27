@@ -18,6 +18,7 @@ var currency := {}
 var currency_by_key := {}
 
 var unlocked_currencies := []
+var wish_eligible_currencies := []
 var total_weight := 0
 var wallet_unlocked := false:
 	set(val):
@@ -46,7 +47,9 @@ func _ready():
 		currency_by_key[currency[cur].key] = currency[cur]
 	for cur in currency.keys():
 		gv.add_currency_to_stage(get_currency_stage(cur), cur)
-
+	
+	wi.wish_completed.connect(wallet_lock)
+	wi.wish_uncompleted.connect(wallet_lock)
 
 
 func close() -> void:
@@ -54,6 +57,14 @@ func close() -> void:
 	unlocked_currencies.clear()
 	total_weight = 0
 	wallet.hide_tabs()
+
+
+
+# - Signal
+
+func wallet_lock(wish: int) -> void:
+	if wish == Wish.Type.JOBS:
+		wallet_unlocked = not wallet_unlocked
 
 
 
@@ -114,26 +125,26 @@ func unlock_currency(cur: int) -> void:
 	currency_just_unlocked.emit(cur, true)
 
 
+func set_wish_eligible_currency(cur: int, eligible: bool) -> void:
+	if eligible:
+		if not cur in wish_eligible_currencies:
+			wish_eligible_currencies.append(cur)
+	else:
+		wish_eligible_currencies.erase(cur)
+
+
 func unlock_currencies(curs: Array) -> void:
 	for cur in curs:
 		unlock_currency(cur)
 
 
 
-func add_current_loss_rate(cur: int, amount) -> void:
-	get_currency(cur).add_current_loss_rate(amount)
+func add_loss_rate(cur: int, amount) -> void:
+	get_currency(cur).add_loss_rate(amount)
 
 
-func subtract_current_loss_rate(cur: int, amount) -> void:
-	get_currency(cur).subtract_current_loss_rate(amount)
-
-
-func add_total_loss_rate(cur: int, amount) -> void:
-	get_currency(cur).add_total_loss_rate(amount)
-
-
-func subtract_total_loss_rate(cur: int, amount) -> void:
-	get_currency(cur).subtract_total_loss_rate(amount)
+func subtract_loss_rate(cur: int, amount) -> void:
+	get_currency(cur).subtract_loss_rate(amount)
 
 
 func set_use_allowed(cur: int, allowed: bool) -> void:
@@ -184,6 +195,10 @@ func get_random_unlocked_currency() -> int:
 	return unlocked_currencies[randi() % unlocked_currencies.size()]
 
 
+func get_random_wish_eligible_currency() -> int:
+	return wish_eligible_currencies[randi() % wish_eligible_currencies.size()]
+
+
 func get_weighted_random_currency() -> int:
 	var roll = randi() % total_weight
 	var shuffled_pool = unlocked_currencies
@@ -201,20 +216,12 @@ func get_icon_and_name_text(cur: int) -> String:
 	return currency[cur].icon_and_name_text
 
 
-func is_current_rate_positive(cur: int) -> bool:
-	return get_currency(cur).positive_current_rate
+func is_rate_positive(cur: int) -> bool:
+	return get_currency(cur).positive_rate
 
 
-func is_total_rate_positive(cur: int) -> bool:
-	return get_currency(cur).positive_total_rate
-
-
-func is_current_rate_negative(cur: int) -> bool:
-	return not is_current_rate_positive(cur)
-
-
-func is_total_rate_negative(cur: int) -> bool:
-	return not is_total_rate_positive(cur)
+func is_rate_negative(cur: int) -> bool:
+	return not is_rate_positive(cur)
 
 
 func is_use_allowed(cur: int) -> bool:
@@ -227,7 +234,7 @@ func get_currencies_in_stage(stage: int) -> Array:
 
 func currencies_have_positive_net(currencies: Array) -> bool:
 	for cur in currencies:
-		if is_total_rate_negative(cur):
+		if is_rate_negative(cur):
 			return false
 	return true
 
@@ -236,4 +243,6 @@ func currencies_have_negative_net(currencies: Array) -> bool:
 	return not currencies_have_positive_net(currencies)
 
 
+func is_currency_unlocked(cur: int) -> bool:
+	return get_currency(cur).unlocked
 

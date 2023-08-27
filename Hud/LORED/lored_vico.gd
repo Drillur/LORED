@@ -38,15 +38,6 @@ const sleep_text_pool := [
 
 
 
-signal showed_or_removed
-func _on_visibility_changed():
-	if visible:
-		emit_signal("showed_or_removed")
-func _on_tree_exited():
-	emit_signal("showed_or_removed")
-
-
-
 func _on_item_rect_changed():
 	if not is_node_ready():
 		await ready
@@ -127,6 +118,8 @@ func attach_lored(_lored: LORED) -> void:
 	lored.connect("leveled_up", flash_on_level_up)
 	lored.connect("just_unlocked", show)
 	lored.connect("just_locked", hide)
+	lored.purchased_changed.connect(purchased_changed)
+	lored.autobuy_changed.connect(autobuy_changed)
 	
 	info.button.connect("mouse_entered", show_info_tooltip)
 	info.button.connect("mouse_exited", gv.clear_tooltip)
@@ -155,11 +148,13 @@ func attach_lored(_lored: LORED) -> void:
 	level_up.color = lored.faded_color
 	
 	info.button.mouse_default_cursor_shape = Control.CURSOR_ARROW
+	jobs.button.mouse_default_cursor_shape = Control.CURSOR_ARROW
+	active_buffs.button.mouse_default_cursor_shape = Control.CURSOR_ARROW
 	animation.setup(lored)
 	animation.modulate = lored.faded_color
 	level_up.show_check() if lored.cost.affordable else level_up.hide_check()
 	currency.hide_threshold()
-	lored_name.text = lored.name
+	lored_name.text = lored.name + ", " + lored.title
 	lored_icon.texture = lored.icon
 	
 	hide()
@@ -203,23 +198,26 @@ func load_finished() -> void:
 
 
 func load_started() -> void:
-	animation.sleep()
 	stop_progress_bar()
 
 
-
-func lored_leveled_up(_level: int) -> void:
-	if not lored.purchased:
+func purchased_changed(purchased: bool) -> void:
+	if not purchased:
+		stop_progress_bar()
 		active_buffs.hide()
 		view_special.hide()
 		currency.hide()
 		name_and_icon.show()
-		return
-	
-	if lored.times_purchased == 1:
+	else:
 		name_and_icon.hide()
 		currency.show()
-	
+		if lv.sleep_unlocked:
+			sleep.show()
+		if lv.advanced_details_unlocked:
+			jobs.show()
+
+
+func lored_leveled_up(_level: int) -> void:
 	if not lored.last_purchase_forced:
 		gv.throw_text_from_parent(
 			level_up, 
@@ -251,15 +249,21 @@ func flash_on_level_up(_level: int) -> void:
 
 
 func sleep_lock(unlocked: bool) -> void:
-	sleep.visible = unlocked
-	if unlocked:
+	sleep.visible = (unlocked and lored.unlocked)# or gv.dev_mode
+	if sleep.visible:
 		gv.flash(sleep, lored.color)
 
 
 func advanced_details_lock(unlocked: bool) -> void:
-	jobs.visible = unlocked or gv.dev_mode
-	if unlocked:
+	jobs.visible = (unlocked and lored.unlocked)# or gv.dev_mode
+	if jobs.visible:
 		gv.flash(jobs, lored.color)
+
+
+func autobuy_changed(autobuy: bool) -> void:
+	level_up.autobuyer.visible = autobuy
+	if autobuy:
+		level_up.autobuyer.play()
 
 
 
@@ -280,8 +284,8 @@ func start_job(_job: Job) -> void:
 
 
 func stop_progress_bar() -> void:
-	#if not lored.working:
 	progress_bar.stop()
+	animation.sleep()
 
 
 func set_status_and_currency(_status: String, _currency: int) -> void:

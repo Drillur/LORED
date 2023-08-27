@@ -451,7 +451,9 @@ class Effect:
 	
 	func apply() -> void:
 		if not applied:
-			effect.changed.connect(refresh)
+			
+			if effect != null:
+				effect.changed.connect(refresh)
 			
 			match type:
 				Type.WAIT_THATS_NOT_FAIR:
@@ -517,7 +519,8 @@ class Effect:
 	func apply_effects() -> void:
 		if not applied:
 			applied = true
-			in_hand = Big.new(effect.get_value())
+			if effect != null:
+				in_hand = Big.new(effect.get_value())
 			match type:
 				Type.I_DRINK_YOUR_MILKSHAKE:
 					var coal := lv.get_lored(LORED.Type.COAL)
@@ -530,6 +533,9 @@ class Effect:
 					iron.input.increase_multiplied(in_hand)
 					copper.output.increase_multiplied(in_hand2)
 					copper.input.increase_multiplied(in_hand2)
+				Type.AUTOBUYER, Type.FREE_LORED:
+					for method in apply_methods:
+						method.call()
 				_:
 					for method in apply_methods:
 						method.call(in_hand)
@@ -549,6 +555,9 @@ class Effect:
 					iron.input.decrease_multiplied(in_hand)
 					copper.output.decrease_multiplied(in_hand2)
 					copper.input.decrease_multiplied(in_hand2)
+				Type.AUTOBUYER, Type.FREE_LORED:
+					for method in remove_methods:
+						method.call()
 				_:
 					for method in remove_methods:
 						method.call(in_hand)
@@ -656,7 +665,6 @@ func _init(_type: int) -> void:
 	else: #s4
 		stage = 3
 		special = false #s3
-	
 	gv.hard_reset.connect(reset)
 	gv.prestige.connect(prestige)
 	
@@ -692,6 +700,7 @@ func _init(_type: int) -> void:
 		return
 	call("init_" + key)
 	
+	cost.stage = stage
 	icon_and_name_text = icon_text + " " + name
 	
 	effected_loreds_text = get_effected_loreds_text()
@@ -1487,9 +1496,9 @@ func init_PROCEDURE() -> void:
 func init_ROUTINE() -> void:
 	name = "[i]Routine[/i]"
 	var metas = gv.get_stage(1).color_text % "Metastasizes"
-	var norm = up.get_colored_upgrade_menu_icon_and_name(UpgradeMenu.Type.NORMAL)
+	var norm = up.get_upgrade_menu(UpgradeMenu.Type.NORMAL).colored_name
 	var meta2 = gv.get_stage(1).color_text % "Metastasis"
-	description = "%s immediately. %s upgrades will persist through %s. After that, this upgrade will be un-purchased."
+	description = "%s immediately. %s upgrades will persist through %s. After that, this upgrade will be reset." % [metas, norm, meta2]
 	set_effect(Effect.Type.WAIT_THATS_NOT_FAIR)
 	icon = preload("res://Sprites/Hud/Tab/s1m.png")
 	color = gv.get_stage_color(1)
@@ -1611,21 +1620,21 @@ func get_effected_loreds_text() -> String:
 		return effected_loreds_text
 	
 	if loreds == lv.get_loreds_in_stage(1):
-		var stage = gv.stage1.get_colored_name()
-		return "[i]for [/i]" + stage
+		var _stage = gv.stage1.get_colored_name()
+		return "[i]for [/i]" + _stage
 	elif loreds == lv.get_loreds_in_stage(2):
-		var stage = gv.stage2.get_colored_name()
-		return "[i]for [/i]" + stage
+		var _stage = gv.stage2.get_colored_name()
+		return "[i]for [/i]" + _stage
 	elif loreds == lv.get_loreds_in_stage(3):
-		var stage = gv.stage3.get_colored_name()
-		return "[i]for [/i]" + stage
+		var _stage = gv.stage3.get_colored_name()
+		return "[i]for [/i]" + _stage
 	elif loreds == lv.get_loreds_in_stage(4):
-		var stage = gv.stage4.get_colored_name()
-		return "[i]for [/i]" + stage
+		var _stage = gv.stage4.get_colored_name()
+		return "[i]for [/i]" + _stage
 	
 	if effect.type == Effect.Type.UPGRADE_AUTOBUYER:
 		var upmen = up.get_upgrade_menu(UpgradeMenu.Type.NORMAL) as UpgradeMenu
-		var text = upmen.color_text % (upmen.name + " Upgrades")
+		var text = upmen.color_text % (upmen.name)
 		return "[i]for [/i]" + text
 	# if loreds.size() > 8: probably a stage.
 	var arr := []

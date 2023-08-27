@@ -110,7 +110,7 @@ func reply_now(emote: Emote) -> void:
 func start_emote_cooldown(emote: Emote) -> void:
 	emotes.erase(emote)
 	if emote_cooldown_timer.is_stopped():
-		var cooldown := randi() % 20 + 20
+		var cooldown := 1#randi() % 20 + 20
 		emote_cooldown_timer.start(cooldown)
 
 
@@ -135,13 +135,10 @@ func emote_when_ready(type: int) -> void:
 
 
 func refresh_emote_timer() -> void:
-	if is_instance_valid(emote_cooldown_timer):
-		emote_cooldown_timer.stop()
-		emote_cooldown_timer.queue_free()
-	emote_cooldown_timer = Timer.new()
-	emote_cooldown_timer.one_shot = true
-	add_child(emote_cooldown_timer)
-	emote_cooldown_timer.connect("timeout", new_random_emote)
+	emote_cooldown_timer.stop()
+	var cooldown := randi() % 20 + 20
+	emote_cooldown_timer.start(cooldown)
+
 
 
 # - Get
