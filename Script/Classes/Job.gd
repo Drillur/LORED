@@ -495,7 +495,7 @@ func assign_lored(lored_type: int) -> void:
 	_lored.fuel.connect("increased", fuel_increased)
 	_lored.fuel.connect("decreased", fuel_decreased)
 	if type == Type.REFUEL:
-		var half = Big.new(_lored.fuel.get_total()).do_not_emit().d(2).toFloat()
+		var half = Big.new(_lored.fuel.get_total()).d(2).toFloat()
 		has_required_currencies = true
 		required_currencies = Cost.new({
 			_lored.fuel_currency: Value.new(half)
@@ -546,23 +546,20 @@ func add_produced_currency(currency: int, amount: float) -> void:
 # - Signal
 
 func lored_output_changed() -> void:
-	subtract_rate()
 	for x in produced_currencies.values():
 		x.set_m_from_lored(lv.get_lored(lored).get_output())
-	add_rate()
+	refresh_produced_rate()
 
 
 func lored_input_changed() -> void:
-	subtract_rate()
 	required_currencies.increase_m_from_lored(lv.get_lored(lored).get_input())
-	add_rate()
+	refresh_required_rate()
 
 
 func lored_haste_changed() -> void:
-	subtract_rate()
 	duration.set_d_from_lored(lv.get_lored(lored).get_haste())
 	fuel_cost.set_d_from_lored(lv.get_lored(lored).get_haste())
-	add_rate()
+	refresh_rate()
 
 
 func lored_fuel_cost_changed() -> void:
@@ -595,21 +592,19 @@ func emit_workable() -> void:
 
 
 func fuel_increased() -> void:
-	if has_sufficient_fuel:
-		return
-	if lv.get_lored(lored).fuel.get_current().greater_equal(fuel_cost.get_value()):
-		has_sufficient_fuel = true
+	if not has_sufficient_fuel:
+		if lv.get_lored(lored).fuel.get_current().greater_equal(fuel_cost.get_value()):
+			has_sufficient_fuel = true
 
 
 func fuel_decreased() -> void:
-	if not has_sufficient_fuel:
-		return
-	if lv.get_lored(lored).fuel.get_current().less(fuel_cost.get_value()):
-		has_sufficient_fuel = false
+	if has_sufficient_fuel:
+		if lv.get_lored(lored).fuel.get_current().less(fuel_cost.get_value()):
+			has_sufficient_fuel = false
 
 
-func another_job_started(job: Job) -> void:
-	pass
+func another_job_started(_job: Job) -> void:
+	pass # called whenever the lored starts any job i guess
 
 
 func lored_purchased_changed(purchased: bool) -> void:
@@ -629,12 +624,14 @@ func can_start() -> bool:
 	if has_method("can_start_job_special_requirements_" + key):
 		if not call("can_start_job_special_requirements_" + key):
 			return false
+	
 	if has_required_currencies:
 		if (
 			not required_currencies.use_allowed
 			or not required_currencies.affordable
 		):
 			return false
+	
 	return has_sufficient_fuel
 
 
@@ -650,6 +647,50 @@ func can_start_job_special_requirements_REFUEL() -> bool:
 		return false
 	return true
 
+
+
+func refresh_rate() -> void:
+	if not added_rate:
+		add_rate()
+		return
+	refresh_produced_rate()
+	refresh_required_rate()
+
+
+func refresh_produced_rate() -> void:
+	if not added_rate:
+		add_rate()
+		return
+	var _duration = duration.get_as_float()
+	for cur in produced_rates:
+		var currency = wa.get_currency(cur) as Currency
+		var gain_rate = currency.gain_rate
+		var new_rate = Big.new(produced_currencies[cur].get_value()).d(_duration)
+		gain_rate.alter_value(
+			gain_rate.added,
+			produced_rates[cur],
+			new_rate
+		)
+		currency.sync_rate()
+		produced_rates[cur] = new_rate
+
+
+func refresh_required_rate() -> void:
+	if not added_rate:
+		add_rate()
+		return
+	var _duration = duration.get_as_float()
+	for cur in required_rates:
+		var currency = wa.get_currency(cur) as Currency
+		var loss_rate = currency.loss_rate
+		var new_rate = Big.new(required_currencies.cost[cur].get_value()).d(_duration)
+		loss_rate.alter_value(
+			loss_rate.added,
+			required_rates[cur],
+			new_rate
+		)
+		currency.sync_rate()
+		required_rates[cur] = new_rate
 
 
 func add_rate() -> void:

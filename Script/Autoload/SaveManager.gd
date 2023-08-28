@@ -93,8 +93,6 @@ var test_data: String
 
 func save_game(method := default_save_method) -> void:
 	var packed_vars = pack_all_saved_vars()
-	if method == SaveMethod.TEST:
-		print(packed_vars["Wishes"])
 	var save_text = JSON.stringify(packed_vars)
 	
 	match method:
@@ -120,8 +118,6 @@ func load_game(method := default_load_method) -> void:
 	gv.close_all()
 	emit_signal("load_started")
 	var data := get_save_data(method)
-	if method == LoadMethod.TEST:
-		print(data["Wishes"])
 	unpack_data(data)
 	gv.open_all()
 	emit_signal("load_finished")

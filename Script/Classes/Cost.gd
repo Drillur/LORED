@@ -28,44 +28,44 @@ var purchased := false:
 			return
 		purchased = val
 		if val:
-			for cur in cost:
-				wa.currency[cur].count.disconnect("increased", currency_increased)
-				wa.currency[cur].count.disconnect("decreased", currency_decreased)
+			connect_sigs()
 		else:
-			if can_afford():
-				for cur in cost:
-					wa.currency[cur].count.connect("decreased", currency_increased)
-			else:
-				for cur in cost:
-					wa.currency[cur].count.connect("increased", currency_increased)
+			disconnect_sigs()
+var currencies_are_unlocked := false:
+	set(val):
+		if not currencies_are_unlocked == val:
+			currencies_are_unlocked = val
 
 var stage: int
+var longest_eta_cur: int = -1
+
 
 
 
 func _init(_cost: Dictionary) -> void:
 	cost = _cost
-	notify_if_increased()
-	currency_increased()
+	longest_eta_cur = cost.keys()[0]
 	SaveManager.connect("load_finished", recheck)
 	for cur in cost:
-		wa.get_currency(cur).use_allowed_changed.connect(currency_use_allowed_changed)
+		var currency = wa.get_currency(cur) as Currency
+		currency.use_allowed_changed.connect(currency_use_allowed_changed)
+		currency.unlocked_changed.connect(currency_unlocked_changed)
+	connect_sigs()
+	recheck()
 
 
-func notify_if_increased() -> void:
-	if not purchased:
-		for cur in cost:
-			if wa.currency[cur].count.is_connected("decreased", currency_decreased):
-				wa.currency[cur].count.disconnect("decreased", currency_decreased)
+func connect_sigs() -> void:
+	for cur in cost:
+		if not wa.currency[cur].count.is_connected("increased", currency_increased):
 			wa.currency[cur].count.connect("increased", currency_increased)
-
-
-func notify_if_decreased() -> void:
-	if not purchased:
-		for cur in cost:
-			if wa.currency[cur].count.is_connected("increased", currency_increased):
-				wa.currency[cur].count.disconnect("increased", currency_increased)
 			wa.currency[cur].count.connect("decreased", currency_decreased)
+
+
+func disconnect_sigs() -> void:
+	for cur in cost:
+		if wa.currency[cur].count.is_connected("increased", currency_increased):
+			wa.currency[cur].count.disconnect("increased", currency_increased)
+			wa.currency[cur].count.disconnect("decreased", currency_decreased)
 
 
 
@@ -79,6 +79,16 @@ func currency_use_allowed_changed(allowed: bool) -> void:
 		use_allowed = true
 
 
+func currency_unlocked_changed(unlocked: bool) -> void:
+	if unlocked:
+		if currencies_are_unlocked:
+			return
+		if wa.currencies_in_list_are_unlocked(cost.keys()):
+			currencies_are_unlocked = true
+	else:
+		currencies_are_unlocked = false
+
+
 
 # - Notify
 
@@ -86,7 +96,6 @@ func currency_increased() -> void:
 	if affordable:
 		return
 	if can_afford():
-		notify_if_decreased()
 		affordable = true
 
 
@@ -94,7 +103,6 @@ func currency_decreased() -> void:
 	if not affordable:
 		return
 	if not can_afford():
-		notify_if_increased()
 		affordable = false
 
 
@@ -102,16 +110,7 @@ func currency_decreased() -> void:
 # - Action
 
 func recheck() -> void:
-	for cur in cost:
-		if wa.currency[cur].count.increased.is_connected(currency_increased):
-			wa.currency[cur].count.disconnect("increased", currency_increased)
-		if wa.currency[cur].count.decreased.is_connected(currency_decreased):
-			wa.currency[cur].count.disconnect("decreased", currency_decreased)
 	affordable = can_afford()
-	if affordable:
-		notify_if_decreased()
-	else:
-		notify_if_increased()
 
 
 func spend(from_player: bool) -> void:
@@ -144,11 +143,13 @@ func increase(times_purchased: int, cost_increase: float) -> void:
 	for cur in cost:
 		var new_val = Big.new(cost_increase).power(times_purchased)
 		cost[cur].set_from_level(new_val)
+	recheck()
 
 
 func increase_m_from_lored(amount) -> void:
 	for cur in cost:
 		cost[cur].set_m_from_lored(amount)
+	recheck()
 
 
 func remove_cost(currency: int) -> void:
@@ -193,23 +194,23 @@ func get_insufficient_currency_types() -> Array:
 
 
 func get_eta() -> Big:
-	var cur: Currency = wa.get_currency(cost.keys()[0])
-	var eta: Big = cur.get_eta(cost.values()[0].get_value())
-	for i in range(1, cost.size()):
-		cur = wa.get_currency(cost.keys()[i])
-		var i_eta = cur.get_eta(cost.values()[i].get_value())
-		if i_eta.greater(eta):
-			eta = i_eta
-	return eta
+	if currencies_are_unlocked:
+		var cur: Currency = wa.get_currency(cost.keys()[0])
+		var eta: Big = cur.get_eta(cost.values()[0].get_value())
+		longest_eta_cur = cur.type
+		for i in range(1, cost.size()):
+			cur = wa.get_currency(cost.keys()[i])
+			var i_eta = cur.get_eta(cost.values()[i].get_value())
+			if i_eta.greater(eta):
+				eta = i_eta
+				longest_eta_cur = cur.type
+		return eta
+	return Big.new(0)
 
 
 func get_progress_percent() -> float:
-	var lowest_percent := 1.0
-	for cur in cost:
-		var count = wa.get_count(cur)
-		var _cost = cost[cur].get_value()
-		if count.less(_cost):
-			var percent = count.percent(_cost)
-			if percent < lowest_percent:
-				lowest_percent = percent
-	return lowest_percent
+	if currencies_are_unlocked:
+		var count = wa.get_count(longest_eta_cur)
+		var _cost = cost[longest_eta_cur].get_value()
+		return count.percent(_cost)
+	return 0.0

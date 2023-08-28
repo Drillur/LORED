@@ -132,18 +132,18 @@ class DifficultyValues:
 	
 	
 	
-	func add_upgrade(upgrade_type: int) -> void:
+	func add_upgrade(_upgrade_type: int) -> void:
 		pass
 		#upgrades.append(up.get_upgrade(upgrade_type))
 
 
 
-var output := Big.new(1)
-var input := Big.new(1)
-var fuel := Big.new(1)
-var fuel_cost := Big.new(1)
-var haste := Big.new(1)
-var crit := Big.new(0)
+var output := Big.new(1, true)
+var input := Big.new(1, true)
+var fuel := Big.new(1, true)
+var fuel_cost := Big.new(1, true)
+var haste := Big.new(1, true)
+var crit := Big.new(0, true)
 
 var description: String
 

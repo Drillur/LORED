@@ -112,4 +112,3 @@ theme = ExtResource("5_y8pu7")
 text = ""
 
 [connection signal="resized" from="." to="." method="_on_resized"]
-[connection signal="tree_exited" from="." to="." method="_on_tree_exited"]

@@ -5,8 +5,6 @@ extends MarginContainer
 @onready var name_label = %Name
 @onready var title = %Title
 @onready var title_bg = %"title bg"
-@onready var icon = %Icon
-@onready var icon_shadow = %Icon2
 
 @onready var level = %Level
 @onready var output = %output

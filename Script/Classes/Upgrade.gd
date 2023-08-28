@@ -287,20 +287,25 @@ class Effect:
 		CRIT,
 		FUEL,
 		FUEL_COST,
-		ITS_GROWIN_ON_ME,
-		I_DRINK_YOUR_MILKSHAKE,
-		THE_THIRD,
-		I_RUN,
-		WAIT_THATS_NOT_FAIR,
+		BONUS_ACTION_ON_CURRENCY_GAIN,
+		BONUS_ACTION_ON_CURRENCY_USE,
 		AUTOBUYER,
 		UPGRADE_AUTOBUYER,
 		FREE_LORED,
 		UPGRADE_NAME,
 	}
 	
+	enum BONUS_ACTION {
+		ADD_CURRENCY,
+		INCREASE_EFFECT,
+		INCREASE_EFFECT1_OR_2,
+	}
+	
 	var type: int
 	var key: String
 	var text: String
+	
+	var upgrade_type: int
 	
 	var applied := false
 	var dynamic := false
@@ -315,29 +320,32 @@ class Effect:
 	var remove_methods: Array
 	
 	var effected_input: int
+	var currency: int
+	
+	var bonus_action_type: int
+	var modifier := 1.0
+	var added_currency: int
 	
 	
 	
 	func _init(_type: int, details: Dictionary) -> void:
 		type = _type
 		key = Type.keys()[type]
-		
+		upgrade_type = details["upgrade_type"]
 		if "effect value" in details.keys():
 			effect = Value.new(details["effect value"])
+		if "effect value2" in details.keys():
+			effect2 = Value.new(details["effect value2"])
 		if "effected_input" in details.keys():
 			effected_input = details["effected_input"]
-		
-		if type == Type.ITS_GROWIN_ON_ME:
-			effect2 = Value.new(details["effect value"])
-		
-		dynamic = type in [
-			Type.ITS_GROWIN_ON_ME,
-			Type.I_DRINK_YOUR_MILKSHAKE,
-		]
-		if dynamic:
-			saved_vars.append("effect")
-			if effect2 != null:
-				saved_vars.append("effect2")
+		if "currency" in details.keys():
+			currency = details["currency"]
+		if "bonus_action_type" in  details.keys():
+			bonus_action_type = details["bonus_action_type"]
+		if "modifier" in  details.keys():
+			modifier = details["modifier"]
+		if "added_currency" in  details.keys():
+			added_currency = details["added_currency"]
 		
 		set_base_text()
 		
@@ -366,34 +374,57 @@ class Effect:
 				text = key.replace("_", " ").capitalize() + " [b]x"
 	
 	
+	func set_dynamic(val: bool) -> void:
+		dynamic = val
+		if val:
+			saved_vars.append("effect")
+			if effect2 != null:
+				saved_vars.append("effect2")
+	
+	
 	
 	# - Signal
 	
-	func growth_spawned(amount: Big) -> void:
-		if applied:
-			var increase = Big.new(amount).m(0.05)
-			if randi() % 2 == 0:
-				effect.add(increase)
-			else:
-				effect2.add(increase)
+	func currency_collected(amount: Big) -> void:
+		var modded_amount = Big.new(amount).m(modifier)
+		match bonus_action_type:
+			BONUS_ACTION.ADD_CURRENCY:
+				wa.add(added_currency, modded_amount)
+			BONUS_ACTION.INCREASE_EFFECT:
+				effect.add(modded_amount)
+				effect.sync()
+			BONUS_ACTION.INCREASE_EFFECT1_OR_2:
+				if randi() % 2 == 0:
+					effect.add(modded_amount)
+					effect.sync()
+				else:
+					effect2.add(modded_amount)
+					effect2.sync()
 	
 	
-	func coal_taken(amount: Big) -> void:
-		if applied:
-			var increase = Big.new(amount).m(0.01)
-			effect.add(increase)
+	func currency_used(amount: Big) -> void:
+		var modded_amount = Big.new(amount).m(modifier)
+		match bonus_action_type:
+			BONUS_ACTION.ADD_CURRENCY:
+				wa.add(added_currency, modded_amount)
+			BONUS_ACTION.INCREASE_EFFECT:
+				effect.add(modded_amount)
+			BONUS_ACTION.INCREASE_EFFECT1_OR_2:
+				if randi() % 2 == 0:
+					effect.add(modded_amount)
+				else:
+					effect2.add(modded_amount)
 	
 	
-	func copo_mined(amount: Big) -> void:
-		wa.add(Currency.Type.COPPER, amount)
-	
-	
-	func irono_mined(amount: Big) -> void:
-		wa.add(Currency.Type.IRON, amount)
-	
-	
-	func coal_dug(amount: Big) -> void:
-		wa.add(Currency.Type.STONE, amount)
+	func reset_effects() -> void:
+		var was_applied = applied
+		if was_applied:
+			remove()
+		effect.reset()
+		if effect2 != null:
+			effect2.reset()
+		if was_applied:
+			apply()
 	
 	
 	
@@ -451,27 +482,18 @@ class Effect:
 	
 	func apply() -> void:
 		if not applied:
-			
 			if effect != null:
-				effect.changed.connect(refresh)
+				effect.increased.connect(refresh)
+			if effect2 != null:
+				effect2.increased.connect(refresh)
 			
 			match type:
-				Type.WAIT_THATS_NOT_FAIR:
-					var cur = wa.get_currency(Currency.Type.COAL)
-					cur.increased_by_lored.connect(coal_dug)
-				Type.I_RUN:
-					var irono = wa.get_currency(Currency.Type.IRON_ORE)
-					irono.increased_by_lored.connect(irono_mined)
-				Type.THE_THIRD:
-					var copo = wa.get_currency(Currency.Type.COPPER_ORE)
-					copo.increased_by_lored.connect(copo_mined)
-				Type.I_DRINK_YOUR_MILKSHAKE:
-					var coal = wa.get_currency(Currency.Type.COAL)
-					coal.decreased_by_lored.connect(coal_taken)
-				Type.ITS_GROWIN_ON_ME:
-					effect2.changed.connect(refresh)
-					var growth = wa.get_currency(Currency.Type.GROWTH)
-					growth.increased_by_lored.connect(growth_spawned)
+				Type.BONUS_ACTION_ON_CURRENCY_GAIN:
+					var cur = wa.get_currency(currency)
+					cur.increased_by_lored.connect(currency_collected)
+				Type.BONUS_ACTION_ON_CURRENCY_USE:
+					var cur = wa.get_currency(currency)
+					cur.decreased_by_lored.connect(currency_used)
 				Type.UPGRADE_NAME:
 					for lored in gv.get_loreds_in_stage(1):
 						lored = lored as LORED
@@ -483,25 +505,18 @@ class Effect:
 	
 	func remove() -> void:
 		if applied:
-			effect.changed.disconnect(refresh)
+			if effect != null:
+				effect.increased.disconnect(refresh)
+			if effect2 != null:
+				effect2.increased.disconnect(refresh)
 			
 			match type:
-				Type.WAIT_THATS_NOT_FAIR:
-					var cur = wa.get_currency(Currency.Type.COAL)
-					cur.increased_by_lored.disconnect(coal_dug)
-				Type.I_RUN:
-					var irono = wa.get_currency(Currency.Type.IRON_ORE)
-					irono.increased_by_lored.disconnect(irono_mined)
-				Type.THE_THIRD:
-					var copo = wa.get_currency(Currency.Type.COPPER_ORE)
-					copo.increased_by_lored.disconnect(copo_mined)
-				Type.I_DRINK_YOUR_MILKSHAKE:
-					var coal = wa.get_currency(Currency.Type.COAL)
-					coal.decreased_by_lored.disconnect(coal_taken)
-				Type.ITS_GROWIN_ON_ME:
-					effect2.changed.disconnect(refresh)
-					var growth = wa.get_currency(Currency.Type.GROWTH)
-					growth.increased_by_lored.disconnect(growth_spawned)
+				Type.BONUS_ACTION_ON_CURRENCY_GAIN:
+					var cur = wa.get_currency(currency)
+					cur.increased_by_lored.disconnect(currency_collected)
+				Type.BONUS_ACTION_ON_CURRENCY_USE:
+					var cur = wa.get_currency(currency)
+					cur.decreased_by_lored.disconnect(currency_used)
 				Type.UPGRADE_NAME:
 					for lored in gv.get_loreds_in_stage(1):
 						lored = lored as LORED
@@ -521,18 +536,23 @@ class Effect:
 			applied = true
 			if effect != null:
 				in_hand = Big.new(effect.get_value())
+			if effect2 != null:
+				in_hand2 = Big.new(effect2.get_value())
 			match type:
-				Type.I_DRINK_YOUR_MILKSHAKE:
-					var coal := lv.get_lored(LORED.Type.COAL)
-					coal.output.increase_multiplied(in_hand)
-				Type.ITS_GROWIN_ON_ME:
-					in_hand2 = Big.new(effect2.get_value())
-					var iron := lv.get_lored(LORED.Type.IRON)
-					var copper := lv.get_lored(LORED.Type.COPPER)
-					iron.output.increase_multiplied(in_hand)
-					iron.input.increase_multiplied(in_hand)
-					copper.output.increase_multiplied(in_hand2)
-					copper.input.increase_multiplied(in_hand2)
+				Type.BONUS_ACTION_ON_CURRENCY_GAIN:
+					match upgrade_type:
+						Upgrade.Type.ITS_GROWIN_ON_ME:
+							var iron := lv.get_lored(LORED.Type.IRON)
+							var copper := lv.get_lored(LORED.Type.COPPER)
+							iron.output.increase_multiplied(in_hand)
+							iron.input.increase_multiplied(in_hand)
+							copper.output.increase_multiplied(in_hand2)
+							copper.input.increase_multiplied(in_hand2)
+				Type.BONUS_ACTION_ON_CURRENCY_USE:
+					match upgrade_type:
+						Upgrade.Type.I_DRINK_YOUR_MILKSHAKE:
+							var coal := lv.get_lored(LORED.Type.COAL)
+							coal.output.increase_multiplied(in_hand)
 				Type.AUTOBUYER, Type.FREE_LORED:
 					for method in apply_methods:
 						method.call()
@@ -545,27 +565,26 @@ class Effect:
 		if applied:
 			applied = false
 			match type:
-				Type.I_DRINK_YOUR_MILKSHAKE:
-					var coal := lv.get_lored(LORED.Type.COAL)
-					coal.output.decrease_multiplied(in_hand)
-				Type.ITS_GROWIN_ON_ME:
-					var iron := lv.get_lored(LORED.Type.IRON)
-					var copper := lv.get_lored(LORED.Type.COPPER)
-					iron.output.decrease_multiplied(in_hand)
-					iron.input.decrease_multiplied(in_hand)
-					copper.output.decrease_multiplied(in_hand2)
-					copper.input.decrease_multiplied(in_hand2)
+				Type.BONUS_ACTION_ON_CURRENCY_GAIN:
+					match upgrade_type:
+						Upgrade.Type.ITS_GROWIN_ON_ME:
+							var iron := lv.get_lored(LORED.Type.IRON)
+							var copper := lv.get_lored(LORED.Type.COPPER)
+							iron.output.decrease_multiplied(in_hand)
+							iron.input.decrease_multiplied(in_hand)
+							copper.output.decrease_multiplied(in_hand2)
+							copper.input.decrease_multiplied(in_hand2)
+				Type.BONUS_ACTION_ON_CURRENCY_USE:
+					match upgrade_type:
+						Upgrade.Type.I_DRINK_YOUR_MILKSHAKE:
+							var coal := lv.get_lored(LORED.Type.COAL)
+							coal.output.decrease_multiplied(in_hand)
 				Type.AUTOBUYER, Type.FREE_LORED:
 					for method in remove_methods:
 						method.call()
 				_:
 					for method in remove_methods:
 						method.call(in_hand)
-			
-			if effect != null:
-				effect.reset()
-			if effect2 != null:
-				effect2.reset()
 	
 	
 	# - Get
@@ -576,6 +595,14 @@ class Effect:
 		if type == Type.CRIT:
 			return text + effect.get_text() + "%"
 		return text + effect.get_text()
+	
+	
+	func get_effect_text() -> String:
+		return effect.get_text()
+	
+	
+	func get_effect2_text() -> String:
+		return effect2.get_text()
 
 
 
@@ -1139,7 +1166,18 @@ func init_ITS_GROWIN_ON_ME() -> void:
 	var cop = lv.get_colored_name(LORED.Type.COPPER)
 	var growth = lv.get_colored_name(LORED.Type.GROWTH)
 	description = "Whenever %s pops, either %s or %s will receive an [b]output and input boost[/b]." % [growth, iron, cop]
-	set_effect(Effect.Type.ITS_GROWIN_ON_ME, 1)
+	effect = Effect.new(
+		Effect.Type.BONUS_ACTION_ON_CURRENCY_GAIN,
+		{
+			"upgrade_type": type,
+			"currency": Currency.Type.GROWTH,
+			"effect value": 1,
+			"effect value2": 1,
+			"bonus_action_type": Effect.BONUS_ACTION.INCREASE_EFFECT1_OR_2,
+			"modifier": 0.05,
+		}
+	)
+	effect.set_dynamic(true)
 	add_effected_lored(LORED.Type.IRON)
 	add_effected_lored(LORED.Type.COPPER)
 	cost = Cost.new({
@@ -1244,7 +1282,17 @@ func init_I_DRINK_YOUR_MILKSHAKE() -> void:
 	var coal = wa.get_icon_and_name_text(Currency.Type.COAL)
 	var coal2 = lv.get_colored_name(LORED.Type.COAL)
 	description = "Whenever a LORED takes %s, %s gets an output boost." % [coal, coal2]
-	set_effect(Effect.Type.I_DRINK_YOUR_MILKSHAKE, 1)
+	effect = Effect.new(
+		Effect.Type.BONUS_ACTION_ON_CURRENCY_USE,
+		{
+			"upgrade_type": type,
+			"currency": Currency.Type.COAL,
+			"effect value": 1,
+			"bonus_action_type": Effect.BONUS_ACTION.INCREASE_EFFECT,
+			"modifier": 0.001,
+		}
+	)
+	effect.set_dynamic(true)
 	add_effected_lored(LORED.Type.COAL)
 	cost = Cost.new({
 		Currency.Type.MALIGNANCY: Value.new("800e3"),
@@ -1281,7 +1329,16 @@ func init_THE_THIRD() -> void:
 	var cop = wa.get_icon_and_name_text(Currency.Type.COPPER)
 	var copo = lv.get_colored_name(LORED.Type.COPPER_ORE)
 	description = "Whenever %s mines, he will produce an equal amount of %s." % [copo, cop]
-	set_effect(Effect.Type.THE_THIRD)
+	effect = Effect.new(
+		Effect.Type.BONUS_ACTION_ON_CURRENCY_GAIN,
+		{
+			"upgrade_type": type,
+			"currency": Currency.Type.COPPER_ORE,
+			"bonus_action_type": Effect.BONUS_ACTION.ADD_CURRENCY,
+			"added_currency": Currency.Type.COPPER,
+			"modifier": 1.0,
+		}
+	)
 	add_effected_lored(LORED.Type.COPPER_ORE)
 	add_effected_lored(LORED.Type.COPPER)
 	cost = Cost.new({
@@ -1343,7 +1400,16 @@ func init_I_RUN() -> void:
 	var iron = wa.get_icon_and_name_text(Currency.Type.IRON)
 	var irono = lv.get_colored_name(LORED.Type.IRON_ORE)
 	description = "Whenever %s murders, he will produce an equal amount of %s." % [irono, iron]
-	set_effect(Effect.Type.I_RUN)
+	effect = Effect.new(
+		Effect.Type.BONUS_ACTION_ON_CURRENCY_GAIN,
+		{
+			"upgrade_type": type,
+			"currency": Currency.Type.IRON_ORE,
+			"bonus_action_type": Effect.BONUS_ACTION.ADD_CURRENCY,
+			"added_currency": Currency.Type.IRON,
+			"modifier": 1.0,
+		}
+	)
 	add_effected_lored(LORED.Type.IRON_ORE)
 	add_effected_lored(LORED.Type.IRON)
 	cost = Cost.new({
@@ -1467,7 +1533,16 @@ func init_WAIT_THATS_NOT_FAIR() -> void:
 	var coal = lv.get_colored_name(LORED.Type.COAL)
 	var stone = wa.get_icon_and_name_text(Currency.Type.STONE)
 	description = "Whenever %s digs, he will produce ten times as much %s." % [coal, stone]
-	set_effect(Effect.Type.WAIT_THATS_NOT_FAIR)
+	effect = Effect.new(
+		Effect.Type.BONUS_ACTION_ON_CURRENCY_GAIN,
+		{
+			"upgrade_type": type,
+			"currency": Currency.Type.COAL,
+			"bonus_action_type": Effect.BONUS_ACTION.ADD_CURRENCY,
+			"added_currency": Currency.Type.STONE,
+			"modifier": 10,
+		}
+	)
 	add_effected_lored(LORED.Type.COAL)
 	add_effected_lored(LORED.Type.STONE)
 	cost = Cost.new({
@@ -1483,7 +1558,7 @@ func init_PROCEDURE() -> void:
 	var tum = wa.get_icon_and_name_text(Currency.Type.TUMORS)
 	var tum2 = lv.get_colored_name(LORED.Type.TUMORS)
 	description = "When %s, every %s %s will be spent to reward you with %s based on %s's output." % [metas, amount, malig, tum, tum2]
-	set_effect(Effect.Type.WAIT_THATS_NOT_FAIR)
+	set_effect(Effect.Type.HASTE, 1)
 	add_effected_lored(LORED.Type.COAL)
 	add_effected_lored(LORED.Type.STONE)
 	cost = Cost.new({
@@ -1499,7 +1574,7 @@ func init_ROUTINE() -> void:
 	var norm = up.get_upgrade_menu(UpgradeMenu.Type.NORMAL).colored_name
 	var meta2 = gv.get_stage(1).color_text % "Metastasis"
 	description = "%s immediately. %s upgrades will persist through %s. After that, this upgrade will be reset." % [metas, norm, meta2]
-	set_effect(Effect.Type.WAIT_THATS_NOT_FAIR)
+	set_effect(Effect.Type.HASTE, 1)
 	icon = preload("res://Sprites/Hud/Tab/s1m.png")
 	color = gv.get_stage_color(1)
 	cost = Cost.new({
@@ -1518,6 +1593,7 @@ func set_effect(_type: int, base_value := -1.0, effected_input = -1) -> void:
 		data["effect value"] = base_value
 	if effected_input != -1:
 		data["effected_input"] = effected_input
+	data["upgrade_type"] = type
 	effect = Effect.new(_type, data)
 
 
@@ -1587,6 +1663,7 @@ func remove() -> void:
 		if special:
 			will_apply_effect = false
 		effect.remove()
+		effect.reset_effects()
 		purchased = false
 
 
@@ -1597,6 +1674,8 @@ func prestige(_stage: int) -> void:
 			apply()
 		elif not special:
 			remove()
+		if effect.dynamic:
+			effect.reset_effects()
 	elif _stage > stage:
 		remove()
 

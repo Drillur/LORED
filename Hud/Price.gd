@@ -36,13 +36,13 @@ func setup(_cost: Cost) -> void:
 		content_parent.add_child(content[cur])
 	
 	bar.hide_background().remove_markers()
-	bar.set_initial_progress(cost.get_progress_percent())
 	
 	content.values()[content.size() - 1].get_node("MarginContainer").add_theme_constant_override("margin_bottom", 0)
 	cost.connect("became_affordable", flash_became_affordable)
 	cost.connect("affordable_changed", affordable_changed)
 	affordable_changed(cost.affordable)
 	set_eta_text()
+	bar.set_initial_progress(cost.get_progress_percent())
 	
 	if cost.affordable:
 		bar.hide_edge()
@@ -55,10 +55,6 @@ func setup(_cost: Cost) -> void:
 	
 	bar.set_deferred("animating_changes", true)
 
-
-
-func update_progress_bar() -> void:
-	bar.progress = cost.get_progress_percent()
 
 
 func became_affordable() -> void:
@@ -75,15 +71,23 @@ func became_unaffordable() -> void:
 
 func connect_calls() -> void:
 	for cur in cost.cost:
+		if content[cur].is_connected("currency_changed", set_eta_text):
+			return
 		content[cur].connect("currency_changed", set_eta_text)
 		content[cur].connect("currency_changed", update_progress_bar)
 
 
 func disconnect_calls() -> void:
 	for cur in cost.cost:
+		if not content[cur].is_connected("currency_changed", set_eta_text):
+			return
 		content[cur].disconnect("currency_changed", set_eta_text)
 		content[cur].disconnect("currency_changed", update_progress_bar)
 
+
+
+func update_progress_bar() -> void:
+	bar.progress = cost.get_progress_percent()
 
 
 func set_eta_text() -> void:
@@ -98,7 +102,6 @@ func flash():
 	if cost.affordable:
 		flash_became_affordable()
 	else:
-		# content[cur] is price_and_currency
 		for cur in cost.get_insufficient_currency_types():
 			content[cur].flash()
 

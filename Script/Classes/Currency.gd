@@ -84,9 +84,9 @@ var icon: Texture
 
 var count: Big
 
-var subtracted_by_loreds := Big.new(0)
-var subtracted_by_player := Big.new(0)
-var added_by_loreds := Big.new(0)
+var subtracted_by_loreds := Big.new(0, true)
+var subtracted_by_player := Big.new(0, true)
+var added_by_loreds := Big.new(0, true)
 
 var unlocked := false:
 	set(val):
@@ -150,7 +150,7 @@ func _init(_type: int = 0) -> void:
 		persists_by_default = true
 	persists = persists_by_default
 	if count == null:
-		count = Big.new(0)
+		count = Big.new(0, true)
 	color_text = "[color=#" + color.to_html() + "]%s[/color]"
 	colored_name = "[color=#" + color.to_html() + "]" + name + "[/color]"
 	if icon == null:
@@ -163,7 +163,7 @@ func _init(_type: int = 0) -> void:
 
 
 func init_STONE() -> void:
-	count = Big.new(5, false)
+	count = Big.new(5, true)
 	color = Color(0.79, 0.79, 0.79)
 	icon = preload("res://Sprites/Currency/stone.png")
 	weight = 3
@@ -186,14 +186,14 @@ func init_COPPER_ORE() -> void:
 
 
 func init_IRON() -> void:
-	count = Big.new(8)
+	count = Big.new(8, true)
 	color = Color(0.07, 0.89, 1)
 	icon = preload("res://Sprites/Currency/iron.png")
 	weight = 3
 
 
 func init_COPPER() -> void:
-	count = Big.new(8)
+	count = Big.new(8, true)
 	color = Color(1, 0.74, 0.05)
 	icon = preload("res://Sprites/Currency/cop.png")
 	weight = 3
@@ -218,7 +218,7 @@ func init_CONCRETE() -> void:
 
 
 func init_MALIGNANCY() -> void:
-	count = Big.new(10)
+	count = Big.new(10, true)
 	color = Color(0.88, .12, .35)
 	icon = preload("res://Sprites/Currency/malig.png")
 	persists_by_default = true
@@ -247,7 +247,7 @@ func init_HUMUS() -> void:
 
 
 func init_SEEDS() -> void:
-	count = Big.new(2)
+	count = Big.new(2, true)
 	color = Color(1, 0.878431, 0.431373)
 	icon = preload("res://Sprites/Currency/seed.png")
 
@@ -258,25 +258,25 @@ func init_TREES() -> void:
 
 
 func init_SOIL() -> void:
-	count = Big.new(25)
+	count = Big.new(25, true)
 	color = Color(0.737255, 0.447059, 0)
 	icon = preload("res://Sprites/Currency/soil.png")
 
 
 func init_AXES() -> void:
-	count = Big.new(5)
+	count = Big.new(5, true)
 	color = Color(0.691406, 0.646158, 0.586075)
 	icon = preload("res://Sprites/Currency/axe.png")
 
 
 func init_WOOD() -> void:
-	count = Big.new(80)
+	count = Big.new(80, true)
 	color = Color(0.545098, 0.372549, 0.015686)
 	icon = preload("res://Sprites/Currency/wood.png")
 
 
 func init_HARDWOOD() -> void:
-	count = Big.new(95)
+	count = Big.new(95, true)
 	color = Color(0.92549, 0.690196, 0.184314)
 	icon = preload("res://Sprites/Currency/hard.png")
 	weight = 3
@@ -288,20 +288,20 @@ func init_LIQUID_IRON() -> void:
 
 
 func init_STEEL() -> void:
-	count = Big.new(25)
+	count = Big.new(25, true)
 	color = Color(0.607843, 0.802328, 0.878431)
 	icon = preload("res://Sprites/Currency/steel.png")
 	weight = 3
 
 
 func init_SAND() -> void:
-	count = Big.new(250)
+	count = Big.new(250, true)
 	color = Color(.87, .70, .45)
 	icon = preload("res://Sprites/Currency/sand.png")
 
 
 func init_GLASS() -> void:
-	count = Big.new(30)
+	count = Big.new(30, true)
 	color = Color(0.81, 0.93, 1.0)
 	icon = preload("res://Sprites/Currency/glass.png")
 	weight = 3
@@ -313,7 +313,7 @@ func init_DRAW_PLATE() -> void:
 
 
 func init_WIRE() -> void:
-	count = Big.new(20)
+	count = Big.new(20, true)
 	color = Color(0.9, 0.6, 0.14)
 	icon = preload("res://Sprites/Currency/wire.png")
 	weight = 3
@@ -452,7 +452,7 @@ func subtract(amount) -> void:
 
 func subtract_from_lored(amount) -> void:
 	if not amount is Big:
-		amount = Big.new(amount).do_not_emit()
+		amount = Big.new(amount)
 	subtract(amount)
 	subtracted_by_loreds.a(amount)
 	decreased_by_lored.emit(amount)
@@ -506,13 +506,11 @@ func sync_rate() -> void:
 	var gain = gain_rate.get_value()
 	var loss = loss_rate.get_value()
 	if gain.greater_equal(loss):
+		positive_rate = true
 		net_rate.set_to(Big.new(gain).s(loss))
-		positive_rate = true
 	else:
-		net_rate.set_to(Big.new(loss).s(gain))
 		positive_rate = false
-	if net_rate.get_value().equal(0):
-		positive_rate = true
+		net_rate.set_to(Big.new(loss).s(gain))
 
 
 

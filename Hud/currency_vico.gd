@@ -18,6 +18,12 @@ var display_rate := true
 
 
 
+func _ready() -> void:
+	SaveManager.connect("load_finished", update_count)
+	SaveManager.connect("load_finished", update_rate)
+
+
+
 func setup(_currency: int) -> void:
 	if not first_setup:
 		if _currency == currency.type:
@@ -32,9 +38,6 @@ func setup(_currency: int) -> void:
 	count.self_modulate = currency.color
 	currency.count.connect("changed", update_count)
 	currency.net_rate.connect("changed", update_rate)
-	
-	SaveManager.connect("load_finished", update_count)
-	SaveManager.connect("load_finished", update_rate)
 	
 	update_count()
 	update_rate()

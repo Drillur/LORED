@@ -5,7 +5,7 @@ extends RefCounted
 
 var saved_vars := [
 	"unlocked",
-	"times_reset",
+	"times_prestiged",
 ]
 
 
@@ -34,7 +34,7 @@ var color: Color
 var color_text: String
 var icon_and_name_text: String
 
-var times_reset := 0
+var times_prestiged := 0
 var unlocked := false:
 	set(val):
 		if unlocked != val:
@@ -99,13 +99,6 @@ func add_purchased_upgrade(upgrade_type: int) -> void:
 
 
 # - Actions
-
-func reset() -> void:
-	times_reset += 1
-	for upgrade in purchased_upgrades:
-		print("resetting ", upgrade.key, "...")
-
-
 
 func add_upgrade(upgrade: int) -> void:
 	if not upgrade in upgrades:

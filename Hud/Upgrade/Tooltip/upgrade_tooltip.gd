@@ -63,6 +63,17 @@ func setup(data: Dictionary) -> void:
 		update_effect_text()
 		recipients.show()
 		effect.show()
+	
+	if up.is_upgrade_purchased(upgrade.type):
+		match upgrade.type:
+			Upgrade.Type.ITS_GROWIN_ON_ME:
+				upgrade.effect.effect.increased.connect(update_description_its_growin)
+				upgrade.effect.effect2.increased.connect(update_description_its_growin)
+				update_description_its_growin()
+			Upgrade.Type.I_DRINK_YOUR_MILKSHAKE:
+				upgrade.effect.effect.increased.connect(update_description_milkshake)
+				update_description_milkshake()
+
 
 
 func update_effect_text() -> void:
@@ -71,6 +82,21 @@ func update_effect_text() -> void:
 
 func purchased_changed(_upgrade: Upgrade) -> void:
 	price.visible = not upgrade.purchased
+
+
+func update_description_its_growin() -> void:
+	var iron = lv.get_colored_name(LORED.Type.IRON)
+	var cop = lv.get_colored_name(LORED.Type.COPPER)
+	var effect1 = "[b]x" + upgrade.effect.get_effect_text() + "[/b]"
+	var effect2 = "[b]x" + upgrade.effect.get_effect2_text() + "[/b]"
+	description.text = upgrade.description 
+	description.text += "\n\n[center]%s: %s[/center]" % [iron, effect1]
+	description.text += "\n[center]%s: %s[/center]" % [cop, effect2]
+
+
+func update_description_milkshake() -> void:
+	var effect = "[b]x" + upgrade.effect.get_effect_text() + "[/b]"
+	description.text = upgrade.description + "\n\n[center]%s" % effect
 
 
 func upgrade_just_unlocked() -> void:

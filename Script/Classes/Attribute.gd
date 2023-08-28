@@ -257,8 +257,7 @@ func get_x_percent_text(percent: float) -> String:
 
 
 func get_randomized_total(min_range := 0.8, max_range := 1.2) -> Big:
-	var _total = Big.new(get_total())
-	return _total.m(randf_range(min_range, max_range))
+	return Big.new(get_total()).m(randf_range(min_range, max_range))
 
 
 func get_total() -> Big:

@@ -246,3 +246,9 @@ func currencies_have_negative_net(currencies: Array) -> bool:
 func is_currency_unlocked(cur: int) -> bool:
 	return get_currency(cur).unlocked
 
+
+func currencies_in_list_are_unlocked(list: Array) -> bool:
+	for cur in list:
+		if not is_currency_unlocked(cur):
+			return false
+	return true

@@ -81,10 +81,10 @@ const MAX_INTEGER: int = 9223372036854775806
 
 var base := {"mantissa": 1.0, "exponent": 0}
 var pending := {"mantissa": 1.0, "exponent": 0}
-var emit_changes := true
+var emit_changes: bool
 
 
-func _init(mant = 1.0, e := 0):
+func _init(mant = 1.0, _emit_changes := false):
 	if mant is String:
 		var scientific = mant.split("e")
 		mantissa = float(scientific[0])
@@ -98,10 +98,12 @@ func _init(mant = 1.0, e := 0):
 	else:
 		_sizeCheck(mant)
 		mantissa = mant
-		exponent = e
+		exponent = 0
 	
 	base.mantissa = mantissa
 	base.exponent = exponent
+	
+	emit_changes = _emit_changes
 	
 	calculate(base)
 	calculate(self)
@@ -114,12 +116,7 @@ func reset() -> void:
 	pending.mantissa = 0.0
 	pending.exponent = 0
 	emit_decrease()
-	calculate(self)
-
-
-func do_not_emit() -> Big:
-	emit_changes = false
-	return self
+	calculate(self, true)
 
 
 func change_base(new_base: float) -> void:
@@ -176,7 +173,7 @@ func type_check(n):
 	return n
 
 
-func a(n) -> Big:
+func a(n, without_emitting := false) -> Big:
 	n = type_check(n)
 	if n.mantissa == 0.0 and n.exponent == 0:
 		return self
@@ -188,12 +185,12 @@ func a(n) -> Big:
 	elif less(n):
 		mantissa = n.mantissa #when difference between values is big, throw away small number
 		exponent = n.exponent
-	calculate(self)
+	calculate(self, without_emitting)
 	emit_increase()
 	return self
 
 
-func s(n) -> Big:
+func s(n, without_emitting := false) -> Big:
 	n = type_check(n)
 	if n.mantissa == 0.0 and n.exponent == 0:
 		return self
@@ -205,12 +202,12 @@ func s(n) -> Big:
 	elif less(n):
 		mantissa = -MANTISSA_PRECISSION
 		exponent = n.exponent
-	calculate(self)
+	calculate(self, without_emitting)
 	emit_decrease()
 	return self
 
 
-func m(n) -> Big:
+func m(n, without_emitting := false) -> Big:
 	n = type_check(n)
 	if n.mantissa == 1.0 and n.exponent == 0:
 		return self
@@ -222,7 +219,7 @@ func m(n) -> Big:
 		new_exponent += 1
 	mantissa = new_mantissa
 	exponent = new_exponent
-	calculate(self)
+	calculate(self, without_emitting)
 	if n.mantissa > 1 or n.exponent > 0:
 		emit_increase()
 	elif n.exponent < 0:
@@ -230,7 +227,7 @@ func m(n) -> Big:
 	return self
 
 
-func d(n) -> Big:
+func d(n, without_emitting := false) -> Big:
 	n = type_check(n)
 	if n.mantissa == 1.0 and n.exponent == 0:
 		return self
@@ -245,7 +242,7 @@ func d(n) -> Big:
 		new_exponent -= 1
 	mantissa = new_mantissa
 	exponent = new_exponent
-	calculate(self)
+	calculate(self, without_emitting)
 	emit_decrease()
 	return self
 
@@ -416,7 +413,7 @@ func modulo(n) -> Big:
 	return self
 
 
-func calculate(big):
+func calculate(big, without_emitting := false):
 	if big.mantissa >= 10.0 or big.mantissa < 1.0:
 		var diff = int(floor(log10(big.mantissa)))
 		if diff > -10 and diff < 248:
@@ -437,8 +434,9 @@ func calculate(big):
 	if big.mantissa < 0:
 		big.mantissa = 0.0
 		big.exponent = 0
-	if big is Big and big == self:
-		emit_change() 
+	if not without_emitting:
+		if big is Big and big == self:
+			emit_change()
 
 
 func equal(n) -> bool:

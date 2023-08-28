@@ -49,7 +49,6 @@ var random_wish_limit := 0:
 
 func _ready() -> void:
 	SaveManager.connect("load_finished", load_finished)
-	lv.purchased_every_lored_once.connect(find_new_main_wish)
 	wish_ended.connect(find_new_main_wish)
 	wish_ended.connect(find_new_random_wish)
 
@@ -68,6 +67,7 @@ func close() -> void:
 
 
 func start() -> void:
+	lv.purchased_every_lored_once.connect(find_new_main_wish)
 	if not Wish.Type.STUFF in completed_wishes:
 		new_wish_considering_conditions(Wish.Type.STUFF)
 	else:
@@ -178,8 +178,9 @@ func has_start_conditions(wish: int) -> bool:
 
 
 func condition_STUFF() -> void:
-	gv.session_incremented.connect(start_STUFF)
-	lv.get_lored(LORED.Type.COAL).just_purchased.connect(skip_STUFF)
+	if not gv.session_incremented.is_connected(start_STUFF):
+		gv.session_incremented.connect(start_STUFF)
+		lv.get_lored(LORED.Type.COAL).just_purchased.connect(skip_STUFF)
 
 
 func start_STUFF(session_duration: int) -> void:

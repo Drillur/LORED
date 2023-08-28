@@ -53,9 +53,12 @@ func show_tooltip() -> void:
 
 
 func cost_update(affordable: bool) -> void:
-	check.visible = affordable
-	if affordable:
-		gv.flash(check, Color(0, 1, 0))
+	if upgrade.purchased:
+		check.hide()
+	else:
+		check.visible = affordable
+		if affordable:
+			gv.flash(check, Color(0, 1, 0))
 
 
 func purchased_changed(_upgrade: Upgrade) -> void:

@@ -922,9 +922,9 @@ func init_S4PLACEHOLDER() -> void:
 	primary_currency = Currency.Type.STONE
 
 
-func add_job(_job: int, unlocked_by_default := false) -> void:
+func add_job(_job: int, _unlocked_by_default := false) -> void:
 	jobs[_job] = Job.new(_job) as Job
-	jobs[_job].unlocked_by_default = unlocked_by_default
+	jobs[_job].unlocked_by_default = _unlocked_by_default
 	if jobs.size() == 1:
 		default_frames = jobs[_job].animation
 	
@@ -956,9 +956,9 @@ func loreds_initialized() -> void:
 	for job in jobs.values():
 		job.assign_lored(type)
 		
-		output.connect("changed", job.lored_output_changed)
-		haste.connect("changed", job.lored_haste_changed)
 		fuel_cost.connect("changed", job.lored_fuel_cost_changed)
+		haste.connect("changed", job.lored_haste_changed)
+		output.connect("changed", job.lored_output_changed)
 		if job.has_required_currencies:
 			input.connect("changed", job.lored_input_changed)
 			job.lored_input_changed()
@@ -1116,13 +1116,17 @@ func manual_purchase() -> void:
 	cost.spend(true)
 	purchase()
 
+var last_reason_autobuy: String
 
 func autobuy_check() -> void:
 	if should_autobuy():
+		printt(key, last_reason_autobuy)
 		automatic_purchase()
 		autobuy_on_cooldown = true
 		await gv.get_tree().physics_frame
 		autobuy_on_cooldown = false
+	else:
+		last_reason_autobuy = ""
 
 
 func should_autobuy() -> bool:
@@ -1148,6 +1152,7 @@ func should_autobuy() -> bool:
 			return false
 		
 		if not purchased:
+			last_reason_autobuy = "wasn't purchased"
 			return true
 		
 		if ( # upgrade conditions
@@ -1172,6 +1177,7 @@ func should_autobuy() -> bool:
 				and up.is_upgrade_purchased(Upgrade.Type.WAIT_THATS_NOT_FAIR)
 			)
 		):
+			last_reason_autobuy = "upgrade reason"
 			return true
 		
 		if required_currencies.size() > 0:
@@ -1179,9 +1185,11 @@ func should_autobuy() -> bool:
 				return false
 		
 		if key_lored:
+			last_reason_autobuy = "is a key lored"
 			return true
 		
 		if wa.currencies_have_negative_net(produced_currencies):
+			last_reason_autobuy = "produced curs are negative net"
 			return true
 	
 	return false
@@ -1333,8 +1341,6 @@ func disable_autobuy() -> void:
 
 func enable_default_purchase() -> void:
 	purchased_by_default = true
-	if key == "COAL":
-		print("purhasuhcuhe by default enabled")
 
 
 func disable_default_purchase() -> void:
@@ -1613,8 +1619,8 @@ func get_used_currency_rate(cur: int) -> Big:
 		if job.uses_currency(cur):
 			rate.a(
 				Big.new(job.required_currencies.cost[cur].get_value()).d(
-					job.duration.get_as_float()
-				).do_not_emit()
+					job.duration.get_as_float(),
+				)
 			)
 	return rate
 
@@ -1626,7 +1632,7 @@ func get_produced_currency_rate(cur: int) -> Big:
 			rate.a(
 				Big.new(job.produced_currencies[cur].get_value()).d(
 					job.duration.get_as_float()
-				).do_not_emit()
+				)
 			)
 	return rate
 
