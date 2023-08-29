@@ -116,7 +116,7 @@ func reset() -> void:
 	pending.mantissa = 0.0
 	pending.exponent = 0
 	emit_decrease()
-	calculate(self, true)
+	calculate(self)
 
 
 func change_base(new_base: float) -> void:
@@ -173,7 +173,7 @@ func type_check(n):
 	return n
 
 
-func a(n, without_emitting := false) -> Big:
+func a(n) -> Big:
 	n = type_check(n)
 	if n.mantissa == 0.0 and n.exponent == 0:
 		return self
@@ -185,12 +185,12 @@ func a(n, without_emitting := false) -> Big:
 	elif less(n):
 		mantissa = n.mantissa #when difference between values is big, throw away small number
 		exponent = n.exponent
-	calculate(self, without_emitting)
+	calculate(self)
 	emit_increase()
 	return self
 
 
-func s(n, without_emitting := false) -> Big:
+func s(n) -> Big:
 	n = type_check(n)
 	if n.mantissa == 0.0 and n.exponent == 0:
 		return self
@@ -202,12 +202,12 @@ func s(n, without_emitting := false) -> Big:
 	elif less(n):
 		mantissa = -MANTISSA_PRECISSION
 		exponent = n.exponent
-	calculate(self, without_emitting)
+	calculate(self)
 	emit_decrease()
 	return self
 
 
-func m(n, without_emitting := false) -> Big:
+func m(n) -> Big:
 	n = type_check(n)
 	if n.mantissa == 1.0 and n.exponent == 0:
 		return self
@@ -219,7 +219,7 @@ func m(n, without_emitting := false) -> Big:
 		new_exponent += 1
 	mantissa = new_mantissa
 	exponent = new_exponent
-	calculate(self, without_emitting)
+	calculate(self)
 	if n.mantissa > 1 or n.exponent > 0:
 		emit_increase()
 	elif n.exponent < 0:
@@ -227,7 +227,7 @@ func m(n, without_emitting := false) -> Big:
 	return self
 
 
-func d(n, without_emitting := false) -> Big:
+func d(n) -> Big:
 	n = type_check(n)
 	if n.mantissa == 1.0 and n.exponent == 0:
 		return self
@@ -242,7 +242,7 @@ func d(n, without_emitting := false) -> Big:
 		new_exponent -= 1
 	mantissa = new_mantissa
 	exponent = new_exponent
-	calculate(self, without_emitting)
+	calculate(self)
 	emit_decrease()
 	return self
 
@@ -413,7 +413,7 @@ func modulo(n) -> Big:
 	return self
 
 
-func calculate(big, without_emitting := false):
+func calculate(big):
 	if big.mantissa >= 10.0 or big.mantissa < 1.0:
 		var diff = int(floor(log10(big.mantissa)))
 		if diff > -10 and diff < 248:
@@ -434,9 +434,8 @@ func calculate(big, without_emitting := false):
 	if big.mantissa < 0:
 		big.mantissa = 0.0
 		big.exponent = 0
-	if not without_emitting:
-		if big is Big and big == self:
-			emit_change()
+	if big is Big and big == self:
+		emit_change()
 
 
 func equal(n) -> bool:

@@ -20,6 +20,8 @@ enum Type {
 	S4M,
 }
 
+signal purchasable_upgrade_count_increased
+signal purchasable_upgrade_count_decreased
 signal unlocked_changed(unlocked)
 
 var type: int
@@ -44,6 +46,7 @@ var unlocked := false:
 
 var upgrades := []
 var purchased_upgrades := []
+var affordable_and_unpurchased_upgrades := []
 
 
 
@@ -108,6 +111,21 @@ func add_upgrade(upgrade: int) -> void:
 
 func unlock() -> void:
 	unlocked = true
+
+
+
+func set_affordable_and_unpurchased(upgrade: int, affordable_and_unpurchased: bool) -> void:
+	if affordable_and_unpurchased:
+		if not upgrade in affordable_and_unpurchased_upgrades:
+			affordable_and_unpurchased_upgrades.append(upgrade)
+			purchasable_upgrade_count_increased.emit()
+	else:
+		if upgrade in affordable_and_unpurchased_upgrades:
+			affordable_and_unpurchased_upgrades.erase(upgrade)
+			purchasable_upgrade_count_decreased.emit()
+	#printt(key, Upgrade.Type.keys()[upgrade], affordable_and_unpurchased_upgrades)
+
+
 
 
 # - Get

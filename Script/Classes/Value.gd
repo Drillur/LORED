@@ -77,14 +77,15 @@ func subtract_pending(amount: Big) -> void:
 func sync() -> void:
 	if requires_sync:
 		requires_sync = false
-		current.reset()
-		current.a(added, true)
-		current.s(subtracted, true)
-		current.m(multiplied, true)
-		current.m(from_level, true)
-		current.m(m_from_lored, true)
-		current.d(divided, true)
-		current.d(d_from_lored, true)
+		var new_cur = Big.new(current.base)
+		new_cur.a(added)
+		new_cur.s(subtracted)
+		new_cur.m(multiplied)
+		new_cur.m(from_level)
+		new_cur.m(m_from_lored)
+		new_cur.d(divided)
+		new_cur.d(d_from_lored)
+		current.set_to(new_cur)
 
 
 func get_text() -> String:
@@ -154,15 +155,12 @@ func set_m_from_lored(amount) -> void:
 
 
 func alter_value(big: Big, current_value: Big, new_value: Big) -> void:
-	current.s(current_value, true)
+	var new_cur = Big.new(current)
+	new_cur.s(current_value)
 	big.s(current_value)
 	big.a(new_value)
-	current.a(new_value, true)
-	if new_value.greater(current_value):
-		emit_increase()
-	elif new_value.less(current_value):
-		emit_decrease()
-	emit_changed()
+	new_cur.a(new_value)
+	current.set_to(new_cur)
 
 
 

@@ -17,7 +17,6 @@ mouse_filter = 2
 
 [node name="Icon" type="TextureRect" parent="center"]
 unique_name_in_owner = true
-visible = false
 layout_mode = 2
 offset_left = -24.0
 offset_top = -5.0
@@ -30,7 +29,6 @@ metadata/_edit_group_ = true
 
 [node name="Icon Shadow" type="TextureRect" parent="center/Icon"]
 unique_name_in_owner = true
-visible = false
 modulate = Color(0, 0, 0, 1)
 show_behind_parent = true
 layout_mode = 2
@@ -44,6 +42,7 @@ expand_mode = 2
 stretch_mode = 5
 
 [node name="bg" type="Panel" parent="center/Icon"]
+visible = false
 show_behind_parent = true
 layout_mode = 1
 anchors_preset = 15

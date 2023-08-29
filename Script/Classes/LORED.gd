@@ -115,7 +115,7 @@ var times_purchased := 0:
 	set(val):
 		times_purchased = val
 		if val == 1:
-			first_purchase()
+			first_purchase_ever()
 var primary_currency: int
 var fuel_currency: int
 var time_spent_asleep := 0.0
@@ -215,7 +215,9 @@ var asleep := false:
 				emit_signal("woke_up")
 			emit_signal("asleep_changed", asleep)
 var time_went_to_bed := 0.0
-var fuel_rate_added := false
+var fuel_rate_added := false:
+	set(val):
+		fuel_rate_added = val
 var emoting := false:
 	set(val):
 		if emoting != val:
@@ -1049,7 +1051,6 @@ func first_second_of_run_autobuy_check(val: int) -> void:
 func prestige(_stage: int) -> void:
 	if _stage >= stage:
 		reset(false)
-		
 		if not gv.run_incremented.is_connected(first_second_of_run_autobuy_check):
 			gv.run_incremented.connect(first_second_of_run_autobuy_check)
 
@@ -1205,18 +1206,21 @@ func automatic_purchase() -> void:
 func purchase() -> void:
 	times_purchased += 1
 	level_up()
-	first_purchase()
 
 
-func first_purchase() -> void:
-	if not purchased:
-		purchased = true
+func first_purchase_ever() -> void:
+	if times_purchased == 1:
 		wa.unlock_currencies(produced_currencies)
-		work()
 
 
 func level_up() -> void:
+	var wasnt_purchased := false
+	if not purchased:
+		wasnt_purchased = true
+		purchased = true
 	set_level_to(level + 1)
+	if wasnt_purchased:
+		work()
 
 
 func set_level_to(_level: int) -> void:

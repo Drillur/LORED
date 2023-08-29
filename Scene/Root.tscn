@@ -1,10 +1,12 @@
-[gd_scene load_steps=8 format=3 uid="uid://bseqrj5lg08it"]
+[gd_scene load_steps=10 format=3 uid="uid://bseqrj5lg08it"]
 
 [ext_resource type="Script" path="res://Scene/Root.gd" id="1_h7r77"]
 [ext_resource type="PackedScene" uid="uid://rmruae8fguk4" path="res://Hud/LORED/lored_container.tscn" id="2_egnhq"]
 [ext_resource type="PackedScene" uid="uid://dlt6lvasr6c46" path="res://Hud/Upgrade/upgrade_container.tscn" id="3_3omr7"]
 [ext_resource type="PackedScene" uid="uid://cb3ej8nlybhvm" path="res://Hud/icon_button.tscn" id="3_agafs"]
 [ext_resource type="PackedScene" uid="uid://c4jcyq4x5dq51" path="res://Hud/Menu/menu.tscn" id="4_y1gq0"]
+[ext_resource type="Theme" uid="uid://cwt08llwihqii" path="res://Theme/ShadowText.tres" id="5_fcpu4"]
+[ext_resource type="FontFile" uid="uid://cubavfw1lomep" path="res://Fonts/Roboto-Black.ttf" id="5_fsywq"]
 [ext_resource type="PackedScene" uid="uid://dg6lv67h5eiuj" path="res://Hud/Wallet/wallet.tscn" id="6_pdtq1"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ge2kb"]
@@ -55,6 +57,22 @@ layout_mode = 2
 [node name="Upgrades Button" parent="Left/Left/Menu Buttons" instance=ExtResource("3_agafs")]
 unique_name_in_owner = true
 layout_mode = 2
+
+[node name="Purchasable Upgrade Count" type="RichTextLabel" parent="Left/Left/Menu Buttons/Upgrades Button"]
+unique_name_in_owner = true
+clip_contents = false
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+mouse_filter = 2
+theme = ExtResource("5_fcpu4")
+theme_override_constants/shadow_outline_size = 4
+theme_override_fonts/normal_font = ExtResource("5_fsywq")
+theme_override_font_sizes/normal_font_size = 14
+bbcode_enabled = true
+text = "4"
+fit_content = true
+autowrap_mode = 0
 
 [node name="Stage1" parent="Left/Left/Menu Buttons" instance=ExtResource("3_agafs")]
 unique_name_in_owner = true

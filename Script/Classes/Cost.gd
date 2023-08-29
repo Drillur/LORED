@@ -24,13 +24,12 @@ var use_allowed := true:
 			use_allowed_changed.emit(val)
 var purchased := false:
 	set(val):
-		if purchased == val:
-			return
-		purchased = val
-		if val:
-			connect_sigs()
-		else:
-			disconnect_sigs()
+		if purchased != val:
+			purchased = val
+			if val:
+				disconnect_calls()
+			else:
+				connect_calls()
 var currencies_are_unlocked := false:
 	set(val):
 		if not currencies_are_unlocked == val:
@@ -50,18 +49,18 @@ func _init(_cost: Dictionary) -> void:
 		var currency = wa.get_currency(cur) as Currency
 		currency.use_allowed_changed.connect(currency_use_allowed_changed)
 		currency.unlocked_changed.connect(currency_unlocked_changed)
-	connect_sigs()
+	connect_calls()
 	recheck()
 
 
-func connect_sigs() -> void:
+func connect_calls() -> void:
 	for cur in cost:
 		if not wa.currency[cur].count.is_connected("increased", currency_increased):
 			wa.currency[cur].count.connect("increased", currency_increased)
 			wa.currency[cur].count.connect("decreased", currency_decreased)
 
 
-func disconnect_sigs() -> void:
+func disconnect_calls() -> void:
 	for cur in cost:
 		if wa.currency[cur].count.is_connected("increased", currency_increased):
 			wa.currency[cur].count.disconnect("increased", currency_increased)

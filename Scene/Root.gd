@@ -17,6 +17,7 @@ extends MarginContainer
 @onready var stage2 = %Stage2 as IconButton
 @onready var stage3 = %Stage3 as IconButton
 @onready var stage4 = %Stage4 as IconButton
+@onready var purchasable_upgrade_count = %"Purchasable Upgrade Count"
 
 @onready var tooltip_position_display = $"Control/Tooltip/Tooltip Position Display"
 
@@ -25,15 +26,17 @@ extends MarginContainer
 func _ready():
 	if not gv.dev_mode:
 		tooltip_position_display.queue_free()
-	
-	upgrades_button.hide()
-	wallet_button.hide()
+		upgrades_button.hide()
+		wallet_button.hide()
 	
 	wa.wallet_unlocked_changed.connect(display_wallet_button)
 	
+	up.purchasable_upgrade_count_changed.connect(update_purchasable_upgrade_count)
 	up.menu_unlocked_changed.connect(display_upgrades_button)
 	up.menu_unlocked_changed.connect(flash_upgrade_button)
 	wa.wallet_unlocked_changed.connect(wallet_lock)
+	
+	update_purchasable_upgrade_count(0)
 	
 	gv.tooltip_parent = tooltip_parent
 	gv.texts_parent = control
@@ -53,16 +56,16 @@ func _ready():
 		if not gv.dev_mode:
 			b.hide()
 	
-	menu_button.modulate = gv.game_color
+	menu_button.color = gv.game_color
 	menu_button.set_icon(load("res://Sprites/Hud/Menu.png"))
 	menu_button.remove_check().remove_icon_shadow()
 	
-	upgrades_button.modulate = up.get_menu_color(UpgradeMenu.Type.NORMAL)
+	upgrades_button.color = up.get_menu_color(UpgradeMenu.Type.NORMAL)
 	upgrades_button.set_icon(load("res://Sprites/Hud/upgrades.png"))
 	upgrades_button.remove_check().remove_icon_shadow()
 	upgrade_container.connect("upgrade_menu_tab_changed", update_upgrades_button_color)
 	
-	wallet_button.modulate = gv.get_stage_color(1)
+	wallet_button.color = gv.get_stage_color(1)
 	wallet_button.set_icon(load("res://Sprites/Hud/ResourceViewer.png"))
 	wallet_button.remove_check().remove_icon_shadow()
 	gv.connect("stage_changed", stage_changed)
@@ -218,6 +221,11 @@ func update_upgrades_button_color(upgrade_menu_tab: int) -> void:
 
 func stage_changed(stage: int) -> void:
 	wallet_button.modulate = gv.get_stage_color(stage)
+
+
+func update_purchasable_upgrade_count(count: int) -> void:
+	purchasable_upgrade_count.visible = count != 0
+	purchasable_upgrade_count.text = "[rainbow freq=0.2 sat=1.0 val=1.0][wave amp=40 freq=1.0]" + str(count)
 
 
 

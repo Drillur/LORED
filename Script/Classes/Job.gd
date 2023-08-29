@@ -697,10 +697,6 @@ func add_rate() -> void:
 	if (
 		added_rate
 		or not lv.get_lored(lored).purchased
-		or (
-			not has_produced_currencies
-			and not has_required_currencies
-		)
 	):
 		return
 	
@@ -728,8 +724,6 @@ func add_rate() -> void:
 
 func subtract_rate() -> void:
 	if not added_rate:
-		return
-	if not has_produced_currencies and not has_required_currencies:
 		return
 	added_rate = false
 	
@@ -788,12 +782,20 @@ func stop() -> void:
 func complete() -> void:
 	no_longer_working()
 	if has_produced_currencies:
-		var multiplier := 1.0
-		if randf_range(0, 100) < crit.get_as_float():
-			multiplier = randf_range(7.5, 12.5)
+		var mult = 1.0 if randf_range(0, 100) > crit.get_as_float() else randf_range(7.5, 12.5)
 		for cur in produced_currencies:
-			last_production[cur] = in_hand_output[cur].m(multiplier)
+			wa.get_currency(cur).last_crit_modifier = mult
+			last_production[cur] = in_hand_output[cur].m(mult)
 			wa.add_from_lored(cur, last_production[cur])
+		
+		# these have already been added in Upgrade, and they account for crit.
+		if type == Type.COPPER_ORE and up.is_upgrade_purchased(Upgrade.Type.THE_THIRD):
+			last_production[Currency.Type.COPPER] = last_production[Currency.Type.COPPER_ORE]
+		elif type == Type.IRON_ORE and up.is_upgrade_purchased(Upgrade.Type.I_RUN):
+			last_production[Currency.Type.IRON] = last_production[Currency.Type.IRON_ORE]
+		elif type == Type.COAL and up.is_upgrade_purchased(Upgrade.Type.WAIT_THATS_NOT_FAIR):
+			last_production[Currency.Type.STONE] = Big.new(last_production[Currency.Type.COAL]).m(10)
+	
 	if has_method("complete_" + key):
 		call("complete_" + key)
 	emit_signal("completed")

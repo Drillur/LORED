@@ -347,6 +347,12 @@ class Effect:
 		if "added_currency" in  details.keys():
 			added_currency = details["added_currency"]
 		
+		if type == Type.UPGRADE_AUTOBUYER:
+			for type in up.get_upgrades_in_menu(details["upgrade_menu"]):
+				var upgrade = up.get_upgrade(type)
+				apply_methods.append(upgrade.enable_autobuy)
+				remove_methods.append(upgrade.disable_autobuy)
+		
 		set_base_text()
 		
 		SaveManager.connect("load_started", load_started)
@@ -386,7 +392,7 @@ class Effect:
 	# - Signal
 	
 	func currency_collected(amount: Big) -> void:
-		var modded_amount = Big.new(amount).m(modifier)
+		var modded_amount = Big.new(amount).m(modifier).m(wa.get_currency(currency).last_crit_modifier)
 		match bonus_action_type:
 			BONUS_ACTION.ADD_CURRENCY:
 				wa.add(added_currency, modded_amount)
@@ -553,7 +559,7 @@ class Effect:
 						Upgrade.Type.I_DRINK_YOUR_MILKSHAKE:
 							var coal := lv.get_lored(LORED.Type.COAL)
 							coal.output.increase_multiplied(in_hand)
-				Type.AUTOBUYER, Type.FREE_LORED:
+				Type.AUTOBUYER, Type.UPGRADE_AUTOBUYER, Type.FREE_LORED:
 					for method in apply_methods:
 						method.call()
 				_:
@@ -613,6 +619,7 @@ signal just_purchased
 signal just_unpurchased
 signal purchased_changed(upgrade)
 signal just_reset
+signal became_affordable_and_unpurchased(type, val)
 
 var type: int
 var key: String
@@ -631,9 +638,9 @@ var icon: Texture:
 		icon_text = "[img=<15>]" + icon.get_path() + "[/img]"
 var icon_text: String
 var icon_and_name_text: String
+var effected_loreds_text: String
 var color: Color
 var loreds: Array
-var effected_loreds_text: String
 
 var unlocked := true:
 	set(val):
@@ -641,11 +648,21 @@ var unlocked := true:
 		emit_signal("unlocked_changed")
 		if val:
 			emit_signal("just_unlocked")
+			affordable_changed(cost.affordable)
 		else:
 			emit_signal("just_locked")
 
-var special: bool
 
+var autobuy := false:
+	set(val):
+		if autobuy != val:
+			autobuy = val
+			if val:
+				became_affordable_and_unpurchased.emit(type, false)
+			affordable_changed(cost.affordable)
+
+
+var special: bool
 var purchased := false:
 	set(val):
 		if purchased != val:
@@ -655,6 +672,7 @@ var purchased := false:
 			else:
 				just_unpurchased.emit()
 			emit_signal("purchased_changed", self)
+			affordable_changed(cost.affordable)
 
 var will_apply_effect := false
 
@@ -728,6 +746,7 @@ func _init(_type: int) -> void:
 	call("init_" + key)
 	
 	cost.stage = stage
+	cost.affordable_changed.connect(affordable_changed)
 	icon_and_name_text = icon_text + " " + name
 	
 	effected_loreds_text = get_effected_loreds_text()
@@ -1350,7 +1369,13 @@ func init_THE_THIRD() -> void:
 
 func init_WE_WERE_SO_CLOSE() -> void:
 	name = "we were so close, now you don't even think about me"
-	set_effect(Effect.Type.UPGRADE_AUTOBUYER, 1, UpgradeMenu.Type.NORMAL)
+	effect = Effect.new(
+		Effect.Type.UPGRADE_AUTOBUYER,
+		{
+			"upgrade_type": type,
+			"upgrade_menu": UpgradeMenu.Type.NORMAL,
+		}
+	)
 	icon = up.get_upgrade_menu(UpgradeMenu.Type.NORMAL).icon
 	color = up.get_upgrade_menu(UpgradeMenu.Type.NORMAL).color
 	cost = Cost.new({
@@ -1589,7 +1614,7 @@ func init_ROUTINE() -> void:
 
 func set_effect(_type: int, base_value := -1.0, effected_input = -1) -> void:
 	var data := {}
-	if base_value != -1 and _type != Effect.Type.UPGRADE_AUTOBUYER:
+	if base_value != -1:
 		data["effect value"] = base_value
 	if effected_input != -1:
 		data["effected_input"] = effected_input
@@ -1625,6 +1650,21 @@ func required_upgrade_purchased() -> void:
 
 func required_upgrade_unpurchased() -> void:
 	unlocked = false
+
+
+func affordable_changed(affordable: bool) -> void:
+	if autobuy:
+		if affordable:
+			purchase()
+	else:
+		if (
+			unlocked
+			and not purchased
+			and affordable
+		):
+			became_affordable_and_unpurchased.emit(type, true)
+		else:
+			became_affordable_and_unpurchased.emit(type, false)
 
 
 
@@ -1665,6 +1705,15 @@ func remove() -> void:
 		effect.remove()
 		effect.reset_effects()
 		purchased = false
+
+
+
+func enable_autobuy() -> void:
+	autobuy = true
+
+
+func disable_autobuy() -> void:
+	autobuy = false
 
 
 

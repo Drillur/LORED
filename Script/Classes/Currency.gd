@@ -122,6 +122,7 @@ var gain_rate := Value.new(0)
 var loss_rate := Value.new(0)
 
 var weight := 1
+var last_crit_modifier := 1.0
 
 var produced_by := []
 var used_by := []

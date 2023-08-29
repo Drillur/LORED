@@ -126,8 +126,6 @@ var key_loreds := [
 	LORED.Type.GLASS,
 	LORED.Type.TUMORS,
 	LORED.Type.HARDWOOD, # was originally WOOD. i changed without knowing why it was wood
-	LORED.Type.IRON,
-	LORED.Type.COPPER,
 ]
 var loreds_required_for_extra_normal_menu := [
 	LORED.Type.SEEDS,

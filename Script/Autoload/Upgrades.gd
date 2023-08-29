@@ -121,10 +121,16 @@ var upgrade_container: UpgradeContainer:
 signal all_upgrades_initialized
 signal menu_unlocked_changed(menu, unlocked)
 signal upgrade_purchased(type)
+signal purchasable_upgrade_count_changed(count)
 
 var upgrades := {}
 var upgrades_by_key := {}
 var upgrade_menus := {}
+var purchasable_upgrade_count := 0:
+	set(val):
+		if purchasable_upgrade_count != val:
+			purchasable_upgrade_count = val
+			purchasable_upgrade_count_changed.emit(val)
 
 
 
@@ -132,13 +138,29 @@ func _ready():
 	for type in UpgradeMenu.Type.values():
 		upgrade_menus[type] = UpgradeMenu.new(type) as UpgradeMenu
 		connect("upgrade_purchased", upgrade_menus[type].add_purchased_upgrade)
+		upgrade_menus[type].purchasable_upgrade_count_increased.connect(purchasable_upgrade_count_increased)
+		upgrade_menus[type].purchasable_upgrade_count_decreased.connect(purchasable_upgrade_count_decreased)
 	for type in Upgrade.Type.values():
 		upgrades[type] = Upgrade.new(type)
 		upgrades_by_key[upgrades[type].key] = upgrades[type]
 	emit_signal("all_upgrades_initialized")
 	
 	for type in Upgrade.Type.values():
-		gv.add_upgrade_to_stage(upgrades[type].stage, type)
+		var upgrade = get_upgrade(type)
+		gv.add_upgrade_to_stage(upgrade.stage, type)
+		var up_menu = up.get_upgrade_menu(upgrade.upgrade_menu)
+		upgrade.became_affordable_and_unpurchased.connect(up_menu.set_affordable_and_unpurchased)
+
+
+
+# - Signal
+
+func purchasable_upgrade_count_increased() -> void:
+	purchasable_upgrade_count += 1
+
+
+func purchasable_upgrade_count_decreased() -> void:
+	purchasable_upgrade_count -= 1
 
 
 
@@ -250,3 +272,7 @@ func is_upgrade_menu_unlocked(menu: int) -> bool:
 
 func get_prestige_name(menu: int) -> String:
 	return get_upgrade_menu(menu).prestige_name
+
+
+func get_upgrades_in_menu(menu: int) -> Array:
+	return get_upgrade_menu(menu).upgrades
