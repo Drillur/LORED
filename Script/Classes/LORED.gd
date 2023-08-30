@@ -134,6 +134,7 @@ var unlocked := false:
 			if val:
 				lv.lored_unlocked(type)
 				emit_signal("just_unlocked")
+				autobuy_check()
 				saved_vars.append("fuel")
 				saved_vars.append("asleep")
 				saved_vars.append("times_purchased")
@@ -165,12 +166,18 @@ var autobuy := false:
 					cost.became_affordable.connect(autobuy_check)
 					for cur in produced_currencies:
 						wa.get_currency(cur).total_net_became_negative.connect(autobuy_check)
+					for cur in required_currencies:
+						wa.get_currency(cur).total_net_became_positive.connect(autobuy_check)
 			else:
 				if cost.became_affordable.is_connected(autobuy_check):
 					cost.became_affordable.disconnect(autobuy_check)
 					for cur in produced_currencies:
 						wa.get_currency(cur).total_net_became_negative.disconnect(autobuy_check)
+					for cur in required_currencies:
+						wa.get_currency(cur).total_net_became_positive.disconnect(autobuy_check)
 			autobuy_changed.emit(val)
+
+
 var autobuy_on_cooldown := false
 var purchased := false:
 	set(val):
@@ -1087,20 +1094,6 @@ func reset(hard: bool):
 
 
 
-#func kill() -> void:
-#	killed = true
-#	for job in jobs.values():
-#		job.disconnect("became_workable", work)
-#		job.disconnect("completed", job_completed)
-#		job.disconnect("cut_short", job_cut_short)
-#		job.kill()
-#	jobs.clear()
-#	cost.kill()
-#	disconnect("woke_up", work)
-#	disconnect("completed_job", work)
-
-
-
 func force_purchase() -> void:
 	if purchased_by_default:
 		if not unlocked:
@@ -1121,13 +1114,15 @@ var last_reason_autobuy: String
 
 func autobuy_check() -> void:
 	if should_autobuy():
-		printt(key, last_reason_autobuy)
+		#printt(key, last_reason_autobuy)
 		automatic_purchase()
 		autobuy_on_cooldown = true
 		await gv.get_tree().physics_frame
 		autobuy_on_cooldown = false
 	else:
 		last_reason_autobuy = ""
+	if type == Type.MALIGNANCY:
+		printt(key, last_reason_autobuy)
 
 
 func should_autobuy() -> bool:
@@ -1143,6 +1138,7 @@ func should_autobuy() -> bool:
 			type == Type.GALENA and not lv.is_lored_purchased(Type.DRAW_PLATE)
 			or type == Type.WOOD and not lv.is_lored_purchased(Type.SEEDS)
 		):
+			last_reason_autobuy = "NO: is galena, and wood not yet bought"
 			return false
 		
 		if (
@@ -1150,6 +1146,7 @@ func should_autobuy() -> bool:
 			and not lv.extra_normal_menu_unlocked
 			and not type in lv.loreds_required_for_extra_normal_menu
 		):
+			last_reason_autobuy = "NO: s2 loreds not purchased"
 			return false
 		
 		if not purchased:
@@ -1183,6 +1180,7 @@ func should_autobuy() -> bool:
 		
 		if required_currencies.size() > 0:
 			if wa.currencies_have_negative_net(required_currencies):
+				last_reason_autobuy = "NO: required curs are negative net"
 				return false
 		
 		if key_lored:
@@ -1193,6 +1191,7 @@ func should_autobuy() -> bool:
 			last_reason_autobuy = "produced curs are negative net"
 			return true
 	
+	last_reason_autobuy = "NO: bottom"
 	return false
 
 
@@ -1600,7 +1599,8 @@ func get_attributes_by_currency(currency_type: int) -> Array:
 	return arr
 
 
-
+func get_job(job: int) -> Job:
+	return jobs[job]
 
 
 func get_used_currency_rate(cur: int) -> Big:
@@ -1633,11 +1633,19 @@ func get_produced_currency_rate(cur: int) -> Big:
 	var rate = Big.new(0)
 	for job in jobs.values():
 		if job.produces_currency(cur):
-			rate.a(
-				Big.new(job.produced_currencies[cur].get_value()).d(
-					job.duration.get_as_float()
+			if cur in job.produced_currencies.keys():
+				rate.a(
+					Big.new(job.produced_currencies[cur].get_value()).d(
+						job.duration.get_as_float()
+					)
 				)
-			)
+			else:
+				rate.a(
+					Big.new(job.bonus_production[cur]).m(output.get_value()).d(
+						job.duration.get_as_float()
+					)
+				)
+	
 	return rate
 
 

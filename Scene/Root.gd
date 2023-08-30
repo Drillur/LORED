@@ -48,7 +48,7 @@ func _ready():
 	
 	for i in range(1, 5):
 		var b = get("stage" + str(i)) as IconButton
-		b.remove_check().remove_icon_shadow()
+		b.remove_optionals()
 		var stage = gv.get_stage(i) as Stage
 		b.set_icon(stage.icon)
 		b.button.modulate = stage.color
@@ -58,16 +58,16 @@ func _ready():
 	
 	menu_button.color = gv.game_color
 	menu_button.set_icon(load("res://Sprites/Hud/Menu.png"))
-	menu_button.remove_check().remove_icon_shadow()
+	menu_button.remove_optionals()
 	
 	upgrades_button.color = up.get_menu_color(UpgradeMenu.Type.NORMAL)
 	upgrades_button.set_icon(load("res://Sprites/Hud/upgrades.png"))
-	upgrades_button.remove_check().remove_icon_shadow()
+	upgrades_button.remove_optionals()
 	upgrade_container.connect("upgrade_menu_tab_changed", update_upgrades_button_color)
 	
 	wallet_button.color = gv.get_stage_color(1)
 	wallet_button.set_icon(load("res://Sprites/Hud/ResourceViewer.png"))
-	wallet_button.remove_check().remove_icon_shadow()
+	wallet_button.remove_optionals()
 	gv.connect("stage_changed", stage_changed)
 	
 	gv.root_ready = true

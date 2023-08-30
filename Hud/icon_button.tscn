@@ -18,13 +18,16 @@ focus_mode = 0
 mouse_default_cursor_shape = 2
 theme = ExtResource("2_3bb0d")
 
-[node name="Autobuyer" type="AnimatedSprite2D" parent="."]
+[node name="Control" type="Control" parent="."]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+mouse_filter = 2
+
+[node name="Autobuyer" type="AnimatedSprite2D" parent="Control"]
 unique_name_in_owner = true
-visible = false
-position = Vector2(2, 2)
 sprite_frames = ExtResource("2_7272n")
-frame_progress = 0.973157
-centered = false
+frame_progress = 0.691775
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 custom_minimum_size = Vector2(36, 36)

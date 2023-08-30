@@ -91,11 +91,11 @@ func set_icons() -> void:
 
 
 func remove_checks() -> void:
-	info.remove_check()
-	jobs.remove_check()
-	active_buffs.remove_check()
-	sleep.remove_check()
-	view_special.remove_check()
+	info.remove_check().remove_autobuyer()
+	jobs.remove_check().remove_autobuyer()
+	active_buffs.remove_check().remove_autobuyer()
+	sleep.remove_check().remove_autobuyer()
+	view_special.remove_check().remove_autobuyer()
 
 
 

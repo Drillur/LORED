@@ -90,6 +90,7 @@ var added_rate_based_on_inhand: bool
 var has_sufficient_fuel := true
 var has_produced_currencies := false
 var produced_currencies := {}
+var bonus_production := {}
 var produced_rates := {}
 var in_hand_output := {}
 var has_required_currencies := false
@@ -615,37 +616,18 @@ func lored_purchased_changed(purchased: bool) -> void:
 
 # - Actions
 
-
-func can_start() -> bool:
-	if not unlocked:
-		return false
-	if type != Type.REFUEL and lv.get_lored(lored).fuel.get_current_percent() <= lv.FUEL_DANGER:
-		return false
-	if has_method("can_start_job_special_requirements_" + key):
-		if not call("can_start_job_special_requirements_" + key):
-			return false
-	
-	if has_required_currencies:
-		if (
-			not required_currencies.use_allowed
-			or not required_currencies.affordable
-		):
-			return false
-	
-	return has_sufficient_fuel
+func add_bonus_production(cur: int, modifier: float) -> void:
+	bonus_production[cur] = modifier
+	wa.append_producer(cur, lored)
+	subtract_rate()
+	add_rate()
 
 
-func can_start_job_special_requirements_REFUEL() -> bool:
-	var _lored = lv.get_lored(lored)
-	if _lored.fuel.get_current_percent() > lv.FUEL_WARNING:
-		return false
-	if ( # if coal's fuel < 50%
-		_lored.fuel_currency == Currency.Type.COAL
-		and _lored.type != LORED.Type.COAL
-		and lv.get_lored(LORED.Type.COAL).fuel.get_current_percent() <= lv.FUEL_WARNING
-	):
-		return false
-	return true
+func remove_bonus_production(cur: int) -> void:
+	bonus_production.erase(cur)
+	wa.erase_producer(cur, lored)
+	if cur in produced_rates:
+		produced_rates.erase(cur)
 
 
 
@@ -665,7 +647,11 @@ func refresh_produced_rate() -> void:
 	for cur in produced_rates:
 		var currency = wa.get_currency(cur) as Currency
 		var gain_rate = currency.gain_rate
-		var new_rate = Big.new(produced_currencies[cur].get_value()).d(_duration)
+		var new_rate = Big.new(1).d(_duration)
+		if cur in produced_currencies.keys():
+			new_rate.m(produced_currencies[cur].get_value())
+		else:
+			new_rate.m(produced_currencies.values()[0].get_value())
 		gain_rate.alter_value(
 			gain_rate.added,
 			produced_rates[cur],
@@ -711,6 +697,16 @@ func add_rate() -> void:
 			
 			currency.add_gain_rate(rate)
 			produced_rates[cur] = rate
+		
+		if bonus_production.size() > 0:
+			for cur in bonus_production:
+				var currency = wa.get_currency(cur) as Currency
+				var rate = Big.new(produced_currencies.values()[0].get_value())
+				rate.m(bonus_production[cur]) # modifier set in Upgrade
+				rate.d(_duration)
+				
+				currency.add_gain_rate(rate)
+				produced_rates[cur] = rate
 	
 	if has_required_currencies and type != Type.REFUEL:
 		required_rates.clear()
@@ -729,13 +725,13 @@ func subtract_rate() -> void:
 	
 	var _duration = duration.get_as_float()
 	if has_produced_currencies:
-		for cur in produced_currencies:
+		for cur in produced_rates:
 			var currency = wa.get_currency(cur) as Currency
-			currency.subtract_gain_rate(Big.new(produced_currencies[cur].get_value()).d(_duration))
+			currency.subtract_gain_rate(Big.new(produced_rates[cur]))
 	if has_required_currencies and type != Type.REFUEL:
 		for cur in required_currencies.cost:
 			var currency = wa.get_currency(cur) as Currency
-			currency.subtract_loss_rate(Big.new(required_currencies.cost[cur].get_value()).d(_duration))
+			currency.subtract_loss_rate(required_rates[cur])
 
 
 
@@ -746,9 +742,14 @@ func start() -> void:
 		for cur in produced_currencies:
 			in_hand_output[cur] = Big.new(produced_currencies[cur].get_value())
 			wa.add_pending(cur, in_hand_output[cur])
+		for cur in bonus_production:
+			in_hand_output[cur] = Big.new(lv.get_lored(lored).output.get_value()).m(bonus_production[cur])
+			wa.add_pending(cur, in_hand_output[cur])
+	
 	elif type == Type.REFUEL:
 		in_hand_output["REFUEL"] = lv.get_lored(lored).fuel.get_x_percent(0.5)
 		lv.get_lored(lored).fuel.add_pending(in_hand_output["REFUEL"])
+	
 	if has_required_currencies:
 		required_currencies.spend(false)
 		in_hand_input.clear()
@@ -779,6 +780,7 @@ func stop() -> void:
 	timer.stop()
 
 
+
 func complete() -> void:
 	no_longer_working()
 	if has_produced_currencies:
@@ -788,13 +790,10 @@ func complete() -> void:
 			last_production[cur] = in_hand_output[cur].m(mult)
 			wa.add_from_lored(cur, last_production[cur])
 		
-		# these have already been added in Upgrade, and they account for crit.
-		if type == Type.COPPER_ORE and up.is_upgrade_purchased(Upgrade.Type.THE_THIRD):
-			last_production[Currency.Type.COPPER] = last_production[Currency.Type.COPPER_ORE]
-		elif type == Type.IRON_ORE and up.is_upgrade_purchased(Upgrade.Type.I_RUN):
-			last_production[Currency.Type.IRON] = last_production[Currency.Type.IRON_ORE]
-		elif type == Type.COAL and up.is_upgrade_purchased(Upgrade.Type.WAIT_THATS_NOT_FAIR):
-			last_production[Currency.Type.STONE] = Big.new(last_production[Currency.Type.COAL]).m(10)
+		for cur in bonus_production:
+			wa.get_currency(cur).last_crit_modifier = mult
+			last_production[cur] = in_hand_output[cur].m(mult)
+			wa.add_from_lored(cur, last_production[cur])
 	
 	if has_method("complete_" + key):
 		call("complete_" + key)
@@ -818,6 +817,38 @@ func complete_REFUEL() -> void:
 
 
 # - Get
+
+func can_start() -> bool:
+	if not unlocked:
+		return false
+	if type != Type.REFUEL and lv.get_lored(lored).fuel.get_current_percent() <= lv.FUEL_DANGER:
+		return false
+	if has_method("can_start_job_special_requirements_" + key):
+		if not call("can_start_job_special_requirements_" + key):
+			return false
+	
+	if has_required_currencies:
+		if (
+			not required_currencies.use_allowed
+			or not required_currencies.affordable
+		):
+			return false
+	
+	return has_sufficient_fuel
+
+
+func can_start_job_special_requirements_REFUEL() -> bool:
+	var _lored = lv.get_lored(lored)
+	if _lored.fuel.get_current_percent() > lv.FUEL_WARNING:
+		return false
+	if ( # if coal's fuel < 50%
+		_lored.fuel_currency == Currency.Type.COAL
+		and _lored.type != LORED.Type.COAL
+		and lv.get_lored(LORED.Type.COAL).fuel.get_current_percent() <= lv.FUEL_WARNING
+	):
+		return false
+	return true
+
 
 func get_produced_currencies() -> Array:
 	var arr := []
@@ -872,6 +903,8 @@ func produces_currency(cur: int) -> bool:
 		return false
 	if not produced_currencies:
 		return false
+	if cur in bonus_production.keys():
+		return true
 	return cur in produced_currencies.keys()
 
 

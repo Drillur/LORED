@@ -33,6 +33,7 @@ func setup(_upgrade: Upgrade):
 	bg.self_modulate = upgrade.color
 	check.self_modulate = upgrade.color
 	lock.modulate = upgrade.color
+	button.autobuyer.modulate = upgrade.color
 	
 	button.button.connect("mouse_entered", show_tooltip)
 	button.button.connect("mouse_exited", gv.clear_tooltip)
@@ -40,6 +41,7 @@ func setup(_upgrade: Upgrade):
 	
 	upgrade.connect("purchased_changed", purchased_changed)
 	upgrade.connect("unlocked_changed", unlocked_changed)
+	upgrade.autobuy_changed.connect(autobuyer_display)
 	purchased_changed(upgrade)
 	unlocked_changed()
 
@@ -63,6 +65,7 @@ func cost_update(affordable: bool) -> void:
 
 func purchased_changed(_upgrade: Upgrade) -> void:
 	bg.visible = upgrade.purchased
+	autobuyer_display()
 	if upgrade.purchased:
 		button.button.mouse_default_cursor_shape = Control.CURSOR_ARROW
 		button.set_theme_invis()
@@ -73,6 +76,7 @@ func purchased_changed(_upgrade: Upgrade) -> void:
 
 
 func unlocked_changed() -> void:
+	autobuyer_display()
 	if upgrade.unlocked:
 		if not upgrade.cost.affordable_changed.is_connected(cost_update):
 			upgrade.cost.connect("affordable_changed", cost_update)
@@ -87,6 +91,18 @@ func unlocked_changed() -> void:
 		lock.show()
 		button.icon.hide()
 		check.hide()
+
+
+func autobuyer_display() -> void:
+	button.autobuyer.visible = (
+		upgrade.autobuy
+		and upgrade.unlocked
+		and not upgrade.purchased
+	)
+	if button.autobuyer.visible:
+		button.autobuyer.play()
+	else:
+		button.autobuyer.stop()
 
 
 

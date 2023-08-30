@@ -76,7 +76,7 @@ class Reward:
 		if object_type == UpgradeMenu.Type.NORMAL:
 			text = "[img=<15>]res://Sprites/Hud/upgrades.png[/img] Upgrade Menu"
 		else:
-			text = upgrade_menu.icon_and_name_text + " Upgrade Menu"
+			text = upgrade_menu.icon_and_name_text
 		text = upgrade_menu.color_text % text
 	
 	

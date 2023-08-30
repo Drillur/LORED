@@ -23,10 +23,7 @@ var color: Color:
 func _ready():
 	hide_check()
 	set_theme_invis()
-	if name != "Level Up":
-		autobuyer.queue_free()
-	else:
-		autobuyer.hide()
+	autobuyer.hide()
 
 
 
@@ -48,8 +45,26 @@ func set_button_color(_color: Color) -> void:
 	button.self_modulate = _color
 
 
+
+func remove_optionals() -> IconButton:
+	check.queue_free()
+	icon_shadow.queue_free()
+	autobuyer.queue_free()
+	return self
+
+
 func remove_check():
 	check.queue_free()
+	return self
+
+
+func remove_icon_shadow():
+	icon_shadow.queue_free()
+	return self
+
+
+func remove_autobuyer():
+	autobuyer.queue_free()
 	return self
 
 
@@ -59,11 +74,6 @@ func show_check() -> void:
 
 func hide_check() -> void:
 	check.hide()
-
-
-func remove_icon_shadow():
-	icon_shadow.queue_free()
-	return self
 
 
 func set_theme_standard() -> void:

@@ -7,7 +7,6 @@ extends MarginContainer
 @onready var produced_currencies_parent = %"Produced Currencies Parent"
 @onready var required_currencies_parent = %"Required Currencies Parent"
 @onready var glow = $glow
-@onready var title_bg = %"title bg"
 
 var lored_job_entry := preload("res://Hud/LORED/Tooltip/lored_job_entry.tscn")
 var job: Job

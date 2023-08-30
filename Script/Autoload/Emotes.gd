@@ -82,15 +82,14 @@ func emote_now(emote: Emote) -> void:
 	if emote in emotes:
 		emotes.erase(emote)
 	
-	if emote.is_random():
-		keep_emote(emote)
-		emote.connect("finished", start_emote_cooldown)
-	
 	var speaker = lv.get_lored(emote.speaker)
 	if speaker.emoting:
 		speaker.enqueue_emote(emote)
 	else:
 		speaker.emote_now(emote)
+		if emote.is_random():
+			keep_emote(emote)
+			emote.connect("finished", start_emote_cooldown)
 		if emote.has_reply():
 			if emote.has_dialogue():
 				emote.connect("text_display_finished", reply_now)
@@ -110,7 +109,7 @@ func reply_now(emote: Emote) -> void:
 func start_emote_cooldown(emote: Emote) -> void:
 	emotes.erase(emote)
 	if emote_cooldown_timer.is_stopped():
-		var cooldown := 1#randi() % 20 + 20
+		var cooldown := randi() % 20 + 20
 		emote_cooldown_timer.start(cooldown)
 
 

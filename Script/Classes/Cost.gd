@@ -11,12 +11,13 @@ signal use_allowed_changed(allowed)
 var cost := {}
 var affordable := false:
 	set(val):
-		affordable = val
-		if val:
-			emit_signal("became_affordable")
-		else:
-			emit_signal("became_unaffordable")
-		emit_signal("affordable_changed", affordable)
+		if affordable != val:
+			affordable = val
+			if val:
+				emit_signal("became_affordable")
+			else:
+				emit_signal("became_unaffordable")
+			emit_signal("affordable_changed", affordable)
 var use_allowed := true:
 	set(val):
 		if use_allowed != val:
@@ -212,4 +213,12 @@ func get_progress_percent() -> float:
 		var count = wa.get_count(longest_eta_cur)
 		var _cost = cost[longest_eta_cur].get_value()
 		return count.percent(_cost)
-	return 0.0
+	
+	var total_percent = cost.size()
+	var percent := 0.0
+	for cur in cost:
+		var currency = wa.get_currency(cur) 
+		var count = currency.count
+		var _cost = cost[cur].get_value()
+		percent += count.percent(_cost)
+	return percent / total_percent

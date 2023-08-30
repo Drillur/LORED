@@ -67,6 +67,7 @@ signal unlocked_changed(unlocked)
 signal use_allowed_changed(allowed)
 signal current_net_changed
 signal total_net_became_negative
+signal total_net_became_positive
 
 var type: int
 var stage: int
@@ -115,7 +116,9 @@ var positive_rate := true:
 	set(val):
 		if positive_rate != val:
 			positive_rate = val
-			if not val:
+			if val:
+				total_net_became_positive.emit()
+			else:
 				total_net_became_negative.emit()
 var net_rate := Value.new(0)
 var gain_rate := Value.new(0)
@@ -413,11 +416,17 @@ func init_GRIEF() -> void:
 # - Signals
 
 func prestige(_stage: int) -> void:
-	if persists:
-		if stage == 0 or _stage <= stage:
-			return
-	if _stage >= stage:
+	if (
+		_stage >= stage
+		and stage > 0
+		and (
+			not persists
+			or _stage > stage
+		)
+	):
 		count.reset()
+	if count.less(count.base):
+		count.set_to(count.base)
 
 
 # - Actions

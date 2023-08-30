@@ -289,6 +289,7 @@ class Effect:
 		FUEL_COST,
 		BONUS_ACTION_ON_CURRENCY_GAIN,
 		BONUS_ACTION_ON_CURRENCY_USE,
+		BONUS_JOB_PRODUCTION,
 		AUTOBUYER,
 		UPGRADE_AUTOBUYER,
 		FREE_LORED,
@@ -325,6 +326,8 @@ class Effect:
 	var bonus_action_type: int
 	var modifier := 1.0
 	var added_currency: int
+	var upgrade_menu: int
+	var job: int
 	
 	
 	
@@ -340,24 +343,27 @@ class Effect:
 			effected_input = details["effected_input"]
 		if "currency" in details.keys():
 			currency = details["currency"]
-		if "bonus_action_type" in  details.keys():
+		if "bonus_action_type" in details.keys():
 			bonus_action_type = details["bonus_action_type"]
-		if "modifier" in  details.keys():
+		if "modifier" in details.keys():
 			modifier = details["modifier"]
-		if "added_currency" in  details.keys():
+		if "added_currency" in details.keys():
 			added_currency = details["added_currency"]
-		
-		if type == Type.UPGRADE_AUTOBUYER:
-			for type in up.get_upgrades_in_menu(details["upgrade_menu"]):
-				var upgrade = up.get_upgrade(type)
-				apply_methods.append(upgrade.enable_autobuy)
-				remove_methods.append(upgrade.disable_autobuy)
+		if "upgrade_menu" in details.keys():
+			upgrade_menu = details["upgrade_menu"]
+		if "job" in details.keys():
+			job = details["job"]
 		
 		set_base_text()
 		
 		SaveManager.connect("load_started", load_started)
 		SaveManager.connect("load_finished", load_finished)
-	
+		
+		if type in [
+			Type.UPGRADE_AUTOBUYER,
+			#Type.UPGRADE_NAME,
+		]:
+			up.all_upgrades_initialized.connect(finish_init)
 	
 	
 	func set_base_text() -> void:
@@ -387,6 +393,15 @@ class Effect:
 			if effect2 != null:
 				saved_vars.append("effect2")
 	
+	
+	func finish_init() -> void:
+		match type:
+			Type.UPGRADE_AUTOBUYER:
+				for type in up.get_upgrades_in_menu(upgrade_menu):
+					var upgrade = up.get_upgrade(type)
+					apply_methods.append(upgrade.enable_autobuy)
+					remove_methods.append(upgrade.disable_autobuy)
+		
 	
 	
 	# - Signal
@@ -439,6 +454,10 @@ class Effect:
 	func add_effected_lored(lored_type: int) -> void:
 		var lored = lv.get_lored(lored_type) as LORED
 		match type:
+			Type.BONUS_JOB_PRODUCTION:
+				var _job = lored.get_job(job) as Job
+				apply_methods.append(_job.add_bonus_production)
+				remove_methods.append(_job.remove_bonus_production)
 			Type.COST:
 				for cur in lored.cost.cost:
 					apply_methods.append(
@@ -501,11 +520,12 @@ class Effect:
 					var cur = wa.get_currency(currency)
 					cur.decreased_by_lored.connect(currency_used)
 				Type.UPGRADE_NAME:
-					for lored in gv.get_loreds_in_stage(1):
-						lored = lored as LORED
+					for x in gv.get_loreds_in_stage(1):
+						var lored = lv.get_lored(x)
 						lored.cost_increase.increase_multiplied(0.9)
 						lored.fuel_cost.increase_multiplied(10)
 						lored.fuel.increase_multiplied(10)
+						lored.fuel.fill_up()
 			refresh()
 	
 	
@@ -524,8 +544,8 @@ class Effect:
 					var cur = wa.get_currency(currency)
 					cur.decreased_by_lored.disconnect(currency_used)
 				Type.UPGRADE_NAME:
-					for lored in gv.get_loreds_in_stage(1):
-						lored = lored as LORED
+					for x in gv.get_loreds_in_stage(1):
+						var lored = lv.get_lored(x)
 						lored.cost_increase.decrease_multiplied(0.9)
 						lored.fuel_cost.decrease_multiplied(10)
 						lored.fuel.decrease_multiplied(10)
@@ -559,6 +579,9 @@ class Effect:
 						Upgrade.Type.I_DRINK_YOUR_MILKSHAKE:
 							var coal := lv.get_lored(LORED.Type.COAL)
 							coal.output.increase_multiplied(in_hand)
+				Type.BONUS_JOB_PRODUCTION:
+					for method in apply_methods:
+						method.call(currency, modifier)
 				Type.AUTOBUYER, Type.UPGRADE_AUTOBUYER, Type.FREE_LORED:
 					for method in apply_methods:
 						method.call()
@@ -585,6 +608,9 @@ class Effect:
 						Upgrade.Type.I_DRINK_YOUR_MILKSHAKE:
 							var coal := lv.get_lored(LORED.Type.COAL)
 							coal.output.decrease_multiplied(in_hand)
+				Type.BONUS_JOB_PRODUCTION:
+					for method in remove_methods:
+						method.call(currency)
 				Type.AUTOBUYER, Type.FREE_LORED:
 					for method in remove_methods:
 						method.call()
@@ -620,6 +646,7 @@ signal just_unpurchased
 signal purchased_changed(upgrade)
 signal just_reset
 signal became_affordable_and_unpurchased(type, val)
+signal autobuy_changed
 
 var type: int
 var key: String
@@ -660,6 +687,7 @@ var autobuy := false:
 			if val:
 				became_affordable_and_unpurchased.emit(type, false)
 			affordable_changed(cost.affordable)
+			autobuy_changed.emit()
 
 
 var special: bool
@@ -1185,6 +1213,8 @@ func init_ITS_GROWIN_ON_ME() -> void:
 	var cop = lv.get_colored_name(LORED.Type.COPPER)
 	var growth = lv.get_colored_name(LORED.Type.GROWTH)
 	description = "Whenever %s pops, either %s or %s will receive an [b]output and input boost[/b]." % [growth, iron, cop]
+	icon = wa.get_icon(Currency.Type.GROWTH)
+	color = lv.get_color(LORED.Type.GROWTH)
 	effect = Effect.new(
 		Effect.Type.BONUS_ACTION_ON_CURRENCY_GAIN,
 		{
@@ -1349,17 +1379,15 @@ func init_THE_THIRD() -> void:
 	var copo = lv.get_colored_name(LORED.Type.COPPER_ORE)
 	description = "Whenever %s mines, he will produce an equal amount of %s." % [copo, cop]
 	effect = Effect.new(
-		Effect.Type.BONUS_ACTION_ON_CURRENCY_GAIN,
+		Effect.Type.BONUS_JOB_PRODUCTION,
 		{
 			"upgrade_type": type,
-			"currency": Currency.Type.COPPER_ORE,
-			"bonus_action_type": Effect.BONUS_ACTION.ADD_CURRENCY,
-			"added_currency": Currency.Type.COPPER,
+			"job": Job.Type.COPPER_ORE,
+			"currency": Currency.Type.COPPER,
 			"modifier": 1.0,
 		}
 	)
 	add_effected_lored(LORED.Type.COPPER_ORE)
-	add_effected_lored(LORED.Type.COPPER)
 	cost = Cost.new({
 		Currency.Type.MALIGNANCY: Value.new("2e8"),
 	})
@@ -1426,17 +1454,15 @@ func init_I_RUN() -> void:
 	var irono = lv.get_colored_name(LORED.Type.IRON_ORE)
 	description = "Whenever %s murders, he will produce an equal amount of %s." % [irono, iron]
 	effect = Effect.new(
-		Effect.Type.BONUS_ACTION_ON_CURRENCY_GAIN,
+		Effect.Type.BONUS_JOB_PRODUCTION,
 		{
 			"upgrade_type": type,
-			"currency": Currency.Type.IRON_ORE,
-			"bonus_action_type": Effect.BONUS_ACTION.ADD_CURRENCY,
-			"added_currency": Currency.Type.IRON,
+			"job": Job.Type.IRON_ORE,
+			"currency": Currency.Type.IRON,
 			"modifier": 1.0,
 		}
 	)
 	add_effected_lored(LORED.Type.IRON_ORE)
-	add_effected_lored(LORED.Type.IRON)
 	cost = Cost.new({
 		Currency.Type.MALIGNANCY: Value.new("25e9"),
 	})
@@ -1559,17 +1585,15 @@ func init_WAIT_THATS_NOT_FAIR() -> void:
 	var stone = wa.get_icon_and_name_text(Currency.Type.STONE)
 	description = "Whenever %s digs, he will produce ten times as much %s." % [coal, stone]
 	effect = Effect.new(
-		Effect.Type.BONUS_ACTION_ON_CURRENCY_GAIN,
+		Effect.Type.BONUS_JOB_PRODUCTION,
 		{
 			"upgrade_type": type,
-			"currency": Currency.Type.COAL,
-			"bonus_action_type": Effect.BONUS_ACTION.ADD_CURRENCY,
-			"added_currency": Currency.Type.STONE,
-			"modifier": 10,
+			"job": Job.Type.COAL,
+			"currency": Currency.Type.STONE,
+			"modifier": 10.0,
 		}
 	)
 	add_effected_lored(LORED.Type.COAL)
-	add_effected_lored(LORED.Type.STONE)
 	cost = Cost.new({
 		Currency.Type.MALIGNANCY: Value.new("1e18"),
 	})
@@ -1654,7 +1678,7 @@ func required_upgrade_unpurchased() -> void:
 
 func affordable_changed(affordable: bool) -> void:
 	if autobuy:
-		if affordable:
+		if unlocked and affordable:
 			purchase()
 	else:
 		if (
@@ -1704,6 +1728,7 @@ func remove() -> void:
 			will_apply_effect = false
 		effect.remove()
 		effect.reset_effects()
+		cost.purchased = false
 		purchased = false
 
 
