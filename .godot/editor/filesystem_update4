@@ -1,4 +1,4 @@
-res://Scene/Root.tscn
+res://Hud/Wallet/wallet_currency_tooltip.tscn
 res://Theme/Standard.tres
 res://Theme/Invis.tres
 res://Theme/TextButton.tres
@@ -7,27 +7,14 @@ res://Theme/Background.tres
 res://Theme/ShadowText.tres
 res://Theme/Subtle Background.tres
 res://Theme/Title.tres
+res://Scene/Root.tscn
 res://Hud/LORED/lored_vico.tscn
 res://Hud/Earnings Report/earnings_report.tscn
 res://Hud/Earnings Report/earnings_report_entry.tscn
 res://Hud/Upgrade/upgrade_container.tscn
 res://Hud/Upgrade/Tooltip/upgrade_tooltip.tscn
 res://Hud/Upgrade/upgrade_vico.tscn
-res://Script/Classes/Upgrade.gd
-res://Script/Autoload/Upgrades.gd
-res://Script/Classes/UpgradeMenu.gd
 res://Hud/icon_button.tscn
-res://Hud/icon_button.gd
+res://Hud/Menu/menu.tscn
 res://Hud/Menu/menu.gd
-res://Scene/Root.gd
-res://Hud/Wallet/wallet.gd
-res://Hud/LORED/lored_vico.gd
-res://Hud/Upgrade/upgrade_vico.gd
-res://Script/Classes/Cost.gd
-res://Script/Classes/Currency.gd
-res://Script/Classes/Job.gd
-res://Script/Classes/LORED.gd
-res://Hud/Wallet/wallet_currency_tooltip.tscn
-res://Script/Autoload/Emotes.gd
-res://Hud/LORED/Tooltip/lored_job.gd
-res://Script/Classes/Wish.gd
+res://Hud/Wallet/wallet.tscn

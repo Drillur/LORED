@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dpest0qdhsgcn"
-path="res://.godot/imported/PatchNotesRead.png-2095a2fb0e37ffc26ddc5ea204ac4a9a.ctex"
+uid="uid://bqdnbs21rmkig"
+path="res://.godot/imported/Stats.png-16300d2ad09bd774a61c9e6ed804e8a6.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Sprites/Hud/PatchNotesRead.png"
-dest_files=["res://.godot/imported/PatchNotesRead.png-2095a2fb0e37ffc26ddc5ea204ac4a9a.ctex"]
+source_file="res://Sprites/Hud/Stats.png"
+dest_files=["res://.godot/imported/Stats.png-16300d2ad09bd774a61c9e6ed804e8a6.ctex"]
 
 [params]
 
