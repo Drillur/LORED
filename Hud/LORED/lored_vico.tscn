@@ -121,6 +121,7 @@ script = ExtResource("9_tchys")
 [node name="bg" type="Panel" parent="VBoxContainer/MarginContainer"]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_8qmng")
+metadata/_edit_lock_ = true
 
 [node name="Fuel Bar" parent="VBoxContainer/MarginContainer" instance=ExtResource("2_p04r2")]
 unique_name_in_owner = true
@@ -176,6 +177,14 @@ offset_left = -10.0
 offset_top = -10.0
 offset_right = -10.0
 offset_bottom = -10.0
+
+[node name="Level Up Texts" type="Control" parent="Control"]
+unique_name_in_owner = true
+anchors_preset = 0
+offset_left = 36.0
+offset_top = 18.0
+offset_right = 36.0
+offset_bottom = 18.0
 
 [node name="RightDown" type="Control" parent="Control"]
 unique_name_in_owner = true

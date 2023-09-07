@@ -1,4 +1,4 @@
-class_name Attribute
+class_name ValuePair
 extends Resource
 
 

@@ -23,6 +23,7 @@ extends MarginContainer
 @onready var emote_container = %"Emote Container"
 @onready var sleep_text_timer = $"Sleep Text Timer"
 @onready var sleep_timer = $"Sleep Timer"
+@onready var level_up_texts = %"Level Up Texts"
 
 var level_icon = preload("res://Sprites/Hud/Level.png")
 
@@ -220,7 +221,7 @@ func purchased_changed(purchased: bool) -> void:
 func lored_leveled_up(_level: int) -> void:
 	if not lored.last_purchase_forced:
 		gv.throw_text_from_parent(
-			level_up, 
+			level_up_texts, 
 			{
 				"text": lored.get_level_text(),
 				"color": lored.color,

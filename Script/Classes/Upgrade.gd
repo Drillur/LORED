@@ -21,7 +21,7 @@ func load_finished() -> void:
 
 
 enum Type {
-	MECHANICAL, # S2 M
+	MECHANICAL, # S2 Radiative
 	LIMIT_BREAK,
 	DONT_TAKE_CANDY_FROM_BABIES,
 	SPLISHY_SPLASHY,
@@ -102,7 +102,7 @@ enum Type {
 	UPGRADE_DESCRIPTION,
 	GRIMOIRE,
 	
-	CANOPY, # S2 N
+	CANOPY, # S2 Extra Normal
 	APPRENTICE_IRON_WORKER,
 	DOUBLE_BARRELS,
 	RAIN_DANCE,
@@ -467,8 +467,8 @@ class Effect:
 						lored.cost.cost[cur].decrease_multiplied
 					)
 			Type.FREE_LORED:
-				apply_methods.append(lored.enable_default_purchase)
-				remove_methods.append(lored.disable_default_purchase)
+				apply_methods.append(lored.enable_purchased_on_reset)
+				remove_methods.append(lored.disable_purchased_on_reset)
 			Type.AUTOBUYER:
 				apply_methods.append(lored.enable_autobuy)
 				remove_methods.append(lored.disable_autobuy)
@@ -1633,6 +1633,997 @@ func init_ROUTINE() -> void:
 	required_upgrade = Type.RED_NECROMANCY
 
 
+func init_CANOPY() -> void:
+	name = "Canopy"
+	set_effect(Effect.Type.OUTPUT_AND_INPUT, 1.25)
+	add_effected_lored(LORED.Type.WATER)
+	cost = Cost.new({
+		Currency.Type.TREES: Value.new("10"),
+	})
+
+
+func init_APPRENTICE_IRON_WORKER() -> void:
+	name = "Apprentice Iron Worker"
+	set_effect(Effect.Type.CRIT, 6)
+	add_effected_lored(LORED.Type.LIQUID_IRON)
+	cost = Cost.new({
+		Currency.Type.STEEL: Value.new("25"),
+	})
+
+
+func init_DOUBLE_BARRELS() -> void:
+	name = "Double Barrels"
+	set_effect(Effect.Type.OUTPUT_AND_INPUT, 2)
+	add_effected_lored(LORED.Type.LIQUID_IRON)
+	cost = Cost.new({
+		Currency.Type.GLASS: Value.new("50"),
+		Currency.Type.HARDWOOD: Value.new("100"),
+	})
+
+
+func init_RAIN_DANCE() -> void:
+	name = "Rain Dance"
+	set_effect(Effect.Type.HASTE, 1.2)
+	add_effected_lored(LORED.Type.WATER)
+	cost = Cost.new({
+		Currency.Type.SAND: Value.new("40"),
+	})
+
+
+func init_LIGHTHOUSE() -> void:
+	name = "Lighthouse"
+	set_effect(Effect.Type.HASTE, 1.15)
+	add_effected_lored(LORED.Type.SAND)
+	cost = Cost.new({
+		Currency.Type.WIRE: Value.new("130"),
+	})
+
+
+func init_ROGUE_BLACKSMITH() -> void:
+	name = "Rogue Blacksmith"
+	set_effect(Effect.Type.CRIT, 6)
+	add_effected_lored(LORED.Type.LIQUID_IRON)
+	cost = Cost.new({
+		Currency.Type.WIRE: Value.new("1e3"),
+		Currency.Type.GLASS: Value.new("1e3"),
+		Currency.Type.CARCINOGENS: Value.new("35"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.APPRENTICE_IRON_WORKER
+
+
+func init_TRIPLE_BARRELS() -> void:
+	name = "Triple Barrels"
+	set_effect(Effect.Type.OUTPUT_AND_INPUT, 2)
+	add_effected_lored(LORED.Type.LIQUID_IRON)
+	cost = Cost.new({
+		Currency.Type.WIRE: Value.new("350"),
+		Currency.Type.STEEL: Value.new("100"),
+		Currency.Type.SOIL: Value.new("250"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.DOUBLE_BARRELS
+
+
+func init_BREAK_THE_DAM() -> void:
+	name = "BREAK THE DAM"
+	set_effect(Effect.Type.HASTE, 1.25)
+	add_effected_lored(LORED.Type.WATER)
+	cost = Cost.new({
+		Currency.Type.LIQUID_IRON: Value.new("30"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.RAIN_DANCE
+
+
+func init_THIS_MIGHT_PAY_OFF_SOMEDAY() -> void:
+	name = "This might pay off someday!"
+	set_effect(Effect.Type.SPECIFIC_INPUT, 0.9, Currency.Type.IRON)
+	add_effected_lored(LORED.Type.LIQUID_IRON)
+	cost = Cost.new({
+		Currency.Type.IRON: Value.new("1e6"),
+	})
+
+
+func init_DIRT_COLLECTION_REWARDS_PROGRAM() -> void:
+	name = "*Dirt Collection Rewards Program!*"
+	set_effect(Effect.Type.HASTE, 1.25)
+	add_effected_lored(LORED.Type.HUMUS)
+	cost = Cost.new({
+		Currency.Type.SOIL: Value.new("25e3"),
+		Currency.Type.LEAD: Value.new("25e3"),
+		Currency.Type.CARCINOGENS: Value.new("350"),
+	})
+
+
+func init_EQUINE() -> void:
+	name = "[b]Equine[/b]"
+	set_effect(Effect.Type.OUTPUT_AND_INPUT, 1.3)
+	add_effected_lored(LORED.Type.HUMUS)
+	cost = Cost.new({
+		Currency.Type.GLASS: Value.new("90"),
+	})
+
+
+func init_UNPREDICTABLE_WEATHER() -> void:
+	name = "Unpredictable Weather"
+	set_effect(Effect.Type.CRIT, 8)
+	add_effected_lored(LORED.Type.WATER)
+	cost = Cost.new({
+		Currency.Type.WIRE: Value.new("1e3"),
+		Currency.Type.GLASS: Value.new("1e3"),
+		Currency.Type.TREES: Value.new("2.5e3"),
+		Currency.Type.CARCINOGENS: Value.new("35"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.BREAK_THE_DAM
+
+
+func init_DECISIVE_STRIKES() -> void:
+	name = "Decisive Strikes"
+	set_effect(Effect.Type.SPECIFIC_INPUT, 0.9, Currency.Type.AXES)
+	add_effected_lored(LORED.Type.WATER)
+	cost = Cost.new({
+		Currency.Type.WIRE: Value.new("350"),
+		Currency.Type.GLASS: Value.new("425"),
+		Currency.Type.SOIL: Value.new("500"),
+	})
+
+
+func init_SOFT_AND_SMOOTH() -> void:
+	name = "Decisive Strikes"
+	set_effect(Effect.Type.OUTPUT_AND_INPUT, 1.25)
+	add_effected_lored(LORED.Type.WATER)
+	cost = Cost.new({
+		Currency.Type.STEEL: Value.new("4500"),
+		Currency.Type.CARCINOGENS: Value.new("900"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.UNPREDICTABLE_WEATHER
+
+
+func init_FLIPPY_FLOPPIES() -> void:
+	name = "Flippy Floppies"
+	set_effect(Effect.Type.SPECIFIC_COST, 0.9, Currency.Type.HUMUS)
+	add_effected_lored(LORED.Type.SAND)
+	cost = Cost.new({
+		Currency.Type.CARCINOGENS: Value.new("850"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.UNPREDICTABLE_WEATHER
+
+
+func init_WOODTHIRSTY() -> void:
+	name = "Woodthirsty"
+	set_effect(Effect.Type.HASTE, 1.3)
+	add_effected_lored(LORED.Type.AXES)
+	cost = Cost.new({
+		Currency.Type.WOOD: Value.new("800"),
+		Currency.Type.HARDWOOD: Value.new("100"),
+	})
+
+
+func init_SEEING_BROWN() -> void:
+	name = "Seeing [color=#7b3f00]Brown[/color]"
+	set_effect(Effect.Type.OUTPUT_AND_INPUT, 1.25)
+	add_effected_lored(LORED.Type.AXES)
+	cost = Cost.new({
+		Currency.Type.GLASS: Value.new("300"),
+		Currency.Type.WIRE: Value.new("300"),
+		Currency.Type.TREES: Value.new("100"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.WOODTHIRSTY
+
+
+func init_CARLIN() -> void:
+	name = "Carlin"
+	set_effect(Effect.Type.HASTE, 1.1)
+	add_effected_stage(2)
+	cost = Cost.new({
+		Currency.Type.LEAD: Value.new("600"),
+	})
+
+
+func init_HARDWOOD_YOURSELF() -> void:
+	name = "[img=<15>]res://Sprites/Currency/hard.png[/img] Hardwood Yourself"
+	set_effect(Effect.Type.SPECIFIC_INPUT, 0.8, Currency.Type.HARDWOOD)
+	add_effected_lored(LORED.Type.AXES)
+	cost = Cost.new({
+		Currency.Type.STEEL: Value.new("185"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.CARLIN
+
+
+func init_STEEL_YOURSELF() -> void:
+	name = "[img=<15>]res://Sprites/Currency/steel.png[/img] Steel Yourself"
+	set_effect(Effect.Type.SPECIFIC_INPUT, 0.9, Currency.Type.LIQUID_IRON)
+	add_effected_lored(LORED.Type.STEEL)
+	cost = Cost.new({
+		Currency.Type.GLASS: Value.new("200"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.CARLIN
+
+
+func init_PLASMA_BOMBARDMENT() -> void:
+	name = "Plasma Bombardment"
+	set_effect(Effect.Type.OUTPUT_AND_INPUT, 1.25)
+	add_effected_lored(LORED.Type.GLASS)
+	cost = Cost.new({
+		Currency.Type.WIRE: Value.new("310"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.CARLIN
+
+
+func init_PATREON_ARTIST() -> void:
+	name = "Patreon Artist"
+	set_effect(Effect.Type.HASTE, 1.2)
+	add_effected_lored(LORED.Type.WIRE)
+	cost = Cost.new({
+		Currency.Type.HARDWOOD: Value.new("200"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.CARLIN
+
+
+func init_MILLERY() -> void:
+	name = "Millery"
+	set_effect(Effect.Type.HASTE, 1.25)
+	add_effected_lored(LORED.Type.HARDWOOD)
+	cost = Cost.new({
+		Currency.Type.STEEL: Value.new("385"),
+		Currency.Type.CARCINOGENS: Value.new("25"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.HARDWOOD_YOURSELF
+
+
+func init_QUAMPS() -> void:
+	name = "Quamps"
+	set_effect(Effect.Type.HASTE, 1.35)
+	add_effected_lored(LORED.Type.STEEL)
+	cost = Cost.new({
+		Currency.Type.GLASS: Value.new("600"),
+		Currency.Type.CARCINOGENS: Value.new("25"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.STEEL_YOURSELF
+
+
+func init_TWO_FIVE_FIVE_TWO() -> void:
+	name = "[i]2552[/i]"
+	set_effect(Effect.Type.SPECIFIC_INPUT, 0.85, Currency.Type.SAND)
+	add_effected_lored(LORED.Type.GLASS)
+	cost = Cost.new({
+		Currency.Type.WIRE: Value.new("750"),
+		Currency.Type.CARCINOGENS: Value.new("25"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.PLASMA_BOMBARDMENT
+
+
+func init_GIMP() -> void:
+	name = "GIMP"
+	set_effect(Effect.Type.OUTPUT_AND_INPUT, 1.3)
+	add_effected_lored(LORED.Type.WIRE)
+	cost = Cost.new({
+		Currency.Type.HARDWOOD: Value.new("900"),
+		Currency.Type.CARCINOGENS: Value.new("25"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.PATREON_ARTIST
+
+
+func init_SAGAN() -> void:
+	name = "Sagan"
+	set_effect(Effect.Type.HASTE, 1.1)
+	add_effected_stage(2)
+	cost = Cost.new({
+		Currency.Type.CARCINOGENS: Value.new("5"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.CARLIN
+
+
+func init_HENRY_CAVILL() -> void:
+	name = "Henry Cavill"
+	set_effect(Effect.Type.OUTPUT_AND_INPUT, 1.3)
+	add_effected_lored(LORED.Type.WATER)
+	cost = Cost.new({
+		Currency.Type.CIGARETTES: Value.new("23.23"),
+		Currency.Type.WOOD_PULP: Value.new("70"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.SAGAN
+
+
+func init_LEMBAS_WATER() -> void:
+	name = "Lembas Water"
+	set_effect(Effect.Type.SPECIFIC_INPUT, 0.8, Currency.Type.WATER)
+	add_effected_lored(LORED.Type.TREES)
+	cost = Cost.new({
+		Currency.Type.TOBACCO: Value.new("45"),
+		Currency.Type.WATER: Value.new("300"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.SAGAN
+
+
+func init_BIGGER_TREES_I_GUESS() -> void:
+	name = "bigger trees i guess"
+	set_effect(Effect.Type.SPECIFIC_INPUT, 0.9, Currency.Type.TREES)
+	add_effected_lored(LORED.Type.WOOD)
+	cost = Cost.new({
+		Currency.Type.PLASTIC: Value.new("10e3"),
+		Currency.Type.WOOD_PULP: Value.new("1e3"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.SAGAN
+
+
+func init_JOURNEYMAN_IRON_WORKER() -> void:
+	name = "Journeyman Iron Worker"
+	set_effect(Effect.Type.OUTPUT_AND_INPUT, 1.3)
+	add_effected_lored(LORED.Type.LIQUID_IRON)
+	add_effected_lored(LORED.Type.STEEL)
+	cost = Cost.new({
+		Currency.Type.AXES: Value.new("250"),
+		Currency.Type.CARCINOGENS: Value.new("50"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.SAGAN
+
+
+func init_CUTTING_CORNERS() -> void:
+	name = "Cutting Corners!"
+	set_effect(Effect.Type.SPECIFIC_INPUT, 0.85, Currency.Type.WOOD)
+	add_effected_lored(LORED.Type.HARDWOOD)
+	cost = Cost.new({
+		Currency.Type.STEEL: Value.new("5.5e3"),
+		Currency.Type.CARCINOGENS: Value.new("200"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.MILLERY
+
+
+func init_QUORMPS() -> void:
+	name = "Cutting Corners!"
+	set_effect(Effect.Type.SPECIFIC_INPUT, 0.85, Currency.Type.LIQUID_IRON)
+	add_effected_lored(LORED.Type.STEEL)
+	cost = Cost.new({
+		Currency.Type.GLASS: Value.new("4.5e3"),
+		Currency.Type.CARCINOGENS: Value.new("200"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.QUAMPS
+
+
+func init_KILTY_SBARK() -> void:
+	name = "Kilty Sbark"
+	set_effect(Effect.Type.HASTE, 1.15)
+	add_effected_lored(LORED.Type.GLASS)
+	cost = Cost.new({
+		Currency.Type.WIRE: Value.new("6.5e3"),
+		Currency.Type.CARCINOGENS: Value.new("200"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.TWO_FIVE_FIVE_TWO
+
+
+func init_HOLE_GEOMETRY() -> void:
+	name = "Kilty Sbark"
+	set_effect(Effect.Type.SPECIFIC_INPUT, 0.9, Currency.Type.DRAW_PLATE)
+	add_effected_lored(LORED.Type.WIRE)
+	cost = Cost.new({
+		Currency.Type.WOOD_PULP: Value.new("10e3"),
+		Currency.Type.HARDWOOD: Value.new("5.2e3"),
+		Currency.Type.CARCINOGENS: Value.new("200"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.GIMP
+
+
+func init_CIORAN() -> void:
+	name = "Cioran"
+	set_effect(Effect.Type.CRIT, 4)
+	add_effected_stage(2)
+	cost = Cost.new({
+		Currency.Type.CARCINOGENS: Value.new("1e3"),
+		Currency.Type.TUMORS: Value.new("100"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.SAGAN
+
+
+func init_WOOD_LORD() -> void:
+	name = "Wood Lord"
+	set_effect(Effect.Type.HASTE, 1.15)
+	add_effected_lored(LORED.Type.AXES)
+	add_effected_lored(LORED.Type.WOOD)
+	add_effected_lored(LORED.Type.HARDWOOD)
+	cost = Cost.new({
+		Currency.Type.STEEL: Value.new("35e3"),
+		Currency.Type.CARCINOGENS: Value.new("2.5e3"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.CUTTING_CORNERS
+
+
+func init_EXPERT_IRON_WORKER() -> void:
+	name = "Expert Iron Worker"
+	set_effect(Effect.Type.HASTE, 1.15)
+	add_effected_lored(LORED.Type.LIQUID_IRON)
+	add_effected_lored(LORED.Type.STEEL)
+	cost = Cost.new({
+		Currency.Type.GLASS: Value.new("40e3"),
+		Currency.Type.CARCINOGENS: Value.new("2.5e3"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.QUORMPS
+
+
+func init_THEYVE_ALWAYS_BEEN_FASTER() -> void:
+	name = "They've Always Been Faster"
+	set_effect(Effect.Type.HASTE, 1.15)
+	add_effected_lored(LORED.Type.HUMUS)
+	add_effected_lored(LORED.Type.SAND)
+	add_effected_lored(LORED.Type.GLASS)
+	cost = Cost.new({
+		Currency.Type.WIRE: Value.new("75e3"),
+		Currency.Type.CARCINOGENS: Value.new("2.5e3"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.KILTY_SBARK
+
+
+func init_WHERES_THE_BOY_STRING() -> void:
+	name = "Where's the boy, String?"
+	set_effect(Effect.Type.HASTE, 1.15)
+	add_effected_lored(LORED.Type.DRAW_PLATE)
+	add_effected_lored(LORED.Type.WIRE)
+	cost = Cost.new({
+		Currency.Type.HARDWOOD: Value.new("35e3"),
+		Currency.Type.CARCINOGENS: Value.new("2.5e3"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.HOLE_GEOMETRY
+
+
+func init_UTTER_MOLESTER_CHAMP() -> void:
+	name = "Utter Molester Champ"
+	set_effect(Effect.Type.HASTE, 1.15)
+	add_effected_lored(LORED.Type.PETROLEUM)
+	cost = Cost.new({
+		Currency.Type.CARCINOGENS: Value.new("100e3"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.CIORAN
+
+
+func init_CANCERS_REAL_COOL() -> void:
+	name = "CANCER'S REAL COOL"
+	set_effect(Effect.Type.HASTE, 1.25)
+	add_effected_lored(LORED.Type.TUMORS)
+	cost = Cost.new({
+		Currency.Type.WATER: Value.new("150e3"),
+		Currency.Type.TREES: Value.new("150e3"),
+		Currency.Type.HUMUS: Value.new("150e3"),
+		Currency.Type.AXES: Value.new("150e3"),
+		Currency.Type.WIRE: Value.new("150e3"),
+		Currency.Type.GLASS: Value.new("150e3"),
+		Currency.Type.HARDWOOD: Value.new("150e3"),
+		Currency.Type.STEEL: Value.new("150e3"),
+		Currency.Type.CARCINOGENS: Value.new("150e3"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.CIORAN
+
+
+func init_SPOOKY() -> void:
+	name = "Sp0oKy"
+	set_effect(Effect.Type.HASTE, 1.15)
+	add_effected_lored(LORED.Type.CARCINOGENS)
+	cost = Cost.new({
+		Currency.Type.CARCINOGENS: Value.new("1e3"),
+		Currency.Type.TUMORS: Value.new("2.5e3"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.CIORAN
+
+
+func init_SQUEEORMP() -> void:
+	name = "Squeeormp"
+	set_effect(Effect.Type.SPECIFIC_INPUT, 0.9, Currency.Type.PETROLEUM)
+	add_effected_lored(LORED.Type.PLASTIC)
+	cost = Cost.new({
+		Currency.Type.CARCINOGENS: Value.new("100e3"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.CIORAN
+
+
+func init_SANDAL_FLANDALS() -> void:
+	name = "Sandal Flandals"
+	set_effect(Effect.Type.SPECIFIC_INPUT, 0.8, Currency.Type.HUMUS)
+	add_effected_lored(LORED.Type.SAND)
+	cost = Cost.new({
+		Currency.Type.SAND: Value.new("100e3"),
+		Currency.Type.CARCINOGENS: Value.new("10e3"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.CIORAN
+
+
+func init_GLITTERDELVE() -> void:
+	name = "Glitterdelve"
+	set_effect(Effect.Type.OUTPUT_AND_INPUT, 1.25)
+	add_effected_lored(LORED.Type.GALENA)
+	cost = Cost.new({
+		Currency.Type.LEAD: Value.new("100e3"),
+		Currency.Type.CARCINOGENS: Value.new("8e3"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.CIORAN
+
+
+func init_VIRILE() -> void:
+	name = "VIRILE"
+	set_effect(Effect.Type.SPECIFIC_INPUT, 0.85, Currency.Type.SEEDS)
+	add_effected_lored(LORED.Type.TOBACCO)
+	cost = Cost.new({
+		Currency.Type.CIGARETTES: Value.new("50e3"),
+		Currency.Type.CARCINOGENS: Value.new("1.5e3"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.CIORAN
+
+
+func init_FACTORY_SQUIRTS() -> void:
+	name = "Factory Squirts"
+	set_effect(Effect.Type.OUTPUT_AND_INPUT, 1.25)
+	add_effected_lored(LORED.Type.PETROLEUM)
+	cost = Cost.new({
+		Currency.Type.GROWTH: Value.new("2e8"),
+		Currency.Type.LEAD: Value.new("3e3"),
+		Currency.Type.TUMORS: Value.new("500"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.CIORAN
+
+
+func init_LONGBOTTOM_LEAF() -> void:
+	name = "Longbottom Leaf"
+	set_effect(Effect.Type.OUTPUT_AND_INPUT, 1.25)
+	add_effected_lored(LORED.Type.TOBACCO)
+	cost = Cost.new({
+		Currency.Type.WOOD: Value.new("500e3"),
+		Currency.Type.CARCINOGENS: Value.new("5e3"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.CIORAN
+
+
+func init_INDEPENDENCE() -> void:
+	name = "INDEPENDENCE"
+	set_effect(Effect.Type.CRIT, 10)
+	add_effected_lored(LORED.Type.LEAD)
+	cost = Cost.new({
+		Currency.Type.GALENA: Value.new("450e3"),
+		Currency.Type.LEAD: Value.new("450e3"),
+		Currency.Type.CARCINOGENS: Value.new("10e3"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.CIORAN
+
+
+func init_NIKEY_WIKEYS() -> void:
+	name = "Nikey Wikeys"
+	set_effect(Effect.Type.CRIT, 7)
+	add_effected_lored(LORED.Type.HUMUS)
+	cost = Cost.new({
+		Currency.Type.SOIL: Value.new("1e6"),
+		Currency.Type.CARCINOGENS: Value.new("10e3"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.CIORAN
+
+
+func init_ERECTWOOD() -> void:
+	name = "ERECTWOOD"
+	set_effect(Effect.Type.OUTPUT_AND_INPUT, 1.3)
+	add_effected_lored(LORED.Type.HARDWOOD)
+	cost = Cost.new({
+		Currency.Type.STEEL: Value.new("2e7"),
+		Currency.Type.CARCINOGENS: Value.new("1e6"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.WOOD_LORD
+
+
+func init_STEELY_DAN() -> void:
+	name = "Steely Dan"
+	set_effect(Effect.Type.CRIT, 7)
+	add_effected_lored(LORED.Type.STEEL)
+	cost = Cost.new({
+		Currency.Type.GLASS: Value.new("3e7"),
+		Currency.Type.CARCINOGENS: Value.new("1e6"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.EXPERT_IRON_WORKER
+
+
+func init_MGALEKGOLO() -> void:
+	name = "Mgalekgolo"
+	set_effect(Effect.Type.OUTPUT_AND_INPUT, 1.3)
+	add_effected_lored(LORED.Type.GLASS)
+	cost = Cost.new({
+		Currency.Type.WIRE: Value.new("80e6"),
+		Currency.Type.CARCINOGENS: Value.new("1e6"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.THEYVE_ALWAYS_BEEN_FASTER
+
+
+func init_PULLEY() -> void:
+	name = "Pulley"
+	set_effect(Effect.Type.SPECIFIC_INPUT, 0.9, Currency.Type.DRAW_PLATE)
+	add_effected_lored(LORED.Type.WIRE)
+	cost = Cost.new({
+		Currency.Type.HARDWOOD: Value.new("95e6"),
+		Currency.Type.CARCINOGENS: Value.new("1e6"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.WHERES_THE_BOY_STRING
+
+
+func init_LE_GUIN() -> void:
+	name = "Le Guin"
+	set_effect(Effect.Type.HASTE, 1.25)
+	add_effected_stage(2)
+	cost = Cost.new({
+		Currency.Type.CARCINOGENS: Value.new("1e6"),
+		Currency.Type.TUMORS: Value.new("100e3"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.CIORAN
+
+
+func init_FLEEORMP() -> void:
+	name = "Fleeormp"
+	set_effect(Effect.Type.SPECIFIC_INPUT, 0.8, Currency.Type.GALENA)
+	add_effected_lored(LORED.Type.LEAD)
+	cost = Cost.new({
+		Currency.Type.GALENA: Value.new("100e6"),
+		Currency.Type.LEAD: Value.new("80e6"),
+		Currency.Type.WIRE: Value.new("50e6"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.LE_GUIN
+
+
+func init_POTENT() -> void:
+	name = "Potent"
+	set_effect(Effect.Type.SPECIFIC_INPUT, 0.85, Currency.Type.WATER)
+	add_effected_lored(LORED.Type.TOBACCO)
+	cost = Cost.new({
+		Currency.Type.SEEDS: Value.new("30e6"),
+		Currency.Type.PAPER: Value.new("45e6"),
+		Currency.Type.SOIL: Value.new("60e6"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.LE_GUIN
+
+
+func init_LIGHT_AS_A_FEATHER() -> void:
+	name = "Light as a Feather"
+	set_effect(Effect.Type.SPECIFIC_INPUT, 0.9, Currency.Type.STEEL)
+	add_effected_lored(LORED.Type.AXES)
+	cost = Cost.new({
+		Currency.Type.DRAW_PLATE: Value.new("10e6"),
+		Currency.Type.CARCINOGENS: Value.new("10e6"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.LE_GUIN
+
+
+func init_BUSY_BEE() -> void:
+	name = "Busy Bee"
+	set_effect(Effect.Type.OUTPUT_AND_INPUT, 1.3)
+	add_effected_lored(LORED.Type.SEEDS)
+	cost = Cost.new({
+		Currency.Type.STEEL: Value.new("10e6"),
+		Currency.Type.GLASS: Value.new("15e6"),
+		Currency.Type.LEAD: Value.new("50e6"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.LE_GUIN
+
+
+func init_DINDER_MUFFLIN() -> void:
+	name = "Dinder Mufflin"
+	set_effect(Effect.Type.OUTPUT_AND_INPUT, 1.25)
+	add_effected_lored(LORED.Type.PAPER)
+	cost = Cost.new({
+		Currency.Type.STEEL: Value.new("100e6"),
+		Currency.Type.GLASS: Value.new("150e6"),
+		Currency.Type.LEAD: Value.new("500e6"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.LE_GUIN
+
+
+func init_ULTRA_SHITSTINCT() -> void:
+	name = "Ultra Shitstinct"
+	set_effect(Effect.Type.OUTPUT_AND_INPUT, 1.35)
+	add_effected_lored(LORED.Type.HUMUS)
+	cost = Cost.new({
+		Currency.Type.WATER: Value.new("1e9"),
+		Currency.Type.SEEDS: Value.new("25e6"),
+		Currency.Type.CARCINOGENS: Value.new("10e6"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.LE_GUIN
+
+
+func init_AND_THIS_IS_TO_GO_EVEN_FURTHER_BEYOND() -> void:
+	name = "And this is to go [i]even further beyond![/i]"
+	set_effect(Effect.Type.OUTPUT_AND_INPUT, 1.25)
+	add_effected_lored(LORED.Type.HUMUS)
+	cost = Cost.new({
+		Currency.Type.PAPER: Value.new("1e7"),
+		Currency.Type.WOOD_PULP: Value.new("3e7"),
+		Currency.Type.WATER: Value.new("25e6"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.LE_GUIN
+
+
+func init_POWER_BARRELS() -> void:
+	name = "Power Barrels"
+	set_effect(Effect.Type.OUTPUT_AND_INPUT, 1.2)
+	add_effected_lored(LORED.Type.LIQUID_IRON)
+	cost = Cost.new({
+		Currency.Type.STEEL: Value.new("100e6"),
+		Currency.Type.GLASS: Value.new("25e6"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.LE_GUIN
+
+
+func init_A_BEE_WITH_TINY_DAGGERS() -> void:
+	name = "a bee with tiny daggers!!!"
+	icon = load("res://Sprites/Upgrades/abeewithdaggers.png")
+	set_effect(Effect.Type.CRIT, 6)
+	add_effected_lored(LORED.Type.SEEDS)
+	cost = Cost.new({
+		Currency.Type.STEEL: Value.new("1e9"),
+		Currency.Type.GLASS: Value.new("25e6"),
+		Currency.Type.CARCINOGENS: Value.new("10e6"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.BUSY_BEE
+
+
+func init_HARDWOOD_YO_MAMA() -> void:
+	name = "[img=<15>]res://Sprites/Currency/hard.png[/img] Hardwood Yo Mama"
+	set_effect(Effect.Type.SPECIFIC_INPUT, 0.8, Currency.Type.HARDWOOD)
+	add_effected_lored(LORED.Type.AXES)
+	cost = Cost.new({
+		Currency.Type.STEEL: Value.new("750e6"),
+		Currency.Type.CARCINOGENS: Value.new("25e6"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.ERECTWOOD
+
+
+func init_STEEL_YO_MAMA() -> void:
+	name = "[img=<15>]res://Sprites/Currency/steel.png[/img] Steel Yo Mama"
+	set_effect(Effect.Type.SPECIFIC_INPUT, 0.85, Currency.Type.LIQUID_IRON)
+	add_effected_lored(LORED.Type.STEEL)
+	cost = Cost.new({
+		Currency.Type.GLASS: Value.new("750e6"),
+		Currency.Type.CARCINOGENS: Value.new("25e6"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.STEELY_DAN
+
+
+func init_MAGNETIC_ACCELERATOR() -> void:
+	name = "Magnetic Accelerator"
+	set_effect(Effect.Type.SPECIFIC_INPUT, 0.8, Currency.Type.SAND)
+	add_effected_lored(LORED.Type.GLASS)
+	cost = Cost.new({
+		Currency.Type.WIRE: Value.new("750e6"),
+		Currency.Type.CARCINOGENS: Value.new("25e6"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.MGALEKGOLO
+
+
+func init_SPOOLY() -> void:
+	name = "Spooly"
+	set_effect(Effect.Type.HASTE, 1.25)
+	add_effected_lored(LORED.Type.WIRE)
+	cost = Cost.new({
+		Currency.Type.HARDWOOD: Value.new("750e6"),
+		Currency.Type.CARCINOGENS: Value.new("25e6"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.PULLEY
+
+
+func init_TORIYAMA() -> void:
+	name = "Toriyama"
+	set_effect(Effect.Type.CRIT, 4)
+	add_effected_stage(2)
+	cost = Cost.new({
+		Currency.Type.STEEL: Value.new("1e9"),
+		Currency.Type.HARDWOOD: Value.new("1e9"),
+		Currency.Type.WIRE: Value.new("1e9"),
+		Currency.Type.GLASS: Value.new("1e9"),
+		Currency.Type.CARCINOGENS: Value.new("50e6"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.LE_GUIN
+
+
+func init_BURDENED() -> void:
+	name = "Burdened"
+	set_effect(Effect.Type.OUTPUT_AND_INPUT, 2)
+	add_effected_lored(LORED.Type.LEAD)
+	cost = Cost.new({
+		Currency.Type.HUMUS: Value.new("10e9"),
+		Currency.Type.WOOD_PULP: Value.new("4e9"),
+		Currency.Type.PAPER: Value.new("1"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.TORIYAMA
+
+
+func init_SQUEEOMP() -> void:
+	name = "Squeeomp"
+	set_effect(Effect.Type.SPECIFIC_INPUT, 0.85, Currency.Type.PETROLEUM)
+	add_effected_lored(LORED.Type.PLASTIC)
+	cost = Cost.new({
+		Currency.Type.TOBACCO: Value.new("12e9"),
+		Currency.Type.CARCINOGENS: Value.new("3e9"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.TORIYAMA
+
+
+func init_BARELY_WOOD_BY_NOW() -> void:
+	name = "Barely Wood by Now"
+	set_effect(Effect.Type.SPECIFIC_INPUT, 0.8, Currency.Type.WOOD)
+	add_effected_lored(LORED.Type.HARDWOOD)
+	cost = Cost.new({
+		Currency.Type.STEEL: Value.new("15e9"),
+		Currency.Type.CARCINOGENS: Value.new("1e9"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.HARDWOOD_YO_MAMA
+
+
+func init_FINGERS_OF_ONDEN() -> void:
+	name = "Fingers of Onden"
+	set_effect(Effect.Type.OUTPUT_AND_INPUT, 1.25)
+	add_effected_lored(LORED.Type.STEEL)
+	cost = Cost.new({
+		Currency.Type.GLASS: Value.new("15e9"),
+		Currency.Type.CARCINOGENS: Value.new("1e9"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.STEEL_YO_MAMA
+
+
+func init_O_SALVATORI() -> void:
+	name = "O'Salvatori"
+	set_effect(Effect.Type.CRIT, 6)
+	add_effected_lored(LORED.Type.GLASS)
+	cost = Cost.new({
+		Currency.Type.WIRE: Value.new("15e9"),
+		Currency.Type.CARCINOGENS: Value.new("1e9"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.MAGNETIC_ACCELERATOR
+
+
+func init_LOW_RISES() -> void:
+	name = "low rises"
+	set_effect(Effect.Type.OUTPUT_AND_INPUT, 1.35)
+	add_effected_lored(LORED.Type.WIRE)
+	cost = Cost.new({
+		Currency.Type.HARDWOOD: Value.new("10e9"),
+		Currency.Type.CARCINOGENS: Value.new("1e9"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.SPOOLY
+
+
+func init_ILL_SHOW_YOU_HARDWOOD() -> void:
+	name = "i'll show you hardwood"
+	set_effect(Effect.Type.CRIT, 6)
+	add_effected_lored(LORED.Type.AXES)
+	add_effected_lored(LORED.Type.WOOD)
+	add_effected_lored(LORED.Type.HARDWOOD)
+	cost = Cost.new({
+		Currency.Type.STEEL: Value.new("1e12"),
+		Currency.Type.CARCINOGENS: Value.new("250e9"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.BARELY_WOOD_BY_NOW
+
+
+func init_STEEL_LORD() -> void:
+	name = "Steel Lord"
+	set_effect(Effect.Type.CRIT, 6)
+	add_effected_lored(LORED.Type.LIQUID_IRON)
+	add_effected_lored(LORED.Type.STEEL)
+	cost = Cost.new({
+		Currency.Type.GLASS: Value.new("1e12"),
+		Currency.Type.CARCINOGENS: Value.new("250e9"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.FINGERS_OF_ONDEN
+
+
+func init_FINISH_THE_FIGHT() -> void:
+	name = "Finish the Fight"
+	set_effect(Effect.Type.CRIT, 6)
+	add_effected_lored(LORED.Type.HUMUS)
+	add_effected_lored(LORED.Type.SAND)
+	add_effected_lored(LORED.Type.GLASS)
+	cost = Cost.new({
+		Currency.Type.WIRE: Value.new("1e12"),
+		Currency.Type.CARCINOGENS: Value.new("250e9"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.O_SALVATORI
+
+
+func init_MICROSOFT_PAINT() -> void:
+	name = "Microsoft Paint"
+	set_effect(Effect.Type.CRIT, 6)
+	add_effected_lored(LORED.Type.DRAW_PLATE)
+	add_effected_lored(LORED.Type.WIRE)
+	cost = Cost.new({
+		Currency.Type.HARDWOOD: Value.new("1e12"),
+		Currency.Type.CARCINOGENS: Value.new("250e9"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.LOW_RISES
+
+
+func init_JOHN_PETER_BAIN_TOTALBISCUIT() -> void:
+	name = "[img=<15>]res://Sprites/Currency/Totalbiscuit.png[/img] John Peter Bain, TotalBiscuit"
+	set_effect(Effect.Type.OUTPUT_AND_INPUT, 2)
+	add_effected_stage(2)
+	cost = Cost.new({
+		Currency.Type.CARCINOGENS: Value.new("1e12"),
+		Currency.Type.TUMORS: Value.new("10e9"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.TORIYAMA
+
+
+func init_() -> void:
+	name = ""
+	set_effect(Effect.Type.CRIT, )
+	set_effect(Effect.Type.HASTE, )
+	set_effect(Effect.Type.OUTPUT_AND_INPUT, )
+	set_effect(Effect.Type.SPECIFIC_INPUT, 0., Currency.Type.)
+	add_effected_lored(LORED.Type.)
+	add_effected_stage()
+	cost = Cost.new({
+		Currency.Type.: Value.new(""),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.
+
+
 
 
 
@@ -1757,6 +2748,8 @@ func prestige(_stage: int) -> void:
 
 func reset() -> void:
 	remove()
+	if effect != null and effect.dynamic:
+		effect.reset_effects()
 	times_purchased = 0
 	will_apply_effect = false
 

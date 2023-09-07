@@ -41,12 +41,18 @@ func _ready():
 	emote_cooldown_timer.connect("timeout", new_random_emote)
 	
 	SaveManager.load_finished.connect(load_finished)
+	gv.hard_reset.connect(reset)
 
 
 
 func close():
 	emote_cooldown_timer.stop()
 	emotes.clear()
+
+
+func reset() -> void:
+	close()
+	start()
 
 
 

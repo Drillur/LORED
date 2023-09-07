@@ -4,6 +4,7 @@ extends MarginContainer
 
 
 @onready var bg = $bg
+@onready var bg2 = $bg2
 @onready var flocket = $Flocket
 @onready var pose = %Pose
 @onready var pose_shadow = %"Pose Shadow"
@@ -26,6 +27,7 @@ func _ready() -> void:
 	var scroll_bar = dialogue_text.get_v_scroll_bar() as VScrollBar
 	scroll_bar.theme = gv.theme_standard
 	gv.prestige.connect(prestige)
+	gv.hard_reset.connect(reset)
 
 
 
@@ -36,6 +38,7 @@ func setup(_emote: Emote) -> void:
 		await ready
 	
 	bg.modulate = emote.color
+	bg2.modulate = emote.color
 	flocket.modulate = emote.color
 	dialogue_text.get_v_scroll_bar().modulate = emote.color
 	
@@ -108,6 +111,10 @@ func display_text() -> void:
 
 func prestige(stage: int) -> void:
 	if stage >= lv.get_lored(emote.speaker).stage:
-		if emote in em.emotes:
-			em.emotes.erase(emote)
-		queue_free()
+		reset()
+
+
+func reset():
+	if emote in em.emotes:
+		em.emotes.erase(emote)
+	queue_free()

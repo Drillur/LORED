@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://68wyiraccybv"
-path="res://.godot/imported/Dupe.png-3b974c51880c43475e1fd7c7eabfb980.ctex"
+uid="uid://bv5ukdy8ktnmp"
+path="res://.godot/imported/Rename.png-c69380642a7c68ec8eff29aad1740b94.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Sprites/Hud/Dupe.png"
-dest_files=["res://.godot/imported/Dupe.png-3b974c51880c43475e1fd7c7eabfb980.ctex"]
+source_file="res://Sprites/Hud/Rename.png"
+dest_files=["res://.godot/imported/Rename.png-c69380642a7c68ec8eff29aad1740b94.ctex"]
 
 [params]
 

@@ -31,6 +31,23 @@ func _on_button_pressed():
 	emit_signal("pressed")
 
 
+func _on_button_mouse_exited():
+	mouse_exited.emit()
+
+
+func _on_button_mouse_entered():
+	mouse_entered.emit()
+
+
+func _on_button_button_down():
+	icon.position.y = 1
+
+
+func _on_button_button_up():
+	icon.position.y = 0
+
+
+
 
 func set_icon(_icon: Texture) -> void:
 	icon.texture = _icon
@@ -88,3 +105,4 @@ func set_theme_invis() -> void:
 
 func get_check() -> Node:
 	return check
+

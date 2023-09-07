@@ -163,6 +163,7 @@ func _init(_type: int = 0) -> void:
 	icon_and_name_text = icon_text + " " + name
 	
 	gv.prestige.connect(prestige)
+	gv.hard_reset.connect(reset)
 
 
 
@@ -427,6 +428,8 @@ func prestige(_stage: int) -> void:
 		count.reset()
 	if count.less(count.base):
 		count.set_to(count.base)
+
+
 
 
 # - Actions

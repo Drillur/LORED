@@ -33,7 +33,7 @@ var start_time: float
 var threshold: float
 
 var has_attribute := false
-var attribute: Attribute
+var attribute: ValuePair
 
 
 
@@ -101,7 +101,7 @@ func show_edge() -> void:
 	edge.show()
 
 
-func attach_attribute(_attribute: Attribute) -> void:
+func attach_attribute(_attribute: ValuePair) -> void:
 	attribute = _attribute
 	has_attribute = true
 	attribute.connect("changed", set_progress)

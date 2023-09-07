@@ -11,6 +11,7 @@ var saved_vars := [
 signal save_finished
 signal load_finished
 signal load_started
+signal save_color_changed(val)
 
 enum SaveMethod {
 	TO_FILE,
@@ -77,14 +78,18 @@ var default_save_method := SaveMethod.TO_FILE
 var default_load_method := LoadMethod.FROM_FILE
 
 var save_name: String = "Save"
-var save_file_color: Color
+var save_file_color: Color:
+	set(val):
+		if save_file_color != val:
+			save_file_color = val
+			save_color_changed.emit(val)
 
 var save_version := {
 	"major": 3,
 	"minor": 0,
 	"revision": 0,
 }
-var last_save_clock: float #reset
+var last_save_clock := Time.get_unix_time_from_system() #reset
 var patched := false
 
 var test_data: String
@@ -110,7 +115,8 @@ func save_game(method := default_save_method) -> void:
 			#print(save_text)
 	
 	last_save_clock = Time.get_unix_time_from_system()
-	emit_signal("save_finished")
+	
+	save_finished.emit()
 
 
 
@@ -325,8 +331,8 @@ func update_save_version() -> void:
 
 # - Get
 
-func get_save_data(method := default_load_method, path := save_name) -> Dictionary:
-	var save_text: String = get_save_text(method, get_save_path(path))
+func get_save_data(method := default_load_method, filename := save_name) -> Dictionary:
+	var save_text: String = get_save_text(method, filename)
 	var json = JSON.new()
 	json.parse(save_text)
 #	if method == LoadMethod.TEST:
@@ -334,11 +340,13 @@ func get_save_data(method := default_load_method, path := save_name) -> Dictiona
 	return json.data
 
 
-func get_save_text(method := default_load_method, path := save_name) -> String:
+func get_save_text(method := default_load_method, filename := save_name) -> String:
 	var save_text: String
 	match method:
 		LoadMethod.FROM_FILE:
-			save_text = FileAccess.open(get_save_path(path), FileAccess.READ).get_line()
+			print(get_save_path(filename))
+			var save_file := FileAccess.open(get_save_path(filename), FileAccess.READ)
+			save_text = Marshalls.base64_to_variant(save_file.get_line())
 		LoadMethod.FROM_CLIPBOARD:
 			save_text = DisplayServer.clipboard_get()
 		LoadMethod.TEST:
@@ -347,8 +355,8 @@ func get_save_text(method := default_load_method, path := save_name) -> String:
 	return save_text
 
 
-func save_exists(path := save_name) -> bool:
-	return FileAccess.file_exists(get_save_path(path))
+func save_exists(filename := save_name) -> bool:
+	return FileAccess.file_exists(get_save_path(filename))
 
 
 func is_compatible_save(data: Dictionary) -> bool:
@@ -368,10 +376,13 @@ func is_compatible_save(data: Dictionary) -> bool:
 func can_load_game(method := default_load_method, path = save_name) -> bool:
 	if not save_exists(path):
 		return false
+	print(1)
 	var json = JSON.new()
 	var error = json.parse(get_save_text(method, path))
 	if error != OK:
+		print("Loading error. ", error)
 		return false
+	print(2)
 	var data := get_save_data()
 	return is_compatible_save(data)
 
@@ -406,5 +417,6 @@ func get_random_path() -> String:
 	return get_unique_path(RANDOM_PATH_POOL[randi() % RANDOM_PATH_POOL.size()])
 
 
-
+func get_time_since_last_save() -> float:
+	return gv.current_clock - last_save_clock
 

@@ -150,6 +150,11 @@ var unlocked_by_default := false:
 	set(val):
 		if unlocked_by_default != val:
 			unlocked_by_default = val
+			unlock_on_reset = unlocked_by_default
+var unlock_on_reset := false:
+	set(val):
+		if unlock_on_reset != val:
+			unlock_on_reset = val
 			if val:
 				if not lv.started.is_connected(unlock):
 					lv.started.connect(unlock)
@@ -200,12 +205,18 @@ var purchased_by_default := false:
 	set(val):
 		if purchased_by_default != val:
 			purchased_by_default = val
+			purchased_on_reset = val
+var purchased_on_reset := false:
+	set(val):
+		if purchased_on_reset != val:
+			purchased_on_reset = val
 			if val:
 				if not lv.started.is_connected(force_purchase):
 					lv.started.connect(force_purchase)
 			else:
 				if lv.started.is_connected(force_purchase):
 					lv.started.disconnect(force_purchase)
+
 var working := false
 var asleep := false:
 	set(val):
@@ -271,7 +282,7 @@ var level := 0:
 			return
 		level = val
 		emit_signal("leveled_up", level)
-var fuel: Attribute
+var fuel: ValuePair
 var fuel_cost: Value
 var output := Value.new(1)
 var input := Value.new(1)
@@ -308,7 +319,7 @@ func _init(_type: int) -> void:
 	gv.prestige.connect(prestige)
 	gv.prestiged.connect(force_purchase)
 	gv.prestiged.connect(autobuy_check)
-	gv.hard_reset.connect(reset)
+	gv.hard_reset.connect(hard_reset)
 	
 	# stage and fuel
 	if type <= Type.OIL:
@@ -335,7 +346,7 @@ func _init(_type: int) -> void:
 	
 	if type in [Type.MALIGNANCY, Type.TUMORS]:
 		fuel_cost = Value.new(0.5 * stage)
-	fuel = Attribute.new(Big.new(fuel_cost.get_value()).m(100))
+	fuel = ValuePair.new(Big.new(fuel_cost.get_value()).m(100))
 	if type == Type.STONE:
 		fuel.change_base(1.0)
 		fuel.reset()
@@ -1062,7 +1073,12 @@ func prestige(_stage: int) -> void:
 			gv.run_incremented.connect(first_second_of_run_autobuy_check)
 
 
+func hard_reset() -> void:
+	reset(true)
+
+
 func reset(hard: bool):
+	emoting = false
 	purchased = false
 	if hard:
 		output.reset()
@@ -1072,11 +1088,12 @@ func reset(hard: bool):
 		fuel_cost.reset()
 		cost.reset()
 		level = 0
+		autobuy = false
 		times_purchased = 0
 		time_spent_asleep = 0.0
-		if type != Type.STONE:
-			purchased_by_default = false
-		if not unlocked_by_default:
+		purchased_on_reset = purchased_by_default
+		unlock_on_reset = unlocked_by_default
+		if not unlock_on_reset:
 			unlocked = false
 		for job in jobs:
 			if not jobs[job].unlocked_by_default:
@@ -1091,11 +1108,15 @@ func reset(hard: bool):
 	if working:
 		stop_job()
 	working = false
+	
+	if hard:
+		if purchased_on_reset:
+			force_purchase()
 
 
 
 func force_purchase() -> void:
-	if purchased_by_default:
+	if purchased_on_reset:
 		if not unlocked:
 			unlocked = true
 		last_purchase_automatic = true
@@ -1342,12 +1363,12 @@ func disable_autobuy() -> void:
 	autobuy = false
 
 
-func enable_default_purchase() -> void:
-	purchased_by_default = true
+func enable_purchased_on_reset() -> void:
+	purchased_on_reset = true
 
 
-func disable_default_purchase() -> void:
-	purchased_by_default = false
+func disable_purchased_on_reset() -> void:
+	purchased_on_reset = false
 
 
 

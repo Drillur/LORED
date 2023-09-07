@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ch538s8t5ygbg"
-path="res://.godot/imported/File.png-16503d1c5e45a7f972252d7b82c0c99a.ctex"
+uid="uid://cpjtvs6ijbec0"
+path="res://.godot/imported/Totalbiscuit.png-2bffee6ccd391091f9ca40a8b83c65d2.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Sprites/Hud/File.png"
-dest_files=["res://.godot/imported/File.png-16503d1c5e45a7f972252d7b82c0c99a.ctex"]
+source_file="res://Sprites/Upgrades/Totalbiscuit.png"
+dest_files=["res://.godot/imported/Totalbiscuit.png-2bffee6ccd391091f9ca40a8b83c65d2.ctex"]
 
 [params]
 

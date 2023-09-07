@@ -175,7 +175,7 @@ class Objective:
 	var color: Color
 	var text: String
 	
-	var progress: Attribute
+	var progress: ValuePair
 	
 	var object_type: int
 	var x: int
@@ -194,11 +194,11 @@ class Objective:
 	
 	
 	func init_LOADED_OBJECTIVE(_data: Dictionary) -> void:
-		progress = Attribute.new(1)
+		progress = ValuePair.new(1)
 	
 	
 	func init_LORED_LEVELED_UP(data: Dictionary) -> void:
-		progress = Attribute.new(1)
+		progress = ValuePair.new(1)
 		object_type = data["object_type"]
 		x = data["x"]
 		icon_path = lv.get_icon(object_type).get_path()
@@ -207,7 +207,7 @@ class Objective:
 	
 	
 	func init_ACCEPTABLE_FUEL(data: Dictionary) -> void:
-		progress = Attribute.new(75)
+		progress = ValuePair.new(75)
 		object_type = data["object_type"]
 		icon_path = lv.get_icon(object_type).get_path()
 		color = lv.get_color(object_type)
@@ -215,7 +215,7 @@ class Objective:
 	
 	
 	func init_COLLECT_CURRENCY(data: Dictionary) -> void:
-		progress = Attribute.new(data["amount"])
+		progress = ValuePair.new(data["amount"])
 		object_type = data["object_type"]
 		icon_path = wa.get_icon(object_type).get_path()
 		color = wa.get_color(object_type)
@@ -223,7 +223,7 @@ class Objective:
 	
 	
 	func init_SLEEP(data: Dictionary) -> void:
-		progress = Attribute.new(data["amount"])
+		progress = ValuePair.new(data["amount"])
 		object_type = data["object_type"]
 		lored_was_already_asleep = lv.get_lored(object_type).asleep
 		icon_path = lv.get_icon(object_type).get_path()
@@ -232,7 +232,7 @@ class Objective:
 	
 	
 	func init_UPGRADE_PURCHASED(data: Dictionary) -> void:
-		progress = Attribute.new(1)
+		progress = ValuePair.new(1)
 		object_type = data["object_type"]
 		icon_path = up.get_icon(object_type).get_path()
 		color = up.get_color(object_type)

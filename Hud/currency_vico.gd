@@ -10,7 +10,6 @@ extends MarginContainer
 @onready var icon_shadow = %"Icon Shadow"
 
 var currency: Currency
-var threshold: Attribute
 
 var first_setup := true
 
@@ -63,7 +62,3 @@ func update_count() -> void:
 func update_rate() -> void:
 	var _sign = "" if currency.positive_rate else "-"
 	rate.text = "[i]" + _sign + currency.net_rate.get_text() + "/s"
-
-
-func update_threshold() -> void:
-	threshold_text.text = "/" + threshold.get_total_text()

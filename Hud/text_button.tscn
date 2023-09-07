@@ -15,4 +15,4 @@ layout_mode = 2
 focus_mode = 0
 mouse_default_cursor_shape = 2
 theme = ExtResource("1_3l6gr")
-text = "DISCORD"
+text = "Hard Reset"

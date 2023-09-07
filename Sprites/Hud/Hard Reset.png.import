@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cws1cddctq1ag"
-path="res://.godot/imported/Power.png-a4e8a709ab58fdcf4a7b4dfe1594489d.ctex"
+uid="uid://bg61ibd6ds5os"
+path="res://.godot/imported/Hard Reset.png-76c167f7bba9b37899b90d5c96dcefa4.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Sprites/Hud/Power.png"
-dest_files=["res://.godot/imported/Power.png-a4e8a709ab58fdcf4a7b4dfe1594489d.ctex"]
+source_file="res://Sprites/Hud/Hard Reset.png"
+dest_files=["res://.godot/imported/Hard Reset.png-76c167f7bba9b37899b90d5c96dcefa4.ctex"]
 
 [params]
 

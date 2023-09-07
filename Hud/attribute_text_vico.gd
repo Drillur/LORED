@@ -7,12 +7,12 @@ extends MarginContainer
 @onready var slash = $HBoxContainer/Slash
 @onready var total = %Total
 
-var attribute: Attribute
+var attribute: ValuePair
 var prepended_text: String
 
 
 
-func setup(_att: Attribute, _prepended_text := "") -> void:
+func setup(_att: ValuePair, _prepended_text := "") -> void:
 	attribute = _att
 	prepended_text = _prepended_text
 	

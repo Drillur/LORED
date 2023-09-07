@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://dlt6lvasr6c46"]
+[gd_scene load_steps=11 format=3 uid="uid://dlt6lvasr6c46"]
 
 [ext_resource type="Theme" uid="uid://b8t7tkhvril5g" path="res://Theme/Standard.tres" id="1_nf00e"]
 [ext_resource type="Script" path="res://Hud/Upgrade/upgrade_container.gd" id="1_t6e5m"]
@@ -8,6 +8,8 @@
 [ext_resource type="Texture2D" uid="uid://cu1jwsvhvsxfn" path="res://Sprites/Hud/Tab/s1n.png" id="6_rp56p"]
 [ext_resource type="Texture2D" uid="uid://bdpxtltnk88hw" path="res://Sprites/Hud/Tab/s1m.png" id="7_d5yiu"]
 [ext_resource type="PackedScene" uid="uid://c0518n1uf8jt2" path="res://Hud/text_button.tscn" id="8_f0t26"]
+[ext_resource type="Texture2D" uid="uid://ddqh8qp3j67w6" path="res://Sprites/Hud/Tab/s2n.png" id="8_s38y8"]
+[ext_resource type="Texture2D" uid="uid://bvc8ucj014dpj" path="res://Sprites/Hud/Tab/s2m.png" id="9_phk4l"]
 
 [node name="Upgrade Container" type="MarginContainer"]
 custom_minimum_size = Vector2(424, 500)
@@ -570,13 +572,14 @@ theme_override_constants/margin_bottom = 10
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/E"]
 layout_mode = 2
 
-[node name="ScrollContainer2" type="ScrollContainer" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer"]
-unique_name_in_owner = true
+[node name="ScrollContainer1" type="ScrollContainer" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
+theme = ExtResource("1_nf00e")
+scroll_vertical = 100
 horizontal_scroll_mode = 0
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer2"]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1"]
 layout_mode = 2
 size_flags_horizontal = 6
 theme_override_constants/margin_left = 10
@@ -584,9 +587,508 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 15
 theme_override_constants/margin_bottom = 10
 
-[node name="Upgrades" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer2/MarginContainer"]
+[node name="Control" type="Control" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer"]
 layout_mode = 2
+mouse_filter = 2
+
+[node name="S2N" type="TextureRect" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Control"]
+self_modulate = Color(2, 2, 2, 1)
+layout_mode = 0
+offset_left = 71.0
+offset_top = 1220.0
+offset_right = 111.0
+offset_bottom = 1260.0
+texture = ExtResource("8_s38y8")
+flip_h = true
+
+[node name="Upgrades" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer"]
+layout_mode = 2
+mouse_filter = 2
 theme_override_constants/separation = 20
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="CANOPY" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="APPRENTICE_IRON_WORKER" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="DOUBLE_BARRELS" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="RAIN_DANCE" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="LIGHTHOUSE" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer2" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="ROGUE_BLACKSMITH" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer2" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="TRIPLE_BARRELS" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer2" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="BREAK_THE_DAM" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer2" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="THIS_MIGHT_PAY_OFF_SOMEDAY" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer3" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="DIRT_COLLECTION_REWARDS_PROGRAM" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer3" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="EQUINE" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer3" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="UNPREDICTABLE_WEATHER" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer3" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="DECISIVE_STRIKES" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer4" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="SOFT_AND_SMOOTH" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer4" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="FLIPPY_FLOPPIES" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer4" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer5" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="WOODTHIRSTY" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer5" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="SEEING_BROWN" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer5" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="WOODIAC_CHOPPER" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer5" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer6" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="CARLIN" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer6" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer7" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="HARDWOOD_YOURSELF" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer7" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="STEEL_YOURSELF" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer7" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="PLASMA_BOMBARDMENT" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer7" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="PATREON_ARTIST" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer7" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer8" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="MILLERY" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer8" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="QUAMPS" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer8" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="TWO_FIVE_FIVE_TWO" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer8" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="GIMP" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer8" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer9" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="SAGAN" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer9" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer10" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="HENRY_CAVILL" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer10" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="LEMBAS_WATER" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer10" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="BIGGER_TREES_I_GUESS" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer10" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="JOURNEYMAN_IRON_WORKER" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer10" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer11" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="CUTTING_CORNERS" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer11" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="QUORMPS" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer11" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="KILTY_SBARK" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer11" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HOLE_GEOMETRY" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer11" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer12" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="CIORAN" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer12" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer13" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="WOOD_LORD" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer13" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="EXPERT_IRON_WORKER" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer13" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="THEYVE_ALWAYS_BEEN_FASTER" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer13" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="WHERES_THE_BOY_STRING" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer13" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer14" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="UTTER_MOLESTER_CHAMP" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer14" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="CANCERS_REAL_COOL" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer14" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="SPOOKY" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer14" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer15" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="SQUEEORMP" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer15" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="SANDAL_FLANDALS" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer15" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="GLITTERDELVE" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer15" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="VIRILE" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer15" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="FACTORY_SQUIRTS" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer15" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer16" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="LONGBOTTOM_LEAF" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer16" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="INDEPENDENCE" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer16" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="NIKEY_WIKEYS" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer16" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer17" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="ERECTWOOD" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer17" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="STEELY_DAN" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer17" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="MGALEKGOLO" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer17" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="PULLEY" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer17" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer21" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="LE_GUIN" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer21" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer18" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="FLEEORMP" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer18" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="POTENT" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer18" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="LIGHT_AS_A_FEATHER" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer18" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="BUSY_BEE" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer18" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer19" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="DINDER_MUFFLIN" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer19" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="ULTRA_SHITSTINCT" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer19" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="AND_THIS_IS_TO_GO_EVEN_FURTHER_BEYOND" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer19" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="POWER_BARRELS" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer19" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="A_BEE_WITH_TINY_DAGGERS" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer19" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer20" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="HARDWOOD_YO_MAMA" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer20" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="STEEL_YO_MAMA" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer20" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="MAGNETIC_ACCELERATOR" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer20" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="SPOOLY" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer20" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer22" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="TORIYAMA" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer22" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer23" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="BURDENED" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer23" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="SQUEEOMP" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer23" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer24" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="BARELY_WOOD_BY_NOW" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer24" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="FINGERS_OF_ONDEN" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer24" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="O_SALVATORI" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer24" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="LOW_RISES" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer24" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer25" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="ILL_SHOW_YOU_HARDWOOD" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer25" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="STEEL_LORD" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer25" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="FINISH_THE_FIGHT" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer25" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="MICROSOFT_PAINT" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer25" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer26" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="JOHN_PETER_BAIN_TOTALBISCUIT" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer26" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
 
 [node name="R" type="MarginContainer" parent="MarginContainer/VBoxContainer/Tabs"]
 visible = false
@@ -599,23 +1101,495 @@ theme_override_constants/margin_bottom = 10
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/R"]
 layout_mode = 2
 
-[node name="ScrollContainer3" type="ScrollContainer" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer"]
-unique_name_in_owner = true
+[node name="ScrollContainer1" type="ScrollContainer" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
+theme = ExtResource("1_nf00e")
+scroll_vertical = 100
 horizontal_scroll_mode = 0
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer3"]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1"]
 layout_mode = 2
 size_flags_horizontal = 6
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 15
-theme_override_constants/margin_bottom = 10
+theme_override_constants/margin_bottom = 120
 
-[node name="Upgrades" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer3/MarginContainer"]
+[node name="Control" type="Control" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer"]
 layout_mode = 2
+mouse_filter = 2
+
+[node name="S2M" type="TextureRect" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Control"]
+layout_mode = 0
+offset_left = 133.0
+offset_top = 1621.0
+offset_right = 197.0
+offset_bottom = 1685.0
+texture = ExtResource("9_phk4l")
+
+[node name="Upgrades" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer"]
+layout_mode = 2
+mouse_filter = 2
 theme_override_constants/separation = 20
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="MECHANICAL" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="LIMIT_BREAK" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="DONT_TAKE_CANDY_FROM_BABIES" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer2" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="SPLISHY_SPLASHY" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer2" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="MILK" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer2" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="FALCON_PAWNCH" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer2" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="SPEED_SHOPPER" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer3" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="AUTOSMITHY" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer3" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="GATORADE" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer3" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="KAIO_KEN" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer3" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="AUTOSENSU" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer4" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="APPLE_JUICE" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer4" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="DANCE_OF_THE_FIRE_GOD" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer4" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer5" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="SUDDEN_COMMISSION" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer5" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="PEPPERMINT_MOCHA" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer5" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="RASENGAN" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer5" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer6" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="MUDSLIDE" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer6" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="THE_GREAT_JOURNEY" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer6" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="BEAVER" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer6" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="MODS_ENABLED" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer6" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer7" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="COVENANT_DANCE" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer7" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="OVERTIME" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer7" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="BONE_MEAL" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer7" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="SILLY" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer7" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer8" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="SPEED_DOODS" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer8" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="EREBOR" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer8" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="CHILD_ENERGY" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer8" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="PLATE" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer8" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer9" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="MASTER" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer9" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="STRAWBERRY_BANANA_SMOOTHIE" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer9" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="AVATAR_STATE" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer9" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer10" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="AXELOT" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer10" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="GREEN_TEA" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer10" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HAMON" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer10" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer11" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="AUTOSHIT" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer11" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="FRENCH_VANILLA" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer11" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="METAL_CAP" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer11" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer12" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="SMASHY_CRASHY" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer12" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="WATER" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer12" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="STAR_ROD" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer12" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer13" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="A_BABY_ROLEUM" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer13" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="POOFY_WIZARD_BOY" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer13" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="BENEFIT" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer13" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="AUTOAQUATICIDE" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer13" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="GO_ON_THEN_LEAD_US" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer13" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer14" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="THE_WITCH_OF_LOREDELITH" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer14" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="TOLKIEN" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer14" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer15" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="BEEKEEPING" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer15" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="ELBOW_STRAPS" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer15" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="AUTO_PERSIST" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer15" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="KETO" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer15" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="NOW_THATS_WHAT_IM_TALKIN_ABOUT" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer15" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer16" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="SCOOPY_DOOPY" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer16" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="THE_ATHORE_COMENTS_AL_TOTOL_LIES" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer16" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="ITS_SPREADIN_ON_ME" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer16" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="WHAT_IN_COUSIN_FUCKIN_TARNATION" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer16" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="MASTER_IRON_WORKER" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer16" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer17" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="JOINTSHACK" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer17" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="DUST" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer17" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="CAPITAL_PUNISHMENT" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer17" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="AROUSAL" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer17" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer18" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="AUTOFLOOF" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer18" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="ELECTRONIC_CIRCUITS" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer18" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="AUTOBADDECISIONMAKER" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer18" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer19" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="CONDUCT" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer19" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer20" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="PILLAR_OF_AUTUMN" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer20" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="WHAT_KIND_OF_RESOURCE_IS_TUMORS" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer20" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="DEVOUR" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer20" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer21" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="IS_IT_SUPPOSED_TO_BE_STICK_DUDES" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer21" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="I_DISAGREE" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer21" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HOME_RUN_BAT" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer21" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="BLAM_THIS_PIECE_OF_CRAP" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer21" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="DOT_DOT_DOT" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer21" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer22" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="ONE_PUNCH" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer22" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="SICK_OF_THE_SUN" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer22" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="AXMAN13" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer22" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="CTHAEH" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer22" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer23" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="RED_NECROMANCY" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer23" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="UPGRADE_DESCRIPTION" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer23" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="GRIMOIRE" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer23" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
 
 [node name="A" type="MarginContainer" parent="MarginContainer/VBoxContainer/Tabs"]
 visible = false
@@ -743,6 +1717,7 @@ layout_mode = 2
 theme = ExtResource("3_l07lh")
 
 [node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/Prestige"]
+modulate = Color(0.482353, 0.247059, 0, 1)
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10

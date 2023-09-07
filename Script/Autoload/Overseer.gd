@@ -21,15 +21,23 @@ enum Platform {PC, HTML,}
 var dev_mode := true#false
 const PLATFORM := Platform.PC
 
-var icon_awake := preload("res://Sprites/Hud/awake.png")
-var icon_asleep := preload("res://Sprites/Hud/Halt.png")
-
 var theme_standard := preload("res://Theme/Standard.tres")
 var theme_invis := preload("res://Theme/Invis.tres")
 var theme_text_button := preload("res://Theme/TextButton.tres")
 var theme_text_button_alternate := preload("res://Theme/TextButtonAlternate.tres")
 var label := preload("res://Hud/rich_text_label.tscn")
 
+var icon_save := preload("res://Sprites/Hud/Save.png")
+var icon_play := preload("res://Sprites/Hud/Play.png")
+var icon_rename := preload("res://Sprites/Hud/Rename.png")
+var icon_color := preload("res://Sprites/Hud/Color.png")
+var icon_duplicate := preload("res://Sprites/Hud/Duplicate.png")
+var icon_clipboard := preload("res://Sprites/Hud/Clipboard.png")
+var icon_new_game := preload("res://Sprites/Hud/New Game.png")
+var icon_delete := preload("res://Sprites/Hud/Delete.png")
+var icon_awake := preload("res://Sprites/Hud/awake.png")
+var icon_asleep := preload("res://Sprites/Hud/Halt.png")
+var icon_hard_reset := preload("res://Sprites/Hud/Hard Reset.png")
 var ascending_icon: Texture = preload("res://Sprites/Hud/arrow-up-s-line.png")
 var descending_icon: Texture = preload("res://Sprites/Hud/arrow-down-s-line.png")
 
@@ -102,6 +110,7 @@ func _ready() -> void:
 
 # - Clock
 
+signal one_second
 signal session_incremented(session)
 signal run_incremented(val)
 
@@ -143,6 +152,9 @@ func second_passed() -> void:
 	session_duration += 1
 	total_duration_played += 1
 	run_duration += 1
+	if SaveManager.get_time_since_last_save() >= 30:
+		SaveManager.save_game()
+	one_second.emit()
 
 
 
@@ -166,7 +178,7 @@ func reload_scene() -> void:
 
 
 func close_all() -> void:
-	#em.close()
+	em.close()
 	wi.close()
 	#up.close() doesnt exist
 	lv.close()
@@ -289,6 +301,16 @@ func update_discord_details(text: String) -> void:
 func update_discord_state(text: String) -> void:
 	discord_sdk.state = text
 	discord_sdk.refresh()
+
+
+
+func get_random_color() -> Color:
+	return Color(
+		0.1, 0.1, 0.1,#randf(),
+		#randf(),
+		#randf(),
+		1
+	)
 
 
 
@@ -422,14 +444,13 @@ class TimeUnit:
 			return WORD[type]["SINGULAR"]
 		return WORD[type]["PLURAL"]
 
+
 func parse_time(big: Big) -> String:
 	if big.less(0):
 		big.set_to(0)
 	
 	if big.less(1) or big.text[0] == "-":
-		if big.equal(0):
-			return ""
-		return "!"
+		return "" if big.equal(0) else "!"
 	
 	return TimeUnit.get_text(big)
 
@@ -498,6 +519,11 @@ func prestige_now(stage: int) -> void:
 	run_duration = 0
 	prestige.emit(stage)
 	prestiged.emit()
+
+
+func hard_reset_now() -> void:
+	print("hard reset")
+	hard_reset.emit()
 
 
 func get_currencies_in_stage(stage: int) -> Array:

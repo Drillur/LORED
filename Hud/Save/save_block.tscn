@@ -1,0 +1,217 @@
+[gd_scene load_steps=10 format=3 uid="uid://c2kyhfm7iif84"]
+
+[ext_resource type="Script" path="res://Hud/Save/save_block.gd" id="1_6u3be"]
+[ext_resource type="Theme" uid="uid://b8t7tkhvril5g" path="res://Theme/Standard.tres" id="2_dulia"]
+[ext_resource type="Theme" uid="uid://8dmfgxdrr5yh" path="res://Theme/Title.tres" id="2_yyw8k"]
+[ext_resource type="PackedScene" uid="uid://cb3ej8nlybhvm" path="res://Hud/icon_button.tscn" id="3_wwduy"]
+[ext_resource type="Texture2D" uid="uid://b5e7ngok522rk" path="res://Sprites/Hud/Time.png" id="4_70nt4"]
+[ext_resource type="Texture2D" uid="uid://bmmkbhweqgkq" path="res://Sprites/Hud/Calendar.png" id="4_kjqb4"]
+[ext_resource type="Texture2D" uid="uid://5iiqw78gbrgu" path="res://Sprites/Hud/Difficulty.png" id="6_ewkwl"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vp750"]
+draw_center = false
+border_width_bottom = 3
+border_color = Color(0, 0, 0, 1)
+border_blend = true
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xut84"]
+bg_color = Color(1, 1, 1, 0.0705882)
+
+[node name="SaveBlock" type="MarginContainer"]
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_6u3be")
+
+[node name="bg" type="Panel" parent="."]
+layout_mode = 2
+theme = ExtResource("2_dulia")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="title bg" type="Panel" parent="VBoxContainer/MarginContainer"]
+unique_name_in_owner = true
+modulate = Color(1, 0, 0.235294, 1)
+layout_mode = 2
+theme = ExtResource("2_yyw8k")
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="filename" type="RichTextLabel" parent="VBoxContainer/MarginContainer/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("2_yyw8k")
+bbcode_enabled = true
+text = "Save.lored"
+fit_content = true
+autowrap_mode = 0
+
+[node name="MarginContainer3" type="MarginContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="bg" type="Panel" parent="VBoxContainer/MarginContainer3"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_vp750")
+
+[node name="MarginContainer2" type="MarginContainer" parent="VBoxContainer/MarginContainer3"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="h" type="HBoxContainer" parent="VBoxContainer/MarginContainer3/MarginContainer2"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer/MarginContainer3/MarginContainer2/h"]
+layout_mode = 2
+
+[node name="Date Icon" type="TextureRect" parent="VBoxContainer/MarginContainer3/MarginContainer2/h/HBoxContainer3"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(15, 15)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource("4_kjqb4")
+expand_mode = 1
+
+[node name="TextureRect2" type="TextureRect" parent="VBoxContainer/MarginContainer3/MarginContainer2/h/HBoxContainer3/Date Icon"]
+modulate = Color(0, 0, 0, 1)
+show_behind_parent = true
+custom_minimum_size = Vector2(15, 15)
+layout_mode = 2
+offset_left = 1.0
+offset_top = 1.0
+offset_right = 16.0
+offset_bottom = 16.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource("4_kjqb4")
+expand_mode = 1
+
+[node name="Date" type="RichTextLabel" parent="VBoxContainer/MarginContainer3/MarginContainer2/h/HBoxContainer3"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 4
+theme = ExtResource("2_dulia")
+bbcode_enabled = true
+text = "12/18/23"
+fit_content = true
+autowrap_mode = 0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/MarginContainer3/MarginContainer2/h"]
+layout_mode = 2
+
+[node name="Time Played Icon" type="TextureRect" parent="VBoxContainer/MarginContainer3/MarginContainer2/h/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(15, 15)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource("4_70nt4")
+expand_mode = 1
+
+[node name="TextureRect2" type="TextureRect" parent="VBoxContainer/MarginContainer3/MarginContainer2/h/HBoxContainer/Time Played Icon"]
+modulate = Color(0, 0, 0, 1)
+show_behind_parent = true
+custom_minimum_size = Vector2(15, 15)
+layout_mode = 2
+offset_left = 1.0
+offset_top = 1.0
+offset_right = 16.0
+offset_bottom = 16.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource("4_70nt4")
+expand_mode = 1
+
+[node name="Time Played" type="RichTextLabel" parent="VBoxContainer/MarginContainer3/MarginContainer2/h/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 4
+theme = ExtResource("2_dulia")
+bbcode_enabled = true
+text = "35h"
+fit_content = true
+autowrap_mode = 0
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/MarginContainer3/MarginContainer2/h"]
+layout_mode = 2
+
+[node name="Difficulty Icon" type="TextureRect" parent="VBoxContainer/MarginContainer3/MarginContainer2/h/HBoxContainer2"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(15, 15)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource("6_ewkwl")
+expand_mode = 1
+
+[node name="TextureRect2" type="TextureRect" parent="VBoxContainer/MarginContainer3/MarginContainer2/h/HBoxContainer2/Difficulty Icon"]
+modulate = Color(0, 0, 0, 1)
+show_behind_parent = true
+custom_minimum_size = Vector2(15, 15)
+layout_mode = 2
+offset_left = 1.0
+offset_top = 1.0
+offset_right = 16.0
+offset_bottom = 16.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource("6_ewkwl")
+expand_mode = 1
+
+[node name="Difficulty" type="RichTextLabel" parent="VBoxContainer/MarginContainer3/MarginContainer2/h/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 4
+theme = ExtResource("2_dulia")
+bbcode_enabled = true
+text = "Marathon"
+fit_content = true
+autowrap_mode = 0
+
+[node name="Control" type="MarginContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="bg" type="Panel" parent="VBoxContainer/Control"]
+layout_mode = 2
+theme = ExtResource("2_dulia")
+theme_override_styles/panel = SubResource("StyleBoxFlat_xut84")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/Control"]
+layout_mode = 2
+alignment = 1
+
+[node name="Play" parent="VBoxContainer/Control/HBoxContainer" instance=ExtResource("3_wwduy")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Rename" parent="VBoxContainer/Control/HBoxContainer" instance=ExtResource("3_wwduy")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Color" parent="VBoxContainer/Control/HBoxContainer" instance=ExtResource("3_wwduy")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="Duplicate" parent="VBoxContainer/Control/HBoxContainer" instance=ExtResource("3_wwduy")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Delete" parent="VBoxContainer/Control/HBoxContainer" instance=ExtResource("3_wwduy")]
+unique_name_in_owner = true
+layout_mode = 2

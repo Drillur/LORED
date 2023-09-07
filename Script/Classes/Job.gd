@@ -864,10 +864,6 @@ func get_required_currency_types() -> Array:
 	return required_currencies.cost.keys()
 
 
-func get_required_currency(_currency: int) -> Attribute:
-	return required_currencies.cost[_currency]
-
-
 func get_primary_currency() -> int:
 	if has_produced_currencies:
 		return produced_currencies.keys()[0]

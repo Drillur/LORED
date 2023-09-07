@@ -18,17 +18,6 @@ focus_mode = 0
 mouse_default_cursor_shape = 2
 theme = ExtResource("2_3bb0d")
 
-[node name="Control" type="Control" parent="."]
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-mouse_filter = 2
-
-[node name="Autobuyer" type="AnimatedSprite2D" parent="Control"]
-unique_name_in_owner = true
-sprite_frames = ExtResource("2_7272n")
-frame_progress = 0.691775
-
 [node name="MarginContainer" type="MarginContainer" parent="."]
 custom_minimum_size = Vector2(36, 36)
 layout_mode = 2
@@ -40,16 +29,44 @@ theme_override_constants/margin_top = 6
 theme_override_constants/margin_right = 6
 theme_override_constants/margin_bottom = 6
 
-[node name="Icon" type="TextureRect" parent="MarginContainer"]
-unique_name_in_owner = true
+[node name="Control" type="Control" parent="MarginContainer"]
 layout_mode = 2
+mouse_filter = 2
+
+[node name="Icon" type="TextureRect" parent="MarginContainer/Control"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 size_flags_horizontal = 0
 mouse_filter = 2
 texture = ExtResource("4_w61eh")
 expand_mode = 2
 stretch_mode = 5
 
-[node name="Icon Shadow" type="TextureRect" parent="MarginContainer/Icon"]
+[node name="Control" type="Control" parent="MarginContainer/Control/Icon"]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+mouse_filter = 2
+
+[node name="Autobuyer" type="AnimatedSprite2D" parent="MarginContainer/Control/Icon/Control"]
+unique_name_in_owner = true
+sprite_frames = ExtResource("2_7272n")
+frame_progress = 0.691775
+
+[node name="Icon Shadow" type="TextureRect" parent="MarginContainer/Control/Icon"]
 unique_name_in_owner = true
 modulate = Color(0, 0, 0, 1)
 show_behind_parent = true
@@ -64,7 +81,7 @@ texture = ExtResource("4_w61eh")
 expand_mode = 2
 stretch_mode = 5
 
-[node name="Check" type="TextureRect" parent="MarginContainer/Icon"]
+[node name="Check" type="TextureRect" parent="MarginContainer/Control/Icon"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
@@ -74,7 +91,7 @@ mouse_filter = 2
 texture = ExtResource("3_c3ale")
 expand_mode = 1
 
-[node name="CheckShadow" type="TextureRect" parent="MarginContainer/Icon/Check"]
+[node name="CheckShadow" type="TextureRect" parent="MarginContainer/Control/Icon/Check"]
 unique_name_in_owner = true
 modulate = Color(0, 0, 0, 1)
 show_behind_parent = true
@@ -87,4 +104,8 @@ mouse_filter = 2
 texture = ExtResource("3_c3ale")
 expand_mode = 1
 
+[connection signal="button_down" from="Button" to="." method="_on_button_button_down"]
+[connection signal="button_up" from="Button" to="." method="_on_button_button_up"]
+[connection signal="mouse_entered" from="Button" to="." method="_on_button_mouse_entered"]
+[connection signal="mouse_exited" from="Button" to="." method="_on_button_mouse_exited"]
 [connection signal="pressed" from="Button" to="." method="_on_button_pressed"]
