@@ -312,3 +312,7 @@ func get_text() -> String:
 
 func is_empty() -> bool:
 	return get_current().equal(0)
+
+
+func is_full() -> bool:
+	return get_current().greater_equal(get_total())

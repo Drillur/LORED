@@ -202,6 +202,10 @@ func get_menu_color(menu: int) -> Color:
 	return upgrade_menus[menu].color
 
 
+func get_menu_color_text(menu: int) -> String:
+	return get_upgrade_menu(menu).color_text
+
+
 func get_color(upgrade: int) -> Color:
 	return upgrades[upgrade].color
 
@@ -212,10 +216,6 @@ func get_icon(upgrade: int) -> Texture:
 
 func get_upgrade_name(upgrade: int) -> String:
 	return upgrades[upgrade].name
-
-
-func get_menu_color_text(menu: int) -> String:
-	return upgrade_menus[menu].color_text
 
 
 func get_icon_and_name_text(upgrade: int) -> String:

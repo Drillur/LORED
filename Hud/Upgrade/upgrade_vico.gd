@@ -39,10 +39,10 @@ func setup(_upgrade: Upgrade):
 	button.button.connect("mouse_exited", gv.clear_tooltip)
 	button.connect("pressed", purchase)
 	
-	upgrade.connect("purchased_changed", purchased_changed)
-	upgrade.connect("unlocked_changed", unlocked_changed)
+	upgrade.purchased.changed.connect(purchased_changed)
+	upgrade.unlocked.changed.connect(unlocked_changed)
 	upgrade.autobuy_changed.connect(autobuyer_display)
-	purchased_changed(upgrade)
+	purchased_changed(upgrade.purchased.get_value())
 	unlocked_changed()
 
 
@@ -63,10 +63,10 @@ func cost_update(affordable: bool) -> void:
 		gv.flash(check, Color(0, 1, 0))
 
 
-func purchased_changed(_upgrade: Upgrade) -> void:
-	bg.visible = upgrade.purchased
+func purchased_changed(val: bool) -> void:
+	bg.visible = val
 	autobuyer_display()
-	if upgrade.purchased:
+	if val:
 		button.button.mouse_default_cursor_shape = Control.CURSOR_ARROW
 		button.set_theme_invis()
 		check.hide()

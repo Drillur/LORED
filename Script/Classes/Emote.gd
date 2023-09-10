@@ -168,10 +168,10 @@ func emote_finished(_emote: Emote) -> void:
 
 
 func await_COAL_GREET() -> void:
-	lv.get_lored(LORED.Type.COAL).connect("just_purchased", connect_COAL_GREET)
+	lv.get_lored(LORED.Type.COAL).purchased.became_true.connect(connect_COAL_GREET)
 func connect_COAL_GREET() -> void:
 	ready = true
-	lv.get_lored(LORED.Type.COAL).disconnect("just_purchased", connect_COAL_GREET)
+	lv.get_lored(LORED.Type.COAL).purchased.became_true.disconnect(connect_COAL_GREET)
 
 
 func await_COAL_WHOA() -> void:

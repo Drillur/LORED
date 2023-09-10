@@ -13,19 +13,17 @@ var saved_vars := [
 
 func load_started() -> void:
 	stop_job()
-	unlocked = false
-	purchased = false
+	unlocked.set_to(false)
+	purchased.set_to(false)
 
 
 func load_finished() -> void:
-	if unlocked:
+	if unlocked.is_true():
 		lv.lored_unlocked(type)
-		just_unlocked.emit()
 	else:
 		lv.lored_locked(type)
-		just_locked.emit()
 	set_level_to(level)
-	if purchased:
+	if purchased.is_true():
 		work()
 		lv.lored_became_active(type)
 	else:
@@ -96,14 +94,10 @@ signal woke_up
 signal asleep_changed(asleep)
 signal sleep_just_enqueued
 signal sleep_just_dequeued
-signal just_unlocked
-signal just_locked
-signal purchased_changed(purchased)
-signal just_purchased
 signal job_started(job)
 signal finished_emoting
 signal spent_one_second_asleep
-signal autobuy_changed(val)
+signal currency_produced(amount)
 
 
 var killed := false
@@ -127,95 +121,31 @@ var upgrades := []
 var unpurchased_upgrades := []
 var emote_queue := []
 
-var unlocked := false:
-	set(val):
-		if unlocked != val:
-			unlocked = val
-			if val:
-				lv.lored_unlocked(type)
-				emit_signal("just_unlocked")
-				autobuy_check()
-				saved_vars.append("fuel")
-				saved_vars.append("asleep")
-				saved_vars.append("times_purchased")
-				saved_vars.append("time_spent_asleep")
-			else:
-				lv.lored_locked(type)
-				emit_signal("just_locked")
-				saved_vars.erase("fuel")
-				saved_vars.erase("asleep")
-				saved_vars.erase("times_purchased")
-				saved_vars.erase("time_spent_asleep")
-var unlocked_by_default := false:
-	set(val):
-		if unlocked_by_default != val:
-			unlocked_by_default = val
-			unlock_on_reset = unlocked_by_default
-var unlock_on_reset := false:
-	set(val):
-		if unlock_on_reset != val:
-			unlock_on_reset = val
-			if val:
-				if not lv.started.is_connected(unlock):
-					lv.started.connect(unlock)
-			else:
-				if lv.started.is_connected(unlock):
-					lv.started.disconnect(unlock)
-var key_lored := false
-var autobuy := false:
-	set(val):
-		if autobuy != val:
-			autobuy = val
-			if val:
-				if not cost.became_affordable.is_connected(autobuy_check):
-					cost.became_affordable.connect(autobuy_check)
-					for cur in produced_currencies:
-						wa.get_currency(cur).total_net_became_negative.connect(autobuy_check)
-					for cur in required_currencies:
-						wa.get_currency(cur).total_net_became_positive.connect(autobuy_check)
-			else:
-				if cost.became_affordable.is_connected(autobuy_check):
-					cost.became_affordable.disconnect(autobuy_check)
-					for cur in produced_currencies:
-						wa.get_currency(cur).total_net_became_negative.disconnect(autobuy_check)
-					for cur in required_currencies:
-						wa.get_currency(cur).total_net_became_positive.disconnect(autobuy_check)
-			autobuy_changed.emit(val)
+var unlocked := Bool.new(false)
 
+
+var key_lored := false
+var autobuy := Bool.new(false)
+
+func autobuy_changed(val: bool) -> void:
+	if val:
+		if not cost.became_affordable.is_connected(autobuy_check):
+			cost.became_affordable.connect(autobuy_check)
+			for cur in produced_currencies:
+				wa.get_currency(cur).total_net_became_negative.connect(autobuy_check)
+			for cur in required_currencies:
+				wa.get_currency(cur).total_net_became_positive.connect(autobuy_check)
+	else:
+		if cost.became_affordable.is_connected(autobuy_check):
+			cost.became_affordable.disconnect(autobuy_check)
+			for cur in produced_currencies:
+				wa.get_currency(cur).total_net_became_negative.disconnect(autobuy_check)
+			for cur in required_currencies:
+				wa.get_currency(cur).total_net_became_positive.disconnect(autobuy_check)
 
 var autobuy_on_cooldown := false
-var purchased := false:
-	set(val):
-		if purchased != val:
-			purchased = val
-			if val:
-				lv.lored_became_active(type)
-				emit_signal("just_purchased")
-				for cur in produced_currencies:
-					wa.unlock_currency(cur)
-					wa.set_wish_eligible_currency(cur, true)
-				for job in jobs:
-					jobs[job].add_rate()
-			else:
-				lv.lored_became_inactive(type)
-				for cur in produced_currencies:
-					wa.set_wish_eligible_currency(cur, false)
-			emit_signal("purchased_changed", val)
-var purchased_by_default := false:
-	set(val):
-		if purchased_by_default != val:
-			purchased_by_default = val
-			purchased_on_reset = val
-var purchased_on_reset := false:
-	set(val):
-		if purchased_on_reset != val:
-			purchased_on_reset = val
-			if val:
-				if not lv.started.is_connected(force_purchase):
-					lv.started.connect(force_purchase)
-			else:
-				if lv.started.is_connected(force_purchase):
-					lv.started.disconnect(force_purchase)
+
+var purchased := Bool.new(false)
 
 var working := false
 var asleep := false:
@@ -296,6 +226,12 @@ func _init(_type: int) -> void:
 	key = Type.keys()[type]
 	title = key.replace("_", " ").capitalize() + " LORED"
 	
+	purchased.changed.connect(purchased_updated)
+	purchased.reset_value_changed.connect(purchased_reset_value_updated)
+	
+	unlocked.changed.connect(unlocked_updated)
+	unlocked.reset_value_changed.connect(unlocked_reset_value_updated)
+	
 	call("init_" + key)
 	
 	key_lored = type in lv.key_loreds
@@ -369,8 +305,8 @@ func init_STONE() -> void:
 		Currency.Type.IRON: Value.new(25.0 / 3),
 		Currency.Type.COPPER: Value.new(15.0 / 3),
 	})
-	purchased_by_default = true
-	unlocked_by_default = true
+	purchased.set_default_value(true)
+	unlocked.set_default_value(true)
 	color = Color(0.79, 0.79, 0.79)
 	faded_color = Color(0.788235, 0.788235, 0.788235)
 	fuel_currency = Currency.Type.COAL
@@ -385,7 +321,7 @@ func init_COAL() -> void:
 	cost = Cost.new({
 		Currency.Type.STONE: Value.new(5),
 	})
-	unlocked_by_default = true
+	unlocked.set_default_value(true)
 	color = Color(0.7, 0, 1)
 	faded_color = Color(0.9, 0.3, 1)
 	fuel_currency = Currency.Type.COAL
@@ -945,10 +881,11 @@ func init_S4PLACEHOLDER() -> void:
 func add_job(_job: int, _unlocked_by_default := false) -> void:
 	jobs[_job] = Job.new(_job) as Job
 	jobs[_job].unlocked_by_default = _unlocked_by_default
+	jobs[_job].currency_produced.connect(emit_currency_produced)
 	if jobs.size() == 1:
 		default_frames = jobs[_job].animation
 	
-	if unlocked_by_default:
+	if unlocked.is_true_by_default():
 		add_job_produced_and_required_currencies(_job)
 
 
@@ -1031,8 +968,58 @@ func attach_vico(_vico: LOREDVico) -> void:
 
 # - Signal Shit
 
+
+func purchased_updated(val: bool) -> void:
+	if purchased.is_true():
+		lv.lored_became_active(type)
+		for cur in produced_currencies:
+			wa.unlock_currency(cur)
+			wa.set_wish_eligible_currency(cur, true)
+		for job in jobs:
+			jobs[job].add_rate()
+	else:
+		lv.lored_became_inactive(type)
+		for cur in produced_currencies:
+			wa.set_wish_eligible_currency(cur, false)
+
+
+func purchased_reset_value_updated() -> void:
+	if purchased.get_reset_value():
+		if not lv.started.is_connected(force_purchase):
+			lv.started.connect(force_purchase)
+	else:
+		if lv.started.is_connected(force_purchase):
+			lv.started.disconnect(force_purchase)
+
+
+
+func unlocked_updated() -> void:
+	if unlocked.is_true():
+		lv.lored_unlocked(type)
+		autobuy_check()
+		saved_vars.append("fuel")
+		saved_vars.append("asleep")
+		saved_vars.append("times_purchased")
+		saved_vars.append("time_spent_asleep")
+	else:
+		lv.lored_locked(type)
+		saved_vars.erase("fuel")
+		saved_vars.erase("asleep")
+		saved_vars.erase("times_purchased")
+		saved_vars.erase("time_spent_asleep")
+
+
+func unlocked_reset_value_updated() -> void:
+	if unlocked.get_reset_value():
+		if not lv.started.is_connected(unlock):
+			lv.started.connect(unlock)
+	else:
+		if lv.started.is_connected(unlock):
+			lv.started.disconnect(unlock)
+
+
 func lored_vicos_ready() -> void:
-	if purchased:
+	if purchased.is_true():
 		work()
 
 
@@ -1050,7 +1037,10 @@ func subtract_fuel_rate() -> void:
 
 
 
-# - Signals
+func emit_currency_produced(amount: Big) -> void:
+	currency_produced.emit(amount)
+
+
 
 func clear_emote_queue() -> void:
 	emote_queue.clear()
@@ -1064,13 +1054,31 @@ func first_second_of_run_autobuy_check(val: int) -> void:
 
 
 
+func apply_limit_break(modifier: Big) -> void:
+	output.increase_multiplied(modifier)
+	input.increase_multiplied(modifier)
+
+
+func update_limit_break(prev_mod: Big, modifier: Big) -> void:
+	output.alter_value(output.multiplied, prev_mod, modifier)
+	input.alter_value(input.multiplied, prev_mod, modifier)
+
+
+func remove_limit_break(modifier: Big) -> void:
+	output.decrease_multiplied(modifier)
+	input.decrease_multiplied(modifier)
+
+
+
+
 # - Actions
 
 func prestige(_stage: int) -> void:
-	if _stage >= stage:
-		reset(false)
-		if not gv.run_incremented.is_connected(first_second_of_run_autobuy_check):
-			gv.run_incremented.connect(first_second_of_run_autobuy_check)
+	if purchased.is_false_on_reset():
+		if _stage >= stage:
+			reset(false)
+			if not gv.run_incremented.is_connected(first_second_of_run_autobuy_check):
+				gv.run_incremented.connect(first_second_of_run_autobuy_check)
 
 
 func hard_reset() -> void:
@@ -1079,7 +1087,7 @@ func hard_reset() -> void:
 
 func reset(hard: bool):
 	emoting = false
-	purchased = false
+	purchased.set_to(false)
 	if hard:
 		output.reset()
 		input.reset()
@@ -1088,13 +1096,11 @@ func reset(hard: bool):
 		fuel_cost.reset()
 		cost.reset()
 		level = 0
-		autobuy = false
+		autobuy.set_to(false)
 		times_purchased = 0
 		time_spent_asleep = 0.0
-		purchased_on_reset = purchased_by_default
-		unlock_on_reset = unlocked_by_default
-		if not unlock_on_reset:
-			unlocked = false
+		purchased.reset()
+		unlocked.reset()
 		for job in jobs:
 			if not jobs[job].unlocked_by_default:
 				lock_job(job)
@@ -1110,15 +1116,15 @@ func reset(hard: bool):
 	working = false
 	
 	if hard:
-		if purchased_on_reset:
+		if purchased.is_true_by_default():
 			force_purchase()
 
 
 
 func force_purchase() -> void:
-	if purchased_on_reset:
-		if not unlocked:
-			unlocked = true
+	if purchased.is_true_on_reset():
+		if unlocked.is_false():
+			unlocked.set_to(true)
 		last_purchase_automatic = true
 		last_purchase_forced = true
 		purchase()
@@ -1150,7 +1156,7 @@ func should_autobuy() -> bool:
 	if (
 		autobuy
 		and not autobuy_on_cooldown
-		and unlocked
+		and unlocked.is_true()
 		and gv.run_duration >= 1
 		and can_afford()
 		and not asleep
@@ -1170,7 +1176,7 @@ func should_autobuy() -> bool:
 			last_reason_autobuy = "NO: s2 loreds not purchased"
 			return false
 		
-		if not purchased:
+		if purchased.is_false():
 			last_reason_autobuy = "wasn't purchased"
 			return true
 		
@@ -1235,9 +1241,9 @@ func first_purchase_ever() -> void:
 
 func level_up() -> void:
 	var wasnt_purchased := false
-	if not purchased:
+	if purchased.is_false():
 		wasnt_purchased = true
-		purchased = true
+		purchased.set_to(true)
 	set_level_to(level + 1)
 	if wasnt_purchased:
 		work()
@@ -1253,7 +1259,7 @@ func set_level_to(_level: int) -> void:
 	
 	subtract_fuel_rate()
 	fuel_cost.set_from_level(Big.new(2).power(_level - 1))
-	if purchased:
+	if purchased.is_true():
 		add_fuel_rate()
 	
 	level = _level
@@ -1261,7 +1267,7 @@ func set_level_to(_level: int) -> void:
 
 
 func unlock() -> void:
-	unlocked = true
+	unlocked.set_to(true)
 
 
 
@@ -1320,7 +1326,7 @@ func emote_finished(_emote: Emote) -> void:
 func add_influencing_upgrade(upgrade: int) -> void:
 	if not upgrade in upgrades:
 		upgrades.append(upgrade)
-		up.get_upgrade(upgrade).connect("purchased_changed", influencing_upgrade_purchased_changed)
+		up.get_upgrade(upgrade).upgrade_purchased_changed.connect(influencing_upgrade_purchased_changed)
 		influencing_upgrade_purchased_changed(up.get_upgrade(upgrade))
 
 
@@ -1355,27 +1361,28 @@ func emote_next_in_line() -> void:
 
 
 
-func enable_autobuy() -> void:
-	autobuy = true
-
-
-func disable_autobuy() -> void:
-	autobuy = false
-
-
 func enable_purchased_on_reset() -> void:
-	purchased_on_reset = true
+	purchased.set_reset_value(true)
 
 
 func disable_purchased_on_reset() -> void:
-	purchased_on_reset = false
+	purchased.set_reset_value(false)
+
+
+
+func connect_limit_break(sig: Signal) -> void:
+	sig.connect(update_limit_break)
+
+
+func disconnect_limit_break(sig: Signal) -> void:
+	sig.disconnect(update_limit_break)
 
 
 
 # - Job
 
 func work(job_type: int = get_next_job_automatically()) -> void:
-	if not purchased or not unlocked:
+	if purchased.is_false() or unlocked.is_false():
 		return
 	if working or will_go_to_sleep():
 		return

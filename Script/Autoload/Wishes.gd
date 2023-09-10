@@ -180,19 +180,19 @@ func has_start_conditions(wish: int) -> bool:
 func condition_STUFF() -> void:
 	if not gv.session_incremented.is_connected(start_STUFF):
 		gv.session_incremented.connect(start_STUFF)
-		lv.get_lored(LORED.Type.COAL).just_purchased.connect(skip_STUFF)
+		lv.get_lored(LORED.Type.COAL).purchased.became_true.connect(skip_STUFF)
 
 
 func start_STUFF(session_duration: int) -> void:
 	if session_duration >= 5:
 		gv.session_incremented.disconnect(start_STUFF)
-		lv.get_lored(LORED.Type.COAL).just_purchased.disconnect(skip_STUFF)
+		lv.get_lored(LORED.Type.COAL).purchased.became_true.disconnect(skip_STUFF)
 		new_wish(Wish.Type.STUFF)
 
 
 func skip_STUFF() -> void:
 	gv.session_incremented.disconnect(start_STUFF)
-	lv.get_lored(LORED.Type.COAL).just_purchased.disconnect(skip_STUFF)
+	lv.get_lored(LORED.Type.COAL).purchased.became_true.disconnect(skip_STUFF)
 	complete_wish(Wish.Type.STUFF)
 	find_new_main_wish()
 
@@ -210,4 +210,4 @@ func is_wish_completed(wish_type: int) -> bool:
 
 
 func is_game_just_beginning() -> bool:
-	return not Wish.Type.STUFF in completed_wishes and not lv.get_lored(LORED.Type.COAL).purchased
+	return not Wish.Type.STUFF in completed_wishes and not lv.is_lored_purchased(LORED.Type.COAL)

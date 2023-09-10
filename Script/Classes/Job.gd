@@ -55,6 +55,7 @@ signal stopped_working
 signal completed
 signal cut_short
 signal unlocked_changed(unlocked)
+signal currency_produced(amount)
 
 var type: int
 var lored: int
@@ -510,7 +511,7 @@ func assign_lored(lored_type: int) -> void:
 		required_currencies.stage = _lored.stage
 	
 	_lored.connect("job_started", another_job_started)
-	_lored.purchased_changed.connect(lored_purchased_changed)
+	_lored.purchased.changed.connect(lored_purchased_changed)
 
 
 
@@ -682,7 +683,7 @@ func refresh_required_rate() -> void:
 func add_rate() -> void:
 	if (
 		added_rate
-		or not lv.get_lored(lored).purchased
+		or lv.get_lored(lored).purchased.is_false()
 	):
 		return
 	
@@ -784,16 +785,21 @@ func stop() -> void:
 func complete() -> void:
 	no_longer_working()
 	if has_produced_currencies:
+		var total_produced_amount := Big.new()
 		var mult = 1.0 if randf_range(0, 100) > crit.get_as_float() else randf_range(7.5, 12.5)
 		for cur in produced_currencies:
 			wa.get_currency(cur).last_crit_modifier = mult
 			last_production[cur] = in_hand_output[cur].m(mult)
+			total_produced_amount.a(last_production[cur])
 			wa.add_from_lored(cur, last_production[cur])
 		
 		for cur in bonus_production:
 			wa.get_currency(cur).last_crit_modifier = mult
 			last_production[cur] = in_hand_output[cur].m(mult)
+			total_produced_amount.a(last_production[cur])
 			wa.add_from_lored(cur, last_production[cur])
+		
+		currency_produced.emit(total_produced_amount)
 	
 	if has_method("complete_" + key):
 		call("complete_" + key)
@@ -831,6 +837,7 @@ func can_start() -> bool:
 		if (
 			not required_currencies.use_allowed
 			or not required_currencies.affordable
+			or not required_currencies.can_take_candy_from_a_baby()
 		):
 			return false
 	

@@ -31,9 +31,9 @@ func setup(data: Dictionary) -> void:
 	title.text = upgrade.name
 	color = upgrade.color
 	
-	upgrade.connect("purchased_changed", purchased_changed)
-	upgrade.connect("just_locked", upgrade_just_locked)
-	upgrade.connect("just_unlocked", upgrade_just_unlocked)
+	upgrade.purchased.changed.connect(purchased_changed)
+	upgrade.unlocked.became_false.connect(upgrade_just_locked)
+	upgrade.unlocked.became_true.connect(upgrade_just_unlocked)
 	
 	if upgrade.unlocked:
 		upgrade_just_unlocked()
@@ -42,7 +42,7 @@ func setup(data: Dictionary) -> void:
 	
 	price.setup(upgrade.cost)
 	price.color = upgrade.color
-	purchased_changed(upgrade)
+	purchased_changed(upgrade.purchased.get_value())
 	
 	if upgrade.has_required_upgrade:
 		required_upgrade.text = "[center][b][i]" + up.get_icon_and_name_text(upgrade.required_upgrade)
@@ -80,8 +80,8 @@ func update_effect_text() -> void:
 	effect.text = upgrade.get_effect_text()
 
 
-func purchased_changed(_upgrade: Upgrade) -> void:
-	price.visible = not upgrade.purchased
+func purchased_changed(val: bool) -> void:
+	price.visible = not val
 
 
 func update_description_its_growin() -> void:

@@ -9,6 +9,7 @@ signal affordable_changed(affordable)
 signal use_allowed_changed(allowed)
 
 var cost := {}
+var base_cost := {}
 var affordable := false:
 	set(val):
 		if affordable != val:
@@ -36,6 +37,9 @@ var currencies_are_unlocked := false:
 		if not currencies_are_unlocked == val:
 			currencies_are_unlocked = val
 
+
+var has_stage1_currency := false
+
 var stage: int
 var longest_eta_cur: int = -1
 
@@ -44,10 +48,13 @@ var longest_eta_cur: int = -1
 
 func _init(_cost: Dictionary) -> void:
 	cost = _cost
+	base_cost = cost
 	longest_eta_cur = cost.keys()[0]
 	SaveManager.connect("load_finished", recheck)
 	for cur in cost:
 		var currency = wa.get_currency(cur) as Currency
+		if currency.stage == 1:
+			has_stage1_currency = true
 		currency.use_allowed_changed.connect(currency_use_allowed_changed)
 		currency.unlocked_changed.connect(currency_unlocked_changed)
 	connect_calls()
@@ -152,10 +159,20 @@ func increase_m_from_lored(amount) -> void:
 	recheck()
 
 
-func remove_cost(currency: int) -> void:
-	if currency in cost.keys():
-		cost[currency].disconnect("increased", currency_increased)
-		cost.erase(currency)
+func erase_currency_from_cost(cur: int) -> void:
+	if cur in cost.keys():
+		if not purchased:
+			cost[cur].disconnect("increased", currency_increased)
+		cost.erase(cur)
+		recheck()
+
+
+func add_currency_to_cost(cur: int) -> void:
+	if not cur in base_cost.keys():
+		cost[cur] = Value.new(base_cost[cur].get_value())
+		if not purchased:
+			cost[cur].increased.connect(currency_increased)
+		connect_calls()
 
 
 
@@ -222,3 +239,16 @@ func get_progress_percent() -> float:
 		var _cost = cost[cur].get_value()
 		percent += count.percent(_cost)
 	return percent / total_percent
+
+
+
+func can_take_candy_from_a_baby() -> bool:
+	if has_stage1_currency:
+		if up.is_upgrade_purchased(Upgrade.Type.DONT_TAKE_CANDY_FROM_BABIES):
+			for cur in cost:
+				var currency = wa.get_currency(cur)
+				if currency.stage == 1:
+					var lored = lv.get_lored(currency.produced_by[0])
+					if lored.level < 5:
+						return false
+	return true

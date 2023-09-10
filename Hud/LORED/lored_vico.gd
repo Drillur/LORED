@@ -117,9 +117,9 @@ func attach_lored(_lored: LORED) -> void:
 	lored.connect("woke_up", wake_up)
 	lored.cost.connect("became_affordable", flash_level_up_button)
 	lored.connect("leveled_up", flash_on_level_up)
-	lored.connect("just_unlocked", show)
-	lored.connect("just_locked", hide)
-	lored.purchased_changed.connect(purchased_changed)
+	lored.unlocked.became_true.connect(show)
+	lored.unlocked.became_false.connect(hide)
+	lored.purchased.changed.connect(purchased_changed)
 	lored.autobuy_changed.connect(autobuy_changed)
 	
 	info.button.connect("mouse_entered", show_info_tooltip)
@@ -194,7 +194,7 @@ func get_preferred_side() -> Node:
 # - Ref Shit
 
 func load_finished() -> void:
-	visible = lored.unlocked
+	visible = lored.unlocked.get_value()
 	lored_leveled_up(lored.level)
 
 

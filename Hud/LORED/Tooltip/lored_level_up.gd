@@ -38,7 +38,7 @@ func setup(data: Dictionary) -> void:
 	price.setup(lored.cost)
 	price.color = lored.color
 	
-	lored.connect("just_purchased", just_purchased)
+	lored.purchased.became_true.connect(just_purchased)
 	lored.connect("leveled_up", set_level_text)
 	
 	just_purchased()
@@ -49,7 +49,7 @@ func setup(data: Dictionary) -> void:
 
 
 func just_purchased() -> void:
-	if not lored.purchased:
+	if lored.times_purchased == 0:
 		details.hide()
 		show_advanced_details(false)
 		title.text = "Invite"
@@ -74,7 +74,7 @@ func just_purchased() -> void:
 		details.show()
 		description.hide()
 		title.text = "Level Up"
-		lored.disconnect("just_purchased", just_purchased)
+		lored.purchased.became_true.disconnect(just_purchased)
 		if lv.advanced_details_unlocked:
 			lored.output.connect("changed", set_output_text)
 			lored.input.connect("changed", set_input_text)

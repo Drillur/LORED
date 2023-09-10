@@ -104,8 +104,7 @@ var unlocked := false:
 				saved_vars.erase("subtracted_by_loreds")
 				saved_vars.erase("subtracted_by_player")
 				saved_vars.erase("added_by_loreds")
-var persists_by_default := false
-var persists := false
+var persist := Bool.new(false)
 var use_allowed := true:
 	set(val):
 		if use_allowed != val:
@@ -150,9 +149,9 @@ func _init(_type: int = 0) -> void:
 	
 	call("init_" + key)
 	
-	if not persists_by_default and stage == 0:
-		persists_by_default = true
-	persists = persists_by_default
+	if persist.is_false_by_default() and stage == 0:
+		persist.set_default_value(true)
+	
 	if count == null:
 		count = Big.new(0, true)
 	color_text = "[color=#" + color.to_html() + "]%s[/color]"
@@ -226,7 +225,7 @@ func init_MALIGNANCY() -> void:
 	count = Big.new(10, true)
 	color = Color(0.88, .12, .35)
 	icon = preload("res://Sprites/Currency/malig.png")
-	persists_by_default = true
+	persist.set_default_value(true)
 
 
 func init_TARBALLS() -> void:
@@ -379,7 +378,7 @@ func init_EMBRYO() -> void:
 func init_TUMORS() -> void:
 	color = Color(1, .54, .54)
 	icon = preload("res://Sprites/Currency/tum.png")
-	persists_by_default = true
+	persist.set_default_value(true)
 
 
 func init_FLOWER_SEED() -> void:
@@ -398,19 +397,19 @@ func init_BLOOD() -> void:
 
 func init_SPIRIT() -> void:
 	color = Color(0.88, .12, .35)
-	persists_by_default = true
+	persist.set_default_value(true)
 
 
 func init_JOY() -> void:
 	color = Color(1, 0.909804, 0)
 	icon = preload("res://Sprites/Currency/Joy.png")
-	persists_by_default = true
+	persist.set_default_value(true)
 
 
 func init_GRIEF() -> void:
 	color = Color(0.74902, 0.203922, 0.533333)
 	icon = preload("res://Sprites/Currency/Grief.png")
-	persists_by_default = true
+	persist.set_default_value(true)
 
 
 
@@ -421,7 +420,7 @@ func prestige(_stage: int) -> void:
 		_stage >= stage
 		and stage > 0
 		and (
-			not persists
+			persist.is_not_true()
 			or _stage > stage
 		)
 	):
@@ -575,4 +574,3 @@ func get_eta_text(threshold: Big) -> String:
 
 func get_random_producer() -> LORED:
 	return produced_by[randi() % produced_by.size()]
-

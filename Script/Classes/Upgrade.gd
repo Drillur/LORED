@@ -16,7 +16,8 @@ func load_finished() -> void:
 	if purchased:
 		if will_apply_effect:
 			refund()
-		emit_signal("just_unlocked")
+		unlocked.became_true.emit()
+		unlocked.changed.emit(unlocked.get_value())
 
 
 
@@ -287,13 +288,17 @@ class Effect:
 		CRIT,
 		FUEL,
 		FUEL_COST,
+		ERASE_CURRENCY_FROM_COST,
 		BONUS_ACTION_ON_CURRENCY_GAIN,
 		BONUS_ACTION_ON_CURRENCY_USE,
 		BONUS_JOB_PRODUCTION,
 		AUTOBUYER,
 		UPGRADE_AUTOBUYER,
+		UPGRADE_PERSIST,
+		LORED_PERSIST,
 		FREE_LORED,
 		UPGRADE_NAME,
+		LIMIT_BREAK,
 	}
 	
 	enum BONUS_ACTION {
@@ -310,6 +315,7 @@ class Effect:
 	
 	var applied := false
 	var dynamic := false
+	var is_overwritten := false
 	
 	var effect: Value
 	var in_hand: Big
@@ -317,17 +323,22 @@ class Effect:
 	var effect2: Value
 	var in_hand2: Big
 	
+	var xp: ValuePair
+	
 	var apply_methods: Array
 	var remove_methods: Array
+	var effected_upgrades: Array
 	
 	var effected_input: int
+	var effected_lored: int
 	var currency: int
-	
 	var bonus_action_type: int
 	var modifier := 1.0
 	var added_currency: int
 	var upgrade_menu: int
 	var job: int
+
+	var replaced_upgrade := -1
 	
 	
 	
@@ -351,18 +362,30 @@ class Effect:
 			added_currency = details["added_currency"]
 		if "upgrade_menu" in details.keys():
 			upgrade_menu = details["upgrade_menu"]
+		if "effected_upgrades" in details.keys():
+			effected_upgrades = details["effected_upgrades"]
 		if "job" in details.keys():
 			job = details["job"]
+		if "effected_lored" in details.keys():
+			effected_lored = details["effected_lored"]
+		if "replaced_upgrade" in details.keys():
+			replaced_upgrade = details["replaced_upgrade"]
+		if "xp" in details.keys():
+			xp = details["xp"]
+			xp.do_not_cap_current()
+			xp.total.set_to(get_limit_break_total_xp())
 		
 		set_base_text()
 		
 		SaveManager.connect("load_started", load_started)
 		SaveManager.connect("load_finished", load_finished)
 		
-		if type in [
-			Type.UPGRADE_AUTOBUYER,
-			#Type.UPGRADE_NAME,
-		]:
+		if (
+			type in [
+				Type.UPGRADE_AUTOBUYER,
+				Type.UPGRADE_PERSIST,
+			]
+		):
 			up.all_upgrades_initialized.connect(finish_init)
 	
 	
@@ -381,7 +404,7 @@ class Effect:
 			Type.AUTOBUYER, Type.UPGRADE_AUTOBUYER:
 				text = "Autobuyer"
 			Type.CRIT:
-				text = "Crit chance [b]+"
+				text = "Crit Chance [b]+"
 			_:
 				text = key.replace("_", " ").capitalize() + " [b]x"
 	
@@ -392,13 +415,20 @@ class Effect:
 			saved_vars.append("effect")
 			if effect2 != null:
 				saved_vars.append("effect2")
+			if xp != null:
+				saved_vars.append("xp")
 	
 	
 	func finish_init() -> void:
 		match type:
+			Type.UPGRADE_PERSIST:
+				for _type in effected_upgrades:
+					var upgrade = up.get_upgrade(_type)
+					apply_methods.append(upgrade.enable_persist)
+					remove_methods.append(upgrade.disable_persist)
 			Type.UPGRADE_AUTOBUYER:
-				for type in up.get_upgrades_in_menu(upgrade_menu):
-					var upgrade = up.get_upgrade(type)
+				for _type in up.get_upgrades_in_menu(upgrade_menu):
+					var upgrade = up.get_upgrade(_type)
 					apply_methods.append(upgrade.enable_autobuy)
 					remove_methods.append(upgrade.disable_autobuy)
 		
@@ -449,11 +479,38 @@ class Effect:
 	
 	
 	
+	func increase_limit_break_xp(amount: Big) -> void:
+		xp.add(amount)
+		var prev_mod = Big.new(effect.get_value())
+		while xp.is_full():
+			level_up_limit_break()
+	
+	
+	func level_up_limit_break(level: Big = Big.new(effect.get_value).a(1)) -> void:
+		effect.set_to(level)
+		xp.subtract(xp.get_total())
+		xp.total.set_to(get_limit_break_total_xp())
+	
+	
+	func get_limit_break_total_xp() -> Big:
+		var level = effect.get_as_int() + 1
+		var exponent = sqrt(level) * 1.5
+		exponent = round(max(exponent, 3.0))
+		return Big.new("1e" + str(exponent))
+	
+	
+	
 	# - Actions
 	
 	func add_effected_lored(lored_type: int) -> void:
 		var lored = lv.get_lored(lored_type) as LORED
 		match type:
+			Type.LORED_PERSIST:
+				apply_methods.append(lored.purchased.set_reset_value_true)
+				remove_methods.append(lored.purchased.set_reset_value_false)
+			Type.LIMIT_BREAK:
+				apply_methods.append(lored.connect_limit_break)
+				remove_methods.append(lored.disconnect_limit_break)
 			Type.BONUS_JOB_PRODUCTION:
 				var _job = lored.get_job(job) as Job
 				apply_methods.append(_job.add_bonus_production)
@@ -470,8 +527,8 @@ class Effect:
 				apply_methods.append(lored.enable_purchased_on_reset)
 				remove_methods.append(lored.disable_purchased_on_reset)
 			Type.AUTOBUYER:
-				apply_methods.append(lored.enable_autobuy)
-				remove_methods.append(lored.disable_autobuy)
+				apply_methods.append(lored.autobuy.set_true)
+				remove_methods.append(lored.autobuy.set_false)
 			Type.SPECIFIC_INPUT:
 				for att in lored.get_attributes_by_currency(effected_input):
 					apply_methods.append(att.increase_multiplied)
@@ -507,12 +564,26 @@ class Effect:
 	
 	func apply() -> void:
 		if not applied:
-			if effect != null:
-				effect.increased.connect(refresh)
-			if effect2 != null:
-				effect2.increased.connect(refresh)
+			if type != Type.LIMIT_BREAK:
+				if effect != null:
+					effect.increased.connect(refresh)
+				if effect2 != null:
+					effect2.increased.connect(refresh)
+			
+			if replaced_upgrade >= 0:
+				var r_up = up.get_upgrade(replaced_upgrade)
+				var was_applied = r_up.effect.applied
+				if was_applied:
+					r_up.effect.remove()
+				r_up.is_overwritten = true
+				if was_applied:
+					r_up.effect.apply()
 			
 			match type:
+				Type.ERASE_CURRENCY_FROM_COST:
+					var lored = lv.get_lored(effected_lored)
+					var cost = lored.cost as Cost
+					cost.erase_currency_from_cost(currency)
 				Type.BONUS_ACTION_ON_CURRENCY_GAIN:
 					var cur = wa.get_currency(currency)
 					cur.increased_by_lored.connect(currency_collected)
@@ -526,17 +597,32 @@ class Effect:
 						lored.fuel_cost.increase_multiplied(10)
 						lored.fuel.increase_multiplied(10)
 						lored.fuel.fill_up()
+			
 			refresh()
 	
 	
 	func remove() -> void:
 		if applied:
-			if effect != null:
-				effect.increased.disconnect(refresh)
-			if effect2 != null:
-				effect2.increased.disconnect(refresh)
+			if type != Type.LIMIT_BREAK:
+				if effect != null:
+					effect.increased.disconnect(refresh)
+				if effect2 != null:
+					effect2.increased.disconnect(refresh)
+			
+			if replaced_upgrade >= 0:
+				var r_up = up.get_upgrade(replaced_upgrade)
+				var was_applied = r_up.effect.applied
+				if was_applied:
+					r_up.effect.remove()
+				r_up.is_overwritten = false
+				if was_applied:
+					r_up.effect.apply()
 			
 			match type:
+				Type.ERASE_CURRENCY_FROM_COST:
+					var lored = lv.get_lored(effected_lored)
+					var cost = lored.cost as Cost
+					cost.add_currency_to_cost(currency)
 				Type.BONUS_ACTION_ON_CURRENCY_GAIN:
 					var cur = wa.get_currency(currency)
 					cur.increased_by_lored.disconnect(currency_collected)
@@ -549,6 +635,7 @@ class Effect:
 						lored.cost_increase.decrease_multiplied(0.9)
 						lored.fuel_cost.decrease_multiplied(10)
 						lored.fuel.decrease_multiplied(10)
+			
 			remove_effects()
 	
 	
@@ -560,13 +647,29 @@ class Effect:
 	func apply_effects() -> void:
 		if not applied:
 			applied = true
+			if is_overwritten:
+				return
+			
 			if effect != null:
 				in_hand = Big.new(effect.get_value())
 			if effect2 != null:
 				in_hand2 = Big.new(effect2.get_value())
 			match type:
+				Type.LIMIT_BREAK:
+					apply_methods[0].get_object().currency_produced.connect(increase_limit_break_xp)
+					apply_methods[0].get_object().apply_limit_break.call(effect)
+					apply_methods[0].call(effect.increased)
 				Type.BONUS_ACTION_ON_CURRENCY_GAIN:
 					match upgrade_type:
+						Upgrade.Type.ITS_SPREADIN_ON_ME:
+							var iron := lv.get_lored(LORED.Type.IRON)
+							var copper := lv.get_lored(LORED.Type.COPPER)
+							var irono := lv.get_lored(LORED.Type.IRON_ORE)
+							var copo := lv.get_lored(LORED.Type.COPPER_ORE)
+							iron.output.increase_multiplied(in_hand)
+							iron.input.increase_multiplied(in_hand)
+							copper.output.increase_multiplied(in_hand2)
+							copper.input.increase_multiplied(in_hand2)
 						Upgrade.Type.ITS_GROWIN_ON_ME:
 							var iron := lv.get_lored(LORED.Type.IRON)
 							var copper := lv.get_lored(LORED.Type.COPPER)
@@ -593,7 +696,14 @@ class Effect:
 	func remove_effects() -> void:
 		if applied:
 			applied = false
+			if is_overwritten:
+				return
+			
 			match type:
+				Type.LIMIT_BREAK:
+					remove_methods[0].get_object().currency_produced.disconnect(increase_limit_break_xp)
+					remove_methods[0].get_object().remove_limit_break.call(effect)
+					remove_methods[0].call(effect.increased)
 				Type.BONUS_ACTION_ON_CURRENCY_GAIN:
 					match upgrade_type:
 						Upgrade.Type.ITS_GROWIN_ON_ME:
@@ -637,13 +747,7 @@ class Effect:
 		return effect2.get_text()
 
 
-
-signal just_unlocked
-signal just_locked
-signal unlocked_changed
-signal just_purchased
-signal just_unpurchased
-signal purchased_changed(upgrade)
+signal upgrade_purchased_changed(upgrade)
 signal just_reset
 signal became_affordable_and_unpurchased(type, val)
 signal autobuy_changed
@@ -669,15 +773,16 @@ var effected_loreds_text: String
 var color: Color
 var loreds: Array
 
-var unlocked := true:
-	set(val):
-		unlocked = val
-		emit_signal("unlocked_changed")
-		if val:
-			emit_signal("just_unlocked")
-			affordable_changed(cost.affordable)
-		else:
-			emit_signal("just_locked")
+var unlocked := Bool.new(true)
+var purchased := Bool.new(false)
+
+func unlocked_updated(val: bool) -> void:
+	if val:
+		affordable_changed(cost.affordable)
+
+func purchased_updated(_val: bool) -> void:
+	affordable_changed(cost.affordable)
+	upgrade_purchased_changed.emit(self)
 
 
 var autobuy := false:
@@ -691,24 +796,14 @@ var autobuy := false:
 
 
 var special: bool
-var purchased := false:
-	set(val):
-		if purchased != val:
-			purchased = val
-			if val:
-				emit_signal("just_purchased")
-			else:
-				just_unpurchased.emit()
-			emit_signal("purchased_changed", self)
-			affordable_changed(cost.affordable)
 
 var will_apply_effect := false
 
-var has_vico := false
 var vico: UpgradeVico:
 	set(val):
 		vico = val
-		has_vico = true
+
+var persist := Bool.new(false)
 
 var effect: Effect
 
@@ -720,7 +815,7 @@ var required_upgrade: int:
 		var upgrade = up.get_upgrade(required_upgrade)
 		upgrade.just_purchased.connect(required_upgrade_purchased)
 		upgrade.just_unpurchased.connect(required_upgrade_unpurchased)
-		unlocked = up.is_upgrade_purchased(required_upgrade)
+		unlocked.set_to(up.is_upgrade_purchased(required_upgrade))
 
 var cost: Cost
 
@@ -1623,7 +1718,42 @@ func init_ROUTINE() -> void:
 	var norm = up.get_upgrade_menu(UpgradeMenu.Type.NORMAL).colored_name
 	var meta2 = gv.get_stage(1).color_text % "Metastasis"
 	description = "%s immediately. %s upgrades will persist through %s. After that, this upgrade will be reset." % [metas, norm, meta2]
-	set_effect(Effect.Type.HASTE, 1)
+	effect = Effect.new(
+		Effect.Type.UPGRADE_PERSIST, {
+			"upgrade_type": type,
+			"effected_upgrades": [
+				Type.GRINDER,
+				Type.LIGHTER_SHOVEL,
+				Type.TEXAS,
+				Type.RYE,
+				Type.GRANDER,
+				Type.SAALNDT,
+				Type.SALT,
+				Type.SAND,
+				Type.GRANDMA,
+				Type.CHEEKS,
+				Type.GROUNDER,
+				Type.MAXER,
+				Type.FLANK,
+				Type.MIXER,
+				Type.GEARED_OILS,
+				Type.THYME,
+				Type.PEPPER,
+				Type.ANCHOVE_COVE,
+				Type.GARLIC,
+				Type.MUD,
+				Type.RIB,
+				Type.WATT,
+				Type.SWIRLER,
+				Type.GRANDPA,
+				Type.SLOP,
+				Type.SLIMER,
+				Type.STICKYTAR,
+				Type.INJECT,
+				Type.RED_GOOPY_BOY,
+			]
+		}
+	)
 	icon = preload("res://Sprites/Hud/Tab/s1m.png")
 	color = gv.get_stage_color(1)
 	cost = Cost.new({
@@ -1784,7 +1914,7 @@ func init_SOFT_AND_SMOOTH() -> void:
 
 func init_FLIPPY_FLOPPIES() -> void:
 	name = "Flippy Floppies"
-	set_effect(Effect.Type.SPECIFIC_COST, 0.9, Currency.Type.HUMUS)
+	set_effect(Effect.Type.SPECIFIC_INPUT, 0.9, Currency.Type.HUMUS)
 	add_effected_lored(LORED.Type.SAND)
 	cost = Cost.new({
 		Currency.Type.CARCINOGENS: Value.new("850"),
@@ -2598,7 +2728,7 @@ func init_MICROSOFT_PAINT() -> void:
 
 
 func init_JOHN_PETER_BAIN_TOTALBISCUIT() -> void:
-	name = "[img=<15>]res://Sprites/Currency/Totalbiscuit.png[/img] John Peter Bain, TotalBiscuit"
+	name = "[img=<15>]res://Sprites/Currency/Totalbiscuit.png[/img]"# John Peter Bain, TotalBiscuit"
 	set_effect(Effect.Type.OUTPUT_AND_INPUT, 2)
 	add_effected_stage(2)
 	cost = Cost.new({
@@ -2609,19 +2739,699 @@ func init_JOHN_PETER_BAIN_TOTALBISCUIT() -> void:
 	required_upgrade = Type.TORIYAMA
 
 
-func init_() -> void:
-	name = ""
-	set_effect(Effect.Type.CRIT, )
-	set_effect(Effect.Type.HASTE, )
-	set_effect(Effect.Type.OUTPUT_AND_INPUT, )
-	set_effect(Effect.Type.SPECIFIC_INPUT, 0., Currency.Type.)
-	add_effected_lored(LORED.Type.)
-	add_effected_stage()
+func init_MECHANICAL() -> void:
+	name = "Mechanical"
+	set_effect(Effect.Type.OUTPUT_AND_INPUT, 2)
+	add_effected_stage(1)
 	cost = Cost.new({
-		Currency.Type.: Value.new(""),
+		Currency.Type.TUMORS: Value.new("250"),
+	})
+
+
+func init_LIMIT_BREAK() -> void:
+	name = "[rainbow freq=0.15][wave amp=20  freq=1]Limit Break[/wave][/rainbow]"
+	effect = Effect.new(Effect.Type.LIMIT_BREAK, {
+		"effect value": 1,
+		"xp": ValuePair.new(1000),
+	})
+	effect.set_dynamic(true)
+	add_effected_stage(1)
+	add_effected_stage(2)
+	cost = Cost.new({
+		Currency.Type.TUMORS: Value.new("250"),
+	})
+
+
+func init_DONT_TAKE_CANDY_FROM_BABIES() -> void:
+	name = "don't take candy from babies"
+	description = "Stage 2 and up LOREDs will not take resources from a Stage 1 resource if its producing LORED is below level 5."
+	cost = Cost.new({
+		Currency.Type.TUMORS: Value.new("1e3"),
 	})
 	await up.all_upgrades_initialized
-	required_upgrade = Type.
+	required_upgrade = Type.MECHANICAL
+
+
+func init_SPLISHY_SPLASHY() -> void:
+	name = "Splishy Splashy"
+	set_effect(Effect.Type.AUTOBUYER)
+	add_effected_lored(LORED.Type.WATER)
+	cost = Cost.new({
+		Currency.Type.TUMORS: Value.new("4e3"),
+	})
+
+
+func init_MILK() -> void:
+	name = "Milk"
+	set_effect(Effect.Type.HASTE, 1.25)
+	add_effected_stage(2)
+	cost = Cost.new({
+		Currency.Type.TUMORS: Value.new("2e3"),
+	})
+
+
+func init_FALCON_PAWNCH() -> void:
+	name = "FALCON [b]PAWNCH[/b]"
+	set_effect(Effect.Type.OUTPUT_AND_INPUT, 1.25)
+	add_effected_stage(2)
+	cost = Cost.new({
+		Currency.Type.TUMORS: Value.new("1250"),
+	})
+
+
+func init_SPEED_SHOPPER() -> void:
+	name = "Speed-Shopper"
+	set_effect(Effect.Type.OUTPUT_AND_INPUT, 2)
+	add_effected_stage(2)
+	cost = Cost.new({
+		Currency.Type.TUMORS: Value.new("35e3"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.DONT_TAKE_CANDY_FROM_BABIES
+
+
+func init_AUTOSMITHY() -> void:
+	name = "Autosmithy"
+	set_effect(Effect.Type.AUTOBUYER)
+	add_effected_lored(LORED.Type.LIQUID_IRON)
+	cost = Cost.new({
+		Currency.Type.TUMORS: Value.new("8e3"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.SPLISHY_SPLASHY
+
+
+func init_GATORADE() -> void:
+	name = "Gatorade?"
+	set_effect(Effect.Type.HASTE, 1.25)
+	add_effected_stage(2)
+	cost = Cost.new({
+		Currency.Type.TUMORS: Value.new("10e3"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.MILK
+
+
+func init_KAIO_KEN() -> void:
+	name = "KAIO-KEN"
+	set_effect(Effect.Type.OUTPUT_AND_INPUT, 1.25)
+	add_effected_stage(2)
+	cost = Cost.new({
+		Currency.Type.TUMORS: Value.new("6250"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.FALCON_PAWNCH
+
+
+func init_AUTOSENSU() -> void:
+	name = "Autosensu"
+	set_effect(Effect.Type.AUTOBUYER)
+	add_effected_lored(LORED.Type.WOOD)
+	cost = Cost.new({
+		Currency.Type.TUMORS: Value.new("160e3"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.AUTOSMITHY
+
+
+func init_APPLE_JUICE() -> void:
+	name = "Apple Juice"
+	set_effect(Effect.Type.HASTE, 1.25)
+	add_effected_stage(2)
+	cost = Cost.new({
+		Currency.Type.TUMORS: Value.new("600e3"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.GATORADE
+
+
+func init_DANCE_OF_THE_FIRE_GOD() -> void:
+	name = "Dance of the Fire God"
+	set_effect(Effect.Type.OUTPUT_AND_INPUT, 1.25)
+	add_effected_stage(2)
+	cost = Cost.new({
+		Currency.Type.TUMORS: Value.new("450e3"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.KAIO_KEN
+
+
+func init_SUDDEN_COMMISSION() -> void:
+	name = "Sudden Commission"
+	set_effect(Effect.Type.AUTOBUYER)
+	add_effected_lored(LORED.Type.DRAW_PLATE)
+	cost = Cost.new({
+		Currency.Type.TUMORS: Value.new("1e6"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.AUTOSENSU
+
+
+func init_PEPPERMINT_MOCHA() -> void:
+	name = "Peppermint Mocha Latte"
+	set_effect(Effect.Type.HASTE, 1.25)
+	add_effected_stage(2)
+	cost = Cost.new({
+		Currency.Type.TUMORS: Value.new("1800e3"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.APPLE_JUICE
+
+
+func init_RASENGAN() -> void:
+	name = "Rasengan"
+	set_effect(Effect.Type.OUTPUT_AND_INPUT, 1.25)
+	add_effected_stage(2)
+	cost = Cost.new({
+		Currency.Type.TUMORS: Value.new("1.35e6"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.DANCE_OF_THE_FIRE_GOD
+
+
+func init_MUDSLIDE() -> void:
+	name = "Mudslide"
+	set_effect(Effect.Type.SPECIFIC_COST, 0.75, Currency.Type.GLASS)
+	add_effected_lored(LORED.Type.HUMUS)
+	cost = Cost.new({
+		Currency.Type.TUMORS: Value.new("1e7"),
+	})
+
+
+func init_THE_GREAT_JOURNEY() -> void:
+	name = "The Great Journey"
+	set_effect(Effect.Type.SPECIFIC_COST, 0.8, Currency.Type.STEEL)
+	add_effected_lored(LORED.Type.GLASS)
+	cost = Cost.new({
+		Currency.Type.TUMORS: Value.new("1e7"),
+	})
+
+
+func init_BEAVER() -> void:
+	name = "The Great Journey"
+	set_effect(Effect.Type.SPECIFIC_COST, 0.8, Currency.Type.WOOD)
+	add_effected_lored(LORED.Type.WATER)
+	cost = Cost.new({
+		Currency.Type.TUMORS: Value.new("1e7"),
+	})
+
+
+func init_MODS_ENABLED() -> void:
+	name = "Mods Enabled"
+	set_effect(Effect.Type.SPECIFIC_COST, 0.75, Currency.Type.GLASS)
+	add_effected_lored(LORED.Type.PETROLEUM)
+	cost = Cost.new({
+		Currency.Type.TUMORS: Value.new("1e7"),
+	})
+
+
+func init_COVENANT_DANCE() -> void:
+	name = "Covenant Dance"
+	set_effect(Effect.Type.HASTE, 1.5)
+	add_effected_lored(LORED.Type.HUMUS)
+	cost = Cost.new({
+		Currency.Type.TUMORS: Value.new("1e7"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.PEPPERMINT_MOCHA
+
+
+func init_OVERTIME() -> void:
+	name = "Overtime"
+	set_effect(Effect.Type.HASTE, 1.5)
+	add_effected_lored(LORED.Type.LIQUID_IRON)
+	cost = Cost.new({
+		Currency.Type.TUMORS: Value.new("2e7"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.COVENANT_DANCE
+
+
+func init_BONE_MEAL() -> void:
+	name = "Bone Meal"
+	set_effect(Effect.Type.HASTE, 1.5)
+	add_effected_lored(LORED.Type.TREES)
+	cost = Cost.new({
+		Currency.Type.TUMORS: Value.new("4e7"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.OVERTIME
+
+
+func init_SILLY() -> void:
+	name = "Silly"
+	set_effect(Effect.Type.HASTE, 1.5)
+	add_effected_lored(LORED.Type.HARDWOOD)
+	cost = Cost.new({
+		Currency.Type.TUMORS: Value.new("8e7"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.BONE_MEAL
+
+
+func init_SPEED_DOODS() -> void:
+	name = "Speed-Doods"
+	set_effect(Effect.Type.HASTE, 1.5)
+	add_effected_lored(LORED.Type.DRAW_PLATE)
+	cost = Cost.new({
+		Currency.Type.TUMORS: Value.new("128e7"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.EREBOR
+
+
+func init_EREBOR() -> void:
+	name = "Erebor"
+	set_effect(Effect.Type.HASTE, 1.5)
+	add_effected_lored(LORED.Type.GALENA)
+	cost = Cost.new({
+		Currency.Type.TUMORS: Value.new("64e7"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.CHILD_ENERGY
+
+
+func init_CHILD_ENERGY() -> void:
+	name = "Child Energy"
+	set_effect(Effect.Type.HASTE, 1.5)
+	add_effected_lored(LORED.Type.SOIL)
+	cost = Cost.new({
+		Currency.Type.TUMORS: Value.new("32e7"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.PLATE
+
+
+func init_PLATE() -> void:
+	name = "Plate"
+	set_effect(Effect.Type.HASTE, 1.5)
+	add_effected_lored(LORED.Type.STEEL)
+	cost = Cost.new({
+		Currency.Type.TUMORS: Value.new("16e7"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.SILLY
+
+
+func init_MASTER() -> void:
+	name = "Master"
+	set_effect(Effect.Type.AUTOBUYER)
+	add_effected_lored(LORED.Type.SAND)
+	cost = Cost.new({
+		Currency.Type.TUMORS: Value.new("1e9"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.SUDDEN_COMMISSION
+
+
+func init_STRAWBERRY_BANANA_SMOOTHIE() -> void:
+	name = "Strawberry Banana Smoothie"
+	set_effect(Effect.Type.HASTE, 1.25)
+	add_effected_stage(2)
+	cost = Cost.new({
+		Currency.Type.TUMORS: Value.new("540e6"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.PEPPERMINT_MOCHA
+
+
+func init_AVATAR_STATE() -> void:
+	name = "Avatar State"
+	set_effect(Effect.Type.OUTPUT_AND_INPUT, 1.25)
+	add_effected_stage(2)
+	cost = Cost.new({
+		Currency.Type.TUMORS: Value.new("405e6"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.RASENGAN
+
+
+func init_AXELOT() -> void:
+	name = "Axelot"
+	set_effect(Effect.Type.AUTOBUYER)
+	add_effected_lored(LORED.Type.AXES)
+	cost = Cost.new({
+		Currency.Type.TUMORS: Value.new("1e10"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.MASTER
+
+
+func init_GREEN_TEA() -> void:
+	name = "Green Tea"
+	set_effect(Effect.Type.HASTE, 1.25)
+	add_effected_stage(2)
+	cost = Cost.new({
+		Currency.Type.TUMORS: Value.new("1.62e9"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.STRAWBERRY_BANANA_SMOOTHIE
+
+
+func init_HAMON() -> void:
+	name = "Hamon"
+	set_effect(Effect.Type.OUTPUT_AND_INPUT, 1.25)
+	add_effected_stage(2)
+	cost = Cost.new({
+		Currency.Type.TUMORS: Value.new("1.215e9"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.AVATAR_STATE
+
+
+func init_AUTOSHIT() -> void:
+	name = "Autoshit"
+	set_effect(Effect.Type.AUTOBUYER)
+	add_effected_lored(LORED.Type.HUMUS)
+	cost = Cost.new({
+		Currency.Type.TUMORS: Value.new("2e10"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.AXELOT
+
+
+func init_FRENCH_VANILLA() -> void:
+	name = "French Vanilla"
+	set_effect(Effect.Type.HASTE, 1.25)
+	add_effected_stage(2)
+	cost = Cost.new({
+		Currency.Type.TUMORS: Value.new("5e9"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.GREEN_TEA
+
+
+func init_METAL_CAP() -> void:
+	name = "Metal Cap"
+	set_effect(Effect.Type.OUTPUT_AND_INPUT, 1.25)
+	add_effected_stage(2)
+	cost = Cost.new({
+		Currency.Type.TUMORS: Value.new("3.6e9"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.HAMON
+
+
+func init_SMASHY_CRASHY() -> void:
+	name = "Smashy Crashy"
+	set_effect(Effect.Type.AUTOBUYER)
+	add_effected_lored(LORED.Type.TREES)
+	cost = Cost.new({
+		Currency.Type.TUMORS: Value.new("4e10"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.AUTOSHIT
+
+
+func init_WATER() -> void:
+	name = "Water"
+	set_effect(Effect.Type.HASTE, 1.25)
+	add_effected_stage(2)
+	cost = Cost.new({
+		Currency.Type.TUMORS: Value.new("1.5e10"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.FRENCH_VANILLA
+
+
+func init_STAR_ROD() -> void:
+	name = "Star Rod"
+	set_effect(Effect.Type.OUTPUT_AND_INPUT, 1.25)
+	add_effected_stage(2)
+	cost = Cost.new({
+		Currency.Type.TUMORS: Value.new("1.1e10"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.METAL_CAP
+
+
+func init_A_BABY_ROLEUM() -> void:
+	name = "A baby Roleum!! Thanks, pa!"
+	set_effect(Effect.Type.AUTOBUYER)
+	add_effected_lored(LORED.Type.PETROLEUM)
+	cost = Cost.new({
+		Currency.Type.TUMORS: Value.new("8e10"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.SMASHY_CRASHY
+
+
+func init_POOFY_WIZARD_BOY() -> void:
+	name = "Poofy Wizard Boy"
+	set_effect(Effect.Type.AUTOBUYER)
+	add_effected_lored(LORED.Type.TOBACCO)
+	cost = Cost.new({
+		Currency.Type.TUMORS: Value.new("1.6e11"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.A_BABY_ROLEUM
+
+
+func init_BENEFIT() -> void:
+	name = "Benefit"
+	set_effect(Effect.Type.AUTOBUYER)
+	add_effected_lored(LORED.Type.GALENA)
+	cost = Cost.new({
+		Currency.Type.TUMORS: Value.new("3.2e11"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.POOFY_WIZARD_BOY
+
+
+func init_AUTOAQUATICIDE() -> void:
+	name = "Autoaquaticide"
+	set_effect(Effect.Type.AUTOBUYER)
+	add_effected_lored(LORED.Type.PLASTIC)
+	cost = Cost.new({
+		Currency.Type.TUMORS: Value.new("6.4e11"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.BENEFIT
+
+
+func init_GO_ON_THEN_LEAD_US() -> void:
+	name = "Go on, then, LEAD us!"
+	set_effect(Effect.Type.AUTOBUYER)
+	add_effected_lored(LORED.Type.LEAD)
+	cost = Cost.new({
+		Currency.Type.TUMORS: Value.new("1.3e12"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.AUTOAQUATICIDE
+
+
+func init_THE_WITCH_OF_LOREDELITH() -> void:
+	name = "The Witch of Loredelith"
+	description = "Stage 1 LOREDs permanently gain Aurus's Bounty, Circe's powerful buff."
+	set_effect(Effect.Type.HASTE, 1)
+	add_effected_stage(1)
+	cost = Cost.new({
+		Currency.Type.TUMORS: Value.new("1e12"),
+	})
+
+
+func init_TOLKIEN() -> void:
+	name = "Tolkien"
+	set_effect(Effect.Type.OUTPUT_AND_INPUT, 2)
+	add_effected_stage(2)
+	cost = Cost.new({
+		Currency.Type.TUMORS: Value.new("1e12"),
+	})
+
+
+func init_BEEKEEPING() -> void:
+	name = "Tolkien"
+	set_effect(Effect.Type.AUTOBUYER)
+	add_effected_lored(LORED.Type.SEEDS)
+	cost = Cost.new({
+		Currency.Type.TUMORS: Value.new("2.5e12"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.GO_ON_THEN_LEAD_US
+
+
+func init_ELBOW_STRAPS() -> void:
+	name = "Elbow Straps"
+	set_effect(Effect.Type.OUTPUT_AND_INPUT, 1.25)
+	add_effected_lored(LORED.Type.COAL)
+	cost = Cost.new({
+		Currency.Type.TUMORS: Value.new("3e12"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.THE_WITCH_OF_LOREDELITH
+
+
+func init_AUTO_PERSIST() -> void:
+	name = "Auto-Persist"
+	effect = Effect.new(
+		Effect.Type.UPGRADE_PERSIST, {
+			"upgrade_type": type,
+			"effected_upgrades": [
+				Type.MOUND,
+				Type.SIDIUS_IRON,
+				Type.SLAPAPOW,
+				Type.SENTIENT_DERRICK,
+				Type.CANKERITE,
+				Type.WTF_IS_THAT_MUSK,
+				Type.MOIST,
+				Type.PIPPENPADDLE_OPPSOCOPOLIS,
+				Type.AUTOPOLICE,
+				Type.AUTOSTONER,
+				Type.OREOREUHBOREALICE,
+				Type.AUTOSHOVELER,
+			]
+		}
+	)
+	description = "Stage 1 autobuyer Upgrades [i]persist through[/i] Chemotherapy!"
+	cost = Cost.new({
+		Currency.Type.TUMORS: Value.new("1e13"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.THE_WITCH_OF_LOREDELITH
+
+
+func init_KETO() -> void:
+	name = "Keto"
+	set_effect(Effect.Type.INPUT, 0.01)
+	add_effected_lored(LORED.Type.IRON)
+	add_effected_lored(LORED.Type.COPPER)
+	cost = Cost.new({
+		Currency.Type.TUMORS: Value.new("3e13"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.THE_WITCH_OF_LOREDELITH
+
+
+func init_NOW_THATS_WHAT_IM_TALKIN_ABOUT() -> void:
+	name = "Now That's What I'm Talkin About, Yeeeeeeaaaaaaa[b]AAAAAAGGGGGHHH[/b]"
+	effect = Effect.new(
+		Effect.Type.UPGRADE_AUTOBUYER,
+		{
+			"upgrade_type": type,
+			"upgrade_menu": UpgradeMenu.Type.EXTRA_NORMAL,
+		}
+	)
+	icon = up.get_upgrade_menu(UpgradeMenu.Type.EXTRA_NORMAL).icon
+	color = up.get_upgrade_menu(UpgradeMenu.Type.EXTRA_NORMAL).color
+	cost = Cost.new({
+		Currency.Type.TUMORS: Value.new("1e12"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.THE_WITCH_OF_LOREDELITH
+
+
+func init_SCOOPY_DOOPY() -> void:
+	name = "Scoopy Doopy"
+	set_effect(Effect.Type.AUTOBUYER)
+	add_effected_lored(LORED.Type.SOIL)
+	cost = Cost.new({
+		Currency.Type.TUMORS: Value.new("5e12"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.BEEKEEPING
+
+
+func init_THE_ATHORE_COMENTS_AL_TOTOL_LIES() -> void:
+	name = "the athore coments al totol lies!"
+	set_effect(Effect.Type.CRIT, 10)
+	add_effected_stage(1)
+	cost = Cost.new({
+		Currency.Type.TUMORS: Value.new("2e13"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.ELBOW_STRAPS
+
+
+func init_ITS_SPREADIN_ON_ME() -> void:
+	name = "IT'S SPREADIN ON ME"
+	var iron = lv.get_colored_name(LORED.Type.IRON)
+	var cop = lv.get_colored_name(LORED.Type.COPPER)
+	var irono = lv.get_colored_name(LORED.Type.IRON_ORE)
+	var copo = lv.get_colored_name(LORED.Type.COPPER_ORE)
+	var growth = lv.get_colored_name(LORED.Type.GROWTH)
+	description = "Placeholder"
+	icon = wa.get_icon(Currency.Type.GROWTH)
+	color = lv.get_color(LORED.Type.GROWTH)
+	effect = Effect.new(
+		Effect.Type.BONUS_ACTION_ON_CURRENCY_GAIN,
+		{
+			"upgrade_type": type,
+			"currency": Currency.Type.GROWTH,
+			"replaced_upgrade": Type.ITS_GROWIN_ON_ME,
+			"effect value": 1,
+			"bonus_action_type": Effect.BONUS_ACTION.INCREASE_EFFECT,
+			"modifier": 0.05,
+		}
+	)
+	effect.set_dynamic(true)
+	add_effected_lored(LORED.Type.IRON_ORE)
+	add_effected_lored(LORED.Type.COPPER_ORE)
+	add_effected_lored(LORED.Type.IRON)
+	add_effected_lored(LORED.Type.COPPER)
+	cost = Cost.new({
+		Currency.Type.TUMORS: Value.new("8e13"),
+	})
+	
+	await up.all_upgrades_initialized
+	required_upgrade = Type.AUTO_PERSIST
+	
+	var itsgrowin = up.get_upgrade(Type.ITS_GROWIN_ON_ME).icon_and_name_text
+	description = "Whenever %s pops, %s, %s, %s, and %s all receive an [b]output and input boost[/b]. This Upgrade replaces %s." % [growth, irono, copo, iron, cop, itsgrowin]
+
+
+func init_WHAT_IN_COUSIN_FUCKIN_TARNATION() -> void:
+	name = "what in cousin-fuckin tarnation alabama betty crocker miss fuckin betty white shit is this"
+	effect = Effect.new(
+		Effect.Type.ERASE_CURRENCY_FROM_COST,
+		{
+			"upgrade_type": type,
+			"currency": Currency.Type.GROWTH,
+			"effected_lored": LORED.Type.TARBALLS,
+		}
+	)
+	cost = Cost.new({
+		Currency.Type.TUMORS: Value.new("5e13"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.KETO
+
+
+func init_MASTER_IRON_WORKER() -> void:
+	name = "Master Iron Worker"
+	set_effect(Effect.Type.AUTOBUYER)
+	add_effected_lored(LORED.Type.STEEL)
+	cost = Cost.new({
+		Currency.Type.TUMORS: Value.new("1e13"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.SCOOPY_DOOPY
+
+
+func init_JOINTSHACK() -> void:
+	name = "Jointshack"
+	set_effect(Effect.Type.AUTOBUYER)
+	add_effected_lored(LORED.Type.PAPER)
+	cost = Cost.new({
+		Currency.Type.TUMORS: Value.new("2e13"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.MASTER_IRON_WORKER
+
+
+func init_DUST() -> void:
+	set_effect(Effect.Type.LORED_PERSIST)
+	add_effected_stage(1)
+	var a = up.get_menu_color_text(UpgradeMenu.Type.MALIGNANT) % 
+	var b = gv.get_stage(Stage.Type.STAGE1).get_colored_name()
+	description = "%s no longer resets %s LOREDs." % [a % "Metastasizing", b]
+	cost = Cost.new({
+		Currency.Type.TUMORS: Value.new("3e14"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.ITS_SPREADIN_ON_ME
+
+
+
 
 
 
@@ -2660,11 +3470,11 @@ func add_effected_stage(_stage: int) -> void:
 # - Signal
 
 func required_upgrade_purchased() -> void:
-	unlocked = true
+	unlocked.set_true()
 
 
 func required_upgrade_unpurchased() -> void:
-	unlocked = false
+	unlocked.set_false()
 
 
 func affordable_changed(affordable: bool) -> void:
@@ -2689,7 +3499,7 @@ func purchase() -> void:
 	if purchased or will_apply_effect:
 		return
 	cost.purchase(true)
-	purchased = true
+	purchased.set_true()
 	if special:
 		will_apply_effect = true
 	else:
@@ -2720,7 +3530,16 @@ func remove() -> void:
 		effect.remove()
 		effect.reset_effects()
 		cost.purchased = false
-		purchased = false
+		purchased.set_false()
+
+
+
+func enable_persist() -> void:
+	persist.set_reset_value(true)
+
+
+func disable_persist() -> void:
+	persist.reset()
 
 
 
@@ -2738,7 +3557,8 @@ func prestige(_stage: int) -> void:
 		if will_apply_effect:
 			apply()
 		elif not special:
-			remove()
+			if persist.is_false_on_reset():
+				remove()
 		if effect.dynamic:
 			effect.reset_effects()
 	elif _stage > stage:

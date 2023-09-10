@@ -39,9 +39,9 @@ func setup(data: Dictionary) -> void:
 	name_label.text = lored.name + ","
 	title.text = lored.title
 	color = lored.color
-	lored.connect("just_purchased", just_purchased)
+	lored.purchased.changed.connect(purchased_updated)
 	lored.connect("leveled_up", update_level)
-	just_purchased()
+	purchased_updated(lored.purchased.get_value())
 	update_level(lored.level)
 	if lv.advanced_details_unlocked or gv.dev_mode:
 		advanced_details.show()
@@ -75,8 +75,8 @@ func update_level(_level: int) -> void:
 	level.text = "Level " + "[b]" + lored.get_level_text()
 
 
-func just_purchased() -> void:
-	if lored.purchased:
+func purchased_updated(val: bool) -> void:
+	if val:
 		details.show()
 		description.hide()
 		fuel.show()
