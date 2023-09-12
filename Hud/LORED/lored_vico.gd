@@ -120,7 +120,7 @@ func attach_lored(_lored: LORED) -> void:
 	lored.unlocked.became_true.connect(show)
 	lored.unlocked.became_false.connect(hide)
 	lored.purchased.changed.connect(purchased_changed)
-	lored.autobuy_changed.connect(autobuy_changed)
+	lored.autobuy.changed.connect(autobuy_changed)
 	
 	info.button.connect("mouse_entered", show_info_tooltip)
 	info.button.connect("mouse_exited", gv.clear_tooltip)

@@ -19,6 +19,7 @@ config/Version="3.0.0"
 
 [autoload]
 
+db="*res://Script/Database/Database.gd"
 gv="*res://Script/Autoload/Overseer.gd"
 wa="*res://Script/Autoload/Wallet.gd"
 lv="*res://Script/Autoload/LOREDs.gd"

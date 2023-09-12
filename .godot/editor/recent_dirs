@@ -1,3 +1,4 @@
+res://Script/Database
 C:/Program Files (x86)/Steam/steamapps/common/Godot Engine/editor_data
 C:/Users/dills/AppData/Local/Programs/Microsoft VS Code
 res://Hud/Save
@@ -12,7 +13,6 @@ res://Theme
 res://Hud/LORED/Tooltip
 res://Hud/Emote
 res://Hud/Upgrade
-res://Hud/Log
 res://Hud/LORED
 res://Sprites/Hud
 res://Sprites/Currency

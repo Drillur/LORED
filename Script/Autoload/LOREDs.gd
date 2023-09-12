@@ -294,7 +294,7 @@ func purchased_every_unlocked_lored_once() -> bool:
 
 
 func is_lored_unlocked(lored: int) -> bool:
-	return get_lored(lored).unlocked
+	return get_lored(lored).unlocked.is_true()
 
 
 func is_lored_purchased(lored: int) -> bool:

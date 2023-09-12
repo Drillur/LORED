@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cs0ox54ujt62x"
-path="res://.godot/imported/thewitchofloredelith.png-5169a4ad96df2c58a497214e1c8d8035.ctex"
+path="res://.godot/imported/thewitchofloredelith.png-f92a3cce99983f76f38b0ef898b40e57.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Sprites/Upgrades/thewitchofloredelith.png"
-dest_files=["res://.godot/imported/thewitchofloredelith.png-5169a4ad96df2c58a497214e1c8d8035.ctex"]
+source_file="res://Sprites/upgrades/thewitchofloredelith.png"
+dest_files=["res://.godot/imported/thewitchofloredelith.png-f92a3cce99983f76f38b0ef898b40e57.ctex"]
 
 [params]
 

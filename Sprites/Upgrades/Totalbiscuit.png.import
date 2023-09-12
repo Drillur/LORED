@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cpjtvs6ijbec0"
-path="res://.godot/imported/Totalbiscuit.png-2bffee6ccd391091f9ca40a8b83c65d2.ctex"
+path="res://.godot/imported/Totalbiscuit.png-fd1cf881934fce94e21ba0ae19a8e50c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Sprites/Upgrades/Totalbiscuit.png"
-dest_files=["res://.godot/imported/Totalbiscuit.png-2bffee6ccd391091f9ca40a8b83c65d2.ctex"]
+source_file="res://Sprites/upgrades/Totalbiscuit.png"
+dest_files=["res://.godot/imported/Totalbiscuit.png-fd1cf881934fce94e21ba0ae19a8e50c.ctex"]
 
 [params]
 

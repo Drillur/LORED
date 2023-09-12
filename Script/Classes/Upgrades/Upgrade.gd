@@ -285,7 +285,9 @@ var icon: Texture:
 		icon_text = "[img=<15>]" + icon.get_path() + "[/img]"
 var icon_text: String
 var icon_and_name_text: String
-var effected_loreds_text: String
+var affected_loreds_text: String
+var color_text: String
+var colored_name: String
 var color: Color
 var loreds: Array
 
@@ -321,6 +323,8 @@ var vico: UpgradeVico:
 
 var persist := Bool.new(false)
 
+var effect: UpgradeEffect
+
 var has_required_upgrade := false
 var required_upgrade: int:
 	set(val):
@@ -338,6 +342,7 @@ var cost: Cost
 func _init(_type: int) -> void:
 	type = _type
 	key = Type.keys()[type]
+	
 	if type >= Type.AUTOSHOVELER:
 		stage = 1
 		special = type <= Type.ROUTINE
@@ -347,6 +352,7 @@ func _init(_type: int) -> void:
 	else: #s4
 		stage = 3
 		special = false #s3
+	
 	gv.hard_reset.connect(reset)
 	gv.prestige.connect(prestige)
 	
@@ -378,15 +384,23 @@ func _init(_type: int) -> void:
 	if type != Type.ROUTINE:
 		up.add_upgrade_to_menu(upgrade_menu, type)
 	
-	if not has_method("init_" + key):
-		return
-	call("init_" + key)
+	
+	var data = db.upgrade[key]
+	
+	name = data.name
+	effect = data.effect
+	set_cost(data.cost_key, data.cost_value)
+	if "description" in data.keys():
+		description = data.description
+	if "affected_loreds" in data.keys():
+		set_affected_loreds(data.affected_loreds)
+	
 	
 	cost.stage = stage
 	cost.affordable_changed.connect(affordable_changed)
 	icon_and_name_text = icon_text + " " + name
 	
-	effected_loreds_text = get_effected_loreds_text()
+	affected_loreds_text = get_affected_loreds_text()
 	
 	if icon == null:
 		if loreds.size() < 10:
@@ -400,27 +414,53 @@ func _init(_type: int) -> void:
 				i += 1
 			icon = lv.get_icon(loreds[ok])
 			color = lv.get_color(loreds[ok])
+
+	color_text = "[color=#" + color.to_html() + "]%s[/color]"
+	colored_name = color_text % name
 	
 	has_description = description != ""
 	
-	SaveManager.connect("load_finished", load_finished)
+	SaveManager.load_finished.connect(load_finished)
 
 
 
-func add_effected_lored(lored: int) -> void:
+
+
+func set_cost(keys, values) -> void:
+	var data := {}
+	
+	if keys is Array:
+		for i in keys.size():
+			data[LORED.Type[keys[i]]] = Value.new(str(values[i]))
+	else:
+		data[LORED.Type[keys]] = Value.new(str(values))
+	
+	cost = Cost.new(data)
+
+
+func set_affected_loreds(val) -> void:
+	if val is Array:
+		add_affected_loreds(val)
+	elif val is String:
+		add_affected_lored(LORED.Type[val])
+
+
+func add_affected_lored(lored: int) -> void:
 	loreds.append(lored)
-	#effect.add_effected_lored(lored)
+	effect.add_effected_lored(lored)
 	await up.all_upgrades_initialized
 	lv.get_lored(lored).add_influencing_upgrade(type)
 
 
-func add_effected_loreds(group: Array) -> void:
+func add_affected_loreds(group: Array) -> void:
 	for lored in group:
-		add_effected_lored(lored)
+		if lored is String:
+			lored = LORED.Type[lored]
+		add_affected_lored(lored)
 
 
-func add_effected_stage(_stage: int) -> void:
-	add_effected_loreds(lv.get_loreds_in_stage(_stage))
+func add_affected_stage(_stage: int) -> void:
+	add_affected_loreds(lv.get_loreds_in_stage(_stage))
 	icon = gv.get_stage(_stage).icon
 	color = gv.get_stage(_stage).color
 
@@ -473,7 +513,7 @@ func finalize_purchase() -> void:
 
 
 func apply() -> void:
-	pass#effect.apply()
+	effect.apply()
 
 
 func refund() -> void:
@@ -487,8 +527,8 @@ func remove() -> void:
 	if purchased:
 		if special:
 			will_apply_effect = false
-		#effect.remove()
-		#effect.reset_effects()
+		effect.remove()
+		effect.reset_effects()
 		cost.purchased = false
 		purchased.set_false()
 
@@ -519,8 +559,8 @@ func prestige(_stage: int) -> void:
 		elif not special:
 			if persist.is_false_on_reset():
 				remove()
-#		if effect.dynamic:
-#			effect.reset_effects()
+		if effect.dynamic:
+			effect.reset_effects()
 	elif _stage > stage:
 		remove()
 
@@ -528,8 +568,8 @@ func prestige(_stage: int) -> void:
 
 func reset() -> void:
 	remove()
-#	if effect != null and effect.dynamic:
-#		effect.reset_effects()
+	if effect != null and effect.dynamic:
+		effect.reset_effects()
 	times_purchased = 0
 	will_apply_effect = false
 
@@ -537,13 +577,13 @@ func reset() -> void:
 
 # - Get
 
-#func get_effect_text() -> String:
-#	return effect.get_text()
+func get_effect_text() -> String:
+	return effect.get_text()
 
 
-func get_effected_loreds_text() -> String:
-	if effected_loreds_text != "":
-		return effected_loreds_text
+func get_affected_loreds_text() -> String:
+	if affected_loreds_text != "":
+		return affected_loreds_text
 	
 	if loreds == lv.get_loreds_in_stage(1):
 		var _stage = gv.stage1.get_colored_name()
@@ -558,10 +598,10 @@ func get_effected_loreds_text() -> String:
 		var _stage = gv.stage4.get_colored_name()
 		return "[i]for [/i]" + _stage
 	
-#	if effect.type == Effect.Type.UPGRADE_AUTOBUYER:
-#		var upmen = up.get_upgrade_menu(UpgradeMenu.Type.NORMAL) as UpgradeMenu
-#		var text = upmen.color_text % (upmen.name)
-#		return "[i]for [/i]" + text
+	if effect.type == UpgradeEffect.Type.UPGRADE_AUTOBUYER:
+		var upmen = up.get_upgrade_menu(UpgradeMenu.Type.NORMAL) as UpgradeMenu
+		var text = upmen.color_text % (upmen.name)
+		return "[i]for [/i]" + text
 	# if loreds.size() > 8: probably a stage.
 	var arr := []
 	for lored in loreds:

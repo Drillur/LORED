@@ -983,8 +983,8 @@ func purchased_updated(val: bool) -> void:
 			wa.set_wish_eligible_currency(cur, false)
 
 
-func purchased_reset_value_updated() -> void:
-	if purchased.get_reset_value():
+func purchased_reset_value_updated(val: bool) -> void:
+	if val:
 		if not lv.started.is_connected(force_purchase):
 			lv.started.connect(force_purchase)
 	else:
@@ -1400,6 +1400,8 @@ func work(job_type: int = get_next_job_automatically()) -> void:
 
 
 func get_next_job_automatically() -> int:
+	if purchased.is_false():
+		return -1
 	for _type in sorted_jobs:
 		var job: Job = jobs[_type]
 		if job.can_start():

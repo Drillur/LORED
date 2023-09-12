@@ -140,8 +140,9 @@ func _ready():
 		connect("upgrade_purchased", upgrade_menus[type].add_purchased_upgrade)
 		upgrade_menus[type].purchasable_upgrade_count_increased.connect(purchasable_upgrade_count_increased)
 		upgrade_menus[type].purchasable_upgrade_count_decreased.connect(purchasable_upgrade_count_decreased)
+	return
 	for type in Upgrade.Type.values():
-		upgrades[type] = Upgrade.new(type)
+		#upgrades[type] = Upgrade.new(type)
 		upgrades_by_key[upgrades[type].key] = upgrades[type]
 	emit_signal("all_upgrades_initialized")
 	
@@ -259,11 +260,11 @@ func is_menu_unlocked(menu: int) -> bool:
 
 
 func is_upgrade_purchased(upgrade: int) -> bool:
-	return upgrades[upgrade].purchased
+	return upgrades[upgrade].purchased.is_true()
 
 
 func is_upgrade_unlocked(upgrade: int) -> bool:
-	return upgrades[upgrade].unlocked
+	return upgrades[upgrade].unlocked.is_true()
 
 
 func is_upgrade_menu_unlocked(menu: int) -> bool:
