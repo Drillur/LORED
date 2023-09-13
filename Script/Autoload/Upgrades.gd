@@ -114,8 +114,6 @@ var upgrade_container: UpgradeContainer:
 	set(val):
 		upgrade_container = val
 		for upgrade in upgrades.values():
-			if upgrade.type < Upgrade.Type.AUTOSHOVELER:
-				continue
 			upgrade_container.set_vico(upgrade)
 
 signal all_upgrades_initialized
@@ -140,9 +138,8 @@ func _ready():
 		connect("upgrade_purchased", upgrade_menus[type].add_purchased_upgrade)
 		upgrade_menus[type].purchasable_upgrade_count_increased.connect(purchasable_upgrade_count_increased)
 		upgrade_menus[type].purchasable_upgrade_count_decreased.connect(purchasable_upgrade_count_decreased)
-	return
 	for type in Upgrade.Type.values():
-		#upgrades[type] = Upgrade.new(type)
+		upgrades[type] = Upgrade.new(type)
 		upgrades_by_key[upgrades[type].key] = upgrades[type]
 	emit_signal("all_upgrades_initialized")
 	

@@ -29,7 +29,7 @@ func get_prestige_description() -> String:
 		UpgradeMenu.Type.MALIGNANT:
 			if gv.stage2.unlocked:
 				var t = up.get_upgrade_menu(UpgradeMenu.Type.NORMAL).colored_name
-				var s = gv.get_stage(Stage.Type.STAGE1).get_colored_name()
+				var s = gv.get_stage(Stage.Type.STAGE1).colored_name
 				var m = wa.get_colored_currency_name(Currency.Type.MALIGNANCY)
 				text = "Resets %s LOREDs, all %s, and all %s currencies except for %s." % [s, t, s, m]
 			else:

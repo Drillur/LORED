@@ -106,16 +106,13 @@ func attach_lored(_lored: LORED) -> void:
 	
 	# signals
 	lored.connect("leveled_up", lored_leveled_up)
-	lored.cost.connect("affordable_changed", cost_update)
-	cost_update(lored.cost.affordable)
+	lored.cost.affordable.changed.connect(cost_update)
+	cost_update(lored.cost.affordable.get_value())
 	level_up.button.connect("pressed", purchase_level_up)
 	sleep.button.connect("pressed", sleep_clicked)
-	lored.connect("asleep_changed", sleep_changed)
+	lored.asleep.changed.connect(sleep_changed)
 	fuel_bar.attach_attribute(lored.fuel)
 	lored.connect("became_unable_to_work", start_idle)
-	lored.connect("went_to_sleep", go_to_sleep)
-	lored.connect("woke_up", wake_up)
-	lored.cost.connect("became_affordable", flash_level_up_button)
 	lored.connect("leveled_up", flash_on_level_up)
 	lored.unlocked.became_true.connect(show)
 	lored.unlocked.became_false.connect(hide)
@@ -153,7 +150,7 @@ func attach_lored(_lored: LORED) -> void:
 	active_buffs.button.mouse_default_cursor_shape = Control.CURSOR_ARROW
 	animation.setup(lored)
 	animation.modulate = lored.faded_color
-	level_up.show_check() if lored.cost.affordable else level_up.hide_check()
+	level_up.show_check() if lored.cost.affordable.is_true() else level_up.hide_check()
 	currency.hide_threshold()
 	lored_name.text = lored.name + ", " + lored.title
 	lored_icon.texture = lored.icon
@@ -161,9 +158,10 @@ func attach_lored(_lored: LORED) -> void:
 	hide()
 
 
-
-func cost_update(affordable: bool) -> void:
-	level_up.check.visible = affordable
+func cost_update(val: bool) -> void:
+	level_up.check.visible = val
+	if val:
+		flash_level_up_button()
 
 
 
@@ -271,7 +269,7 @@ func autobuy_changed(autobuy: bool) -> void:
 # - Actions
 
 func purchase_level_up() -> void:
-	if lored.cost.affordable or gv.dev_mode:
+	if lored.cost.affordable.is_true() or gv.dev_mode:
 		lored.manual_purchase()
 	else:
 		gv.get_tooltip().get_price_node().flash()
@@ -302,18 +300,22 @@ func set_status_and_currency(_status: String, _currency: int) -> void:
 
 func sleep_clicked() -> void:
 	if lored.will_go_to_sleep():
-		lored.dequeue_sleep()
-		sleep_changed(false)
+		lored.wake_up()
 	else:
-		lored.enqueue_sleep()
-		sleep_changed(true)
+		lored.go_to_sleep()
 
 
-func sleep_changed(asleep: bool) -> void:
-	if asleep:
+func sleep_changed(val: bool) -> void:
+	if val:
 		sleep.set_icon(gv.icon_awake)
+		set_status_and_currency("[wave amp=20 freq=1]Sleeping.", lored.primary_currency)
+		animation.sleep()
+		start_spewing_sleep_text()
+		start_sleep_timer()
 	else:
 		sleep.set_icon(gv.icon_asleep)
+		sleep_text_timer.stop()
+		sleep_timer.stop()
 
 
 func start_idle() -> void:
@@ -322,20 +324,8 @@ func start_idle() -> void:
 	animation.sleep()
 
 
-func wake_up() -> void:
-	sleep_text_timer.stop()
-	sleep_timer.stop()
-
-
-func go_to_sleep() -> void:
-	set_status_and_currency("[wave amp=20 freq=1]Sleeping.", lored.primary_currency)
-	animation.sleep()
-	start_spewing_sleep_text()
-	start_sleep_timer()
-
-
 func start_sleep_timer() -> void:
-	if lored.asleep and sleep_timer.is_stopped():
+	if lored.asleep.is_true() and sleep_timer.is_stopped():
 		sleep_timer.start(1)
 
 
@@ -344,7 +334,7 @@ func spent_one_second_asleep() -> void:
 
 
 func start_spewing_sleep_text() -> void:
-	if lored.asleep and sleep_text_timer.is_stopped():
+	if lored.asleep.is_true() and sleep_text_timer.is_stopped():
 		sleep_text_timer.start(randf_range(3, 6))
 
 

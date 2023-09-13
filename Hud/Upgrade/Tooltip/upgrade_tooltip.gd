@@ -32,17 +32,12 @@ func setup(data: Dictionary) -> void:
 	color = upgrade.color
 	
 	upgrade.purchased.changed.connect(purchased_changed)
-	upgrade.unlocked.became_false.connect(upgrade_just_locked)
-	upgrade.unlocked.became_true.connect(upgrade_just_unlocked)
-	
-	if upgrade.unlocked:
-		upgrade_just_unlocked()
-	else:
-		upgrade_just_locked()
+	upgrade.unlocked.changed.connect(upgrade_unlocked_changed)
+	purchased_changed(upgrade.purchased.get_value())
+	upgrade_unlocked_changed(upgrade.unlocked.get_value())
 	
 	price.setup(upgrade.cost)
 	price.color = upgrade.color
-	purchased_changed(upgrade.purchased.get_value())
 	
 	if upgrade.has_required_upgrade:
 		required_upgrade.text = "[center][b][i]" + up.get_icon_and_name_text(upgrade.required_upgrade)
@@ -63,6 +58,11 @@ func setup(data: Dictionary) -> void:
 		update_effect_text()
 		recipients.show()
 		effect.show()
+	
+	match upgrade.type:
+		Upgrade.Type.JOHN_PETER_BAIN_TOTALBISCUIT:
+			description.text = "[center][i]I am here to ask and answer one simple question:\nWTF is LORED?[/i]"
+			description.show()
 	
 	if up.is_upgrade_purchased(upgrade.type):
 		match upgrade.type:
@@ -95,19 +95,18 @@ func update_description_its_growin() -> void:
 
 
 func update_description_milkshake() -> void:
-	var effect = "[b]x" + upgrade.effect.get_effect_text() + "[/b]"
-	description.text = upgrade.description + "\n\n[center]%s" % effect
+	var a = "[b]x" + upgrade.effect.get_effect_text() + "[/b]"
+	description.text = upgrade.description + "\n\n[center]%s" % a
 
 
-func upgrade_just_unlocked() -> void:
-	unlocked.show()
-	locked.hide()
-
-
-func upgrade_just_locked() -> void:
-	unlocked.hide()
-	locked.show()
-	set_random_upgrade_description()
+func upgrade_unlocked_changed(val: bool) -> void:
+	if val:
+		unlocked.show()
+		locked.hide()
+	else:
+		unlocked.hide()
+		locked.show()
+		set_random_upgrade_description()
 
 
 func set_random_upgrade_description() -> void:

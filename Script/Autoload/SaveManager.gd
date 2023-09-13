@@ -376,13 +376,11 @@ func is_compatible_save(data: Dictionary) -> bool:
 func can_load_game(method := default_load_method, path = save_name) -> bool:
 	if not save_exists(path):
 		return false
-	print(1)
 	var json = JSON.new()
 	var error = json.parse(get_save_text(method, path))
 	if error != OK:
 		print("Loading error. ", error)
 		return false
-	print(2)
 	var data := get_save_data()
 	return is_compatible_save(data)
 

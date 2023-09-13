@@ -48,28 +48,22 @@ func setup(data: Dictionary) -> void:
 	await ready
 	
 	color = lored.color
-	lored.connect("woke_up", sleep)
-	lored.connect("sleep_just_dequeued", sleep)
-	lored.connect("sleep_just_enqueued", wake_up)
-	if lored.asleep or lored.will_go_to_sleep():
-		wake_up()
-	else:
-		sleep()
+	lored.asleep.changed.connect(sleep_changed)
+	sleep_changed(lored.asleep.get_value())
 	var text_length = description.text.length()
 	description.custom_minimum_size.x = min(250, 50 + (text_length * 2))
 
 
-func wake_up() -> void:
-	title.text = "Wake"
-	if randi() % 100 < 10:
-		description.text = wake_pool[randi() % wake_pool.size()]
+func sleep_changed(val: bool) -> void:
+	if val:
+		title.text = "Sleep"
+		if randi() % 100 < 10:
+			description.text = sleep_pool[randi() % sleep_pool.size()]
+		else:
+			description.text = "Go to sleep."
 	else:
-		description.text = "Wake up!"
-
-
-func sleep() -> void:
-	title.text = "Sleep"
-	if randi() % 100 < 10:
-		description.text = sleep_pool[randi() % sleep_pool.size()]
-	else:
-		description.text = "Go to sleep."
+		title.text = "Wake"
+		if randi() % 100 < 10:
+			description.text = wake_pool[randi() % wake_pool.size()]
+		else:
+			description.text = "Wake up!"

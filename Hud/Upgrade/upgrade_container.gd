@@ -11,6 +11,8 @@ extends MarginContainer
 @onready var count = %Count
 @onready var s1n = %S1N
 @onready var s1m = %S1M
+@onready var s2n = %S2N
+@onready var s2m = %S2M
 @onready var scroll_container_0 = %ScrollContainer0
 @onready var scroll_container_1 = %ScrollContainer1
 @onready var scroll_container_2 = %ScrollContainer2
@@ -57,6 +59,9 @@ func _ready():
 	
 	s1m.connect("mouse_entered", show_s1m_avatar_tooltip)
 	s1m.connect("mouse_exited", gv.clear_tooltip)
+	
+	s2n.connect("mouse_entered", show_s2n_avatar_tooltip)
+	s2n.connect("mouse_exited", gv.clear_tooltip)
 	
 	for i in range(0, 8):
 		var _color = up.get_menu_color(i)
@@ -132,6 +137,7 @@ func show_s1n_avatar_tooltip() -> void:
 			"I'm a remnant of an era long past. ... [i]the [b]Kongregate era!",
 			"This huge arrow is supposed to represent Upgrades!",
 			"This isn't as heavy as you might think because I don't really exist so I'm not holding anything!",
+			"The original inspiration for Ore Lord (the first version of LORED) was Factorio! I don't think the two are much alike at this point.",
 		][randi() % 5],
 		"color": color,
 	})
@@ -145,6 +151,19 @@ func show_s1m_avatar_tooltip() -> void:
 			"People used to--and still do!--complain about [b]IT'S GROWIN ON ME[/b] favoring either Iron or Copper because it seemed to be the case on the particular run they were on. It is a little known fact that it actually [i]does[/i] favor one or the other! Bwa-haha!\n\nJust kiddin. Here is the code for it:\nvar increase = Big.new(amount).m(0.05)\nif randi() % 2 == 0:\n\teffect.add(increase)\nelse:\n\teffect2.add(increase)",
 			"Although my strategies and techniques for animation my have changed (for the better), I will never re-do these older animations. Coal's was the first that was created, followed by Stone's!",
 			"At first, and for a good long while, the LOREDs had [b]no progress bar[/b]! I intended for the [i]animations[/i] to [i]replace[/i] them! Overall, it is best to have both.",
+		][randi() % 5],
+		"color": color,
+	})
+
+
+func show_s2n_avatar_tooltip() -> void:
+	gv.new_tooltip(gv.Tooltip.JUST_TEXT, right_down, {
+		"text": [
+			"Help me!",
+			"My strategy for adding Upgrades for Stage 2 was to play the game and look at what I wish there was an Upgrade for. That's pretty much it!",
+			"This segment of the game is the most difficult. You can make it through, I believe in you!",
+			"Shave and a haircut. Six bits! Get it? Because the chemo blasted away all of my hair!\n\nI hate cancer.",
+			"I wonder what music players like you listen to while playing this game... or are you watching a let's play series on YouTube? Or listening to a podcast! Oh--watching TV!!! NO! Your favorite movie!!!!\n\nWell, Drillur listens to ASMR while working. Music can be too distracting, he might start dancing.",
 		][randi() % 5],
 		"color": color,
 	})

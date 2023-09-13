@@ -225,7 +225,7 @@ class Objective:
 	func init_SLEEP(data: Dictionary) -> void:
 		progress = ValuePair.new(data["amount"])
 		object_type = data["object_type"]
-		lored_was_already_asleep = lv.get_lored(object_type).asleep
+		lored_was_already_asleep = lv.get_lored(object_type).asleep.get_value()
 		icon_path = lv.get_icon(object_type).get_path()
 		color = lv.get_color(object_type)
 		text = "Sleep"
@@ -331,12 +331,12 @@ class Objective:
 	
 	
 	func start_UPGRADE_PURCHASED() -> void:
-		up.get_upgrade(object_type).just_purchased.connect(update_UPGRADE_PURCHASED)
+		up.get_upgrade(object_type).purchased.became_true.connect(update_UPGRADE_PURCHASED)
 	
 	
 	func update_UPGRADE_PURCHASED() -> void:
 		progress.set_to(1)
-		up.get_upgrade(object_type).just_purchased.disconnect(update_UPGRADE_PURCHASED)
+		up.get_upgrade(object_type).purchased.became_true.disconnect(update_UPGRADE_PURCHASED)
 	
 	
 	

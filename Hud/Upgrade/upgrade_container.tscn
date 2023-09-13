@@ -78,6 +78,7 @@ theme_override_colors/font_selected_color = Color(0.937255, 0.32549, 0, 1)
 tab_alignment = 1
 
 [node name="Q" type="MarginContainer" parent="MarginContainer/VBoxContainer/Tabs"]
+visible = false
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
@@ -562,7 +563,6 @@ unique_name_in_owner = true
 layout_mode = 2
 
 [node name="E" type="MarginContainer" parent="MarginContainer/VBoxContainer/Tabs"]
-visible = false
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
@@ -577,7 +577,6 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 theme = ExtResource("1_nf00e")
-scroll_vertical = 100
 horizontal_scroll_mode = 0
 
 [node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer2"]
@@ -593,6 +592,7 @@ layout_mode = 2
 mouse_filter = 2
 
 [node name="S2N" type="TextureRect" parent="MarginContainer/VBoxContainer/Tabs/E/VBoxContainer/ScrollContainer2/MarginContainer/Control"]
+unique_name_in_owner = true
 self_modulate = Color(2, 2, 2, 1)
 layout_mode = 0
 offset_left = 71.0
@@ -1107,7 +1107,6 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 theme = ExtResource("1_nf00e")
-scroll_vertical = 100
 horizontal_scroll_mode = 0
 
 [node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer3"]
@@ -1123,6 +1122,7 @@ layout_mode = 2
 mouse_filter = 2
 
 [node name="S2M" type="TextureRect" parent="MarginContainer/VBoxContainer/Tabs/R/VBoxContainer/ScrollContainer3/MarginContainer/Control"]
+unique_name_in_owner = true
 layout_mode = 0
 offset_left = 133.0
 offset_top = 1621.0

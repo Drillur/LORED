@@ -273,7 +273,7 @@ func get_as_float() -> float:
 
 
 func get_as_int() -> int:
-	return total.current.toInt()
+	return total.get_as_int()
 
 
 func get_current() -> Big:

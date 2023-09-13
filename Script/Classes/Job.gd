@@ -536,7 +536,7 @@ func erase_producer_and_user() -> void:
 
 func hookup_required_currencies() -> void:
 	if has_required_currencies:
-		required_currencies.connect("became_affordable", emit_workable)
+		required_currencies.affordable.became_true.connect(emit_workable)
 		required_currencies.use_allowed_changed.connect(required_currency_use_allowed_changed)
 
 
@@ -586,7 +586,7 @@ func emit_workable() -> void:
 			not has_required_currencies
 			or (
 				required_currencies.use_allowed
-				and required_currencies.affordable
+				and required_currencies.affordable.is_true()
 			)
 		)
 	):
@@ -781,6 +781,12 @@ func stop() -> void:
 	timer.stop()
 
 
+func stop_and_refund() -> void:
+	if has_required_currencies:
+		required_currencies.refund()
+	stop()
+
+
 
 func complete() -> void:
 	no_longer_working()
@@ -836,7 +842,7 @@ func can_start() -> bool:
 	if has_required_currencies:
 		if (
 			not required_currencies.use_allowed
-			or not required_currencies.affordable
+			or required_currencies.affordable.is_false()
 			or not required_currencies.can_take_candy_from_a_baby()
 		):
 			return false

@@ -38,35 +38,19 @@ func setup(_cost: Cost) -> void:
 	bar.hide_background().remove_markers()
 	
 	content.values()[content.size() - 1].get_node("MarginContainer").add_theme_constant_override("margin_bottom", 0)
-	cost.connect("became_affordable", flash_became_affordable)
-	cost.connect("affordable_changed", affordable_changed)
-	affordable_changed(cost.affordable)
+	cost.affordable.changed.connect(affordable_changed)
+	affordable_changed(cost.affordable.get_value())
 	set_eta_text()
 	bar.set_initial_progress(cost.get_progress_percent())
 	
-	if cost.affordable:
+	if cost.affordable.is_true():
 		bar.hide_edge()
 		bar.set_deferred("progress", 1.0)
 	else:
 		connect_calls()
 	
-	cost.connect("became_affordable", became_affordable)
-	cost.connect("became_unaffordable", became_unaffordable)
-	
 	bar.set_deferred("animating_changes", true)
 
-
-
-func became_affordable() -> void:
-	bar.hide_edge()
-	disconnect_calls()
-
-
-func became_unaffordable() -> void:
-	bar.show_edge()
-	connect_calls()
-	set_eta_text()
-	update_progress_bar()
 
 
 func connect_calls() -> void:
@@ -99,7 +83,7 @@ func set_eta_text() -> void:
 
 
 func flash():
-	if cost.affordable:
+	if cost.affordable.is_true():
 		flash_became_affordable()
 	else:
 		for cur in cost.get_insufficient_currency_types():
@@ -110,5 +94,14 @@ func flash_became_affordable() -> void:
 	gv.flash(check, Color(0, 1, 0))
 
 
-func affordable_changed(affordable: bool) -> void:
-	check.button_pressed = affordable
+func affordable_changed(val: bool) -> void:
+	check.button_pressed = val
+	if val:
+		bar.hide_edge()
+		disconnect_calls()
+		flash_became_affordable()
+	else:
+		bar.show_edge()
+		connect_calls()
+		set_eta_text()
+		update_progress_bar()

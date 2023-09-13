@@ -86,14 +86,8 @@ enum ReasonCannotWork {
 
 signal became_unable_to_work
 signal completed_job
-signal stopped_working
 signal began_working
 signal leveled_up(level)
-signal went_to_sleep
-signal woke_up
-signal asleep_changed(asleep)
-signal sleep_just_enqueued
-signal sleep_just_dequeued
 signal job_started(job)
 signal finished_emoting
 signal spent_one_second_asleep
@@ -129,15 +123,15 @@ var autobuy := Bool.new(false)
 
 func autobuy_changed(val: bool) -> void:
 	if val:
-		if not cost.became_affordable.is_connected(autobuy_check):
-			cost.became_affordable.connect(autobuy_check)
+		if not cost.affordable.became_true.is_connected(autobuy_check):
+			cost.affordable.became_true.connect(autobuy_check)
 			for cur in produced_currencies:
 				wa.get_currency(cur).total_net_became_negative.connect(autobuy_check)
 			for cur in required_currencies:
 				wa.get_currency(cur).total_net_became_positive.connect(autobuy_check)
 	else:
-		if cost.became_affordable.is_connected(autobuy_check):
-			cost.became_affordable.disconnect(autobuy_check)
+		if cost.affordable.became_true.is_connected(autobuy_check):
+			cost.affordable.became_true.disconnect(autobuy_check)
 			for cur in produced_currencies:
 				wa.get_currency(cur).total_net_became_negative.disconnect(autobuy_check)
 			for cur in required_currencies:
@@ -147,21 +141,9 @@ var autobuy_on_cooldown := false
 
 var purchased := Bool.new(false)
 
-var working := false
-var asleep := false:
-	set(val):
-		if asleep != val:
-			asleep = val
-			if val:
-				time_went_to_bed = Time.get_unix_time_from_system()
-				lv.lored_went_to_sleep(type)
-				emit_signal("went_to_sleep")
-			else:
-				if time_went_to_bed != 0:
-					calculate_time_in_bed()
-				lv.lored_woke_up(type)
-				emit_signal("woke_up")
-			emit_signal("asleep_changed", asleep)
+var working := Bool.new(false)
+var asleep := Bool.new(false)
+
 var time_went_to_bed := 0.0
 var fuel_rate_added := false:
 	set(val):
@@ -232,6 +214,8 @@ func _init(_type: int) -> void:
 	unlocked.changed.connect(unlocked_updated)
 	unlocked.reset_value_changed.connect(unlocked_reset_value_updated)
 	
+	asleep.changed.connect(asleep_updated)
+	
 	call("init_" + key)
 	
 	key_lored = type in lv.key_loreds
@@ -245,7 +229,7 @@ func _init(_type: int) -> void:
 		faded_color = color
 	color_text = "[color=#" + color.to_html() + "]%s[/color]"
 	
-	connect("woke_up", work)
+	asleep.became_false.connect(work)
 	connect("completed_job", work)
 	
 	SaveManager.connect("load_finished", load_finished)
@@ -970,7 +954,7 @@ func attach_vico(_vico: LOREDVico) -> void:
 
 
 func purchased_updated(val: bool) -> void:
-	if purchased.is_true():
+	if val:
 		lv.lored_became_active(type)
 		for cur in produced_currencies:
 			wa.unlock_currency(cur)
@@ -992,9 +976,18 @@ func purchased_reset_value_updated(val: bool) -> void:
 			lv.started.disconnect(force_purchase)
 
 
+func asleep_updated(val: bool) -> void:
+	if val:
+		time_went_to_bed = Time.get_unix_time_from_system()
+		lv.lored_went_to_sleep(type)
+	else:
+		if time_went_to_bed != 0:
+			calculate_time_in_bed()
+		lv.lored_woke_up(type)
 
-func unlocked_updated() -> void:
-	if unlocked.is_true():
+
+func unlocked_updated(val: bool) -> void:
+	if val:
 		lv.lored_unlocked(type)
 		autobuy_check()
 		saved_vars.append("fuel")
@@ -1009,8 +1002,8 @@ func unlocked_updated() -> void:
 		saved_vars.erase("time_spent_asleep")
 
 
-func unlocked_reset_value_updated() -> void:
-	if unlocked.get_reset_value():
+func unlocked_reset_value_updated(val: bool) -> void:
+	if val:
 		if not lv.started.is_connected(unlock):
 			lv.started.connect(unlock)
 	else:
@@ -1110,10 +1103,10 @@ func reset(hard: bool):
 		cost.recheck()
 		if type == Type.STONE:
 			fuel.add(9)
-	asleep = false
-	if working:
+	asleep.set_to(false)
+	if working.is_true():
 		stop_job()
-	working = false
+	working.set_false()
 	
 	if hard:
 		if purchased.is_true_by_default():
@@ -1159,7 +1152,7 @@ func should_autobuy() -> bool:
 		and unlocked.is_true()
 		and gv.run_duration >= 1
 		and can_afford()
-		and not asleep
+		and asleep.is_false()
 	):
 		if (
 			type == Type.GALENA and not lv.is_lored_purchased(Type.DRAW_PLATE)
@@ -1270,36 +1263,16 @@ func unlock() -> void:
 	unlocked.set_to(true)
 
 
-
-func enqueue_sleep() -> void:
-	if asleep or is_connected("completed_job", go_to_sleep):
-		return
-	emit_signal("sleep_just_enqueued")
-	if working:
-		connect("completed_job", go_to_sleep)
-	else:
-		go_to_sleep()
-
-
 func go_to_sleep() -> void:
-	asleep = true
-	emit_signal("stopped_working")
+	if working.is_true():
+		last_job.stop_and_refund()
+	asleep.set_to(true)
 	if is_connected("completed_job", go_to_sleep):
 		disconnect("completed_job", go_to_sleep)
 
 
-func dequeue_sleep() -> void:
-	if asleep:
-		wake_up()
-	else:
-		emit_signal("sleep_just_dequeued")
-		if is_connected("completed_job", go_to_sleep):
-			disconnect("completed_job", go_to_sleep)
-
-
 func wake_up() -> void:
-	asleep = false
-	emit_signal("woke_up")
+	asleep.set_to(false)
 	if is_connected("completed_job", go_to_sleep):
 		disconnect("completed_job", go_to_sleep)
 
@@ -1331,7 +1304,7 @@ func add_influencing_upgrade(upgrade: int) -> void:
 
 
 func influencing_upgrade_purchased_changed(upgrade: Upgrade) -> void:
-	if upgrade.purchased:
+	if upgrade.purchased.is_true():
 		unpurchased_upgrades.erase(upgrade.type)
 	else:
 		if not upgrade.type in unpurchased_upgrades:
@@ -1384,7 +1357,7 @@ func disconnect_limit_break(sig: Signal) -> void:
 func work(job_type: int = get_next_job_automatically()) -> void:
 	if purchased.is_false() or unlocked.is_false():
 		return
-	if working or will_go_to_sleep():
+	if working.is_true():
 		return
 	if job_type > -1:
 		start_job(job_type)
@@ -1411,7 +1384,7 @@ func get_next_job_automatically() -> int:
 
 func start_job(_type: int) -> void:
 	reason_cannot_work = ReasonCannotWork.CAN_WORK
-	working = true
+	working.set_to(true)
 	last_job = jobs[_type]
 	last_job.start()
 	if vico == null:
@@ -1422,19 +1395,19 @@ func start_job(_type: int) -> void:
 
 
 func stop_job() -> void:
-	if working:
+	if working.is_true():
 		last_job.stop()
-	working = false
+	working.set_to(false)
 
 
 func job_completed() -> void:
-	working = false
+	working.set_to(false)
 	vico.job_completed()
 	emit_signal("completed_job")
 
 
 func job_cut_short() -> void:
-	working = false
+	working.set_to(false)
 
 
 
@@ -1445,7 +1418,6 @@ func determine_why_cannot_work() -> void:
 		cannot_work(ReasonCannotWork.INSUFFICIENT_CURRENCIES)
 	else:
 		cannot_work(ReasonCannotWork.UNKNOWN)
-	emit_signal("stopped_working")
 
 
 func cannot_work(reason: int) -> void:
@@ -1538,12 +1510,6 @@ func get_wish() -> String:
 
 # - Get
 
-func will_go_to_sleep() -> bool:
-	if asleep:
-		return true
-	return is_connected("completed_job", go_to_sleep)
-
-
 func is_visible() -> bool:
 	if lv.lored_container.current_tab + 1 != stage:
 		return false
@@ -1551,7 +1517,7 @@ func is_visible() -> bool:
 
 
 func can_afford() -> bool:
-	return cost.affordable
+	return cost.affordable.get_value()
 
 
 func get_level_text() -> String:

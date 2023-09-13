@@ -1,7 +1,16 @@
-[gd_scene load_steps=3 format=3 uid="uid://cjrvv7gf1rvcq"]
+[gd_scene load_steps=4 format=3 uid="uid://cjrvv7gf1rvcq"]
 
 [ext_resource type="Script" path="res://Hud/Tooltip/tooltip.gd" id="1_e14g4"]
 [ext_resource type="Theme" uid="uid://bl4v2v143rihi" path="res://Theme/Background.tres" id="1_ohnix"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6r76x"]
+bg_color = Color(0, 0, 0, 1)
+draw_center = false
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0, 0, 0, 0.501961)
 
 [node name="Tooltip" type="MarginContainer"]
 offset_right = 52.0
@@ -14,9 +23,17 @@ script = ExtResource("1_e14g4")
 layout_mode = 2
 theme = ExtResource("1_ohnix")
 
+[node name="border" type="Panel" parent="."]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_6r76x")
+
 [node name="Tooltip Content" type="MarginContainer" parent="."]
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
+theme_override_constants/margin_left = 1
+theme_override_constants/margin_top = 1
+theme_override_constants/margin_right = 1
+theme_override_constants/margin_bottom = 1
 
 [connection signal="item_rect_changed" from="Tooltip Content" to="." method="_on_tooltip_content_item_rect_changed"]

@@ -4,6 +4,7 @@ extends MarginContainer
 
 @onready var content = $"Tooltip Content"
 @onready var bg = $bg
+@onready var border = $border
 
 var tooltip_parent: MarginContainer
 var parent: Node
@@ -11,6 +12,11 @@ var parent: Node
 var will_adjust_position := false
 
 var type: int
+
+var color: Color:
+	set(val):
+		bg.modulate = val
+		#border.modulate = val
 
 
 

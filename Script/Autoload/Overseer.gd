@@ -351,7 +351,7 @@ func new_tooltip(type: int, parent: Node, info: Dictionary) -> void:
 	tooltip_content = SRC[TOOLTIP_KEYS[type]].instantiate()
 	tooltip_content.setup(info)
 	tooltip.content.add_child(tooltip_content)
-	tooltip.get_node("bg").self_modulate = tooltip_content.color
+	tooltip.color = tooltip_content.color
 	
 	tip_filled = true
 

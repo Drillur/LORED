@@ -1,13 +1,9 @@
 class_name Bool
 extends RefCounted
 
-
-
 var saved_vars := [
 	"current",
 ]
-
-
 
 signal changed(val)
 signal became_true
@@ -17,12 +13,10 @@ signal reset_value_changed(val)
 signal reset_value_became_true
 signal reset_value_became_false
 
-
 var base: bool:
 	set(val):
 		base = val
 		reset_value = val
-
 
 var current: bool:
 	set(val):
@@ -33,7 +27,6 @@ var current: bool:
 				became_true.emit()
 			else:
 				became_false.emit()
-
 
 var reset_value := false:
 	set(val):
@@ -46,14 +39,13 @@ var reset_value := false:
 				reset_value_became_false.emit()
 
 
-
 func _init(_base: bool) -> void:
 	base = _base
 	current = _base
 
 
-
 # - Action
+
 
 func set_true() -> void:
 	set_to(true)
@@ -92,34 +84,39 @@ func reset() -> void:
 	reset_value = base
 
 
-
 # - Get
+
 
 func is_true() -> bool:
 	return true if current else false
+
+
 func is_not_false() -> bool:
 	return is_true()
 
 
 func is_false() -> bool:
 	return not is_true()
+
+
 func is_not_true() -> bool:
 	return is_false()
 
 
-
 func is_true_on_reset() -> bool:
 	return true if reset_value else false
+
+
 func is_false_on_reset() -> bool:
 	return not is_true_on_reset()
 
 
-
 func is_true_by_default() -> bool:
 	return true if base else false
+
+
 func is_false_by_default() -> bool:
 	return not is_true_by_default()
-
 
 
 func get_value() -> bool:

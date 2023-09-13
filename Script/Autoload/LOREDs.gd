@@ -343,8 +343,8 @@ func is_lored_active(lored: int) -> bool:
 	return (
 		x.unlocked
 		and x.purchased.is_true()
-		and x.working
-		and not x.asleep
+		and x.working.is_true()
+		and x.asleep.is_false()
 	)
 
 

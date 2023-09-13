@@ -87,7 +87,6 @@ autowrap_mode = 0
 
 [node name="description" type="RichTextLabel" parent="VBoxContainer/Unlocked/VBoxContainer/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
-visible = false
 layout_mode = 2
 theme = ExtResource("1_eflbk")
 bbcode_enabled = true

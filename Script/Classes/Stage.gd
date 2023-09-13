@@ -28,6 +28,7 @@ var icon: Texture
 var icon_text: String
 var color: Color
 var color_text: String
+var colored_name: String
 var icon_and_name_text: String
 
 var times_reset := 0
@@ -50,6 +51,7 @@ func _init(_type: int) -> void:
 	icon_text = "[img=<15>]" + icon.get_path() + "[/img]"
 	color_text = "[color=#" + color.to_html() + "]%s[/color]"
 	icon_and_name_text = icon_text + " " + name
+	colored_name = color_text % name
 
 
 
@@ -103,9 +105,6 @@ func unlock() -> void:
 
 
 # - Get
-
-func get_colored_name() -> String:
-	return color_text % name
 
 
 func get_colored_icon_and_name() -> String:

@@ -192,3 +192,7 @@ func report() -> void:
 
 func get_as_float() -> float:
 	return current.toFloat()
+
+
+func get_as_int() -> int:
+	return current.toInt()

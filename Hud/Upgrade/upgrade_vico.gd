@@ -35,15 +35,15 @@ func setup(_upgrade: Upgrade):
 	lock.modulate = upgrade.color
 	button.autobuyer.modulate = upgrade.color
 	
-	button.button.connect("mouse_entered", show_tooltip)
-	button.button.connect("mouse_exited", gv.clear_tooltip)
-	button.connect("pressed", purchase)
+	button.mouse_entered.connect(show_tooltip)
+	button.mouse_exited.connect(gv.clear_tooltip)
+	button.pressed.connect(purchase)
 	
 	upgrade.purchased.changed.connect(purchased_changed)
 	upgrade.unlocked.changed.connect(unlocked_changed)
 	upgrade.autobuy_changed.connect(autobuyer_display)
 	purchased_changed(upgrade.purchased.get_value())
-	unlocked_changed()
+	unlocked_changed(upgrade.unlocked.get_value())
 
 
 
@@ -75,18 +75,18 @@ func purchased_changed(val: bool) -> void:
 		button.set_theme_standard()
 
 
-func unlocked_changed() -> void:
+func unlocked_changed(val: bool) -> void:
 	autobuyer_display()
-	if upgrade.unlocked:
-		if not upgrade.cost.affordable_changed.is_connected(cost_update):
-			upgrade.cost.connect("affordable_changed", cost_update)
-		cost_update(upgrade.cost.affordable)
+	if val:
+		if not upgrade.cost.affordable.changed.is_connected(cost_update):
+			upgrade.cost.affordable.changed.connect(cost_update)
+		cost_update(upgrade.cost.affordable.get_value())
 		button.modulate.a = 1
 		lock.hide()
 		button.icon.show()
 	else:
-		if upgrade.cost.is_connected("affordable_changed", cost_update):
-			upgrade.cost.disconnect("affordable_changed", cost_update)
+		if upgrade.cost.affordable.changed.is_connected(cost_update):
+			upgrade.cost.affordable.changed.disconnect(cost_update)
 		button.modulate.a = 0.5
 		lock.show()
 		button.icon.hide()
@@ -96,8 +96,8 @@ func unlocked_changed() -> void:
 func autobuyer_display() -> void:
 	button.autobuyer.visible = (
 		upgrade.autobuy
-		and upgrade.unlocked
-		and not upgrade.purchased
+		and upgrade.unlocked.is_true()
+		and upgrade.purchased.is_false()
 	)
 	if button.autobuyer.visible:
 		button.autobuyer.play()
@@ -109,11 +109,11 @@ func autobuyer_display() -> void:
 # - Actions
 
 func purchase() -> void:
-	if not upgrade.purchased:
-		if upgrade.unlocked and (upgrade.cost.affordable or gv.dev_mode):
+	if upgrade.purchased.is_false():
+		if upgrade.unlocked.is_true() and (upgrade.cost.affordable.is_true() or gv.dev_mode):
 			upgrade.purchase()
 			upgrade.cost.throw_texts(center)
-		elif upgrade.unlocked:
+		elif upgrade.unlocked.is_true():
 			gv.get_tooltip().get_price_node().flash()
 		else:
 			up.get_vico(upgrade.required_upgrade).flash()

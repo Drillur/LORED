@@ -3,22 +3,11 @@ extends RefCounted
 
 
 
-signal became_affordable
-signal became_unaffordable
-signal affordable_changed(affordable)
 signal use_allowed_changed(allowed)
 
 var cost := {}
 var base_cost := {}
-var affordable := false:
-	set(val):
-		if affordable != val:
-			affordable = val
-			if val:
-				emit_signal("became_affordable")
-			else:
-				emit_signal("became_unaffordable")
-			emit_signal("affordable_changed", affordable)
+var affordable := Bool.new(false)
 var use_allowed := true:
 	set(val):
 		if use_allowed != val:
@@ -100,24 +89,24 @@ func currency_unlocked_changed(unlocked: bool) -> void:
 # - Notify
 
 func currency_increased() -> void:
-	if affordable:
+	if affordable.is_true():
 		return
 	if can_afford():
-		affordable = true
+		affordable.set_to(true)
 
 
 func currency_decreased() -> void:
-	if not affordable:
+	if affordable.is_false():
 		return
 	if not can_afford():
-		affordable = false
+		affordable.set_to(false)
 
 
 
 # - Action
 
 func recheck() -> void:
-	affordable = can_afford()
+	affordable.set_to(can_afford())
 
 
 func spend(from_player: bool) -> void:
@@ -201,7 +190,7 @@ func get_text() -> Array:
 
 
 func get_insufficient_currency_types() -> Array:
-	if affordable:
+	if affordable.is_true():
 		return []
 	var array := []
 	for cur in cost:
