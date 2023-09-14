@@ -12,7 +12,6 @@ var saved_vars := [
 	"help_icon_path",
 	"thank_icon_path",
 	"reward_count",
-	"rewards",
 ]
 
 
@@ -95,6 +94,7 @@ class Reward:
 		if not "type" in saved_vars:
 			saved_vars = [
 				"type",
+				"key",
 				"amount",
 				"object_type",
 			]
@@ -252,6 +252,9 @@ class Objective:
 	
 	
 	func start() -> void:
+		print("wish obj start")
+		if key == "LOADED_OBJECTIVE":
+			return
 		progress.filled.connect(progress_filled)
 		if has_method("already_completed_" + key) and call("already_completed_" + key):
 			progress.set_to_percent(1)
@@ -446,16 +449,11 @@ var container: VBoxContainer
 
 
 
-func _init(_type: int, init := true) -> void:
+func _init(_type: int) -> void:
 	type = _type
 	key = Type.keys()[type]
 	
 	SaveManager.connect("load_started", load_started)
-	
-	if not init:
-		objective = Objective.new(Objective.Type.LOADED_OBJECTIVE, {})
-		objective.connect("completed", objective_completed)
-		return
 	
 	call("init_" + key)
 	
@@ -796,6 +794,8 @@ func add_reward(reward: Reward, save_rewards := false) -> void:
 	reward_count = rewards.size()
 	if save_rewards:
 		reward.save_rewards()
+		if not "rewards" in saved_vars:
+			saved_vars.append("rewards")
 
 
 

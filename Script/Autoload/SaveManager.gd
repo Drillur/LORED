@@ -89,6 +89,8 @@ var save_version := {
 	"minor": 0,
 	"revision": 0,
 }
+
+var loaded_data: Dictionary
 var last_save_clock := Time.get_unix_time_from_system() #reset
 var patched := false
 
@@ -123,10 +125,10 @@ func save_game(method := default_save_method) -> void:
 func load_game(method := default_load_method) -> void:
 	gv.close_all()
 	emit_signal("load_started")
-	var data := get_save_data(method)
-	unpack_data(data)
+	loaded_data = get_save_data(method)
+	unpack_data(loaded_data)
 	gv.open_all()
-	emit_signal("load_finished")
+	load_finished.emit()
 	
 	update_save_version()
 
@@ -221,6 +223,8 @@ func pack_array(array: Array) -> Dictionary:
 			if value is Wish:
 				variable_class = "Wish"
 			elif value is Wish.Reward:
+				if not "type" in value.saved_vars:
+					continue
 				variable_class = "Reward"
 			data[variable_class + str(i)] = pack_saved_vars(value)
 		elif value is int:
@@ -291,7 +295,7 @@ func unpack_array(packed_array: Dictionary) -> Array:
 		var variable_class = key.rstrip("0123456789")
 		
 		if variable_class == "Wish":
-			var wish = Wish.new(data["type"], false)
+			var wish = Wish.new(data["type"])
 			unpack_vars(wish, data)
 			array.append(wish)
 		
@@ -417,4 +421,5 @@ func get_random_path() -> String:
 
 func get_time_since_last_save() -> float:
 	return gv.current_clock - last_save_clock
+
 

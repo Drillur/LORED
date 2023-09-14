@@ -8,28 +8,6 @@ var saved_vars := [
 ]
 
 
-func save() -> String:
-	var data := {}
-	for type in upgrades:
-		var upgrade = get_upgrade(type)
-		data[upgrade.key] = upgrade.save()
-	for upgrade_menu in upgrade_menus.values():
-		data[upgrade_menu.key + " Upgrade Menu"] = upgrade_menu.save()
-	return var_to_str(data)
-
-
-func load_data(data_str: String) -> void:
-	var data: Dictionary = str_to_var(data_str)
-	for type in upgrades:
-		var key = Upgrade.Type.keys()[type]
-		if key in data.keys():
-			upgrades[type].load_data(data[key])
-	for type in upgrade_menus:
-		var key = UpgradeMenu.Type.keys()[type]
-		if key in data.keys():
-			upgrade_menus[type].load_data(data[key])
-
-
 
 const RANDOM_UPGRADE_DESCRIPTION := [
 	"Firefox, Brave, Opera, Safari, Edge, and Chrome all merge into Firvadra, the ultimate open-source, pro-privacy, fast, ad-blocking, ai-assisted, extension-capable, password-managing, VPN-accompanied browser for all for free! There is no apparent [b]actual[/b] benefit. But it is cool.",
@@ -148,6 +126,7 @@ func _ready():
 		gv.add_upgrade_to_stage(upgrade.stage, type)
 		var up_menu = up.get_upgrade_menu(upgrade.upgrade_menu)
 		upgrade.became_affordable_and_unpurchased.connect(up_menu.set_affordable_and_unpurchased)
+	
 
 
 

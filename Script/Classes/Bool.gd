@@ -1,11 +1,10 @@
 class_name Bool
-extends RefCounted
+extends Resource
 
 var saved_vars := [
 	"current",
 ]
 
-signal changed(val)
 signal became_true
 signal became_false
 
@@ -13,16 +12,13 @@ signal reset_value_changed(val)
 signal reset_value_became_true
 signal reset_value_became_false
 
-var base: bool:
-	set(val):
-		base = val
-		reset_value = val
+var base: bool
 
 var current: bool:
 	set(val):
 		if current != val:
 			current = val
-			changed.emit(val)
+			emit_changed()
 			if val:
 				became_true.emit()
 			else:
@@ -73,6 +69,7 @@ func set_reset_value(val: bool) -> void:
 
 func set_default_value(val: bool) -> void:
 	base = val
+	reset_value = val
 
 
 func prestige() -> void:
@@ -82,6 +79,13 @@ func prestige() -> void:
 func reset() -> void:
 	current = base
 	reset_value = base
+
+
+
+func connect_and_call(sig: String, method: Callable) -> void:
+	get(sig).connect(method)
+	method.call()
+
 
 
 # - Get

@@ -17,7 +17,7 @@ func load_finished() -> void:
 		if will_apply_effect:
 			refund()
 		unlocked.became_true.emit()
-		unlocked.changed.emit(unlocked.get_value())
+		unlocked.emit_changed()
 
 
 
@@ -293,10 +293,10 @@ var purchased := Bool.new(false)
 
 func unlocked_updated(val: bool) -> void:
 	if val:
-		affordable_changed(cost.affordable.get_value())
+		affordable_changed()
 
 func purchased_updated(_val: bool) -> void:
-	affordable_changed(cost.affordable.get_value())
+	affordable_changed()
 	upgrade_purchased_changed.emit(self)
 
 
@@ -306,7 +306,7 @@ var autobuy := false:
 			autobuy = val
 			if val:
 				became_affordable_and_unpurchased.emit(type, false)
-			affordable_changed(cost.affordable.get_value())
+			affordable_changed()
 			autobuy_changed.emit()
 
 
@@ -3209,7 +3209,7 @@ func init_UPGRADE_DESCRIPTION() -> void:
 	name = "upgrade_description"
 	var a = gv.get_stage(1).colored_name
 	var b = gv.get_stage(2).colored_name
-	description = "Reduces the cost increase of %s and %s LOREDs by 10%, but increases their [b]maximum fuel[/b] and [b]fuel cost[/b] by 1,000%." % [a, b]
+	description = "Reduces the cost incresase of %s and %s LOREDs by 10%, but increases their [b]maximum fuel[/b] and [b]fuel cost[/b] by 1,000%." % [a, b]
 	set_effect(UpgradeEffect.Type.UPGRADE_NAME)
 	icon = gv.get_stage_icon(2)
 	color = gv.get_stage_color(2)
@@ -3285,7 +3285,8 @@ func required_upgrade_unpurchased() -> void:
 	unlocked.set_false()
 
 
-func affordable_changed(affordable: bool) -> void:
+func affordable_changed() -> void:
+	var affordable = cost.affordable.get_value()
 	if autobuy:
 		if unlocked.is_true() and affordable:
 			purchase()

@@ -272,8 +272,8 @@ func add_effected_lored(lored_type: int) -> void:
 					lored.cost.cost[cur].decrease_multiplied
 				)
 		Type.FREE_LORED:
-			apply_methods.append(lored.enable_purchased_on_reset)
-			remove_methods.append(lored.disable_purchased_on_reset)
+			apply_methods.append(lored.purchased.set_reset_value_true)
+			remove_methods.append(lored.purchased.set_reset_value_false)
 		Type.AUTOBUYER:
 			apply_methods.append(lored.autobuy.set_true)
 			remove_methods.append(lored.autobuy.set_false)

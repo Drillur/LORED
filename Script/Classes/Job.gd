@@ -609,7 +609,8 @@ func another_job_started(_job: Job) -> void:
 	pass # called whenever the lored starts any job i guess
 
 
-func lored_purchased_changed(purchased: bool) -> void:
+func lored_purchased_changed() -> void:
+	var purchased = lv.is_lored_purchased(lored)
 	if not purchased:
 		subtract_rate()
 

@@ -38,8 +38,7 @@ func setup(_cost: Cost) -> void:
 	bar.hide_background().remove_markers()
 	
 	content.values()[content.size() - 1].get_node("MarginContainer").add_theme_constant_override("margin_bottom", 0)
-	cost.affordable.changed.connect(affordable_changed)
-	affordable_changed(cost.affordable.get_value())
+	cost.affordable.connect_and_call("changed", affordable_changed)
 	set_eta_text()
 	bar.set_initial_progress(cost.get_progress_percent())
 	
@@ -94,7 +93,8 @@ func flash_became_affordable() -> void:
 	gv.flash(check, Color(0, 1, 0))
 
 
-func affordable_changed(val: bool) -> void:
+func affordable_changed() -> void:
+	var val = cost.affordable.get_value()
 	check.button_pressed = val
 	if val:
 		bar.hide_edge()

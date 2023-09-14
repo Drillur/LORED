@@ -69,6 +69,7 @@ func close() -> void:
 func start() -> void:
 	lv.purchased_every_lored_once.connect(find_new_main_wish)
 	if not Wish.Type.STUFF in completed_wishes:
+		print("STUFF STARTED")
 		new_wish_considering_conditions(Wish.Type.STUFF)
 	else:
 		find_new_main_wish()
@@ -140,6 +141,7 @@ func new_wish_vico(wish: Wish, pending_vico_index: int) -> void:
 	wish.container.add_child(vico)
 	wish.container.move_child(vico, pending_vico_index)
 	vico.ended.connect(start_new_wish_after_wish_completed)
+	print("wish started")
 	wish.start()
 
 

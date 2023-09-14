@@ -39,11 +39,9 @@ func setup(_upgrade: Upgrade):
 	button.mouse_exited.connect(gv.clear_tooltip)
 	button.pressed.connect(purchase)
 	
-	upgrade.purchased.changed.connect(purchased_changed)
-	upgrade.unlocked.changed.connect(unlocked_changed)
+	upgrade.purchased.connect_and_call("changed", purchased_changed)
+	upgrade.unlocked.connect_and_call("changed", unlocked_changed)
 	upgrade.autobuy_changed.connect(autobuyer_display)
-	purchased_changed(upgrade.purchased.get_value())
-	unlocked_changed(upgrade.unlocked.get_value())
 
 
 
@@ -54,16 +52,18 @@ func show_tooltip() -> void:
 	gv.new_tooltip(gv.Tooltip.UPGRADE, tooltip_parent, {"upgrade": upgrade})
 
 
-func cost_update(affordable: bool) -> void:
-	if affordable and upgrade.autobuy:
+func cost_update() -> void:
+	var val = upgrade.cost.affordable.get_value()
+	if val and upgrade.autobuy:
 		check.hide()
 		return
-	check.visible = affordable
-	if affordable:
+	check.visible = val
+	if val:
 		gv.flash(check, Color(0, 1, 0))
 
 
-func purchased_changed(val: bool) -> void:
+func purchased_changed() -> void:
+	var val = upgrade.purchased.get_value()
 	bg.visible = val
 	autobuyer_display()
 	if val:
@@ -75,12 +75,13 @@ func purchased_changed(val: bool) -> void:
 		button.set_theme_standard()
 
 
-func unlocked_changed(val: bool) -> void:
+func unlocked_changed() -> void:
+	var val = upgrade.unlocked.get_value()
 	autobuyer_display()
 	if val:
 		if not upgrade.cost.affordable.changed.is_connected(cost_update):
 			upgrade.cost.affordable.changed.connect(cost_update)
-		cost_update(upgrade.cost.affordable.get_value())
+		cost_update()
 		button.modulate.a = 1
 		lock.hide()
 		button.icon.show()

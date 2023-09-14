@@ -106,8 +106,7 @@ func attach_lored(_lored: LORED) -> void:
 	
 	# signals
 	lored.connect("leveled_up", lored_leveled_up)
-	lored.cost.affordable.changed.connect(cost_update)
-	cost_update(lored.cost.affordable.get_value())
+	lored.cost.affordable.connect_and_call("changed", cost_update)
 	level_up.button.connect("pressed", purchase_level_up)
 	sleep.button.connect("pressed", sleep_clicked)
 	lored.asleep.changed.connect(sleep_changed)
@@ -158,7 +157,8 @@ func attach_lored(_lored: LORED) -> void:
 	hide()
 
 
-func cost_update(val: bool) -> void:
+func cost_update() -> void:
+	var val = lored.cost.affordable.get_value()
 	level_up.check.visible = val
 	if val:
 		flash_level_up_button()
@@ -200,7 +200,8 @@ func load_started() -> void:
 	stop_progress_bar()
 
 
-func purchased_changed(purchased: bool) -> void:
+func purchased_changed() -> void:
+	var purchased = lored.purchased.get_value()
 	if not purchased:
 		stop_progress_bar()
 		active_buffs.hide()
@@ -259,7 +260,8 @@ func advanced_details_lock(unlocked: bool) -> void:
 		gv.flash(jobs, lored.color)
 
 
-func autobuy_changed(autobuy: bool) -> void:
+func autobuy_changed() -> void:
+	var autobuy = lored.autobuy.get_value()
 	level_up.autobuyer.visible = autobuy
 	if autobuy:
 		level_up.autobuyer.play()

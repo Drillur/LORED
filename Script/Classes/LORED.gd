@@ -121,22 +121,6 @@ var unlocked := Bool.new(false)
 var key_lored := false
 var autobuy := Bool.new(false)
 
-func autobuy_changed(val: bool) -> void:
-	if val:
-		if not cost.affordable.became_true.is_connected(autobuy_check):
-			cost.affordable.became_true.connect(autobuy_check)
-			for cur in produced_currencies:
-				wa.get_currency(cur).total_net_became_negative.connect(autobuy_check)
-			for cur in required_currencies:
-				wa.get_currency(cur).total_net_became_positive.connect(autobuy_check)
-	else:
-		if cost.affordable.became_true.is_connected(autobuy_check):
-			cost.affordable.became_true.disconnect(autobuy_check)
-			for cur in produced_currencies:
-				wa.get_currency(cur).total_net_became_negative.disconnect(autobuy_check)
-			for cur in required_currencies:
-				wa.get_currency(cur).total_net_became_positive.disconnect(autobuy_check)
-
 var autobuy_on_cooldown := false
 
 var purchased := Bool.new(false)
@@ -213,6 +197,8 @@ func _init(_type: int) -> void:
 	
 	unlocked.changed.connect(unlocked_updated)
 	unlocked.reset_value_changed.connect(unlocked_reset_value_updated)
+	
+	autobuy.changed.connect(autobuy_changed)
 	
 	asleep.changed.connect(asleep_updated)
 	
@@ -1011,6 +997,24 @@ func unlocked_reset_value_updated(val: bool) -> void:
 			lv.started.disconnect(unlock)
 
 
+func autobuy_changed(val: bool) -> void:
+	if val:
+		if not cost.affordable.became_true.is_connected(autobuy_check):
+			cost.affordable.became_true.connect(autobuy_check)
+			for cur in produced_currencies:
+				wa.get_currency(cur).total_net_became_negative.connect(autobuy_check)
+			for cur in required_currencies:
+				wa.get_currency(cur).total_net_became_positive.connect(autobuy_check)
+	else:
+		if cost.affordable.became_true.is_connected(autobuy_check):
+			cost.affordable.became_true.disconnect(autobuy_check)
+			for cur in produced_currencies:
+				wa.get_currency(cur).total_net_became_negative.disconnect(autobuy_check)
+			for cur in required_currencies:
+				wa.get_currency(cur).total_net_became_positive.disconnect(autobuy_check)
+
+
+
 func lored_vicos_ready() -> void:
 	if purchased.is_true():
 		work()
@@ -1067,11 +1071,10 @@ func remove_limit_break(modifier: Big) -> void:
 # - Actions
 
 func prestige(_stage: int) -> void:
-	if purchased.is_false_on_reset():
-		if _stage >= stage:
-			reset(false)
-			if not gv.run_incremented.is_connected(first_second_of_run_autobuy_check):
-				gv.run_incremented.connect(first_second_of_run_autobuy_check)
+	if _stage >= stage:
+		reset(false)
+		if not gv.run_incremented.is_connected(first_second_of_run_autobuy_check):
+			gv.run_incremented.connect(first_second_of_run_autobuy_check)
 
 
 func hard_reset() -> void:
@@ -1133,7 +1136,10 @@ func manual_purchase() -> void:
 var last_reason_autobuy: String
 
 func autobuy_check() -> void:
-	if should_autobuy():
+	var val = should_autobuy()
+	if type == Type.COAL:
+		printt(key, last_reason_autobuy)
+	if val:
 		#printt(key, last_reason_autobuy)
 		automatic_purchase()
 		autobuy_on_cooldown = true
@@ -1141,8 +1147,6 @@ func autobuy_check() -> void:
 		autobuy_on_cooldown = false
 	else:
 		last_reason_autobuy = ""
-	if type == Type.MALIGNANCY:
-		printt(key, last_reason_autobuy)
 
 
 func should_autobuy() -> bool:
@@ -1331,15 +1335,6 @@ func emote_next_in_line() -> void:
 	
 	if is_connected("finished_emoting", emote_next_in_line):
 		disconnect("finished_emoting", emote_next_in_line)
-
-
-
-func enable_purchased_on_reset() -> void:
-	purchased.set_reset_value(true)
-
-
-func disable_purchased_on_reset() -> void:
-	purchased.set_reset_value(false)
 
 
 

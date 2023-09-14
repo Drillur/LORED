@@ -48,14 +48,13 @@ func setup(data: Dictionary) -> void:
 	await ready
 	
 	color = lored.color
-	lored.asleep.changed.connect(sleep_changed)
-	sleep_changed(lored.asleep.get_value())
+	lored.asleep.connect_and_call("changed", sleep_changed)
 	var text_length = description.text.length()
 	description.custom_minimum_size.x = min(250, 50 + (text_length * 2))
 
 
-func sleep_changed(val: bool) -> void:
-	if val:
+func sleep_changed() -> void:
+	if lored.asleep.is_true():
 		title.text = "Sleep"
 		if randi() % 100 < 10:
 			description.text = sleep_pool[randi() % sleep_pool.size()]

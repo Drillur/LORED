@@ -31,10 +31,8 @@ func setup(data: Dictionary) -> void:
 	title.text = upgrade.name
 	color = upgrade.color
 	
-	upgrade.purchased.changed.connect(purchased_changed)
-	upgrade.unlocked.changed.connect(upgrade_unlocked_changed)
-	purchased_changed(upgrade.purchased.get_value())
-	upgrade_unlocked_changed(upgrade.unlocked.get_value())
+	upgrade.purchased.connect_and_call("changed", purchased_changed)
+	upgrade.unlocked.connect_and_call("changed", upgrade_unlocked_changed)
 	
 	price.setup(upgrade.cost)
 	price.color = upgrade.color
@@ -80,8 +78,8 @@ func update_effect_text() -> void:
 	effect.text = upgrade.get_effect_text()
 
 
-func purchased_changed(val: bool) -> void:
-	price.visible = not val
+func purchased_changed() -> void:
+	price.visible = upgrade.purchased.is_false()
 
 
 func update_description_its_growin() -> void:
@@ -99,8 +97,8 @@ func update_description_milkshake() -> void:
 	description.text = upgrade.description + "\n\n[center]%s" % a
 
 
-func upgrade_unlocked_changed(val: bool) -> void:
-	if val:
+func upgrade_unlocked_changed() -> void:
+	if upgrade.unlocked.is_true():
 		unlocked.show()
 		locked.hide()
 	else:

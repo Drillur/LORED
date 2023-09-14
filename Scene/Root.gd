@@ -72,15 +72,16 @@ func _ready():
 	
 	gv.root_ready = true
 	
-	gv.update_discord_details("Just began a new game!")
 	lv.start()
-	wi.start()
 	em.start()
 	
-	if 1 == 2 and SaveManager.can_load_game():
+	if SaveManager.can_load_game():
 		SaveManager.load_game()
 	else:
 		SaveManager.save_file_color = gv.get_random_color()
+		gv.update_discord_details("Just began a new game!")
+	
+	wi.start()
 
 
 
