@@ -1,11 +1,11 @@
 [gd_scene load_steps=9 format=3 uid="uid://c2quvpihdkvj2"]
 
+[ext_resource type="Script" path="res://Hud/Earnings Report/earnings_report.gd" id="1_2ab3p"]
 [ext_resource type="Theme" uid="uid://bl4v2v143rihi" path="res://Theme/Background.tres" id="1_yve1h"]
 [ext_resource type="Theme" uid="uid://8dmfgxdrr5yh" path="res://Theme/Title.tres" id="2_ag71j"]
 [ext_resource type="PackedScene" uid="uid://cb3ej8nlybhvm" path="res://Hud/icon_button.tscn" id="3_5ucbr"]
 [ext_resource type="Theme" uid="uid://b8t7tkhvril5g" path="res://Theme/Standard.tres" id="4_gs7lu"]
 [ext_resource type="Texture2D" uid="uid://jbcyavxupodp" path="res://Sprites/reactions/Test.png" id="4_sbuap"]
-[ext_resource type="PackedScene" uid="uid://cy2u42e4tqe3n" path="res://Hud/Earnings Report/earnings_report_entry.tscn" id="6_aeubw"]
 [ext_resource type="PackedScene" uid="uid://c0518n1uf8jt2" path="res://Hud/text_button.tscn" id="7_u0y7l"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sbtnb"]
@@ -16,6 +16,7 @@ offset_right = 240.0
 offset_bottom = 366.0
 size_flags_horizontal = 4
 size_flags_vertical = 4
+script = ExtResource("1_2ab3p")
 
 [node name="bg" type="Panel" parent="."]
 layout_mode = 2
@@ -41,12 +42,11 @@ theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
 [node name="Title" type="RichTextLabel" parent="VBoxContainer/Title/MarginContainer"]
-unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
 theme = ExtResource("2_ag71j")
 bbcode_enabled = true
-text = "Earnings Report"
+text = "Offline Report"
 fit_content = true
 autowrap_mode = 0
 
@@ -64,17 +64,19 @@ theme_override_constants/margin_bottom = 10
 
 [node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/MarginContainer"]
 layout_mode = 2
-theme_override_constants/separation = 8
+theme_override_constants/separation = 15
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="TextureRect" type="TextureRect" parent="VBoxContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="Pose" type="TextureRect" parent="VBoxContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 texture = ExtResource("4_sbuap")
 stretch_mode = 3
 
-[node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="dialogue time offline" type="RichTextLabel" parent="VBoxContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
@@ -83,25 +85,20 @@ bbcode_enabled = true
 text = "[i]Hey, buddy! You were gone for [b]12 hours, 34 minutes, and 56 seconds!"
 fit_content = true
 
-[node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer/MarginContainer/VBoxContainer"]
+[node name="dialogue negative fuel" type="RichTextLabel" parent="VBoxContainer/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
 theme = ExtResource("4_gs7lu")
 bbcode_enabled = true
-text = "[i]Because [img=<15>]res://Sprites/Currency/coal.png[/img] Coal had a negative net output when you left, every single LORED that relies on him for [b]fuel[/b] took a production hit."
+text = "[i]Because [img=<15>]res://Sprites/Currency/coal.png[/img] Coal had a negative net output when you left, every single LORED that relies on him for [b]fuel[/b] took a production hit.
+
+Same for Joules, too, unfortunately!"
 fit_content = true
 
-[node name="RichTextLabel4" type="RichTextLabel" parent="VBoxContainer/MarginContainer/VBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 4
-theme = ExtResource("4_gs7lu")
-bbcode_enabled = true
-text = "Same for [img=<15>]res://Sprites/Currency/jo.png[/img] Joules, too, unfortunately!"
-fit_content = true
-
-[node name="RichTextLabel5" type="RichTextLabel" parent="VBoxContainer/MarginContainer/VBoxContainer"]
+[node name="dialogue lost resources" type="RichTextLabel" parent="VBoxContainer/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
@@ -117,18 +114,14 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="VBoxContainer2" type="GridContainer" parent="VBoxContainer/MarginContainer/VBoxContainer/MarginContainer"]
+[node name="Loss Parent" type="GridContainer" parent="VBoxContainer/MarginContainer/VBoxContainer/MarginContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/h_separation = 16
 columns = 2
 
-[node name="Earnings Report Entry3" parent="VBoxContainer/MarginContainer/VBoxContainer/MarginContainer/VBoxContainer2" instance=ExtResource("6_aeubw")]
-layout_mode = 2
-
-[node name="Earnings Report Entry2" parent="VBoxContainer/MarginContainer/VBoxContainer/MarginContainer/VBoxContainer2" instance=ExtResource("6_aeubw")]
-layout_mode = 2
-
-[node name="RichTextLabel2" type="RichTextLabel" parent="VBoxContainer/MarginContainer/VBoxContainer"]
+[node name="dialogue gained resources" type="RichTextLabel" parent="VBoxContainer/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
@@ -144,27 +137,14 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="VBoxContainer" type="GridContainer" parent="VBoxContainer/MarginContainer/VBoxContainer/MarginContainer2"]
+[node name="Gain Parent" type="GridContainer" parent="VBoxContainer/MarginContainer/VBoxContainer/MarginContainer2"]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/h_separation = 16
 columns = 2
 
-[node name="Earnings Report Entry" parent="VBoxContainer/MarginContainer/VBoxContainer/MarginContainer2/VBoxContainer" instance=ExtResource("6_aeubw")]
-layout_mode = 2
-
-[node name="Earnings Report Entry4" parent="VBoxContainer/MarginContainer/VBoxContainer/MarginContainer2/VBoxContainer" instance=ExtResource("6_aeubw")]
-layout_mode = 2
-
-[node name="Earnings Report Entry3" parent="VBoxContainer/MarginContainer/VBoxContainer/MarginContainer2/VBoxContainer" instance=ExtResource("6_aeubw")]
-layout_mode = 2
-
-[node name="Earnings Report Entry5" parent="VBoxContainer/MarginContainer/VBoxContainer/MarginContainer2/VBoxContainer" instance=ExtResource("6_aeubw")]
-layout_mode = 2
-
-[node name="Earnings Report Entry2" parent="VBoxContainer/MarginContainer/VBoxContainer/MarginContainer2/VBoxContainer" instance=ExtResource("6_aeubw")]
-layout_mode = 2
-
-[node name="RichTextLabel3" type="RichTextLabel" parent="VBoxContainer/MarginContainer/VBoxContainer"]
+[node name="dialogue closing" type="RichTextLabel" parent="VBoxContainer/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4

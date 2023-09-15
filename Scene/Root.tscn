@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://bseqrj5lg08it"]
+[gd_scene load_steps=11 format=3 uid="uid://bseqrj5lg08it"]
 
 [ext_resource type="Script" path="res://Scene/Root.gd" id="1_h7r77"]
 [ext_resource type="PackedScene" uid="uid://rmruae8fguk4" path="res://Hud/LORED/lored_container.tscn" id="2_egnhq"]
@@ -8,6 +8,7 @@
 [ext_resource type="Theme" uid="uid://cwt08llwihqii" path="res://Theme/ShadowText.tres" id="5_fcpu4"]
 [ext_resource type="FontFile" uid="uid://cubavfw1lomep" path="res://Fonts/Roboto-Black.ttf" id="5_fsywq"]
 [ext_resource type="PackedScene" uid="uid://dg6lv67h5eiuj" path="res://Hud/Wallet/wallet.tscn" id="6_pdtq1"]
+[ext_resource type="PackedScene" uid="uid://c2quvpihdkvj2" path="res://Hud/Earnings Report/earnings_report.tscn" id="8_gl0q2"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ge2kb"]
 draw_center = false
@@ -182,6 +183,10 @@ mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_ge2kb")
 
 [node name="Wallet" parent="." instance=ExtResource("6_pdtq1")]
+visible = false
+layout_mode = 2
+
+[node name="Earnings Report" parent="." instance=ExtResource("8_gl0q2")]
 visible = false
 layout_mode = 2
 

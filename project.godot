@@ -28,7 +28,6 @@ wi="*res://Script/Autoload/Wishes.gd"
 em="*res://Script/Autoload/Emotes.gd"
 SaveManager="*res://Script/Autoload/SaveManager.gd"
 DiscordSDKLoader="*res://addons/discord-sdk-gd/nodes/core_updater.gd"
-SaveSystem="*res://addons/save_system/SaveSystem.gd"
 
 [debug]
 
@@ -41,7 +40,7 @@ window/size/viewport_height=720
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/discord-sdk-gd/plugin.cfg", "res://addons/save_system/plugin.cfg")
+enabled=PackedStringArray("res://addons/discord-sdk-gd/plugin.cfg")
 
 [input]
 

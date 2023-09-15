@@ -3,8 +3,6 @@ extends Node
 
 
 var saved_vars := [
-	"current_clock",
-	"session_duration",
 	"run_duration",
 	"total_duration_played",
 	"stage0",
@@ -70,6 +68,8 @@ var texts_parent: Control
 
 
 func _ready() -> void:
+	SaveManager.load_finished.connect(load_finished)
+	SaveManager.load_finished.connect(get_offline_earnings)
 	session_tracker()
 	for i in range(0, 5):
 		set("stage" + str(i), Stage.new(i))
@@ -108,6 +108,12 @@ func _ready() -> void:
 	discord_sdk.refresh()
 
 
+
+func load_finished():
+	saved_vars.append("current_clock")
+	saved_vars.append("session_duration")
+
+
 # - Clock
 
 signal one_second
@@ -134,8 +140,7 @@ func _notification(what) -> void:
 		if time - current_clock > 1:
 			var time_delta := time - last_clock
 			if time_delta > 1:
-				# get offline earnings(time_delta)
-				pass
+				get_offline_earnings()
 
 
 func session_tracker() -> void:
@@ -445,6 +450,152 @@ class TimeUnit:
 		return WORD[type]["PLURAL"]
 
 
+func get_time_dict(time: int) -> Dictionary:
+	var dict := {"days": 0, "years": 0, "hours": 0, "minutes": 0, "seconds": 0}
+	if time >= 31536000:
+		dict["years"] = time / 31536000
+		time = time % 31536000
+	if time >= 86400:
+		dict["days"] = time / 86400
+		time = time % 86400
+	if time >= 3600:
+		dict["hours"] = time / 3600
+		time = time % 3600
+	if time >= 60:
+		dict["minutes"] = time / 60
+		time = time % 60
+	dict["seconds"] = time
+	return dict
+
+
+func get_time_text_from_dict(dict: Dictionary) -> String:
+	var years = dict["years"]
+	var days = dict["days"]
+	var hours = dict["hours"]
+	var minutes = dict["minutes"]
+	var seconds = dict["seconds"]
+	
+	var number_of_above_zero_elements: int
+	if years > 0:
+		number_of_above_zero_elements += 1
+	if days > 0:
+		number_of_above_zero_elements += 1
+	if hours > 0:
+		number_of_above_zero_elements += 1
+	if minutes > 0:
+		number_of_above_zero_elements += 1
+	if seconds > 0:
+		number_of_above_zero_elements += 1
+	
+	var a: String
+	var b: String
+	var c: String
+	var d: String
+	
+	match number_of_above_zero_elements:
+		5:
+			return str(years) + " years, " + str(days) + " days, " + str(hours) + " hours, " + str(minutes) + " minutes, and " + str(seconds) + " seconds"
+		4:
+			if years > 0:
+				a = str(years) + " years"
+				if days > 0:
+					b = str(days) + " days"
+					if hours > 0:
+						c = str(hours) + " hours"
+						if minutes > 0:
+							d = str(minutes) + " minutes"
+						else:
+							d = str(seconds) + " seconds"
+					else:
+						c = str(minutes) + " minutes"
+						d = str(seconds) + " seconds"
+				else:
+					b = str(hours) + " hours"
+					c = str(minutes) + " minutes"
+					d = str(seconds) + " seconds"
+			else:
+				a = str(days) + " days"
+				b = str(hours) + " hours"
+				c = str(minutes) + " minutes"
+				d = str(seconds) + " seconds"
+			return "%s, %s, %s, and %s" % [a, b, c, d]
+		3:
+			if years > 0:
+				a = str(years) + "years"
+				if days > 0:
+					b = str(days) + " days"
+					if hours > 0:
+						c = str(hours) + " hours"
+					elif minutes > 0:
+						c = str(minutes) + " minutes"
+					else:
+						c = str(seconds) + " seconds"
+				elif hours > 0:
+					b = str(hours) + " hours"
+					if minutes > 0:
+						c = str(minutes) + " minutes"
+					else:
+						c = str(seconds) + " seconds"
+				else:
+					b = str(minutes) + " minutes"
+					c = str(seconds) + " seconds"
+			elif days > 0:
+				a = str(days) + " days"
+				if hours > 0:
+					b = str(hours) + " hours"
+					if minutes > 0:
+						c = str(minutes) + " minutes"
+					else:
+						c = str(seconds) + " seconds"
+				else:
+					b = str(minutes) + " minutes"
+					c = str(seconds) + " seconds"
+			else:
+				a = str(hours) + " hours"
+				b = str(minutes) + " minutes"
+				c = str(seconds) + " seconds"
+			return "%s, %s, and %s" % [a, b, c]
+		2:
+			if years > 0:
+				a = str(years) + "years"
+				if days > 0:
+					b = str(days) + " days"
+				elif hours > 0:
+					b = str(hours) + " hours"
+				elif minutes > 0:
+					b = str(minutes) + " minutes"
+				else:
+					b = str(seconds) + " seconds"
+			elif days > 0:
+				a = str(days) + "days"
+				if hours > 0:
+					b = str(hours) + " hours"
+				elif minutes > 0:
+					b = str(minutes) + " minutes"
+				else:
+					b = str(seconds) + " seconds"
+			elif hours > 0:
+				a = str(hours) + "hours"
+				if minutes > 0:
+					b = str(minutes) + " minutes"
+				else:
+					b = str(seconds) + " seconds"
+			else:
+				a = str(minutes) + " minutes"
+				b = str(seconds) + " seconds"
+			return "%s and %s" % [a, b]
+		1:
+			if years > 0:
+				return str(years) + " years"
+			elif days > 0:
+				return str(days) + " days"
+			elif hours > 0:
+				return str(hours) + " hours"
+			elif minutes > 0:
+				return str(minutes) + " minutes"
+	return str(seconds) + " seconds"
+
+
 func parse_time(big: Big) -> String:
 	if big.less(0):
 		big.set_to(0)
@@ -453,6 +604,49 @@ func parse_time(big: Big) -> String:
 		return "" if big.equal(0) else "!"
 	
 	return TimeUnit.get_text(big)
+
+
+
+# - Offline Earnings Shit
+
+signal offline_report_ready
+
+var time_offline: float
+var time_offline_dict := {"days": 0, "years": 0,"hours": 0, "minutes":0, "seconds":0}
+var offline_earnings: Dictionary
+
+
+func get_offline_earnings() -> void:
+	await get_tree().physics_frame
+	var _last_clock: float = SaveManager.loaded_data["Overseer"]["current_clock"]
+	time_offline = Time.get_unix_time_from_system() - _last_clock
+	time_offline = 31536000 * randf_range(1,5)
+	time_offline_dict = get_time_dict(int(time_offline))
+	if time_offline < 30:
+		return
+	
+	var eligible_currencies := []
+	
+	for c in wa.get_all_currencies():
+		c = c as Currency
+		
+		if not c.eligible_for_offline_earnings():
+			continue
+		eligible_currencies.append(c)
+		
+		c.set_gain_over_loss()
+	
+	for c in eligible_currencies:
+		offline_earnings[c.type] = c.get_offline_production(time_offline)
+		if c.positive_rate:
+			c.add_from_lored(offline_earnings[c.type])
+			print(c.name, " increased by ", offline_earnings[c.type].text)
+		else:
+			c.subtract_from_lored(offline_earnings[c.type])
+			print(c.name, " decreased by ", offline_earnings[c.type].text)
+	
+	offline_report_ready.emit()
+
 
 
 

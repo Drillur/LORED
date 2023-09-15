@@ -141,7 +141,6 @@ func new_wish_vico(wish: Wish, pending_vico_index: int) -> void:
 	wish.container.add_child(vico)
 	wish.container.move_child(vico, pending_vico_index)
 	vico.ended.connect(start_new_wish_after_wish_completed)
-	print("wish started")
 	wish.start()
 
 

@@ -183,6 +183,10 @@ func get_currency(cur: int) -> Currency:
 	return currency[cur]
 
 
+func get_all_currencies() -> Array:
+	return currency.values()
+
+
 func get_currency_weight(cur: int) -> int:
 	return get_currency(cur).weight
 

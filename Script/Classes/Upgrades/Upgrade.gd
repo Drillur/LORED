@@ -3036,9 +3036,9 @@ func init_CONDUCT() -> void:
 	var a = stage1.color_text % "Metastasizing"
 	var b = stage1.colored_name
 	description = "%s no longer resets %s resources." % [a, b]
-	var stage = gv.get_stage(1)
-	icon = stage.icon
-	color = stage.color
+	var _stage = gv.get_stage(1)
+	icon = _stage.icon
+	color = _stage.color
 	effect = UpgradeEffect.new(
 		UpgradeEffect.Type.CURRENCY_PERSIST,
 		{

@@ -348,7 +348,6 @@ func get_save_text(method := default_load_method, filename := save_name) -> Stri
 	var save_text: String
 	match method:
 		LoadMethod.FROM_FILE:
-			print(get_save_path(filename))
 			var save_file := FileAccess.open(get_save_path(filename), FileAccess.READ)
 			save_text = Marshalls.base64_to_variant(save_file.get_line())
 		LoadMethod.FROM_CLIPBOARD:

@@ -939,8 +939,8 @@ func attach_vico(_vico: LOREDVico) -> void:
 # - Signal Shit
 
 
-func purchased_updated(val: bool) -> void:
-	if val:
+func purchased_updated() -> void:
+	if purchased.is_true():
 		lv.lored_became_active(type)
 		for cur in produced_currencies:
 			wa.unlock_currency(cur)
@@ -972,8 +972,8 @@ func asleep_updated(val: bool) -> void:
 		lv.lored_woke_up(type)
 
 
-func unlocked_updated(val: bool) -> void:
-	if val:
+func unlocked_updated() -> void:
+	if unlocked.is_true():
 		lv.lored_unlocked(type)
 		autobuy_check()
 		saved_vars.append("fuel")

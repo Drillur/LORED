@@ -132,9 +132,9 @@ func _init(_type: int, details: Dictionary) -> void:
 	
 	if type == Type.CURRENCY_PERSIST:
 		for cur in gv.get_currencies_in_stage(details["stage"]):
-			var currency = wa.get_currency(cur)
-			apply_methods.append(currency.persist.set_true)
-			remove_methods.append(currency.persist.reset)
+			var _currency = wa.get_currency(cur)
+			apply_methods.append(_currency.persist.set_true)
+			remove_methods.append(_currency.persist.reset)
 
 
 func set_base_text() -> void:

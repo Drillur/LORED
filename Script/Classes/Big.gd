@@ -304,7 +304,7 @@ func subtract_pending(n) -> void:
 func percent(n) -> float:
 	n = type_check(n)
 	if is_zero_approx(n.mantissa):
-		printerr("Don't divide by 0 you fucking stupid bastard")
+		printerr("You can't divide by zero, it's impossible.\nWhy isn't it possible you stupid bastard?")
 		return 0.0
 	
 	if exponent > n.exponent:

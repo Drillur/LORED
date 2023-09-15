@@ -265,6 +265,10 @@ func get_random_active_lored() -> int:
 	return active[randi() % active.size()]
 
 
+func get_random_unlocked_lored() -> int:
+	return unlocked[randi() % unlocked.size()]
+
+
 func get_random_awake_lored() -> int:
 	return active_and_awake[randi() % active_and_awake.size()]
 

@@ -252,7 +252,6 @@ class Objective:
 	
 	
 	func start() -> void:
-		print("wish obj start")
 		if key == "LOADED_OBJECTIVE":
 			return
 		progress.filled.connect(progress_filled)

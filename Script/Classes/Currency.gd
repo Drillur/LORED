@@ -110,6 +110,7 @@ var use_allowed := true:
 		if use_allowed != val:
 			use_allowed = val
 			use_allowed_changed.emit(val)
+var used_for_fuel := false
 
 var positive_rate := true:
 	set(val):
@@ -128,6 +129,7 @@ var last_crit_modifier := 1.0
 
 var produced_by := []
 var used_by := []
+
 
 
 
@@ -177,6 +179,7 @@ func init_COAL() -> void:
 	color = Color(0.7, 0, 1)
 	icon = preload("res://Sprites/Currency/coal.png")
 	weight = 2
+	used_for_fuel = true
 
 
 func init_IRON_ORE() -> void:
@@ -213,6 +216,7 @@ func init_JOULES() -> void:
 	color = Color(1, 0.98, 0)
 	icon = preload("res://Sprites/Currency/jo.png")
 	weight = 2
+	used_for_fuel = true
 
 
 func init_CONCRETE() -> void:
@@ -534,6 +538,12 @@ func subtract_pending(amount: Big) -> void:
 	count.subtract_pending(amount)
 
 
+func set_gain_over_loss() -> void:
+	if loss_rate.get_value().equal(0):
+		gain_over_loss = 1.0
+	else:
+		gain_over_loss = min(1, gain_rate.get_value().percent(loss_rate.get_value()))
+
 
 
 # - Get
@@ -574,3 +584,40 @@ func get_eta_text(threshold: Big) -> String:
 
 func get_random_producer() -> LORED:
 	return produced_by[randi() % produced_by.size()]
+
+
+func eligible_for_offline_earnings() -> bool:
+	var cont = false
+	for x in produced_by: # only need one lored producing this cur
+		var lored = lv.get_lored(x)
+		if (
+			lored.unlocked.is_true()
+			and wa.is_currency_unlocked(lored.fuel_currency)
+		):
+			cont = true
+			break
+	if not cont:
+		return false
+	return unlocked
+
+
+func get_fuel_currency() -> int:
+	return lv.get_lored(produced_by[0]).fuel_currency
+
+
+
+# - Offline Earnings Shit
+
+
+var gain_over_loss := 1.0
+var fuel_cur_gain_loss: float
+var offline_production: Big
+
+
+func get_offline_production(time_offline: float) -> Big:
+	var net = net_rate.get_value()
+	if net.equal(0):
+		return Big.new(0)
+	fuel_cur_gain_loss = wa.get_currency(get_fuel_currency()).gain_over_loss
+	offline_production = Big.new(net).m(time_offline).m(fuel_cur_gain_loss)
+	return offline_production

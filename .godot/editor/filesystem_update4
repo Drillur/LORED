@@ -3,10 +3,13 @@ res://Theme/Standard.tres
 res://Theme/Invis.tres
 res://Theme/TextButton.tres
 res://Theme/TextButtonAlternate.tres
-res://Theme/ShadowText.tres
 res://Theme/Background.tres
+res://Theme/ShadowText.tres
 res://Theme/Subtle Background.tres
 res://Theme/Title.tres
+res://Script/Autoload/SaveManager.gd
+res://Scene/Root.gd
+res://Script/Autoload/Overseer.gd
 res://Scene/Root.tscn
 res://Hud/Earnings Report/earnings_report.tscn
 res://Hud/Earnings Report/earnings_report_entry.tscn
@@ -14,6 +17,14 @@ res://Hud/Upgrade/upgrade_container.tscn
 res://Hud/Save/save_block.tscn
 res://Hud/Tooltip/tooltip.tscn
 res://Hud/Upgrade/Tooltip/upgrade_tooltip.tscn
-res://Script/Autoload/SaveManager.gd
-res://Scene/Root.gd
+res://Script/Classes/Wish.gd
+res://Script/Autoload/Wishes.gd
+res://Script/Autoload/Wallet.gd
+res://Script/Classes/LORED.gd
+res://Script/Classes/Currency.gd
 res://Script/Classes/Upgrades/Upgrade.gd
+res://Script/Classes/Upgrades/UpgradeEffect.gd
+res://Script/Classes/Big.gd
+res://Hud/Earnings Report/earnings_report.gd
+res://Script/Autoload/LOREDs.gd
+res://Hud/Earnings Report/earnings_report_entry.gd
