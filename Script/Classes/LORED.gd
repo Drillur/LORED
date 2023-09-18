@@ -1639,4 +1639,3 @@ func get_produced_currency_rate(cur: int) -> Big:
 	
 	return rate
 
-

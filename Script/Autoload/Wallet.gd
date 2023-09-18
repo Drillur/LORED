@@ -220,6 +220,10 @@ func get_icon_and_name_text(cur: int) -> String:
 	return currency[cur].icon_and_name_text
 
 
+func get_icon_and_colored_name(cur: int) -> String:
+	return currency[cur].icon_and_colored_name
+
+
 func is_rate_positive(cur: int) -> bool:
 	return get_currency(cur).positive_rate
 

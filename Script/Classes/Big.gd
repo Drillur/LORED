@@ -96,7 +96,6 @@ func _init(mant = 1.0, _emit_changes := false):
 		mantissa = mant.mantissa
 		exponent = mant.exponent
 	else:
-		_sizeCheck(mant)
 		mantissa = mant
 		exponent = 0
 	
@@ -159,11 +158,6 @@ func emit_decrease() -> void:
 
 
 
-func _sizeCheck(mant):
-	if mant > MAX_MANTISSA:
-		printerr("BIG ERROR: MANTISSA TOO LARGE, PLEASE USE EXPONENT OR SCIENTIFIC NOTATION")
-
-
 func type_check(n):
 	if n is int or n is float:
 		return {"mantissa":float(n), "exponent":int(0)}
@@ -177,7 +171,6 @@ func a(n) -> Big:
 	n = type_check(n)
 	if n.mantissa == 0.0 and n.exponent == 0:
 		return self
-	_sizeCheck(n.mantissa)
 	var exp_diff = n.exponent - exponent
 	if exp_diff < 248:
 		var scaled_mantissa = n.mantissa * pow(10, exp_diff)
@@ -194,7 +187,6 @@ func s(n) -> Big:
 	n = type_check(n)
 	if n.mantissa == 0.0 and n.exponent == 0:
 		return self
-	_sizeCheck(n.mantissa)
 	var exp_diff = n.exponent - exponent
 	if exp_diff < 248:
 		var scaled_mantissa = n.mantissa * pow(10, exp_diff)
@@ -211,7 +203,6 @@ func m(n) -> Big:
 	n = type_check(n)
 	if n.mantissa == 1.0 and n.exponent == 0:
 		return self
-	_sizeCheck(n.mantissa)
 	var new_exponent = n.exponent + exponent
 	var new_mantissa = n.mantissa * mantissa
 	while new_mantissa >= 10.0:
@@ -231,7 +222,6 @@ func d(n) -> Big:
 	n = type_check(n)
 	if n.mantissa == 1.0 and n.exponent == 0:
 		return self
-	_sizeCheck(n.mantissa)
 	if n.mantissa == 0:
 		printerr("BIG ERROR: d BY ZERO OR LESS THAN " + str(MANTISSA_PRECISSION))
 		return self
@@ -249,7 +239,6 @@ func d(n) -> Big:
 
 func set_to(n) -> Big:
 	n = type_check(n)
-	_sizeCheck(n.mantissa)
 	var new_exponent = n.exponent
 	var new_mantissa = n.mantissa
 	if new_exponent == exponent and new_mantissa == mantissa:
@@ -277,7 +266,6 @@ func set_to(n) -> Big:
 
 func add_pending(n) -> void:
 	n = type_check(n)
-	_sizeCheck(n.mantissa)
 	var exp_diff = n.exponent - exponent
 	if exp_diff < 248:
 		var scaled_mantissa = n.mantissa * pow(10, exp_diff)
@@ -290,7 +278,6 @@ func add_pending(n) -> void:
 
 func subtract_pending(n) -> void:
 	n = type_check(n)
-	_sizeCheck(n.mantissa)
 	var exp_diff = n.exponent - exponent #abs?
 	if exp_diff < 248:
 		var scaled_mantissa = n.mantissa * pow(10, exp_diff)
@@ -403,7 +390,6 @@ func squareRoot() -> Big:
 
 func modulo(n) -> Big:
 	n = type_check(n)
-	_sizeCheck(n.mantissa)
 	var big = {"mantissa":mantissa, "exponent":exponent}
 	d(n)
 	roundDown()

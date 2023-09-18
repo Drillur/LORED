@@ -12,10 +12,10 @@
 bg_color = Color(0, 0, 0, 0.501961)
 
 [node name="Earnings Report" type="MarginContainer"]
-offset_right = 240.0
-offset_bottom = 366.0
+offset_right = 363.0
+offset_bottom = 464.0
 size_flags_horizontal = 4
-size_flags_vertical = 4
+size_flags_vertical = 6
 script = ExtResource("1_2ab3p")
 
 [node name="bg" type="Panel" parent="."]
@@ -92,9 +92,9 @@ size_flags_horizontal = 3
 size_flags_vertical = 4
 theme = ExtResource("4_gs7lu")
 bbcode_enabled = true
-text = "[i]Because [img=<15>]res://Sprites/Currency/coal.png[/img] Coal had a negative net output when you left, every single LORED that relies on him for [b]fuel[/b] took a production hit.
+text = "All right, you moron. Are you a newbie, or what? You're really going to just leave the game when one of the most important resources was being produced at a loss? You can't do that. You need Coal to have a positive rate! Get that through your skull!
 
-Same for Joules, too, unfortunately!"
+Not only that, but you did it for Joules, too. You are just a wonder of fumbles, aren't you? Ugh, whatever."
 fit_content = true
 
 [node name="dialogue lost resources" type="RichTextLabel" parent="VBoxContainer/MarginContainer/VBoxContainer"]
@@ -107,18 +107,31 @@ bbcode_enabled = true
 text = "So, you lost some resources. Looky here:"
 fit_content = true
 
-[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/MarginContainer/VBoxContainer"]
+[node name="Loss" type="MarginContainer" parent="VBoxContainer/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 0
+theme_override_constants/margin_bottom = 0
+
+[node name="ColorRect" type="ColorRect" parent="VBoxContainer/MarginContainer/VBoxContainer/Loss"]
+layout_mode = 2
+color = Color(1, 0, 0, 0.1)
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/MarginContainer/VBoxContainer/Loss"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="Loss Parent" type="GridContainer" parent="VBoxContainer/MarginContainer/VBoxContainer/MarginContainer"]
+[node name="Loss Parent" type="GridContainer" parent="VBoxContainer/MarginContainer/VBoxContainer/Loss/MarginContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_constants/h_separation = 16
-columns = 2
+size_flags_horizontal = 4
+theme_override_constants/h_separation = 15
+columns = 3
 
 [node name="dialogue gained resources" type="RichTextLabel" parent="VBoxContainer/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
@@ -130,18 +143,45 @@ bbcode_enabled = true
 text = "[i]Besides all that, things went pretty alright! Look, you got all this!"
 fit_content = true
 
-[node name="MarginContainer2" type="MarginContainer" parent="VBoxContainer/MarginContainer/VBoxContainer"]
+[node name="Gain" type="MarginContainer" parent="VBoxContainer/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
+
+[node name="ColorRect" type="ColorRect" parent="VBoxContainer/MarginContainer/VBoxContainer/Gain"]
+layout_mode = 2
+color = Color(0, 1, 0, 0.1)
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/MarginContainer/VBoxContainer/Gain"]
+layout_mode = 2
+size_flags_horizontal = 4
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="Gain Parent" type="GridContainer" parent="VBoxContainer/MarginContainer/VBoxContainer/MarginContainer2"]
+[node name="Gain S1" type="GridContainer" parent="VBoxContainer/MarginContainer/VBoxContainer/Gain/MarginContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_constants/h_separation = 16
-columns = 2
+theme_override_constants/h_separation = 15
+columns = 3
+
+[node name="Gain S2" type="GridContainer" parent="VBoxContainer/MarginContainer/VBoxContainer/Gain/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/h_separation = 15
+columns = 3
+
+[node name="Gain S3" type="GridContainer" parent="VBoxContainer/MarginContainer/VBoxContainer/Gain/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/h_separation = 15
+columns = 3
+
+[node name="Gain S4" type="GridContainer" parent="VBoxContainer/MarginContainer/VBoxContainer/Gain/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/h_separation = 15
+columns = 3
 
 [node name="dialogue closing" type="RichTextLabel" parent="VBoxContainer/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
@@ -156,7 +196,8 @@ fit_content = true
 [node name="Title2" type="MarginContainer" parent="VBoxContainer"]
 layout_mode = 2
 
-[node name="title bg" type="Panel" parent="VBoxContainer/Title2"]
+[node name="bottom title bg" type="Panel" parent="VBoxContainer/Title2"]
+unique_name_in_owner = true
 layout_mode = 2
 theme = ExtResource("2_ag71j")
 
@@ -169,18 +210,19 @@ theme_override_constants/margin_bottom = 10
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/Title2/MarginContainer"]
 layout_mode = 2
-theme_override_constants/separation = 8
+theme_override_constants/separation = 10
 alignment = 1
 
 [node name="Nice" parent="VBoxContainer/Title2/MarginContainer/HBoxContainer" instance=ExtResource("7_u0y7l")]
+unique_name_in_owner = true
 layout_mode = 2
 
 [node name="Mean" parent="VBoxContainer/Title2/MarginContainer/HBoxContainer" instance=ExtResource("7_u0y7l")]
+unique_name_in_owner = true
 layout_mode = 2
 
 [node name="Options" type="Control" parent="."]
 unique_name_in_owner = true
-visible = false
 clip_contents = true
 layout_mode = 2
 mouse_filter = 2
@@ -251,20 +293,22 @@ theme_override_constants/margin_bottom = 10
 layout_mode = 2
 mouse_filter = 2
 
-[node name="keep_wallet_sorted" type="CheckBox" parent="Options/MarginContainer/VBoxContainer/MarginContainer2/VBoxContainer"]
+[node name="limit_gain" type="CheckBox" parent="Options/MarginContainer/VBoxContainer/MarginContainer2/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 0
 theme = ExtResource("4_gs7lu")
-text = "Keep constantly sorted"
+button_pressed = true
+text = "Only display top 3 gained resources per stage"
 
-[node name="save_wallet_sort" type="CheckBox" parent="Options/MarginContainer/VBoxContainer/MarginContainer2/VBoxContainer"]
+[node name="limit_loss" type="CheckBox" parent="Options/MarginContainer/VBoxContainer/MarginContainer2/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 0
 theme = ExtResource("4_gs7lu")
-text = "Save sort type"
+button_pressed = true
+text = "Only display top 6 lost resources"
 
 [connection signal="gui_input" from="Options/fade" to="." method="_on_fade_gui_input" flags=18]
-[connection signal="pressed" from="Options/MarginContainer/VBoxContainer/MarginContainer2/VBoxContainer/keep_wallet_sorted" to="." method="_on_keep_wallet_sorted_pressed" flags=18]
-[connection signal="pressed" from="Options/MarginContainer/VBoxContainer/MarginContainer2/VBoxContainer/save_wallet_sort" to="." method="_on_save_wallet_sort_pressed" flags=18]
+[connection signal="pressed" from="Options/MarginContainer/VBoxContainer/MarginContainer2/VBoxContainer/limit_gain" to="." method="_on_limit_gain_pressed"]
+[connection signal="pressed" from="Options/MarginContainer/VBoxContainer/MarginContainer2/VBoxContainer/limit_loss" to="." method="_on_limit_loss_pressed"]

@@ -18,6 +18,7 @@ extends MarginContainer
 @onready var stage3 = %Stage3 as IconButton
 @onready var stage4 = %Stage4 as IconButton
 @onready var purchasable_upgrade_count = %"Purchasable Upgrade Count"
+@onready var offline_report = $"Offline Report"
 
 @onready var tooltip_position_display = $"Control/Tooltip/Tooltip Position Display"
 
@@ -104,6 +105,8 @@ func _input(event):
 		if menu.visible:
 			node = menu
 			button = menu_button
+		elif offline_report.visible:
+			node = offline_report
 		elif upgrade_container.visible:
 			node = upgrade_container
 			button = upgrades_button
@@ -114,7 +117,10 @@ func _input(event):
 		if (esc_pressed
 			or (
 				not gv.node_has_point(node, event.position)
-				and not gv.node_has_point(button, event.position)
+				and (
+					button == null
+					or not gv.node_has_point(button, event.position)
+				)
 			)
 		):
 			node.hide()
@@ -171,7 +177,7 @@ func _input(event):
 
 
 func should_hide_a_menu() -> bool:
-	return menu.visible or upgrade_container.visible or wallet.visible
+	return menu.visible or upgrade_container.visible or wallet.visible or offline_report.visible
 
 
 func _on_menu_button_pressed():
@@ -271,23 +277,29 @@ func wallet_lock(unlocked: bool) -> void:
 
 func open_wallet(_show: bool) -> void:
 	if wa.wallet_unlocked or gv.dev_mode:
-		wallet.visible = _show
-		upgrade_container.hide()
-		menu.hide()
-		gv.clear_tooltip()
+		hide_menus()
+		if _show:
+			wallet.show()
 
 
 func select_upgrade_menu_tab(tab: int, _show = true) -> void:
 	if up.is_menu_unlocked(tab) or gv.dev_mode:
+		hide_menus()
 		if _show:
 			upgrade_container.show()
-			menu.hide()
-			wallet.hide()
 		upgrade_container.select_tab(tab)
-		gv.clear_tooltip()
+
+
+func hide_menus() -> void:
+	upgrade_container.hide()
+	menu.hide()
+	wallet.hide()
+	offline_report.hide()
+	gv.clear_tooltip()
 
 
 func select_stage(stage: int) -> void:
+	hide_menus()
 	lored_container.select_stage(stage)
 
 

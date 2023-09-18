@@ -49,7 +49,7 @@ func setup(data: Dictionary) -> void:
 	
 	for lored_type in currency.produced_by:
 		var lored := lv.get_lored(lored_type) as LORED
-		if not lored.unlocked:
+		if lored.unlocked.is_false():
 			continue
 		var rate = lored.get_produced_currency_rate(currency.type)
 		var label = gv.label.instantiate() as RichTextLabel
@@ -59,7 +59,7 @@ func setup(data: Dictionary) -> void:
 	
 	for lored_type in currency.used_by:
 		var lored := lv.get_lored(lored_type) as LORED
-		if not lored.unlocked:
+		if lored.unlocked.is_false():
 			continue
 		var rate = lored.get_used_currency_rate(currency.type)
 		var label = gv.label.instantiate() as RichTextLabel

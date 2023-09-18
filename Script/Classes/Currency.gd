@@ -76,6 +76,7 @@ var name: String
 var colored_name: String
 var icon_text: String
 var icon_and_name_text: String
+var icon_and_colored_name: String
 var key: String
 
 var color: Color
@@ -157,11 +158,12 @@ func _init(_type: int = 0) -> void:
 	if count == null:
 		count = Big.new(0, true)
 	color_text = "[color=#" + color.to_html() + "]%s[/color]"
-	colored_name = "[color=#" + color.to_html() + "]" + name + "[/color]"
+	colored_name = color_text % name
 	if icon == null:
 		icon = preload("res://Sprites/Hud/Delete.png")
 	icon_text = "[img=<15>]" + icon.get_path() + "[/img]"
 	icon_and_name_text = icon_text + " " + name
+	icon_and_colored_name = icon_text + " " + colored_name
 	
 	gv.prestige.connect(prestige)
 	gv.hard_reset.connect(reset)
@@ -612,12 +614,34 @@ func get_fuel_currency() -> int:
 var gain_over_loss := 1.0
 var fuel_cur_gain_loss: float
 var offline_production: Big
+var positive_offline_rate: bool
 
 
 func get_offline_production(time_offline: float) -> Big:
-	var net = net_rate.get_value()
-	if net.equal(0):
-		return Big.new(0)
+	var gain = Big.new(gain_rate.get_value())
 	fuel_cur_gain_loss = wa.get_currency(get_fuel_currency()).gain_over_loss
-	offline_production = Big.new(net).m(time_offline).m(fuel_cur_gain_loss)
+	gain.m(fuel_cur_gain_loss)
+	
+	var loss = Big.new(0)
+	for x in used_by:
+		var lored = lv.get_lored(x) as LORED
+		if (
+			lored.unlocked.is_true()
+			and wa.is_currency_unlocked(lored.fuel_currency)
+		):
+			loss.a(lored.get_used_currency_rate(type))
+	
+	positive_offline_rate = gain.greater_equal(loss)
+	
+	var net: Big
+	if positive_offline_rate:
+		net = Big.new(gain).s(loss)
+	else:
+		net = Big.new(loss).s(gain)
+	
+	if net.equal(0):
+		offline_production = Big.new(0)
+	else:
+		offline_production = Big.new(net).m(str(time_offline))
+	
 	return offline_production

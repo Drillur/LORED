@@ -32,8 +32,9 @@ func setup(_currency: int) -> void:
 	currency.count.connect("changed", update_count)
 	currency.net_rate.connect("changed", update_rate)
 	
-	SaveManager.connect("load_finished", update_count)
-	SaveManager.connect("load_finished", update_rate)
+	if not SaveManager.load_finished.is_connected(update_count):
+		SaveManager.connect("load_finished", update_count)
+		SaveManager.connect("load_finished", update_rate)
 	
 	update_count()
 	update_rate()

@@ -186,7 +186,7 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_ge2kb")
 visible = false
 layout_mode = 2
 
-[node name="Earnings Report" parent="." instance=ExtResource("8_gl0q2")]
+[node name="Offline Report" parent="." instance=ExtResource("8_gl0q2")]
 visible = false
 layout_mode = 2
 

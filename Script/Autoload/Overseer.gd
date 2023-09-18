@@ -620,7 +620,7 @@ func get_offline_earnings() -> void:
 	await get_tree().physics_frame
 	var _last_clock: float = SaveManager.loaded_data["Overseer"]["current_clock"]
 	time_offline = Time.get_unix_time_from_system() - _last_clock
-	time_offline = 31536000 * randf_range(1,5)
+	time_offline = 10000 * randf_range(1,5)
 	time_offline_dict = get_time_dict(int(time_offline))
 	if time_offline < 30:
 		return
@@ -636,14 +636,19 @@ func get_offline_earnings() -> void:
 		
 		c.set_gain_over_loss()
 	
+	#wa.get_currency(Currency.Type.COAL).gain_over_loss = 0.5
+	#wa.get_currency(Currency.Type.JOULES).gain_over_loss = 0.5
+	
 	for c in eligible_currencies:
-		offline_earnings[c.type] = c.get_offline_production(time_offline)
-		if c.positive_rate:
-			c.add_from_lored(offline_earnings[c.type])
-			print(c.name, " increased by ", offline_earnings[c.type].text)
+		offline_earnings[c.type] = {}
+		offline_earnings[c.type]["rate"] = c.get_offline_production(time_offline)
+		offline_earnings[c.type]["positive"] = c.positive_offline_rate
+		if c.positive_offline_rate:
+			c.add_from_lored(offline_earnings[c.type]["rate"])
+			print(c.name, " increased by ", offline_earnings[c.type]["rate"].text)
 		else:
-			c.subtract_from_lored(offline_earnings[c.type])
-			print(c.name, " decreased by ", offline_earnings[c.type].text)
+			c.subtract_from_lored(offline_earnings[c.type]["rate"])
+			print(c.name, " decreased by ", offline_earnings[c.type]["rate"].text)
 	
 	offline_report_ready.emit()
 
@@ -716,7 +721,6 @@ func prestige_now(stage: int) -> void:
 
 
 func hard_reset_now() -> void:
-	print("hard reset")
 	hard_reset.emit()
 
 

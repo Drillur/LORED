@@ -695,7 +695,7 @@ func add_rate() -> void:
 		produced_rates.clear()
 		for cur in produced_currencies:
 			var currency = wa.get_currency(cur) as Currency
-			var rate = Big.new(produced_currencies[cur].get_value()).d(_duration)
+			var rate = get_gain_rate(cur)
 			
 			currency.add_gain_rate(rate)
 			produced_rates[cur] = rate
@@ -714,7 +714,7 @@ func add_rate() -> void:
 		required_rates.clear()
 		for cur in required_currencies.cost:
 			var currency = wa.get_currency(cur) as Currency
-			var rate = Big.new(required_currencies.cost[cur].get_value()).d(_duration)
+			var rate = get_loss_rate(cur)
 			
 			currency.add_loss_rate(rate)
 			required_rates[cur] = rate
@@ -925,3 +925,11 @@ func uses_currency(cur: int) -> bool:
 		return false
 	return cur in required_currencies.cost.keys()
 
+
+
+func get_gain_rate(cur: int) -> Big:
+	return Big.new(produced_currencies[cur].get_value()).d(duration.get_as_float())
+
+
+func get_loss_rate(cur: int) -> Big:
+	return Big.new(required_currencies.cost[cur].get_value()).d(duration.get_as_float())
