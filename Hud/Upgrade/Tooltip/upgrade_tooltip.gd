@@ -28,14 +28,14 @@ func setup(data: Dictionary) -> void:
 	upgrade = data["upgrade"]
 	if not is_node_ready():
 		await ready
-	title.text = upgrade.name
-	color = upgrade.color
+	title.text = upgrade.details.name
+	color = upgrade.details.color
 	
 	upgrade.purchased.connect_and_call("changed", purchased_changed)
 	upgrade.unlocked.connect_and_call("changed", upgrade_unlocked_changed)
 	
 	price.setup(upgrade.cost)
-	price.color = upgrade.color
+	price.color = upgrade.details.color
 	
 	if upgrade.has_required_upgrade:
 		required_upgrade.text = "[center][b][i]" + up.get_icon_and_name_text(upgrade.required_upgrade)
@@ -44,9 +44,9 @@ func setup(data: Dictionary) -> void:
 	if upgrade.has_description:
 		effect.hide()
 		recipients.hide()
-		var text_length = upgrade.description.length()
+		var text_length = upgrade.details.description.length()
 		description.custom_minimum_size.x = min(250, max(50 + text_length * 2, 100))
-		description.text = upgrade.description
+		description.text = upgrade.details.description
 		description.show()
 	else:
 		description.hide()
@@ -87,14 +87,14 @@ func update_description_its_growin() -> void:
 	var cop = lv.get_colored_name(LORED.Type.COPPER)
 	var effect1 = "[b]x" + upgrade.effect.get_effect_text() + "[/b]"
 	var effect2 = "[b]x" + upgrade.effect.get_effect2_text() + "[/b]"
-	description.text = upgrade.description 
+	description.text = upgrade.details.description 
 	description.text += "\n\n[center]%s: %s[/center]" % [iron, effect1]
 	description.text += "\n[center]%s: %s[/center]" % [cop, effect2]
 
 
 func update_description_milkshake() -> void:
 	var a = "[b]x" + upgrade.effect.get_effect_text() + "[/b]"
-	description.text = upgrade.description + "\n\n[center]%s" % a
+	description.text = upgrade.details.description + "\n\n[center]%s" % a
 
 
 func upgrade_unlocked_changed() -> void:

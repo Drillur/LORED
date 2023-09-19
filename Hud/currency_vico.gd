@@ -26,9 +26,9 @@ func setup(_currency: int) -> void:
 	
 	first_setup = false
 	currency = wa.get_currency(_currency) as Currency
-	icon.texture = currency.icon
+	icon.texture = currency.details.icon
 	icon_shadow.texture = icon.texture
-	count.self_modulate = currency.color
+	count.self_modulate = currency.details.color
 	currency.count.connect("changed", update_count)
 	currency.net_rate.connect("changed", update_rate)
 	

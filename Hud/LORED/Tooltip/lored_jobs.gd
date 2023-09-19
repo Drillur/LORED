@@ -20,7 +20,7 @@ func setup(data: Dictionary) -> void:
 	lored = lv.get_lored(data["lored"]) as LORED
 	if not is_node_ready():
 		await ready
-	color = lored.color
+	color = lored.details.color
 	for job in lored.sorted_jobs:
 		var x = lored_job.instantiate()
 		x.setup(lored.jobs[job])

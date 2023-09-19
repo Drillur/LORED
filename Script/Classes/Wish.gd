@@ -56,12 +56,13 @@ class Reward:
 			amount = data["amount"]
 		else:
 			amount = Big.new(data["amount"])
-		text = (wa.get_currency(object_type).color_text % "+%s ") + wa.get_icon_and_name_text(object_type)
+		text = (wa.get_currency(object_type).details.color_text % "+%s ") + wa.get_icon_and_name_text(object_type)
 	
 	
 	func init_NEW_LORED(data: Dictionary) -> void:
 		object_type = data["object_type"]
-		text = "New LORED - " + lv.get_icon_and_name_text(object_type)
+		var lored = lv.get_lored(object_type)
+		text = lored.details.icon_and_colored_name + ", [i]" + lored.details.color_text % lored.details.get_title()
 	
 	
 	func init_INCREASED_RANDOM_WISH_LIMIT(data: Dictionary) -> void:
@@ -74,15 +75,15 @@ class Reward:
 		var upgrade_menu: UpgradeMenu = up.get_upgrade_menu(object_type)
 		if object_type == UpgradeMenu.Type.NORMAL:
 			text = "[img=<15>]res://Sprites/Hud/upgrades.png[/img] Upgrade Menu"
+			text = upgrade_menu.details.color_text % text
 		else:
-			text = upgrade_menu.icon_and_name_text
-		text = upgrade_menu.color_text % text
+			text = upgrade_menu.details.icon_and_colored_name
 	
 	
 	func init_STAGE(data: Dictionary) -> void:
 		object_type = data["object_type"]
 		var stage: Stage = gv.get_stage(object_type) as Stage
-		text = stage.color_text % stage.icon_and_name_text
+		text = stage.details.color_text % stage.details.icon_and_name_text
 	
 	
 	func init_JUST_TEXT(data: Dictionary) -> void:

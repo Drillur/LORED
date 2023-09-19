@@ -26,10 +26,10 @@ func setup(data: Dictionary) -> void:
 		"Get back to work!",
 		"Wake up! Grab a brush and put a little make-up!",
 		"Get out of bed, young " + lored.pronoun_man + "!",
-		lored.name + ", none of this is real. You are in a dream. Wake up.",
+		lored.details.name + ", none of this is real. You are in a dream. Wake up.",
 		"Rise and shine!",
 		"Wakey-wakey!",
-		"Wake up, Mr. " + lored.name + ". Wake up and smell the ashes.",
+		"Wake up, Mr. " + lored.details.name + ". Wake up and smell the ashes.",
 		"Up and at 'em!!",
 		"Carpe freaking diem, dude!",
 	]
@@ -47,7 +47,7 @@ func setup(data: Dictionary) -> void:
 	]
 	await ready
 	
-	color = lored.color
+	color = lored.details.color
 	lored.asleep.connect_and_call("changed", sleep_changed)
 	var text_length = description.text.length()
 	description.custom_minimum_size.x = min(250, 50 + (text_length * 2))

@@ -38,7 +38,6 @@ const sleep_text_pool := [
 ]
 
 
-
 func _on_item_rect_changed():
 	if not is_node_ready():
 		await ready
@@ -131,28 +130,28 @@ func attach_lored(_lored: LORED) -> void:
 		lored.jobs[job].connect("cut_short", job_cut_short)
 	
 	# ref
-	$bg.self_modulate = lored.color
-	progress_bar.color = lored.color
+	$bg.self_modulate = lored.details.color
+	progress_bar.color = lored.details.color
 	progress_bar.modulate.a = 0.25
 	fuel_bar.color = wa.get_color(lored.fuel_currency)
 	fuel_bar.modulate = Color(0.75, 0.75, 0.75)
-	lored_name.modulate = lored.color
-	info.color = lored.faded_color
-	jobs.color = lored.faded_color
-	active_buffs.color = lored.faded_color
-	sleep.color = lored.faded_color
-	view_special.color = lored.faded_color
-	level_up.color = lored.faded_color
+	lored_name.modulate = lored.details.color
+	info.color = lored.details.alt_color
+	jobs.color = lored.details.alt_color
+	active_buffs.color = lored.details.alt_color
+	sleep.color = lored.details.alt_color
+	view_special.color = lored.details.alt_color
+	level_up.color = lored.details.alt_color
 	
 	info.button.mouse_default_cursor_shape = Control.CURSOR_ARROW
 	jobs.button.mouse_default_cursor_shape = Control.CURSOR_ARROW
 	active_buffs.button.mouse_default_cursor_shape = Control.CURSOR_ARROW
 	animation.setup(lored)
-	animation.modulate = lored.faded_color
+	animation.modulate = lored.details.alt_color
 	level_up.show_check() if lored.cost.affordable.is_true() else level_up.hide_check()
 	currency.hide_threshold()
-	lored_name.text = lored.name + ", " + lored.title
-	lored_icon.texture = lored.icon
+	lored_name.text = lored.details.name + ", " + lored.details.get_title()
+	lored_icon.texture = lored.details.icon
 	
 	hide()
 
@@ -223,9 +222,9 @@ func lored_leveled_up(_level: int) -> void:
 			level_up_texts, 
 			{
 				"text": lored.get_level_text(),
-				"color": lored.color,
+				"color": lored.details.color,
 				"icon": level_icon,
-				"icon modulate": lored.color,
+				"icon modulate": lored.details.color,
 			}
 		)
 
@@ -245,19 +244,19 @@ func flash_level_up_button() -> void:
 
 
 func flash_on_level_up(_level: int) -> void:
-	gv.flash(self, lored.color)
+	gv.flash(self, lored.details.color)
 
 
 func sleep_lock(unlocked: bool) -> void:
 	sleep.visible = (unlocked and lored.unlocked)# or gv.dev_mode
 	if sleep.visible:
-		gv.flash(sleep, lored.color)
+		gv.flash(sleep, lored.details.color)
 
 
 func advanced_details_lock(unlocked: bool) -> void:
 	jobs.visible = (unlocked and lored.unlocked)# or gv.dev_mode
 	if jobs.visible:
-		gv.flash(jobs, lored.color)
+		gv.flash(jobs, lored.details.color)
 
 
 func autobuy_changed() -> void:
@@ -301,7 +300,7 @@ func set_status_and_currency(_status: String, _currency: int) -> void:
 
 
 func sleep_clicked() -> void:
-	if lored.will_go_to_sleep():
+	if lored.asleep.is_true():
 		lored.wake_up()
 	else:
 		lored.go_to_sleep()
@@ -345,7 +344,7 @@ func spew_sleep_text() -> void:
 		output_texts, 
 		{
 			"text": sleep_text_pool[randi() % sleep_text_pool.size()],
-			"color": lored.color,
+			"color": lored.details.color,
 		}
 	)
 

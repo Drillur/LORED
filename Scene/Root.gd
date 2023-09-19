@@ -51,8 +51,8 @@ func _ready():
 		var b = get("stage" + str(i)) as IconButton
 		b.remove_optionals()
 		var stage = gv.get_stage(i) as Stage
-		b.set_icon(stage.icon)
-		b.button.modulate = stage.color
+		b.set_icon(stage.details.icon)
+		b.button.modulate = stage.details.color
 		stage.stage_unlocked_changed.connect(display_stage_button)
 		if not gv.dev_mode:
 			b.hide()

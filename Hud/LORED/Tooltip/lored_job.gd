@@ -18,7 +18,7 @@ func setup(_job: Job) -> void:
 	if not is_node_ready():
 		await ready
 	
-	glow.self_modulate = lv.get_lored(job.lored).faded_color
+	glow.self_modulate = lv.get_lored(job.lored).details.alt_color
 	
 	title.text = "[b]" + job.name
 	job.duration.connect("changed", update_duration_text)

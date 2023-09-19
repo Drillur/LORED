@@ -5,6 +5,8 @@ extends Node
 var saved_vars := [
 	"run_duration",
 	"total_duration_played",
+	"current_clock",
+	"session_duration",
 	"stage0",
 	"stage1",
 	"stage2",
@@ -110,8 +112,8 @@ func _ready() -> void:
 
 
 func load_finished():
-	saved_vars.append("current_clock")
-	saved_vars.append("session_duration")
+	current_clock = Time.get_unix_time_from_system()
+	session_duration = 0
 
 
 # - Clock
@@ -244,8 +246,8 @@ func throw_texts_by_dictionary(parent: Node, _data: Dictionary, prepended_text :
 		var currency := wa.get_currency(cur) as Currency
 		var data = {
 			"text": prepended_text + _data[cur].text,
-			"color": currency.color,
-			"icon": currency.icon,
+			"color": currency.details.color,
+			"icon": currency.details.icon,
 		}
 		for text in texts:
 			text.position.y -= 13
@@ -263,8 +265,8 @@ func throw_texts(parent: Node, _data: Dictionary, prepended_text := "+") -> void
 		var currency := wa.get_currency(cur) as Currency
 		var data = {
 			"text": prepended_text + _data[cur].text,
-			"color": currency.color,
-			"icon": currency.icon,
+			"color": currency.details.color,
+			"icon": currency.details.icon,
 		}
 		for text in texts:
 			text.position.y -= 13
@@ -620,7 +622,7 @@ func get_offline_earnings() -> void:
 	await get_tree().physics_frame
 	var _last_clock: float = SaveManager.loaded_data["Overseer"]["current_clock"]
 	time_offline = Time.get_unix_time_from_system() - _last_clock
-	time_offline = 10000 * randf_range(1,5)
+	#time_offline = 10000 * randf_range(1,5)
 	time_offline_dict = get_time_dict(int(time_offline))
 	if time_offline < 30:
 		return
@@ -645,10 +647,10 @@ func get_offline_earnings() -> void:
 		offline_earnings[c.type]["positive"] = c.positive_offline_rate
 		if c.positive_offline_rate:
 			c.add_from_lored(offline_earnings[c.type]["rate"])
-			print(c.name, " increased by ", offline_earnings[c.type]["rate"].text)
+			print(c.details.name, " increased by ", offline_earnings[c.type]["rate"].text)
 		else:
 			c.subtract_from_lored(offline_earnings[c.type]["rate"])
-			print(c.name, " decreased by ", offline_earnings[c.type]["rate"].text)
+			print(c.details.name, " decreased by ", offline_earnings[c.type]["rate"].text)
 	
 	offline_report_ready.emit()
 
@@ -699,11 +701,11 @@ func get_stage(stage: int) -> Stage:
 
 
 func get_stage_color(stage: int) -> Color:
-	return get_stage(stage).color
+	return get_stage(stage).details.color
 
 
 func get_stage_icon(stage: int) -> Texture:
-	return get_stage(stage).icon
+	return get_stage(stage).details.icon
 
 
 

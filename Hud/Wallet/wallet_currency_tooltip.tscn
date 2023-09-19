@@ -78,6 +78,16 @@ text = "[b]123e123/s"
 fit_content = true
 autowrap_mode = 0
 
+[node name="description" type="RichTextLabel" parent="VBoxContainer/MarginContainer/VBoxContainer/MarginContainer2/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 8
+mouse_filter = 2
+theme = ExtResource("3_u2nac")
+bbcode_enabled = true
+text = "Description!"
+fit_content = true
+
 [node name="useAllowed" type="RichTextLabel" parent="VBoxContainer/MarginContainer/VBoxContainer/MarginContainer2/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
@@ -85,7 +95,7 @@ size_flags_vertical = 8
 mouse_filter = 2
 theme = ExtResource("3_u2nac")
 bbcode_enabled = true
-text = "This resource is [b]blocked[/b] and may [b]not[/b] be used by LOREDs."
+text = "This resource is [b]blocked[/b] and may [i]not[/i] be used by LOREDs."
 fit_content = true
 
 [node name="Producers" type="MarginContainer" parent="VBoxContainer"]

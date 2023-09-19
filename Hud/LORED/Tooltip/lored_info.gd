@@ -36,9 +36,9 @@ var color: Color:
 func setup(data: Dictionary) -> void:
 	lored = lv.get_lored(data["lored"])
 	await ready
-	name_label.text = lored.name + ","
-	title.text = lored.title
-	color = lored.color
+	name_label.text = lored.details.name + ","
+	title.text = lored.details.get_title()
+	color = lored.details.color
 	lored.purchased.connect_and_call("changed", purchased_updated)
 	lored.connect("leveled_up", update_level)
 	update_level(lored.level)
@@ -83,7 +83,7 @@ func purchased_updated() -> void:
 		fuel.hide()
 		details.hide()
 		description.show()
-		description.text = lored.description
+		description.text = lored.details.description
 
 
 func update_output() -> void:

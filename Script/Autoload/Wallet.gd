@@ -164,19 +164,19 @@ func get_count_text(cur: int) -> String:
 
 
 func get_color(cur: int) -> Color:
-	return currency[cur].color
+	return currency[cur].details.color
 
 
 func get_icon(cur: int) -> Texture:
-	return currency[cur].icon
+	return currency[cur].details.icon
 
 
 func get_currency_name(cur: int) -> String:
-	return currency[cur].name
+	return currency[cur].details.name
 
 
 func get_colored_currency_name(cur: int) -> String:
-	return currency[cur].colored_name
+	return currency[cur].details.colored_name
 
 
 func get_currency(cur: int) -> Currency:
@@ -217,11 +217,11 @@ func get_weighted_random_currency() -> int:
 
 
 func get_icon_and_name_text(cur: int) -> String:
-	return currency[cur].icon_and_name_text
+	return currency[cur].details.icon_and_name_text
 
 
 func get_icon_and_colored_name(cur: int) -> String:
-	return currency[cur].icon_and_colored_name
+	return currency[cur].details.icon_and_colored_name
 
 
 func is_rate_positive(cur: int) -> bool:

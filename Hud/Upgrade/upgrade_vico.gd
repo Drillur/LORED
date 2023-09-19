@@ -27,13 +27,13 @@ func setup(_upgrade: Upgrade):
 	if not is_node_ready():
 		await ready
 	upgrade.vico = self
-	button.set_icon(upgrade.icon)
+	button.set_icon(upgrade.details.icon)
 	button.remove_check()
-	button.set_button_color(upgrade.color)
-	bg.self_modulate = upgrade.color
-	check.self_modulate = upgrade.color
-	lock.modulate = upgrade.color
-	button.autobuyer.modulate = upgrade.color
+	button.set_button_color(upgrade.details.color)
+	bg.self_modulate = upgrade.details.color
+	check.self_modulate = upgrade.details.color
+	lock.modulate = upgrade.details.color
+	button.autobuyer.modulate = upgrade.details.color
 	
 	button.mouse_entered.connect(show_tooltip)
 	button.mouse_exited.connect(gv.clear_tooltip)
@@ -129,4 +129,4 @@ func hide_check() -> void:
 
 
 func flash() -> void:
-	gv.flash(self, upgrade.color)
+	gv.flash(self, upgrade.details.color)

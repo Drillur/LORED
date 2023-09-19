@@ -86,10 +86,8 @@ enum ReasonCannotWork {
 
 signal became_unable_to_work
 signal completed_job
-signal began_working
 signal leveled_up(level)
 signal job_started(job)
-signal finished_emoting
 signal spent_one_second_asleep
 signal currency_produced(amount)
 
@@ -132,36 +130,20 @@ var time_went_to_bed := 0.0
 var fuel_rate_added := false:
 	set(val):
 		fuel_rate_added = val
-var emoting := false:
-	set(val):
-		if emoting != val:
-			emoting = val
-			if val:
-				pass
-			else:
-				emit_signal("finished_emoting")
+var emoting := Bool.new(false)
+
 var last_purchase_automatic := false
 var last_purchase_forced := false
 
 var key: String
-var name := ""
-var title := ""
-var colored_name := ""
-var description := ""
+var details := Details.new()
 var pronoun_he := "he"
 var pronoun_him := "him"
 var pronoun_his := "his"
 var pronoun_man := "man"
 var pronoun_boy := "boy"
 
-var color: Color
-var color_text: String
-var faded_color: Color
-
-var icon: Texture
 var default_frames: SpriteFrames
-var icon_text: String
-var icon_and_name_text: String
 
 var cost: Cost
 var cost_increase := Value.new(3)
@@ -190,13 +172,15 @@ var crit := Value.new(0)
 func _init(_type: int) -> void:
 	type = _type
 	key = Type.keys()[type]
-	title = key.replace("_", " ").capitalize() + " LORED"
+	details.set_title(key.replace("_", " ").capitalize() + " LORED")
 	
 	purchased.changed.connect(purchased_updated)
 	purchased.reset_value_changed.connect(purchased_reset_value_updated)
 	
 	unlocked.changed.connect(unlocked_updated)
 	unlocked.reset_value_changed.connect(unlocked_reset_value_updated)
+	
+	emoting.became_false.connect(emote_next_in_line)
 	
 	autobuy.changed.connect(autobuy_changed)
 	
@@ -207,13 +191,6 @@ func _init(_type: int) -> void:
 	key_lored = type in lv.key_loreds
 	
 	add_job(Job.Type.REFUEL, true)
-	
-	if name == "":
-		name = key.replace("_", " ").capitalize()
-	colored_name = "[color=#" + color.to_html() + "]" + name + "[/color]"
-	if faded_color == Color(0,0,0,1):
-		faded_color = color
-	color_text = "[color=#" + color.to_html() + "]%s[/color]"
 	
 	asleep.became_false.connect(work)
 	connect("completed_job", work)
@@ -261,15 +238,16 @@ func _init(_type: int) -> void:
 	
 	level = 0
 	
-	icon_text = "[img=<15>]" + icon.get_path() + "[/img]"
-	icon_and_name_text = icon_text + " " + colored_name
-	
 	sort_jobs()
 
 
 
 func init_STONE() -> void:
-	name = "Scoot"
+	details.name = "Scoot"
+	details.color = Color(0.79, 0.79, 0.79)
+	details.alt_color = Color(0.788235, 0.788235, 0.788235)
+	details.icon = preload("res://Sprites/Currency/stone.png")
+	details.description = "Likes rocks. Has a bottomless bag."
 	add_job(Job.Type.STONE, true)
 	cost = Cost.new({
 		Currency.Type.IRON: Value.new(25.0 / 3),
@@ -277,370 +255,366 @@ func init_STONE() -> void:
 	})
 	purchased.set_default_value(true)
 	unlocked.set_default_value(true)
-	color = Color(0.79, 0.79, 0.79)
-	faded_color = Color(0.788235, 0.788235, 0.788235)
 	fuel_currency = Currency.Type.COAL
-	icon = preload("res://Sprites/Currency/stone.png")
-	description = "Likes rocks. Has a bottomless bag."
 	primary_currency = Currency.Type.STONE
 
 
 func init_COAL() -> void:
-	name = "Carl"
+	details.name = "Carl"
 	add_job(Job.Type.COAL, true)
 	cost = Cost.new({
 		Currency.Type.STONE: Value.new(5),
 	})
 	unlocked.set_default_value(true)
-	color = Color(0.7, 0, 1)
-	faded_color = Color(0.9, 0.3, 1)
+	details.color = Color(0.7, 0, 1)
+	details.alt_color = Color(0.9, 0.3, 1)
 	fuel_currency = Currency.Type.COAL
-	icon = preload("res://Sprites/Currency/coal.png")
-	description = "Plays support in every game."
+	details.icon = preload("res://Sprites/Currency/coal.png")
+	details.description = "Plays support in every game."
 	primary_currency = Currency.Type.COAL
 
 
 func init_IRON_ORE() -> void:
-	name = "Ted"
+	details.name = "Ted"
 	add_job(Job.Type.IRON_ORE, true)
 	cost = Cost.new({
 		Currency.Type.STONE: Value.new(8),
 	})
-	color = Color(0, 0.517647, 0.905882)
-	faded_color = Color(0.5, 0.788732, 1)
+	details.color = Color(0, 0.517647, 0.905882)
+	details.alt_color = Color(0.5, 0.788732, 1)
 	fuel_currency = Currency.Type.COAL
-	icon = preload("res://Sprites/Currency/irono.png")
-	description = "Is actually evil."
+	details.icon = preload("res://Sprites/Currency/irono.png")
+	details.description = "Is actually evil."
 	primary_currency = Currency.Type.IRON_ORE
 
 
 func init_COPPER_ORE() -> void:
-	name = "Eugene"
+	details.name = "Eugene"
 	add_job(Job.Type.COPPER_ORE, true)
 	cost = Cost.new({
 		Currency.Type.STONE: Value.new(8),
 	})
-	color = Color(0.7, 0.33, 0)
-	faded_color = Color(0.695313, 0.502379, 0.334076)
+	details.color = Color(0.7, 0.33, 0)
+	details.alt_color = Color(0.695313, 0.502379, 0.334076)
 	fuel_currency = Currency.Type.COAL
-	icon = preload("res://Sprites/Currency/copo.png")
-	description = "Trapped in a dead-end job. Literally."
+	details.icon = preload("res://Sprites/Currency/copo.png")
+	details.description = "Trapped in a dead-end job. Literally."
 	primary_currency = Currency.Type.COPPER_ORE
 
 
 func init_IRON() -> void:
-	name = "Will"
+	details.name = "Will"
 	add_job(Job.Type.IRON, true)
 	cost = Cost.new({
 		Currency.Type.STONE: Value.new(9),
 		Currency.Type.COPPER: Value.new(8),
 	})
-	color = Color(0.07, 0.89, 1)
-	faded_color = Color(0.496094, 0.940717, 1)
+	details.color = Color(0.07, 0.89, 1)
+	details.alt_color = Color(0.496094, 0.940717, 1)
 	fuel_currency = Currency.Type.COAL
-	icon = preload("res://Sprites/Currency/iron.png")
-	description = "Wants everyone to succeed."
+	details.icon = preload("res://Sprites/Currency/iron.png")
+	details.description = "Wants everyone to succeed."
 	primary_currency = Currency.Type.IRON
 
 
 func init_COPPER() -> void:
-	name = "Ben"
+	details.name = "Ben"
 	add_job(Job.Type.COPPER, true)
 	cost = Cost.new({
 		Currency.Type.STONE: Value.new(9),
 		Currency.Type.IRON: Value.new(8),
 	})
-	color = Color(1, 0.74, 0.05)
-	faded_color = Color(1, 0.862001, 0.496094)
+	details.color = Color(1, 0.74, 0.05)
+	details.alt_color = Color(1, 0.862001, 0.496094)
 	fuel_currency = Currency.Type.COAL
-	icon = preload("res://Sprites/Currency/cop.png")
-	description = "Loves s'mores."
+	details.icon = preload("res://Sprites/Currency/cop.png")
+	details.description = "Loves s'mores."
 	primary_currency = Currency.Type.COPPER
 
 
 func init_GROWTH() -> void:
-	name = "Percy"
+	details.name = "Percy"
 	add_job(Job.Type.GROWTH, true)
 	cost = Cost.new({
 		Currency.Type.STONE: Value.new(900),
 	})
-	color = Color(0.79, 1, 0.05)
-	faded_color = Color(0.890041, 1, 0.5)
+	details.color = Color(0.79, 1, 0.05)
+	details.alt_color = Color(0.890041, 1, 0.5)
 	fuel_currency = Currency.Type.JOULES
-	icon = preload("res://Sprites/Currency/growth.png")
-	description = "Is in an unfortunate situation."
+	details.icon = preload("res://Sprites/Currency/growth.png")
+	details.description = "Is in an unfortunate situation."
 	primary_currency = Currency.Type.GROWTH
 
 
 func init_JOULES() -> void:
-	name = "Notzuko"
+	details.name = "Notzuko"
 	add_job(Job.Type.JOULES, true)
 	cost = Cost.new({
 		Currency.Type.CONCRETE: Value.new(25),
 	})
-	color = Color(1, 0.98, 0)
-	faded_color = Color(1, 0.9572, 0.503906)
+	details.color = Color(1, 0.98, 0)
+	details.alt_color = Color(1, 0.9572, 0.503906)
 	fuel_currency = Currency.Type.COAL
-	icon = preload("res://Sprites/Currency/jo.png")
-	description = "Follows Tesla on [s]Twitter[/s] X."
+	details.icon = preload("res://Sprites/Currency/jo.png")
+	details.description = "Follows Tesla on [s]Twitter[/s] X."
 	primary_currency = Currency.Type.JOULES
 
 
 func init_CONCRETE() -> void:
-	name = "Santos"
+	details.name = "Santos"
 	add_job(Job.Type.CONCRETE, true)
 	cost = Cost.new({
 		Currency.Type.IRON: Value.new(90),
 		Currency.Type.COPPER: Value.new(150),
 	})
-	color = Color(0.35, 0.35, 0.35)
-	faded_color = Color(0.6, 0.6, 0.6)
+	details.color = Color(0.35, 0.35, 0.35)
+	details.alt_color = Color(0.6, 0.6, 0.6)
 	fuel_currency = Currency.Type.COAL
-	icon = preload("res://Sprites/Currency/conc.png")
-	description = "Laughs about everything."
+	details.icon = preload("res://Sprites/Currency/conc.png")
+	details.description = "Laughs about everything."
 	primary_currency = Currency.Type.CONCRETE
 
 
 func init_OIL() -> void:
-	name = "Odd Lee"
+	details.name = "Odd Lee"
 	add_job(Job.Type.OIL, true)
 	cost = Cost.new({
 		Currency.Type.COPPER: Value.new(160),
 		Currency.Type.CONCRETE: Value.new(250),
 	})
-	color = Color(0.65, 0.3, 0.66)
-	faded_color = Color(0.647059, 0.298039, 0.658824)
+	details.color = Color(0.65, 0.3, 0.66)
+	details.alt_color = Color(0.647059, 0.298039, 0.658824)
 	fuel_currency = Currency.Type.COAL
-	icon = preload("res://Sprites/Currency/oil.png")
-	description = "Is a big baby."
+	details.icon = preload("res://Sprites/Currency/oil.png")
+	details.description = "Is a big baby."
 	primary_currency = Currency.Type.OIL
 
 
 func init_TARBALLS() -> void:
-	name = "Jon"
+	details.name = "Jon"
 	add_job(Job.Type.TARBALLS, true)
 	cost = Cost.new({
 		Currency.Type.IRON: Value.new(350),
 		Currency.Type.MALIGNANCY: Value.new(10),
 	})
-	color = Color(0.56, 0.44, 1)
-	faded_color = Color(0.560784, 0.439216, 1)
+	details.color = Color(0.56, 0.44, 1)
+	details.alt_color = Color(0.560784, 0.439216, 1)
 	fuel_currency = Currency.Type.JOULES
-	icon = preload("res://Sprites/Currency/tar.png")
-	description = "Quiet science guy."
+	details.icon = preload("res://Sprites/Currency/tar.png")
+	details.description = "Quiet science guy."
 	primary_currency = Currency.Type.TARBALLS
 
 
 func init_MALIGNANCY() -> void:
-	name = "Tenant"
+	details.name = "Tenant"
 	add_job(Job.Type.MALIGNANCY, true)
 	cost = Cost.new({
 		Currency.Type.IRON: Value.new(900),
 		Currency.Type.COPPER: Value.new(900),
 		Currency.Type.CONCRETE: Value.new(50),
 	})
-	color = Color(0.88, 0.12, 0.35)
-	faded_color = Color(0.882353, 0.121569, 0.352941)
+	details.color = Color(0.88, 0.12, 0.35)
+	details.alt_color = Color(0.882353, 0.121569, 0.352941)
 	fuel_currency = Currency.Type.JOULES
-	icon = preload("res://Sprites/Currency/malig.png")
-	description = "Infinite clones."
+	details.icon = preload("res://Sprites/Currency/malig.png")
+	details.description = "Infinite clones."
 	primary_currency = Currency.Type.MALIGNANCY
 
 
 func init_WATER() -> void:
 	add_job(Job.Type.WATER, true)
-	name = "Gatorade"
+	details.name = "Gatorade"
 	cost = Cost.new({
 		Currency.Type.STONE: Value.new(2500),
 		Currency.Type.WOOD: Value.new(80),
 	})
-	color = Color(0, 0.647059, 1)
-	faded_color = Color(0.570313, 0.859009, 1)
+	details.color = Color(0, 0.647059, 1)
+	details.alt_color = Color(0.570313, 0.859009, 1)
 	fuel_currency = Currency.Type.COAL
-	icon = preload("res://Sprites/Currency/water.png")
-	description = "Likes his pool."
+	details.icon = preload("res://Sprites/Currency/water.png")
+	details.description = "Likes his pool."
 	primary_currency = Currency.Type.WATER
 
 
 func init_HUMUS() -> void:
-	name = "Chip"
+	details.name = "Chip"
 	add_job(Job.Type.HUMUS, true)
 	cost = Cost.new({
 		Currency.Type.IRON: Value.new(600),
 		Currency.Type.COPPER: Value.new(600),
 		Currency.Type.GLASS: Value.new(30),
 	})
-	color = Color(0.458824, 0.25098, 0)
-	faded_color = Color(0.6, 0.3, 0)
+	details.color = Color(0.458824, 0.25098, 0)
+	details.alt_color = Color(0.6, 0.3, 0)
 	fuel_currency = Currency.Type.JOULES
-	icon = preload("res://Sprites/Currency/humus.png")
-	description = "The shittest character in the game."
+	details.icon = preload("res://Sprites/Currency/humus.png")
+	details.description = "The shittest character in the game."
 	primary_currency = Currency.Type.HUMUS
 
 
 func init_SOIL() -> void:
-	name = "Mike"
+	details.name = "Mike"
 	add_job(Job.Type.SOIL, true)
 	cost = Cost.new({
 		Currency.Type.CONCRETE: Value.new(1000),
 		Currency.Type.HARDWOOD: Value.new(40),
 	})
-	color = Color(0.737255, 0.447059, 0)
+	details.color = Color(0.737255, 0.447059, 0)
 	fuel_currency = Currency.Type.COAL
-	icon = preload("res://Sprites/Currency/soil.png")
-	description = "#note."
+	details.icon = preload("res://Sprites/Currency/soil.png")
+	details.description = "#note."
 	primary_currency = Currency.Type.SOIL
 	set_female_pronouns()
 
 
 func init_TREES() -> void:
-	name = "Biby"
+	details.name = "Biby"
 	add_job(Job.Type.TREES, true)
 	cost = Cost.new({
 		Currency.Type.GROWTH: Value.new(150),
 		Currency.Type.SOIL: Value.new(25),
 	})
-	color = Color(0.772549, 1, 0.247059)
-	faded_color = Color(0.864746, 0.988281, 0.679443)
+	details.color = Color(0.772549, 1, 0.247059)
+	details.alt_color = Color(0.864746, 0.988281, 0.679443)
 	fuel_currency = Currency.Type.JOULES
-	icon = preload("res://Sprites/Currency/tree.png")
-	description = "God-mode."
+	details.icon = preload("res://Sprites/Currency/tree.png")
+	details.description = "God-mode."
 	primary_currency = Currency.Type.TREES
 
 
 func init_SEEDS() -> void:
-	name = "Maybe"
+	details.name = "Maybe"
 	add_job(Job.Type.SEEDS, true)
 	cost = Cost.new({
 		Currency.Type.COPPER: Value.new(800),
 		Currency.Type.TREES: Value.new(2),
 	})
-	color = Color(1, 0.878431, 0.431373)
-	faded_color = Color(.8,.8,.8)
+	details.color = Color(1, 0.878431, 0.431373)
+	details.alt_color = Color(.8,.8,.8)
 	fuel_currency = Currency.Type.COAL
-	icon = preload("res://Sprites/Currency/seed.png")
-	description = "Keeps beesy."
+	details.icon = preload("res://Sprites/Currency/seed.png")
+	details.description = "Keeps beesy."
 	primary_currency = Currency.Type.SEEDS
 
 
 func init_GALENA() -> void:
-	name = "Jack"
+	details.name = "Jack"
 	add_job(Job.Type.GALENA, true)
 	cost = Cost.new({
 		Currency.Type.STONE: Value.new(1100),
 		Currency.Type.WIRE: Value.new(200),
 	})
-	color = Color(0.701961, 0.792157, 0.929412)
-	faded_color = Color(0.701961, 0.792157, 0.929412)
+	details.color = Color(0.701961, 0.792157, 0.929412)
+	details.alt_color = Color(0.701961, 0.792157, 0.929412)
 	fuel_currency = Currency.Type.COAL
-	icon = preload("res://Sprites/Currency/gale.png")
-	description = "#note."
+	details.icon = preload("res://Sprites/Currency/gale.png")
+	details.description = "#note."
 	primary_currency = Currency.Type.GALENA
 
 
 func init_LEAD() -> void:
-	name = "Martin"
+	details.name = "Martin"
 	add_job(Job.Type.LEAD, true)
 	cost = Cost.new({
 		Currency.Type.STONE: Value.new(400),
 		Currency.Type.GROWTH: Value.new(800),
 	})
-	color = Color(0.53833, 0.714293, 0.984375)
+	details.color = Color(0.53833, 0.714293, 0.984375)
 	fuel_currency = Currency.Type.COAL
-	icon = preload("res://Sprites/Currency/lead.png")
-	description = "#note."
+	details.icon = preload("res://Sprites/Currency/lead.png")
+	details.description = "#note."
 	primary_currency = Currency.Type.LEAD
 
 
 func init_WOOD_PULP() -> void:
-	name = ""
+	details.name = ""
 	add_job(Job.Type.WOOD_PULP, true)
 	cost = Cost.new({
 		Currency.Type.WIRE: Value.new(15),
 		Currency.Type.GLASS: Value.new(30),
 	})
-	color = Color(0.94902, 0.823529, 0.54902)
+	details.color = Color(0.94902, 0.823529, 0.54902)
 	fuel_currency = Currency.Type.JOULES
-	icon = preload("res://Sprites/Currency/pulp.png")
-	description = "#note."
+	details.icon = preload("res://Sprites/Currency/pulp.png")
+	details.description = "#note."
 	primary_currency = Currency.Type.WOOD_PULP
 
 
 func init_PAPER() -> void:
-	name = "Sawyer"
+	details.name = "Sawyer"
 	add_job(Job.Type.PAPER, true)
 	cost = Cost.new({
 		Currency.Type.CONCRETE: Value.new(1200),
 		Currency.Type.STEEL: Value.new(15),
 	})
-	color = Color(0.792157, 0.792157, 0.792157)
+	details.color = Color(0.792157, 0.792157, 0.792157)
 	fuel_currency = Currency.Type.COAL
-	icon = preload("res://Sprites/Currency/paper.png")
-	description = "Was in the boy scouts for 25 years."
+	details.icon = preload("res://Sprites/Currency/paper.png")
+	details.description = "Was in the boy scouts for 25 years."
 	primary_currency = Currency.Type.PAPER
 
 
 func init_TOBACCO() -> void:
-	name = "Gondalf"
+	details.name = "Gondalf"
 	add_job(Job.Type.TOBACCO, true)
 	cost = Cost.new({
 		Currency.Type.SOIL: Value.new(3),
 		Currency.Type.HARDWOOD: Value.new(15),
 	})
-	color = Color(0.639216, 0.454902, 0.235294)
-	faded_color = Color(0.85, 0.75, 0.63)
+	details.color = Color(0.639216, 0.454902, 0.235294)
+	details.alt_color = Color(0.85, 0.75, 0.63)
 	fuel_currency = Currency.Type.COAL
-	icon = preload("res://Sprites/Currency/toba.png")
-	description = "Thinks vapes are dangerous."
+	details.icon = preload("res://Sprites/Currency/toba.png")
+	details.description = "Thinks vapes are dangerous."
 	primary_currency = Currency.Type.TOBACCO
 
 
 func init_CIGARETTES() -> void:
-	name = "George"
+	details.name = "George"
 	add_job(Job.Type.CIGARETTES, true)
 	cost = Cost.new({
 		Currency.Type.HARDWOOD: Value.new(50),
 		Currency.Type.WIRE: Value.new(120),
 	})
-	color = Color(0.929412, 0.584314, 0.298039)
-	faded_color = Color(0.97, 0.8, 0.6)
+	details.color = Color(0.929412, 0.584314, 0.298039)
+	details.alt_color = Color(0.97, 0.8, 0.6)
 	fuel_currency = Currency.Type.JOULES
-	icon = preload("res://Sprites/Currency/ciga.png")
-	description = "On his 45th smoke break this shift."
+	details.icon = preload("res://Sprites/Currency/ciga.png")
+	details.description = "On his 45th smoke break this shift."
 	primary_currency = Currency.Type.CIGARETTES
 
 
 func init_PETROLEUM() -> void:
-	name = "Daniel"
+	details.name = "Daniel"
 	add_job(Job.Type.PETROLEUM, true)
 	cost = Cost.new({
 		Currency.Type.IRON: Value.new(3000),
 		Currency.Type.COPPER: Value.new(4000),
 		Currency.Type.GLASS: Value.new(130),
 	})
-	color = Color(0.76, 0.53, 0.14)
+	details.color = Color(0.76, 0.53, 0.14)
 	fuel_currency = Currency.Type.COAL
-	icon = preload("res://Sprites/Currency/pet.png")
-	description = "#note."
+	details.icon = preload("res://Sprites/Currency/pet.png")
+	details.description = "#note."
 	primary_currency = Currency.Type.PETROLEUM
 
 
 func init_PLASTIC() -> void:
-	name = ""
+	details.name = ""
 	add_job(Job.Type.PLASTIC, true)
 	cost = Cost.new({
 		Currency.Type.STONE: Value.new(10000),
 		Currency.Type.TARBALLS: Value.new(700),
 	})
-	color = Color(0.85, 0.85, 0.85)
+	details.color = Color(0.85, 0.85, 0.85)
 	fuel_currency = Currency.Type.JOULES
-	icon = preload("res://Sprites/Currency/plast.png")
-	description = "#note."
+	details.icon = preload("res://Sprites/Currency/plast.png")
+	details.description = "#note."
 	primary_currency = Currency.Type.PLASTIC
 
 
 func init_CARCINOGENS() -> void:
-	name = "Lamash"
+	details.name = "Lamash"
 	add_job(Job.Type.CARCINOGENS, true)
 	cost = Cost.new({
 		Currency.Type.GROWTH: Value.new(8500),
@@ -648,150 +622,150 @@ func init_CARCINOGENS() -> void:
 		Currency.Type.STEEL: Value.new(150),
 		Currency.Type.LEAD: Value.new(800),
 	})
-	color = Color(0.772549, 0.223529, 0.192157)
+	details.color = Color(0.772549, 0.223529, 0.192157)
 	fuel_currency = Currency.Type.JOULES
-	icon = preload("res://Sprites/Currency/carc.png")
-	description = "#note."
+	details.icon = preload("res://Sprites/Currency/carc.png")
+	details.description = "#note."
 	primary_currency = Currency.Type.CARCINOGENS
 
 
 func init_LIQUID_IRON() -> void:
-	name = "Boy"
+	details.name = "Boy"
 	add_job(Job.Type.LIQUID_IRON, true)
 	cost = Cost.new({
 		Currency.Type.CONCRETE: Value.new(30),
 		Currency.Type.STEEL: Value.new(25),
 	})
-	color = Color(0.27, 0.888, .9)
-	faded_color = Color(0.7, 0.94, .985)
+	details.color = Color(0.27, 0.888, .9)
+	details.alt_color = Color(0.7, 0.94, .985)
 	fuel_currency = Currency.Type.JOULES
-	icon = preload("res://Sprites/Currency/liq.png")
-	description = "Likes soup."
+	details.icon = preload("res://Sprites/Currency/liq.png")
+	details.description = "Likes soup."
 	primary_currency = Currency.Type.LIQUID_IRON
 
 
 func init_STEEL() -> void:
-	name = "Ryan"
+	details.name = "Ryan"
 	add_job(Job.Type.STEEL, true)
 	cost = Cost.new({
 		Currency.Type.IRON: Value.new(15000),
 		Currency.Type.COPPER: Value.new(3000),
 		Currency.Type.HARDWOOD: Value.new(35),
 	})
-	color = Color(0.607843, 0.802328, 0.878431)
-	faded_color = Color(0.823529, 0.898039, 0.92549)
+	details.color = Color(0.607843, 0.802328, 0.878431)
+	details.alt_color = Color(0.823529, 0.898039, 0.92549)
 	fuel_currency = Currency.Type.JOULES
-	icon = preload("res://Sprites/Currency/steel.png")
-	description = "Is as strong as Guts."
+	details.icon = preload("res://Sprites/Currency/steel.png")
+	details.description = "Is as strong as Guts."
 	primary_currency = Currency.Type.STEEL
 
 
 func init_SAND() -> void:
-	name = "Herakin"
+	details.name = "Herakin"
 	add_job(Job.Type.SAND, true)
 	cost = Cost.new({
 		Currency.Type.IRON: Value.new(700),
 		Currency.Type.COPPER: Value.new(2850),
 	})
-	color = Color(.87, .70, .45)
+	details.color = Color(.87, .70, .45)
 	fuel_currency = Currency.Type.COAL
-	icon = preload("res://Sprites/Currency/sand.png")
-	description = "Didn't get DisneyPlus-ed."
+	details.icon = preload("res://Sprites/Currency/sand.png")
+	details.description = "Didn't get DisneyPlus-ed."
 	primary_currency = Currency.Type.SAND
 	set_female_pronouns()
 
 
 func init_GLASS() -> void:
-	name = "Shyuum"
+	details.name = "Shyuum"
 	add_job(Job.Type.GLASS, true)
 	cost = Cost.new({
 		Currency.Type.COPPER: Value.new(6000),
 		Currency.Type.STEEL: Value.new(40),
 	})
-	color = Color(0.81, 0.93, 1.0)
-	faded_color = Color(0.81, 0.93, 1.0)
+	details.color = Color(0.81, 0.93, 1.0)
+	details.alt_color = Color(0.81, 0.93, 1.0)
 	fuel_currency = Currency.Type.JOULES
-	icon = preload("res://Sprites/Currency/glass.png")
-	description = "Vaporizes people for fun."
+	details.icon = preload("res://Sprites/Currency/glass.png")
+	details.description = "Vaporizes people for fun."
 	primary_currency = Currency.Type.GLASS
 
 
 func init_WIRE() -> void:
-	name = "Joyce"
+	details.name = "Joyce"
 	add_job(Job.Type.WIRE, true)
 	cost = Cost.new({
 		Currency.Type.STONE: Value.new(13000),
 		Currency.Type.GLASS: Value.new(30),
 	})
-	color = Color(0.9, 0.6, 0.14)
+	details.color = Color(0.9, 0.6, 0.14)
 	fuel_currency = Currency.Type.JOULES
-	icon = preload("res://Sprites/Currency/wire.png")
-	description = "Loves her grandchildren."
+	details.icon = preload("res://Sprites/Currency/wire.png")
+	details.description = "Loves her grandchildren."
 	primary_currency = Currency.Type.WIRE
 	set_female_pronouns()
 
 
 func init_DRAW_PLATE() -> void:
-	name = "Billy"
+	details.name = "Billy"
 	add_job(Job.Type.DRAW_PLATE, true)
 	cost = Cost.new({
 		Currency.Type.IRON: Value.new(900),
 		Currency.Type.CONCRETE: Value.new(300),
 		Currency.Type.WIRE: Value.new(20),
 	})
-	color = Color(0.333333, 0.639216, 0.811765)
+	details.color = Color(0.333333, 0.639216, 0.811765)
 	fuel_currency = Currency.Type.COAL
-	icon = preload("res://Sprites/Currency/draw.png")
-	description = "Can run really fast."
+	details.icon = preload("res://Sprites/Currency/draw.png")
+	details.description = "Can run really fast."
 	primary_currency = Currency.Type.DRAW_PLATE
 
 
 func init_AXES() -> void:
-	name = "Assemblotron"
+	details.name = "Assemblotron"
 	add_job(Job.Type.AXES, true)
 	cost = Cost.new({
 		Currency.Type.IRON: Value.new(1000),
 		Currency.Type.HARDWOOD: Value.new(55),
 	})
-	color = Color(0.691406, 0.646158, 0.586075)
+	details.color = Color(0.691406, 0.646158, 0.586075)
 	fuel_currency = Currency.Type.JOULES
-	icon = preload("res://Sprites/Currency/axe.png")
-	description = "IN THE YEAR 202070707020. I AM WAKAKO."
+	details.icon = preload("res://Sprites/Currency/axe.png")
+	details.description = "IN THE YEAR 202070707020. I AM WAKAKO."
 	primary_currency = Currency.Type.AXES
 
 
 func init_WOOD() -> void:
-	name = "Goketa"
+	details.name = "Goketa"
 	add_job(Job.Type.WOOD, true)
 	cost = Cost.new({
 		Currency.Type.COPPER: Value.new(4500),
 		Currency.Type.WIRE: Value.new(15),
 	})
-	color = Color(0.545098, 0.372549, 0.015686)
-	faded_color = Color(0.77, 0.68, 0.6)
+	details.color = Color(0.545098, 0.372549, 0.015686)
+	details.alt_color = Color(0.77, 0.68, 0.6)
 	fuel_currency = Currency.Type.JOULES
-	icon = preload("res://Sprites/Currency/wood.png")
-	description = "Is just Goku."
+	details.icon = preload("res://Sprites/Currency/wood.png")
+	details.description = "Is just Goku."
 	primary_currency = Currency.Type.WOOD
 
 
 func init_HARDWOOD() -> void:
-	name = "Rabbit"
+	details.name = "Rabbit"
 	add_job(Job.Type.HARDWOOD, true)
 	cost = Cost.new({
 		Currency.Type.IRON: Value.new(3500),
 		Currency.Type.CONCRETE: Value.new(350),
 		Currency.Type.WIRE: Value.new(35),
 	})
-	color = Color(0.92549, 0.690196, 0.184314)
+	details.color = Color(0.92549, 0.690196, 0.184314)
 	fuel_currency = Currency.Type.JOULES
-	icon = preload("res://Sprites/Currency/hard.png")
-	description = "Potentially problematic."
+	details.icon = preload("res://Sprites/Currency/hard.png")
+	details.description = "Potentially problematic."
 	primary_currency = Currency.Type.HARDWOOD
 
 
 func init_TUMORS() -> void:
-	name = "Jesse"
+	details.name = "Jesse"
 	add_job(Job.Type.TUMORS, true)
 	cost = Cost.new({
 		Currency.Type.HARDWOOD: Value.new(50),
@@ -799,52 +773,52 @@ func init_TUMORS() -> void:
 		Currency.Type.GLASS: Value.new(150),
 		Currency.Type.STEEL: Value.new(100),
 	})
-	color = Color(1, .54, .54)
+	details.color = Color(1, .54, .54)
 	fuel_currency = Currency.Type.JOULES
-	icon = preload("res://Sprites/Currency/tum.png")
-	description = "#note."
+	details.icon = preload("res://Sprites/Currency/tum.png")
+	details.description = "#note."
 	primary_currency = Currency.Type.TUMORS
 
 
 func init_WITCH() -> void:
-	name = "Circe"
+	details.name = "Circe"
 	cost = Cost.new({
 		Currency.Type.HARDWOOD: Value.new(50),
 		Currency.Type.WIRE: Value.new(150),
 		Currency.Type.GLASS: Value.new(150),
 		Currency.Type.STEEL: Value.new(100),
 	})
-	color = Color(0.937255, 0.501961, 0.776471)
+	details.color = Color(0.937255, 0.501961, 0.776471)
 	fuel_currency = Currency.Type.COAL
-	icon = preload("res://Sprites/upgrades/thewitchofloredelith.png")
-	description = "Loves her garden. In good favor with Aurus."
+	details.icon = preload("res://Sprites/upgrades/thewitchofloredelith.png")
+	details.description = "Loves her garden. In good favor with Aurus."
 	primary_currency = Currency.Type.FLOWER_SEED
 	set_female_pronouns()
 
 
 func init_BLOOD() -> void:
-	name = "Charity"
+	details.name = "Charity"
 	cost = Cost.new({
 		Currency.Type.HARDWOOD: Value.new(50),
 		Currency.Type.WIRE: Value.new(150),
 		Currency.Type.GLASS: Value.new(150),
 		Currency.Type.STEEL: Value.new(100),
 	})
-	color = Color(1, 0, 0)
-	faded_color = Color(1, 0.4, 0.4)
-	icon = preload("res://Sprites/Currency/axe.png")
-	description = "A stoic, hard-working healer."
+	details.color = Color(1, 0, 0)
+	details.alt_color = Color(1, 0.4, 0.4)
+	details.icon = preload("res://Sprites/Currency/axe.png")
+	details.description = "A stoic, hard-working healer."
 	primary_currency = Currency.Type.BLOOD
 	set_female_pronouns()
 
 
 func init_S4PLACEHOLDER() -> void:
-	name = "you wouldn't think this would be necessary, but you'd be freakin wrong"
+	details.name = "you wouldn't think this would be necessary, but you'd be freakin wrong"
 	cost = Cost.new({Currency.Type.STONE: Value.new(1)})
-	color = Color(1, 0, 0)
-	faded_color = Color(1, 0.4, 0.4)
-	icon = preload("res://Sprites/Currency/axe.png")
-	description = "A real piece of work."
+	details.color = Color(1, 0, 0)
+	details.alt_color = Color(1, 0.4, 0.4)
+	details.icon = preload("res://Sprites/Currency/axe.png")
+	details.description = "A real piece of work."
 	primary_currency = Currency.Type.STONE
 
 
@@ -1082,7 +1056,7 @@ func hard_reset() -> void:
 
 
 func reset(hard: bool):
-	emoting = false
+	emoting.set_to(false)
 	purchased.set_to(false)
 	if hard:
 		output.reset()
@@ -1290,13 +1264,13 @@ func calculate_time_in_bed() -> void:
 
 
 func emote_now(emote: Emote) -> void:
-	emoting = true
+	emoting.set_to(true)
 	vico.emote(emote)
 	emote.connect("finished", emote_finished)
 
 
 func emote_finished(_emote: Emote) -> void:
-	emoting = false
+	emoting.set_to(false)
 
 
 
@@ -1318,23 +1292,18 @@ func influencing_upgrade_purchased_changed(upgrade: Upgrade) -> void:
 
 func enqueue_emote(emote: Emote) -> void:
 	emote_queue.append(emote)
-	if not is_connected("finished_emoting", emote_next_in_line):
-		connect("finished_emoting", emote_next_in_line)
 
 
 func emote_next_in_line() -> void:
-	if emoting:
-		return
-	
-	if emote_queue.size() > 0:
+	if (
+		emoting.is_false()
+		and emote_queue.size() > 0
+	):
 		var emote: Emote = emote_queue[emote_queue.size() - 1]
 		em.emote_now(emote)
 		emote_queue.erase(emote)
 		if emote_queue.size() > 0:
 			return
-	
-	if is_connected("finished_emoting", emote_next_in_line):
-		disconnect("finished_emoting", emote_next_in_line)
 
 
 
@@ -1379,13 +1348,12 @@ func get_next_job_automatically() -> int:
 
 func start_job(_type: int) -> void:
 	reason_cannot_work = ReasonCannotWork.CAN_WORK
-	working.set_to(true)
 	last_job = jobs[_type]
 	last_job.start()
+	working.set_to(true)
 	if vico == null:
 		return
 	vico.start_job(last_job)
-	emit_signal("began_working")
 	emit_signal("job_started", last_job)
 
 

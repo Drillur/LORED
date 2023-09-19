@@ -72,6 +72,7 @@ func start() -> void:
 		print("STUFF STARTED")
 		new_wish_considering_conditions(Wish.Type.STUFF)
 	else:
+		print("helo")
 		find_new_main_wish()
 
 

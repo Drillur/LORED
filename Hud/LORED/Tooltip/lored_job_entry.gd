@@ -16,5 +16,5 @@ func setup(val: Value, _cur: int, is_a_produced_currency: bool) -> void:
 		await ready
 	value.text = ("+" if is_a_produced_currency else "-") + val.get_text()
 	var currency = wa.get_currency(_cur)
-	currency_name.text = currency.icon_and_name_text
-	color = currency.color
+	currency_name.text = currency.details.icon_and_name_text
+	color = currency.details.color

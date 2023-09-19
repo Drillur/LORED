@@ -72,17 +72,9 @@ signal total_net_became_positive
 var type: int
 var stage: int
 
-var name: String
-var colored_name: String
-var icon_text: String
-var icon_and_name_text: String
-var icon_and_colored_name: String
+var details := Details.new()
+
 var key: String
-
-var color: Color
-var color_text: String
-
-var icon: Texture
 
 var count: Big
 
@@ -137,7 +129,7 @@ var used_by := []
 func _init(_type: int = 0) -> void:
 	type = _type
 	key = Type.keys()[type]
-	name = key.replace("_", " ").capitalize()
+	details.name = key.replace("_", " ").capitalize()
 	
 	if type <= Type.OIL:
 		stage = 1
@@ -157,13 +149,8 @@ func _init(_type: int = 0) -> void:
 	
 	if count == null:
 		count = Big.new(0, true)
-	color_text = "[color=#" + color.to_html() + "]%s[/color]"
-	colored_name = color_text % name
-	if icon == null:
-		icon = preload("res://Sprites/Hud/Delete.png")
-	icon_text = "[img=<15>]" + icon.get_path() + "[/img]"
-	icon_and_name_text = icon_text + " " + name
-	icon_and_colored_name = icon_text + " " + colored_name
+	if details.icon == null:
+		details.icon = preload("res://Sprites/Hud/Delete.png")
 	
 	gv.prestige.connect(prestige)
 	gv.hard_reset.connect(reset)
@@ -172,249 +159,257 @@ func _init(_type: int = 0) -> void:
 
 func init_STONE() -> void:
 	count = Big.new(5, true)
-	color = Color(0.79, 0.79, 0.79)
-	icon = preload("res://Sprites/Currency/stone.png")
+	details.color = Color(0.79, 0.79, 0.79)
+	details.icon = preload("res://Sprites/Currency/stone.png")
 	weight = 3
 
 
 func init_COAL() -> void:
-	color = Color(0.7, 0, 1)
-	icon = preload("res://Sprites/Currency/coal.png")
+	details.color = Color(0.7, 0, 1)
+	details.icon = preload("res://Sprites/Currency/coal.png")
+	details.description = "Used primarily as fuel for LOREDs!"
 	weight = 2
 	used_for_fuel = true
 
 
 func init_IRON_ORE() -> void:
-	color = Color(0, 0.517647, 0.905882)
-	icon = preload("res://Sprites/Currency/irono.png")
+	details.color = Color(0, 0.517647, 0.905882)
+	details.icon = preload("res://Sprites/Currency/irono.png")
 
 
 func init_COPPER_ORE() -> void:
-	color = Color(0.7, 0.33, 0)
-	icon = preload("res://Sprites/Currency/copo.png")
+	details.color = Color(0.7, 0.33, 0)
+	details.icon = preload("res://Sprites/Currency/copo.png")
 
 
 func init_IRON() -> void:
 	count = Big.new(8, true)
-	color = Color(0.07, 0.89, 1)
-	icon = preload("res://Sprites/Currency/iron.png")
+	details.color = Color(0.07, 0.89, 1)
+	details.icon = preload("res://Sprites/Currency/iron.png")
+	details.description = "It's possible that this is toast."
 	weight = 3
 
 
 func init_COPPER() -> void:
 	count = Big.new(8, true)
-	color = Color(1, 0.74, 0.05)
-	icon = preload("res://Sprites/Currency/cop.png")
+	details.color = Color(1, 0.74, 0.05)
+	details.icon = preload("res://Sprites/Currency/cop.png")
 	weight = 3
 
 
 func init_GROWTH() -> void:
-	color = Color(0.79, 1, 0.05)
-	icon = preload("res://Sprites/Currency/growth.png")
+	details.color = Color(0.79, 1, 0.05)
+	details.icon = preload("res://Sprites/Currency/growth.png")
+	details.description = "What? This game is weird!"
 	weight = 2
 
 
 func init_JOULES() -> void:
-	color = Color(1, 0.98, 0)
-	icon = preload("res://Sprites/Currency/jo.png")
+	details.color = Color(1, 0.98, 0)
+	details.icon = preload("res://Sprites/Currency/jo.png")
+	details.description = "Used primarily as fuel for LOREDs!"
 	weight = 2
 	used_for_fuel = true
 
 
 func init_CONCRETE() -> void:
-	color = Color(0.35, 0.35, 0.35)
-	icon = preload("res://Sprites/Currency/conc.png")
+	details.color = Color(0.35, 0.35, 0.35)
+	details.icon = preload("res://Sprites/Currency/conc.png")
 	weight = 3
 
 
 func init_MALIGNANCY() -> void:
 	count = Big.new(10, true)
-	color = Color(0.88, .12, .35)
-	icon = preload("res://Sprites/Currency/malig.png")
+	details.color = Color(0.88, .12, .35)
+	details.icon = preload("res://Sprites/Currency/malig.png")
 	persist.set_default_value(true)
 
 
 func init_TARBALLS() -> void:
-	color = Color(.56, .44, 1)
-	icon = preload("res://Sprites/Currency/tar.png")
+	details.color = Color(.56, .44, 1)
+	details.icon = preload("res://Sprites/Currency/tar.png")
 	weight = 2
 
 
 func init_OIL() -> void:
-	color = Color(.65, .3, .66)
-	icon = preload("res://Sprites/Currency/oil.png")
+	details.color = Color(.65, .3, .66)
+	details.icon = preload("res://Sprites/Currency/oil.png")
 
 
 func init_WATER() -> void:
-	color = Color(0, 0.647059, 1)
-	icon = preload("res://Sprites/Currency/water.png")
+	details.color = Color(0, 0.647059, 1)
+	details.icon = preload("res://Sprites/Currency/water.png")
+	details.description = "The 4x2 Lego piece of life."
 	weight = 2
 
 
 func init_HUMUS() -> void:
-	color = Color(0.458824, 0.25098, 0)
-	icon = preload("res://Sprites/Currency/humus.png")
+	details.color = Color(0.458824, 0.25098, 0)
+	details.icon = preload("res://Sprites/Currency/humus.png")
+	details.description = "Actual shit."
 
 
 func init_SEEDS() -> void:
 	count = Big.new(2, true)
-	color = Color(1, 0.878431, 0.431373)
-	icon = preload("res://Sprites/Currency/seed.png")
+	details.color = Color(1, 0.878431, 0.431373)
+	details.icon = preload("res://Sprites/Currency/seed.png")
 
 
 func init_TREES() -> void:
-	color = Color(0.772549, 1, 0.247059)
-	icon = preload("res://Sprites/Currency/tree.png")
+	details.color = Color(0.772549, 1, 0.247059)
+	details.icon = preload("res://Sprites/Currency/tree.png")
 
 
 func init_SOIL() -> void:
 	count = Big.new(25, true)
-	color = Color(0.737255, 0.447059, 0)
-	icon = preload("res://Sprites/Currency/soil.png")
+	details.color = Color(0.737255, 0.447059, 0)
+	details.icon = preload("res://Sprites/Currency/soil.png")
 
 
 func init_AXES() -> void:
 	count = Big.new(5, true)
-	color = Color(0.691406, 0.646158, 0.586075)
-	icon = preload("res://Sprites/Currency/axe.png")
+	details.color = Color(0.691406, 0.646158, 0.586075)
+	details.icon = preload("res://Sprites/Currency/axe.png")
 
 
 func init_WOOD() -> void:
 	count = Big.new(80, true)
-	color = Color(0.545098, 0.372549, 0.015686)
-	icon = preload("res://Sprites/Currency/wood.png")
+	details.color = Color(0.545098, 0.372549, 0.015686)
+	details.icon = preload("res://Sprites/Currency/wood.png")
 
 
 func init_HARDWOOD() -> void:
 	count = Big.new(95, true)
-	color = Color(0.92549, 0.690196, 0.184314)
-	icon = preload("res://Sprites/Currency/hard.png")
+	details.color = Color(0.92549, 0.690196, 0.184314)
+	details.icon = preload("res://Sprites/Currency/hard.png")
+	details.description = "( ͡⚆ ͜ʖ ͡⚆)"
 	weight = 3
 
 
 func init_LIQUID_IRON() -> void:
-	color = Color(0.27, 0.888, .9)
-	icon = preload("res://Sprites/Currency/liq.png")
+	details.color = Color(0.27, 0.888, .9)
+	details.icon = preload("res://Sprites/Currency/liq.png")
 
 
 func init_STEEL() -> void:
 	count = Big.new(25, true)
-	color = Color(0.607843, 0.802328, 0.878431)
-	icon = preload("res://Sprites/Currency/steel.png")
+	details.color = Color(0.607843, 0.802328, 0.878431)
+	details.icon = preload("res://Sprites/Currency/steel.png")
 	weight = 3
 
 
 func init_SAND() -> void:
 	count = Big.new(250, true)
-	color = Color(.87, .70, .45)
-	icon = preload("res://Sprites/Currency/sand.png")
+	details.color = Color(.87, .70, .45)
+	details.icon = preload("res://Sprites/Currency/sand.png")
+	details.description = "It's roarse, and cough, and it gets eherweyeve!"
 
 
 func init_GLASS() -> void:
 	count = Big.new(30, true)
-	color = Color(0.81, 0.93, 1.0)
-	icon = preload("res://Sprites/Currency/glass.png")
+	details.color = Color(0.81, 0.93, 1.0)
+	details.icon = preload("res://Sprites/Currency/glass.png")
 	weight = 3
 
 
 func init_DRAW_PLATE() -> void:
-	color = Color(0.333333, 0.639216, 0.811765)
-	icon = preload("res://Sprites/Currency/draw.png")
+	details.color = Color(0.333333, 0.639216, 0.811765)
+	details.icon = preload("res://Sprites/Currency/draw.png")
 
 
 func init_WIRE() -> void:
 	count = Big.new(20, true)
-	color = Color(0.9, 0.6, 0.14)
-	icon = preload("res://Sprites/Currency/wire.png")
+	details.color = Color(0.9, 0.6, 0.14)
+	details.icon = preload("res://Sprites/Currency/wire.png")
 	weight = 3
 
 
 func init_GALENA() -> void:
-	color = Color(0.701961, 0.792157, 0.929412)
-	icon = preload("res://Sprites/Currency/gale.png")
+	details.color = Color(0.701961, 0.792157, 0.929412)
+	details.icon = preload("res://Sprites/Currency/gale.png")
 
 
 func init_LEAD() -> void:
-	color = Color(0.53833, 0.714293, 0.984375)
-	icon = preload("res://Sprites/Currency/lead.png")
+	details.color = Color(0.53833, 0.714293, 0.984375)
+	details.icon = preload("res://Sprites/Currency/lead.png")
 
 
 func init_PETROLEUM() -> void:
-	color = Color(0.76, 0.53, 0.14)
-	icon = preload("res://Sprites/Currency/pet.png")
+	details.color = Color(0.76, 0.53, 0.14)
+	details.icon = preload("res://Sprites/Currency/pet.png")
 
 
 func init_WOOD_PULP() -> void:
-	color = Color(0.94902, 0.823529, 0.54902)
-	icon = preload("res://Sprites/Currency/pulp.png")
+	details.color = Color(0.94902, 0.823529, 0.54902)
+	details.icon = preload("res://Sprites/Currency/pulp.png")
 
 
 func init_PAPER() -> void:
-	color = Color(0.792157, 0.792157, 0.792157)
-	icon = preload("res://Sprites/Currency/paper.png")
+	details.color = Color(0.792157, 0.792157, 0.792157)
+	details.icon = preload("res://Sprites/Currency/paper.png")
 
 
 func init_PLASTIC() -> void:
-	color = Color(0.85, 0.85, 0.85)
-	icon = preload("res://Sprites/Currency/plast.png")
+	details.color = Color(0.85, 0.85, 0.85)
+	details.icon = preload("res://Sprites/Currency/plast.png")
 	weight = 2
 
 
 func init_TOBACCO() -> void:
-	color = Color(0.639216, 0.454902, 0.235294)
-	icon = preload("res://Sprites/Currency/toba.png")
+	details.color = Color(0.639216, 0.454902, 0.235294)
+	details.icon = preload("res://Sprites/Currency/toba.png")
 
 
 func init_CIGARETTES() -> void:
-	color = Color(0.929412, 0.584314, 0.298039)
-	icon = preload("res://Sprites/Currency/ciga.png")
+	details.color = Color(0.929412, 0.584314, 0.298039)
+	details.icon = preload("res://Sprites/Currency/ciga.png")
 	weight = 2
 
 
 func init_CARCINOGENS() -> void:
-	color = Color(0.772549, 0.223529, 0.192157)
-	icon = preload("res://Sprites/Currency/carc.png")
+	details.color = Color(0.772549, 0.223529, 0.192157)
+	details.icon = preload("res://Sprites/Currency/carc.png")
 	weight = 2
 
 
 func init_EMBRYO() -> void:
-	color = Color(1, .54, .54)
+	details.color = Color(1, .54, .54)
 
 
 func init_TUMORS() -> void:
-	color = Color(1, .54, .54)
-	icon = preload("res://Sprites/Currency/tum.png")
+	details.color = Color(1, .54, .54)
+	details.icon = preload("res://Sprites/Currency/tum.png")
 	persist.set_default_value(true)
 
 
 func init_FLOWER_SEED() -> void:
-	color = Color(1, 0.878431, 0.431373)
-	icon = preload("res://Sprites/Currency/seed.png")
+	details.color = Color(1, 0.878431, 0.431373)
+	details.icon = preload("res://Sprites/Currency/seed.png")
 
 
 func init_MANA() -> void:
 	# alt: Color(0.721569, 0.34902, 0.901961)
-	color = Color(0, 0.709804, 1)
+	details.color = Color(0, 0.709804, 1)
 
 
 func init_BLOOD() -> void:
-	color = Color(1, 0, 0)
+	details.color = Color(1, 0, 0)
 
 
 func init_SPIRIT() -> void:
-	color = Color(0.88, .12, .35)
+	details.color = Color(0.88, .12, .35)
 	persist.set_default_value(true)
 
 
 func init_JOY() -> void:
-	color = Color(1, 0.909804, 0)
-	icon = preload("res://Sprites/Currency/Joy.png")
+	details.color = Color(1, 0.909804, 0)
+	details.icon = preload("res://Sprites/Currency/Joy.png")
 	persist.set_default_value(true)
 
 
 func init_GRIEF() -> void:
-	color = Color(0.74902, 0.203922, 0.533333)
-	icon = preload("res://Sprites/Currency/Grief.png")
+	details.color = Color(0.74902, 0.203922, 0.533333)
+	details.icon = preload("res://Sprites/Currency/Grief.png")
 	persist.set_default_value(true)
 
 
@@ -561,10 +556,6 @@ func is_unlocked() -> bool:
 
 func is_locked() -> bool:
 	return not is_unlocked()
-
-
-func get_icon_path() -> String:
-	return icon.get_path()
 
 
 func get_eta(threshold: Big) -> Big:

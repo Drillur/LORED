@@ -1,4 +1,4 @@
-res://Script/Database
+res://Script/Autoload
 C:/Program Files (x86)/Steam/steamapps/common/Godot Engine/editor_data
 C:/Users/dills/AppData/Local/Programs/Microsoft VS Code
 res://Hud/Save
@@ -7,7 +7,6 @@ res://Hud/Tooltip
 res://Hud/Earnings Report
 res://Hud/Wallet
 res://Hud
-res://Script/Autoload
 res://Hud/Wish
 res://Theme
 res://Hud/LORED/Tooltip

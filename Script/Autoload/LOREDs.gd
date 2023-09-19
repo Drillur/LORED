@@ -150,6 +150,11 @@ var extra_normal_menu_unlocked := false
 
 
 func _ready():
+	
+	var array: Array[int] = [0,0,0,0,0,0,0,0,0,0,]
+	for i in 10:
+		array.append(0)
+	
 	for lored in LORED.Type.values():
 		loreds[lored] = LORED.new(lored)
 		loreds_by_key[loreds[lored].key] = loreds[lored]
@@ -258,7 +263,7 @@ func get_lored(lored: int) -> LORED:
 
 
 func lored_is_emoting(lored: int) -> bool:
-	return get_lored(lored).emoting
+	return get_lored(lored).emoting.is_true()
 
 
 func get_random_active_lored() -> int:
@@ -278,11 +283,11 @@ func get_vico(lored: int) -> LOREDVico:
 
 
 func get_icon(lored: int) -> Texture:
-	return get_lored(lored).icon
+	return get_lored(lored).details.icon
 
 
 func get_color(lored: int) -> Color:
-	return get_lored(lored).color
+	return get_lored(lored).details.color
 
 
 func get_loreds_in_stage(stage: int) -> Array:
@@ -323,19 +328,15 @@ func get_fuel_percent(lored: int) -> float:
 
 
 func get_icon_and_name_text(lored: int) -> String:
-	return get_lored(lored).icon_and_name_text
-
-
-func get_colored_icon_and_name(lored: int) -> String:
-	return get_lored(lored).color_text % get_icon_and_name_text(lored)
+	return get_lored(lored).details.icon_and_name_text
 
 
 func get_colored_name(lored: int) -> String:
-	return get_lored(lored).color_text % get_lored_name(lored)
+	return get_lored(lored).details.colored_name
 
 
 func get_lored_name(lored: int) -> String:
-	return get_lored(lored).name
+	return get_lored(lored).details.name
 
 
 func get_key(lored: int) -> String:

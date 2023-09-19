@@ -16,6 +16,7 @@ extends MarginContainer
 @onready var use_allowed = %useAllowed
 @onready var scroll_hint = %"scroll hint"
 @onready var breaker = %breaker
+@onready var description = %description
 
 
 
@@ -39,12 +40,17 @@ func setup(data: Dictionary) -> void:
 	if not is_node_ready():
 		await ready
 	
-	color = currency.color
+	color = currency.details.color
 	
 	currency.use_allowed_changed.connect(use_allowed_changed)
 	use_allowed_changed(currency.use_allowed)
 	
-	title.text = currency.name
+	title.text = currency.details.name
+	if currency.details.description == "":
+		description.hide()
+	else:
+		description.text = currency.details.description
+		description.show()
 	total_income.text = "Total: [b]" + currency.net_rate.get_text() + "/s"
 	
 	for lored_type in currency.produced_by:
@@ -53,7 +59,7 @@ func setup(data: Dictionary) -> void:
 			continue
 		var rate = lored.get_produced_currency_rate(currency.type)
 		var label = gv.label.instantiate() as RichTextLabel
-		label.text = lored.icon_and_name_text + "    [b]" + rate.text + "/s"
+		label.text = lored.details.icon_and_name_text + "    [b]" + rate.text + "/s"
 		producers_container.add_child(label)
 	producers.visible = producers_container.get_child_count() != 0
 	
@@ -63,8 +69,8 @@ func setup(data: Dictionary) -> void:
 			continue
 		var rate = lored.get_used_currency_rate(currency.type)
 		var label = gv.label.instantiate() as RichTextLabel
-		label.name = lored.name
-		label.text = lored.icon_and_name_text + "    [b]-" + rate.text + "/s"
+		label.name = lored.details.name
+		label.text = lored.details.icon_and_name_text + "    [b]-" + rate.text + "/s"
 		label.temp = rate
 		users_container.add_child(label)
 	users_scroll_container.custom_minimum_size.y = (

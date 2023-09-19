@@ -1,6 +1,7 @@
 class_name Bool
 extends Resource
 
+
 var saved_vars := [
 	"current",
 ]
@@ -38,6 +39,7 @@ var reset_value := false:
 func _init(_base: bool) -> void:
 	base = _base
 	current = _base
+
 
 
 # - Action

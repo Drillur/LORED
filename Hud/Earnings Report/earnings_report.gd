@@ -151,6 +151,18 @@ func _on_limit_loss_pressed():
 	limit_loss = not limit_loss
 
 
+func _on_nice_pressed():
+	wa.add(Currency.Type.JOY, 1)
+	gv.throw_texts(nice, {Currency.Type.JOY: Big.new(1)})
+	hide()
+
+
+func _on_mean_pressed():
+	wa.add(Currency.Type.GRIEF, 1)
+	gv.throw_texts(mean, {Currency.Type.GRIEF: Big.new(1)})
+	hide()
+
+
 
 func go() -> void:
 	coal_ratio = wa.get_currency(Currency.Type.COAL).gain_over_loss
@@ -306,8 +318,8 @@ func instance_label(cur: int, parent: Node) -> void:
 	var currency = wa.get_currency(cur)
 	var _text = "%s" + currency.offline_production.text
 	_text = _text % ("+" if currency.positive_offline_rate else "-")
-	_text = currency.color_text % _text
-	var _name = currency.icon_and_colored_name
+	_text = currency.details.color_text % _text
+	var _name = currency.details.icon_and_colored_name
 	x.text = _text + " " + _name
 	parent.add_child(x)
 

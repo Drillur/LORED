@@ -33,10 +33,10 @@ var color: Color:
 func setup(data: Dictionary) -> void:
 	lored = lv.get_lored(data["lored"])
 	await ready
-	color = lored.color
+	color = lored.details.color
 	
 	price.setup(lored.cost)
-	price.color = lored.color
+	price.color = color
 	
 	lored.purchased.became_true.connect(just_purchased)
 	lored.connect("leveled_up", set_level_text)
@@ -54,18 +54,18 @@ func just_purchased() -> void:
 		show_advanced_details(false)
 		title.text = "Invite"
 		description.show()
-		description.text = "[center]Ask " + lored.colored_name + " to join you!"
+		description.text = "[center]Ask " + lored.details.colored_name + " to join you!"
 		if randi() % 100 < 10:
 			var pool = [
-				"Bribe " + lored.colored_name + " to join you!",
-				"Ask " + lored.colored_name + " to join you (as if they had a choice)!",
-				"Ask " + lored.colored_name + " to join you (but not for free)!",
-				"Force " + lored.colored_name + " to join you!",
-				"Threaten " + lored.colored_name + " into joining you!",
-				"Ask " + lored.colored_name + " very nicely to join you!",
-				"Jump-scare " + lored.colored_name + " into joining you!",
-				"Provide intimate favors for " + lored.colored_name + " so that " + lored.pronoun_he + "'ll join you!",
-				"Promise " + lored.colored_name + " the largest share of the booty if " + lored.pronoun_he + " joins!",
+				"Bribe " + lored.details.colored_name + " to join you!",
+				"Ask " + lored.details.colored_name  + " to join you (as if they had a choice)!",
+				"Ask " + lored.details.colored_name  + " to join you (but not for free)!",
+				"Force " + lored.details.colored_name  + " to join you!",
+				"Threaten " + lored.details.colored_name  + " into joining you!",
+				"Ask " + lored.details.colored_name  + " very nicely to join you!",
+				"Jump-scare " + lored.details.colored_name  + " into joining you!",
+				"Provide intimate favors for " + lored.details.colored_name  + " so that " + lored.pronoun_he + "'ll join you!",
+				"Promise " + lored.details.colored_name  + " the largest share of the booty if " + lored.pronoun_he + " joins!",
 			]
 			#description.custom_minimum_size.x = 150
 			description.text = "[center]" + pool[randi() % pool.size()]
@@ -98,7 +98,7 @@ func set_level_text(_level: int) -> void:
 	current_level.text = lored.get_level_text()
 	next_level.text = lored.get_next_level_text()
 	if flash_allowed:
-		gv.flash(details_container, lored.color)
+		gv.flash(details_container, lored.details.color)
 
 
 func set_output_text() -> void:

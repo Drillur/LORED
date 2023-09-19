@@ -19,6 +19,8 @@ enum Type {
 	SONIC, # 7
 }
 
+
+
 class DifficultyValues:
 	
 	var type: int
@@ -156,3 +158,7 @@ var active_difficulty := Type.NORMAL
 func _ready():
 	for diff in Type.values():
 		diffs.append(DifficultyValues.new(diff))
+
+
+func poop():
+	return

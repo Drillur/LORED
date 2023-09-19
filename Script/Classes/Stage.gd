@@ -23,13 +23,7 @@ signal just_reset
 var type: int
 var key: String
 
-var name: String
-var icon: Texture
-var icon_text: String
-var color: Color
-var color_text: String
-var colored_name: String
-var icon_and_name_text: String
+var details := Details.new()
 
 var times_reset := 0
 var unlocked := false:
@@ -48,33 +42,29 @@ func _init(_type: int) -> void:
 	type = _type
 	key = Type.keys()[type]
 	call(key)
-	icon_text = "[img=<15>]" + icon.get_path() + "[/img]"
-	color_text = "[color=#" + color.to_html() + "]%s[/color]"
-	icon_and_name_text = icon_text + " " + name
-	colored_name = color_text % name
 
 
 
 func NO_STAGE():
-	name = "No Stage"
-	color = gv.game_color
-	icon = load("res://Sprites/Hud/savedelete.png")
+	details.name = "No Stage"
+	details.color = gv.game_color
+	details.icon = load("res://Sprites/Hud/savedelete.png")
 func STAGE1():
-	name = "Stage 1"
-	color = Color(0.878431, 0.121569, 0.34902)
-	icon = load("res://Sprites/Hud/Tab/t0.png")
+	details.name = "Stage 1"
+	details.color = Color(0.878431, 0.121569, 0.34902)
+	details.icon = load("res://Sprites/Hud/Tab/t0.png")
 func STAGE2(): 
-	name = "Stage 2"
-	color = Color(1, 0.541176, 0.541176)
-	icon = load("res://Sprites/Hud/Tab/s2.png")
+	details.name = "Stage 2"
+	details.color = Color(1, 0.541176, 0.541176)
+	details.icon = load("res://Sprites/Hud/Tab/s2.png")
 func STAGE3(): 
-	name = "Stage 3"
-	color = Color(0.8, 0.8, 0.8)
-	icon = load("res://Sprites/Upgrades/thewitchofloredelith.png")
+	details.name = "Stage 3"
+	details.color = Color(0.8, 0.8, 0.8)
+	details.icon = load("res://Sprites/Upgrades/thewitchofloredelith.png")
 func STAGE4(): 
-	name = "Stage 4"
-	color = Color(0.8, 0.8, 0.8)
-	icon = load("res://Sprites/Currency/Grief.png")
+	details.name = "Stage 4"
+	details.color = Color(0.8, 0.8, 0.8)
+	details.icon = load("res://Sprites/Currency/Grief.png")
 
 
 
@@ -101,11 +91,3 @@ func add_currency(currency: int) -> void:
 
 func unlock() -> void:
 	unlocked = true
-
-
-
-# - Get
-
-
-func get_colored_icon_and_name() -> String:
-	return color_text % icon_and_name_text

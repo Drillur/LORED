@@ -30,7 +30,7 @@ func setup(data: Dictionary) -> void:
 		await ready
 	
 	color = wish.get_color()
-	giver.text = lv.get_lored(wish.giver).colored_name
+	giver.text = lv.get_lored(wish.giver).details.colored_name
 	face.modulate = lv.get_color(wish.giver)
 	
 	set_text(wish.help_text)

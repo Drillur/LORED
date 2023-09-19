@@ -27,16 +27,16 @@ func _on_mouse_entered():
 
 func setup(cur: int) -> void:
 	currency = wa.get_currency(cur) as Currency
-	name = currency.name
+	name = currency.details.name
 	
 	if not is_node_ready():
 		await ready
 	
-	count.self_modulate = currency.color
-	rate.self_modulate = currency.color
-	check.self_modulate = currency.color
+	count.self_modulate = currency.details.color
+	rate.self_modulate = currency.details.color
+	check.self_modulate = currency.details.color
 	
-	icon_and_name.text = currency.icon_text + " " + currency.colored_name
+	icon_and_name.text = currency.details.icon_text + " " + currency.details.colored_name
 	
 	currency.unlocked_changed.connect(display_and_update)
 	display_and_update(currency.unlocked)

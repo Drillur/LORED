@@ -176,31 +176,31 @@ func get_eta(upgrade: int) -> Big:
 
 
 func get_menu_color(menu: int) -> Color:
-	return upgrade_menus[menu].color
+	return upgrade_menus[menu].details.color
 
 
 func get_menu_color_text(menu: int) -> String:
-	return get_upgrade_menu(menu).color_text
+	return get_upgrade_menu(menu).details.color_text
 
 
 func get_color(upgrade: int) -> Color:
-	return upgrades[upgrade].color
+	return upgrades[upgrade].details.color
 
 
 func get_icon(upgrade: int) -> Texture:
-	return upgrades[upgrade].icon
+	return upgrades[upgrade].details.icon
 
 
 func get_upgrade_name(upgrade: int) -> String:
-	return upgrades[upgrade].name
+	return upgrades[upgrade].details.name
 
 
 func get_icon_and_name_text(upgrade: int) -> String:
-	return upgrades[upgrade].icon_and_name_text
+	return upgrades[upgrade].details.icon_and_name_text
 
 
 func get_menu_name(menu: int) -> String:
-	return upgrade_menus[menu].name
+	return upgrade_menus[menu].details.name
 
 
 func get_colored_upgrade_menu_icon_and_name(menu: int) -> String:

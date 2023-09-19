@@ -27,8 +27,8 @@ func setup(_currency: int, _cost: Value) -> void:
 	if not is_node_ready():
 		await ready
 	
-	h_box_container.modulate = currency.color
-	currency_name.text = currency.icon_text + " " + currency.name
+	h_box_container.modulate = currency.details.color
+	currency_name.text = currency.details.icon_text + " " + currency.details.name
 	currency.count.connect("changed", set_currency_text)
 	cost.connect("changed", set_cost_text)
 	

@@ -28,6 +28,7 @@ wi="*res://Script/Autoload/Wishes.gd"
 em="*res://Script/Autoload/Emotes.gd"
 SaveManager="*res://Script/Autoload/SaveManager.gd"
 DiscordSDKLoader="*res://addons/discord-sdk-gd/nodes/core_updater.gd"
+Test="*res://Script/Autoload/Test.gd"
 
 [debug]
 

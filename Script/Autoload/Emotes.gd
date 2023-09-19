@@ -89,7 +89,7 @@ func emote_now(emote: Emote) -> void:
 		emotes.erase(emote)
 	
 	var speaker = lv.get_lored(emote.speaker)
-	if speaker.emoting:
+	if speaker.emoting.is_true():
 		speaker.enqueue_emote(emote)
 	else:
 		speaker.emote_now(emote)
