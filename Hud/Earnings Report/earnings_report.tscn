@@ -193,22 +193,27 @@ bbcode_enabled = true
 text = "[i]I'll spare you the rest, milord, it surely isn't worth your time to consider. Rest assured, [b]you made progress!"
 fit_content = true
 
-[node name="Title2" type="MarginContainer" parent="VBoxContainer"]
+[node name="Guess Who" type="VBoxContainer" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Title2" type="MarginContainer" parent="VBoxContainer/Guess Who"]
 layout_mode = 2
 
-[node name="bottom title bg" type="Panel" parent="VBoxContainer/Title2"]
+[node name="bottom title bg" type="Panel" parent="VBoxContainer/Guess Who/Title2"]
 unique_name_in_owner = true
 layout_mode = 2
 theme = ExtResource("2_ag71j")
 
-[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Title2"]
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Guess Who/Title2"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="Title" type="RichTextLabel" parent="VBoxContainer/Title2/MarginContainer"]
+[node name="Title" type="RichTextLabel" parent="VBoxContainer/Guess Who/Title2/MarginContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 theme = ExtResource("2_ag71j")
@@ -217,29 +222,44 @@ text = "Guess Who!"
 fit_content = true
 autowrap_mode = 0
 
-[node name="MarginContainer2" type="MarginContainer" parent="VBoxContainer"]
+[node name="MarginContainer2" type="MarginContainer" parent="VBoxContainer/Guess Who"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/MarginContainer2"]
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/Guess Who/MarginContainer2"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/Guess Who/MarginContainer2/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/separation = 10
 alignment = 1
 
-[node name="1" parent="VBoxContainer/MarginContainer2/HBoxContainer" instance=ExtResource("7_u0y7l")]
+[node name="Guess 0" parent="VBoxContainer/Guess Who/MarginContainer2/VBoxContainer/HBoxContainer" instance=ExtResource("7_u0y7l")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="2" parent="VBoxContainer/MarginContainer2/HBoxContainer" instance=ExtResource("7_u0y7l")]
+[node name="Guess 1" parent="VBoxContainer/Guess Who/MarginContainer2/VBoxContainer/HBoxContainer" instance=ExtResource("7_u0y7l")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="3" parent="VBoxContainer/MarginContainer2/HBoxContainer" instance=ExtResource("7_u0y7l")]
+[node name="Guess 2" parent="VBoxContainer/Guess Who/MarginContainer2/VBoxContainer/HBoxContainer" instance=ExtResource("7_u0y7l")]
 unique_name_in_owner = true
 layout_mode = 2
+
+[node name="dialogue guess" type="RichTextLabel" parent="VBoxContainer/Guess Who/MarginContainer2/VBoxContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme = ExtResource("4_gs7lu")
+bbcode_enabled = true
+text = "[i]Dude!! It's me!! Don't you know me?!"
+fit_content = true
 
 [node name="Options" type="Control" parent="."]
 unique_name_in_owner = true
@@ -330,9 +350,9 @@ theme = ExtResource("4_gs7lu")
 button_pressed = true
 text = "Only display top 3 gained resources per stage"
 
-[connection signal="pressed" from="VBoxContainer/MarginContainer2/HBoxContainer/1" to="." method="_on_nice_pressed"]
-[connection signal="pressed" from="VBoxContainer/MarginContainer2/HBoxContainer/2" to="." method="_on_mean_pressed"]
-[connection signal="pressed" from="VBoxContainer/MarginContainer2/HBoxContainer/3" to="." method="_on_mean_pressed"]
+[connection signal="pressed" from="VBoxContainer/Guess Who/MarginContainer2/VBoxContainer/HBoxContainer/Guess 0" to="." method="_on_guess_0_pressed"]
+[connection signal="pressed" from="VBoxContainer/Guess Who/MarginContainer2/VBoxContainer/HBoxContainer/Guess 1" to="." method="_on_guess_1_pressed"]
+[connection signal="pressed" from="VBoxContainer/Guess Who/MarginContainer2/VBoxContainer/HBoxContainer/Guess 2" to="." method="_on_guess_2_pressed"]
 [connection signal="gui_input" from="Options/fade" to="." method="_on_fade_gui_input" flags=18]
 [connection signal="pressed" from="Options/MarginContainer/VBoxContainer/MarginContainer2/VBoxContainer/limit_loss" to="." method="_on_limit_loss_pressed"]
 [connection signal="pressed" from="Options/MarginContainer/VBoxContainer/MarginContainer2/VBoxContainer/limit_gain" to="." method="_on_limit_gain_pressed"]

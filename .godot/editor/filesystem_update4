@@ -50,3 +50,5 @@ res://Hud/Price and Currency.gd
 res://Hud/LORED/Tooltip/lored_job.gd
 res://Script/Autoload/Emotes.gd
 res://Hud/text_button.tscn
+res://Hud/rich_text_label.tscn
+res://Hud/rich_text_label.gd

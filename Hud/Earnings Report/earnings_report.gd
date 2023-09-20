@@ -14,8 +14,6 @@ extends MarginContainer
 @onready var loss_parent = %"Loss Parent"
 @onready var dialogue_gained_resources = %"dialogue gained resources"
 @onready var dialogue_closing = %"dialogue closing"
-@onready var nice = %Nice as TextButton
-@onready var mean = %Mean as TextButton
 @onready var loss = %Loss
 @onready var gain = %Gain
 @onready var options = %Options
@@ -24,9 +22,18 @@ extends MarginContainer
 @onready var gain_s2 = %"Gain S2"
 @onready var gain_s3 = %"Gain S3"
 @onready var gain_s4 = %"Gain S4"
+@onready var guess0 = %"Guess 0" as TextButton
+@onready var guess1 = %"Guess 1" as TextButton
+@onready var guess2 = %"Guess 2" as TextButton
+@onready var guess_who_node = %"Guess Who"
+@onready var dialogue_guess = %"dialogue guess"
+
+var guess_who_done := false
 
 
 var label = preload("res://Hud/rich_text_label.tscn")
+
+var color: Color
 
 var speech_time_offline := {
 	LORED.Type.COAL: "Welcome back! You were offline for %s!",
@@ -101,6 +108,20 @@ var speech_closing := {
 	LORED.Type.TARBALLS: "I'll spare you the rest, m'lord, for it surely isn't worth your time to consider. Rest assured, [b]we made progress![/b]",
 	LORED.Type.MALIGNANCY: "That's it! We did good, didn't we? Now it's time to [b]play![/b]",
 }
+var speech_guess := {
+	LORED.Type.COAL: ["I knew you'd know it was me!", "Dude?!"],
+	LORED.Type.STONE: ["Ayyy! :)", "How could you do me like this?"],
+	LORED.Type.IRON_ORE: ["Of course you remember me. I'm the only [b]memorable character[/b] in the game.", "Are you absolutely kidding me right now?\n\nREMEMBER THIS! *Shotguns yo face*"],
+	LORED.Type.COPPER_ORE: ["Well, sure, boss! I knew you'd know me, I sure did. See, I reckon it's on account of the fact that I talk so dang darn much that there's surely no conceivable way you could ever [b]not know it was me, see?!!![/b]", "What am I, boss, chopped liver? We even shared supper together once, don't you remember, boss? Boss?"],
+	LORED.Type.IRON: ["Our fearless leader reveals his wisdom! You're the best, man!", "...I'm finally beginning to understand %s."],
+	LORED.Type.COPPER: ["Duuude! Man, I'm so glad you're around.", "Don't even worry about it, man! It's fine!"],
+	LORED.Type.GROWTH: ["*High fives you!*", "I would go through all this pain, take a bullet straight through my brain--I would die for you. But you clearly wouldn't do the same."],
+	LORED.Type.JOULES: ["Cool.", "My honorrrrr!!!!!!!"],
+	LORED.Type.CONCRETE: ["Tu eres el mejor, primo!", "No mames, pinche madre puta perdedor imbécil sin educación!"],
+	LORED.Type.OIL: ["Hahahaha!", "*Cries uncontrollably in public.*"],
+	LORED.Type.TARBALLS: ["Excellent choice!", "You noob. What are you even doing?"],
+	LORED.Type.MALIGNANCY: ["I'm honestly surprised you knew it was me! Or did you guess?", "This literally doesn't affect me in any capacity. Carry on!"],
+}
 
 var coal_ratio: float
 var jo_ratio: float
@@ -120,6 +141,7 @@ var limit_loss := true:
 
 
 func _ready():
+	randomize()
 	gv.offline_report_ready.connect(go)
 	hamburger.set_icon(preload("res://Sprites/Hud/Menu.png"))
 	hamburger.remove_optionals()
@@ -129,9 +151,7 @@ func _ready():
 	hamburger2.remove_optionals()
 	hamburger2.modulate = Color(0, 0, 0)
 	hamburger2.pressed.connect(options.hide)
-	
-	nice.text = "Thank you!"
-	mean.text = "Shut up."
+	speech_guess[LORED.Type.IRON][1] = speech_guess[LORED.Type.IRON][1] % lv.get_lored(LORED.Type.IRON_ORE).details.colored_name
 
 
 func _on_fade_gui_input(event):
@@ -151,16 +171,28 @@ func _on_limit_loss_pressed():
 	limit_loss = not limit_loss
 
 
-func _on_nice_pressed():
-	wa.add(Currency.Type.JOY, 1)
-	gv.throw_texts(nice, {Currency.Type.JOY: Big.new(1)})
-	hide()
+func _on_guess_0_pressed():
+	if not guess_who_done:
+		if guess0.text == lv.get_lored_name(lored):
+			victory_guess(guess0)
+		else:
+			fail_guess(guess0)
 
 
-func _on_mean_pressed():
-	wa.add(Currency.Type.GRIEF, 1)
-	gv.throw_texts(mean, {Currency.Type.GRIEF: Big.new(1)})
-	hide()
+func _on_guess_1_pressed():
+	if not guess_who_done:
+		if guess1.text == lv.get_lored_name(lored):
+			victory_guess(guess1)
+		else:
+			fail_guess(guess1)
+
+
+func _on_guess_2_pressed():
+	if not guess_who_done:
+		if guess2.text == lv.get_lored_name(lored):
+			victory_guess(guess2)
+		else:
+			fail_guess(guess2)
 
 
 
@@ -173,18 +205,17 @@ func go() -> void:
 	lost_resources()
 	gained_resources()
 	closing()
+	guess_who()
 	show()
 
 
 func set_speaker() -> void:
 	lored = lv.get_random_unlocked_lored()
-	var color = lv.get_color(lored)
+	color = lv.get_color(lored)
 	$bg.modulate = color
 	pose.modulate = color
 	title_bg.modulate = color
 	bottom_title_bg.modulate = color
-	nice.color = color
-	mean.color = color
 	option_title_bg.modulate = color
 	option_bg.modulate = color
 
@@ -314,7 +345,7 @@ func closing() -> void:
 
 
 func instance_label(cur: int, parent: Node) -> void:
-	var x = label.instantiate()
+	var x = label.instantiate() as RichTextLabelPrefab
 	var currency = wa.get_currency(cur)
 	var _text = "%s" + currency.offline_production.text
 	_text = _text % ("+" if currency.positive_offline_rate else "-")
@@ -358,3 +389,51 @@ func show_or_hide_loss() -> void:
 		if i >= 6:
 			node.visible = not limit_loss
 		i += 1
+
+
+func guess_who() -> void:
+	if lv.unlocked.size() < 3:
+		guess_who_node.hide()
+		return
+	
+	dialogue_guess.hide()
+	
+	var unlocked = lv.unlocked.duplicate()
+	unlocked.erase(lored)
+	
+	var cor_ans_pos = randi() % 3
+	
+	for i in 3:
+		var _lored: LORED
+		if i == cor_ans_pos:
+			_lored = lv.get_lored(lored)
+		else:
+			var pos = randi() % unlocked.size()
+			_lored = lv.get_lored(unlocked.pop_at(pos))
+		var button = get("guess" + str(i)) as TextButton
+		button.name = str(_lored.type)
+		button.text = _lored.details.name
+		button.color = color
+
+
+func victory_guess(parent_node: Node) -> void:
+	wa.add(Currency.Type.JOY, 1)
+	gv.throw_texts(parent_node, {Currency.Type.JOY: Big.new(1)})
+	dialogue_guess.text = "[center][i]" + speech_guess[lored][0]
+	guess_who_over()
+
+
+func fail_guess(parent_node: Node) -> void:
+	wa.add(Currency.Type.GRIEF, 1)
+	gv.throw_texts(parent_node, {Currency.Type.GRIEF: Big.new(1)})
+	dialogue_guess.text = "[center][i]" + speech_guess[lored][1]
+	guess_who_over()
+
+
+func guess_who_over() -> void:
+	dialogue_guess.show()
+	guess_who_done = true
+	for i in 3:
+		var button = get("guess" + str(i))
+		button.color = lv.get_color(int(str(button.name)))
+		button.button.mouse_default_cursor_shape = Control.CURSOR_ARROW

@@ -1,3 +1,4 @@
+VBoxContainer
 Camera2D
 CheckBox
 GridContainer
@@ -8,7 +9,6 @@ Panel
 Container
 Button
 Control
-VBoxContainer
 TextureRect
 RichTextLabel
 VSlider

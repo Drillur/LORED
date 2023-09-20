@@ -70,6 +70,7 @@ var texts_parent: Control
 
 
 func _ready() -> void:
+	randomize()
 	SaveManager.load_finished.connect(load_finished)
 	SaveManager.load_finished.connect(get_offline_earnings)
 	session_tracker()
@@ -622,7 +623,7 @@ func get_offline_earnings() -> void:
 	await get_tree().physics_frame
 	var _last_clock: float = SaveManager.loaded_data["Overseer"]["current_clock"]
 	time_offline = Time.get_unix_time_from_system() - _last_clock
-	#time_offline = 10000 * randf_range(1,5)
+	time_offline = 10000 * randf_range(1,5)
 	time_offline_dict = get_time_dict(int(time_offline))
 	if time_offline < 30:
 		return
