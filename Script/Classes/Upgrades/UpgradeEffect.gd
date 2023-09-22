@@ -80,6 +80,8 @@ var added_currency: int
 var upgrade_menu: int
 var job: int
 
+var affected_loreds := []
+
 var replaced_upgrade := -1
 
 
@@ -309,14 +311,7 @@ func add_effected_lored(lored_type: int) -> void:
 			apply_methods.append(lored.fuel_cost.increase_multiplied)
 			remove_methods.append(lored.fuel_cost.decrease_multiplied)
 		Type.UPGRADE_NAME:
-			apply_methods.append(lored.cost_increase.increase_multiplied(0.9))
-			apply_methods.append(lored.fuel_cost.increase_multiplied(10))
-			apply_methods.append(lored.fuel.increase_multiplied(10))
-			apply_methods.append(lored.fuel.fill_up())
-			
-			remove_methods.append(lored.cost_increase.decrease_multiplied(0.9))
-			remove_methods.append(lored.fuel_cost.decrease_multiplied(10))
-			remove_methods.append(lored.fuel.decrease_multiplied(10))
+			affected_loreds.append(lored_type)
 
 
 func apply() -> void:
@@ -347,6 +342,12 @@ func apply() -> void:
 			Type.BONUS_ACTION_ON_CURRENCY_USE:
 				var cur = wa.get_currency(currency)
 				cur.decreased_by_lored.connect(currency_used)
+			Type.UPGRADE_NAME:
+				for lored in lv.get_lored_in_list(affected_loreds):
+					lored.cost_increase.increase_multiplied(0.9)
+					lored.fuel_cost.increase_multiplied(10)
+					lored.fuel.increase_multiplied(10)
+					lored.fuel.fill_up()
 		
 		refresh()
 
@@ -379,6 +380,11 @@ func remove() -> void:
 			Type.BONUS_ACTION_ON_CURRENCY_USE:
 				var cur = wa.get_currency(currency)
 				cur.decreased_by_lored.disconnect(currency_used)
+			Type.UPGRADE_NAME:
+				for lored in lv.get_lored_in_list(affected_loreds):
+					lored.cost_increase.decrease_multiplied(0.9)
+					lored.fuel_cost.decrease_multiplied(10)
+					lored.fuel.decrease_multiplied(10)
 		
 		remove_effects()
 

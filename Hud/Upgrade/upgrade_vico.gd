@@ -42,6 +42,8 @@ func setup(_upgrade: Upgrade):
 	upgrade.purchased.connect_and_call("changed", purchased_changed)
 	upgrade.unlocked.connect_and_call("changed", unlocked_changed)
 	upgrade.autobuy_changed.connect(autobuyer_display)
+	
+	hide_check()
 
 
 
@@ -54,7 +56,11 @@ func show_tooltip() -> void:
 
 func cost_update() -> void:
 	var val = upgrade.cost.affordable.get_value()
-	if val and upgrade.autobuy:
+	if (
+		val
+		and upgrade.autobuy
+		or upgrade.purchased.is_true()
+	):
 		check.hide()
 		return
 	check.visible = val

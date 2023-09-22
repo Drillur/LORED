@@ -316,3 +316,7 @@ func is_empty() -> bool:
 
 func is_full() -> bool:
 	return get_current().greater_equal(get_total())
+
+
+func is_not_full() -> bool:
+	return not is_full()

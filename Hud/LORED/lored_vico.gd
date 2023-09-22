@@ -74,10 +74,10 @@ func _ready():
 	SaveManager.connect("load_finished", load_finished)
 	SaveManager.connect("load_started", load_started)
 	
-	lv.connect("sleep_just_unlocked", sleep_lock)
-	lv.connect("advanced_details_just_unlocked", advanced_details_lock)
-	sleep_lock(false)
-	advanced_details_lock(false)
+	lv.sleep_unlocked.changed.connect(sleep_lock)
+	lv.advanced_details_unlocked.changed.connect(advanced_details_lock)
+	sleep_lock()
+	advanced_details_lock()
 
 
 
@@ -210,9 +210,9 @@ func purchased_changed() -> void:
 	else:
 		name_and_icon.hide()
 		currency.show()
-		if lv.sleep_unlocked:
+		if lv.sleep_unlocked.is_true():
 			sleep.show()
-		if lv.advanced_details_unlocked:
+		if lv.advanced_details_unlocked.is_true():
 			jobs.show()
 
 
@@ -236,6 +236,8 @@ func job_completed() -> void:
 
 
 func job_cut_short() -> void:
+	if current_job.has_required_currencies:
+		gv.throw_texts_by_dictionary(output_texts, current_job.in_hand_input)
 	stop_progress_bar()
 
 
@@ -247,14 +249,14 @@ func flash_on_level_up(_level: int) -> void:
 	gv.flash(self, lored.details.color)
 
 
-func sleep_lock(unlocked: bool) -> void:
-	sleep.visible = (unlocked and lored.unlocked)# or gv.dev_mode
+func sleep_lock() -> void:
+	sleep.visible = (lv.sleep_unlocked.is_true() and lored.unlocked)# or gv.dev_mode
 	if sleep.visible:
 		gv.flash(sleep, lored.details.color)
 
 
-func advanced_details_lock(unlocked: bool) -> void:
-	jobs.visible = (unlocked and lored.unlocked)# or gv.dev_mode
+func advanced_details_lock() -> void:
+	jobs.visible = (lv.advanced_details_unlocked.is_true() and lored.unlocked)# or gv.dev_mode
 	if jobs.visible:
 		gv.flash(jobs, lored.details.color)
 
@@ -306,8 +308,8 @@ func sleep_clicked() -> void:
 		lored.go_to_sleep()
 
 
-func sleep_changed(val: bool) -> void:
-	if val:
+func sleep_changed() -> void:
+	if lored.asleep.is_true():
 		sleep.set_icon(gv.icon_awake)
 		set_status_and_currency("[wave amp=20 freq=1]Sleeping.", lored.primary_currency)
 		animation.sleep()

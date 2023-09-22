@@ -8,7 +8,7 @@
 [ext_resource type="Theme" uid="uid://dt7rd31blnvth" path="res://Theme/Invis.tres" id="4_43dff"]
 [ext_resource type="Texture2D" uid="uid://b5sh16p1b12b1" path="res://Sprites/Currency/axe.png" id="4_g5nc0"]
 [ext_resource type="PackedScene" uid="uid://cb3ej8nlybhvm" path="res://Hud/icon_button.tscn" id="7_d7ftl"]
-[ext_resource type="SpriteFrames" path="res://Sprites/animations/tree.tres" id="8_t5wek"]
+[ext_resource type="SpriteFrames" path="res://Sprites/animations/humus.tres" id="8_tpr38"]
 [ext_resource type="Script" path="res://Hud/LORED/lored_animation.gd" id="9_tchys"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_iihta"]
@@ -113,8 +113,8 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_iihta")
 unique_name_in_owner = true
 position = Vector2(2, 2)
 scale = Vector2(2, 2)
-sprite_frames = ExtResource("8_t5wek")
-animation = &"TREES"
+sprite_frames = ExtResource("8_tpr38")
+animation = &"HUMUS"
 centered = false
 script = ExtResource("9_tchys")
 

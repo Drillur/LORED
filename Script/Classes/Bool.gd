@@ -9,13 +9,13 @@ var saved_vars := [
 signal became_true
 signal became_false
 
-signal reset_value_changed(val)
+signal reset_value_changed
 signal reset_value_became_true
 signal reset_value_became_false
 
 var base: bool
 
-var current: bool:
+@export var current: bool:
 	set(val):
 		if current != val:
 			current = val
@@ -29,14 +29,14 @@ var reset_value := false:
 	set(val):
 		if reset_value != val:
 			reset_value = val
-			reset_value_changed.emit(val)
+			reset_value_changed.emit()
 			if val:
 				reset_value_became_true.emit()
 			else:
 				reset_value_became_false.emit()
 
 
-func _init(_base: bool) -> void:
+func _init(_base: bool = false) -> void:
 	base = _base
 	current = _base
 

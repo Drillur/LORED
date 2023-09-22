@@ -326,7 +326,7 @@ class Objective:
 	
 	func wake_up_sleeping_lored() -> void:
 		if type == Type.SLEEP and not lored_was_already_asleep:
-			lv.get_lored(object_type).dequeue_sleep()
+			lv.get_lored(object_type).wake_up()
 	
 	
 	func already_completed_UPGRADE_PURCHASED() -> bool:
@@ -517,6 +517,7 @@ func init_RANDOM() -> void:
 	rewards_modifier /= _reward_count
 	lucky_multiplier = 1 + (randf() * _reward_count) # if 7 rewards, x 1-8
 	rewards_modifier *= lucky_multiplier
+	rewards_modifier *= 0.8
 	
 	var amounts := {}
 	for reward in _reward_count:

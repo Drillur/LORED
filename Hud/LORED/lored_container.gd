@@ -15,7 +15,7 @@ signal lored_vicos_ready
 
 func _ready():
 	_on_tab_container_tab_changed(0)
-	for lored in lv.loreds.values():
+	for lored in lv.get_all_loreds():
 		lored.attach_vico(get_node("%" + lored.key))
 		connect("lored_vicos_ready", lored.lored_vicos_ready)
 	emit_signal("lored_vicos_ready")

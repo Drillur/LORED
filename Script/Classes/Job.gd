@@ -102,6 +102,7 @@ var required_rates := {}
 var timer: Timer
 
 var last_production := {}
+var last_used_curs := {}
 
 var duration: Value
 var fuel_cost: Value
@@ -785,6 +786,8 @@ func stop() -> void:
 func stop_and_refund() -> void:
 	if has_required_currencies:
 		required_currencies.refund()
+	if fuel_cost.greater(0):
+		lv.get_lored(lored).fuel.add(fuel_cost.get_value())
 	stop()
 
 

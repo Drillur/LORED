@@ -8,7 +8,6 @@ var saved_vars := [
 	"random_wish_limit",
 	"completed_random_wishes",
 	"wishes",
-	"active_random_wishes",
 ]
 
 
@@ -55,8 +54,6 @@ func _ready() -> void:
 
 
 func close() -> void:
-	wish_ended.disconnect(find_new_main_wish)
-	wish_ended.disconnect(find_new_random_wish)
 	wishes.clear()
 	active_wish_types.clear()
 	uncomplete_all_wishes()
@@ -69,10 +66,8 @@ func close() -> void:
 func start() -> void:
 	lv.purchased_every_lored_once.connect(find_new_main_wish)
 	if not Wish.Type.STUFF in completed_wishes:
-		print("STUFF STARTED")
 		new_wish_considering_conditions(Wish.Type.STUFF)
 	else:
-		print("helo")
 		find_new_main_wish()
 
 

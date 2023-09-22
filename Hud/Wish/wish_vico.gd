@@ -68,6 +68,9 @@ func setup(_wish: Wish) -> void:
 		wish.became_ready_to_turn_in.connect(wish_is_ready)
 	else:
 		wish_is_ready()
+	
+	if gv.node_has_point(self, get_global_mouse_position()):
+		show_tooltip()
 
 
 

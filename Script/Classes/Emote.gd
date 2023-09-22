@@ -261,8 +261,8 @@ func RANDOM_COAL() -> void:
 			var text = wa.get_icon_and_name_text(Currency.Type.COAL)
 			dialogue = "Sometimes I take my %s with salt." % text
 		14:
-			var icon = wa.get_currency(Currency.Type.COAL).icon_text
-			var text = wa.get_currency(Currency.Type.COAL).color_text % "COAL"
+			var icon = wa.get_currency(Currency.Type.COAL).details.icon_text
+			var text = wa.get_currency(Currency.Type.COAL).details.color_text % "COAL"
 			dialogue = "WE NEED MORE %s %s! NONE OF YOU ARE GIVING ME A SECOND'S BREAK!" % [icon, text]
 			reply = Type.COAL14_REPLY
 		13:
@@ -527,7 +527,7 @@ func RANDOM_IRON_ORE() -> void:
 			var text = lv.get_colored_name(LORED.Type.COPPER_ORE)
 			dialogue = "%s. That incessant whacking and clanging. [b]I[/b] choose to work [b]smarter[/b]." % text
 		20:
-			var text = lv.get_lored(LORED.Type.IRON).color_text % lv.get_lored(LORED.Type.IRON).title
+			var text = lv.get_lored(LORED.Type.IRON).details.color_text % lv.get_lored(LORED.Type.IRON).title
 			dialogue = "%s. I follow you, my brother. My captain. My king." % text
 		19:
 			dialogue = "Hey, guess what, buddy? Those [b]aren't[/b] s'mores."
@@ -695,8 +695,18 @@ func IRON2_REPLY():
 
 
 func IRON4_REPLY():
-	speaker = LORED.Type.HARDWOOD
-	dialogue = "Yes, but actually, no!"
+	var d = []
+	if lv.can_lored_emote(LORED.Type.HARDWOOD):
+		d.append(0)
+	if lv.can_lored_emote(LORED.Type.COPPER_ORE):
+		d.append(1)
+	match d[randi() % d.size()]:
+		0:
+			speaker = LORED.Type.HARDWOOD
+			dialogue = "Yes, but actually, no!"
+		1:
+			speaker = LORED.Type.COPPER_ORE
+			dialogue = "Get this man his hardhat, now, see?! Boss, this just ain't right, no, it just ain't. Safety must come first, now, y'see!"
 
 
 
@@ -718,7 +728,7 @@ func RANDOM_COPPER() -> void:
 		11:
 			var icon = lv.get_lored(LORED.Type.COAL).icon_text
 			var name = lv.get_colored_name(LORED.Type.COAL)
-			var text = lv.get_lored(LORED.Type.COAL).color_text % ("Coca-Coal %s" % name)
+			var text = lv.get_lored(LORED.Type.COAL).details.color_text % ("Coca-Coal %s" % name)
 			dialogue = "%s %s, what's happening, bro? Fill me up, baby! No homo." % [icon, text]
 			
 		10:

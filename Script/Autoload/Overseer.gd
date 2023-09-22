@@ -314,9 +314,9 @@ func update_discord_state(text: String) -> void:
 
 func get_random_color() -> Color:
 	return Color(
-		0.1, 0.1, 0.1,#randf(),
-		#randf(),
-		#randf(),
+		randf(),
+		randf(),
+		randf(),
 		1
 	)
 
@@ -623,7 +623,7 @@ func get_offline_earnings() -> void:
 	await get_tree().physics_frame
 	var _last_clock: float = SaveManager.loaded_data["Overseer"]["current_clock"]
 	time_offline = Time.get_unix_time_from_system() - _last_clock
-	time_offline = 10000 * randf_range(1,5)
+	#time_offline = 10000 * randf_range(1,5)
 	time_offline_dict = get_time_dict(int(time_offline))
 	if time_offline < 30:
 		return
@@ -648,10 +648,10 @@ func get_offline_earnings() -> void:
 		offline_earnings[c.type]["positive"] = c.positive_offline_rate
 		if c.positive_offline_rate:
 			c.add_from_lored(offline_earnings[c.type]["rate"])
-			print(c.details.name, " increased by ", offline_earnings[c.type]["rate"].text)
+			#print(c.details.name, " increased by ", offline_earnings[c.type]["rate"].text)
 		else:
 			c.subtract_from_lored(offline_earnings[c.type]["rate"])
-			print(c.details.name, " decreased by ", offline_earnings[c.type]["rate"].text)
+			#print(c.details.name, " decreased by ", offline_earnings[c.type]["rate"].text)
 	
 	offline_report_ready.emit()
 

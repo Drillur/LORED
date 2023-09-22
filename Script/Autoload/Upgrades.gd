@@ -4,7 +4,7 @@ extends Node
 
 var saved_vars := [
 	"upgrades_by_key",
-	"upgrade_menus",
+	"upgrade_menu_by_key",
 ]
 
 
@@ -97,16 +97,12 @@ var upgrade_container: UpgradeContainer:
 signal all_upgrades_initialized
 signal menu_unlocked_changed(menu, unlocked)
 signal upgrade_purchased(type)
-signal purchasable_upgrade_count_changed(count)
 
 var upgrades := {}
 var upgrades_by_key := {}
 var upgrade_menus := {}
-var purchasable_upgrade_count := 0:
-	set(val):
-		if purchasable_upgrade_count != val:
-			purchasable_upgrade_count = val
-			purchasable_upgrade_count_changed.emit(val)
+var upgrade_menu_by_key := {}
+var purchasable_upgrade_count := Int.new(0)
 
 
 
@@ -116,6 +112,7 @@ func _ready():
 		connect("upgrade_purchased", upgrade_menus[type].add_purchased_upgrade)
 		upgrade_menus[type].purchasable_upgrade_count_increased.connect(purchasable_upgrade_count_increased)
 		upgrade_menus[type].purchasable_upgrade_count_decreased.connect(purchasable_upgrade_count_decreased)
+		upgrade_menu_by_key[upgrade_menus[type].key] = upgrade_menus[type]
 	for type in Upgrade.Type.values():
 		upgrades[type] = Upgrade.new(type)
 		upgrades_by_key[upgrades[type].key] = upgrades[type]
@@ -133,11 +130,11 @@ func _ready():
 # - Signal
 
 func purchasable_upgrade_count_increased() -> void:
-	purchasable_upgrade_count += 1
+	purchasable_upgrade_count.add(1)
 
 
 func purchasable_upgrade_count_decreased() -> void:
-	purchasable_upgrade_count -= 1
+	purchasable_upgrade_count.subtract(1)
 
 
 

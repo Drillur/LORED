@@ -55,7 +55,7 @@ var speech_negative_fuel := {
 	LORED.Type.STONE: ["Well, bad news! Everyone who uses %s performed worse because when you left, it was going at a loss!", "Same for %s!!!"],
 	LORED.Type.IRON_ORE: ["All right, you moron. Are you a newbie, or what? You're really going to just leave the game when one of the most important resources was being produced at a loss? You can't do that. You need %s to have a positive rate! Get that through your skull!", "Not only that, but you did it for %s, too. You are just a wonder of fumbles, aren't you? Ugh, whatever."],
 	LORED.Type.COPPER_ORE:
-		["Listen here, boss! Got some bad news for you, see, real bad. %s there was at a loss when you left. Yes, boss, I wouldn't say it if it wasn't true, no sir, I wouldn't. That might not be so bad in itself, see, boss, except for the fact that many of us [b]depend[/b] on it, see? Well, that means all of our production while you were gone took a hit, see? Yeah, now you see, don't you, boss? Yes, see, it isn't a pretty sight to see, see?",
+		["Okay, boss! Got some bad news for you, see, real bad. %s there was at a loss when you left. Yes, boss, I wouldn't say it if it wasn't true, no sir, I wouldn't. That might not be so bad in itself, see, boss, except for the fact that many of us [b]depend[/b] on it, see? Well, that means all of our production while you were gone took a hit, see? Yeah, now you see, don't you, boss? Yes, see, it isn't a pretty sight to see, see?",
 		"Along that line, see, the same goes for %s. Yes, boss, it's true. It's a real sire situation, here, boss, it sure is."],
 	LORED.Type.IRON: ["So, unfortunately, we lost a lot of %s while you were gone. What that means is that all of our friends who use it produced [b]less[/b] than they would have while you were out!", "The same goes for %s!"],
 	LORED.Type.COPPER: ["So, listen, yeah...! %s lost resources while you were gone. So that means, so did all of our amigos who use it for fuel.", "That happened with %s, too."],
@@ -111,13 +111,13 @@ var speech_closing := {
 var speech_guess := {
 	LORED.Type.COAL: ["I knew you'd know it was me!", "Dude?!"],
 	LORED.Type.STONE: ["Ayyy! :)", "How could you do me like this?"],
-	LORED.Type.IRON_ORE: ["Of course you remember me. I'm the only [b]memorable character[/b] in the game.", "Are you absolutely kidding me right now?\n\nREMEMBER THIS! *Shotguns yo face*"],
+	LORED.Type.IRON_ORE: ["Of course you remember me. I'm the only [b]memorable character[/b] in the game.", "Are you absolutely kidding me right now? You can't even remember the best character in the game? ...\n\nREMEMBER THIS! *Shotguns yo face*"],
 	LORED.Type.COPPER_ORE: ["Well, sure, boss! I knew you'd know me, I sure did. See, I reckon it's on account of the fact that I talk so dang darn much that there's surely no conceivable way you could ever [b]not know it was me, see?!!![/b]", "What am I, boss, chopped liver? We even shared supper together once, don't you remember, boss? Boss?"],
 	LORED.Type.IRON: ["Our fearless leader reveals his wisdom! You're the best, man!", "...I'm finally beginning to understand %s."],
-	LORED.Type.COPPER: ["Duuude! Man, I'm so glad you're around.", "Don't even worry about it, man! It's fine!"],
+	LORED.Type.COPPER: ["Duuude! I knew you weren't just a pretty face! Man, I'm so glad you're around.", "Don't even worry about it, man! It's fine!"],
 	LORED.Type.GROWTH: ["*High fives you!*", "I would go through all this pain, take a bullet straight through my brain--I would die for you. But you clearly wouldn't do the same."],
 	LORED.Type.JOULES: ["Cool.", "My honorrrrr!!!!!!!"],
-	LORED.Type.CONCRETE: ["Tu eres el mejor, primo!", "No mames, pinche madre puta perdedor imbécil sin educación!"],
+	LORED.Type.CONCRETE: ["Tu eres el mejor, primo!", "No mames, pinche madre puto perdedor imbécil sin educación!"],
 	LORED.Type.OIL: ["Hahahaha!", "*Cries uncontrollably in public.*"],
 	LORED.Type.TARBALLS: ["Excellent choice!", "You noob. What are you even doing?"],
 	LORED.Type.MALIGNANCY: ["I'm honestly surprised you knew it was me! Or did you guess?", "This literally doesn't affect me in any capacity. Carry on!"],
@@ -345,6 +345,7 @@ func closing() -> void:
 
 
 func instance_label(cur: int, parent: Node) -> void:
+	
 	var x = label.instantiate() as RichTextLabelPrefab
 	var currency = wa.get_currency(cur)
 	var _text = "%s" + currency.offline_production.text

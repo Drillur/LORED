@@ -281,3 +281,7 @@ func hard_reset() -> void:
 
 func save_game() -> void:
 	SaveManager.save_game()
+
+
+func _on_load_now_button_pressed():
+	pass

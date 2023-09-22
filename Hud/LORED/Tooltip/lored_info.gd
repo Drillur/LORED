@@ -42,7 +42,7 @@ func setup(data: Dictionary) -> void:
 	lored.purchased.connect_and_call("changed", purchased_updated)
 	lored.connect("leveled_up", update_level)
 	update_level(lored.level)
-	if lv.advanced_details_unlocked or gv.dev_mode:
+	if lv.advanced_details_unlocked.is_true() or gv.dev_mode:
 		advanced_details.show()
 		advanced_fuel_details.show()
 		lored.output.connect("changed", update_output)

@@ -48,12 +48,12 @@ var change_on_cooldown := false:
 			emit_signal("change_cooldown_finished")
 var change_queued := false
 
-var mantissa: float = 0.0:
+@export var mantissa: float = 0.0:
 	set(val):
 		if mantissa != val:
 			mantissa = val
 			text_requires_update = true
-var exponent: int = 1:
+@export var exponent: int = 1:
 	set(val):
 		if exponent != val:
 			exponent = val

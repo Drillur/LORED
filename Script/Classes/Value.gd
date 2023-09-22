@@ -196,3 +196,24 @@ func get_as_float() -> float:
 
 func get_as_int() -> int:
 	return current.toInt()
+
+
+func greater(value) -> bool:
+	return current.greater(value)
+
+
+func greater_equal(value) -> bool:
+	return current.greater_equal(value)
+
+
+func less(value) -> bool:
+	return current.less(value)
+
+
+func less_equal(value) -> bool:
+	return current.less_equal(value)
+
+
+func equal(value) -> bool:
+	return current.equal(value)
+

@@ -3,6 +3,7 @@ extends RefCounted
 
 
 var saved_vars := [
+	"unlocked",
 ]
 
 

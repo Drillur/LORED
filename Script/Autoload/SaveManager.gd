@@ -91,7 +91,7 @@ var save_version := {
 }
 
 var loaded_data: Dictionary
-var last_save_clock := Time.get_unix_time_from_system() #reset
+var last_save_clock := Time.get_unix_time_from_system()
 var patched := false
 
 var test_data: String
@@ -341,6 +341,8 @@ func get_save_data(method := default_load_method, filename := save_name) -> Dict
 	json.parse(save_text)
 #	if method == LoadMethod.TEST:
 #		print(json.data)
+	
+	#ID[itemsJson.] = itemsJson.data[key]["Tags"]
 	return json.data
 
 

@@ -85,8 +85,6 @@ const ANIMATION_FRAMES := {
 signal started
 signal purchased_every_lored_once
 signal loreds_initialized
-signal sleep_just_unlocked(unlocked)
-signal advanced_details_just_unlocked(unlocked)
 
 var loreds := {}
 var loreds_by_key := {}
@@ -97,16 +95,9 @@ var loreds_are_initialized := false:
 		if loreds_are_initialized != val:
 			loreds_are_initialized = val
 			emit_signal("loreds_initialized")
-var sleep_unlocked := false:
-	set(val):
-		if sleep_unlocked != val:
-			sleep_unlocked = val
-			sleep_just_unlocked.emit(val)
-var advanced_details_unlocked := false: # includes jobs and level_up tooltip
-	set(val):
-		if advanced_details_unlocked != val:
-			advanced_details_unlocked = val
-			advanced_details_just_unlocked.emit(val)
+
+var sleep_unlocked := Bool.new()
+var advanced_details_unlocked := Bool.new()
 
 var unlocked := []
 var active := []
@@ -150,11 +141,6 @@ var extra_normal_menu_unlocked := false
 
 
 func _ready():
-	
-	var array: Array[int] = [0,0,0,0,0,0,0,0,0,0,]
-	for i in 10:
-		array.append(0)
-	
 	for lored in LORED.Type.values():
 		loreds[lored] = LORED.new(lored)
 		loreds_by_key[loreds[lored].key] = loreds[lored]
@@ -187,12 +173,12 @@ func start() -> void:
 
 func sleep_lock(wish: int) -> void:
 	if wish == Wish.Type.UPGRADE_STONE:
-		sleep_unlocked = wi.is_wish_completed(wish)
+		sleep_unlocked.set_to(wi.is_wish_completed(wish))
 
 
 func job_lock(wish: int) -> void:
 	if wish == Wish.Type.JOBS:
-		advanced_details_unlocked = wi.is_wish_completed(wish)
+		advanced_details_unlocked.set_to(wi.is_wish_completed(wish))
 
 
 
@@ -358,3 +344,14 @@ func any_loreds_in_list_are_active(list: Array) -> bool:
 		if is_lored_active(x):
 			return true
 	return false
+
+
+func get_all_loreds() -> Array:
+	return loreds.values()
+
+
+func get_lored_in_list(list: Array) -> Array:
+	var arr = []
+	for x in list:
+		arr.append(get_lored(x))
+	return arr

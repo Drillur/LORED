@@ -29,15 +29,18 @@ func _ready():
 		tooltip_position_display.queue_free()
 		upgrades_button.hide()
 		wallet_button.hide()
+		$Left/Dev.hide()
+	
+	get_tree().root.size_changed.connect(window_resized)
 	
 	wa.wallet_unlocked_changed.connect(display_wallet_button)
 	
-	up.purchasable_upgrade_count_changed.connect(update_purchasable_upgrade_count)
+	up.purchasable_upgrade_count.changed.connect(update_purchasable_upgrade_count)
 	up.menu_unlocked_changed.connect(display_upgrades_button)
 	up.menu_unlocked_changed.connect(flash_upgrade_button)
 	wa.wallet_unlocked_changed.connect(wallet_lock)
 	
-	update_purchasable_upgrade_count(0)
+	update_purchasable_upgrade_count()
 	
 	gv.tooltip_parent = tooltip_parent
 	gv.texts_parent = control
@@ -77,6 +80,7 @@ func _ready():
 	em.start()
 	
 	if SaveManager.can_load_game():
+		print("GAME LOADED")
 		SaveManager.load_game()
 	else:
 		SaveManager.save_file_color = gv.get_random_color()
@@ -128,6 +132,12 @@ func _input(event):
 			return
 	
 	if esc_pressed and not menu.visible:
+		menu.show()
+		return
+	
+	if Input.is_action_just_pressed("Save"):
+		hide_menus()
+		menu._on_save_button_pressed()
 		menu.show()
 		return
 	
@@ -222,8 +232,6 @@ func _on_random_wishes_sort_children():
 
 
 
-# - Signal Shit
-
 func update_upgrades_button_color(upgrade_menu_tab: int) -> void:
 	upgrades_button.modulate = up.get_menu_color(upgrade_menu_tab)
 
@@ -232,9 +240,16 @@ func stage_changed(stage: int) -> void:
 	wallet_button.modulate = gv.get_stage_color(stage)
 
 
-func update_purchasable_upgrade_count(count: int) -> void:
+func update_purchasable_upgrade_count() -> void:
+	var count: int = up.purchasable_upgrade_count.get_value()
 	purchasable_upgrade_count.visible = count != 0
 	purchasable_upgrade_count.text = "[rainbow freq=0.2 sat=1.0 val=1.0][wave amp=40 freq=1.0]" + str(count)
+
+
+
+func window_resized() -> void:
+	var win: Vector2 = get_viewport_rect().size
+	size = Vector2(win.x / scale.x, win.y / scale.y)
 
 
 

@@ -1,5 +1,5 @@
 class_name Upgrade
-extends RefCounted
+extends Resource
 
 
 
@@ -285,11 +285,11 @@ var loreds: Array
 var unlocked := Bool.new(true)
 var purchased := Bool.new(false)
 
-func unlocked_updated(val: bool) -> void:
-	if val:
+func unlocked_updated() -> void:
+	if unlocked.is_true():
 		affordable_changed()
 
-func purchased_updated(_val: bool) -> void:
+func purchased_updated() -> void:
 	affordable_changed()
 	upgrade_purchased_changed.emit(self)
 
@@ -302,6 +302,7 @@ var autobuy := false:
 				became_affordable_and_unpurchased.emit(type, false)
 			affordable_changed()
 			autobuy_changed.emit()
+			
 
 
 var special: bool
@@ -344,6 +345,8 @@ func _init(_type: int) -> void:
 		special = false #s3
 	gv.hard_reset.connect(reset)
 	gv.prestige.connect(prestige)
+	purchased.changed.connect(purchased_updated)
+	unlocked.changed.connect(unlocked_updated)
 	
 	match stage:
 		1:

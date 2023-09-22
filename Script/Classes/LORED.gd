@@ -1,5 +1,5 @@
 class_name LORED
-extends RefCounted
+extends Resource
 
 
 
@@ -12,6 +12,7 @@ var saved_vars := [
 ]
 
 func load_started() -> void:
+	
 	stop_job()
 	unlocked.set_to(false)
 	purchased.set_to(false)
@@ -97,14 +98,8 @@ var killed := false
 var type: int
 var stage: int
 var last_job: Job
-var times_purchased := 0:
-	set(val):
-		times_purchased = val
-		if val == 1:
-			first_purchase_ever()
 var primary_currency: int
 var fuel_currency: int
-var time_spent_asleep := 0.0
 var reason_cannot_work := 0
 
 var produced_currencies := []
@@ -113,7 +108,23 @@ var upgrades := []
 var unpurchased_upgrades := []
 var emote_queue := []
 
-var unlocked := Bool.new(false)
+@export var fuel: ValuePair
+@export var unlocked_jobs := []
+@export var unlocked := Bool.new(false)
+@export var purchased := Bool.new(false)
+@export var asleep := Bool.new(false)
+@export var time_spent_asleep := 0.0
+@export var times_purchased := 0:
+	set(val):
+		times_purchased = val
+		if val == 1:
+			first_purchase_ever()
+@export var level := 0:
+	set(val):
+		if level == val:
+			return
+		level = val
+		emit_signal("leveled_up", level)
 
 
 var key_lored := false
@@ -121,10 +132,8 @@ var autobuy := Bool.new(false)
 
 var autobuy_on_cooldown := false
 
-var purchased := Bool.new(false)
 
 var working := Bool.new(false)
-var asleep := Bool.new(false)
 
 var time_went_to_bed := 0.0
 var fuel_rate_added := false:
@@ -152,15 +161,7 @@ var vico: LOREDVico
 
 var jobs := {}
 var sorted_jobs := []
-var unlocked_jobs := []
 
-var level := 0:
-	set(val):
-		if level == val:
-			return
-		level = val
-		emit_signal("leveled_up", level)
-var fuel: ValuePair
 var fuel_cost: Value
 var output := Value.new(1)
 var input := Value.new(1)
@@ -169,21 +170,17 @@ var crit := Value.new(0)
 
 
 
-func _init(_type: int) -> void:
+func _init(_type: int = 0) -> void:
 	type = _type
 	key = Type.keys()[type]
 	details.set_title(key.replace("_", " ").capitalize() + " LORED")
 	
 	purchased.changed.connect(purchased_updated)
 	purchased.reset_value_changed.connect(purchased_reset_value_updated)
-	
 	unlocked.changed.connect(unlocked_updated)
 	unlocked.reset_value_changed.connect(unlocked_reset_value_updated)
-	
 	emoting.became_false.connect(emote_next_in_line)
-	
 	autobuy.changed.connect(autobuy_changed)
-	
 	asleep.changed.connect(asleep_updated)
 	
 	call("init_" + key)
@@ -239,7 +236,6 @@ func _init(_type: int) -> void:
 	level = 0
 	
 	sort_jobs()
-
 
 
 func init_STONE() -> void:
@@ -854,6 +850,7 @@ func remove_job_produced_and_required_currencies(job_type: int) -> void:
 
 
 func loreds_initialized() -> void:
+	gv.add_lored_to_stage(stage, type)
 	for job in jobs.values():
 		job.assign_lored(type)
 		
@@ -927,8 +924,8 @@ func purchased_updated() -> void:
 			wa.set_wish_eligible_currency(cur, false)
 
 
-func purchased_reset_value_updated(val: bool) -> void:
-	if val:
+func purchased_reset_value_updated() -> void:
+	if purchased.is_true_on_reset():
 		if not lv.started.is_connected(force_purchase):
 			lv.started.connect(force_purchase)
 	else:
@@ -936,8 +933,8 @@ func purchased_reset_value_updated(val: bool) -> void:
 			lv.started.disconnect(force_purchase)
 
 
-func asleep_updated(val: bool) -> void:
-	if val:
+func asleep_updated() -> void:
+	if asleep.is_true():
 		time_went_to_bed = Time.get_unix_time_from_system()
 		lv.lored_went_to_sleep(type)
 	else:
@@ -951,19 +948,17 @@ func unlocked_updated() -> void:
 		lv.lored_unlocked(type)
 		autobuy_check()
 		saved_vars.append("fuel")
-		saved_vars.append("asleep")
 		saved_vars.append("times_purchased")
 		saved_vars.append("time_spent_asleep")
 	else:
 		lv.lored_locked(type)
 		saved_vars.erase("fuel")
-		saved_vars.erase("asleep")
 		saved_vars.erase("times_purchased")
 		saved_vars.erase("time_spent_asleep")
 
 
-func unlocked_reset_value_updated(val: bool) -> void:
-	if val:
+func unlocked_reset_value_updated() -> void:
+	if unlocked.is_true_on_reset():
 		if not lv.started.is_connected(unlock):
 			lv.started.connect(unlock)
 	else:
@@ -1080,7 +1075,7 @@ func reset(hard: bool):
 		cost.recheck()
 		if type == Type.STONE:
 			fuel.add(9)
-	asleep.set_to(false)
+	wake_up()
 	if working.is_true():
 		stop_job()
 	working.set_false()
@@ -1111,10 +1106,10 @@ var last_reason_autobuy: String
 
 func autobuy_check() -> void:
 	var val = should_autobuy()
-	if type == Type.COAL:
-		printt(key, last_reason_autobuy)
+#	if type == Type.COAL:
+#		printt(key, last_reason_autobuy)
 	if val:
-		#printt(key, last_reason_autobuy)
+		printt(key, last_reason_autobuy)
 		automatic_purchase()
 		autobuy_on_cooldown = true
 		await gv.get_tree().physics_frame
@@ -1125,7 +1120,7 @@ func autobuy_check() -> void:
 
 func should_autobuy() -> bool:
 	if (
-		autobuy
+		autobuy.is_true()
 		and not autobuy_on_cooldown
 		and unlocked.is_true()
 		and gv.run_duration >= 1
@@ -1245,14 +1240,10 @@ func go_to_sleep() -> void:
 	if working.is_true():
 		last_job.stop_and_refund()
 	asleep.set_to(true)
-	if is_connected("completed_job", go_to_sleep):
-		disconnect("completed_job", go_to_sleep)
 
 
 func wake_up() -> void:
 	asleep.set_to(false)
-	if is_connected("completed_job", go_to_sleep):
-		disconnect("completed_job", go_to_sleep)
 
 
 func calculate_time_in_bed() -> void:
@@ -1319,10 +1310,14 @@ func disconnect_limit_break(sig: Signal) -> void:
 # - Job
 
 func work(job_type: int = get_next_job_automatically()) -> void:
-	if purchased.is_false() or unlocked.is_false():
+	if (
+		purchased.is_false()
+		or unlocked.is_false()
+		or working.is_true()
+		or asleep.is_true()
+	):
 		return
-	if working.is_true():
-		return
+	
 	if job_type > -1:
 		start_job(job_type)
 	else:
@@ -1563,22 +1558,14 @@ func get_job(job: int) -> Job:
 
 
 func get_used_currency_rate(cur: int) -> Big:
-	if cur == Currency.Type.COAL:
-		if type == Type.JOULES:
-			return Big.new(fuel_cost.get_value()).a(
-				jobs[Job.Type.JOULES].required_currencies.cost[cur].get_value()).d(
-					jobs[Job.Type.JOULES].duration.get_as_float()
-				)
-		elif type == Type.PLASTIC:
-			return Big.new(fuel_cost.get_value()).a(
-				jobs[Job.Type.PLASTIC].required_currencies.cost[cur].get_value()).d(
-					jobs[Job.Type.PLASTIC].duration.get_as_float()
-				)
-		if fuel_currency == cur:
-			return Big.new(fuel_cost.get_value())
-	
 	var rate = Big.new(0)
+	
+	if wa.get_currency(cur).used_for_fuel and cur == fuel_currency:
+		rate.a(fuel_cost.get_value())
+	
 	for job in jobs.values():
+		if job.type == Job.Type.REFUEL:
+			continue
 		if job.uses_currency(cur):
 			rate.a(
 				Big.new(job.required_currencies.cost[cur].get_value()).d(

@@ -75,7 +75,7 @@ func just_purchased() -> void:
 		description.hide()
 		title.text = "Level Up"
 		lored.purchased.became_true.disconnect(just_purchased)
-		if lv.advanced_details_unlocked:
+		if lv.advanced_details_unlocked.is_true():
 			lored.output.connect("changed", set_output_text)
 			lored.input.connect("changed", set_input_text)
 			lored.fuel_cost.connect("changed", set_fuel_cost_text)
