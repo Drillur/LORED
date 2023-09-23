@@ -564,6 +564,7 @@ func get_eta(threshold: Big) -> Big:
 		count.greater_equal(threshold)
 		or net_rate.get_value().equal(0)
 		or not lv.any_loreds_in_list_are_active(produced_by)
+		or not positive_rate
 	):
 		return Big.new(0)
 	

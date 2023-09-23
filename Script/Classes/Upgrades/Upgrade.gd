@@ -292,6 +292,8 @@ func unlocked_updated() -> void:
 func purchased_updated() -> void:
 	affordable_changed()
 	upgrade_purchased_changed.emit(self)
+	
+	up.emit_signal("upgrade_purchased", type)
 
 
 var autobuy := false:
@@ -302,7 +304,7 @@ var autobuy := false:
 				became_affordable_and_unpurchased.emit(type, false)
 			affordable_changed()
 			autobuy_changed.emit()
-			
+
 
 
 var special: bool
@@ -2045,7 +2047,8 @@ func init_POWER_BARRELS() -> void:
 
 
 func init_A_BEE_WITH_TINY_DAGGERS() -> void:
-	details.name = "a bee with tiny daggers!!!"
+	var shit = "[shake rate=20.0 level=5 connected=1]%s[/shake]"
+	details.name = shit % "a bee with tiny daggers!!!"
 	details.icon = load("res://Sprites/Upgrades/abeewithdaggers.png")
 	details.color = lv.get_color(LORED.Type.SEEDS)
 	set_effect(UpgradeEffect.Type.CRIT, 6)
@@ -2750,7 +2753,8 @@ func init_GO_ON_THEN_LEAD_US() -> void:
 
 
 func init_THE_WITCH_OF_LOREDELITH() -> void:
-	details.name = "The Witch of Loredelith"
+	var shit = lv.get_lored(LORED.Type.WITCH).details.color_text
+	details.name = shit % "The Witch of Loredelith"
 	details.description = "Stage 1 LOREDs permanently gain Aurus's Bounty, Circe's powerful buff."
 	set_effect(UpgradeEffect.Type.HASTE, 1)
 	add_effected_stage(1)
@@ -3307,7 +3311,7 @@ func purchase() -> void:
 	if purchased.is_true() or will_apply_effect:
 		return
 	cost.purchase(true)
-	purchased.set_true()
+	purchased.set_to(true)
 	if special:
 		will_apply_effect = true
 	else:
@@ -3317,7 +3321,6 @@ func purchase() -> void:
 func finalize_purchase() -> void:
 	apply()
 	times_purchased += 1
-	up.emit_signal("upgrade_purchased", type)
 
 
 func apply() -> void:
@@ -3335,10 +3338,11 @@ func remove() -> void:
 	if purchased.is_true():
 		if special:
 			will_apply_effect = false
-		effect.remove()
-		effect.reset_effects()
+		if effect.applied:
+			effect.remove()
+			effect.reset_effects()
 		cost.purchased = false
-		purchased.set_false()
+		purchased.set_to(false)
 
 
 
@@ -3364,6 +3368,7 @@ func prestige(_stage: int) -> void:
 	if _stage == stage:
 		if will_apply_effect:
 			apply()
+			will_apply_effect = false
 		elif not special:
 			if persist.is_false_on_reset():
 				remove()

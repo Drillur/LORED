@@ -1,3 +1,4 @@
+@icon("res://Sprites/reactions/STONE_HAPPY_STONE0.png")
 class_name LOREDVico
 extends MarginContainer
 
@@ -104,6 +105,7 @@ func attach_lored(_lored: LORED) -> void:
 	has_lored = true
 	
 	# signals
+	gv.prestige.connect(prestige)
 	lored.connect("leveled_up", lored_leveled_up)
 	lored.cost.affordable.connect_and_call("changed", cost_update)
 	level_up.button.connect("pressed", purchase_level_up)
@@ -161,6 +163,11 @@ func cost_update() -> void:
 	level_up.check.visible = val
 	if val:
 		flash_level_up_button()
+
+
+func prestige(stage: int) -> void:
+	if stage >= lored.stage:
+		status.hide()
 
 
 

@@ -228,7 +228,7 @@ func time_offline() -> void:
 		LORED.Type.CONCRETE:
 			date_text = date_text.replace("year", "año").replace("day", "dia").replace("hour", "hora").replace("minute", "minuto").replace("second", "segundo").replace("and", "y")
 	
-	dialogue_time_offline.text = "[i]" + speech_time_offline[lored] % ("[b]" + date_text + "[/b]")
+	dialogue_time_offline.text = "[i][center]" + speech_time_offline[lored] % ("[b]" + date_text + "[/b]")
 
 
 func negative_fuel() -> void:
@@ -248,9 +248,9 @@ func negative_fuel() -> void:
 	
 	var text: String
 	
-	text = speech_negative_fuel[lored][0] % coal_text if coal_ratio < 1.0 else jo_text
+	text = "[center]" + speech_negative_fuel[lored][0] % coal_text if coal_ratio < 1.0 else jo_text
 	if coal_ratio < 1.0 and jo_ratio < 1.0:
-		text += "\n\n" + (speech_negative_fuel[lored][1] % jo_text)
+		text += "\n\n" + ("[center]" + speech_negative_fuel[lored][1] % jo_text)
 	
 	dialogue_negative_fuel.text = "[i]" + text
 
@@ -280,7 +280,7 @@ func lost_resources() -> void:
 	
 	show_or_hide_loss()
 	
-	dialogue_lost_resources.text = "[i]" + speech_lost_resources[lored]
+	dialogue_lost_resources.text = "[center][i]" + speech_lost_resources[lored]
 
 
 func gained_resources() -> void:
@@ -336,11 +336,11 @@ func gained_resources() -> void:
 		i = 0
 	else:
 		i = 1
-	dialogue_gained_resources.text = speech_gained_resources[lored][i]
+	dialogue_gained_resources.text = "[center]" + speech_gained_resources[lored][i]
 
 
 func closing() -> void:
-	dialogue_closing.text = "[i]" + speech_closing[lored]
+	dialogue_closing.text = "[center][i]" + speech_closing[lored]
 
 
 

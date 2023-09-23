@@ -221,7 +221,8 @@ func reset_effects() -> void:
 	var was_applied = applied
 	if was_applied:
 		remove()
-	effect.reset()
+	if effect != null:
+		effect.reset()
 	if effect2 != null:
 		effect2.reset()
 	if was_applied:

@@ -18,6 +18,7 @@ var color: Color:
 		alt_color = color
 var color_text: String
 var colored_name: String
+var colored_alt_name: String
 
 var alt_color: Color:
 	set(val):
@@ -51,10 +52,11 @@ var icon_and_alt_colored_name: String
 
 func set_title(val: String) -> void:
 	alt_name = val
+	colored_alt_name = color_text % alt_name
 
 
 func set_nickname(val: String) -> void:
-	alt_name = val
+	set_title(val)
 
 
 

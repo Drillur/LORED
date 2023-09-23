@@ -527,7 +527,7 @@ func RANDOM_IRON_ORE() -> void:
 			var text = lv.get_colored_name(LORED.Type.COPPER_ORE)
 			dialogue = "%s. That incessant whacking and clanging. [b]I[/b] choose to work [b]smarter[/b]." % text
 		20:
-			var text = lv.get_lored(LORED.Type.IRON).details.color_text % lv.get_lored(LORED.Type.IRON).title
+			var text = lv.get_lored(LORED.Type.IRON).details.colored_alt_name
 			dialogue = "%s. I follow you, my brother. My captain. My king." % text
 		19:
 			dialogue = "Hey, guess what, buddy? Those [b]aren't[/b] s'mores."
@@ -665,7 +665,10 @@ func RANDOM_IRON() -> void:
 		5: dialogue = "I shouldn't have left that one in for so long."
 		4:
 			dialogue = "Can I borrow anyone's helmet?"
-			reply = Type.IRON4_REPLY
+			if lv.can_lored_emote(LORED.Type.COPPER_ORE):
+				reply = Type.IRON4_REPLY
+			else:
+				print("why not")
 		3: dialogue = "I haven't cleaned this toaster since I bought it!"
 		2:
 			var name = lv.get_colored_name(LORED.Type.IRON_ORE)
@@ -700,6 +703,8 @@ func IRON4_REPLY():
 		d.append(0)
 	if lv.can_lored_emote(LORED.Type.COPPER_ORE):
 		d.append(1)
+	if d.size() == 0:
+		return
 	match d[randi() % d.size()]:
 		0:
 			speaker = LORED.Type.HARDWOOD

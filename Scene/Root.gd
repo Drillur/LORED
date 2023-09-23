@@ -80,7 +80,6 @@ func _ready():
 	em.start()
 	
 	if SaveManager.can_load_game():
-		print("GAME LOADED")
 		SaveManager.load_game()
 	else:
 		SaveManager.save_file_color = gv.get_random_color()

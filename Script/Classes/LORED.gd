@@ -173,7 +173,6 @@ var crit := Value.new(0)
 func _init(_type: int = 0) -> void:
 	type = _type
 	key = Type.keys()[type]
-	details.set_title(key.replace("_", " ").capitalize() + " LORED")
 	
 	purchased.changed.connect(purchased_updated)
 	purchased.reset_value_changed.connect(purchased_reset_value_updated)
@@ -184,6 +183,8 @@ func _init(_type: int = 0) -> void:
 	asleep.changed.connect(asleep_updated)
 	
 	call("init_" + key)
+	
+	details.set_title(key.replace("_", " ").capitalize() + " LORED")
 	
 	key_lored = type in lv.key_loreds
 	
@@ -966,8 +967,9 @@ func unlocked_reset_value_updated() -> void:
 			lv.started.disconnect(unlock)
 
 
-func autobuy_changed(val: bool) -> void:
-	if val:
+func autobuy_changed() -> void:
+	if autobuy.is_true():
+		autobuy_check()
 		if not cost.affordable.became_true.is_connected(autobuy_check):
 			cost.affordable.became_true.connect(autobuy_check)
 			for cur in produced_currencies:
@@ -1183,6 +1185,12 @@ func should_autobuy() -> bool:
 		if wa.currencies_have_negative_net(produced_currencies):
 			last_reason_autobuy = "produced curs are negative net"
 			return true
+	
+#	if key == "COAL":
+#		print("autobuy ", autobuy.is_true())
+#		print("autobuy cd ", autobuy_on_cooldown)
+#		print("gv.run_duration >= 1 ", gv.run_duration >= 1)
+#		print("can_afford() ", can_afford())
 	
 	last_reason_autobuy = "NO: bottom"
 	return false
