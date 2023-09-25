@@ -536,13 +536,6 @@ func subtract_pending(amount: Big) -> void:
 	count.subtract_pending(amount)
 
 
-func set_gain_over_loss() -> void:
-	if loss_rate.get_value().equal(0):
-		gain_over_loss = 1.0
-	else:
-		gain_over_loss = min(1, gain_rate.get_value().percent(loss_rate.get_value()))
-
-
 
 # - Get
 
@@ -581,21 +574,6 @@ func get_random_producer() -> LORED:
 	return produced_by[randi() % produced_by.size()]
 
 
-func eligible_for_offline_earnings() -> bool:
-	var cont = false
-	for x in produced_by: # only need one lored producing this cur
-		var lored = lv.get_lored(x)
-		if (
-			lored.unlocked.is_true()
-			and wa.is_currency_unlocked(lored.fuel_currency)
-		):
-			cont = true
-			break
-	if not cont:
-		return false
-	return unlocked
-
-
 func get_fuel_currency() -> int:
 	return lv.get_lored(produced_by[0]).fuel_currency
 
@@ -603,17 +581,20 @@ func get_fuel_currency() -> int:
 
 # - Offline Earnings Shit
 
-
-var gain_over_loss := 1.0
+var gain_over_loss := -1.0:
+	set(val):
+		if gain_over_loss != val:
+			gain_over_loss = val
+			if gain_over_loss != 1:
+				for lored_type in used_by:
+					lv.get_lored(lored_type).cap_gain_loss_if_uses_currency(type)
 var fuel_cur_gain_loss: float
 var offline_production: Big
 var positive_offline_rate: bool
 
 
 func get_offline_production(time_offline: float) -> Big:
-	var gain = Big.new(gain_rate.get_value())
-	fuel_cur_gain_loss = wa.get_currency(get_fuel_currency()).gain_over_loss
-	gain.m(fuel_cur_gain_loss)
+	var gain = Big.new(gain_rate.get_value()).m(gain_over_loss)
 	
 	var loss = Big.new(0)
 	for x in used_by:
@@ -638,3 +619,26 @@ func get_offline_production(time_offline: float) -> Big:
 		offline_production = Big.new(net).m(str(time_offline))
 	
 	return offline_production
+
+
+func eligible_for_offline_earnings() -> bool:
+	var cont = false
+	for x in produced_by: # only need one lored producing this cur
+		var lored = lv.get_lored(x)
+		if (
+			lored.unlocked.is_true()
+			and wa.is_currency_unlocked(lored.fuel_currency)
+		):
+			cont = true
+			break
+	if not cont:
+		return false
+	return unlocked
+
+
+func set_gain_over_loss() -> void:
+	if gain_over_loss == -1:
+		if loss_rate.get_value().equal(0):
+			gain_over_loss = 1.0
+		else:
+			gain_over_loss = min(1, gain_rate.get_value().percent(loss_rate.get_value()))

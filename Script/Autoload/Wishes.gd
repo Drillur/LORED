@@ -128,6 +128,7 @@ func new_pending_wish(wish: Wish) -> void:
 	var pending_vico = pending_wish_vico.instantiate()
 	pending_vico.setup(wish)
 	wish.container.add_child(pending_vico)
+	wish.container.move_child(pending_vico, 0)
 	pending_vico.exiting.connect(new_wish_vico)
 
 

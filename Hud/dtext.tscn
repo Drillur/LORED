@@ -6,7 +6,8 @@
 [ext_resource type="StyleBox" uid="uid://chtvcjgh56o7a" path="res://Theme/Backdrop.tres" id="3_ffdnw"]
 
 [node name="dtext" type="MarginContainer"]
-grow_horizontal = 2
+offset_right = 44.0
+offset_bottom = 15.0
 mouse_filter = 2
 script = ExtResource("2")
 

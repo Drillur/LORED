@@ -11,12 +11,17 @@ var saved_vars := [
 	"lucky_multiplier",
 	"help_icon_path",
 	"thank_icon_path",
-	"reward_count",
 ]
 
 
 func load_started() -> void:
 	kill()
+
+
+func load_finished() -> void:
+	if is_random_wish():
+		for reward in rewards:
+			reward.save_rewards()
 
 
 
@@ -453,7 +458,8 @@ func _init(_type: int) -> void:
 	type = _type
 	key = Type.keys()[type]
 	
-	SaveManager.connect("load_started", load_started)
+	SaveManager.load_started.connect(load_started)
+	SaveManager.load_finished.connect(load_finished)
 	
 	call("init_" + key)
 	
@@ -784,8 +790,14 @@ func init_A_NEW_LEAF() -> void:
 	objective = Objective.new(Objective.Type.UPGRADE_PURCHASED, {
 		"object_type": Upgrade.Type.UPGRADE_NAME,
 	})
-	add_reward(Reward.new(Reward.Type.INCREASED_RANDOM_WISH_LIMIT, {
-		"amount": 1,
+	add_reward(Reward.new(Reward.Type.NEW_LORED, {
+		"object_type": LORED.Type.WATER,
+	}))
+	add_reward(Reward.new(Reward.Type.NEW_LORED, {
+		"object_type": LORED.Type.SEEDS,
+	}))
+	add_reward(Reward.new(Reward.Type.NEW_LORED, {
+		"object_type": LORED.Type.TREES,
 	}))
 
 
@@ -900,4 +912,7 @@ func has_rewards() -> bool:
 func is_main_wish() -> bool:
 	return type > 0
 
+
+func is_random_wish() -> bool:
+	return not is_main_wish()
 

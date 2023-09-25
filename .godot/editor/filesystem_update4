@@ -1,4 +1,4 @@
-res://Hud/LORED/lored_container.tscn
+res://Hud/LORED/lored_vico.tscn
 res://Theme/Standard.tres
 res://Theme/Invis.tres
 res://Theme/TextButton.tres
@@ -7,10 +7,35 @@ res://Theme/Background.tres
 res://Theme/ShadowText.tres
 res://Theme/Subtle Background.tres
 res://Theme/Title.tres
+res://Hud/LORED/lored_vico.gd
 res://Scene/Root.tscn
+res://Scene/Root.gd
 res://Hud/Save/save_block.tscn
 res://Hud/Earnings Report/earnings_report.tscn
 res://Hud/Menu/menu.tscn
 res://Hud/icon_button.tscn
-res://Hud/LORED/lored_vico.tscn
-res://Hud/LORED/lored_vico.gd
+res://Hud/dtext.tscn
+res://Hud/flying_text.tscn
+res://Hud/LORED/lored_container.tscn
+res://Script/Classes/FlyingText.gd
+res://Script/Classes/FlyingTextCurrency.gd
+res://Hud/flying_text_vico.gd
+res://Script/Classes/FlyingTexts.gd
+res://Hud/Wish/wish_vico.gd
+res://Hud/Wish/wish_vico.tscn
+res://Script/Classes/_FlyingText.gd
+res://Script/Classes/_FlyingTextCurrency.gd
+res://Script/Classes/_FlyingTexts.gd
+res://Sprites/animations/humus.tres
+res://Sprites/animations/growth.tres
+res://Sprites/animations/hard.tres
+res://Sprites/animations/glass.tres
+res://Sprites/animations/draw.tres
+res://Sprites/animations/wire.tres
+res://Sprites/animations/toba.tres
+res://Sprites/animations/ciga.tres
+res://Script/Classes/Cost.gd
+res://Hud/Upgrade/upgrade_vico.tscn
+res://Script/Autoload/Overseer.gd
+res://Hud/Upgrade/upgrade_container.tscn
+res://Hud/Upgrade/upgrade_container.gd

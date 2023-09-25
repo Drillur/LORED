@@ -667,8 +667,6 @@ func RANDOM_IRON() -> void:
 			dialogue = "Can I borrow anyone's helmet?"
 			if lv.can_lored_emote(LORED.Type.COPPER_ORE):
 				reply = Type.IRON4_REPLY
-			else:
-				print("why not")
 		3: dialogue = "I haven't cleaned this toaster since I bought it!"
 		2:
 			var name = lv.get_colored_name(LORED.Type.IRON_ORE)

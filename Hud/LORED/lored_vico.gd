@@ -238,7 +238,19 @@ func lored_leveled_up(_level: int) -> void:
 
 func job_completed() -> void:
 	if current_job.has_produced_currencies:
-		gv.throw_texts_by_dictionary(output_texts, current_job.last_production)
+		var text = FlyingText.new(
+			FlyingText.Type.CURRENCY,
+			output_texts,
+			output_texts,
+			false,
+		)
+		for cur in current_job.last_production:
+			text.add({
+				"cur": cur,
+				"text": "+" + current_job.last_production[cur].text,
+				"crit": false,
+			})
+		text.go()
 	stop_progress_bar()
 
 

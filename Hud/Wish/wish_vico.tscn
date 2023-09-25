@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://bxwt1hbvsigah"]
+[gd_scene load_steps=12 format=3 uid="uid://bxwt1hbvsigah"]
 
 [ext_resource type="Theme" uid="uid://bl4v2v143rihi" path="res://Theme/Background.tres" id="1_nnvct"]
 [ext_resource type="Script" path="res://Hud/Wish/wish_vico.gd" id="1_u1cay"]
@@ -17,12 +17,15 @@ border_width_top = 2
 border_width_bottom = 2
 border_color = Color(1, 1, 1, 1)
 shadow_color = Color(0, 0, 0, 1)
-shadow_size = 5
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xncda"]
 bg_color = Color(0.36, 0, 0, 0.85)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ybvue"]
+size = Vector2(81.9999, 44)
+
 [node name="Wish Vico" type="MarginContainer"]
+clip_contents = true
 offset_right = 82.0
 offset_bottom = 46.0
 size_flags_horizontal = 0
@@ -109,6 +112,7 @@ autowrap_mode = 0
 
 [node name="Dismiss" type="MarginContainer" parent="."]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 
 [node name="bg" type="Panel" parent="Dismiss"]
@@ -167,12 +171,13 @@ anchor_left = 1.0
 anchor_right = 1.0
 grow_horizontal = 0
 
-[node name="TopCenter" type="Control" parent="Control"]
+[node name="Texts" type="Control" parent="Control"]
 unique_name_in_owner = true
 layout_mode = 1
-anchors_preset = 5
 anchor_left = 0.5
-anchor_right = 0.5
+anchor_right = 1.0
+offset_top = -3.0
+offset_bottom = -3.0
 grow_horizontal = 2
 
 [node name="Button" type="Button" parent="."]
@@ -185,5 +190,14 @@ metadata/_edit_lock_ = true
 
 [node name="Ready Flash Timer" type="Timer" parent="."]
 wait_time = 10.0
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+
+[node name="Collision" type="CollisionShape2D" parent="StaticBody2D"]
+unique_name_in_owner = true
+position = Vector2(41, 24)
+shape = SubResource("RectangleShape2D_ybvue")
+one_way_collision = true
+one_way_collision_margin = 4.0
 
 [connection signal="resized" from="." to="." method="_on_resized"]

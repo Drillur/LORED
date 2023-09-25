@@ -11,9 +11,11 @@ extends MarginContainer
 @onready var ready_border = $ready
 @onready var button = %Button
 @onready var right = %RightUp
-@onready var top_center = %TopCenter
 @onready var dismiss_node = %Dismiss
 @onready var ready_flash_timer = $"Ready Flash Timer"
+@onready var right_down = $Control/RightDown
+@onready var texts = %Texts
+@onready var collision = %Collision
 
 signal ended(wish, successful_completion)
 
@@ -32,6 +34,8 @@ func _on_resized() -> void:
 	if not is_node_ready():
 		await ready
 	right.position.x = size.x + 10
+	collision.position.x = size.x / 2
+	collision.shape.size.x = size.x
 
 
 
@@ -115,7 +119,22 @@ func button_input(event: InputEvent) -> void:
 func turn_in() -> void:
 	if wish.ready_to_turn_in or gv.dev_mode:
 		gv.clear_tooltip()
-		gv.throw_texts(top_center, wish.get_currency_rewards())
+		
+		var cur_rew = wish.get_currency_rewards()
+		var text = FlyingText.new(
+			FlyingText.Type.CURRENCY,
+			texts, # node used to determine text locations
+			gv.texts_parent, # node that will hold texts
+			true, # collision
+		)
+		for cur in cur_rew:
+			text.add({
+				"cur": cur,
+				"text": "+" + cur_rew[cur].text,
+				"crit": false,
+			})
+		text.go()
+		
 		wish.turn_in()
 		queue_free()
 	else:
@@ -130,7 +149,21 @@ func dismiss() -> void:
 	
 	if dismiss_node.visible:
 		gv.clear_tooltip()
-		gv.throw_texts(top_center, wish.get_dismissal_currencies())
+		var cur_rew = wish.get_dismissal_currencies()
+		var text = FlyingText.new(
+			FlyingText.Type.CURRENCY,
+			texts, # node used to determine text locations
+			gv.texts_parent, # node that will hold texts
+			true, # collision
+		)
+		for cur in cur_rew:
+			text.add({
+				"cur": cur,
+				"text": "-" + cur_rew[cur].text,
+				"crit": false,
+			})
+		text.go()
+		
 		wish.dismiss()
 		queue_free()
 	else:

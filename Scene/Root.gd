@@ -19,6 +19,7 @@ extends MarginContainer
 @onready var stage4 = %Stage4 as IconButton
 @onready var purchasable_upgrade_count = %"Purchasable Upgrade Count"
 @onready var offline_report = $"Offline Report"
+@onready var fps = %FPS
 
 @onready var tooltip_position_display = $"Control/Tooltip/Tooltip Position Display"
 
@@ -86,6 +87,10 @@ func _ready():
 		gv.update_discord_details("Just began a new game!")
 	
 	wi.start()
+
+
+func _physics_process(delta):
+	fps.text = "FPS: [i]" + str(Engine.get_frames_per_second())
 
 
 
@@ -323,24 +328,58 @@ func select_stage(stage: int) -> void:
 
 @onready var dev_text = $Left/Dev/RichTextLabel
 func _on_dev_pressed():
-	wa.add(Currency.Type.STONE, 10)
-	wa.add(Currency.Type.COAL, 10)
-	if lv.is_lored_unlocked(LORED.Type.IRON):
-		lv.get_lored(LORED.Type.IRON).purchase()
-		lv.get_lored(LORED.Type.COPPER).purchase()
-		lv.get_lored(LORED.Type.COPPER_ORE).purchase()
-		lv.get_lored(LORED.Type.IRON_ORE).purchase()
+#	wa.add(Currency.Type.STONE, 10)
+#	wa.add(Currency.Type.COAL, 10)
+#	if lv.is_lored_unlocked(LORED.Type.IRON):
+#		lv.get_lored(LORED.Type.IRON)_.purchase()
+#		lv.get_lored(LORED.Type.COPPER).purchase()
+#		lv.get_lored(LORED.Type.COPPER_ORE).purchase()
+#		lv.get_lored(LORED.Type.IRON_ORE).purchase()
+	
+	var buff = Big.new(1.1)
+	print(lv.get_lored(LORED.Type.IRON).output.get_text())
+	lv.get_lored(LORED.Type.IRON).output.increase_multiplied(buff)
+	lv.get_lored(LORED.Type.IRON).output.alter_value(
+		lv.get_lored(LORED.Type.IRON).output.multiplied,
+		buff,
+		Big.new(buff).m(1.1)
+	)
+	print(lv.get_lored(LORED.Type.IRON).output.get_text())
+	
+	
+	var text = FlyingText.new(
+		FlyingText.Type.CURRENCY,
+		%Dev,
+		%Dev,
+		true,
+	)
+	text.add({
+		"cur": Currency.Type.LIQUID_IRON,
+		"text": "+" + Big.new(10).text,
+		"crit": false,
+	})
+	text.add({
+		"cur": Currency.Type.AXES,
+		"text": "+" + Big.new(15).text,
+		"crit": false,
+	})
+	text.add({
+		"cur": Currency.Type.CARCINOGENS,
+		"text": "+" + Big.new(20).text,
+		"crit": false,
+	})
+	text.go()
+	
+	
+	pass
 
-var test_data: String
 func _on_dev_2_pressed():
-	gv.reset(1)
 	pass
 
 func _on_dev_4_pressed():
 	pass # Replace with function body.
 
 func _on_dev_3_pressed():
-	gv.reset(2)
 	pass
 
 func _on_dev_5_pressed():

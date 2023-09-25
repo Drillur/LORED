@@ -54,7 +54,7 @@ func _on_resized():
 
 func _ready() -> void:
 	delta_bar.hide()
-	set_physics_process(false)
+	set_process(false)
 	await get_tree().create_timer(1).timeout
 	if using_texts:
 		if text.text == "":
@@ -162,17 +162,17 @@ func new_delta_animation() -> void:
 func start(_threshold: float) -> void:
 	start_time = Time.get_unix_time_from_system()
 	threshold = _threshold
-	set_physics_process(true)
+	set_process(true)
 	show()
 
 
-func _physics_process(_delta) -> void:
+func _process(_delta) -> void:
 	progress = (Time.get_unix_time_from_system() - start_time) / threshold
 
 
 func stop() -> void:
 	hide()
-	set_physics_process(false)
+	set_process(false)
 
 
 

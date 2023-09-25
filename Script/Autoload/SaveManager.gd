@@ -296,6 +296,8 @@ func unpack_array(packed_array: Dictionary) -> Array:
 		
 		if variable_class == "Wish":
 			var wish = Wish.new(data["type"])
+			if wish.is_random_wish():
+				wish.saved_vars.append("rewards")
 			unpack_vars(wish, data)
 			array.append(wish)
 		

@@ -36,7 +36,6 @@ var unlocked := false:
 		if unlocked != val:
 			unlocked = val
 			unlocked_changed.emit(val)
-			print("UPMENU EMIT CHANGED")
 			up.menu_unlocked_changed.emit(type, val)
 
 var upgrades := []

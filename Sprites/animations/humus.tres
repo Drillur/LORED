@@ -1,25 +1,55 @@
-[gd_resource type="SpriteFrames" load_steps=11 format=2]
+[gd_resource type="SpriteFrames" load_steps=11 format=3 uid="uid://c58qs6wt052dg"]
 
-[ext_resource path="res://Sprites/animations/humus/g0.png" type="Texture" id=1]
-[ext_resource path="res://Sprites/animations/humus/g1.png" type="Texture" id=2]
-[ext_resource path="res://Sprites/animations/humus/wait.png" type="Texture" id=3]
-[ext_resource path="res://Sprites/animations/humus/g2.png" type="Texture" id=4]
-[ext_resource path="res://Sprites/animations/humus/g7.png" type="Texture" id=5]
-[ext_resource path="res://Sprites/animations/humus/g5.png" type="Texture" id=6]
-[ext_resource path="res://Sprites/animations/humus/g8.png" type="Texture" id=7]
-[ext_resource path="res://Sprites/animations/humus/g3.png" type="Texture" id=8]
-[ext_resource path="res://Sprites/animations/humus/g4.png" type="Texture" id=9]
-[ext_resource path="res://Sprites/animations/humus/g6.png" type="Texture" id=10]
+[ext_resource type="Texture2D" uid="uid://cuf2k1bsqw7tw" path="res://Sprites/animations/humus/g0.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://ca15latx0g7e6" path="res://Sprites/animations/humus/g1.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://xv24crvpjyn2" path="res://Sprites/animations/humus/wait.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://nh428o2w6d5s" path="res://Sprites/animations/humus/g2.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://ctd6o2w8yf2d" path="res://Sprites/animations/humus/g7.png" id="5"]
+[ext_resource type="Texture2D" uid="uid://cwv8h34deudl7" path="res://Sprites/animations/humus/g5.png" id="6"]
+[ext_resource type="Texture2D" uid="uid://ds4lfn8o3ybap" path="res://Sprites/animations/humus/g8.png" id="7"]
+[ext_resource type="Texture2D" uid="uid://c3jhiyard66nx" path="res://Sprites/animations/humus/g3.png" id="8"]
+[ext_resource type="Texture2D" uid="uid://g38cfnraem36" path="res://Sprites/animations/humus/g4.png" id="9"]
+[ext_resource type="Texture2D" uid="uid://31phygq4icxw" path="res://Sprites/animations/humus/g6.png" id="10"]
 
 [resource]
-animations = [ {
-"frames": [ ExtResource( 1 ), ExtResource( 2 ), ExtResource( 4 ), ExtResource( 8 ), ExtResource( 9 ), ExtResource( 6 ), ExtResource( 10 ), ExtResource( 5 ), ExtResource( 7 ) ],
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7")
+}],
 "loop": true,
-"name": "HUMUS",
+"name": &"HUMUS",
 "speed": 1.0
 }, {
-"frames": [ ExtResource( 3 ) ],
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3")
+}],
 "loop": true,
-"name": "ww",
+"name": &"ww",
 "speed": 5.0
-} ]
+}]

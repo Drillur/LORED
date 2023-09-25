@@ -319,9 +319,9 @@ func apply() -> void:
 	if not applied:
 		if type != Type.LIMIT_BREAK:
 			if effect != null:
-				effect.increased.connect(refresh)
+				effect.changed.connect(refresh)
 			if effect2 != null:
-				effect2.increased.connect(refresh)
+				effect2.changed.connect(refresh)
 		
 		if replaced_upgrade >= 0:
 			var r_up = up.get_upgrade(replaced_upgrade)
@@ -350,7 +350,7 @@ func apply() -> void:
 					lored.fuel.increase_multiplied(10)
 					lored.fuel.fill_up()
 		
-		refresh()
+		apply_effects()
 
 
 func remove() -> void:
@@ -391,8 +391,51 @@ func remove() -> void:
 
 
 func refresh() -> void:
-	remove_effects()
-	apply_effects()
+	match type:
+		Type.LIMIT_BREAK:
+			return
+		Type.BONUS_ACTION_ON_CURRENCY_GAIN:
+			match upgrade_type:
+				Upgrade.Type.ITS_SPREADIN_ON_ME:
+					var iron := lv.get_lored(LORED.Type.IRON)
+					var copper := lv.get_lored(LORED.Type.COPPER)
+					var irono := lv.get_lored(LORED.Type.IRON_ORE)
+					var copo := lv.get_lored(LORED.Type.COPPER_ORE)
+					iron.output.alter_value(iron.output.multiplied, in_hand, effect.get_value())
+					iron.input.alter_value(iron.input.multiplied, in_hand, effect.get_value())
+					copper.output.alter_value(copper.output.multiplied, in_hand, effect.get_value())
+					copper.input.alter_value(copper.input.multiplied, in_hand, effect.get_value())
+					irono.output.alter_value(irono.output.multiplied, in_hand, effect.get_value())
+					irono.input.alter_value(irono.input.multiplied, in_hand, effect.get_value())
+					copo.output.alter_value(copo.output.multiplied, in_hand, effect.get_value())
+					copo.input.alter_value(copo.input.multiplied, in_hand, effect.get_value())
+				Upgrade.Type.ITS_GROWIN_ON_ME:
+					var iron := lv.get_lored(LORED.Type.IRON)
+					var copper := lv.get_lored(LORED.Type.COPPER)
+					var iron_output = iron.output.get_text()
+					var copper_output = copper.output.get_text()
+					#iron.output.alter_value(iron.output.multiplied, in_hand, effect.get_value())
+					iron.output.alter_value(
+						iron.output.multiplied,
+						in_hand,
+						effect.get_value()
+					)
+					iron.input.alter_value(iron.input.multiplied, in_hand, effect.get_value())
+					copper.output.alter_value(copper.output.multiplied, in_hand2, effect2.get_value())
+					copper.input.alter_value(copper.input.multiplied, in_hand2, effect2.get_value())
+					print("Effect ", in_hand.text, " -> ", effect.get_text(), "\t\t Iron ", iron_output, " -> ", iron.output.get_text(), " - Copper ", copper_output, " -> ", copper.output.get_text())
+		Type.BONUS_ACTION_ON_CURRENCY_USE:
+			match upgrade_type:
+				Upgrade.Type.I_DRINK_YOUR_MILKSHAKE:
+					var coal := lv.get_lored(LORED.Type.COAL)
+					coal.output.alter_value(coal.output.multiplied, in_hand, effect.get_value())
+		_:
+			remove_effects()
+			apply_effects()
+	
+	in_hand.set_to(effect.get_value())
+	if effect2 != null:
+		in_hand2.set_to(effect2.get_value())
 
 
 func apply_effects() -> void:
@@ -500,3 +543,4 @@ func get_effect_text() -> String:
 
 func get_effect2_text() -> String:
 	return effect2.get_text()
+

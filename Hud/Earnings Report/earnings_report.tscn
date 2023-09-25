@@ -12,8 +12,9 @@
 bg_color = Color(0, 0, 0, 0.501961)
 
 [node name="Earnings Report" type="MarginContainer"]
-offset_right = 363.0
-offset_bottom = 464.0
+custom_minimum_size = Vector2(280, 0)
+offset_right = 280.0
+offset_bottom = 574.0
 size_flags_horizontal = 4
 size_flags_vertical = 6
 script = ExtResource("1_2ab3p")

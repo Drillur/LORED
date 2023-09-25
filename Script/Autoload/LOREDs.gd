@@ -298,7 +298,7 @@ func is_lored_purchased(lored: int) -> bool:
 
 func can_lored_emote(lored_type: int) -> bool:
 	var lored = get_lored(lored_type)
-	return lored.unlocked and lored in active_and_awake
+	return lored.unlocked.is_true() and lored in active_and_awake
 
 
 func get_active_lored_count() -> int:

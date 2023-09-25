@@ -1602,3 +1602,13 @@ func get_produced_currency_rate(cur: int) -> Big:
 	
 	return rate
 
+
+func cap_gain_loss_if_uses_currency(cur: int) -> void:
+	for job in jobs.values():
+		if job.uses_currency(cur):
+			for cur2 in job.produced_currencies:
+				var cur_gain_loss = wa.get_currency(cur).gain_over_loss
+				var cur2_gain_loss = wa.get_currency(cur2).gain_over_loss
+				if cur2_gain_loss > cur_gain_loss or cur2_gain_loss == -1:
+					wa.get_currency(cur2).gain_over_loss = wa.get_currency(cur).gain_over_loss
+

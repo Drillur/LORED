@@ -41,6 +41,8 @@ var icon_hard_reset := preload("res://Sprites/Hud/Hard Reset.png")
 var ascending_icon: Texture = preload("res://Sprites/Hud/arrow-up-s-line.png")
 var descending_icon: Texture = preload("res://Sprites/Hud/arrow-down-s-line.png")
 
+var flying_text: PackedScene = preload("res://Hud/flying_text.tscn")
+
 var control_node := preload("res://Hud/control.tscn")
 const SRC := {
 	"dtext": preload("res://Hud/dtext.tscn"),
@@ -143,7 +145,7 @@ func _notification(what) -> void:
 		if time - current_clock > 1:
 			var time_delta := time - last_clock
 			if time_delta > 1:
-				get_offline_earnings()
+				get_offline_earnings(last_clock)
 
 
 func session_tracker() -> void:
@@ -240,6 +242,8 @@ func getRandomColor() -> Color:
 	var b = randf_range(0, 1)
 	return Color(r, g, b, 1.0)
 
+
+var flying_texts := []
 
 func throw_texts_by_dictionary(parent: Node, _data: Dictionary, prepended_text := "+") -> void:
 	var texts := []
@@ -619,9 +623,8 @@ var time_offline_dict := {"days": 0, "years": 0,"hours": 0, "minutes":0, "second
 var offline_earnings: Dictionary
 
 
-func get_offline_earnings() -> void:
+func get_offline_earnings(_last_clock: float = SaveManager.loaded_data["Overseer"]["current_clock"]) -> void:
 	await get_tree().physics_frame
-	var _last_clock: float = SaveManager.loaded_data["Overseer"]["current_clock"]
 	time_offline = Time.get_unix_time_from_system() - _last_clock
 	#time_offline = 10000 * randf_range(1,5)
 	time_offline_dict = get_time_dict(int(time_offline))
