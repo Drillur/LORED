@@ -34,6 +34,8 @@ theme = ExtResource("1_wef1c")
 
 [node name="body" type="StaticBody2D" parent="."]
 unique_name_in_owner = true
+collision_layer = 2
+collision_mask = 2
 
 [node name="Collision2" type="CollisionShape2D" parent="body"]
 unique_name_in_owner = true
@@ -43,7 +45,7 @@ shape = SubResource("RectangleShape2D_cakvs")
 one_way_collision = true
 one_way_collision_margin = 10.0
 
-[node name="Collision3" type="CollisionShape2D" parent="body"]
+[node name="Collision3" type="CollisionShape2D" parent="body" groups=["Collision"]]
 unique_name_in_owner = true
 position = Vector2(-16.3752, 254)
 rotation = 1.5708
@@ -127,8 +129,10 @@ theme_override_constants/margin_right = 15
 theme_override_constants/margin_bottom = 10
 
 [node name="body" type="StaticBody2D" parent="MarginContainer/VBoxContainer/Tabs/Q/ScrollContainer0/MarginContainer"]
+collision_layer = 2
+collision_mask = 2
 
-[node name="Collision" type="CollisionShape2D" parent="MarginContainer/VBoxContainer/Tabs/Q/ScrollContainer0/MarginContainer/body"]
+[node name="Collision" type="CollisionShape2D" parent="MarginContainer/VBoxContainer/Tabs/Q/ScrollContainer0/MarginContainer/body" groups=["Collision"]]
 position = Vector2(178, -24)
 rotation = 3.14159
 shape = SubResource("RectangleShape2D_byxmb")

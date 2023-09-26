@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://cc20piiohvlkw"]
+[gd_scene load_steps=16 format=3 uid="uid://cc20piiohvlkw"]
 
 [ext_resource type="Script" path="res://Hud/LORED/lored_vico.gd" id="1_0ael0"]
 [ext_resource type="Theme" uid="uid://b8t7tkhvril5g" path="res://Theme/Standard.tres" id="1_7ail2"]
@@ -10,6 +10,7 @@
 [ext_resource type="PackedScene" uid="uid://cb3ej8nlybhvm" path="res://Hud/icon_button.tscn" id="7_d7ftl"]
 [ext_resource type="SpriteFrames" uid="uid://8711hjmk3if8" path="res://Sprites/animations/glass.tres" id="8_egirl"]
 [ext_resource type="Script" path="res://Hud/LORED/lored_animation.gd" id="9_tchys"]
+[ext_resource type="PhysicsMaterial" uid="uid://dwcoahtxdrh6o" path="res://Theme/BoundaryPhysicsMat.tres" id="11_l5hm5"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_iihta"]
 bg_color = Color(1, 1, 1, 0.0470588)
@@ -32,6 +33,9 @@ border_blend = true
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ltk7m"]
 bg_color = Color(1, 1, 1, 0.0705882)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_kh5hn"]
+size = Vector2(216, 4.5)
 
 [node name="LORED Vico" type="MarginContainer"]
 custom_minimum_size = Vector2(216, 0)
@@ -240,6 +244,16 @@ one_shot = true
 
 [node name="Sleep Timer" type="Timer" parent="."]
 one_shot = true
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+physics_material_override = ExtResource("11_l5hm5")
+
+[node name="Collision" type="CollisionShape2D" parent="StaticBody2D"]
+unique_name_in_owner = true
+position = Vector2(108, 2.75)
+shape = SubResource("RectangleShape2D_kh5hn")
+one_way_collision = true
+debug_color = Color(0, 0.6, 0.701961, 0.419608)
 
 [connection signal="item_rect_changed" from="." to="." method="_on_item_rect_changed"]
 [connection signal="tree_exited" from="." to="." method="_on_tree_exited"]

@@ -99,6 +99,7 @@ func _on_resized():
 func _on_visibility_changed():
 	if visible:
 		gv.clear_tooltip()
+	
 
 
 

@@ -1,6 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://c8f7jwtn8oya4"]
+[gd_scene load_steps=6 format=3 uid="uid://c8f7jwtn8oya4"]
 
 [ext_resource type="Script" path="res://Hud/Wish/wish_pending.gd" id="1_0b3o5"]
+[ext_resource type="PhysicsMaterial" uid="uid://dwcoahtxdrh6o" path="res://Theme/BoundaryPhysicsMat.tres" id="2_tvqan"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2okpp"]
 bg_color = Color(0.305882, 0.305882, 0.305882, 1)
@@ -19,6 +20,9 @@ corner_radius_top_left = 3
 corner_radius_top_right = 3
 corner_radius_bottom_right = 3
 corner_radius_bottom_left = 3
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_nf708"]
+height = 36.0
 
 [node name="Wish Pending" type="MarginContainer"]
 custom_minimum_size = Vector2(0, 46)
@@ -67,3 +71,12 @@ layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 theme_override_styles/panel = SubResource("StyleBoxFlat_mghex")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+physics_material_override = ExtResource("2_tvqan")
+
+[node name="Collision" type="CollisionShape2D" parent="StaticBody2D"]
+unique_name_in_owner = true
+position = Vector2(19, 23)
+rotation = 1.57079
+shape = SubResource("CapsuleShape2D_nf708")

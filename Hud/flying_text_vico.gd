@@ -12,11 +12,11 @@ extends RigidBody2D
 
 var velocity := Vector2(
 	randf_range(-0.1, 0.1),
-	randf_range(-0.15, -0.2)
+	randf_range(-0.13, -0.18)
 )
 var crit: bool
 var gravity := 0.25
-var collide := false
+var use_move_slide := true
 
 
 
@@ -24,21 +24,24 @@ func _ready():
 	set_process(false)
 	label.finished.connect(fix_body)
 	timer.timeout.connect(queue_free)
+	if get_parent() == gv.texts_parent:
+		use_move_slide = false
 
 
 func _process(delta):
-	velocity.x *= (1 - (0.1 * delta))
-	velocity.y += gravity * delta
-	#apply_force(velocity)
-	var collision = move_and_collide(velocity)
-	if collision:
-		velocity = velocity.bounce(collision.get_normal())
+	if use_move_slide:
+		velocity.x *= (1 - (0.1 * delta))
+		velocity.y += gravity * delta
+		var collision = move_and_collide(velocity)
+		if collision:
+			velocity = velocity.bounce(collision.get_normal())
 	
-	if timer.time_left <= 0.15:
-		if collision_layer == 2:
-			collision_layer = 0
-			collision_mask = 0
-		margin_container.modulate = Color(1, 1, 1, margin_container.modulate.a * 0.95)
+	if not timer.is_stopped():
+		if timer.time_left <= 0.15:
+			if collision_layer == 2:
+				collision_layer = 0
+				collision_mask = 0
+			margin_container.modulate = Color(1, 1, 1, margin_container.modulate.a * 0.95)
 
 
 
@@ -47,8 +50,11 @@ func fix_body() -> void:
 
 
 
-func setup(_collide: bool) -> void:
-	collide = _collide
+func setup(layer: int, mask: int) -> void:
+	if layer > 0:
+		set_collision_layer_value(layer, true)
+	if mask > 0:
+		set_collision_mask_value(layer, true)
 
 
 func setup_currency(data: Dictionary) -> void:
@@ -66,13 +72,25 @@ func setup_currency(data: Dictionary) -> void:
 
 
 
-func go(_duration: float) -> void:
+func go(
+	_duration: float,
+	velocity_range: Array
+) -> void:
 	show()
-	if collide:
-		collision_layer = 1
-		collision_mask = 1
-	timer.start(_duration)
-	var dir = Vector2(randf_range(-25, 25), -50)
+	if _duration > 0:
+		timer.start(_duration)
+	if use_move_slide:
+		velocity = Vector2(velocity_range[0], velocity_range[1])
+	else:
+		var dir = Vector2(
+			randf_range(-25, 25), 
+			randf_range(-85,-75)
+		)
+		apply_impulse(dir)
+	
+	if timer.is_stopped() and not use_move_slide:
+		set_process(false)
+	
 	animate() if not crit else animate_crit()
 	set_process(true)
 

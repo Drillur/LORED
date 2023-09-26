@@ -20,6 +20,8 @@ extends MarginContainer
 @onready var purchasable_upgrade_count = %"Purchasable Upgrade Count"
 @onready var offline_report = $"Offline Report"
 @onready var fps = %FPS
+@onready var screen_area = %ScreenArea
+
 
 @onready var tooltip_position_display = $"Control/Tooltip/Tooltip Position Display"
 
@@ -254,7 +256,14 @@ func update_purchasable_upgrade_count() -> void:
 func window_resized() -> void:
 	var win: Vector2 = get_viewport_rect().size
 	size = Vector2(win.x / scale.x, win.y / scale.y)
+	
+	screen_area.shape.size.x = size.x * 1.1
+	screen_area.shape.size.y = size.y * 1.1
+	screen_area.position = Vector2(size.x / 2, size.y / 2)
 
+
+func _on_screen_area_body_exited(body):
+	body.queue_free()
 
 
 
@@ -351,7 +360,7 @@ func _on_dev_pressed():
 		FlyingText.Type.CURRENCY,
 		%Dev,
 		%Dev,
-		true,
+		[1, 1],
 	)
 	text.add({
 		"cur": Currency.Type.LIQUID_IRON,
@@ -384,6 +393,7 @@ func _on_dev_3_pressed():
 
 func _on_dev_5_pressed():
 	pass # Replace with function body.
+
 
 
 

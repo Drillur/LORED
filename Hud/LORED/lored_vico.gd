@@ -242,7 +242,7 @@ func job_completed() -> void:
 			FlyingText.Type.CURRENCY,
 			output_texts,
 			output_texts,
-			false,
+			[1, 1],
 		)
 		for cur in current_job.last_production:
 			text.add({

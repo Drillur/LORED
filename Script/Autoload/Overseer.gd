@@ -528,7 +528,7 @@ func get_time_text_from_dict(dict: Dictionary) -> String:
 			return "%s, %s, %s, and %s" % [a, b, c, d]
 		3:
 			if years > 0:
-				a = str(years) + "years"
+				a = str(years) + " years"
 				if days > 0:
 					b = str(days) + " days"
 					if hours > 0:
@@ -574,7 +574,7 @@ func get_time_text_from_dict(dict: Dictionary) -> String:
 				else:
 					b = str(seconds) + " seconds"
 			elif days > 0:
-				a = str(days) + "days"
+				a = str(days) + " days"
 				if hours > 0:
 					b = str(hours) + " hours"
 				elif minutes > 0:
@@ -582,7 +582,7 @@ func get_time_text_from_dict(dict: Dictionary) -> String:
 				else:
 					b = str(seconds) + " seconds"
 			elif hours > 0:
-				a = str(hours) + "hours"
+				a = str(hours) + " hours"
 				if minutes > 0:
 					b = str(minutes) + " minutes"
 				else:

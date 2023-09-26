@@ -125,7 +125,8 @@ func turn_in() -> void:
 			FlyingText.Type.CURRENCY,
 			texts, # node used to determine text locations
 			gv.texts_parent, # node that will hold texts
-			true, # collision
+			[1, 1], # collision
+			[randf_range(-0.1, 0.1), -0.08, -0.12]
 		)
 		for cur in cur_rew:
 			text.add({
@@ -133,7 +134,7 @@ func turn_in() -> void:
 				"text": "+" + cur_rew[cur].text,
 				"crit": false,
 			})
-		text.go()
+		text.go(-1)
 		
 		wish.turn_in()
 		queue_free()
@@ -154,7 +155,7 @@ func dismiss() -> void:
 			FlyingText.Type.CURRENCY,
 			texts, # node used to determine text locations
 			gv.texts_parent, # node that will hold texts
-			true, # collision
+			[1, 1], # collision
 		)
 		for cur in cur_rew:
 			text.add({
@@ -162,7 +163,7 @@ func dismiss() -> void:
 				"text": "-" + cur_rew[cur].text,
 				"crit": false,
 			})
-		text.go()
+		text.go(-1)
 		
 		wish.dismiss()
 		queue_free()

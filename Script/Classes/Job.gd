@@ -591,6 +591,7 @@ func emit_workable() -> void:
 			)
 		)
 	):
+		print(lv.get_lored_name(lored), " EMIT WORKABLE")
 		became_workable.emit()
 
 

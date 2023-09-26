@@ -1,5 +1,6 @@
-Path2D
 CollisionShape2D
+Area2D
+Path2D
 StaticBody2D
 RigidBody2D
 Timer

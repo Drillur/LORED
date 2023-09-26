@@ -170,7 +170,7 @@ func throw_texts(parent_node: Node) -> void:
 		FlyingText.Type.CURRENCY,
 		parent_node, # node used to determine text locations
 		parent_node, # node that will hold texts
-		true, # collision
+		[2, 2], # collision
 	)
 	for cur in cost:
 		text.add({

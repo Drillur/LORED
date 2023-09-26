@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://bseqrj5lg08it"]
+[gd_scene load_steps=12 format=3 uid="uid://bseqrj5lg08it"]
 
 [ext_resource type="Script" path="res://Scene/Root.gd" id="1_h7r77"]
 [ext_resource type="PackedScene" uid="uid://rmruae8fguk4" path="res://Hud/LORED/lored_container.tscn" id="2_egnhq"]
@@ -17,6 +17,9 @@ border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
 border_color = Color(1, 0, 0, 1)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_alvwj"]
+size = Vector2(1280, 720)
 
 [node name="Root" type="MarginContainer"]
 offset_right = 1280.0
@@ -195,6 +198,16 @@ layout_mode = 2
 visible = false
 layout_mode = 2
 
+[node name="Area2D" type="Area2D" parent="."]
+collision_layer = 7
+collision_mask = 7
+monitorable = false
+
+[node name="ScreenArea" type="CollisionShape2D" parent="Area2D"]
+unique_name_in_owner = true
+position = Vector2(640, 360)
+shape = SubResource("RectangleShape2D_alvwj")
+
 [connection signal="pressed" from="Left/Left/Menu Buttons/Menu Button" to="." method="_on_menu_button_pressed"]
 [connection signal="pressed" from="Left/Left/Menu Buttons/Wallet Button" to="." method="_on_wallet_button_pressed"]
 [connection signal="pressed" from="Left/Left/Menu Buttons/Upgrades Button" to="." method="_on_upgrades_button_pressed"]
@@ -205,3 +218,4 @@ layout_mode = 2
 [connection signal="pressed" from="Left/Dev/Dev4" to="." method="_on_dev_4_pressed"]
 [connection signal="pressed" from="Left/Dev/Dev3" to="." method="_on_dev_3_pressed"]
 [connection signal="pressed" from="Left/Dev/Dev5" to="." method="_on_dev_5_pressed"]
+[connection signal="body_exited" from="Area2D" to="." method="_on_screen_area_body_exited"]
