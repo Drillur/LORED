@@ -78,7 +78,6 @@ func _ready():
 	lv.sleep_unlocked.changed.connect(sleep_lock)
 	lv.advanced_details_unlocked.changed.connect(advanced_details_lock)
 	sleep_lock()
-	advanced_details_lock()
 
 
 
@@ -115,6 +114,7 @@ func attach_lored(_lored: LORED) -> void:
 	lored.connect("became_unable_to_work", start_idle)
 	lored.connect("leveled_up", flash_on_level_up)
 	lored.unlocked.became_true.connect(show)
+	lored.unlocked.became_true.connect(display_all_parent_nodes)
 	lored.unlocked.became_false.connect(hide)
 	lored.purchased.changed.connect(purchased_changed)
 	lored.autobuy.changed.connect(autobuy_changed)
@@ -154,6 +154,8 @@ func attach_lored(_lored: LORED) -> void:
 	currency.hide_threshold()
 	lored_name.text = lored.details.name + ", " + lored.details.get_title()
 	lored_icon.texture = lored.details.icon
+	
+	advanced_details_lock()
 	
 	hide()
 
@@ -225,15 +227,27 @@ func purchased_changed() -> void:
 
 func lored_leveled_up(_level: int) -> void:
 	if not lored.last_purchase_forced:
-		gv.throw_text_from_parent(
-			level_up_texts, 
-			{
-				"text": lored.get_level_text(),
-				"color": lored.details.color,
-				"icon": level_icon,
-				"icon modulate": lored.details.color,
-			}
+		
+		var text = FlyingText.new(
+			FlyingText.Type.LEVEL_UP,
+			level_up_texts,
+			level_up_texts,
+			[0, 0],
 		)
+		text.add({
+			"lored": lored.type,
+		})
+		text.go()
+#
+#		gv.throw_text_from_parent(
+#			level_up_texts, 
+#			{
+#				"text": lored.get_level_text(),
+#				"color": lored.details.color,
+#				"icon": level_icon,
+#				"icon modulate": lored.details.color,
+#			}
+#		)
 
 
 func job_completed() -> void:
@@ -242,7 +256,7 @@ func job_completed() -> void:
 			FlyingText.Type.CURRENCY,
 			output_texts,
 			output_texts,
-			[1, 1],
+			[0, 0],
 		)
 		for cur in current_job.last_production:
 			text.add({
@@ -256,7 +270,20 @@ func job_completed() -> void:
 
 func job_cut_short() -> void:
 	if current_job.has_required_currencies:
-		gv.throw_texts_by_dictionary(output_texts, current_job.in_hand_input)
+		var text = FlyingText.new(
+			FlyingText.Type.CURRENCY,
+			output_texts,
+			output_texts,
+			[0, 0],
+		)
+		for cur in current_job.in_hand_input:
+			text.add({
+				"cur": cur,
+				"text": "+" + current_job.in_hand_input[cur].text,
+				"crit": false,
+			})
+		text.go()
+		
 	stop_progress_bar()
 
 
@@ -275,7 +302,7 @@ func sleep_lock() -> void:
 
 
 func advanced_details_lock() -> void:
-	jobs.visible = (lv.advanced_details_unlocked.is_true() and lored.unlocked)# or gv.dev_mode
+	jobs.visible = (lv.advanced_details_unlocked.is_true() and lored.unlocked) or gv.dev_mode
 	if jobs.visible:
 		gv.flash(jobs, lored.details.color)
 
@@ -361,13 +388,17 @@ func start_spewing_sleep_text() -> void:
 
 
 func spew_sleep_text() -> void:
-	gv.throw_text_from_parent(
-		output_texts, 
-		{
-			"text": sleep_text_pool[randi() % sleep_text_pool.size()],
-			"color": lored.details.color,
-		}
+	var text = FlyingText.new(
+		FlyingText.Type.SLEEP,
+		output_texts,
+		output_texts,
+		[0, 0],
 	)
+	text.add({
+		"color": lored.details.color,
+		"text": sleep_text_pool[randi() % sleep_text_pool.size()],
+	})
+	text.go()
 
 
 
@@ -378,3 +409,13 @@ func emote(_emote: Emote) -> void:
 
 
 
+func display_all_parent_nodes() -> void:
+	display_parents(get_parent())
+
+
+func display_parents(node) -> void:
+	if node is MarginContainer:
+		return
+	if not node.visible:
+		node.show()
+	display_parents(node.get_parent())

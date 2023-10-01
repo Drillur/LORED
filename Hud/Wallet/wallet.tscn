@@ -11,9 +11,9 @@
 bg_color = Color(0, 0, 0, 0.501961)
 
 [node name="Wallet" type="MarginContainer"]
-custom_minimum_size = Vector2(277, 383)
-offset_right = 277.0
-offset_bottom = 383.0
+custom_minimum_size = Vector2(300, 420)
+offset_right = 300.0
+offset_bottom = 420.0
 size_flags_horizontal = 4
 size_flags_vertical = 4
 script = ExtResource("1_0m8tw")
@@ -56,6 +56,33 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 0
 
+[node name="SortContainer" type="MarginContainer" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 5
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/SortContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="SortName" parent="VBoxContainer/SortContainer/HBoxContainer" instance=ExtResource("5_rpbmj")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SortCount" parent="VBoxContainer/SortContainer/HBoxContainer" instance=ExtResource("5_rpbmj")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SortRate" parent="VBoxContainer/SortContainer/HBoxContainer" instance=ExtResource("5_rpbmj")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
 [node name="Tabs" type="TabContainer" parent="VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
@@ -69,29 +96,13 @@ layout_mode = 2
 mouse_filter = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
+theme_override_constants/margin_right = 22
 theme_override_constants/margin_bottom = 10
 
-[node name="MarginContainer2" type="MarginContainer" parent="VBoxContainer/Tabs/Stage 1"]
-layout_mode = 2
-mouse_filter = 2
-theme_override_constants/margin_left = 0
-theme_override_constants/margin_top = 6
-theme_override_constants/margin_right = 0
-theme_override_constants/margin_bottom = 0
-
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/Tabs/Stage 1/MarginContainer2"]
-layout_mode = 2
-mouse_filter = 2
-
-[node name="Space" type="MarginContainer" parent="VBoxContainer/Tabs/Stage 1/MarginContainer2/VBoxContainer"]
-custom_minimum_size = Vector2(0, 27)
-layout_mode = 2
-mouse_filter = 2
-
-[node name="Stage 1 Container" type="VBoxContainer" parent="VBoxContainer/Tabs/Stage 1/MarginContainer2/VBoxContainer"]
+[node name="Stage 1 Container" type="VBoxContainer" parent="VBoxContainer/Tabs/Stage 1"]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 4
 mouse_filter = 2
 theme_override_constants/separation = 0
 
@@ -109,26 +120,10 @@ layout_mode = 2
 size_flags_vertical = 3
 horizontal_scroll_mode = 0
 
-[node name="MarginContainer2" type="MarginContainer" parent="VBoxContainer/Tabs/Stage 2/ScrollContainer"]
-layout_mode = 2
-mouse_filter = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 0
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
-
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/Tabs/Stage 2/ScrollContainer/MarginContainer2"]
-layout_mode = 2
-mouse_filter = 2
-
-[node name="Space" type="MarginContainer" parent="VBoxContainer/Tabs/Stage 2/ScrollContainer/MarginContainer2/VBoxContainer"]
-custom_minimum_size = Vector2(0, 27)
-layout_mode = 2
-mouse_filter = 2
-
-[node name="Stage 2 Container" type="VBoxContainer" parent="VBoxContainer/Tabs/Stage 2/ScrollContainer/MarginContainer2/VBoxContainer"]
+[node name="Stage 2 Container" type="VBoxContainer" parent="VBoxContainer/Tabs/Stage 2/ScrollContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 6
 mouse_filter = 2
 theme_override_constants/separation = 0
 
@@ -146,26 +141,10 @@ layout_mode = 2
 size_flags_vertical = 3
 horizontal_scroll_mode = 0
 
-[node name="MarginContainer2" type="MarginContainer" parent="VBoxContainer/Tabs/Stage 3/ScrollContainer"]
-layout_mode = 2
-mouse_filter = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 0
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
-
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/Tabs/Stage 3/ScrollContainer/MarginContainer2"]
-layout_mode = 2
-mouse_filter = 2
-
-[node name="Space" type="MarginContainer" parent="VBoxContainer/Tabs/Stage 3/ScrollContainer/MarginContainer2/VBoxContainer"]
-custom_minimum_size = Vector2(0, 27)
-layout_mode = 2
-mouse_filter = 2
-
-[node name="Stage 3 Container" type="VBoxContainer" parent="VBoxContainer/Tabs/Stage 3/ScrollContainer/MarginContainer2/VBoxContainer"]
+[node name="Stage 3 Container" type="VBoxContainer" parent="VBoxContainer/Tabs/Stage 3/ScrollContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 6
 mouse_filter = 2
 theme_override_constants/separation = 0
 
@@ -183,60 +162,12 @@ layout_mode = 2
 size_flags_vertical = 3
 horizontal_scroll_mode = 0
 
-[node name="MarginContainer2" type="MarginContainer" parent="VBoxContainer/Tabs/Stage 4/ScrollContainer"]
-layout_mode = 2
-mouse_filter = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 0
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
-
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/Tabs/Stage 4/ScrollContainer/MarginContainer2"]
-layout_mode = 2
-mouse_filter = 2
-
-[node name="Space" type="MarginContainer" parent="VBoxContainer/Tabs/Stage 4/ScrollContainer/MarginContainer2/VBoxContainer"]
-custom_minimum_size = Vector2(0, 27)
-layout_mode = 2
-mouse_filter = 2
-
-[node name="Stage 4 Container" type="VBoxContainer" parent="VBoxContainer/Tabs/Stage 4/ScrollContainer/MarginContainer2/VBoxContainer"]
+[node name="Stage 4 Container" type="VBoxContainer" parent="VBoxContainer/Tabs/Stage 4/ScrollContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 6
 mouse_filter = 2
 theme_override_constants/separation = 0
-
-[node name="Sort" type="Control" parent="VBoxContainer"]
-layout_mode = 2
-
-[node name="SortContainer" type="MarginContainer" parent="VBoxContainer/Sort"]
-unique_name_in_owner = true
-layout_mode = 0
-offset_top = -308.0
-offset_right = 277.0
-offset_bottom = -281.0
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 0
-theme_override_constants/margin_right = 10
-
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/Sort/SortContainer"]
-layout_mode = 2
-theme_override_constants/separation = 0
-
-[node name="SortName" parent="VBoxContainer/Sort/SortContainer/HBoxContainer" instance=ExtResource("5_rpbmj")]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="SortCount" parent="VBoxContainer/Sort/SortContainer/HBoxContainer" instance=ExtResource("5_rpbmj")]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="SortRate" parent="VBoxContainer/Sort/SortContainer/HBoxContainer" instance=ExtResource("5_rpbmj")]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
 
 [node name="Options" type="Control" parent="."]
 unique_name_in_owner = true
@@ -318,13 +249,6 @@ focus_mode = 0
 theme = ExtResource("1_kpejk")
 text = "Keep constantly sorted"
 
-[node name="save_wallet_sort" type="CheckBox" parent="Options/MarginContainer/VBoxContainer/MarginContainer2/VBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-focus_mode = 0
-theme = ExtResource("1_kpejk")
-text = "Save sort type"
-
 [node name="Control" type="Control" parent="."]
 layout_mode = 2
 mouse_filter = 2
@@ -344,4 +268,3 @@ grow_horizontal = 0
 [connection signal="tab_changed" from="VBoxContainer/Tabs" to="." method="_on_tab_changed"]
 [connection signal="gui_input" from="Options/fade" to="." method="_on_fade_gui_input"]
 [connection signal="pressed" from="Options/MarginContainer/VBoxContainer/MarginContainer2/VBoxContainer/keep_wallet_sorted" to="." method="_on_keep_wallet_sorted_pressed"]
-[connection signal="pressed" from="Options/MarginContainer/VBoxContainer/MarginContainer2/VBoxContainer/save_wallet_sort" to="." method="_on_save_wallet_sort_pressed"]

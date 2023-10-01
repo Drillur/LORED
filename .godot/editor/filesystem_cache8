@@ -1,5 +1,5 @@
 ea4bc82a6ad023ab7ee23ee620429895
-::res://::1695697737
+::res://::1696122232
 export_presets.cfg::TextFile::-1::1695610806::0::1::::<><>::
 ::res://addons/::1695400913
 ::res://addons/discord-sdk-gd/::1694476434
@@ -31,7 +31,7 @@ Roboto-Medium.ttf::FontFile::4781694139716567338::1695181644::1695181644::1::::<
 Roboto-MediumItalic.ttf::FontFile::1872232576374603663::1695181644::1695181644::1::::<><>::
 Roboto-Thin.ttf::FontFile::3709016443829214519::1695181644::1695181644::1::::<><>::
 Roboto-ThinItalic.ttf::FontFile::665327978364826632::1695181644::1695181644::1::::<><>::
-::res://Hud/::1695688751
+::res://Hud/::1696044554
 attribute_text_vico.gd::GDScript::-1::1694476433::0::1::::AttributeTextVico<>MarginContainer<>::
 attribute_text_vico.tscn::PackedScene::2935233051677495523::1694476433::0::1::::<><>::res://Hud/attribute_text_vico.gd<>uid://b8t7tkhvril5g
 bar.gd::GDScript::-1::1695528489::0::1::::Bar<>MarginContainer<>::
@@ -43,8 +43,8 @@ dtext.gd::GDScript::-1::1695079768::0::1::::<>MarginContainer<>::
 dtext.tscn::PackedScene::5626289807644751372::1695612630::0::1::::<><>::res://Hud/dtext.gd<>uid://b5sh16p1b12b1
 Flash.gd::GDScript::-1::1694476433::0::1::::<>Panel<>::
 Flash.tscn::PackedScene::2887740135225956800::1694476433::0::1::::<><>::res://Hud/Flash.gd
-flying_text.tscn::PackedScene::7236350543182916432::1695688751::0::1::::<><>::res://Hud/flying_text_vico.gd<>uid://cwt08llwihqii::::res://Theme/ShadowText.tres
-flying_text_vico.gd::GDScript::-1::1695688447::0::1::::FlyingTextVico<>RigidBody2D<>res://Sprites/Currency/liq.png::
+flying_text.tscn::PackedScene::7236350543182916432::1696044554::0::1::::<><>::res://Hud/flying_text_vico.gd<>uid://dqwc7nrl44s0j::::res://Sprites/Currency/liq.png<>uid://cwt08llwihqii::::res://Theme/ShadowText.tres
+flying_text_vico.gd::GDScript::-1::1695872119::0::1::::FlyingTextVico<>RigidBody2D<>res://Sprites/Currency/liq.png::
 icon_button.gd::GDScript::-1::1694476433::0::1::::IconButton<>MarginContainer<>::
 icon_button.tscn::PackedScene::4901093482139040154::1695612630::0::1::::<><>::res://Hud/icon_button.gd<>uid://dt7rd31blnvth
 Price and Currency.gd::GDScript::-1::1695087257::0::1::::PriceAndCurrency<>MarginContainer<>::
@@ -57,37 +57,37 @@ simple_text_icon_button.gd::GDScript::-1::1694476433::0::1::::SimpleTextIconButt
 simple_text_icon_button.tscn::PackedScene::6655098786887632076::1694476433::0::1::::<><>::res://Hud/simple_text_icon_button.gd<>uid://d328m6cljbdnh
 text_button.gd::GDScript::-1::1694476433::0::1::::TextButton<>MarginContainer<>::
 text_button.tscn::PackedScene::6591132087854759581::1695090091::0::1::::<><>::uid://ckdnb4in367o6
-::res://Hud/Earnings Report/::1695684922
-earnings_report.gd::GDScript::-1::1695426923::0::1::::<>MarginContainer<>::
-earnings_report.tscn::PackedScene::6702222831736527105::1695684922::0::1::::<><>::res://Hud/Earnings Report/earnings_report.gd<>uid://bl4v2v143rihi::::res://Theme/Background.tres<>uid://8dmfgxdrr5yh::::res://Theme/Title.tres<>uid://cb3ej8nlybhvm::::res://Hud/icon_button.tscn<>uid://b8t7tkhvril5g::::res://Theme/Standard.tres<>uid://jbcyavxupodp::::res://Sprites/reactions/Test.png<>uid://c0518n1uf8jt2::::res://Hud/text_button.tscn
+::res://Hud/Earnings Report/::1696044554
+earnings_report.gd::GDScript::-1::1695946263::0::1::::<>MarginContainer<>::
+earnings_report.tscn::PackedScene::6702222831736527105::1696044554::0::1::::<><>::res://Hud/Earnings Report/earnings_report.gd<>uid://bl4v2v143rihi::::res://Theme/Background.tres<>uid://8dmfgxdrr5yh::::res://Theme/Title.tres<>uid://cb3ej8nlybhvm::::res://Hud/icon_button.tscn<>uid://b8t7tkhvril5g::::res://Theme/Standard.tres<>uid://jbcyavxupodp::::res://Sprites/reactions/Test.png<>uid://c0518n1uf8jt2::::res://Hud/text_button.tscn
 ::res://Hud/Emote/::1695426879
 emote_vico.gd::GDScript::-1::1694476433::0::1::::EmoteVico<>MarginContainer<>::
 emote_vico.tscn::PackedScene::2180560252361498097::1695426879::0::1::::<><>::res://Hud/Emote/emote_vico.gd<>uid://d04kr43kmt18j
-::res://Hud/LORED/::1695688648
+::res://Hud/LORED/::1696044600
 lored_animation.gd::GDScript::-1::1694476433::0::1::::LOREDAnimation<>AnimatedSprite2D<>::
-lored_container.gd::GDScript::-1::1695247346::0::1::::LOREDContainer<>MarginContainer<>::
-lored_container.tscn::PackedScene::1219050787335923297::1695688647::0::1::::<><>::res://Hud/LORED/lored_container.gd<>uid://cc20piiohvlkw::::res://Hud/LORED/lored_vico.tscn<>uid://b8t7tkhvril5g::::res://Theme/Standard.tres
-lored_vico.gd::GDScript::-1::1695687961::0::1::::LOREDVico<>MarginContainer<>res://Sprites/reactions/STONE_HAPPY_STONE0.png::
-lored_vico.tscn::PackedScene::4970502398941141102::1695688647::0::1::::<><>::res://Hud/LORED/lored_vico.gd<>uid://b8t7tkhvril5g::::res://Theme/Standard.tres<>uid://bl4v2v143rihi::::res://Theme/Background.tres<>uid://exe3ppvvv74m::::res://Hud/bar.tscn<>uid://bhw3xnrs1osqd::::res://Hud/currency_vico.tscn<>uid://dt7rd31blnvth::::res://Theme/Invis.tres<>uid://b5sh16p1b12b1::::res://Sprites/Currency/axe.png<>uid://cb3ej8nlybhvm::::res://Hud/icon_button.tscn<>uid://8711hjmk3if8::::res://Sprites/animations/glass.tres<>res://Hud/LORED/lored_animation.gd
-::res://Hud/LORED/Tooltip/::1695426879
+lored_container.gd::GDScript::-1::1695870200::0::1::::LOREDContainer<>MarginContainer<>::
+lored_container.tscn::PackedScene::1219050787335923297::1696044554::0::1::::<><>::res://Hud/LORED/lored_container.gd<>uid://cc20piiohvlkw::::res://Hud/LORED/lored_vico.tscn<>uid://b8t7tkhvril5g::::res://Theme/Standard.tres
+lored_vico.gd::GDScript::-1::1695870896::0::1::::LOREDVico<>MarginContainer<>res://Sprites/reactions/STONE_HAPPY_STONE0.png::
+lored_vico.tscn::PackedScene::4970502398941141102::1696044600::0::1::::<><>::res://Hud/LORED/lored_vico.gd<>uid://b8t7tkhvril5g::::res://Theme/Standard.tres<>uid://bl4v2v143rihi::::res://Theme/Background.tres<>uid://exe3ppvvv74m::::res://Hud/bar.tscn<>uid://bhw3xnrs1osqd::::res://Hud/currency_vico.tscn<>uid://dt7rd31blnvth::::res://Theme/Invis.tres<>uid://b5sh16p1b12b1::::res://Sprites/Currency/axe.png<>uid://cb3ej8nlybhvm::::res://Hud/icon_button.tscn<>uid://8711hjmk3if8::::res://Sprites/animations/glass.tres<>res://Hud/LORED/lored_animation.gd
+::res://Hud/LORED/Tooltip/::1696044554
 lored_info.gd::GDScript::-1::1695259033::0::1::::<>MarginContainer<>::
 lored_info.tscn::PackedScene::8834150209449549529::1694476433::0::1::::<><>::res://Hud/LORED/Tooltip/lored_info.gd<>uid://b8t7tkhvril5g
-lored_job.gd::GDScript::-1::1695088408::0::1::::<>MarginContainer<>::
-lored_job.tscn::PackedScene::1953108869568294783::1694476433::0::1::::<><>::res://Hud/LORED/Tooltip/lored_job.gd<>uid://b8t7tkhvril5g
+lored_job.gd::GDScript::-1::1695862250::0::1::::<>MarginContainer<>::
+lored_job.tscn::PackedScene::1953108869568294783::1695868409::0::1::::<><>::res://Hud/LORED/Tooltip/lored_job.gd<>uid://b8t7tkhvril5g
 lored_jobs.gd::GDScript::-1::1695086830::0::1::::<>MarginContainer<>::
-lored_jobs.tscn::PackedScene::497176714152565443::1694476433::0::1::::<><>::uid://b8t7tkhvril5g
+lored_jobs.tscn::PackedScene::497176714152565443::1696044554::0::1::::<><>::uid://b8t7tkhvril5g::::res://Theme/Standard.tres<>res://Hud/LORED/Tooltip/lored_jobs.gd<>uid://8dmfgxdrr5yh::::res://Theme/Title.tres
 lored_job_entry.gd::GDScript::-1::1695087210::0::1::::<>MarginContainer<>::
 lored_job_entry.tscn::PackedScene::1180092375776286644::1694476433::0::1::::<><>::res://Hud/LORED/Tooltip/lored_job_entry.gd<>uid://b8t7tkhvril5g
 lored_level_up.gd::GDScript::-1::1695259033::0::1::::<>MarginContainer<>::
 lored_level_up.tscn::PackedScene::457700072731598786::1694476433::0::1::::<><>::uid://b8t7tkhvril5g
 lored_sleep.gd::GDScript::-1::1695358472::0::1::::<>MarginContainer<>::
 lored_sleep.tscn::PackedScene::601109055416963767::1695426879::0::1::::<><>::res://Hud/LORED/Tooltip/lored_sleep.gd<>uid://b8t7tkhvril5g
-::res://Hud/Menu/::1695688647
+::res://Hud/Menu/::1696044553
 menu.gd::GDScript::-1::1695360756::0::1::::<>MarginContainer<>::
-menu.tscn::PackedScene::6827062411973102318::1695688647::0::1::::<><>::uid://bl4v2v143rihi::::res://Theme/Background.tres<>res://Hud/Menu/menu.gd<>uid://8dmfgxdrr5yh::::res://Theme/Title.tres<>uid://cb3ej8nlybhvm::::res://Hud/icon_button.tscn<>uid://b8t7tkhvril5g::::res://Theme/Standard.tres<>uid://c0518n1uf8jt2::::res://Hud/text_button.tscn<>uid://cya8ro2s324t3::::res://Sprites/Hud/Save.png<>uid://dt7rd31blnvth::::res://Theme/Invis.tres<>uid://bvb4ehu30w7iu::::res://Sprites/Hud/Options.png<>uid://bqdnbs21rmkig::::res://Sprites/Hud/Stats.png<>uid://dlt8c53eja853::::res://Sprites/Hud/New Game.png<>uid://dpest0qdhsgcn::::res://Sprites/Hud/PatchNotes.png<>uid://dum715xqonouw::::res://Sprites/Hud/Hint.png
+menu.tscn::PackedScene::6827062411973102318::1696044553::0::1::::<><>::uid://bl4v2v143rihi::::res://Theme/Background.tres<>res://Hud/Menu/menu.gd<>uid://8dmfgxdrr5yh::::res://Theme/Title.tres<>uid://cb3ej8nlybhvm::::res://Hud/icon_button.tscn<>uid://b8t7tkhvril5g::::res://Theme/Standard.tres<>uid://c0518n1uf8jt2::::res://Hud/text_button.tscn<>uid://cya8ro2s324t3::::res://Sprites/Hud/Save.png<>uid://dt7rd31blnvth::::res://Theme/Invis.tres<>uid://bvb4ehu30w7iu::::res://Sprites/Hud/Options.png<>uid://bqdnbs21rmkig::::res://Sprites/Hud/Stats.png<>uid://dlt8c53eja853::::res://Sprites/Hud/New Game.png<>uid://dpest0qdhsgcn::::res://Sprites/Hud/PatchNotes.png<>uid://dum715xqonouw::::res://Sprites/Hud/Hint.png
 ::res://Hud/Save/::1695684922
 save_block.gd::GDScript::-1::1695348011::0::1::::<>MarginContainer<>::
-save_block.tscn::PackedScene::6690053914156752979::1695684922::0::1::::<><>::res://Hud/Save/save_block.gd<>uid://b8t7tkhvril5g::::res://Theme/Standard.tres<>uid://8dmfgxdrr5yh::::res://Theme/Title.tres<>uid://cb3ej8nlybhvm::::res://Hud/icon_button.tscn<>uid://b5e7ngok522rk::::res://Sprites/Hud/Time.png<>uid://bmmkbhweqgkq::::res://Sprites/Hud/Calendar.png<>uid://5iiqw78gbrgu::::res://Sprites/Hud/Difficulty.png
+save_block.tscn::PackedScene::6690053914156752979::1695684922::0::1::::<><>::res://Hud/Save/save_block.gd<>uid://b8t7tkhvril5g
 ::res://Hud/Tooltip/::1695426880
 Just Text.gd::GDScript::-1::1694476433::0::1::::<>MarginContainer<>::
 Just Text.tscn::PackedScene::3403420142453427935::1694476433::0::1::::<><>::res://Hud/Tooltip/Just Text.gd<>uid://b8t7tkhvril5g
@@ -95,63 +95,63 @@ prestige_tooltip.gd::GDScript::-1::1695089524::0::1::::<>MarginContainer<>::
 prestige_tooltip.tscn::PackedScene::4572603685531451242::1694476433::0::1::::<><>::res://Hud/Tooltip/prestige_tooltip.gd<>uid://b8t7tkhvril5g
 tooltip.gd::GDScript::-1::1695405303::0::1::::<>MarginContainer<>::
 tooltip.tscn::PackedScene::5440949630746253808::1695426880::0::1::::<><>::res://Hud/Tooltip/tooltip.gd<>uid://bl4v2v143rihi
-::res://Hud/Upgrade/::1695688648
+::res://Hud/Upgrade/::1696044554
 upgrade_container.gd::GDScript::-1::1695684874::0::1::::UpgradeContainer<>MarginContainer<>::
-upgrade_container.tscn::PackedScene::7972465482765639497::1695688648::0::1::::<><>::uid://b8t7tkhvril5g::::res://Theme/Standard.tres<>res://Hud/Upgrade/upgrade_container.gd<>uid://bl4v2v143rihi::::res://Theme/Background.tres<>uid://bvb7sgyflbxkp::::res://Hud/Upgrade/upgrade_vico.tscn<>uid://8dmfgxdrr5yh::::res://Theme/Title.tres<>uid://cu1jwsvhvsxfn::::res://Sprites/Hud/Tab/s1n.png<>uid://bdpxtltnk88hw::::res://Sprites/Hud/Tab/s1m.png<>uid://c0518n1uf8jt2::::res://Hud/text_button.tscn<>uid://ddqh8qp3j67w6::::res://Sprites/Hud/Tab/s2n.png<>uid://bvc8ucj014dpj::::res://Sprites/Hud/Tab/s2m.png
+upgrade_container.tscn::PackedScene::7972465482765639497::1696044554::0::1::::<><>::uid://b8t7tkhvril5g::::res://Theme/Standard.tres<>res://Hud/Upgrade/upgrade_container.gd<>uid://bl4v2v143rihi::::res://Theme/Background.tres<>uid://bvb7sgyflbxkp::::res://Hud/Upgrade/upgrade_vico.tscn<>uid://8dmfgxdrr5yh::::res://Theme/Title.tres<>uid://cu1jwsvhvsxfn::::res://Sprites/Hud/Tab/s1n.png<>uid://bdpxtltnk88hw::::res://Sprites/Hud/Tab/s1m.png<>uid://c0518n1uf8jt2::::res://Hud/text_button.tscn<>uid://ddqh8qp3j67w6::::res://Sprites/Hud/Tab/s2n.png<>uid://bvc8ucj014dpj::::res://Sprites/Hud/Tab/s2m.png
 upgrade_vico.gd::GDScript::-1::1695357608::0::1::::UpgradeVico<>MarginContainer<>::
-upgrade_vico.tscn::PackedScene::3864426218362005783::1695688648::0::1::::<><>::uid://cb3ej8nlybhvm::::res://Hud/icon_button.tscn<>res://Hud/Upgrade/upgrade_vico.gd<>uid://b8t7tkhvril5g::::res://Theme/Standard.tres<>uid://ygxbtnng8h6u::::res://Sprites/Hud/Locked.png
+upgrade_vico.tscn::PackedScene::3864426218362005783::1695861981::0::1::::<><>::uid://cb3ej8nlybhvm
 ::res://Hud/Upgrade/Tooltip/::1695087735
 upgrade_tooltip.gd::GDScript::-1::1695087735::0::1::::<>MarginContainer<>::
 upgrade_tooltip.tscn::PackedScene::8964562228666219573::1694885281::0::1::::<><>::uid://b8t7tkhvril5g
-::res://Hud/Wallet/::1695089322
-wallet.gd::GDScript::-1::1694476433::0::1::::WalletVico<>MarginContainer<>::
-wallet.tscn::PackedScene::7645097889891685425::1694476433::0::1::::<><>::res://Hud/Wallet/wallet.gd<>uid://b8t7tkhvril5g
+::res://Hud/Wallet/::1696044554
+wallet.gd::GDScript::-1::1695870648::0::1::::WalletVico<>MarginContainer<>::
+wallet.tscn::PackedScene::7645097889891685425::1696044554::0::1::::<><>::res://Hud/Wallet/wallet.gd<>uid://b8t7tkhvril5g::::res://Theme/Standard.tres<>uid://bl4v2v143rihi::::res://Theme/Background.tres<>uid://8dmfgxdrr5yh::::res://Theme/Title.tres<>uid://cb3ej8nlybhvm::::res://Hud/icon_button.tscn<>uid://c121rfowa2il5::::res://Hud/simple_text_icon_button.tscn
 wallet_currency.gd::GDScript::-1::1695086924::0::1::::WalletCurrency<>MarginContainer<>::
 wallet_currency.tscn::PackedScene::159349220965602514::1694476433::0::1::::<><>::uid://cwt08llwihqii
 wallet_currency_tooltip.gd::GDScript::-1::1695088317::0::1::::<>MarginContainer<>::
 wallet_currency_tooltip.tscn::PackedScene::2946655933660371728::1695089322::0::1::::<><>::uid://b8t7tkhvril5g
-::res://Hud/Wish/::1695688648
-wish_pending.gd::GDScript::-1::1694476433::0::1::::<>MarginContainer<>::
-wish_pending.tscn::PackedScene::7101355297625565277::1694476433::0::1::::<><>::res://Hud/Wish/wish_pending.gd
-wish_vico.gd::GDScript::-1::1695688561::0::1::::WishVico<>MarginContainer<>::
-wish_vico.tscn::PackedScene::4047380821648025823::1695688648::0::1::::<><>::uid://bl4v2v143rihi::::res://Theme/Background.tres<>res://Hud/Wish/wish_vico.gd<>uid://exe3ppvvv74m::::res://Hud/bar.tscn<>uid://crf5gyv8gm6r1::::res://Theme/Subtle Background.tres<>uid://b5sh16p1b12b1::::res://Sprites/Currency/axe.png<>uid://chtvcjgh56o7a::::res://Theme/Backdrop.tres<>uid://dt7rd31blnvth::::res://Theme/Invis.tres<>uid://cwt08llwihqii::::res://Theme/ShadowText.tres
+::res://Hud/Wish/::1695861981
+wish_pending.gd::GDScript::-1::1695704873::0::1::::<>MarginContainer<>::
+wish_pending.tscn::PackedScene::7101355297625565277::1695861981::0::1::::<><>::res://Hud/Wish/wish_pending.gd<>uid://dwcoahtxdrh6o
+wish_vico.gd::GDScript::-1::1695859040::0::1::::WishVico<>MarginContainer<>::
+wish_vico.tscn::PackedScene::4047380821648025823::1695861981::0::1::::<><>::uid://bl4v2v143rihi
 ::res://Hud/Wish/Tooltip/::1695086511
 wish_tooltip.gd::GDScript::-1::1695086511::0::1::::<>MarginContainer<>::
 wish_tooltip.tscn::PackedScene::5871264916026136177::1694476433::0::1::::<><>::res://Hud/Wish/Tooltip/wish_tooltip.gd<>uid://b8t7tkhvril5g
-::res://Scene/::1695688647
-Root.gd::GDScript::-1::1695684921::0::1::::<>MarginContainer<>::
-Root.tscn::PackedScene::3659079730137682223::1695688647::0::1::::<><>::res://Scene/Root.gd<>uid://rmruae8fguk4::::res://Hud/LORED/lored_container.tscn<>uid://dlt6lvasr6c46::::res://Hud/Upgrade/upgrade_container.tscn<>uid://cb3ej8nlybhvm::::res://Hud/icon_button.tscn<>uid://c4jcyq4x5dq51::::res://Hud/Menu/menu.tscn<>uid://cwt08llwihqii::::res://Theme/ShadowText.tres<>uid://cubavfw1lomep::::res://Fonts/Roboto-Black.ttf<>uid://dg6lv67h5eiuj::::res://Hud/Wallet/wallet.tscn<>uid://c2quvpihdkvj2::::res://Hud/Earnings Report/earnings_report.tscn
+::res://Scene/::1696044553
+Root.gd::GDScript::-1::1696043656::0::1::::<>MarginContainer<>::
+Root.tscn::PackedScene::3659079730137682223::1696044553::0::1::::<><>::res://Scene/Root.gd<>uid://rmruae8fguk4::::res://Hud/LORED/lored_container.tscn<>uid://dlt6lvasr6c46::::res://Hud/Upgrade/upgrade_container.tscn<>uid://cb3ej8nlybhvm::::res://Hud/icon_button.tscn<>uid://c4jcyq4x5dq51::::res://Hud/Menu/menu.tscn<>uid://cwt08llwihqii::::res://Theme/ShadowText.tres<>uid://cubavfw1lomep::::res://Fonts/Roboto-Black.ttf<>uid://dg6lv67h5eiuj::::res://Hud/Wallet/wallet.tscn<>uid://c2quvpihdkvj2::::res://Hud/Earnings Report/earnings_report.tscn
 ::res://Script/::1695247714
-::res://Script/Autoload/::1695613212
+::res://Script/Autoload/::1695945383
 Difficulty.gd::GDScript::-1::1695078280::0::1::::<>Node<>::
-Emotes.gd::GDScript::-1::1695089169::0::1::::<>Node<>::
-LOREDs.gd::GDScript::-1::1695481358::0::1::::<>Node<>::
-Overseer.gd::GDScript::-1::1695613212::0::1::::<>Node<>::
+Emotes.gd::GDScript::-1::1695863670::0::1::::<>Node<>::
+LOREDs.gd::GDScript::-1::1695945383::0::1::::<>Node<>::
+Overseer.gd::GDScript::-1::1695869807::0::1::::<>Node<>::
 SaveManager.gd::GDScript::-1::1695479097::0::1::::<>Node<>::
 Upgrades.gd::GDScript::-1::1695359385::0::1::::<>Node<>::
-Wallet.gd::GDScript::-1::1695086778::0::1::::<>Node<>::
-Wishes.gd::GDScript::-1::1695480893::0::1::::Wishes<>Node<>::
-::res://Script/Classes/::1695688532
+Wallet.gd::GDScript::-1::1695870653::0::1::::<>Node<>::
+Wishes.gd::GDScript::-1::1695870994::0::1::::Wishes<>Node<>::
+::res://Script/Classes/::1696044553
 Big.gd::GDScript::-1::1695244858::0::1::::Big<>Resource<>::
 Bool.gd::GDScript::-1::1695401520::0::1::::Bool<>Resource<>::
-Cost.gd::GDScript::-1::1695684921::0::1::::Cost<>RefCounted<>::
+Cost.gd::GDScript::-1::1695869807::0::1::::Cost<>RefCounted<>::
 Currency.gd::GDScript::-1::1695487982::0::1::::Currency<>RefCounted<>::
 Details.gd::GDScript::-1::1695427750::0::1::::Details<>RefCounted<>::
 Emote.gd::GDScript::-1::1695481358::0::1::::Emote<>RefCounted<>::
-FlyingText.gd::GDScript::-1::1695688532::0::1::::FlyingText<>Resource<>::
+FlyingText.gd::GDScript::-1::1695870004::0::1::::FlyingText<>Resource<>::
 Int.gd::GDScript::-1::1695356404::0::1::::Int<>Resource<>::
-Job.gd::GDScript::-1::1695686859::0::1::::Job<>RefCounted<>::
+Job.gd::GDScript::-1::1695863671::0::1::::Job<>RefCounted<>::
 LORED.gd::GDScript::-1::1695487805::0::1::::LORED<>Resource<>::
 Stage.gd::GDScript::-1::1695085569::0::1::::Stage<>RefCounted<>::
 UpgradeMenu.gd::GDScript::-1::1695490946::0::1::::UpgradeMenu<>RefCounted<>::
 Value.gd::GDScript::-1::1695509131::0::1::::Value<>Resource<>::
 ValuePair.gd::GDScript::-1::1695361661::0::1::::ValuePair<>Resource<>::
-Wish.gd::GDScript::-1::1695485075::0::1::::Wish<>RefCounted<>::
+Wish.gd::GDScript::-1::1696044553::0::1::::Wish<>RefCounted<>::
 ::res://Script/Classes/Upgrades/::1695521454
 Upgrade.gd::GDScript::-1::1695437856::0::1::::Upgrade<>Resource<>::
 UpgradeEffect.gd::GDScript::-1::1695521454::0::1::::UpgradeEffect<>RefCounted<>::
 ::res://Sprites/::1694476433
-::res://Sprites/animations/::1695612402
+::res://Sprites/animations/::1696044322
 alert guy.tres::SpriteFrames::450397091039521754::1694476433::0::1::::<><>::uid://b37n8eggxljlp
 autobuyer.tres::SpriteFrames::488814233663903401::1694476433::0::1::::<><>::uid://ckb4ds0qk0b8u
 axe.tres::SpriteFrames::-1::1694476433::0::1::::<><>::res://Sprites/animations/axe/wait.png<>res://Sprites/animations/axe/ff0001.png<>res://Sprites/animations/axe/ff0002.png
@@ -163,8 +163,8 @@ cop.tres::SpriteFrames::-1::1694476433::0::1::::<><>::res://Sprites/animations/c
 copo.tres::SpriteFrames::-1::1694476433::0::1::::<><>::res://Sprites/animations/copo/g11.png<>res://Sprites/animations/copo/g12.png<>res://Sprites/animations/copo/g13.png<>res://Sprites/animations/copo/g14.png<>res://Sprites/animations/copo/g15.png<>res://Sprites/animations/copo/g17.png<>res://Sprites/animations/copo/g16.png<>res://Sprites/animations/copo/g18.png<>res://Sprites/animations/copo/g19.png<>res://Sprites/animations/copo/g20.png<>res://Sprites/animations/copo/g21.png<>res://Sprites/animations/copo/g22.png<>res://Sprites/animations/copo/g23.png<>res://Sprites/animations/copo/g24.png<>res://Sprites/animations/copo/g25.png<>res://Sprites/animations/copo/g26.png<>res://Sprites/animations/copo/g27.png<>res://Sprites/animations/copo/g3.png<>res://Sprites/animations/copo/g4.png<>res://Sprites/animations/copo/g5.png<>res://Sprites/animations/copo/g6.png<>res://Sprites/animations/copo/g7.png<>res://Sprites/animations/copo/g8.png<>res://Sprites/animations/copo/g9.png<>res://Sprites/animations/copo/g10.png<>res://Sprites/animations/copo/wait.png
 draw.tres::SpriteFrames::8623099041423103341::1695612402::0::1::::<><>::uid://dnurd3t3diewi
 gale.tres::SpriteFrames::-1::1694476433::0::1::::<><>::res://Sprites/animations/gale/g2.png<>res://Sprites/animations/gale/g1.png<>res://Sprites/animations/gale/g0.png<>res://Sprites/animations/gale/g3.png<>res://Sprites/animations/gale/g8.png<>res://Sprites/animations/gale/g11.png<>res://Sprites/animations/gale/g5.png<>res://Sprites/animations/gale/g16.png<>res://Sprites/animations/gale/g17.png<>res://Sprites/animations/gale/g6.png<>res://Sprites/animations/gale/g4.png<>res://Sprites/animations/gale/g14.png<>res://Sprites/animations/gale/g10.png<>res://Sprites/animations/gale/g13.png<>res://Sprites/animations/gale/g15.png<>res://Sprites/animations/gale/g7.png<>res://Sprites/animations/gale/g9.png<>res://Sprites/animations/gale/g12.png<>res://Sprites/animations/gale/g18.png<>res://Sprites/animations/gale/g20.png<>res://Sprites/animations/gale/g19.png<>res://Sprites/animations/gale/g21.png<>res://Sprites/animations/gale/wait.png<>res://Sprites/animations/gale/wait2.png
-glass.tres::SpriteFrames::2383917382764826027::1695612402::0::1::::<><>::uid://bekt8qi8ugxwb
-growth.tres::SpriteFrames::2007394989202008650::1695612402::0::1::::<><>::uid://bob73ke0csvcc
+glass.tres::SpriteFrames::2383917382764826027::1696044322::0::1::::<><>::uid://bekt8qi8ugxwb::::res://Sprites/animations/glass/g24.png<>uid://cd5l5mep5qisl::::res://Sprites/animations/glass/g25.png<>uid://cvauiot56b81k::::res://Sprites/animations/glass/g26.png<>uid://dyiwkovrxjwtt::::res://Sprites/animations/glass/g27.png<>uid://bl5es7y5st1kn::::res://Sprites/animations/glass/g28.png<>uid://cq6bp65c7x355::::res://Sprites/animations/glass/g29.png<>uid://bul1r5nnukwr::::res://Sprites/animations/glass/g30.png<>uid://bxqn8y75bka6o::::res://Sprites/animations/glass/g31.png<>uid://4ccdgnfu87w1::::res://Sprites/animations/glass/g32.png<>uid://ounemltvocre::::res://Sprites/animations/glass/g33.png<>uid://cpnof0p6hxt7a::::res://Sprites/animations/glass/g34.png<>uid://kn82nel3c3ja::::res://Sprites/animations/glass/g35.png<>uid://lbb7fmq6o54d::::res://Sprites/animations/glass/g36.png<>uid://m5o1be2qwcks::::res://Sprites/animations/glass/g0.png<>uid://cq770c02y8xa::::res://Sprites/animations/glass/g1.png<>uid://b0npa10fbd8e::::res://Sprites/animations/glass/g2.png<>uid://ceald30amf6j2::::res://Sprites/animations/glass/g3.png<>uid://b8u6b5ialb16w::::res://Sprites/animations/glass/g4.png<>uid://bgg7xr8t274hs::::res://Sprites/animations/glass/g6.png<>uid://ck4667ohhwb52::::res://Sprites/animations/glass/g8.png<>uid://xfmr0p25dw0x::::res://Sprites/animations/glass/g9.png<>uid://b2un70axvpa4q::::res://Sprites/animations/glass/g10.png<>uid://bxjxb6f43ibm1::::res://Sprites/animations/glass/g11.png<>uid://bd5x2gfgq4hig::::res://Sprites/animations/glass/g12.png<>uid://bvwgjia6b7hhp::::res://Sprites/animations/glass/g13.png<>uid://cmne1oafs6obu::::res://Sprites/animations/glass/g14.png<>uid://bsakviaa6o145::::res://Sprites/animations/glass/g15.png<>uid://caa02xddrtyjw::::res://Sprites/animations/glass/g16.png<>uid://q2e4t0ny31xc::::res://Sprites/animations/glass/g17.png<>uid://7hph6bm36yfb::::res://Sprites/animations/glass/g18.png<>uid://drkhubjnl5eug::::res://Sprites/animations/glass/g19.png<>uid://76vjvim454ya::::res://Sprites/animations/glass/g20.png<>uid://cekhfv0ne0k0v::::res://Sprites/animations/glass/g21.png<>uid://t5nmw0tm4743::::res://Sprites/animations/glass/g22.png<>uid://w2h8q2fh55ry::::res://Sprites/animations/glass/g23.png<>uid://c838xi15xjuju::::res://Sprites/animations/glass/wait.png
+growth.tres::SpriteFrames::2007394989202008650::1695870687::0::1::::<><>::uid://bob73ke0csvcc
 hard.tres::SpriteFrames::3709397051960931416::1695612402::0::1::::<><>::uid://cot27og1pg42s
 humus.tres::SpriteFrames::6947636421693141304::1695612154::0::1::::<><>::uid://cuf2k1bsqw7tw
 iron.tres::SpriteFrames::-1::1694476433::0::1::::<><>::res://Sprites/animations/iron/g10.png<>res://Sprites/animations/iron/g11.png<>res://Sprites/animations/iron/g12.png<>res://Sprites/animations/iron/g13.png<>res://Sprites/animations/iron/g14.png<>res://Sprites/animations/iron/g15.png<>res://Sprites/animations/iron/g16.png<>res://Sprites/animations/iron/g17.png<>res://Sprites/animations/iron/g19.png<>res://Sprites/animations/iron/gactually19.png<>res://Sprites/animations/iron/g0.png<>res://Sprites/animations/iron/g1.png<>res://Sprites/animations/iron/g2.png<>res://Sprites/animations/iron/g3.png<>res://Sprites/animations/iron/g4.png<>res://Sprites/animations/iron/g5.png<>res://Sprites/animations/iron/g6.png<>res://Sprites/animations/iron/g7.png<>res://Sprites/animations/iron/g8.png<>res://Sprites/animations/iron/g9.png<>res://Sprites/animations/iron/wait.png
@@ -1415,14 +1415,15 @@ WATER9.png::CompressedTexture2D::8859627081527964803::1694476421::1694476434::1:
 abeewithdaggers.png::CompressedTexture2D::5387223906618313532::1694476421::1694476713::1::::<><>::
 thewitchofloredelith.png::CompressedTexture2D::6088742729302173969::1694476421::1694476713::1::::<><>::
 Totalbiscuit.png::CompressedTexture2D::5845445539962585413::1694476433::1694476713::1::::<><>::
-::res://Theme/::1695683522
+::res://Theme/::1696026391
 Backdrop.tres::StyleBoxFlat::5304665560953821616::1694476434::0::1::::<><>::
-Background.tres::Theme::3219689336373708926::1695683522::0::1::::<><>::
-Invis.tres::Theme::8559949225469965721::1695683522::0::1::::<><>::
+Background.tres::Theme::3219689336373708926::1696026391::0::1::::<><>::
+BoundaryPhysicsMat.tres::PhysicsMaterial::8708395802587301664::1695866020::0::1::::<><>::
+Invis.tres::Theme::8559949225469965721::1696026391::0::1::::<><>::
 ProgressBar.tres::StyleBoxFlat::9060528236265062505::1694476434::0::1::::<><>::
-ShadowText.tres::Theme::6357796556528337552::1695683522::0::1::::<><>::uid://cubavfw1lomep::::res://Fonts/Roboto-Black.ttf<>uid://d2cepijgbnmb1::::res://Fonts/Roboto-BlackItalic.ttf<>uid://1w6nq6sovkc2::::res://Fonts/Roboto-MediumItalic.ttf<>uid://caej2ljgikhb3::::res://Fonts/Roboto-Medium.ttf
-Standard.tres::Theme::4743853111952347486::1695683522::0::1::::<><>::uid://cubavfw1lomep::::res://Fonts/Roboto-Black.ttf<>uid://d2cepijgbnmb1::::res://Fonts/Roboto-BlackItalic.ttf<>uid://1w6nq6sovkc2::::res://Fonts/Roboto-MediumItalic.ttf<>uid://caej2ljgikhb3::::res://Fonts/Roboto-Medium.ttf
-Subtle Background.tres::Theme::5978207117058666104::1695683522::0::1::::<><>::
-TextButton.tres::Theme::5481715579893497555::1695683522::0::1::::<><>::uid://caej2ljgikhb3::::res://Fonts/Roboto-Medium.ttf
-TextButtonAlternate.tres::Theme::2306309963710176350::1695683522::0::1::::<><>::uid://caej2ljgikhb3::::res://Fonts/Roboto-Medium.ttf
-Title.tres::Theme::2323162857030300135::1695683522::0::1::::<><>::uid://caej2ljgikhb3::::res://Fonts/Roboto-Medium.ttf<>uid://cubavfw1lomep::::res://Fonts/Roboto-Black.ttf<>uid://d2cepijgbnmb1::::res://Fonts/Roboto-BlackItalic.ttf<>uid://1w6nq6sovkc2::::res://Fonts/Roboto-MediumItalic.ttf
+ShadowText.tres::Theme::6357796556528337552::1696026391::0::1::::<><>::uid://cubavfw1lomep::::res://Fonts/Roboto-Black.ttf<>uid://d2cepijgbnmb1::::res://Fonts/Roboto-BlackItalic.ttf<>uid://1w6nq6sovkc2::::res://Fonts/Roboto-MediumItalic.ttf<>uid://caej2ljgikhb3::::res://Fonts/Roboto-Medium.ttf
+Standard.tres::Theme::4743853111952347486::1696026391::0::1::::<><>::uid://cubavfw1lomep::::res://Fonts/Roboto-Black.ttf<>uid://d2cepijgbnmb1::::res://Fonts/Roboto-BlackItalic.ttf<>uid://1w6nq6sovkc2::::res://Fonts/Roboto-MediumItalic.ttf<>uid://caej2ljgikhb3::::res://Fonts/Roboto-Medium.ttf
+Subtle Background.tres::Theme::5978207117058666104::1696026391::0::1::::<><>::
+TextButton.tres::Theme::5481715579893497555::1696026391::0::1::::<><>::uid://caej2ljgikhb3::::res://Fonts/Roboto-Medium.ttf
+TextButtonAlternate.tres::Theme::2306309963710176350::1696026391::0::1::::<><>::uid://caej2ljgikhb3::::res://Fonts/Roboto-Medium.ttf
+Title.tres::Theme::2323162857030300135::1696026391::0::1::::<><>::uid://caej2ljgikhb3::::res://Fonts/Roboto-Medium.ttf<>uid://cubavfw1lomep::::res://Fonts/Roboto-Black.ttf<>uid://d2cepijgbnmb1::::res://Fonts/Roboto-BlackItalic.ttf<>uid://1w6nq6sovkc2::::res://Fonts/Roboto-MediumItalic.ttf

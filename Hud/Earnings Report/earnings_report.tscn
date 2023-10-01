@@ -160,25 +160,28 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="Gain S1" type="GridContainer" parent="VBoxContainer/MarginContainer/VBoxContainer/Gain/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/MarginContainer/VBoxContainer/Gain/MarginContainer"]
+layout_mode = 2
+
+[node name="Gain S1" type="GridContainer" parent="VBoxContainer/MarginContainer/VBoxContainer/Gain/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/h_separation = 15
 columns = 3
 
-[node name="Gain S2" type="GridContainer" parent="VBoxContainer/MarginContainer/VBoxContainer/Gain/MarginContainer"]
+[node name="Gain S2" type="GridContainer" parent="VBoxContainer/MarginContainer/VBoxContainer/Gain/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/h_separation = 15
 columns = 3
 
-[node name="Gain S3" type="GridContainer" parent="VBoxContainer/MarginContainer/VBoxContainer/Gain/MarginContainer"]
+[node name="Gain S3" type="GridContainer" parent="VBoxContainer/MarginContainer/VBoxContainer/Gain/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/h_separation = 15
 columns = 3
 
-[node name="Gain S4" type="GridContainer" parent="VBoxContainer/MarginContainer/VBoxContainer/Gain/MarginContainer"]
+[node name="Gain S4" type="GridContainer" parent="VBoxContainer/MarginContainer/VBoxContainer/Gain/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/h_separation = 15

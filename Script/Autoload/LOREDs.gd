@@ -70,14 +70,14 @@ const ANIMATION_FRAMES := {
 	"WIRE": 27,
 	"GALENA": 22,
 	"LEAD": 11,
-#	"PETROLEUM": ,
-#	"WOOD_PULP": ,
-#	"PAPER": ,
-#	"PLASTIC": ,
+	"PETROLEUM": 1, # ---------
+	"WOOD_PULP": 1, # ---------
+	"PAPER": 1, # ---------
+	"PLASTIC": 1, # ---------
 	"TOBACCO": 73,
 	"CIGARETTES": 25,
-#	"CARCINOGENS": ,
-#	"TUMORS": ,
+	"CARCINOGENS": 1, # ---------
+	"TUMORS": 1, # ---------
 	"refuel0": 28,
 	"refuel1": 27,
 }

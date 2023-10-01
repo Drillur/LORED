@@ -23,7 +23,6 @@ extends MarginContainer
 @onready var sort_rate = %SortRate as SimpleTextIconButton
 
 @onready var keep_wallet_sorted = %keep_wallet_sorted
-@onready var save_wallet_sort = %save_wallet_sort
 
 @onready var right_down = $Control/Right
 
@@ -85,7 +84,6 @@ func _ready():
 	sort_count.pressed.connect(sort_by_count)
 	sort_rate.pressed.connect(sort_by_rate)
 	wa.keep_wallet_sorted_changed.connect(check_keep_sorted)
-	wa.save_wallet_sort_changed.connect(check_save_sort)
 	hamburger.set_icon(preload("res://Sprites/Hud/Menu.png"))
 	hamburger.remove_optionals()
 	hamburger.modulate = Color(0, 0, 0)
@@ -100,6 +98,7 @@ func _ready():
 	hamburger_2.pressed.connect(options.hide)
 	hamburger.pressed.connect(options.show)
 	visibility_changed.connect(_on_visibility_changed)
+	stage_2_container.get_parent().get_v_scroll_bar().modulate = gv.get_stage_color(Stage.Type.STAGE2)
 
 
 
@@ -126,9 +125,6 @@ func _on_keep_wallet_sorted_pressed():
 	wa.keep_wallet_sorted = not wa.keep_wallet_sorted
 
 
-func _on_save_wallet_sort_pressed():
-	wa.save_wallet_sort = not wa.save_wallet_sort
-
 
 func _on_fade_gui_input(event):
 	if (
@@ -141,7 +137,7 @@ func _on_fade_gui_input(event):
 
 
 func stage_unlocked(stage: int, unlocked: bool) -> void:
-	if stage == 0:
+	if stage == 2:
 		tabs.tabs_visible = unlocked
 		adjust_sort_container_position()
 	tabs.set_tab_hidden(stage, not unlocked)
@@ -163,10 +159,6 @@ func check_keep_sorted(keep_sorted: bool) -> void:
 		disconnect_rate()
 
 
-func check_save_sort(save_sort: bool) -> void:
-	save_wallet_sort.button_pressed = save_sort
-
-
 
 func currency_mouse_entered(cur: int) -> void:
 	gv.new_tooltip(gv.Tooltip.WALLET_CURRENCY, right_down, {"currency": cur})
@@ -178,7 +170,7 @@ func currency_mouse_entered(cur: int) -> void:
 
 func hide_tabs() -> void:
 	for i in 4:
-		stage_unlocked(i, false)
+		stage_unlocked(i + 1, false)
 
 
 

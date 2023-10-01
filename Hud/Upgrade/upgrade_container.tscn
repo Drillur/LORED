@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://dlt6lvasr6c46"]
+[gd_scene load_steps=13 format=3 uid="uid://dlt6lvasr6c46"]
 
 [ext_resource type="Theme" uid="uid://b8t7tkhvril5g" path="res://Theme/Standard.tres" id="1_nf00e"]
 [ext_resource type="Script" path="res://Hud/Upgrade/upgrade_container.gd" id="1_t6e5m"]
@@ -16,9 +16,6 @@ size = Vector2(498, 38.7506)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_qajed"]
 size = Vector2(498, 38.7504)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_byxmb"]
-size = Vector2(424, 49)
 
 [node name="Upgrade Container" type="MarginContainer"]
 custom_minimum_size = Vector2(424, 500)
@@ -127,17 +124,6 @@ theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 15
 theme_override_constants/margin_bottom = 10
-
-[node name="body" type="StaticBody2D" parent="MarginContainer/VBoxContainer/Tabs/Q/ScrollContainer0/MarginContainer"]
-collision_layer = 2
-collision_mask = 2
-
-[node name="Collision" type="CollisionShape2D" parent="MarginContainer/VBoxContainer/Tabs/Q/ScrollContainer0/MarginContainer/body" groups=["Collision"]]
-position = Vector2(178, -24)
-rotation = 3.14159
-shape = SubResource("RectangleShape2D_byxmb")
-one_way_collision = true
-one_way_collision_margin = 10.0
 
 [node name="Control" type="Control" parent="MarginContainer/VBoxContainer/Tabs/Q/ScrollContainer0/MarginContainer"]
 layout_mode = 2

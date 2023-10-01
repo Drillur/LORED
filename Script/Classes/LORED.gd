@@ -524,7 +524,7 @@ func init_LEAD() -> void:
 
 
 func init_WOOD_PULP() -> void:
-	details.name = ""
+	details.name = "Marsellus"
 	add_job(Job.Type.WOOD_PULP, true)
 	cost = Cost.new({
 		Currency.Type.WIRE: Value.new(15),
@@ -597,7 +597,7 @@ func init_PETROLEUM() -> void:
 
 
 func init_PLASTIC() -> void:
-	details.name = ""
+	details.name = "Dolly"
 	add_job(Job.Type.PLASTIC, true)
 	cost = Cost.new({
 		Currency.Type.STONE: Value.new(10000),
@@ -1116,6 +1116,7 @@ func autobuy_check() -> void:
 		autobuy_on_cooldown = true
 		await gv.get_tree().physics_frame
 		autobuy_on_cooldown = false
+		autobuy_check()
 	else:
 		last_reason_autobuy = ""
 

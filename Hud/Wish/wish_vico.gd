@@ -134,7 +134,7 @@ func turn_in() -> void:
 				"text": "+" + cur_rew[cur].text,
 				"crit": false,
 			})
-		text.go(-1)
+		text.go(10)
 		
 		wish.turn_in()
 		queue_free()
@@ -163,7 +163,7 @@ func dismiss() -> void:
 				"text": "-" + cur_rew[cur].text,
 				"crit": false,
 			})
-		text.go(-1)
+		text.go(10)
 		
 		wish.dismiss()
 		queue_free()

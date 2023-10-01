@@ -297,7 +297,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"TOBACCO",
-"speed": 8.0
+"speed": 1.0
 }, {
 "frames": [{
 "duration": 1.0,

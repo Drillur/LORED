@@ -5,10 +5,11 @@ extends RefCounted
 
 signal use_allowed_changed(allowed)
 
+
 var cost := {}
 var base_cost := {}
 var affordable := Bool.new(false)
-var use_allowed := true:
+var use_allowed := true: # set by player in Wallet
 	set(val):
 		if use_allowed != val:
 			use_allowed = val

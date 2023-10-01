@@ -23,6 +23,10 @@ func _ready():
 	for i in range(1, 5):
 		var color = gv.get_stage_color(i)
 		get("scroll_container_" + str(i)).get_v_scroll_bar().modulate = color
+		if get("scroll_container_" + str(i)).has_node("SubViewportContainer"):
+			get("scroll_container_" + str(i)).get_node("SubViewportContainer").size.y = get("scroll_container_" + str(i)).get_node("SubViewportContainer/SubViewport/MarginContainer").size.y
+	
+	hide_all_vbox_and_hbox_containers()
 
 
 
@@ -36,3 +40,17 @@ func _on_tab_container_tab_changed(tab):
 
 func select_stage(stage: int) -> void:
 	tab_container.current_tab = stage - 1
+
+
+func hide_all_vbox_and_hbox_containers(node: Node = self) -> void:
+	if node is LOREDVico:
+		return
+	if node is HBoxContainer or node is VBoxContainer:
+		node.hide()
+	for child in node.get_children():
+		hide_all_vbox_and_hbox_containers(child)
+
+
+
+func _on_scroll_container_1_scroll_started():
+	print(1)

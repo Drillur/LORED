@@ -245,59 +245,6 @@ func getRandomColor() -> Color:
 
 var flying_texts := []
 
-func throw_texts_by_dictionary(parent: Node, _data: Dictionary, prepended_text := "+") -> void:
-	var texts := []
-	for cur in _data:
-		var currency := wa.get_currency(cur) as Currency
-		var data = {
-			"text": prepended_text + _data[cur].text,
-			"color": currency.details.color,
-			"icon": currency.details.icon,
-		}
-		for text in texts:
-			text.position.y -= 13
-		var dtext = SRC["dtext"].instantiate()
-		dtext.init(data)
-		parent.add_child(dtext)
-		texts.append(dtext)
-		await get_tree().create_timer(0.05).timeout
-
-
-func throw_texts(parent: Node, _data: Dictionary, prepended_text := "+") -> void:
-	var parent_position = parent.global_position
-	var texts := []
-	for cur in _data:
-		var currency := wa.get_currency(cur) as Currency
-		var data = {
-			"text": prepended_text + _data[cur].text,
-			"color": currency.details.color,
-			"icon": currency.details.icon,
-		}
-		for text in texts:
-			text.position.y -= 13
-		var dtext = SRC["dtext"].instantiate()
-		dtext.init(data)
-		texts_parent.add_child(dtext)
-		dtext.position = parent_position
-		texts.append(dtext)
-		await get_tree().create_timer(0.1).timeout
-
-
-func throw_text_from_parent(parent: Node, data: Dictionary) -> void:
-	var control := control_node.instantiate()
-	var dtext = SRC["dtext"].instantiate()
-	dtext.init(data)
-	parent.add_child(control)
-	control.add_child(dtext)
-	var parent_center_pos = Vector2(
-		parent.global_position.x + (parent.size.x / 2),
-		parent.global_position.y + (parent.size.y / 2)
-	)
-	dtext.global_position = parent_center_pos
-	await dtext.tree_exiting
-	control.queue_free()
-
-
 func flash(parent: Node, color = Color(1, 0, 0)) -> void:
 	var _flash = gv.SRC["flash"].instantiate()
 	parent.add_child(_flash)
@@ -448,7 +395,7 @@ class TimeUnit:
 			if amount.less(division):
 				break
 			amount.d(division)
-			type = type + 1
+			type = Type.values()[type + 1]
 		return amount.roundDown().text + " " + unit_text(type, amount)
 	
 	static func unit_text(type: int, amount: Big) -> String:
@@ -482,7 +429,7 @@ func get_time_text_from_dict(dict: Dictionary) -> String:
 	var minutes = dict["minutes"]
 	var seconds = dict["seconds"]
 	
-	var number_of_above_zero_elements: int
+	var number_of_above_zero_elements := 0
 	if years > 0:
 		number_of_above_zero_elements += 1
 	if days > 0:
@@ -564,7 +511,7 @@ func get_time_text_from_dict(dict: Dictionary) -> String:
 			return "%s, %s, and %s" % [a, b, c]
 		2:
 			if years > 0:
-				a = str(years) + "years"
+				a = str(years) + " years"
 				if days > 0:
 					b = str(days) + " days"
 				elif hours > 0:

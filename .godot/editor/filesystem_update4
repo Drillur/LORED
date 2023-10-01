@@ -1,4 +1,4 @@
-res://Hud/flying_text.tscn
+res://Hud/LORED/lored_vico.tscn
 res://Theme/Standard.tres
 res://Theme/Invis.tres
 res://Theme/TextButton.tres
@@ -7,20 +7,23 @@ res://Theme/Background.tres
 res://Theme/ShadowText.tres
 res://Theme/Subtle Background.tres
 res://Theme/Title.tres
-res://Script/Autoload/Overseer.gd
 res://Scene/Root.tscn
 res://Hud/Menu/menu.tscn
-res://Hud/LORED/lored_vico.tscn
+res://Hud/flying_text.tscn
+res://Hud/LORED/Tooltip/lored_jobs.tscn
 res://Hud/LORED/lored_container.tscn
-res://Hud/Wish/wish_vico.tscn
-res://Hud/Upgrade/upgrade_vico.tscn
+res://Hud/Wallet/wallet.tscn
+res://Hud/Earnings Report/earnings_report.tscn
 res://Hud/Upgrade/upgrade_container.tscn
-res://Theme/BoundaryPhysicsMat.tres
-res://Hud/flying_text_vico.gd
+res://Script/Classes/Wish.gd
+res://Script/Autoload/Wishes.gd
 res://Script/Classes/FlyingText.gd
+res://Hud/flying_text_vico.gd
 res://Hud/LORED/lored_vico.gd
+res://Script/Classes/LORED.gd
+res://Script/Autoload/LOREDs.gd
+res://Hud/Wallet/wallet.gd
+res://Script/Classes/ValuePair.gd
+res://Script/Classes/Big.gd
+res://Sprites/animations/toba.tres
 res://Script/Classes/Cost.gd
-res://Scene/Root.gd
-res://Hud/Wish/wish_vico.gd
-res://Hud/Wish/wish_pending.tscn
-res://Hud/Wish/wish_pending.gd

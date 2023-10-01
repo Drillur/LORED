@@ -46,7 +46,7 @@ func _ready():
 	update_purchasable_upgrade_count()
 	
 	gv.tooltip_parent = tooltip_parent
-	gv.texts_parent = control
+	gv.texts_parent = $"Texts Parent"
 	lv.lored_container = lored_container
 	up.upgrade_container = upgrade_container
 	wi.main_wish_container = main_wishes
@@ -89,10 +89,9 @@ func _ready():
 		gv.update_discord_details("Just began a new game!")
 	
 	wi.start()
-
-
-func _physics_process(delta):
-	fps.text = "FPS: [i]" + str(Engine.get_frames_per_second())
+	
+	# DEBUG
+	update_fps()
 
 
 
@@ -239,7 +238,7 @@ func _on_random_wishes_sort_children():
 
 
 func update_upgrades_button_color(upgrade_menu_tab: int) -> void:
-	upgrades_button.modulate = up.get_menu_color(upgrade_menu_tab)
+	upgrades_button.color = up.get_menu_color(upgrade_menu_tab)
 
 
 func stage_changed(stage: int) -> void:
@@ -269,6 +268,13 @@ func _on_screen_area_body_exited(body):
 
 # - Ref
 
+func update_fps() -> void:
+	while true:
+		await get_tree().create_timer(1).timeout
+		fps.text = "FPS: [i]" + str(Engine.get_frames_per_second())
+
+
+
 func display_wallet_button(unlocked: bool) -> void:
 	wallet_button.visible = unlocked
 	if unlocked:
@@ -291,7 +297,7 @@ func display_stage_button(stage: int, unlocked: bool) -> void:
 	var b = get("stage" + str(stage))
 	b.visible = unlocked
 	if unlocked:
-		gv.flash(b, _stage.color)
+		gv.flash(b, _stage.details.color)
 
 
 func wallet_lock(unlocked: bool) -> void:
@@ -335,7 +341,6 @@ func select_stage(stage: int) -> void:
 # - Get
 
 
-@onready var dev_text = $Left/Dev/RichTextLabel
 func _on_dev_pressed():
 #	wa.add(Currency.Type.STONE, 10)
 #	wa.add(Currency.Type.COAL, 10)

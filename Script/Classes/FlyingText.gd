@@ -3,7 +3,7 @@ extends Resource
 
 
 
-enum Type { CURRENCY, }
+enum Type { CURRENCY, LEVEL_UP, SLEEP, }
 enum CurrencyKeys { collide, cur, text, }
 
 
@@ -25,8 +25,8 @@ func _init(
 	_parent_node: Node,
 	_layer: Array,
 	_velocity_range: Array = [
-		randf_range(-0.1, 0.1),
-		randf_range(-0.13, -0.18)
+		randf_range(-1, 1),
+		randf_range(-1, -1.8)
 	]
 ):
 	type = _type
@@ -36,6 +36,8 @@ func _init(
 	velocity_range = _velocity_range
 	match type:
 		Type.CURRENCY:
+			duration = 0.8
+		Type.LEVEL_UP:
 			duration = 1.5
 	gv.add_child(timer)
 	timer.wait_time = 0.08
@@ -59,6 +61,10 @@ func add(data: Dictionary) -> void:
 	match type:
 		Type.CURRENCY:
 			vico.setup_currency(data)
+		Type.LEVEL_UP:
+			vico.setup_level_up(data)
+		Type.SLEEP:
+			vico.setup_sleep(data)
 
 
 

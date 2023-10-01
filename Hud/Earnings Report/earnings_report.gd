@@ -210,7 +210,7 @@ func go() -> void:
 
 
 func set_speaker() -> void:
-	lored = lv.get_random_unlocked_lored()
+	lored = min(lv.get_random_unlocked_lored(), LORED.Type.MALIGNANCY)
 	color = lv.get_color(lored)
 	$bg.modulate = color
 	pose.modulate = color
@@ -419,14 +419,38 @@ func guess_who() -> void:
 
 func victory_guess(parent_node: Node) -> void:
 	wa.add(Currency.Type.JOY, 1)
-	gv.throw_texts(parent_node, {Currency.Type.JOY: Big.new(1)})
+	var text = FlyingText.new(
+		FlyingText.Type.CURRENCY,
+		parent_node, # node used to determine text locations
+		gv.texts_parent, # node that will hold texts
+		[1, 1], # collision
+	)
+	text.add({
+		"cur": Currency.Type.JOY,
+		"text": "+1",
+		"crit": false,
+	})
+	text.go()
+	
 	dialogue_guess.text = "[center][i]" + speech_guess[lored][0]
 	guess_who_over()
 
 
 func fail_guess(parent_node: Node) -> void:
 	wa.add(Currency.Type.GRIEF, 1)
-	gv.throw_texts(parent_node, {Currency.Type.GRIEF: Big.new(1)})
+	var text = FlyingText.new(
+		FlyingText.Type.CURRENCY,
+		parent_node, # node used to determine text locations
+		gv.texts_parent, # node that will hold texts
+		[1, 1], # collision
+	)
+	text.add({
+		"cur": Currency.Type.GRIEF,
+		"text": "+1",
+		"crit": false,
+	})
+	text.go()
+	
 	dialogue_guess.text = "[center][i]" + speech_guess[lored][1]
 	guess_who_over()
 

@@ -8,6 +8,9 @@ var saved_vars := [
 	"random_wish_limit",
 	"completed_random_wishes",
 	"wishes",
+	"automated_sleep",
+	"wish_amount_divider",
+	"automated_turn_in",
 ]
 
 
@@ -15,8 +18,9 @@ func load_finished() -> void:
 	for wish in wishes:
 		new_pending_wish(wish)
 	
-	wish_ended.connect(find_new_main_wish)
-	wish_ended.connect(find_new_random_wish)
+	if not wish_ended.is_connected(find_new_main_wish):
+		wish_ended.connect(find_new_main_wish)
+		wish_ended.connect(find_new_random_wish)
 	
 	for i in random_wish_limit:
 		find_new_random_wish()
@@ -40,9 +44,13 @@ var active_random_wishes := 0
 var wishes := []
 var completed_wishes := []
 var completed_random_wishes := 0
+var automated_sleep := false
+var automated_turn_in := false
 var random_wish_limit := 0:
 	set(val):
 		random_wish_limit = val
+
+var wish_amount_divider := 1.0
 
 
 
@@ -65,7 +73,7 @@ func close() -> void:
 
 func start() -> void:
 	lv.purchased_every_lored_once.connect(find_new_main_wish)
-	if not Wish.Type.STUFF in completed_wishes:
+	if not is_wish_begun_or_completed(Wish.Type.STUFF):
 		new_wish_considering_conditions(Wish.Type.STUFF)
 	else:
 		find_new_main_wish()

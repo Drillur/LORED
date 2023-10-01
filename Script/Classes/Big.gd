@@ -58,6 +58,7 @@ var change_queued := false
 		if exponent != val:
 			exponent = val
 			text_requires_update = true
+
 var text: String:
 	set(val):
 		text = val
@@ -71,9 +72,6 @@ var text: String:
 		return text
 var text_requires_update := true
 
-static var other = {"dynamic_decimals":true, "dynamic_numbers":4, "small_decimals":2, "thousand_decimals":2, "big_decimals":2, "scientific_decimals": 2, "logarithmic_decimals":2, "thousand_separator":".", "decimal_separator":",", "postfix_separator":"", "reading_separator":"", "thousand_name":"thousand"}
-
-const MAX_MANTISSA = 1209600.0
 const MANTISSA_PRECISSION = 0.0000001
 
 const MIN_INTEGER: int = -9223372036854775807
@@ -441,17 +439,22 @@ func greater_equal(n) -> bool:
 func less(n) -> bool:
 	n = type_check(n)
 	calculate(n)
-	if mantissa == 0 and (n.mantissa > MANTISSA_PRECISSION or mantissa < MANTISSA_PRECISSION) and n.mantissa == 0:
+	if (
+		mantissa == 0
+		and (n.mantissa > MANTISSA_PRECISSION or mantissa < MANTISSA_PRECISSION)
+		and n.mantissa == 0
+	):
 		return false
 	if exponent < n.exponent:
+		if abs(exponent - n.exponent) == 1:
+			if (mantissa == 1 and n.mantissa == 10) or (mantissa == 10 and n.mantissa == 1):
+				return false
 		return true
 	elif exponent == n.exponent:
-		if mantissa < n.mantissa:
-			return true
-		else:
+		if is_equal_approx(mantissa, n.mantissa):
 			return false
-	else:
-		return false
+		return mantissa < n.mantissa
+	return false
 
 
 func less_equal(n) -> bool:

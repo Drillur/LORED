@@ -13,6 +13,7 @@ func load_finished() -> void:
 	refresh_emote_timer()
 	start_all_main_emotes()
 	if random_emotes_allowed:
+		print("random emotes allowed")
 		emote_cooldown_timer.start(randi() % 5 + 5) # 5-10
 
 

@@ -11,7 +11,6 @@ var saved_vars := [
 
 signal currency_just_unlocked(cur, unlocked)
 signal wallet_unlocked_changed(unlocked)
-signal save_wallet_sort_changed(save_sort)
 signal keep_wallet_sorted_changed(keep_sorted)
 
 var currency := {}
@@ -31,11 +30,6 @@ var keep_wallet_sorted := false:
 		if keep_wallet_sorted != val:
 			keep_wallet_sorted = val
 			keep_wallet_sorted_changed.emit(val)
-var save_wallet_sort := false:
-	set(val):
-		if save_wallet_sort != val:
-			save_wallet_sort = val
-			save_wallet_sort_changed.emit(val)
 
 var wallet: WalletVico
 
