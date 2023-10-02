@@ -388,7 +388,8 @@ func _on_dev_pressed():
 	pass
 
 func _on_dev_2_pressed():
-	pass
+	for upgrade in up.get_upgrade_menu(UpgradeMenu.Type.EXTRA_NORMAL).upgrades:
+		up.get_upgrade(upgrade).refund()
 
 func _on_dev_4_pressed():
 	pass # Replace with function body.

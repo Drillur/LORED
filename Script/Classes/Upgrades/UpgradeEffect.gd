@@ -423,7 +423,7 @@ func refresh() -> void:
 					iron.input.alter_value(iron.input.multiplied, in_hand, effect.get_value())
 					copper.output.alter_value(copper.output.multiplied, in_hand2, effect2.get_value())
 					copper.input.alter_value(copper.input.multiplied, in_hand2, effect2.get_value())
-					print("Effect ", in_hand.text, " -> ", effect.get_text(), "\t\t Iron ", iron_output, " -> ", iron.output.get_text(), " - Copper ", copper_output, " -> ", copper.output.get_text())
+					#print("Effect ", in_hand.text, " -> ", effect.get_text(), "\t\t Iron ", iron_output, " -> ", iron.output.get_text(), " - Copper ", copper_output, " -> ", copper.output.get_text())
 		Type.BONUS_ACTION_ON_CURRENCY_USE:
 			match upgrade_type:
 				Upgrade.Type.I_DRINK_YOUR_MILKSHAKE:
@@ -523,6 +523,7 @@ func remove_effects() -> void:
 				for method in remove_methods:
 					method.call()
 			_:
+				print("ok")
 				for method in remove_methods:
 					method.call(in_hand)
 

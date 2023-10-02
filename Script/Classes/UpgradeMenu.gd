@@ -82,10 +82,14 @@ func S4M():
 # - Signal
 
 func add_purchased_upgrade(upgrade_type: int) -> void:
-	var upgrade = up.get_upgrade(upgrade_type)
+	var upgrade = up.get_upgrade(upgrade_type) as Upgrade
 	if upgrade.upgrade_menu == type:
-		if not upgrade_type in purchased_upgrades:
-			purchased_upgrades.append(upgrade_type)
+		if upgrade.purchased.is_true():
+			if not upgrade_type in purchased_upgrades:
+				purchased_upgrades.append(upgrade_type)
+		else:
+			if upgrade_type in purchased_upgrades:
+				purchased_upgrades.erase(upgrade_type)
 
 
 
@@ -111,7 +115,6 @@ func set_affordable_and_unpurchased(upgrade: int, affordable_and_unpurchased: bo
 		if upgrade in affordable_and_unpurchased_upgrades:
 			affordable_and_unpurchased_upgrades.erase(upgrade)
 			purchasable_upgrade_count_decreased.emit()
-	#printt(key, Upgrade.Type.keys()[upgrade], affordable_and_unpurchased_upgrades)
 
 
 

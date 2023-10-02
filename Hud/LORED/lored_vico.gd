@@ -160,7 +160,7 @@ func attach_lored(_lored: LORED) -> void:
 	hide()
 
 
-func cost_update() -> void:
+func cost_update() -> void: 
 	var val = lored.cost.affordable.get_value()
 	level_up.check.visible = val
 	if val:

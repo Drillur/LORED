@@ -61,6 +61,8 @@ enum Type {
 	GRIEF,
 }
 
+enum SafetyType { SAFE, LORED_PURCHASED, }
+
 signal increased_by_lored(amount)
 signal increased(amount)
 signal decreased_by_lored(amount)
@@ -70,8 +72,10 @@ signal current_net_changed
 signal total_net_became_negative
 signal total_net_became_positive
 
-var type: int
-var stage: int
+var type: Type
+var stage: Stage.Type
+var safety_type := SafetyType.SAFE
+var safety_subject: int
 
 var details := Details.new()
 
@@ -83,6 +87,7 @@ var subtracted_by_loreds := Big.new(0, true)
 var subtracted_by_player := Big.new(0, true)
 var added_by_loreds := Big.new(0, true)
 
+var safe := Bool.new(true)
 var unlocked := false:
 	set(val):
 		if unlocked != val:
@@ -145,6 +150,9 @@ func _init(_type: int = 0) -> void:
 	
 	call("init_" + key)
 	
+	if safety_type == SafetyType.SAFE:
+		safe.set_to(true)
+	
 	if persist.is_false_by_default() and stage == 0:
 		persist.set_default_value(true)
 	
@@ -189,6 +197,7 @@ func init_IRON() -> void:
 	details.icon = preload("res://Sprites/Currency/iron.png")
 	details.description = "It's possible that this is toast."
 	weight = 3
+	set_safety_condition(SafetyType.LORED_PURCHASED, LORED.Type.IRON)
 
 
 func init_COPPER() -> void:
@@ -196,6 +205,7 @@ func init_COPPER() -> void:
 	details.color = Color(1, 0.74, 0.05)
 	details.icon = preload("res://Sprites/Currency/cop.png")
 	weight = 3
+	set_safety_condition(SafetyType.LORED_PURCHASED, LORED.Type.COPPER)
 
 
 func init_GROWTH() -> void:
@@ -211,6 +221,7 @@ func init_JOULES() -> void:
 	details.description = "Used primarily as fuel for LOREDs!"
 	weight = 2
 	used_for_fuel = true
+	set_safety_condition(SafetyType.LORED_PURCHASED, LORED.Type.JOULES)
 
 
 func init_CONCRETE() -> void:
@@ -224,6 +235,7 @@ func init_MALIGNANCY() -> void:
 	details.color = Color(0.88, .12, .35)
 	details.icon = preload("res://Sprites/Currency/malig.png")
 	persist.set_default_value(true)
+	set_safety_condition(SafetyType.LORED_PURCHASED, LORED.Type.TARBALLS)
 
 
 func init_TARBALLS() -> void:
@@ -254,6 +266,7 @@ func init_SEEDS() -> void:
 	count = Big.new(2, true)
 	details.color = Color(1, 0.878431, 0.431373)
 	details.icon = preload("res://Sprites/Currency/seed.png")
+	set_safety_condition(SafetyType.LORED_PURCHASED, LORED.Type.SEEDS)
 
 
 func init_TREES() -> void:
@@ -265,18 +278,21 @@ func init_SOIL() -> void:
 	count = Big.new(25, true)
 	details.color = Color(0.737255, 0.447059, 0)
 	details.icon = preload("res://Sprites/Currency/soil.png")
+	set_safety_condition(SafetyType.LORED_PURCHASED, LORED.Type.SOIL)
 
 
 func init_AXES() -> void:
 	count = Big.new(5, true)
 	details.color = Color(0.691406, 0.646158, 0.586075)
 	details.icon = preload("res://Sprites/Currency/axe.png")
+	set_safety_condition(SafetyType.LORED_PURCHASED, LORED.Type.AXES)
 
 
 func init_WOOD() -> void:
 	count = Big.new(80, true)
 	details.color = Color(0.545098, 0.372549, 0.015686)
 	details.icon = preload("res://Sprites/Currency/wood.png")
+	set_safety_condition(SafetyType.LORED_PURCHASED, LORED.Type.WOOD)
 
 
 func init_HARDWOOD() -> void:
@@ -285,6 +301,7 @@ func init_HARDWOOD() -> void:
 	details.icon = preload("res://Sprites/Currency/hard.png")
 	details.description = "( ͡⚆ ͜ʖ ͡⚆)"
 	weight = 3
+	set_safety_condition(SafetyType.LORED_PURCHASED, LORED.Type.HARDWOOD)
 
 
 func init_LIQUID_IRON() -> void:
@@ -297,6 +314,7 @@ func init_STEEL() -> void:
 	details.color = Color(0.607843, 0.802328, 0.878431)
 	details.icon = preload("res://Sprites/Currency/steel.png")
 	weight = 3
+	set_safety_condition(SafetyType.LORED_PURCHASED, LORED.Type.STEEL)
 
 
 func init_SAND() -> void:
@@ -304,6 +322,7 @@ func init_SAND() -> void:
 	details.color = Color(.87, .70, .45)
 	details.icon = preload("res://Sprites/Currency/sand.png")
 	details.description = "It's roarse, and cough, and it gets eherweyeve!"
+	set_safety_condition(SafetyType.LORED_PURCHASED, LORED.Type.SAND)
 
 
 func init_GLASS() -> void:
@@ -311,6 +330,7 @@ func init_GLASS() -> void:
 	details.color = Color(0.81, 0.93, 1.0)
 	details.icon = preload("res://Sprites/Currency/glass.png")
 	weight = 3
+	set_safety_condition(SafetyType.LORED_PURCHASED, LORED.Type.GLASS)
 
 
 func init_DRAW_PLATE() -> void:
@@ -323,6 +343,7 @@ func init_WIRE() -> void:
 	details.color = Color(0.9, 0.6, 0.14)
 	details.icon = preload("res://Sprites/Currency/wire.png")
 	weight = 3
+	set_safety_condition(SafetyType.LORED_PURCHASED, LORED.Type.WIRE)
 
 
 func init_GALENA() -> void:
@@ -415,7 +436,23 @@ func init_GRIEF() -> void:
 
 
 
+# - Setup
+
+func set_safety_condition(_type: SafetyType, _subject: int) -> void:
+	safety_type = _type
+	safety_subject = _subject
+	await lv.loreds_initialized
+	match safety_type:
+		SafetyType.LORED_PURCHASED:
+			lv.get_lored(safety_subject).purchased.changed.connect(safety_check)
+			safety_check()
+		SafetyType.SAFE:
+			safe.set_to(true)
+
+
+
 # - Signals
+
 
 func prestige(_stage: int) -> void:
 	if (
@@ -439,6 +476,10 @@ func reset():
 	count.reset()
 
 
+func safety_check() -> void:
+	match safety_type:
+		SafetyType.LORED_PURCHASED:
+			safe.set_to(lv.is_lored_purchased(safety_subject))
 
 
 func unlock() -> void:
@@ -537,48 +578,6 @@ func subtract_pending(amount: Big) -> void:
 
 
 
-# - Get
-
-
-func get_count_text() -> String:
-	return count.text
-
-
-func is_unlocked() -> bool:
-	return unlocked
-
-
-func is_locked() -> bool:
-	return not is_unlocked()
-
-
-func get_eta(threshold: Big) -> Big:
-	if (
-		count.greater_equal(threshold)
-		or net_rate.get_value().equal(0)
-		or not lv.any_loreds_in_list_are_active(produced_by)
-		or not positive_rate
-	):
-		return Big.new(0)
-	
-	var deficit = Big.new(threshold).s(count)
-	return deficit.d(net_rate.get_value())
-
-
-func get_eta_text(threshold: Big) -> String:
-	var eta = get_eta(threshold)
-	return gv.parse_time(eta)
-
-
-func get_random_producer() -> LORED:
-	return produced_by[randi() % produced_by.size()]
-
-
-func get_fuel_currency() -> int:
-	return lv.get_lored(produced_by[0]).fuel_currency
-
-
-
 # - Offline Earnings Shit
 
 var gain_over_loss := -1.0:
@@ -642,3 +641,44 @@ func set_gain_over_loss() -> void:
 			gain_over_loss = 1.0
 		else:
 			gain_over_loss = min(1, gain_rate.get_value().percent(loss_rate.get_value()))
+
+
+
+# - Get
+
+func get_count_text() -> String:
+	return count.text
+
+
+func is_unlocked() -> bool:
+	return unlocked
+
+
+func is_locked() -> bool:
+	return not is_unlocked()
+
+
+func get_eta(threshold: Big) -> Big:
+	if (
+		count.greater_equal(threshold)
+		or net_rate.get_value().equal(0)
+		or not lv.any_loreds_in_list_are_active(produced_by)
+		or not positive_rate
+	):
+		return Big.new(0)
+	
+	var deficit = Big.new(threshold).s(count)
+	return deficit.d(net_rate.get_value())
+
+
+func get_eta_text(threshold: Big) -> String:
+	var eta = get_eta(threshold)
+	return gv.parse_time(eta)
+
+
+func get_random_producer() -> LORED:
+	return produced_by[randi() % produced_by.size()]
+
+
+func get_fuel_currency() -> int:
+	return lv.get_lored(produced_by[0]).fuel_currency

@@ -110,8 +110,12 @@ func _ready():
 	for type in UpgradeMenu.Type.values():
 		upgrade_menus[type] = UpgradeMenu.new(type) as UpgradeMenu
 		connect("upgrade_purchased", upgrade_menus[type].add_purchased_upgrade)
-		upgrade_menus[type].purchasable_upgrade_count_increased.connect(purchasable_upgrade_count_increased)
-		upgrade_menus[type].purchasable_upgrade_count_decreased.connect(purchasable_upgrade_count_decreased)
+		upgrade_menus[type].purchasable_upgrade_count_increased.connect(
+			purchasable_upgrade_count_increased
+		)
+		upgrade_menus[type].purchasable_upgrade_count_decreased.connect(
+			purchasable_upgrade_count_decreased
+		)
 		upgrade_menu_by_key[upgrade_menus[type].key] = upgrade_menus[type]
 	for type in Upgrade.Type.values():
 		upgrades[type] = Upgrade.new(type)

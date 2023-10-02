@@ -1,3 +1,4 @@
+TextureProgressBar
 MarginContainer
 VBoxContainer
 Control
@@ -27,6 +28,5 @@ HScrollBar
 MenuButton
 MenuBar
 ItemList
-TextureProgressBar
 TabContainer
 AnimationPlayer

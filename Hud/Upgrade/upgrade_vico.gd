@@ -44,6 +44,8 @@ func setup(_upgrade: Upgrade):
 	upgrade.autobuy_changed.connect(autobuyer_display)
 	
 	hide_check()
+	
+	cost_update()
 
 
 
