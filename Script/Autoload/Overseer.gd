@@ -40,6 +40,8 @@ var icon_asleep := preload("res://Sprites/Hud/Halt.png")
 var icon_hard_reset := preload("res://Sprites/Hud/Hard Reset.png")
 var ascending_icon: Texture = preload("res://Sprites/Hud/arrow-up-s-line.png")
 var descending_icon: Texture = preload("res://Sprites/Hud/arrow-down-s-line.png")
+var icon_view := preload("res://Sprites/Hud/View.png")
+var icon_hide := preload("res://Sprites/Hud/ViewHide.png")
 
 var flying_text: PackedScene = preload("res://Hud/flying_text.tscn")
 

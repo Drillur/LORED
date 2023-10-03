@@ -6,15 +6,19 @@ extends MarginContainer
 signal pressed
 
 @onready var check = %Check
-@onready var icon = %Icon
+@onready var texture_rect = %Icon
 @onready var button = $Button
 @onready var icon_shadow = %"Icon Shadow"
 @onready var autobuyer = %Autobuyer
 
+@export var icon: Texture2D
+@export var kill_autobuyer := false
+@export var kill_check := false
+
 var color: Color:
 	set(val):
 		color = val
-		icon.self_modulate = val
+		texture_rect.self_modulate = val
 		button.modulate = val
 		if is_instance_valid(autobuyer):
 			autobuyer.modulate = val
@@ -24,6 +28,10 @@ func _ready():
 	hide_check()
 	set_theme_invis()
 	autobuyer.hide()
+	if kill_autobuyer:
+		autobuyer.queue_free()
+	if kill_check:
+		check.queue_free()
 
 
 
@@ -40,22 +48,22 @@ func _on_button_mouse_entered():
 
 
 func _on_button_button_down():
-	icon.position.y = 1
+	texture_rect.position.y = 1
 
 
 func _on_button_button_up():
-	icon.position.y = 0
+	texture_rect.position.y = 0
 
 
 
 
 func set_icon(_icon: Texture) -> void:
-	icon.texture = _icon
-	icon_shadow.texture = icon.texture
+	texture_rect.texture = _icon
+	icon_shadow.texture = texture_rect.texture
 
 
 func set_icon_min_size(_size: Vector2) -> void:
-	icon.custom_minimum_size = _size
+	texture_rect.custom_minimum_size = _size
 
 
 func set_button_color(_color: Color) -> void:

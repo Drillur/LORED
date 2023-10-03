@@ -648,7 +648,8 @@ func init_IMPORTANCE_OF_COAL() -> void:
 
 func init_UPGRADE_STONE() -> void:
 	giver = LORED.Type.IRON
-	help_text = "Stone seems like he's got a little much to do. Could you level him up to make it easier on him?"
+	var a = lv.get_colored_name(LORED.Type.STONE)
+	help_text = "%s seems like he's got a little much to do. Could you level him up to make it easier on him?" % a
 	thank_text = "Awesome! I bet he's liking that. Thanks :)"
 	discord_state = "Getting Stone to Level 2."
 	objective = Objective.new(Objective.Type.LORED_LEVELED_UP, {

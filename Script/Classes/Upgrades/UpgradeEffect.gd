@@ -357,9 +357,9 @@ func remove() -> void:
 	if applied:
 		if type != Type.LIMIT_BREAK:
 			if effect != null:
-				effect.increased.disconnect(refresh)
+				effect.changed.disconnect(refresh)
 			if effect2 != null:
-				effect2.increased.disconnect(refresh)
+				effect2.changed.disconnect(refresh)
 		
 		if replaced_upgrade >= 0:
 			var r_up = up.get_upgrade(replaced_upgrade)
@@ -523,7 +523,6 @@ func remove_effects() -> void:
 				for method in remove_methods:
 					method.call()
 			_:
-				print("ok")
 				for method in remove_methods:
 					method.call(in_hand)
 

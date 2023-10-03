@@ -35,6 +35,11 @@ var threshold: float
 var has_attribute := false
 var attribute: ValuePair
 
+@export var kill_markers := false
+@export var kill_texts := false
+@export var allow_animations := false
+@export var kill_background := false
+
 
 
 func _on_resized():
@@ -53,6 +58,14 @@ func _on_resized():
 
 
 func _ready() -> void:
+	if kill_markers:
+		remove_markers()
+	if kill_texts:
+		remove_texts()
+	if allow_animations:
+		animate_changes()
+	if kill_background:
+		hide_background()
 	delta_bar.hide()
 	set_process(false)
 	await get_tree().create_timer(1).timeout

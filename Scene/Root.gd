@@ -9,21 +9,30 @@ extends MarginContainer
 @onready var main_wishes = %"Main Wishes"
 @onready var control = $Control
 @onready var menu = $Menu
-@onready var menu_button = %"Menu Button" as IconButton
-@onready var upgrades_button = %"Upgrades Button" as IconButton
+@onready var menu_button = %"Menu Button" as _MenuButton
+@onready var upgrades_button = %"Upgrades Button" as _MenuButton
 @onready var wallet = $Wallet as WalletVico
-@onready var wallet_button = %"Wallet Button" as IconButton
-@onready var stage1 = %Stage1 as IconButton
-@onready var stage2 = %Stage2 as IconButton
-@onready var stage3 = %Stage3 as IconButton
-@onready var stage4 = %Stage4 as IconButton
+@onready var wallet_button = %"Wallet Button" as _MenuButton
+@onready var stage1 = %Stage1 as _MenuButton
+@onready var stage2 = %Stage2 as _MenuButton
+@onready var stage3 = %Stage3 as _MenuButton
+@onready var stage4 = %Stage4 as _MenuButton
 @onready var purchasable_upgrade_count = %"Purchasable Upgrade Count"
 @onready var offline_report = $"Offline Report"
 @onready var fps = %FPS
 @onready var screen_area = %ScreenArea
 
-
 @onready var tooltip_position_display = $"Control/Tooltip/Tooltip Position Display"
+
+@onready var menu_scroll = %MenuScroll
+@onready var menu_container = %MenuContainer
+@onready var menu_contents = %"Menu Contents"
+@onready var sidebar_background = %"Sidebar Background"
+@onready var sidebar_title_background = %"Sidebar Title Background"
+
+var menu_container_size: float
+
+
 
 
 
@@ -34,7 +43,11 @@ func _ready():
 		wallet_button.hide()
 		$Left/Dev.hide()
 	
+	%"Sidebar Title Background".modulate = gv.game_color
+	%"Sidebar Background".modulate = gv.game_color
+	menu_scroll.get_v_scroll_bar().modulate = gv.game_color
 	get_tree().root.size_changed.connect(window_resized)
+	
 	
 	wa.wallet_unlocked_changed.connect(display_wallet_button)
 	
@@ -54,28 +67,16 @@ func _ready():
 	wa.wallet = wallet
 	
 	for i in range(1, 5):
-		var b = get("stage" + str(i)) as IconButton
-		b.remove_optionals()
 		var stage = gv.get_stage(i) as Stage
-		b.set_icon(stage.details.icon)
-		b.button.modulate = stage.details.color
-		stage.stage_unlocked_changed.connect(display_stage_button)
+		stage.stage_unlocked_changed.connect(display_stage_button) #menu
 		if not gv.dev_mode:
+			var b = get("stage" + str(i)) as _MenuButton
 			b.hide()
 	
-	menu_button.color = gv.game_color
-	menu_button.set_icon(load("res://Sprites/Hud/Menu.png"))
-	menu_button.remove_optionals()
-	
-	upgrades_button.color = up.get_menu_color(UpgradeMenu.Type.NORMAL)
-	upgrades_button.set_icon(load("res://Sprites/Hud/upgrades.png"))
-	upgrades_button.remove_optionals()
 	upgrade_container.connect("upgrade_menu_tab_changed", update_upgrades_button_color)
 	
-	wallet_button.color = gv.get_stage_color(1)
-	wallet_button.set_icon(load("res://Sprites/Hud/ResourceViewer.png"))
-	wallet_button.remove_optionals()
 	gv.connect("stage_changed", stage_changed)
+	stage_changed(1)
 	
 	gv.root_ready = true
 	
@@ -90,8 +91,16 @@ func _ready():
 	
 	wi.start()
 	
+	update_menu_size_once()
+	
 	# DEBUG
 	update_fps()
+
+
+func update_menu_size_once() -> void:
+	await menu_container.resized
+	update_menu_container_size()
+	menu_scroll.custom_minimum_size.y = menu_container_size
 
 
 
@@ -196,6 +205,16 @@ func should_hide_a_menu() -> bool:
 
 
 func _on_menu_button_pressed():
+	menu_contents.visible = not menu_contents.visible
+	menu_button.set_text_visibility(menu_contents.visible)
+	sidebar_background.visible = menu_contents.visible
+#	if menu_contents.visible:
+#		menu_button.color = Color.BLACK
+#		#sidebar_title_background.modulate = gv.game_color
+#	else:
+#		menu_button.color = Color.WHITE
+#		#sidebar_title_background.
+	return
 	if menu.visible:
 		menu.hide()
 	else:
@@ -242,7 +261,8 @@ func update_upgrades_button_color(upgrade_menu_tab: int) -> void:
 
 
 func stage_changed(stage: int) -> void:
-	wallet_button.modulate = gv.get_stage_color(stage)
+	var color = gv.get_stage_color(stage)
+	get_tree().call_group("Menu_Game", "set_color", color)
 
 
 func update_purchasable_upgrade_count() -> void:
@@ -259,10 +279,20 @@ func window_resized() -> void:
 	screen_area.shape.size.x = size.x * 1.1
 	screen_area.shape.size.y = size.y * 1.1
 	screen_area.position = Vector2(size.x / 2, size.y / 2)
+	update_menu_container_size()
+	_on_menu_container_resized()
 
 
 func _on_screen_area_body_exited(body):
 	body.queue_free()
+
+
+
+func _on_menu_container_resized():
+	if not is_node_ready():
+		await ready
+	menu_scroll.custom_minimum_size.y = min(menu_container.size.y, menu_container_size)
+
 
 
 
@@ -273,6 +303,10 @@ func update_fps() -> void:
 		await get_tree().create_timer(1).timeout
 		fps.text = "FPS: [i]" + str(Engine.get_frames_per_second())
 
+
+func update_menu_container_size() -> void:
+	menu_container_size = get_viewport().size.y - menu_scroll.global_position.y - 20
+	print(menu_container_size)
 
 
 func display_wallet_button(unlocked: bool) -> void:

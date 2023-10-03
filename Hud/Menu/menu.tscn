@@ -277,6 +277,7 @@ visible = false
 clip_contents = true
 layout_mode = 2
 mouse_filter = 2
+metadata/_edit_lock_ = true
 
 [node name="fade" type="Panel" parent="Navigation"]
 layout_mode = 1
@@ -687,7 +688,6 @@ offset_top = -10.0
 offset_right = 264.0
 offset_bottom = -10.0
 
-[connection signal="pressed" from="VBoxContainer/Content/save Content/VBoxContainer/VBoxContainer/HBoxContainer2/Load Now Button" to="." method="_on_load_now_button_pressed"]
 [connection signal="gui_input" from="Navigation/fade" to="." method="_on_fade_gui_input"]
 [connection signal="pressed" from="Navigation/MarginContainer/VBoxContainer/MarginContainer2/VBoxContainer2/MarginContainer/SaveButton" to="." method="_on_save_button_pressed"]
 [connection signal="pressed" from="Navigation/MarginContainer/VBoxContainer/MarginContainer2/VBoxContainer2/MarginContainer7/LoadButton" to="." method="_on_save_button_pressed"]

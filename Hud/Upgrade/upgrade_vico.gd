@@ -92,13 +92,13 @@ func unlocked_changed() -> void:
 		cost_update()
 		button.modulate.a = 1
 		lock.hide()
-		button.icon.show()
+		button.texture_rect.show()
 	else:
 		if upgrade.cost.affordable.changed.is_connected(cost_update):
 			upgrade.cost.affordable.changed.disconnect(cost_update)
 		button.modulate.a = 0.5
 		lock.show()
-		button.icon.hide()
+		button.texture_rect.hide()
 		check.hide()
 
 

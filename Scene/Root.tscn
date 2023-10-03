@@ -1,14 +1,57 @@
-[gd_scene load_steps=12 format=3 uid="uid://bseqrj5lg08it"]
+[gd_scene load_steps=33 format=3 uid="uid://bseqrj5lg08it"]
 
 [ext_resource type="Script" path="res://Scene/Root.gd" id="1_h7r77"]
 [ext_resource type="PackedScene" uid="uid://rmruae8fguk4" path="res://Hud/LORED/lored_container.tscn" id="2_egnhq"]
 [ext_resource type="PackedScene" uid="uid://dlt6lvasr6c46" path="res://Hud/Upgrade/upgrade_container.tscn" id="3_3omr7"]
-[ext_resource type="PackedScene" uid="uid://cb3ej8nlybhvm" path="res://Hud/icon_button.tscn" id="3_agafs"]
+[ext_resource type="PackedScene" uid="uid://bfi0uovwegdxj" path="res://Hud/MenuButton.tscn" id="4_3h2sv"]
 [ext_resource type="PackedScene" uid="uid://c4jcyq4x5dq51" path="res://Hud/Menu/menu.tscn" id="4_y1gq0"]
+[ext_resource type="PackedScene" uid="uid://ddupv5ku3o3m2" path="res://Hud/ShowHide.tscn" id="5_7doml"]
 [ext_resource type="Theme" uid="uid://cwt08llwihqii" path="res://Theme/ShadowText.tres" id="5_fcpu4"]
 [ext_resource type="FontFile" uid="uid://cubavfw1lomep" path="res://Fonts/Roboto-Black.ttf" id="5_fsywq"]
+[ext_resource type="Texture2D" uid="uid://d246l0oi6tmqa" path="res://Sprites/Hud/ResourceViewer.png" id="6_fxkih"]
+[ext_resource type="Texture2D" uid="uid://bog36eh0f0ar1" path="res://Sprites/Hud/Tab/t0.png" id="6_lo011"]
 [ext_resource type="PackedScene" uid="uid://dg6lv67h5eiuj" path="res://Hud/Wallet/wallet.tscn" id="6_pdtq1"]
+[ext_resource type="Texture2D" uid="uid://408er70eh4ns" path="res://Sprites/Hud/upgrades.png" id="6_sjgrn"]
+[ext_resource type="Texture2D" uid="uid://bqaiv8sb5y85p" path="res://Sprites/Hud/Tab/s2.png" id="7_6y55p"]
 [ext_resource type="PackedScene" uid="uid://c2quvpihdkvj2" path="res://Hud/Earnings Report/earnings_report.tscn" id="8_gl0q2"]
+[ext_resource type="Texture2D" uid="uid://dlt8c53eja853" path="res://Sprites/Hud/New Game.png" id="10_8u1ic"]
+[ext_resource type="Texture2D" uid="uid://cya8ro2s324t3" path="res://Sprites/Hud/Save.png" id="10_mipnr"]
+[ext_resource type="Texture2D" uid="uid://fyiafb4i50ua" path="res://Sprites/Hud/Clipboard.png" id="12_bqm8u"]
+[ext_resource type="Texture2D" uid="uid://cm003srgjic8i" path="res://Sprites/Hud/Color.png" id="12_st5ae"]
+[ext_resource type="Theme" uid="uid://b8t7tkhvril5g" path="res://Theme/Standard.tres" id="13_0ehpq"]
+[ext_resource type="Texture2D" uid="uid://bg61ibd6ds5os" path="res://Sprites/Hud/Hard Reset.png" id="13_0l83t"]
+[ext_resource type="Texture2D" uid="uid://bv5ukdy8ktnmp" path="res://Sprites/Hud/Rename.png" id="13_6v2xt"]
+[ext_resource type="Texture2D" uid="uid://c1omdjwk0lsh4" path="res://Sprites/Hud/Duplicate.png" id="14_5312t"]
+[ext_resource type="Texture2D" uid="uid://dbgwbxq3lcon1" path="res://Sprites/Hud/Delete.png" id="15_s64ty"]
+[ext_resource type="Texture2D" uid="uid://d31dpqjhgrtaq" path="res://Sprites/Hud/Discord.png" id="22_ejl1s"]
+[ext_resource type="Texture2D" uid="uid://kdslypb5pkh8" path="res://Sprites/Hud/ItchIo.svg" id="23_mvmsj"]
+[ext_resource type="Texture2D" uid="uid://bwk6j2a1sf2d7" path="res://Sprites/Hud/steam-logo-transparent.png" id="24_ila10"]
+[ext_resource type="Texture2D" uid="uid://bbj2j5ohabcp1" path="res://Sprites/Hud/Godot.svg" id="24_u1xhr"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fydh3"]
+bg_color = Color(0.0705882, 0.0705882, 0.0705882, 1)
+draw_center = false
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+shadow_color = Color(0.8, 0.8, 0.8, 0.298039)
+shadow_size = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qs83t"]
+bg_color = Color(0.1, 0.1, 0.1, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+shadow_color = Color(0.8, 0.8, 0.8, 0.298039)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_asv2k"]
+bg_color = Color(0.662745, 0.662745, 0.662745, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ge2kb"]
 draw_center = false
@@ -25,6 +68,7 @@ size = Vector2(1280, 720)
 offset_right = 1280.0
 offset_bottom = 720.0
 script = ExtResource("1_h7r77")
+metadata/_edit_horizontal_guides_ = []
 
 [node name="LORED Container" parent="." instance=ExtResource("2_egnhq")]
 layout_mode = 2
@@ -37,128 +81,24 @@ theme_override_constants/margin_left = 15
 theme_override_constants/margin_top = 15
 theme_override_constants/margin_bottom = 15
 
-[node name="Left" type="VBoxContainer" parent="Left"]
-custom_minimum_size = Vector2(64, 0)
-layout_mode = 2
-size_flags_horizontal = 0
-mouse_filter = 2
-theme_override_constants/separation = 0
-
-[node name="Menu Buttons" type="VBoxContainer" parent="Left/Left"]
-layout_mode = 2
-size_flags_horizontal = 0
-mouse_filter = 2
-theme_override_constants/separation = 0
-
-[node name="Menu Button" parent="Left/Left/Menu Buttons" instance=ExtResource("3_agafs")]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="Wallet Button" parent="Left/Left/Menu Buttons" instance=ExtResource("3_agafs")]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="Upgrades Button" parent="Left/Left/Menu Buttons" instance=ExtResource("3_agafs")]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="Purchasable Upgrade Count" type="RichTextLabel" parent="Left/Left/Menu Buttons/Upgrades Button"]
-unique_name_in_owner = true
-clip_contents = false
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-mouse_filter = 2
-theme = ExtResource("5_fcpu4")
-theme_override_constants/shadow_outline_size = 4
-theme_override_fonts/normal_font = ExtResource("5_fsywq")
-theme_override_font_sizes/normal_font_size = 14
-bbcode_enabled = true
-text = "4"
-fit_content = true
-autowrap_mode = 0
-
-[node name="Stage1" parent="Left/Left/Menu Buttons" instance=ExtResource("3_agafs")]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="Stage2" parent="Left/Left/Menu Buttons" instance=ExtResource("3_agafs")]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="Stage3" parent="Left/Left/Menu Buttons" instance=ExtResource("3_agafs")]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="Stage4" parent="Left/Left/Menu Buttons" instance=ExtResource("3_agafs")]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="Left2" type="VBoxContainer" parent="Left"]
+[node name="V" type="VBoxContainer" parent="Left"]
 layout_mode = 2
 size_flags_horizontal = 0
 mouse_filter = 2
 theme_override_constants/separation = 20
 alignment = 2
 
-[node name="Random Wishes" type="VBoxContainer" parent="Left/Left2"]
+[node name="Random Wishes" type="VBoxContainer" parent="Left/V"]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 10
 
-[node name="Main Wishes" type="VBoxContainer" parent="Left/Left2"]
+[node name="Main Wishes" type="VBoxContainer" parent="Left/V"]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 10
-
-[node name="Dev" type="VBoxContainer" parent="Left"]
-layout_mode = 2
-size_flags_vertical = 6
-mouse_filter = 2
-
-[node name="Dev" type="Button" parent="Left/Dev"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "throw texts"
-
-[node name="Dev2" type="Button" parent="Left/Dev"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "refund s2n's"
-
-[node name="TextureProgressBar" type="TextureProgressBar" parent="Left/Dev/Dev2"]
-layout_mode = 0
-offset_left = 164.0
-offset_top = -18.0
-offset_right = 204.0
-offset_bottom = 22.0
-
-[node name="Dev4" type="Button" parent="Left/Dev"]
-unique_name_in_owner = true
-visible = false
-layout_mode = 2
-text = "0"
-
-[node name="Dev3" type="Button" parent="Left/Dev"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Reset Stage 2"
-
-[node name="Dev5" type="Button" parent="Left/Dev"]
-unique_name_in_owner = true
-visible = false
-layout_mode = 2
-text = "Load 2
-"
-
-[node name="FPS" type="RichTextLabel" parent="Left/Dev"]
-unique_name_in_owner = true
-layout_mode = 2
-bbcode_enabled = true
-text = "Big text"
-fit_content = true
 
 [node name="Right" type="MarginContainer" parent="."]
 layout_mode = 2
@@ -181,6 +121,355 @@ layout_mode = 2
 layout_mode = 2
 mouse_filter = 2
 metadata/_edit_lock_ = true
+
+[node name="Sidebar" type="MarginContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="MarginContainer" type="MarginContainer" parent="Sidebar"]
+layout_mode = 2
+
+[node name="Sidebar Background" type="Panel" parent="Sidebar/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_fydh3")
+
+[node name="Sidebar Background2" type="Panel" parent="Sidebar/MarginContainer"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_qs83t")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Sidebar/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="MarginContainer2" type="MarginContainer" parent="Sidebar/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Sidebar Title Background" type="Panel" parent="Sidebar/MarginContainer/VBoxContainer/MarginContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_asv2k")
+
+[node name="MarginContainer" type="MarginContainer" parent="Sidebar/MarginContainer/VBoxContainer/MarginContainer2"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="Menu Button" parent="Sidebar/MarginContainer/VBoxContainer/MarginContainer2/MarginContainer" instance=ExtResource("4_3h2sv")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(36, 42)
+layout_mode = 2
+text = "GameName"
+color = Color(0, 0, 0, 1)
+
+[node name="Menu Contents" type="MarginContainer" parent="Sidebar/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="MenuScroll" type="ScrollContainer" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 1000)
+layout_mode = 2
+theme = ExtResource("13_0ehpq")
+horizontal_scroll_mode = 0
+
+[node name="MenuContainer" type="MarginContainer" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_right = 16
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="GAME" type="MarginContainer" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/GAME"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/GAME/HBoxContainer"]
+self_modulate = Color(1, 1, 1, 0.658824)
+layout_mode = 2
+size_flags_vertical = 4
+theme = ExtResource("13_0ehpq")
+bbcode_enabled = true
+text = "GAME"
+fit_content = true
+autowrap_mode = 0
+
+[node name="ShowHide" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/GAME/HBoxContainer" node_paths=PackedStringArray("node") instance=ExtResource("5_7doml")]
+layout_mode = 2
+node = NodePath("../../../Game")
+
+[node name="Game" type="MarginContainer" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_bottom = 25
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Wallet Button" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game/VBoxContainer" groups=["Menu_Game"] instance=ExtResource("4_3h2sv")]
+unique_name_in_owner = true
+layout_mode = 2
+icon = ExtResource("6_fxkih")
+text = "Wallet"
+
+[node name="Upgrades Button" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game/VBoxContainer" groups=["Menu_Game"] instance=ExtResource("4_3h2sv")]
+unique_name_in_owner = true
+layout_mode = 2
+icon = ExtResource("6_sjgrn")
+text = "Upgrades"
+
+[node name="Purchasable Upgrade Count" type="RichTextLabel" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game/VBoxContainer/Upgrades Button"]
+unique_name_in_owner = true
+clip_contents = false
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+mouse_filter = 2
+theme = ExtResource("5_fcpu4")
+theme_override_constants/shadow_outline_size = 4
+theme_override_fonts/normal_font = ExtResource("5_fsywq")
+theme_override_font_sizes/normal_font_size = 14
+bbcode_enabled = true
+text = "4"
+fit_content = true
+autowrap_mode = 0
+
+[node name="Stage1" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game/VBoxContainer" instance=ExtResource("4_3h2sv")]
+unique_name_in_owner = true
+layout_mode = 2
+icon = ExtResource("6_lo011")
+text = "Stage 1"
+
+[node name="Stage2" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game/VBoxContainer" instance=ExtResource("4_3h2sv")]
+unique_name_in_owner = true
+layout_mode = 2
+icon = ExtResource("7_6y55p")
+text = "Stage 2"
+
+[node name="Stage3" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game/VBoxContainer" instance=ExtResource("4_3h2sv")]
+unique_name_in_owner = true
+layout_mode = 2
+icon = ExtResource("7_6y55p")
+text = "Stage 3"
+
+[node name="Stage4" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game/VBoxContainer" instance=ExtResource("4_3h2sv")]
+unique_name_in_owner = true
+layout_mode = 2
+icon = ExtResource("7_6y55p")
+text = "Stage 4"
+
+[node name="SAVE" type="MarginContainer" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/SAVE"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/SAVE/HBoxContainer"]
+self_modulate = Color(1, 1, 1, 0.658824)
+layout_mode = 2
+size_flags_vertical = 4
+theme = ExtResource("13_0ehpq")
+bbcode_enabled = true
+text = "SAVE"
+fit_content = true
+autowrap_mode = 0
+
+[node name="ShowHide" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/SAVE/HBoxContainer" node_paths=PackedStringArray("node") instance=ExtResource("5_7doml")]
+layout_mode = 2
+node = NodePath("../../../Save")
+
+[node name="Save" type="MarginContainer" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_bottom = 25
+
+[node name="Save" type="VBoxContainer" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="New Game" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save/Save" groups=["Menu_Save"] instance=ExtResource("4_3h2sv")]
+layout_mode = 2
+icon = ExtResource("10_8u1ic")
+text = "New Game"
+
+[node name="Save Game" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save/Save" groups=["Menu_Save"] instance=ExtResource("4_3h2sv")]
+layout_mode = 2
+icon = ExtResource("10_mipnr")
+text = "Save"
+
+[node name="Load Game" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save/Save" groups=["Menu_Save"] instance=ExtResource("4_3h2sv")]
+layout_mode = 2
+icon = ExtResource("10_mipnr")
+text = "Load"
+
+[node name="Export Save" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save/Save" groups=["Menu_Save"] instance=ExtResource("4_3h2sv")]
+layout_mode = 2
+icon = ExtResource("12_bqm8u")
+text = "Export"
+
+[node name="Hard Reset" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save/Save" instance=ExtResource("4_3h2sv")]
+layout_mode = 2
+icon = ExtResource("13_0l83t")
+text = "Hard Reset"
+color = Color(1, 0, 0, 1)
+
+[node name="MarginContainer" type="MarginContainer" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save/Save"]
+layout_mode = 2
+theme_override_constants/margin_top = 20
+
+[node name="Save" type="VBoxContainer" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save/Save/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Save Color Button" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save/Save/MarginContainer/Save" groups=["Menu_Save"] instance=ExtResource("4_3h2sv")]
+layout_mode = 2
+icon = ExtResource("12_st5ae")
+text = "Set Color"
+
+[node name="Rename Save Button" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save/Save/MarginContainer/Save" groups=["Menu_Save"] instance=ExtResource("4_3h2sv")]
+layout_mode = 2
+icon = ExtResource("13_6v2xt")
+text = "Rename"
+
+[node name="Duplicate Save Button" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save/Save/MarginContainer/Save" groups=["Menu_Save"] instance=ExtResource("4_3h2sv")]
+layout_mode = 2
+icon = ExtResource("14_5312t")
+text = "Duplicate"
+
+[node name="Delete Save Button" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save/Save/MarginContainer/Save" instance=ExtResource("4_3h2sv")]
+layout_mode = 2
+icon = ExtResource("15_s64ty")
+text = "Delete"
+color = Color(1, 0, 0, 1)
+
+[node name="META" type="MarginContainer" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/META"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/META/HBoxContainer"]
+self_modulate = Color(1, 1, 1, 0.658824)
+layout_mode = 2
+size_flags_vertical = 4
+theme = ExtResource("13_0ehpq")
+bbcode_enabled = true
+text = "META"
+fit_content = true
+autowrap_mode = 0
+
+[node name="ShowHide" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/META/HBoxContainer" node_paths=PackedStringArray("node") instance=ExtResource("5_7doml")]
+layout_mode = 2
+node = NodePath("../../../Meta")
+
+[node name="Meta" type="MarginContainer" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_bottom = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Meta"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Discord" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Meta/VBoxContainer" instance=ExtResource("4_3h2sv")]
+layout_mode = 2
+icon = ExtResource("22_ejl1s")
+text = "Discord"
+color = Color(0.345098, 0.396078, 0.94902, 1)
+
+[node name="Itchio" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Meta/VBoxContainer" instance=ExtResource("4_3h2sv")]
+layout_mode = 2
+icon = ExtResource("23_mvmsj")
+text = "Itch.io"
+color = Color(0.980392, 0.360784, 0.360784, 1)
+
+[node name="Steam" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Meta/VBoxContainer" instance=ExtResource("4_3h2sv")]
+layout_mode = 2
+icon = ExtResource("24_ila10")
+text = "Steam"
+
+[node name="Godot" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Meta/VBoxContainer" instance=ExtResource("4_3h2sv")]
+layout_mode = 2
+icon = ExtResource("24_u1xhr")
+text = "Godot Engine"
+color = Color(0.345098, 0.654902, 0.862745, 1)
+
+[node name="Dev" type="VBoxContainer" parent="Sidebar/MarginContainer/VBoxContainer"]
+visible = false
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+
+[node name="Dev" type="Button" parent="Sidebar/MarginContainer/VBoxContainer/Dev"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "throw texts"
+
+[node name="Dev2" type="Button" parent="Sidebar/MarginContainer/VBoxContainer/Dev"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "refund s2n's"
+
+[node name="TextureProgressBar" type="TextureProgressBar" parent="Sidebar/MarginContainer/VBoxContainer/Dev/Dev2"]
+layout_mode = 0
+offset_left = 164.0
+offset_top = -18.0
+offset_right = 204.0
+offset_bottom = 22.0
+
+[node name="Dev4" type="Button" parent="Sidebar/MarginContainer/VBoxContainer/Dev"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+text = "0"
+
+[node name="Dev3" type="Button" parent="Sidebar/MarginContainer/VBoxContainer/Dev"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Reset Stage 2"
+
+[node name="Dev5" type="Button" parent="Sidebar/MarginContainer/VBoxContainer/Dev"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+text = "Load 2
+"
+
+[node name="FPS" type="RichTextLabel" parent="Sidebar/MarginContainer/VBoxContainer/Dev"]
+unique_name_in_owner = true
+layout_mode = 2
+bbcode_enabled = true
+text = "Big text"
+fit_content = true
 
 [node name="Control" type="Control" parent="."]
 layout_mode = 2
@@ -220,14 +509,14 @@ unique_name_in_owner = true
 position = Vector2(640, 360)
 shape = SubResource("RectangleShape2D_alvwj")
 
-[connection signal="pressed" from="Left/Left/Menu Buttons/Menu Button" to="." method="_on_menu_button_pressed"]
-[connection signal="pressed" from="Left/Left/Menu Buttons/Wallet Button" to="." method="_on_wallet_button_pressed"]
-[connection signal="pressed" from="Left/Left/Menu Buttons/Upgrades Button" to="." method="_on_upgrades_button_pressed"]
-[connection signal="sort_children" from="Left/Left2/Random Wishes" to="." method="_on_random_wishes_sort_children"]
-[connection signal="sort_children" from="Left/Left2/Main Wishes" to="." method="_on_main_wishes_sort_children"]
-[connection signal="pressed" from="Left/Dev/Dev" to="." method="_on_dev_pressed"]
-[connection signal="pressed" from="Left/Dev/Dev2" to="." method="_on_dev_2_pressed"]
-[connection signal="pressed" from="Left/Dev/Dev4" to="." method="_on_dev_4_pressed"]
-[connection signal="pressed" from="Left/Dev/Dev3" to="." method="_on_dev_3_pressed"]
-[connection signal="pressed" from="Left/Dev/Dev5" to="." method="_on_dev_5_pressed"]
+[connection signal="sort_children" from="Left/V/Random Wishes" to="." method="_on_random_wishes_sort_children"]
+[connection signal="sort_children" from="Left/V/Main Wishes" to="." method="_on_main_wishes_sort_children"]
+[connection signal="pressed" from="Sidebar/MarginContainer/VBoxContainer/MarginContainer2/MarginContainer/Menu Button" to="." method="_on_menu_button_pressed"]
+[connection signal="visibility_changed" from="Sidebar/MarginContainer/VBoxContainer/MarginContainer2/MarginContainer/Menu Button" to="Sidebar/MarginContainer/VBoxContainer/MarginContainer2/MarginContainer/Menu Button" method="_on_visibility_changed"]
+[connection signal="resized" from="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer" to="." method="_on_menu_container_resized"]
+[connection signal="pressed" from="Sidebar/MarginContainer/VBoxContainer/Dev/Dev" to="." method="_on_dev_pressed"]
+[connection signal="pressed" from="Sidebar/MarginContainer/VBoxContainer/Dev/Dev2" to="." method="_on_dev_2_pressed"]
+[connection signal="pressed" from="Sidebar/MarginContainer/VBoxContainer/Dev/Dev4" to="." method="_on_dev_4_pressed"]
+[connection signal="pressed" from="Sidebar/MarginContainer/VBoxContainer/Dev/Dev3" to="." method="_on_dev_3_pressed"]
+[connection signal="pressed" from="Sidebar/MarginContainer/VBoxContainer/Dev/Dev5" to="." method="_on_dev_5_pressed"]
 [connection signal="body_exited" from="Area2D" to="." method="_on_screen_area_body_exited"]

@@ -132,7 +132,7 @@ var used_by := []
 
 
 
-func _init(_type: int = 0) -> void:
+func _init(_type := Type.STONE) -> void:
 	type = _type
 	key = Type.keys()[type]
 	details.name = key.replace("_", " ").capitalize()

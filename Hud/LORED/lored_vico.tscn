@@ -112,7 +112,7 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_iihta")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="VBoxContainer/MarginContainer/MarginContainer/HBoxContainer/Panel"]
 unique_name_in_owner = true
-position = Vector2(2, 2)
+position = Vector2(-4, 0)
 scale = Vector2(2, 2)
 sprite_frames = ExtResource("8_mscl5")
 animation = &"TOBACCO"
@@ -145,22 +145,32 @@ alignment = 1
 [node name="Info" parent="VBoxContainer/Control/HBoxContainer" instance=ExtResource("7_d7ftl")]
 unique_name_in_owner = true
 layout_mode = 2
+kill_autobuyer = true
+kill_check = true
 
 [node name="Jobs" parent="VBoxContainer/Control/HBoxContainer" instance=ExtResource("7_d7ftl")]
 unique_name_in_owner = true
 layout_mode = 2
+kill_autobuyer = true
+kill_check = true
 
 [node name="Active Buffs" parent="VBoxContainer/Control/HBoxContainer" instance=ExtResource("7_d7ftl")]
 unique_name_in_owner = true
 layout_mode = 2
+kill_autobuyer = true
+kill_check = true
 
 [node name="View Special" parent="VBoxContainer/Control/HBoxContainer" instance=ExtResource("7_d7ftl")]
 unique_name_in_owner = true
 layout_mode = 2
+kill_autobuyer = true
+kill_check = true
 
 [node name="Sleep" parent="VBoxContainer/Control/HBoxContainer" instance=ExtResource("7_d7ftl")]
 unique_name_in_owner = true
 layout_mode = 2
+kill_autobuyer = true
+kill_check = true
 
 [node name="Level Up" parent="VBoxContainer/Control/HBoxContainer" instance=ExtResource("7_d7ftl")]
 unique_name_in_owner = true

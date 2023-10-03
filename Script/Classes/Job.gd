@@ -505,6 +505,9 @@ func assign_lored(lored_type: int) -> void:
 		})
 		hookup_required_currencies()
 		animation_key = "refuel"
+		if lored != LORED.Type.COAL and _lored.fuel_currency == Currency.Type.COAL:
+			# whenever coal refuels, check if should emit workable!
+			lv.get_lored(LORED.Type.COAL).get_job(type).completed.connect(emit_workable)
 	else:
 		animation_key = _lored.key
 	
@@ -833,6 +836,7 @@ func complete_REFUEL() -> void:
 
 
 # - Get
+
 
 func can_start() -> bool:
 	if not unlocked:

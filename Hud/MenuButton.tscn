@@ -1,0 +1,87 @@
+[gd_scene load_steps=8 format=3 uid="uid://bfi0uovwegdxj"]
+
+[ext_resource type="Script" path="res://Hud/MenuButton.gd" id="1_pwhdq"]
+[ext_resource type="Texture2D" uid="uid://djwo8cenuwp14" path="res://Sprites/Hud/Menu.png" id="2_rnf1g"]
+[ext_resource type="Theme" uid="uid://dt7rd31blnvth" path="res://Theme/Invis.tres" id="2_w2of4"]
+[ext_resource type="Texture2D" uid="uid://d328m6cljbdnh" path="res://Sprites/Hud/arrow-down-s-line.png" id="4_71ge4"]
+[ext_resource type="Theme" uid="uid://b8t7tkhvril5g" path="res://Theme/Standard.tres" id="4_eba2e"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_icq3d"]
+bg_color = Color(1, 1, 1, 0.0588235)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_r7kh0"]
+bg_color = Color(1, 1, 1, 0.03)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[node name="Menu Button" type="MarginContainer"]
+custom_minimum_size = Vector2(36, 36)
+offset_right = 36.0
+offset_bottom = 36.0
+script = ExtResource("1_pwhdq")
+icon = ExtResource("2_rnf1g")
+text = "Menu"
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 2
+focus_mode = 0
+mouse_default_cursor_shape = 2
+theme = ExtResource("2_w2of4")
+theme_override_styles/hover = SubResource("StyleBoxFlat_icq3d")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_r7kh0")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+custom_minimum_size = Vector2(36, 36)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 6
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 10
+
+[node name="Control" type="Control" parent="MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+
+[node name="Icon" type="TextureRect" parent="MarginContainer/HBoxContainer/Control"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+offset_right = 24.0
+offset_bottom = 24.0
+size_flags_horizontal = 0
+mouse_filter = 2
+texture = ExtResource("4_71ge4")
+expand_mode = 2
+stretch_mode = 5
+
+[node name="Label" type="RichTextLabel" parent="MarginContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+theme = ExtResource("4_eba2e")
+bbcode_enabled = true
+text = "Ok"
+fit_content = true
+autowrap_mode = 0
+
+[connection signal="button_down" from="Button" to="." method="_on_button_button_down"]
+[connection signal="button_up" from="Button" to="." method="_on_button_button_up"]
+[connection signal="mouse_entered" from="Button" to="." method="_on_button_mouse_entered"]
+[connection signal="mouse_exited" from="Button" to="." method="_on_button_mouse_exited"]
+[connection signal="pressed" from="Button" to="." method="_on_button_pressed"]
