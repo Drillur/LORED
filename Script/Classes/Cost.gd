@@ -8,6 +8,9 @@ signal use_allowed_changed(allowed)
 
 var cost := {}
 var base_cost := {}
+
+var produced_by := []
+
 var affordable := Bool.new(false)
 var use_allowed := true: # set by player in Wallet
 	set(val):
@@ -22,12 +25,7 @@ var purchased := false:
 				disconnect_calls()
 			else:
 				connect_calls()
-var currencies_are_unlocked := false:
-	set(val):
-		if not currencies_are_unlocked == val:
-			currencies_are_unlocked = val
-
-
+var currencies_are_unlocked := false
 var has_stage1_currency := false
 
 var stage: int
@@ -43,6 +41,9 @@ func _init(_cost: Dictionary) -> void:
 	SaveManager.connect("load_finished", recheck)
 	for cur in cost:
 		var currency = wa.get_currency(cur) as Currency
+		for x in currency.produced_by:
+			if not x in produced_by:
+				produced_by.append(x)
 		if currency.stage == 1:
 			has_stage1_currency = true
 		currency.use_allowed_changed.connect(currency_use_allowed_changed)
@@ -211,6 +212,7 @@ func get_insufficient_currency_types() -> Array:
 
 func get_eta() -> Big:
 	if currencies_are_unlocked:
+		
 		var cur: Currency = wa.get_currency(cost.keys()[0])
 		var eta: Big = cur.get_eta(cost.values()[0].get_value())
 		longest_eta_cur = cur.type
@@ -220,12 +222,12 @@ func get_eta() -> Big:
 			if i_eta.greater(eta):
 				eta = i_eta
 				longest_eta_cur = cur.type
-		return eta
+		return Big.new(eta)
 	return Big.new(0)
 
 
 func get_progress_percent() -> float:
-	if currencies_are_unlocked:
+	if currencies_are_unlocked and not lv.any_loreds_in_list_are_inactive(produced_by):
 		var count = wa.get_count(longest_eta_cur)
 		var _cost = cost[longest_eta_cur].get_value()
 		return count.percent(_cost)
@@ -233,10 +235,9 @@ func get_progress_percent() -> float:
 	var total_percent = cost.size()
 	var percent := 0.0
 	for cur in cost:
-		var currency = wa.get_currency(cur) 
-		var count = currency.count
+		var currency = wa.get_currency(cur)
 		var _cost = cost[cur].get_value()
-		percent += count.percent(_cost)
+		percent += currency.count.percent(_cost)
 	return percent / total_percent
 
 

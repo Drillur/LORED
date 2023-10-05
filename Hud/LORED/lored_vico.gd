@@ -56,11 +56,7 @@ func _ready():
 	# ref
 	status.hide()
 	progress_bar.hide()
-	progress_bar.remove_markers()
 	fuel_bar.size.x = size.x
-	fuel_bar.delta_bar.hide()
-	fuel_bar.animate_changes()
-	fuel_bar.hide_background()
 	set_icons()
 	remove_checks()
 	
@@ -219,6 +215,7 @@ func purchased_changed() -> void:
 	else:
 		name_and_icon.hide()
 		currency.show()
+		currency.setup(lored.primary_currency)
 		if lv.sleep_unlocked.is_true():
 			sleep.show()
 		if lv.advanced_details_unlocked.is_true():

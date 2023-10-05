@@ -1,0 +1,71 @@
+[gd_scene load_steps=6 format=3 uid="uid://cvi1rqoeg6bj0"]
+
+[ext_resource type="Script" path="res://Hud/Notice/save_notice.gd" id="1_3suxe"]
+[ext_resource type="Theme" uid="uid://b8t7tkhvril5g" path="res://Theme/Standard.tres" id="1_qmpjq"]
+[ext_resource type="Texture2D" uid="uid://cya8ro2s324t3" path="res://Sprites/Hud/Save.png" id="1_vx4rb"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6l6uc"]
+bg_color = Color(0.0705882, 0.0705882, 0.0705882, 1)
+draw_center = false
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+shadow_color = Color(0.8, 0.8, 0.8, 0.298039)
+shadow_size = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_i0b8g"]
+bg_color = Color(0.1, 0.1, 0.1, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+shadow_color = Color(0.8, 0.8, 0.8, 0.298039)
+
+[node name="SaveNotice" type="MarginContainer"]
+custom_minimum_size = Vector2(125, 0)
+offset_right = 122.0
+offset_bottom = 44.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+script = ExtResource("1_3suxe")
+
+[node name="Background" type="Panel" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_6l6uc")
+
+[node name="Background2" type="Panel" parent="."]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_i0b8g")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Icon" type="TextureRect" parent="MarginContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+texture = ExtResource("1_vx4rb")
+
+[node name="Label" type="RichTextLabel" parent="MarginContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme = ExtResource("1_qmpjq")
+bbcode_enabled = true
+text = "[center][i]Saved!"
+fit_content = true
+autowrap_mode = 0
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 3.0
+one_shot = true

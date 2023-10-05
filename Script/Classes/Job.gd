@@ -797,16 +797,11 @@ func stop_and_refund() -> void:
 
 func complete() -> void:
 	no_longer_working()
+	
 	if has_produced_currencies:
 		var total_produced_amount := Big.new()
 		var mult = 1.0 if randf_range(0, 100) > crit.get_as_float() else randf_range(7.5, 12.5)
-		for cur in produced_currencies:
-			wa.get_currency(cur).last_crit_modifier = mult
-			last_production[cur] = in_hand_output[cur].m(mult)
-			total_produced_amount.a(last_production[cur])
-			wa.add_from_lored(cur, last_production[cur])
-		
-		for cur in bonus_production:
+		for cur in in_hand_output:
 			wa.get_currency(cur).last_crit_modifier = mult
 			last_production[cur] = in_hand_output[cur].m(mult)
 			total_produced_amount.a(last_production[cur])

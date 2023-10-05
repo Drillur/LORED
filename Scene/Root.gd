@@ -8,7 +8,6 @@ extends MarginContainer
 @onready var random_wishes = %"Random Wishes"
 @onready var main_wishes = %"Main Wishes"
 @onready var control = $Control
-@onready var menu = $Menu
 @onready var menu_button = %"Menu Button" as _MenuButton
 @onready var upgrades_button = %"Upgrades Button" as _MenuButton
 @onready var wallet = $Wallet as WalletVico
@@ -24,11 +23,15 @@ extends MarginContainer
 
 @onready var tooltip_position_display = $"Control/Tooltip/Tooltip Position Display"
 
+# MENU
+
 @onready var menu_scroll = %MenuScroll
 @onready var menu_container = %MenuContainer
 @onready var menu_contents = %"Menu Contents"
 @onready var sidebar_background = %"Sidebar Background"
 @onready var sidebar_title_background = %"Sidebar Title Background"
+@onready var save_game = %"Save Game"
+@onready var total_notice_count = %"Total Notice Count"
 
 var menu_container_size: float
 
@@ -43,10 +46,16 @@ func _ready():
 		wallet_button.hide()
 		$Left/Dev.hide()
 	
+	get_tree().root.size_changed.connect(window_resized)
+	
+	# MENU
+	
 	%"Sidebar Title Background".modulate = gv.game_color
 	%"Sidebar Background".modulate = gv.game_color
 	menu_scroll.get_v_scroll_bar().modulate = gv.game_color
-	get_tree().root.size_changed.connect(window_resized)
+	update_menu_size_once()
+	wallet.color_changed.connect(on_wallet_color_changed)
+	wallet_button.color = gv.get_stage_color(Stage.Type.STAGE1)
 	
 	
 	wa.wallet_unlocked_changed.connect(display_wallet_button)
@@ -75,9 +84,6 @@ func _ready():
 	
 	upgrade_container.connect("upgrade_menu_tab_changed", update_upgrades_button_color)
 	
-	gv.connect("stage_changed", stage_changed)
-	stage_changed(1)
-	
 	gv.root_ready = true
 	
 	lv.start()
@@ -91,8 +97,6 @@ func _ready():
 	
 	wi.start()
 	
-	update_menu_size_once()
-	
 	# DEBUG
 	update_fps()
 
@@ -100,7 +104,8 @@ func _ready():
 func update_menu_size_once() -> void:
 	await menu_container.resized
 	update_menu_container_size()
-	menu_scroll.custom_minimum_size.y = menu_container_size
+	_on_menu_container_resized()
+	close_menu()
 
 
 
@@ -120,8 +125,8 @@ func _input(event):
 	):
 		var node
 		var button
-		if menu.visible:
-			node = menu
+		if menu_contents.visible:
+			node = menu_contents
 			button = menu_button
 		elif offline_report.visible:
 			node = offline_report
@@ -141,18 +146,19 @@ func _input(event):
 				)
 			)
 		):
-			node.hide()
+			if node == menu_contents:
+				close_menu()
+			else:
+				node.hide()
 			gv.clear_tooltip()
 			return
 	
-	if esc_pressed and not menu.visible:
-		menu.show()
+	if esc_pressed and not menu_contents.visible:
+		open_menu()
 		return
 	
 	if Input.is_action_just_pressed("Save"):
-		hide_menus()
-		menu._on_save_button_pressed()
-		menu.show()
+		SaveManager.save_game()
 		return
 	
 	if Input.is_action_just_pressed("Q"):
@@ -201,27 +207,31 @@ func _input(event):
 
 
 func should_hide_a_menu() -> bool:
-	return menu.visible or upgrade_container.visible or wallet.visible or offline_report.visible
+	return menu_contents.visible or upgrade_container.visible or wallet.visible or offline_report.visible
 
 
 func _on_menu_button_pressed():
-	menu_contents.visible = not menu_contents.visible
-	menu_button.set_text_visibility(menu_contents.visible)
-	sidebar_background.visible = menu_contents.visible
-#	if menu_contents.visible:
-#		menu_button.color = Color.BLACK
-#		#sidebar_title_background.modulate = gv.game_color
-#	else:
-#		menu_button.color = Color.WHITE
-#		#sidebar_title_background.
-	return
-	if menu.visible:
-		menu.hide()
+	if menu_contents.visible:
+		close_menu()
 	else:
-		menu.show()
+		open_menu()
+
+
+func close_menu() -> void:
+	menu_contents.hide()
+	menu_button.set_text_visibility(false)
+	sidebar_background.hide()
+
+
+func open_menu() -> void:
+	menu_contents.show()
+	menu_button.set_text_visibility(true)
+	sidebar_background.show()
+	total_notice_count.hide()
 
 
 func _on_upgrades_button_pressed():
+	hide_menus()
 	if upgrade_container.visible:
 		upgrade_container.hide()
 	else:
@@ -229,6 +239,7 @@ func _on_upgrades_button_pressed():
 
 
 func _on_wallet_button_pressed():
+	hide_menus()
 	open_wallet(not wallet.visible)
 
 
@@ -260,15 +271,19 @@ func update_upgrades_button_color(upgrade_menu_tab: int) -> void:
 	upgrades_button.color = up.get_menu_color(upgrade_menu_tab)
 
 
-func stage_changed(stage: int) -> void:
-	var color = gv.get_stage_color(stage)
-	get_tree().call_group("Menu_Game", "set_color", color)
-
 
 func update_purchasable_upgrade_count() -> void:
 	var count: int = up.purchasable_upgrade_count.get_value()
-	purchasable_upgrade_count.visible = count != 0
-	purchasable_upgrade_count.text = "[rainbow freq=0.2 sat=1.0 val=1.0][wave amp=40 freq=1.0]" + str(count)
+	purchasable_upgrade_count.count = count
+	if not upgrade_container.visible:
+		update_notice_count()
+
+
+func update_notice_count() -> void:
+	total_notice_count.count = (
+		up.purchasable_upgrade_count.get_value()
+		+ 0
+	)
 
 
 
@@ -279,6 +294,7 @@ func window_resized() -> void:
 	screen_area.shape.size.x = size.x * 1.1
 	screen_area.shape.size.y = size.y * 1.1
 	screen_area.position = Vector2(size.x / 2, size.y / 2)
+	
 	update_menu_container_size()
 	_on_menu_container_resized()
 
@@ -294,6 +310,26 @@ func _on_menu_container_resized():
 	menu_scroll.custom_minimum_size.y = min(menu_container.size.y, menu_container_size)
 
 
+func on_wallet_color_changed(val: Color) -> void:
+	wallet_button.color = val
+
+
+func _on_stage_1_pressed():
+	select_stage(1)
+
+
+func _on_stage_2_pressed():
+	select_stage(2)
+
+
+func _on_stage_3_pressed():
+	select_stage(3)
+
+
+func _on_stage_4_pressed():
+	select_stage(4)
+
+
 
 
 # - Ref
@@ -305,8 +341,7 @@ func update_fps() -> void:
 
 
 func update_menu_container_size() -> void:
-	menu_container_size = get_viewport().size.y - menu_scroll.global_position.y - 20
-	print(menu_container_size)
+	menu_container_size = get_viewport().size.y - 88 - 26
 
 
 func display_wallet_button(unlocked: bool) -> void:
@@ -360,9 +395,9 @@ func select_upgrade_menu_tab(tab: int, _show = true) -> void:
 
 func hide_menus() -> void:
 	upgrade_container.hide()
-	menu.hide()
 	wallet.hide()
 	offline_report.hide()
+	close_menu()
 	gv.clear_tooltip()
 
 
@@ -433,6 +468,7 @@ func _on_dev_3_pressed():
 
 func _on_dev_5_pressed():
 	pass # Replace with function body.
+
 
 
 

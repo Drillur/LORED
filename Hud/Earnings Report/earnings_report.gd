@@ -273,10 +273,10 @@ func lost_resources() -> void:
 				<= wa.get_currency(b).gain_over_loss
 			)
 	)
-	var i = 0
+	var _i = 0
 	for cur in negative_resources:
 		instance_label(cur, loss_parent)
-		i += 1
+		_i += 1
 	
 	show_or_hide_loss()
 	

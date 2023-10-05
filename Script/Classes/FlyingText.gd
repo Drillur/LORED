@@ -3,7 +3,7 @@ extends Resource
 
 
 
-enum Type { CURRENCY, LEVEL_UP, SLEEP, }
+enum Type { CURRENCY, LEVEL_UP, SLEEP, JUST_TEXT, }
 enum CurrencyKeys { collide, cur, text, }
 
 
@@ -35,7 +35,7 @@ func _init(
 	layer = _layer
 	velocity_range = _velocity_range
 	match type:
-		Type.CURRENCY:
+		Type.CURRENCY, Type.SLEEP, Type.JUST_TEXT:
 			duration = 0.8
 		Type.LEVEL_UP:
 			duration = 1.5
@@ -63,7 +63,7 @@ func add(data: Dictionary) -> void:
 			vico.setup_currency(data)
 		Type.LEVEL_UP:
 			vico.setup_level_up(data)
-		Type.SLEEP:
+		Type.SLEEP, Type.JUST_TEXT:
 			vico.setup_sleep(data)
 
 

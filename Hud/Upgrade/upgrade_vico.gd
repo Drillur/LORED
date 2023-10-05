@@ -62,6 +62,7 @@ func cost_update() -> void:
 		val
 		and upgrade.autobuy
 		or upgrade.purchased.is_true()
+		or upgrade.unlocked.is_false()
 	):
 		check.hide()
 		return

@@ -90,10 +90,7 @@ func setup_sleep(data: Dictionary) -> void:
 
 
 
-func go(
-	_duration: float,
-	_velocity_range: Array
-) -> void:
+func go(_duration: float, _velocity_range: Array) -> void:
 	show()
 	if _duration > 0:
 		timer.start(_duration)

@@ -44,7 +44,6 @@ func setup(_wish: Wish) -> void:
 	if not is_node_ready():
 		await ready
 	
-	bar.remove_markers().remove_texts().animate_changes()
 	bar.attach_attribute(wish.objective.progress)
 	
 	icon.texture = wish.get_icon()

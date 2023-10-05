@@ -61,6 +61,9 @@ layout_mode = 2
 [node name="Bar" parent="VBoxContainer/MarginContainer3" instance=ExtResource("5_o7b2f")]
 unique_name_in_owner = true
 layout_mode = 2
+kill_markers = true
+animate = true
+kill_background = true
 
 [node name="MarginContainer2" type="MarginContainer" parent="VBoxContainer/MarginContainer3"]
 layout_mode = 2

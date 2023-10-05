@@ -9,6 +9,7 @@ signal pressed
 @onready var texture_rect = %Icon
 @onready var button = $Button
 @onready var label = %Label
+@onready var texts = $Texts
 
 @export var icon: Texture2D
 @export var text: String
@@ -54,6 +55,12 @@ func _on_button_pressed():
 		emit_signal("pressed")
 	else:
 		drop_down.visible = not drop_down.visible
+	
+	match name:
+		"Save Game":
+			if gv.current_clock - SaveManager.last_save_clock < 3:
+				return
+			SaveManager.save_game()
 
 
 func drop_down_visibility_changed() -> void:

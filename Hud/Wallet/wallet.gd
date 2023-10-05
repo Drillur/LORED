@@ -26,6 +26,7 @@ extends MarginContainer
 
 @onready var right_down = $Control/Right
 
+signal color_changed(val)
 
 var ascending_icon: Texture = preload("res://Sprites/Hud/arrow-up-s-line.png")
 var descending_icon: Texture = preload("res://Sprites/Hud/arrow-down-s-line.png")
@@ -44,11 +45,13 @@ var wallet_currency_node = preload("res://Hud/Wallet/wallet_currency.tscn")
 var content := {}
 var color: Color:
 	set(val):
-		color = val
-		title_bg.modulate = color
-		option_bg.modulate = color
-		bg.modulate = color
-		option_title_bg.modulate = color
+		if color != val:
+			color = val
+			title_bg.modulate = color
+			option_bg.modulate = color
+			bg.modulate = color
+			option_title_bg.modulate = color
+			color_changed.emit(val)
 
 var sort: int = -1:
 	set(val):

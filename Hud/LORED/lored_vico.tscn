@@ -54,6 +54,7 @@ layout_mode = 2
 [node name="Progress Bar" parent="VBoxContainer/MarginContainer" instance=ExtResource("2_p04r2")]
 unique_name_in_owner = true
 layout_mode = 2
+kill_markers = true
 
 [node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/MarginContainer"]
 layout_mode = 2
@@ -128,6 +129,8 @@ metadata/_edit_lock_ = true
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 8
+animate = true
+kill_background = true
 
 [node name="Control" type="MarginContainer" parent="VBoxContainer"]
 layout_mode = 2

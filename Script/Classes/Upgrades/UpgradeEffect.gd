@@ -412,8 +412,6 @@ func refresh() -> void:
 				Upgrade.Type.ITS_GROWIN_ON_ME:
 					var iron := lv.get_lored(LORED.Type.IRON)
 					var copper := lv.get_lored(LORED.Type.COPPER)
-					var iron_output = iron.output.get_text()
-					var copper_output = copper.output.get_text()
 					#iron.output.alter_value(iron.output.multiplied, in_hand, effect.get_value())
 					iron.output.alter_value(
 						iron.output.multiplied,

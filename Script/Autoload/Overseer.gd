@@ -151,6 +151,7 @@ func _notification(what) -> void:
 
 
 func session_tracker() -> void:
+	await root_ready_finished
 	var t = Timer.new()
 	t.one_shot = false
 	t.wait_time = 1
@@ -218,6 +219,8 @@ func open() -> void:
 
 
 func node_has_point(node: Node, point: Vector2) -> bool:
+	if not node.is_visible_in_tree():
+		return false
 	return node.get_global_rect().has_point(point)
 
 

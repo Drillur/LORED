@@ -191,7 +191,10 @@ func _init(_type: int = 0) -> void:
 	add_job(Job.Type.REFUEL, true)
 	
 	asleep.became_false.connect(work)
-	connect("completed_job", work)
+	completed_job.connect(work)
+	purchased.became_true.connect(work)
+	gv.one_second.connect(work)
+	disconnect_second_work_thing()
 	
 	SaveManager.connect("load_finished", load_finished)
 	SaveManager.connect("load_started", load_started)
@@ -718,7 +721,7 @@ func init_DRAW_PLATE() -> void:
 
 
 func init_AXES() -> void:
-	details.name = "Assemblotron"
+	details.name = "Alaxea"
 	add_job(Job.Type.AXES, true)
 	cost = Cost.new({
 		Currency.Type.IRON: Value.new(1000),
@@ -819,6 +822,7 @@ func init_S4PLACEHOLDER() -> void:
 	primary_currency = Currency.Type.STONE
 
 
+
 func add_job(_job: int, _unlocked_by_default := false) -> void:
 	jobs[_job] = Job.new(_job) as Job
 	jobs[_job].unlocked_by_default = _unlocked_by_default
@@ -853,6 +857,7 @@ func remove_job_produced_and_required_currencies(job_type: int) -> void:
 func loreds_initialized() -> void:
 	gv.add_lored_to_stage(stage, type)
 	for job in jobs.values():
+		job = job as Job
 		job.assign_lored(type)
 		
 		fuel_cost.connect("changed", job.lored_fuel_cost_changed)
@@ -866,9 +871,9 @@ func loreds_initialized() -> void:
 		job.lored_haste_changed()
 		job.lored_fuel_cost_changed()
 		
-		job.connect("became_workable", work)
-		job.connect("completed", job_completed)
-		job.connect("cut_short", job_cut_short)
+		job.became_workable.connect(work)
+		job.completed.connect(job_completed)
+		job.cut_short.connect(job_cut_short)
 		
 		if job.unlocked_by_default:
 			unlock_job(job.type)
@@ -1215,13 +1220,9 @@ func first_purchase_ever() -> void:
 
 
 func level_up() -> void:
-	var wasnt_purchased := false
 	if purchased.is_false():
-		wasnt_purchased = true
 		purchased.set_to(true)
 	set_level_to(level + 1)
-	if wasnt_purchased:
-		work()
 
 
 func set_level_to(_level: int) -> void:
@@ -1321,6 +1322,7 @@ func disconnect_limit_break(sig: Signal) -> void:
 func work(job_type: int = get_next_job_automatically()) -> void:
 	if (
 		purchased.is_false()
+		or gv.session_duration < 1
 		or unlocked.is_false()
 		or working.is_true()
 		or asleep.is_true()
@@ -1407,6 +1409,13 @@ func cannot_work(reason: int) -> void:
 				vico.set_status_and_currency("Cannot work!", primary_currency)
 	emit_signal("became_unable_to_work")
 
+
+
+# - Handy
+
+func disconnect_second_work_thing() -> void:
+	await gv.one_second
+	gv.one_second.disconnect(work)
 
 
 # - Wish

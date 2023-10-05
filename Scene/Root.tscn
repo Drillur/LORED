@@ -1,32 +1,35 @@
-[gd_scene load_steps=33 format=3 uid="uid://bseqrj5lg08it"]
+[gd_scene load_steps=36 format=3 uid="uid://bseqrj5lg08it"]
 
 [ext_resource type="Script" path="res://Scene/Root.gd" id="1_h7r77"]
 [ext_resource type="PackedScene" uid="uid://rmruae8fguk4" path="res://Hud/LORED/lored_container.tscn" id="2_egnhq"]
 [ext_resource type="PackedScene" uid="uid://dlt6lvasr6c46" path="res://Hud/Upgrade/upgrade_container.tscn" id="3_3omr7"]
+[ext_resource type="PackedScene" uid="uid://cvi1rqoeg6bj0" path="res://Hud/Notice/save_notice.tscn" id="3_ugub1"]
 [ext_resource type="PackedScene" uid="uid://bfi0uovwegdxj" path="res://Hud/MenuButton.tscn" id="4_3h2sv"]
-[ext_resource type="PackedScene" uid="uid://c4jcyq4x5dq51" path="res://Hud/Menu/menu.tscn" id="4_y1gq0"]
 [ext_resource type="PackedScene" uid="uid://ddupv5ku3o3m2" path="res://Hud/ShowHide.tscn" id="5_7doml"]
-[ext_resource type="Theme" uid="uid://cwt08llwihqii" path="res://Theme/ShadowText.tres" id="5_fcpu4"]
-[ext_resource type="FontFile" uid="uid://cubavfw1lomep" path="res://Fonts/Roboto-Black.ttf" id="5_fsywq"]
 [ext_resource type="Texture2D" uid="uid://d246l0oi6tmqa" path="res://Sprites/Hud/ResourceViewer.png" id="6_fxkih"]
 [ext_resource type="Texture2D" uid="uid://bog36eh0f0ar1" path="res://Sprites/Hud/Tab/t0.png" id="6_lo011"]
 [ext_resource type="PackedScene" uid="uid://dg6lv67h5eiuj" path="res://Hud/Wallet/wallet.tscn" id="6_pdtq1"]
 [ext_resource type="Texture2D" uid="uid://408er70eh4ns" path="res://Sprites/Hud/upgrades.png" id="6_sjgrn"]
+[ext_resource type="PackedScene" uid="uid://bc52155u06u16" path="res://Hud/Notice/notifications.tscn" id="7_3ao4c"]
 [ext_resource type="Texture2D" uid="uid://bqaiv8sb5y85p" path="res://Sprites/Hud/Tab/s2.png" id="7_6y55p"]
 [ext_resource type="PackedScene" uid="uid://c2quvpihdkvj2" path="res://Hud/Earnings Report/earnings_report.tscn" id="8_gl0q2"]
 [ext_resource type="Texture2D" uid="uid://dlt8c53eja853" path="res://Sprites/Hud/New Game.png" id="10_8u1ic"]
 [ext_resource type="Texture2D" uid="uid://cya8ro2s324t3" path="res://Sprites/Hud/Save.png" id="10_mipnr"]
+[ext_resource type="Texture2D" uid="uid://bvb4ehu30w7iu" path="res://Sprites/Hud/Options.png" id="12_34j7m"]
 [ext_resource type="Texture2D" uid="uid://fyiafb4i50ua" path="res://Sprites/Hud/Clipboard.png" id="12_bqm8u"]
 [ext_resource type="Texture2D" uid="uid://cm003srgjic8i" path="res://Sprites/Hud/Color.png" id="12_st5ae"]
 [ext_resource type="Theme" uid="uid://b8t7tkhvril5g" path="res://Theme/Standard.tres" id="13_0ehpq"]
 [ext_resource type="Texture2D" uid="uid://bg61ibd6ds5os" path="res://Sprites/Hud/Hard Reset.png" id="13_0l83t"]
 [ext_resource type="Texture2D" uid="uid://bv5ukdy8ktnmp" path="res://Sprites/Hud/Rename.png" id="13_6v2xt"]
 [ext_resource type="Texture2D" uid="uid://c1omdjwk0lsh4" path="res://Sprites/Hud/Duplicate.png" id="14_5312t"]
+[ext_resource type="Texture2D" uid="uid://i5w3qd2sgfwm" path="res://Sprites/Hud/Load.png" id="15_bxrvx"]
 [ext_resource type="Texture2D" uid="uid://dbgwbxq3lcon1" path="res://Sprites/Hud/Delete.png" id="15_s64ty"]
 [ext_resource type="Texture2D" uid="uid://d31dpqjhgrtaq" path="res://Sprites/Hud/Discord.png" id="22_ejl1s"]
 [ext_resource type="Texture2D" uid="uid://kdslypb5pkh8" path="res://Sprites/Hud/ItchIo.svg" id="23_mvmsj"]
 [ext_resource type="Texture2D" uid="uid://bwk6j2a1sf2d7" path="res://Sprites/Hud/steam-logo-transparent.png" id="24_ila10"]
+[ext_resource type="Texture2D" uid="uid://dpest0qdhsgcn" path="res://Sprites/Hud/PatchNotes.png" id="24_qdxv7"]
 [ext_resource type="Texture2D" uid="uid://bbj2j5ohabcp1" path="res://Sprites/Hud/Godot.svg" id="24_u1xhr"]
+[ext_resource type="Texture2D" uid="uid://bqdnbs21rmkig" path="res://Sprites/Hud/Stats.png" id="25_ops5o"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fydh3"]
 bg_color = Color(0.0705882, 0.0705882, 0.0705882, 1)
@@ -69,6 +72,7 @@ offset_right = 1280.0
 offset_bottom = 720.0
 script = ExtResource("1_h7r77")
 metadata/_edit_horizontal_guides_ = []
+metadata/_edit_vertical_guides_ = []
 
 [node name="LORED Container" parent="." instance=ExtResource("2_egnhq")]
 layout_mode = 2
@@ -106,8 +110,16 @@ size_flags_horizontal = 8
 mouse_filter = 2
 theme_override_constants/margin_left = 0
 theme_override_constants/margin_top = 15
-theme_override_constants/margin_right = 32
+theme_override_constants/margin_right = 27
 theme_override_constants/margin_bottom = 15
+
+[node name="Notice" type="MarginContainer" parent="Right"]
+layout_mode = 2
+theme_override_constants/margin_top = 32
+
+[node name="SaveNotice" parent="Right/Notice" instance=ExtResource("3_ugub1")]
+visible = false
+layout_mode = 2
 
 [node name="Upgrade Container" parent="." instance=ExtResource("3_3omr7")]
 visible = false
@@ -126,10 +138,10 @@ metadata/_edit_lock_ = true
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
 
 [node name="MarginContainer" type="MarginContainer" parent="Sidebar"]
 layout_mode = 2
@@ -156,11 +168,12 @@ layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_asv2k")
 
 [node name="MarginContainer" type="MarginContainer" parent="Sidebar/MarginContainer/VBoxContainer/MarginContainer2"]
+custom_minimum_size = Vector2(0, 62)
 layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 0
+theme_override_constants/margin_bottom = 0
 
 [node name="Menu Button" parent="Sidebar/MarginContainer/VBoxContainer/MarginContainer2/MarginContainer" instance=ExtResource("4_3h2sv")]
 unique_name_in_owner = true
@@ -169,12 +182,27 @@ layout_mode = 2
 text = "GameName"
 color = Color(0, 0, 0, 1)
 
+[node name="Control" type="Control" parent="Sidebar/MarginContainer/VBoxContainer/MarginContainer2/MarginContainer/Menu Button"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 8
+mouse_filter = 2
+
+[node name="Total Notice Count" parent="Sidebar/MarginContainer/VBoxContainer/MarginContainer2/MarginContainer/Menu Button/Control" instance=ExtResource("7_3ao4c")]
+unique_name_in_owner = true
+layout_mode = 2
+anchors_preset = 0
+offset_left = -8.0
+offset_top = -6.0
+offset_right = 7.0
+offset_bottom = 9.0
+
 [node name="Menu Contents" type="MarginContainer" parent="Sidebar/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_constants/margin_left = 16
+theme_override_constants/margin_left = 20
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
@@ -223,39 +251,54 @@ node = NodePath("../../../Game")
 
 [node name="Game" type="MarginContainer" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_constants/margin_bottom = 25
+theme_override_constants/margin_bottom = 40
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game"]
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="Wallet Button" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game/VBoxContainer" groups=["Menu_Game"] instance=ExtResource("4_3h2sv")]
+[node name="Wallet Button" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game/VBoxContainer" instance=ExtResource("4_3h2sv")]
 unique_name_in_owner = true
 layout_mode = 2
 icon = ExtResource("6_fxkih")
 text = "Wallet"
 
-[node name="Upgrades Button" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game/VBoxContainer" groups=["Menu_Game"] instance=ExtResource("4_3h2sv")]
+[node name="Control" type="Control" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game/VBoxContainer/Wallet Button"]
+layout_mode = 2
+size_flags_horizontal = 8
+mouse_filter = 2
+
+[node name="Notifications" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game/VBoxContainer/Wallet Button/Control" instance=ExtResource("7_3ao4c")]
+visible = false
+layout_mode = 1
+anchors_preset = 0
+offset_left = -25.0
+offset_top = 10.0
+offset_right = -10.0
+offset_bottom = 25.0
+grow_horizontal = 1
+
+[node name="Upgrades Button" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game/VBoxContainer" instance=ExtResource("4_3h2sv")]
 unique_name_in_owner = true
 layout_mode = 2
 icon = ExtResource("6_sjgrn")
 text = "Upgrades"
 
-[node name="Purchasable Upgrade Count" type="RichTextLabel" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game/VBoxContainer/Upgrades Button"]
-unique_name_in_owner = true
-clip_contents = false
+[node name="Control" type="Control" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game/VBoxContainer/Upgrades Button"]
 layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
+size_flags_horizontal = 8
 mouse_filter = 2
-theme = ExtResource("5_fcpu4")
-theme_override_constants/shadow_outline_size = 4
-theme_override_fonts/normal_font = ExtResource("5_fsywq")
-theme_override_font_sizes/normal_font_size = 14
-bbcode_enabled = true
-text = "4"
-fit_content = true
-autowrap_mode = 0
+
+[node name="Purchasable Upgrade Count" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game/VBoxContainer/Upgrades Button/Control" instance=ExtResource("7_3ao4c")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 0
+offset_left = -25.0
+offset_top = 10.0
+offset_right = -10.0
+offset_bottom = 25.0
+grow_horizontal = 1
 
 [node name="Stage1" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game/VBoxContainer" instance=ExtResource("4_3h2sv")]
 unique_name_in_owner = true
@@ -307,33 +350,38 @@ node = NodePath("../../../Save")
 
 [node name="Save" type="MarginContainer" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_constants/margin_bottom = 25
+theme_override_constants/margin_bottom = 40
 
 [node name="Save" type="VBoxContainer" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save"]
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="New Game" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save/Save" groups=["Menu_Save"] instance=ExtResource("4_3h2sv")]
-layout_mode = 2
-icon = ExtResource("10_8u1ic")
-text = "New Game"
-
 [node name="Save Game" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save/Save" groups=["Menu_Save"] instance=ExtResource("4_3h2sv")]
+unique_name_in_owner = true
 layout_mode = 2
 icon = ExtResource("10_mipnr")
-text = "Save"
+text = "Save Now"
 
 [node name="Load Game" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save/Save" groups=["Menu_Save"] instance=ExtResource("4_3h2sv")]
+unique_name_in_owner = true
 layout_mode = 2
-icon = ExtResource("10_mipnr")
+icon = ExtResource("15_bxrvx")
 text = "Load"
 
 [node name="Export Save" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save/Save" groups=["Menu_Save"] instance=ExtResource("4_3h2sv")]
+unique_name_in_owner = true
 layout_mode = 2
 icon = ExtResource("12_bqm8u")
 text = "Export"
 
+[node name="New Game" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save/Save" groups=["Menu_Save"] instance=ExtResource("4_3h2sv")]
+unique_name_in_owner = true
+layout_mode = 2
+icon = ExtResource("10_8u1ic")
+text = "New Game"
+
 [node name="Hard Reset" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save/Save" instance=ExtResource("4_3h2sv")]
+unique_name_in_owner = true
 layout_mode = 2
 icon = ExtResource("13_0l83t")
 text = "Hard Reset"
@@ -348,21 +396,25 @@ layout_mode = 2
 theme_override_constants/separation = 0
 
 [node name="Save Color Button" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save/Save/MarginContainer/Save" groups=["Menu_Save"] instance=ExtResource("4_3h2sv")]
+unique_name_in_owner = true
 layout_mode = 2
 icon = ExtResource("12_st5ae")
 text = "Set Color"
 
 [node name="Rename Save Button" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save/Save/MarginContainer/Save" groups=["Menu_Save"] instance=ExtResource("4_3h2sv")]
+unique_name_in_owner = true
 layout_mode = 2
 icon = ExtResource("13_6v2xt")
 text = "Rename"
 
 [node name="Duplicate Save Button" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save/Save/MarginContainer/Save" groups=["Menu_Save"] instance=ExtResource("4_3h2sv")]
+unique_name_in_owner = true
 layout_mode = 2
 icon = ExtResource("14_5312t")
 text = "Duplicate"
 
 [node name="Delete Save Button" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save/Save/MarginContainer/Save" instance=ExtResource("4_3h2sv")]
+unique_name_in_owner = true
 layout_mode = 2
 icon = ExtResource("15_s64ty")
 text = "Delete"
@@ -400,24 +452,53 @@ theme_override_constants/margin_bottom = 0
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="Discord" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Meta/VBoxContainer" instance=ExtResource("4_3h2sv")]
+[node name="Settings Button" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Meta/VBoxContainer" instance=ExtResource("4_3h2sv")]
+unique_name_in_owner = true
+layout_mode = 2
+icon = ExtResource("12_34j7m")
+text = "Settings"
+color = Color(0.137255, 0.698039, 0.552941, 1)
+
+[node name="Statistics Button" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Meta/VBoxContainer" instance=ExtResource("4_3h2sv")]
+unique_name_in_owner = true
+layout_mode = 2
+icon = ExtResource("25_ops5o")
+text = "Statistics"
+color = Color(0.74902, 0.639216, 0.0352941, 1)
+
+[node name="Patch Notes Button" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Meta/VBoxContainer" instance=ExtResource("4_3h2sv")]
+unique_name_in_owner = true
+layout_mode = 2
+icon = ExtResource("24_qdxv7")
+text = "Patch Notes"
+color = Color(0.996078, 0.443137, 0.172549, 1)
+
+[node name="MarginContainer" type="MarginContainer" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Meta/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_top = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Meta/VBoxContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Discord" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Meta/VBoxContainer/MarginContainer/VBoxContainer" instance=ExtResource("4_3h2sv")]
 layout_mode = 2
 icon = ExtResource("22_ejl1s")
 text = "Discord"
 color = Color(0.345098, 0.396078, 0.94902, 1)
 
-[node name="Itchio" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Meta/VBoxContainer" instance=ExtResource("4_3h2sv")]
+[node name="Itchio" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Meta/VBoxContainer/MarginContainer/VBoxContainer" instance=ExtResource("4_3h2sv")]
 layout_mode = 2
 icon = ExtResource("23_mvmsj")
 text = "Itch.io"
 color = Color(0.980392, 0.360784, 0.360784, 1)
 
-[node name="Steam" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Meta/VBoxContainer" instance=ExtResource("4_3h2sv")]
+[node name="Steam" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Meta/VBoxContainer/MarginContainer/VBoxContainer" instance=ExtResource("4_3h2sv")]
 layout_mode = 2
 icon = ExtResource("24_ila10")
 text = "Steam"
 
-[node name="Godot" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Meta/VBoxContainer" instance=ExtResource("4_3h2sv")]
+[node name="Godot" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Meta/VBoxContainer/MarginContainer/VBoxContainer" instance=ExtResource("4_3h2sv")]
 layout_mode = 2
 icon = ExtResource("24_u1xhr")
 text = "Godot Engine"
@@ -494,10 +575,6 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_ge2kb")
 visible = false
 layout_mode = 2
 
-[node name="Menu" parent="." instance=ExtResource("4_y1gq0")]
-visible = false
-layout_mode = 2
-
 [node name="Area2D" type="Area2D" parent="."]
 visible = false
 collision_layer = 7
@@ -514,6 +591,12 @@ shape = SubResource("RectangleShape2D_alvwj")
 [connection signal="pressed" from="Sidebar/MarginContainer/VBoxContainer/MarginContainer2/MarginContainer/Menu Button" to="." method="_on_menu_button_pressed"]
 [connection signal="visibility_changed" from="Sidebar/MarginContainer/VBoxContainer/MarginContainer2/MarginContainer/Menu Button" to="Sidebar/MarginContainer/VBoxContainer/MarginContainer2/MarginContainer/Menu Button" method="_on_visibility_changed"]
 [connection signal="resized" from="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer" to="." method="_on_menu_container_resized"]
+[connection signal="pressed" from="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game/VBoxContainer/Wallet Button" to="." method="_on_wallet_button_pressed"]
+[connection signal="pressed" from="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game/VBoxContainer/Upgrades Button" to="." method="_on_upgrades_button_pressed"]
+[connection signal="pressed" from="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game/VBoxContainer/Stage1" to="." method="_on_stage_1_pressed"]
+[connection signal="pressed" from="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game/VBoxContainer/Stage2" to="." method="_on_stage_2_pressed"]
+[connection signal="pressed" from="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game/VBoxContainer/Stage3" to="." method="_on_stage_3_pressed"]
+[connection signal="pressed" from="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game/VBoxContainer/Stage4" to="." method="_on_stage_4_pressed"]
 [connection signal="pressed" from="Sidebar/MarginContainer/VBoxContainer/Dev/Dev" to="." method="_on_dev_pressed"]
 [connection signal="pressed" from="Sidebar/MarginContainer/VBoxContainer/Dev/Dev2" to="." method="_on_dev_2_pressed"]
 [connection signal="pressed" from="Sidebar/MarginContainer/VBoxContainer/Dev/Dev4" to="." method="_on_dev_4_pressed"]

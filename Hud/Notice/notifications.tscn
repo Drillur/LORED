@@ -1,0 +1,45 @@
+[gd_scene load_steps=4 format=3 uid="uid://bc52155u06u16"]
+
+[ext_resource type="Theme" uid="uid://b8t7tkhvril5g" path="res://Theme/Standard.tres" id="1_5anjb"]
+[ext_resource type="Script" path="res://Hud/Notice/notifications.gd" id="1_w2o1r"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_if1r5"]
+bg_color = Color(1, 0, 0, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[node name="Notifications" type="MarginContainer"]
+anchors_preset = -1
+offset_left = -7.0
+offset_right = 8.0
+offset_bottom = 15.0
+grow_horizontal = 2
+mouse_filter = 2
+script = ExtResource("1_w2o1r")
+
+[node name="Background" type="Panel" parent="."]
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_if1r5")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 0
+
+[node name="Label" type="RichTextLabel" parent="MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+mouse_filter = 2
+theme = ExtResource("1_5anjb")
+bbcode_enabled = true
+text = "6"
+fit_content = true
+autowrap_mode = 0

@@ -881,7 +881,7 @@ func init_GRAMMA() -> void:
 	#discord_state = "About to meet a new group of LOREDs!"
 	
 	objective = Objective.new(Objective.Type.COLLECT_CURRENCY, {
-		"object_type": Currency.Type.STEEL,
+		"object_type": Currency.Type.WIRE,
 		"amount": 25,
 	})
 	add_reward(Reward.new(Reward.Type.NEW_LORED, {
@@ -929,6 +929,10 @@ func init_HARDY() -> void:
 	add_reward(Reward.new(Reward.Type.NEW_LORED, {
 		"object_type": LORED.Type.GLASS,
 	}))
+	add_reward(Reward.new(Reward.Type.CURRENCY, {
+		"object_type": Currency.Type.STEEL,
+		"amount": "50",
+	}))
 	pair.append(Type.WOODY)
 	pair.append(Type.AXY)
 
@@ -938,7 +942,7 @@ func init_AXY() -> void:
 	var hd = wa.get_currency(Currency.Type.HARDWOOD).details.icon_and_colored_name
 	var st = wa.get_currency(Currency.Type.STEEL).details.icon_and_colored_name
 	var ax = wa.get_currency(Currency.Type.AXES).details.icon_and_colored_name
-	help_text = "I require 0.8 %s and 0.25 %s per cycle. Satisfy these requirements and I will assemble 1.0 %s. If you require further assistance, you can find help in the Help section of your Alaxa app." % [
+	help_text = "I require 0.8 %s and 0.25 %s per cycle. Satisfy these requirements and I will assemble 1.0 %s. If you require further assistance, you can find help in the Help section of your Alaxea app." % [
 		hd, st, ax
 	]
 	thank_text = "Task complete."
@@ -987,19 +991,19 @@ func init_TREEY() -> void:
 	}))
 	add_reward(Reward.new(Reward.Type.CURRENCY, {
 		"object_type": Currency.Type.STEEL,
-		"amount": "50",
+		"amount": "100",
 	}))
 	add_reward(Reward.new(Reward.Type.CURRENCY, {
 		"object_type": Currency.Type.HARDWOOD,
-		"amount": "50",
+		"amount": "100",
 	}))
 	add_reward(Reward.new(Reward.Type.CURRENCY, {
 		"object_type": Currency.Type.WIRE,
-		"amount": "50",
+		"amount": "100",
 	}))
 	add_reward(Reward.new(Reward.Type.CURRENCY, {
 		"object_type": Currency.Type.GLASS,
-		"amount": "50",
+		"amount": "100",
 	}))
 
 

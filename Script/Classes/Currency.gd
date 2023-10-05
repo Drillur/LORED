@@ -138,15 +138,15 @@ func _init(_type := Type.STONE) -> void:
 	details.name = key.replace("_", " ").capitalize()
 	
 	if type <= Type.OIL:
-		stage = 1
+		stage = Stage.Type.STAGE1
 	elif type <= Type.TUMORS:
-		stage = 2
+		stage = Stage.Type.STAGE2
 	elif type <= Type.SPIRIT:
-		stage = 3
+		stage = Stage.Type.STAGE3
 	elif type < Type.JOY:
-		stage = 4
+		stage = Stage.Type.STAGE4
 	else:
-		stage = 0
+		stage = Stage.Type.NO_STAGE
 	
 	call("init_" + key)
 	
@@ -662,7 +662,7 @@ func get_eta(threshold: Big) -> Big:
 	if (
 		count.greater_equal(threshold)
 		or net_rate.get_value().equal(0)
-		or not lv.any_loreds_in_list_are_active(produced_by)
+		or not lv.any_loreds_in_list_are_purchased(produced_by)
 		or not positive_rate
 	):
 		return Big.new(0)

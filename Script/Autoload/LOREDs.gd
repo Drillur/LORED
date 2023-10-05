@@ -339,9 +339,16 @@ func is_lored_active(lored: int) -> bool:
 	)
 
 
-func any_loreds_in_list_are_active(list: Array) -> bool:
+func any_loreds_in_list_are_purchased(list: Array) -> bool:
 	for x in list:
-		if is_lored_active(x):
+		if is_lored_purchased(x):
+			return true
+	return false
+
+
+func any_loreds_in_list_are_inactive(list: Array) -> bool:
+	for x in list:
+		if not is_lored_active(x):
 			return true
 	return false
 

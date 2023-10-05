@@ -35,11 +35,9 @@ func setup(_cost: Cost) -> void:
 		content[cur].setup(cur, cost.cost[cur])
 		content_parent.add_child(content[cur])
 	
-	bar.hide_background().remove_markers()
-	
 	content.values()[content.size() - 1].get_node("MarginContainer").add_theme_constant_override("margin_bottom", 0)
 	cost.affordable.connect_and_call("changed", affordable_changed)
-	set_eta_text()
+	
 	bar.set_initial_progress(cost.get_progress_percent())
 	
 	if cost.affordable.is_true():
@@ -47,8 +45,7 @@ func setup(_cost: Cost) -> void:
 		bar.set_deferred("progress", 1.0)
 	else:
 		connect_calls()
-	
-	bar.set_deferred("animating_changes", true)
+		update_progress_bar()
 
 
 
