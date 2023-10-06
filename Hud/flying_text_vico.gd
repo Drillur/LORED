@@ -40,7 +40,7 @@ func _physics_process(_delta):
 
 
 func fix_body() -> void:
-	collision.shape.height = margin_container.size.x - 6
+	collision.shape.height = margin_container.size.x - 8
 	label.finished.disconnect(fix_body)
 
 

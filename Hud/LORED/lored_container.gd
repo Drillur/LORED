@@ -50,7 +50,3 @@ func hide_all_vbox_and_hbox_containers(node: Node = self) -> void:
 	for child in node.get_children():
 		hide_all_vbox_and_hbox_containers(child)
 
-
-
-func _on_scroll_container_1_scroll_started():
-	print(1)

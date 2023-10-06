@@ -15,7 +15,6 @@ extends MarginContainer
 @onready var ready_flash_timer = $"Ready Flash Timer"
 @onready var right_down = $Control/RightDown
 @onready var texts = %Texts
-@onready var collision = %Collision
 
 signal ended(wish, successful_completion)
 
@@ -34,8 +33,6 @@ func _on_resized() -> void:
 	if not is_node_ready():
 		await ready
 	right.position.x = size.x + 10
-	collision.position.x = size.x / 2
-	collision.shape.size.x = size.x
 
 
 
@@ -124,7 +121,7 @@ func turn_in() -> void:
 			FlyingText.Type.CURRENCY,
 			texts, # node used to determine text locations
 			gv.texts_parent, # node that will hold texts
-			[1, 1], # collision
+			[1, 1],
 			[randf_range(-0.1, 0.1), -0.08, -0.12]
 		)
 		for cur in cur_rew:

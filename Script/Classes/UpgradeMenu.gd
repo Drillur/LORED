@@ -37,6 +37,11 @@ var unlocked := false:
 			unlocked = val
 			unlocked_changed.emit(val)
 			up.menu_unlocked_changed.emit(type, val)
+			if val:
+				for x in upgrades:
+					var upgrade = up.get_upgrade(x) as Upgrade
+					if upgrade.cost.affordable.is_true():
+						upgrade.affordable_changed()
 
 var upgrades := []
 var purchased_upgrades := []

@@ -1,24 +1,14 @@
-[gd_scene load_steps=10 format=3 uid="uid://bvb7sgyflbxkp"]
+[gd_scene load_steps=6 format=3 uid="uid://bvb7sgyflbxkp"]
 
 [ext_resource type="PackedScene" uid="uid://cb3ej8nlybhvm" path="res://Hud/icon_button.tscn" id="1_36ve1"]
 [ext_resource type="Script" path="res://Hud/Upgrade/upgrade_vico.gd" id="1_y3gc6"]
 [ext_resource type="Theme" uid="uid://b8t7tkhvril5g" path="res://Theme/Standard.tres" id="3_5ps5m"]
 [ext_resource type="Texture2D" uid="uid://ygxbtnng8h6u" path="res://Sprites/Hud/Locked.png" id="3_mevru"]
-[ext_resource type="PhysicsMaterial" uid="uid://dwcoahtxdrh6o" path="res://Theme/BoundaryPhysicsMat.tres" id="5_tg71e"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_h2uwq"]
 bg_color = Color(0.117647, 0.117647, 0.117647, 1)
 shadow_color = Color(0.117647, 0.117647, 0.117647, 1)
 shadow_size = 5
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_kpuc5"]
-size = Vector2(44, 44)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_u3jew"]
-size = Vector2(43.9999, 44.0001)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_fwgpk"]
-size = Vector2(44.0001, 43.9999)
 
 [node name="Upgrade Vico" type="MarginContainer"]
 custom_minimum_size = Vector2(50, 50)
@@ -92,27 +82,4 @@ anchor_bottom = 0.5
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="StaticBody2D" type="StaticBody2D" parent="."]
-collision_layer = 2
-collision_mask = 2
-physics_material_override = ExtResource("5_tg71e")
-
-[node name="Collision" type="CollisionShape2D" parent="StaticBody2D"]
-unique_name_in_owner = true
-position = Vector2(25, 25)
-shape = SubResource("RectangleShape2D_kpuc5")
-one_way_collision = true
-
-[node name="Collision2" type="CollisionShape2D" parent="StaticBody2D"]
-unique_name_in_owner = true
-position = Vector2(25, 25)
-rotation = 1.57079
-shape = SubResource("RectangleShape2D_u3jew")
-one_way_collision = true
-
-[node name="Collision3" type="CollisionShape2D" parent="StaticBody2D"]
-unique_name_in_owner = true
-position = Vector2(25, 25)
-rotation = -1.57079
-shape = SubResource("RectangleShape2D_fwgpk")
-one_way_collision = true
+[connection signal="right_mouse_pressed" from="Button" to="." method="_on_button_right_mouse_pressed"]

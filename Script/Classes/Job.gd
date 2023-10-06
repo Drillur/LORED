@@ -25,6 +25,7 @@ enum Type {
 	TREES,
 	SOIL,
 	AXES,
+	AXES2,
 	WOOD,
 	HARDWOOD,
 	LIQUID_IRON, # 20
@@ -87,6 +88,7 @@ var starting := false
 var added_rate := false
 var working := false
 var added_rate_based_on_inhand: bool
+var do_not_alter_rates := false
 
 var has_sufficient_fuel := true
 var has_produced_currencies := false
@@ -119,6 +121,10 @@ func _init(_type: int) -> void:
 	
 	has_required_currencies = required_currencies != null
 	has_produced_currencies = not produced_currencies.is_empty()
+	
+	if has_required_currencies:
+		for cur in required_currencies.cost:
+			required_currencies.cost[cur].changed.connect(refresh_required_rate)
 	
 	unlocked_changed.connect(became_unlocked)
 	
@@ -300,6 +306,17 @@ func init_AXES() -> void:
 		Currency.Type.HARDWOOD: Value.new(0.8),
 		Currency.Type.STEEL: Value.new(0.25),
 	})
+
+
+func init_AXES2() -> void:
+	name = "Emergency Routine A"
+	duration = Value.new(15)
+	animation = preload("res://Sprites/animations/axe.tres")
+	add_produced_currency(Currency.Type.AXES, 1)
+	required_currencies = Cost.new({
+		Currency.Type.STEEL: Value.new(2.5),
+	})
+	do_not_alter_rates = true
 
 
 func init_WOOD() -> void:
@@ -687,7 +704,8 @@ func refresh_required_rate() -> void:
 
 func add_rate() -> void:
 	if (
-		added_rate
+		do_not_alter_rates
+		or added_rate
 		or lv.get_lored(lored).purchased.is_false()
 	):
 		return

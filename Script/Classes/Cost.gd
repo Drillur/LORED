@@ -129,6 +129,8 @@ func refund() -> void:
 	for cur in cost:
 		wa.add(cur, cost[cur].get_value())
 	purchased = false
+	recheck()
+	affordable.changed.emit()
 
 
 func reset() -> void:
@@ -212,22 +214,32 @@ func get_insufficient_currency_types() -> Array:
 
 func get_eta() -> Big:
 	if currencies_are_unlocked:
+		longest_eta_cur = cost.keys()[0]
 		
-		var cur: Currency = wa.get_currency(cost.keys()[0])
-		var eta: Big = cur.get_eta(cost.values()[0].get_value())
-		longest_eta_cur = cur.type
-		for i in range(1, cost.size()):
-			cur = wa.get_currency(cost.keys()[i])
+		var eta: Big = wa.get_currency(longest_eta_cur).get_eta(cost.values()[0].get_value())
+		for i in cost.size():
+			var cur = wa.get_currency(cost.keys()[i]) as Currency
+			
+			if not cur.positive_rate:
+				longest_eta_cur = -1
+				return Big.new(0)
+			
 			var i_eta = cur.get_eta(cost.values()[i].get_value())
 			if i_eta.greater(eta):
 				eta = i_eta
 				longest_eta_cur = cur.type
+		
 		return Big.new(eta)
+	
 	return Big.new(0)
 
 
 func get_progress_percent() -> float:
-	if currencies_are_unlocked and not lv.any_loreds_in_list_are_inactive(produced_by):
+	if (
+		currencies_are_unlocked
+		and not lv.any_loreds_in_list_are_inactive(produced_by)
+		and not longest_eta_cur == -1
+	):
 		var count = wa.get_count(longest_eta_cur)
 		var _cost = cost[longest_eta_cur].get_value()
 		return count.percent(_cost)

@@ -4,6 +4,7 @@ extends MarginContainer
 
 
 signal pressed
+signal right_mouse_pressed
 
 @onready var check = %Check
 @onready var texture_rect = %Icon
@@ -34,9 +35,12 @@ func _ready():
 		check.queue_free()
 
 
-
-func _on_button_pressed():
-	emit_signal("pressed")
+func _on_button_gui_input(event):
+	if event is InputEventMouseButton and event.is_pressed():
+		if event.button_index == MOUSE_BUTTON_LEFT:
+			pressed.emit()
+		elif event.button_index == MOUSE_BUTTON_RIGHT:
+			right_mouse_pressed.emit()
 
 
 func _on_button_mouse_exited():

@@ -507,11 +507,13 @@ func idk(x: float) -> float:
 
 
 func init_RANDOM() -> void:
-	giver = lv.get_random_active_lored()
+	if lv.get_active_lored_count() == 0:
+		giver = lv.get_random_unlocked_lored()
+	else:
+		giver = lv.get_random_active_lored()
 	var obj_key = lv.get_lored(giver).get_wish()
 	var obj_type = Objective.Type[obj_key]
 	var data := {}
-	#var experience_modifier = idk(wi.completed_random_wishes)
 	var rewards_modifier := randf_range(10, 30)
 	match obj_key:
 		"COLLECT_CURRENCY":
@@ -524,7 +526,6 @@ func init_RANDOM() -> void:
 				var amount_modifier = randf_range(30, 50)
 				amount.m(amount_modifier)
 				amount.d(wi.wish_amount_divider)
-				#amount.d(experience_modifier)
 			data = {
 				"object_type": currency.type,
 				"amount": amount.roundDown(),
@@ -537,7 +538,7 @@ func init_RANDOM() -> void:
 		"SLEEP":
 			data = {
 				"object_type": giver,
-				"amount": round(randf_range(8, 22) / wi.wish_amount_divider),# / experience_modifier),
+				"amount": round(randf_range(8, 22) / wi.wish_amount_divider),
 			}
 		"ACCEPTABLE_FUEL":
 			data = {"object_type": giver}
@@ -1225,6 +1226,18 @@ func init_CIORANY() -> void:
 	pair.append(Type.MALIGGY)
 
 
+func init_AUTOCOMPLETE() -> void:
+	giver = LORED.Type.OIL
+	help_text = "Gahoogie!!! Snaffle. Hehehe~"
+	thank_text = "*farts and poops*"
+	#discord_state = "About to meet a new group of LOREDs!"
+	
+	objective = Objective.new(Objective.Type.UPGRADE_PURCHASED, {
+		"object_type": Upgrade.Type.THE_WITCH_OF_LOREDELITH,
+	})
+	add_reward(Reward.new(Reward.Type.AUTO_WISH_TURNIN, {}))
+
+
 func init_EASIER() -> void:
 	giver = LORED.Type.PAPER
 	var papboy = lv.get_lored(giver).details.color_text % "Paper Boy"
@@ -1242,20 +1255,6 @@ func init_EASIER() -> void:
 	add_reward(Reward.new(Reward.Type.WISH_AMOUNT_DIVIDER, {
 		"amount": 2,
 	}))
-	pair.append(Type.AUTOCOMPLETE)
-
-
-func init_AUTOCOMPLETE() -> void:
-	giver = LORED.Type.OIL
-	help_text = "Gahoogie!!! Snaffle. Hehehe~"
-	thank_text = "*farts and poops*"
-	#discord_state = "About to meet a new group of LOREDs!"
-	
-	objective = Objective.new(Objective.Type.UPGRADE_PURCHASED, {
-		"object_type": Upgrade.Type.THE_WITCH_OF_LOREDELITH,
-	})
-	add_reward(Reward.new(Reward.Type.AUTO_WISH_TURNIN, {}))
-	pair.append(Type.EASIER)
 
 
 func init_TO_DA_LIMIT() -> void:
@@ -1269,7 +1268,6 @@ func init_TO_DA_LIMIT() -> void:
 		"object_type": Upgrade.Type.THE_WITCH_OF_LOREDELITH,
 	})
 	add_reward(Reward.new(Reward.Type.AUTO_WISH_TURNIN, {}))
-	pair.append(Type.EASIER)
 
 
 

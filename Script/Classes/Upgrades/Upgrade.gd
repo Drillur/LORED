@@ -286,13 +286,13 @@ var unlocked := Bool.new(true)
 var purchased := Bool.new(false)
 
 func unlocked_updated() -> void:
-	if unlocked.is_true():
-		affordable_changed()
+	affordable_changed()
+	if vico != null:
+		vico.cost_update()
 
 func purchased_updated() -> void:
 	affordable_changed()
 	upgrade_purchased_changed.emit(self)
-	
 	up.emit_signal("upgrade_purchased", type)
 
 
@@ -3278,11 +3278,11 @@ func add_effected_stage(_stage: int) -> void:
 # - Signal
 
 func required_upgrade_purchased() -> void:
-	unlocked.set_true()
+	unlocked.set_to(true)
 
 
 func required_upgrade_unpurchased() -> void:
-	unlocked.set_false()
+	unlocked.set_to(false)
 
 
 func affordable_changed() -> void:
@@ -3298,6 +3298,7 @@ func affordable_changed() -> void:
 			unlocked.is_true()
 			and purchased.is_false()
 			and affordable
+			and up.is_upgrade_menu_unlocked(upgrade_menu)
 		):
 			became_affordable_and_unpurchased.emit(type, true)
 		else:
@@ -3330,8 +3331,8 @@ func apply() -> void:
 func refund() -> void:
 	if purchased.is_false():
 		return
-	cost.refund()
 	remove()
+	cost.refund()
 
 
 func remove() -> void:

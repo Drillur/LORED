@@ -13,6 +13,7 @@ var saved_vars := [
 
 func load_started() -> void:
 	
+	lv.lored_became_inactive(type)
 	stop_job()
 	unlocked.set_to(false)
 	purchased.set_to(false)
@@ -26,9 +27,6 @@ func load_finished() -> void:
 	set_level_to(level)
 	if purchased.is_true():
 		work()
-		lv.lored_became_active(type)
-	else:
-		lv.lored_became_inactive(type)
 
 
 
@@ -107,6 +105,7 @@ var required_currencies := []
 var upgrades := []
 var unpurchased_upgrades := []
 var emote_queue := []
+var buffs := []
 
 @export var fuel: ValuePair
 @export var unlocked_jobs := []
@@ -723,6 +722,7 @@ func init_DRAW_PLATE() -> void:
 func init_AXES() -> void:
 	details.name = "Alaxea"
 	add_job(Job.Type.AXES, true)
+	add_job(Job.Type.AXES2, true)
 	cost = Cost.new({
 		Currency.Type.IRON: Value.new(1000),
 		Currency.Type.HARDWOOD: Value.new(55),
@@ -918,7 +918,6 @@ func attach_vico(_vico: LOREDVico) -> void:
 
 func purchased_updated() -> void:
 	if purchased.is_true():
-		lv.lored_became_active(type)
 		for cur in produced_currencies:
 			wa.unlock_currency(cur)
 			wa.set_wish_eligible_currency(cur, true)
@@ -944,6 +943,7 @@ func asleep_updated() -> void:
 		time_went_to_bed = Time.get_unix_time_from_system()
 		lv.lored_went_to_sleep(type)
 	else:
+		lv.lored_became_inactive(type)
 		if time_went_to_bed != 0:
 			calculate_time_in_bed()
 		lv.lored_woke_up(type)
@@ -1353,6 +1353,7 @@ func get_next_job_automatically() -> int:
 
 
 func start_job(_type: int) -> void:
+	lv.lored_became_active(type)
 	reason_cannot_work = ReasonCannotWork.CAN_WORK
 	last_job = jobs[_type]
 	last_job.start()
@@ -1381,6 +1382,7 @@ func job_cut_short() -> void:
 
 
 func determine_why_cannot_work() -> void:
+	lv.lored_became_inactive(type)
 	if fuel.get_current_percent() <= lv.FUEL_DANGER:
 		cannot_work(ReasonCannotWork.INSUFFICIENT_FUEL)
 	elif jobs[sorted_jobs[1]].has_required_currencies:
@@ -1582,7 +1584,7 @@ func get_used_currency_rate(cur: int) -> Big:
 		rate.a(fuel_cost.get_value())
 	
 	for job in jobs.values():
-		if job.type == Job.Type.REFUEL:
+		if job.type == Job.Type.REFUEL or job.do_not_alter_rates:
 			continue
 		if job.uses_currency(cur):
 			rate.a(
@@ -1596,7 +1598,7 @@ func get_used_currency_rate(cur: int) -> Big:
 func get_produced_currency_rate(cur: int) -> Big:
 	var rate = Big.new(0)
 	for job in jobs.values():
-		if job.produces_currency(cur):
+		if job.produces_currency(cur) and not job.do_not_alter_rates:
 			if cur in job.produced_currencies.keys():
 				rate.a(
 					Big.new(job.produced_currencies[cur].get_value()).d(
@@ -1621,4 +1623,3 @@ func cap_gain_loss_if_uses_currency(cur: int) -> void:
 				var cur2_gain_loss = wa.get_currency(cur2).gain_over_loss
 				if cur2_gain_loss > cur_gain_loss or cur2_gain_loss == -1:
 					wa.get_currency(cur2).gain_over_loss = wa.get_currency(cur).gain_over_loss
-

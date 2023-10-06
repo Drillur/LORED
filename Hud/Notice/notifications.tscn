@@ -11,7 +11,6 @@ corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
 
 [node name="Notifications" type="MarginContainer"]
-anchors_preset = -1
 offset_left = -7.0
 offset_right = 8.0
 offset_bottom = 15.0

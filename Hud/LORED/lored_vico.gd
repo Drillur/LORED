@@ -271,7 +271,7 @@ func job_cut_short() -> void:
 			FlyingText.Type.CURRENCY,
 			output_texts,
 			output_texts,
-			[0, 0],
+			[1, 1],
 		)
 		for cur in current_job.in_hand_input:
 			text.add({
@@ -389,7 +389,7 @@ func spew_sleep_text() -> void:
 		FlyingText.Type.SLEEP,
 		output_texts,
 		output_texts,
-		[0, 0],
+		[1, 1],
 	)
 	text.add({
 		"color": lored.details.color,

@@ -58,6 +58,7 @@ func connect_calls() -> void:
 
 
 func disconnect_calls() -> void:
+	check.text = ""
 	for cur in cost.cost:
 		if not content[cur].is_connected("currency_changed", set_eta_text):
 			return

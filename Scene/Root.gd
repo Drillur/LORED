@@ -25,6 +25,7 @@ extends MarginContainer
 
 # MENU
 
+@onready var game_section = %"Game Section"
 @onready var menu_scroll = %MenuScroll
 @onready var menu_container = %MenuContainer
 @onready var menu_contents = %"Menu Contents"
@@ -50,6 +51,13 @@ func _ready():
 	
 	# MENU
 	
+	wallet_button.hide()
+	upgrades_button.hide()
+	stage1.hide()
+	stage2.hide()
+	stage3.hide()
+	stage4.hide()
+	game_section.hide()
 	%"Sidebar Title Background".modulate = gv.game_color
 	%"Sidebar Background".modulate = gv.game_color
 	menu_scroll.get_v_scroll_bar().modulate = gv.game_color
@@ -77,7 +85,7 @@ func _ready():
 	
 	for i in range(1, 5):
 		var stage = gv.get_stage(i) as Stage
-		stage.stage_unlocked_changed.connect(display_stage_button) #menu
+		stage.stage_unlocked_changed.connect(display_stage_button)
 		if not gv.dev_mode:
 			var b = get("stage" + str(i)) as _MenuButton
 			b.hide()
@@ -346,13 +354,19 @@ func update_menu_container_size() -> void:
 
 func display_wallet_button(unlocked: bool) -> void:
 	wallet_button.visible = unlocked
+	update_section_visibility(game_section)
 	if unlocked:
 		gv.flash(wallet_button, wallet.color)
+
+
+func update_section_visibility(section: Node) -> void:
+	section.visible = section.get_child(0).visible or section.get_child(1).visible
 
 
 func display_upgrades_button(_menu: int, unlocked: bool) -> void:
 	if _menu == UpgradeMenu.Type.NORMAL:
 		upgrades_button.visible = unlocked
+		update_section_visibility(game_section)
 
 
 func flash_upgrade_button(_menu: int, unlocked: bool) -> void:
@@ -366,7 +380,10 @@ func display_stage_button(stage: int, unlocked: bool) -> void:
 	var b = get("stage" + str(stage))
 	b.visible = unlocked
 	if unlocked:
-		gv.flash(b, _stage.details.color)
+		if menu_contents.visible:
+			gv.flash(menu_button, _stage.details.color)
+		else:
+			gv.flash(b, _stage.details.color)
 
 
 func wallet_lock(unlocked: bool) -> void:
@@ -456,20 +473,9 @@ func _on_dev_pressed():
 	
 	pass
 
-func _on_dev_2_pressed():
-	for upgrade in up.get_upgrade_menu(UpgradeMenu.Type.EXTRA_NORMAL).upgrades:
-		up.get_upgrade(upgrade).refund()
-
-func _on_dev_4_pressed():
-	pass # Replace with function body.
-
-func _on_dev_3_pressed():
-	pass
-
-func _on_dev_5_pressed():
-	pass # Replace with function body.
 
 
 
-
-
+func _on_dev_1_pressed():
+	var b = LOREDBuff.new(LOREDBuff.Type.WITCH, LORED.Type.STONE) as Buff
+	b.start()

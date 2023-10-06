@@ -1,4 +1,4 @@
-class_name Int
+class_name Float
 extends Resource
 
 
@@ -8,8 +8,8 @@ var saved_vars := ["current"]
 signal increased
 signal decreased
 
-var base: int
-var current: int:
+var base: float
+var current: float:
 	set(val):
 		if current != val:
 			var prev_cur = current
@@ -31,7 +31,7 @@ var text: String:
 
 
 
-func _init(_base: int) -> void:
+func _init(_base: float) -> void:
 	base = _base
 	current = base
 
@@ -65,7 +65,7 @@ func divide(amount) -> void:
 
 # - Get
 
-func get_value() -> int:
+func get_value() -> float:
 	return current
 
 

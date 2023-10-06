@@ -1,11 +1,11 @@
+VBoxContainer
+MarginContainer
 Control
 RichTextLabel
-MarginContainer
 Panel
 Timer
 TextureRect
 HBoxContainer
-VBoxContainer
 CheckBox
 ScrollContainer
 Button

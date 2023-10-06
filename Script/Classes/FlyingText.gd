@@ -36,7 +36,7 @@ func _init(
 	velocity_range = _velocity_range
 	match type:
 		Type.CURRENCY, Type.SLEEP, Type.JUST_TEXT:
-			duration = 0.8
+			duration = 0.6
 		Type.LEVEL_UP:
 			duration = 1.5
 	gv.add_child(timer)

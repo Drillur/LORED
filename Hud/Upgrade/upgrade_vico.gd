@@ -26,6 +26,8 @@ func setup(_upgrade: Upgrade):
 	upgrade = _upgrade
 	if not is_node_ready():
 		await ready
+	
+	upgrade.cost.affordable.changed.connect(cost_update)
 	upgrade.vico = self
 	button.set_icon(upgrade.details.icon)
 	button.remove_check()
@@ -43,7 +45,7 @@ func setup(_upgrade: Upgrade):
 	upgrade.unlocked.connect_and_call("changed", unlocked_changed)
 	upgrade.autobuy_changed.connect(autobuyer_display)
 	
-	hide_check()
+	check.hide()
 	
 	cost_update()
 
@@ -88,15 +90,10 @@ func unlocked_changed() -> void:
 	var val = upgrade.unlocked.get_value()
 	autobuyer_display()
 	if val:
-		if not upgrade.cost.affordable.changed.is_connected(cost_update):
-			upgrade.cost.affordable.changed.connect(cost_update)
-		cost_update()
 		button.modulate.a = 1
 		lock.hide()
 		button.texture_rect.show()
 	else:
-		if upgrade.cost.affordable.changed.is_connected(cost_update):
-			upgrade.cost.affordable.changed.disconnect(cost_update)
 		button.modulate.a = 0.5
 		lock.show()
 		button.texture_rect.hide()
@@ -129,13 +126,14 @@ func purchase() -> void:
 			up.get_vico(upgrade.required_upgrade).flash()
 
 
-func show_check() -> void:
-	check.show()
-
-
-func hide_check() -> void:
-	check.hide()
-
-
 func flash() -> void:
 	gv.flash(self, upgrade.details.color)
+
+
+
+
+# - DEV
+
+func _on_button_right_mouse_pressed():
+	if gv.dev_mode:
+		upgrade.refund()

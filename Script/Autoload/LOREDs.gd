@@ -206,9 +206,10 @@ func add_lored_to_never_purchased(lored: int) -> void:
 
 
 func erase_lored_from_never_purchased(lored: int) -> void:
-	never_purchased.erase(lored)
-	if purchased_every_unlocked_lored_once():
-		emit_signal("purchased_every_lored_once")
+	if lored in never_purchased:
+		never_purchased.erase(lored)
+		if purchased_every_unlocked_lored_once():
+			emit_signal("purchased_every_lored_once")
 
 
 
@@ -221,12 +222,13 @@ func lored_became_active(lored: int) -> void:
 	if not lored in active:
 		active.append(lored)
 		active_and_awake.append(lored)
-	erase_lored_from_never_purchased(lored)
+		erase_lored_from_never_purchased(lored)
 
 
 func lored_became_inactive(lored: int) -> void:
-	active.erase(lored)
-	active_and_awake.erase(lored)
+	if lored in active:
+		active.erase(lored)
+		active_and_awake.erase(lored)
 
 
 
