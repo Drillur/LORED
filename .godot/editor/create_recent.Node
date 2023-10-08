@@ -1,7 +1,7 @@
 VBoxContainer
 MarginContainer
-Control
 RichTextLabel
+Control
 Panel
 Timer
 TextureRect

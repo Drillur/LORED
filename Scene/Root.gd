@@ -477,5 +477,4 @@ func _on_dev_pressed():
 
 
 func _on_dev_1_pressed():
-	var b = LOREDBuff.new(LOREDBuff.Type.WITCH, LORED.Type.STONE) as Buff
-	b.start()
+	Buffs.apply_buff_on_lored(lv.get_lored(LORED.Type.STONE), LOREDBuff.Type.WITCH)

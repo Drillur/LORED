@@ -78,7 +78,7 @@ func setup(_wish: Wish) -> void:
 
 
 func show_tooltip() -> void:
-	gv.new_tooltip(gv.Tooltip.WISH, right, {"wish": wish})
+	gv.new_tooltip(gv.Tooltip.WISH_TOOLTIP, right, {"wish": wish})
 
 
 func update_objective_text() -> void:

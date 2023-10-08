@@ -55,7 +55,7 @@ func setup(_upgrade: Upgrade):
 
 
 func show_tooltip() -> void:
-	gv.new_tooltip(gv.Tooltip.UPGRADE, tooltip_parent, {"upgrade": upgrade})
+	gv.new_tooltip(gv.Tooltip.UPGRADE_TOOLTIP, tooltip_parent, {"upgrade": upgrade})
 
 
 func cost_update() -> void:

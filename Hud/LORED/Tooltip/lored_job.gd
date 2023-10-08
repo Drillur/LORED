@@ -9,7 +9,6 @@ extends MarginContainer
 @onready var required_currencies_parent = %"Required Currencies Parent"
 @onready var glow = $glow
 
-var lored_job_entry := preload("res://Hud/LORED/Tooltip/lored_job_entry.tscn")
 var job: Job
 
 
@@ -40,7 +39,7 @@ func setup(_job: Job) -> void:
 func prepare_produced_currencies() -> void:
 	if job.has_produced_currencies:
 		for cur in job.produced_currencies:
-			var x = lored_job_entry.instantiate()
+			var x = res.get_resource("lored_job_entry").instantiate()
 			x.setup(job.produced_currencies[cur], cur, true)
 			produced_currencies_parent.add_child(x)
 	else:
@@ -50,7 +49,7 @@ func prepare_produced_currencies() -> void:
 func prepare_required_currencies() -> void:
 	if job.has_required_currencies:
 		for cur in job.required_currencies.cost:
-			var x = lored_job_entry.instantiate()
+			var x = res.get_resource("lored_job_entry").instantiate()
 			x.setup(job.required_currencies.cost[cur], cur, false)
 			required_currencies_parent.add_child(x)
 	else:

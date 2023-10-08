@@ -25,47 +25,6 @@ var theme_standard := preload("res://Theme/Standard.tres")
 var theme_invis := preload("res://Theme/Invis.tres")
 var theme_text_button := preload("res://Theme/TextButton.tres")
 var theme_text_button_alternate := preload("res://Theme/TextButtonAlternate.tres")
-var label := preload("res://Hud/rich_text_label.tscn")
-
-var icon_save := preload("res://Sprites/Hud/Save.png")
-var icon_play := preload("res://Sprites/Hud/Play.png")
-var icon_rename := preload("res://Sprites/Hud/Rename.png")
-var icon_color := preload("res://Sprites/Hud/Color.png")
-var icon_duplicate := preload("res://Sprites/Hud/Duplicate.png")
-var icon_clipboard := preload("res://Sprites/Hud/Clipboard.png")
-var icon_new_game := preload("res://Sprites/Hud/New Game.png")
-var icon_delete := preload("res://Sprites/Hud/Delete.png")
-var icon_awake := preload("res://Sprites/Hud/awake.png")
-var icon_asleep := preload("res://Sprites/Hud/Halt.png")
-var icon_hard_reset := preload("res://Sprites/Hud/Hard Reset.png")
-var ascending_icon: Texture = preload("res://Sprites/Hud/arrow-up-s-line.png")
-var descending_icon: Texture = preload("res://Sprites/Hud/arrow-down-s-line.png")
-var icon_view := preload("res://Sprites/Hud/View.png")
-var icon_hide := preload("res://Sprites/Hud/ViewHide.png")
-
-var flying_text: PackedScene = preload("res://Hud/flying_text.tscn")
-
-var control_node := preload("res://Hud/control.tscn")
-const SRC := {
-	"dtext": preload("res://Hud/dtext.tscn"),
-	"price_and_currency": preload("res://Hud/price_and_currency.tscn"),
-	"flash": preload("res://Hud/Flash.tscn"),
-	
-	"tooltip": preload("res://Hud/Tooltip/tooltip.tscn"),
-	"LORED_INFO": preload("res://Hud/LORED/Tooltip/lored_info.tscn"),
-	"LORED_LEVEL_UP": preload("res://Hud/LORED/Tooltip/lored_level_up.tscn"),
-	"LORED_SLEEP": preload("res://Hud/LORED/Tooltip/lored_sleep.tscn"),
-	"LORED_JOBS": preload("res://Hud/LORED/Tooltip/lored_jobs.tscn"),
-	"UPGRADE": preload("res://Hud/Upgrade/Tooltip/upgrade_tooltip.tscn"),
-	"WISH": preload("res://Hud/Wish/Tooltip/wish_tooltip.tscn"),
-	"JUST_TEXT": preload("res://Hud/Tooltip/Just Text.tscn"),
-	"WALLET_CURRENCY": preload("res://Hud/Wallet/wallet_currency_tooltip.tscn"),
-	"PRESTIGE": preload("res://Hud/Tooltip/prestige_tooltip.tscn"),
-}
-
-const TEXTURES := {
-	"Level": preload("res://Sprites/Hud/Level.png"),
-}
 
 const game_color := Color(1, 0, 0.235)
 
@@ -251,7 +210,7 @@ func getRandomColor() -> Color:
 var flying_texts := []
 
 func flash(parent: Node, color = Color(1, 0, 0)) -> void:
-	var _flash = gv.SRC["flash"].instantiate()
+	var _flash = res.get_resource("flash").instantiate()
 	parent.add_child(_flash)
 	_flash.flash(color)
 
@@ -286,11 +245,11 @@ enum Tooltip {
 	LORED_LEVEL_UP,
 	LORED_SLEEP,
 	LORED_JOBS,
-	UPGRADE,
-	WISH,
+	UPGRADE_TOOLTIP,
+	WISH_TOOLTIP,
 	JUST_TEXT,
-	WALLET_CURRENCY,
-	PRESTIGE,
+	WALLET_CURRENCY_TOOLTIP,
+	PRESTIGE_TOOLTIP,
 }
 
 var TOOLTIP_KEYS := Tooltip.keys()
@@ -304,15 +263,15 @@ var tip_filled := false
 func new_tooltip(type: int, parent: Node, info: Dictionary) -> void:
 	clear_tooltip()
 	
-	tooltip = SRC["tooltip"].instantiate()
+	tooltip = res.get_resource("tooltip").instantiate()
 	tooltip.parent = parent
 	tooltip.tooltip_parent = tooltip_parent
 	tooltip.setup(type)
 	tooltip_parent.add_child(tooltip)
 	tooltip.grow_vertical = Control.GROW_DIRECTION_BEGIN
 	
-	
-	tooltip_content = SRC[TOOLTIP_KEYS[type]].instantiate()
+	var key = TOOLTIP_KEYS[type].to_lower()
+	tooltip_content = res.get_resource(key).instantiate()
 	tooltip_content.setup(info)
 	tooltip.content.add_child(tooltip_content)
 	tooltip.color = tooltip_content.color

@@ -1266,7 +1266,7 @@ func init_ROUTINE() -> void:
 			]
 		}
 	)
-	details.icon = preload("res://Sprites/Hud/Tab/s1m.png")
+	details.icon = res.get_resource("s1m")
 	details.color = gv.get_stage_color(1)
 	cost = Cost.new({
 		Currency.Type.MALIGNANCY: Value.new("1e20"),

@@ -3,7 +3,6 @@ extends MarginContainer
 
 
 
-@onready var price_and_currency = preload("res://Hud/price_and_currency.tscn")
 @onready var content_parent = %"Content Parent"
 @onready var check = %Check
 @onready var title_bg = %"title bg"
@@ -31,7 +30,7 @@ func setup(_cost: Cost) -> void:
 	if not is_node_ready():
 		await ready
 	for cur in cost.cost:
-		content[cur] = price_and_currency.instantiate()
+		content[cur] = res.get_resource("price_and_currency").instantiate()
 		content[cur].setup(cur, cost.cost[cur])
 		content_parent.add_child(content[cur])
 	

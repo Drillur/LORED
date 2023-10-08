@@ -111,7 +111,7 @@ func update_count(type: int) -> void:
 
 
 func show_prestige_tooltip() -> void:
-	gv.new_tooltip(gv.Tooltip.PRESTIGE, right_down, {"menu": tabs.current_tab})
+	gv.new_tooltip(gv.Tooltip.PRESTIGE_TOOLTIP, right_down, {"menu": tabs.current_tab})
 
 
 

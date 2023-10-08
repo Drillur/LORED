@@ -18,8 +18,6 @@ func load_finished() -> void:
 
 
 
-var emote_vico := preload("res://Hud/Emote/emote_vico.tscn")
-
 var emote_cooldown_timer: Timer
 var emotes := []
 

@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://cc20piiohvlkw"]
+[gd_scene load_steps=20 format=3 uid="uid://cc20piiohvlkw"]
 
 [ext_resource type="Script" path="res://Hud/LORED/lored_vico.gd" id="1_0ael0"]
 [ext_resource type="Theme" uid="uid://b8t7tkhvril5g" path="res://Theme/Standard.tres" id="1_7ail2"]
@@ -10,6 +10,12 @@
 [ext_resource type="PackedScene" uid="uid://cb3ej8nlybhvm" path="res://Hud/icon_button.tscn" id="7_d7ftl"]
 [ext_resource type="SpriteFrames" uid="uid://cw62sjrj5glo1" path="res://Sprites/animations/toba.tres" id="8_mscl5"]
 [ext_resource type="Script" path="res://Hud/LORED/lored_animation.gd" id="9_tchys"]
+[ext_resource type="Texture2D" uid="uid://beuki11l6kwux" path="res://Sprites/Hud/Info.png" id="11_o6yhx"]
+[ext_resource type="Texture2D" uid="uid://bkebt7vnjp4bt" path="res://Sprites/Hud/activeBuffs.png" id="12_kfyd2"]
+[ext_resource type="Texture2D" uid="uid://d4nkia2vms0t7" path="res://Sprites/Hud/Jobs.png" id="13_6wd2y"]
+[ext_resource type="Texture2D" uid="uid://cootbhqtp6dj6" path="res://Sprites/Hud/View.png" id="14_clor7"]
+[ext_resource type="Texture2D" uid="uid://bi6fq33gkf5oh" path="res://Sprites/Hud/Halt.png" id="15_jf5nq"]
+[ext_resource type="Texture2D" uid="uid://bgx6xg4vtb0p4" path="res://Sprites/Hud/Level.png" id="16_qtvup"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_iihta"]
 bg_color = Color(1, 1, 1, 0.0470588)
@@ -148,36 +154,42 @@ alignment = 1
 [node name="Info" parent="VBoxContainer/Control/HBoxContainer" instance=ExtResource("7_d7ftl")]
 unique_name_in_owner = true
 layout_mode = 2
-kill_autobuyer = true
-kill_check = true
-
-[node name="Jobs" parent="VBoxContainer/Control/HBoxContainer" instance=ExtResource("7_d7ftl")]
-unique_name_in_owner = true
-layout_mode = 2
+icon = ExtResource("11_o6yhx")
 kill_autobuyer = true
 kill_check = true
 
 [node name="Active Buffs" parent="VBoxContainer/Control/HBoxContainer" instance=ExtResource("7_d7ftl")]
 unique_name_in_owner = true
 layout_mode = 2
+icon = ExtResource("12_kfyd2")
+kill_autobuyer = true
+kill_check = true
+
+[node name="Jobs" parent="VBoxContainer/Control/HBoxContainer" instance=ExtResource("7_d7ftl")]
+unique_name_in_owner = true
+layout_mode = 2
+icon = ExtResource("13_6wd2y")
 kill_autobuyer = true
 kill_check = true
 
 [node name="View Special" parent="VBoxContainer/Control/HBoxContainer" instance=ExtResource("7_d7ftl")]
 unique_name_in_owner = true
 layout_mode = 2
+icon = ExtResource("14_clor7")
 kill_autobuyer = true
 kill_check = true
 
 [node name="Sleep" parent="VBoxContainer/Control/HBoxContainer" instance=ExtResource("7_d7ftl")]
 unique_name_in_owner = true
 layout_mode = 2
+icon = ExtResource("15_jf5nq")
 kill_autobuyer = true
 kill_check = true
 
 [node name="Level Up" parent="VBoxContainer/Control/HBoxContainer" instance=ExtResource("7_d7ftl")]
 unique_name_in_owner = true
 layout_mode = 2
+icon = ExtResource("16_qtvup")
 
 [node name="Control" type="Control" parent="."]
 layout_mode = 2

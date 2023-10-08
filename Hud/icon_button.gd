@@ -33,6 +33,9 @@ func _ready():
 		autobuyer.queue_free()
 	if kill_check:
 		check.queue_free()
+	if icon != null:
+		texture_rect.texture = icon
+		icon_shadow.texture = texture_rect.texture
 
 
 func _on_button_gui_input(event):

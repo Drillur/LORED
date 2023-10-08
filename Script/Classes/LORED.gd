@@ -105,7 +105,6 @@ var required_currencies := []
 var upgrades := []
 var unpurchased_upgrades := []
 var emote_queue := []
-var buffs := []
 
 @export var fuel: ValuePair
 @export var unlocked_jobs := []
@@ -245,7 +244,7 @@ func init_STONE() -> void:
 	details.name = "Scoot"
 	details.color = Color(0.79, 0.79, 0.79)
 	details.alt_color = Color(0.788235, 0.788235, 0.788235)
-	details.icon = preload("res://Sprites/Currency/stone.png")
+	details.icon = res.get_resource("stone")
 	details.description = "Likes rocks. Has a bottomless bag."
 	add_job(Job.Type.STONE, true)
 	cost = Cost.new({
@@ -268,7 +267,7 @@ func init_COAL() -> void:
 	details.color = Color(0.7, 0, 1)
 	details.alt_color = Color(0.9, 0.3, 1)
 	fuel_currency = Currency.Type.COAL
-	details.icon = preload("res://Sprites/Currency/coal.png")
+	details.icon = res.get_resource("coal")
 	details.description = "Plays support in every game."
 	primary_currency = Currency.Type.COAL
 
@@ -282,7 +281,7 @@ func init_IRON_ORE() -> void:
 	details.color = Color(0, 0.517647, 0.905882)
 	details.alt_color = Color(0.5, 0.788732, 1)
 	fuel_currency = Currency.Type.COAL
-	details.icon = preload("res://Sprites/Currency/irono.png")
+	details.icon = res.get_resource("irono")
 	details.description = "Is actually evil."
 	primary_currency = Currency.Type.IRON_ORE
 
@@ -296,7 +295,7 @@ func init_COPPER_ORE() -> void:
 	details.color = Color(0.7, 0.33, 0)
 	details.alt_color = Color(0.695313, 0.502379, 0.334076)
 	fuel_currency = Currency.Type.COAL
-	details.icon = preload("res://Sprites/Currency/copo.png")
+	details.icon = res.get_resource("copo")
 	details.description = "Trapped in a dead-end job. Literally."
 	primary_currency = Currency.Type.COPPER_ORE
 
@@ -311,7 +310,7 @@ func init_IRON() -> void:
 	details.color = Color(0.07, 0.89, 1)
 	details.alt_color = Color(0.496094, 0.940717, 1)
 	fuel_currency = Currency.Type.COAL
-	details.icon = preload("res://Sprites/Currency/iron.png")
+	details.icon = res.get_resource("iron")
 	details.description = "Wants everyone to succeed."
 	primary_currency = Currency.Type.IRON
 
@@ -326,7 +325,7 @@ func init_COPPER() -> void:
 	details.color = Color(1, 0.74, 0.05)
 	details.alt_color = Color(1, 0.862001, 0.496094)
 	fuel_currency = Currency.Type.COAL
-	details.icon = preload("res://Sprites/Currency/cop.png")
+	details.icon = res.get_resource("cop")
 	details.description = "Loves s'mores."
 	primary_currency = Currency.Type.COPPER
 
@@ -340,7 +339,7 @@ func init_GROWTH() -> void:
 	details.color = Color(0.79, 1, 0.05)
 	details.alt_color = Color(0.890041, 1, 0.5)
 	fuel_currency = Currency.Type.JOULES
-	details.icon = preload("res://Sprites/Currency/growth.png")
+	details.icon = res.get_resource("growth")
 	details.description = "Is in an unfortunate situation."
 	primary_currency = Currency.Type.GROWTH
 
@@ -354,7 +353,7 @@ func init_JOULES() -> void:
 	details.color = Color(1, 0.98, 0)
 	details.alt_color = Color(1, 0.9572, 0.503906)
 	fuel_currency = Currency.Type.COAL
-	details.icon = preload("res://Sprites/Currency/jo.png")
+	details.icon = res.get_resource("jo")
 	details.description = "Follows Tesla on [s]Twitter[/s] X."
 	primary_currency = Currency.Type.JOULES
 
@@ -369,7 +368,7 @@ func init_CONCRETE() -> void:
 	details.color = Color(0.35, 0.35, 0.35)
 	details.alt_color = Color(0.6, 0.6, 0.6)
 	fuel_currency = Currency.Type.COAL
-	details.icon = preload("res://Sprites/Currency/conc.png")
+	details.icon = res.get_resource("conc")
 	details.description = "Laughs about everything."
 	primary_currency = Currency.Type.CONCRETE
 
@@ -384,7 +383,7 @@ func init_OIL() -> void:
 	details.color = Color(0.65, 0.3, 0.66)
 	details.alt_color = Color(0.647059, 0.298039, 0.658824)
 	fuel_currency = Currency.Type.COAL
-	details.icon = preload("res://Sprites/Currency/oil.png")
+	details.icon = res.get_resource("oil")
 	details.description = "Is a big baby."
 	primary_currency = Currency.Type.OIL
 
@@ -399,7 +398,7 @@ func init_TARBALLS() -> void:
 	details.color = Color(0.56, 0.44, 1)
 	details.alt_color = Color(0.560784, 0.439216, 1)
 	fuel_currency = Currency.Type.JOULES
-	details.icon = preload("res://Sprites/Currency/tar.png")
+	details.icon = res.get_resource("tar")
 	details.description = "Quiet science guy."
 	primary_currency = Currency.Type.TARBALLS
 
@@ -415,7 +414,7 @@ func init_MALIGNANCY() -> void:
 	details.color = Color(0.88, 0.12, 0.35)
 	details.alt_color = Color(0.882353, 0.121569, 0.352941)
 	fuel_currency = Currency.Type.JOULES
-	details.icon = preload("res://Sprites/Currency/malig.png")
+	details.icon = res.get_resource("malig")
 	details.description = "Infinite clones."
 	primary_currency = Currency.Type.MALIGNANCY
 
@@ -430,7 +429,7 @@ func init_WATER() -> void:
 	details.color = Color(0, 0.647059, 1)
 	details.alt_color = Color(0.570313, 0.859009, 1)
 	fuel_currency = Currency.Type.COAL
-	details.icon = preload("res://Sprites/Currency/water.png")
+	details.icon = res.get_resource("water")
 	details.description = "Likes his pool."
 	primary_currency = Currency.Type.WATER
 
@@ -446,7 +445,7 @@ func init_HUMUS() -> void:
 	details.color = Color(0.458824, 0.25098, 0)
 	details.alt_color = Color(0.6, 0.3, 0)
 	fuel_currency = Currency.Type.JOULES
-	details.icon = preload("res://Sprites/Currency/humus.png")
+	details.icon = res.get_resource("humus")
 	details.description = "The shittest character in the game."
 	primary_currency = Currency.Type.HUMUS
 
@@ -460,7 +459,7 @@ func init_SOIL() -> void:
 	})
 	details.color = Color(0.737255, 0.447059, 0)
 	fuel_currency = Currency.Type.COAL
-	details.icon = preload("res://Sprites/Currency/soil.png")
+	details.icon = res.get_resource("soil")
 	details.description = "#note."
 	primary_currency = Currency.Type.SOIL
 	set_female_pronouns()
@@ -476,7 +475,7 @@ func init_TREES() -> void:
 	details.color = Color(0.772549, 1, 0.247059)
 	details.alt_color = Color(0.864746, 0.988281, 0.679443)
 	fuel_currency = Currency.Type.JOULES
-	details.icon = preload("res://Sprites/Currency/tree.png")
+	details.icon = res.get_resource("tree")
 	details.description = "God-mode."
 	primary_currency = Currency.Type.TREES
 
@@ -491,7 +490,7 @@ func init_SEEDS() -> void:
 	details.color = Color(1, 0.878431, 0.431373)
 	details.alt_color = Color(.8,.8,.8)
 	fuel_currency = Currency.Type.COAL
-	details.icon = preload("res://Sprites/Currency/seed.png")
+	details.icon = res.get_resource("seed")
 	details.description = "Keeps beesy."
 	primary_currency = Currency.Type.SEEDS
 
@@ -506,7 +505,7 @@ func init_GALENA() -> void:
 	details.color = Color(0.701961, 0.792157, 0.929412)
 	details.alt_color = Color(0.701961, 0.792157, 0.929412)
 	fuel_currency = Currency.Type.COAL
-	details.icon = preload("res://Sprites/Currency/gale.png")
+	details.icon = res.get_resource("gale")
 	details.description = "#note."
 	primary_currency = Currency.Type.GALENA
 
@@ -520,7 +519,7 @@ func init_LEAD() -> void:
 	})
 	details.color = Color(0.53833, 0.714293, 0.984375)
 	fuel_currency = Currency.Type.COAL
-	details.icon = preload("res://Sprites/Currency/lead.png")
+	details.icon = res.get_resource("lead")
 	details.description = "#note."
 	primary_currency = Currency.Type.LEAD
 
@@ -534,7 +533,7 @@ func init_WOOD_PULP() -> void:
 	})
 	details.color = Color(0.94902, 0.823529, 0.54902)
 	fuel_currency = Currency.Type.JOULES
-	details.icon = preload("res://Sprites/Currency/pulp.png")
+	details.icon = res.get_resource("pulp")
 	details.description = "#note."
 	primary_currency = Currency.Type.WOOD_PULP
 
@@ -548,7 +547,7 @@ func init_PAPER() -> void:
 	})
 	details.color = Color(0.792157, 0.792157, 0.792157)
 	fuel_currency = Currency.Type.COAL
-	details.icon = preload("res://Sprites/Currency/paper.png")
+	details.icon = res.get_resource("paper")
 	details.description = "Was in the boy scouts for 25 years."
 	primary_currency = Currency.Type.PAPER
 
@@ -563,7 +562,7 @@ func init_TOBACCO() -> void:
 	details.color = Color(0.639216, 0.454902, 0.235294)
 	details.alt_color = Color(0.85, 0.75, 0.63)
 	fuel_currency = Currency.Type.COAL
-	details.icon = preload("res://Sprites/Currency/toba.png")
+	details.icon = res.get_resource("toba")
 	details.description = "Thinks vapes are dangerous."
 	primary_currency = Currency.Type.TOBACCO
 
@@ -578,7 +577,7 @@ func init_CIGARETTES() -> void:
 	details.color = Color(0.929412, 0.584314, 0.298039)
 	details.alt_color = Color(0.97, 0.8, 0.6)
 	fuel_currency = Currency.Type.JOULES
-	details.icon = preload("res://Sprites/Currency/ciga.png")
+	details.icon = res.get_resource("ciga")
 	details.description = "On his 45th smoke break this shift."
 	primary_currency = Currency.Type.CIGARETTES
 
@@ -593,7 +592,7 @@ func init_PETROLEUM() -> void:
 	})
 	details.color = Color(0.76, 0.53, 0.14)
 	fuel_currency = Currency.Type.COAL
-	details.icon = preload("res://Sprites/Currency/pet.png")
+	details.icon = res.get_resource("pet")
 	details.description = "#note."
 	primary_currency = Currency.Type.PETROLEUM
 
@@ -607,7 +606,7 @@ func init_PLASTIC() -> void:
 	})
 	details.color = Color(0.85, 0.85, 0.85)
 	fuel_currency = Currency.Type.JOULES
-	details.icon = preload("res://Sprites/Currency/plast.png")
+	details.icon = res.get_resource("plast")
 	details.description = "#note."
 	primary_currency = Currency.Type.PLASTIC
 
@@ -623,7 +622,7 @@ func init_CARCINOGENS() -> void:
 	})
 	details.color = Color(0.772549, 0.223529, 0.192157)
 	fuel_currency = Currency.Type.JOULES
-	details.icon = preload("res://Sprites/Currency/carc.png")
+	details.icon = res.get_resource("carc")
 	details.description = "#note."
 	primary_currency = Currency.Type.CARCINOGENS
 
@@ -638,7 +637,7 @@ func init_LIQUID_IRON() -> void:
 	details.color = Color(0.27, 0.888, .9)
 	details.alt_color = Color(0.7, 0.94, .985)
 	fuel_currency = Currency.Type.JOULES
-	details.icon = preload("res://Sprites/Currency/liq.png")
+	details.icon = res.get_resource("liq")
 	details.description = "Likes soup."
 	primary_currency = Currency.Type.LIQUID_IRON
 
@@ -654,7 +653,7 @@ func init_STEEL() -> void:
 	details.color = Color(0.607843, 0.802328, 0.878431)
 	details.alt_color = Color(0.823529, 0.898039, 0.92549)
 	fuel_currency = Currency.Type.JOULES
-	details.icon = preload("res://Sprites/Currency/steel.png")
+	details.icon = res.get_resource("steel")
 	details.description = "Is as strong as Guts."
 	primary_currency = Currency.Type.STEEL
 
@@ -668,7 +667,7 @@ func init_SAND() -> void:
 	})
 	details.color = Color(.87, .70, .45)
 	fuel_currency = Currency.Type.COAL
-	details.icon = preload("res://Sprites/Currency/sand.png")
+	details.icon = res.get_resource("sand")
 	details.description = "Didn't get DisneyPlus-ed."
 	primary_currency = Currency.Type.SAND
 	set_female_pronouns()
@@ -684,7 +683,7 @@ func init_GLASS() -> void:
 	details.color = Color(0.81, 0.93, 1.0)
 	details.alt_color = Color(0.81, 0.93, 1.0)
 	fuel_currency = Currency.Type.JOULES
-	details.icon = preload("res://Sprites/Currency/glass.png")
+	details.icon = res.get_resource("glass")
 	details.description = "Vaporizes people for fun."
 	primary_currency = Currency.Type.GLASS
 
@@ -698,7 +697,7 @@ func init_WIRE() -> void:
 	})
 	details.color = Color(0.9, 0.6, 0.14)
 	fuel_currency = Currency.Type.JOULES
-	details.icon = preload("res://Sprites/Currency/wire.png")
+	details.icon = res.get_resource("wire")
 	details.description = "Loves her grandchildren."
 	primary_currency = Currency.Type.WIRE
 	set_female_pronouns()
@@ -714,7 +713,7 @@ func init_DRAW_PLATE() -> void:
 	})
 	details.color = Color(0.333333, 0.639216, 0.811765)
 	fuel_currency = Currency.Type.COAL
-	details.icon = preload("res://Sprites/Currency/draw.png")
+	details.icon = res.get_resource("draw")
 	details.description = "Can run really fast."
 	primary_currency = Currency.Type.DRAW_PLATE
 
@@ -729,7 +728,7 @@ func init_AXES() -> void:
 	})
 	details.color = Color(0.691406, 0.646158, 0.586075)
 	fuel_currency = Currency.Type.JOULES
-	details.icon = preload("res://Sprites/Currency/axe.png")
+	details.icon = res.get_resource("axe")
 	details.description = "IN THE YEAR 202070707020. I AM WAKAKO."
 	primary_currency = Currency.Type.AXES
 
@@ -744,7 +743,7 @@ func init_WOOD() -> void:
 	details.color = Color(0.545098, 0.372549, 0.015686)
 	details.alt_color = Color(0.77, 0.68, 0.6)
 	fuel_currency = Currency.Type.JOULES
-	details.icon = preload("res://Sprites/Currency/wood.png")
+	details.icon = res.get_resource("wood")
 	details.description = "Is just Goku."
 	primary_currency = Currency.Type.WOOD
 
@@ -759,7 +758,7 @@ func init_HARDWOOD() -> void:
 	})
 	details.color = Color(0.92549, 0.690196, 0.184314)
 	fuel_currency = Currency.Type.JOULES
-	details.icon = preload("res://Sprites/Currency/hard.png")
+	details.icon = res.get_resource("hard")
 	details.description = "Potentially problematic."
 	primary_currency = Currency.Type.HARDWOOD
 
@@ -775,7 +774,7 @@ func init_TUMORS() -> void:
 	})
 	details.color = Color(1, .54, .54)
 	fuel_currency = Currency.Type.JOULES
-	details.icon = preload("res://Sprites/Currency/tum.png")
+	details.icon = res.get_resource("tum")
 	details.description = "#note."
 	primary_currency = Currency.Type.TUMORS
 
@@ -790,7 +789,7 @@ func init_WITCH() -> void:
 	})
 	details.color = Color(0.937255, 0.501961, 0.776471)
 	fuel_currency = Currency.Type.COAL
-	details.icon = preload("res://Sprites/upgrades/thewitchofloredelith.png")
+	details.icon = res.get_resource("thewitchofloredelith")
 	details.description = "Loves her garden. In good favor with Aurus."
 	primary_currency = Currency.Type.FLOWER_SEED
 	set_female_pronouns()
@@ -806,7 +805,7 @@ func init_BLOOD() -> void:
 	})
 	details.color = Color(1, 0, 0)
 	details.alt_color = Color(1, 0.4, 0.4)
-	details.icon = preload("res://Sprites/Currency/axe.png")
+	details.icon = res.get_resource("axe")
 	details.description = "A stoic, hard-working healer."
 	primary_currency = Currency.Type.BLOOD
 	set_female_pronouns()
@@ -817,7 +816,7 @@ func init_S4PLACEHOLDER() -> void:
 	cost = Cost.new({Currency.Type.STONE: Value.new(1)})
 	details.color = Color(1, 0, 0)
 	details.alt_color = Color(1, 0.4, 0.4)
-	details.icon = preload("res://Sprites/Currency/axe.png")
+	details.icon = res.get_resource("axe")
 	details.description = "A real piece of work."
 	primary_currency = Currency.Type.STONE
 
@@ -1116,7 +1115,7 @@ func autobuy_check() -> void:
 #	if type == Type.COAL:
 #		printt(key, last_reason_autobuy)
 	if val:
-		printt(key, last_reason_autobuy)
+		#printt(key, last_reason_autobuy)
 		automatic_purchase()
 		autobuy_on_cooldown = true
 		await gv.get_tree().physics_frame
@@ -1623,3 +1622,20 @@ func cap_gain_loss_if_uses_currency(cur: int) -> void:
 				var cur2_gain_loss = wa.get_currency(cur2).gain_over_loss
 				if cur2_gain_loss > cur_gain_loss or cur2_gain_loss == -1:
 					wa.get_currency(cur2).gain_over_loss = wa.get_currency(cur).gain_over_loss
+
+
+
+func get_produced_currency_rates() -> Dictionary:
+	var data := {}
+	for job in jobs.values():
+		if job.type == Job.Type.REFUEL or job.do_not_alter_rates:
+			continue
+		for cur in job.produced_currencies:
+			data[cur] = Big.new(job.produced_currencies[cur].get_value()).d(
+				job.duration.get_as_float()
+			)
+		for cur in job.bonus_production:
+			data[cur] = Big.new(job.bonus_production[cur]).m(output.get_value()).d(
+				job.duration.get_as_float()
+			)
+	return data

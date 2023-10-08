@@ -32,19 +32,6 @@ var color: Color:
 
 
 func _ready() -> void:
-	play_button.remove_check().remove_autobuyer()
-	rename_button.remove_check().remove_autobuyer()
-	color_button.remove_check().remove_autobuyer()
-	duplicate_button.remove_check().remove_autobuyer()
-	delete_button.remove_check().remove_autobuyer()
-	
-	play_button.set_icon(gv.icon_play)
-	rename_button.set_icon(gv.icon_rename)
-	color_button.set_icon(gv.icon_color)
-	duplicate_button.set_icon(gv.icon_duplicate)
-	delete_button.set_icon(gv.icon_delete)
-	
-	#play_button.color = Color(0, 1, 0)
 	delete_button.color = Color(1, 0, 0)
 	
 	SaveManager.save_color_changed.connect(save_color_changed)

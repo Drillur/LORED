@@ -58,7 +58,7 @@ func setup(data: Dictionary) -> void:
 		if lored.unlocked.is_false():
 			continue
 		var rate = lored.get_produced_currency_rate(currency.type)
-		var label = gv.label.instantiate() as RichTextLabel
+		var label = res.get_resource("rich_text_label").instantiate() as RichTextLabel
 		label.text = lored.details.icon_and_name_text + "    [b]" + rate.text + "/s"
 		producers_container.add_child(label)
 	producers.visible = producers_container.get_child_count() != 0
@@ -68,7 +68,7 @@ func setup(data: Dictionary) -> void:
 		if lored.unlocked.is_false():
 			continue
 		var rate = lored.get_used_currency_rate(currency.type)
-		var label = gv.label.instantiate() as RichTextLabel
+		var label = res.get_resource("rich_text_label").instantiate() as RichTextLabel
 		label.name = lored.details.name
 		label.text = lored.details.icon_and_name_text + "    [b]-" + rate.text + "/s"
 		label.temp = rate

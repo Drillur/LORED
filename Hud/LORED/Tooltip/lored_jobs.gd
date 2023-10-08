@@ -6,7 +6,6 @@ extends MarginContainer
 @onready var jobs_parent = %"Jobs Parent"
 @onready var scroll_container = %ScrollContainer
 
-var lored_job := preload("res://Hud/LORED/Tooltip/lored_job.tscn")
 var lored: LORED
 
 var color: Color:
@@ -22,7 +21,7 @@ func setup(data: Dictionary) -> void:
 		await ready
 	color = lored.details.color
 	for job in lored.sorted_jobs:
-		var x = lored_job.instantiate()
+		var x = res.get_resource("lored_job").instantiate()
 		x.setup(lored.jobs[job])
 		jobs_parent.add_child(x)
 	

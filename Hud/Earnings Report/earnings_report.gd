@@ -31,8 +31,6 @@ extends MarginContainer
 var guess_who_done := false
 
 
-var label = preload("res://Hud/rich_text_label.tscn")
-
 var color: Color
 
 var speech_time_offline := {
@@ -143,11 +141,11 @@ var limit_loss := true:
 func _ready():
 	randomize()
 	gv.offline_report_ready.connect(go)
-	hamburger.set_icon(preload("res://Sprites/Hud/Menu.png"))
+	hamburger.set_icon(res.get_resource("Menu"))
 	hamburger.remove_optionals()
 	hamburger.modulate = Color(0, 0, 0)
 	hamburger.pressed.connect(options.show)
-	hamburger2.set_icon(preload("res://Sprites/Hud/Menu.png"))
+	hamburger2.set_icon(res.get_resource("Menu"))
 	hamburger2.remove_optionals()
 	hamburger2.modulate = Color(0, 0, 0)
 	hamburger2.pressed.connect(options.hide)
@@ -345,8 +343,7 @@ func closing() -> void:
 
 
 func instance_label(cur: int, parent: Node) -> void:
-	
-	var x = label.instantiate() as RichTextLabelPrefab
+	var x = res.get_resource("rich_text_label").instantiate() as RichTextLabelPrefab
 	var currency = wa.get_currency(cur)
 	var _text = "%s" + currency.offline_production.text
 	_text = _text % ("+" if currency.positive_offline_rate else "-")

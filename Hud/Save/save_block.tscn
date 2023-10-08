@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://c2kyhfm7iif84"]
+[gd_scene load_steps=14 format=3 uid="uid://c2kyhfm7iif84"]
 
 [ext_resource type="Script" path="res://Hud/Save/save_block.gd" id="1_6u3be"]
 [ext_resource type="Theme" uid="uid://b8t7tkhvril5g" path="res://Theme/Standard.tres" id="2_dulia"]
@@ -7,6 +7,10 @@
 [ext_resource type="Texture2D" uid="uid://b5e7ngok522rk" path="res://Sprites/Hud/Time.png" id="4_70nt4"]
 [ext_resource type="Texture2D" uid="uid://bmmkbhweqgkq" path="res://Sprites/Hud/Calendar.png" id="4_kjqb4"]
 [ext_resource type="Texture2D" uid="uid://5iiqw78gbrgu" path="res://Sprites/Hud/Difficulty.png" id="6_ewkwl"]
+[ext_resource type="Texture2D" uid="uid://dxkljddlbf3cf" path="res://Sprites/Hud/Play.png" id="8_v5a32"]
+[ext_resource type="Texture2D" uid="uid://bv5ukdy8ktnmp" path="res://Sprites/Hud/Rename.png" id="9_8g4d7"]
+[ext_resource type="Texture2D" uid="uid://c1omdjwk0lsh4" path="res://Sprites/Hud/Duplicate.png" id="10_w7r6d"]
+[ext_resource type="Texture2D" uid="uid://dbgwbxq3lcon1" path="res://Sprites/Hud/Delete.png" id="11_psihq"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vp750"]
 draw_center = false
@@ -198,20 +202,27 @@ alignment = 1
 [node name="Play" parent="VBoxContainer/Control/HBoxContainer" instance=ExtResource("3_wwduy")]
 unique_name_in_owner = true
 layout_mode = 2
+icon = ExtResource("8_v5a32")
+kill_autobuyer = true
+kill_check = true
 
 [node name="Rename" parent="VBoxContainer/Control/HBoxContainer" instance=ExtResource("3_wwduy")]
 unique_name_in_owner = true
 layout_mode = 2
-
-[node name="Color" parent="VBoxContainer/Control/HBoxContainer" instance=ExtResource("3_wwduy")]
-unique_name_in_owner = true
-visible = false
-layout_mode = 2
+icon = ExtResource("9_8g4d7")
+kill_autobuyer = true
+kill_check = true
 
 [node name="Duplicate" parent="VBoxContainer/Control/HBoxContainer" instance=ExtResource("3_wwduy")]
 unique_name_in_owner = true
 layout_mode = 2
+icon = ExtResource("10_w7r6d")
+kill_autobuyer = true
+kill_check = true
 
 [node name="Delete" parent="VBoxContainer/Control/HBoxContainer" instance=ExtResource("3_wwduy")]
 unique_name_in_owner = true
 layout_mode = 2
+icon = ExtResource("11_psihq")
+kill_autobuyer = true
+kill_check = true

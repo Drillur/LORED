@@ -1,10 +1,11 @@
+res://Script/Autoload
+res://Hud/LORED
 res://Hud/Notice
 res://Hud
 res://Theme
 D:/Games/LORED
 D:/Games
 res://Script
-res://Script/Autoload
 C:/Program Files (x86)/Steam/steamapps/common/Godot Engine/editor_data
 C:/Users/dills/AppData/Local/Programs/Microsoft VS Code
 res://Hud/Save
@@ -16,6 +17,5 @@ res://Hud/Wish
 res://Hud/LORED/Tooltip
 res://Hud/Emote
 res://Hud/Upgrade
-res://Hud/LORED
 res://Sprites/Hud
 res://Sprites/Currency

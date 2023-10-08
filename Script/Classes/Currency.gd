@@ -159,7 +159,7 @@ func _init(_type := Type.STONE) -> void:
 	if count == null:
 		count = Big.new(0, true)
 	if details.icon == null:
-		details.icon = preload("res://Sprites/Hud/Delete.png")
+		details.icon = res.get_resource("Delete")
 	
 	gv.prestige.connect(prestige)
 	gv.hard_reset.connect(reset)
@@ -169,13 +169,13 @@ func _init(_type := Type.STONE) -> void:
 func init_STONE() -> void:
 	count = Big.new(5, true)
 	details.color = Color(0.79, 0.79, 0.79)
-	details.icon = preload("res://Sprites/Currency/stone.png")
+	details.icon = res.get_resource("stone")
 	weight = 3
 
 
 func init_COAL() -> void:
 	details.color = Color(0.7, 0, 1)
-	details.icon = preload("res://Sprites/Currency/coal.png")
+	details.icon = res.get_resource("coal")
 	details.description = "Used primarily as fuel for LOREDs!"
 	weight = 2
 	used_for_fuel = true
@@ -183,18 +183,18 @@ func init_COAL() -> void:
 
 func init_IRON_ORE() -> void:
 	details.color = Color(0, 0.517647, 0.905882)
-	details.icon = preload("res://Sprites/Currency/irono.png")
+	details.icon = res.get_resource("irono")
 
 
 func init_COPPER_ORE() -> void:
 	details.color = Color(0.7, 0.33, 0)
-	details.icon = preload("res://Sprites/Currency/copo.png")
+	details.icon = res.get_resource("copo")
 
 
 func init_IRON() -> void:
 	count = Big.new(8, true)
 	details.color = Color(0.07, 0.89, 1)
-	details.icon = preload("res://Sprites/Currency/iron.png")
+	details.icon = res.get_resource("iron")
 	details.description = "It's possible that this is toast."
 	weight = 3
 	set_safety_condition(SafetyType.LORED_PURCHASED, LORED.Type.IRON)
@@ -203,21 +203,21 @@ func init_IRON() -> void:
 func init_COPPER() -> void:
 	count = Big.new(8, true)
 	details.color = Color(1, 0.74, 0.05)
-	details.icon = preload("res://Sprites/Currency/cop.png")
+	details.icon = res.get_resource("cop")
 	weight = 3
 	set_safety_condition(SafetyType.LORED_PURCHASED, LORED.Type.COPPER)
 
 
 func init_GROWTH() -> void:
 	details.color = Color(0.79, 1, 0.05)
-	details.icon = preload("res://Sprites/Currency/growth.png")
+	details.icon = res.get_resource("growth")
 	details.description = "What? This game is weird!"
 	weight = 2
 
 
 func init_JOULES() -> void:
 	details.color = Color(1, 0.98, 0)
-	details.icon = preload("res://Sprites/Currency/jo.png")
+	details.icon = res.get_resource("jo")
 	details.description = "Used primarily as fuel for LOREDs!"
 	weight = 2
 	used_for_fuel = true
@@ -226,79 +226,79 @@ func init_JOULES() -> void:
 
 func init_CONCRETE() -> void:
 	details.color = Color(0.35, 0.35, 0.35)
-	details.icon = preload("res://Sprites/Currency/conc.png")
+	details.icon = res.get_resource("conc")
 	weight = 3
 
 
 func init_MALIGNANCY() -> void:
 	count = Big.new(10, true)
 	details.color = Color(0.88, .12, .35)
-	details.icon = preload("res://Sprites/Currency/malig.png")
+	details.icon = res.get_resource("malig")
 	persist.set_default_value(true)
 	set_safety_condition(SafetyType.LORED_PURCHASED, LORED.Type.TARBALLS)
 
 
 func init_TARBALLS() -> void:
 	details.color = Color(.56, .44, 1)
-	details.icon = preload("res://Sprites/Currency/tar.png")
+	details.icon = res.get_resource("tar")
 	weight = 2
 
 
 func init_OIL() -> void:
 	details.color = Color(.65, .3, .66)
-	details.icon = preload("res://Sprites/Currency/oil.png")
+	details.icon = res.get_resource("oil")
 
 
 func init_WATER() -> void:
 	details.color = Color(0, 0.647059, 1)
-	details.icon = preload("res://Sprites/Currency/water.png")
+	details.icon = res.get_resource("water")
 	details.description = "The 4x2 Lego piece of life."
 	weight = 2
 
 
 func init_HUMUS() -> void:
 	details.color = Color(0.458824, 0.25098, 0)
-	details.icon = preload("res://Sprites/Currency/humus.png")
+	details.icon = res.get_resource("humus")
 	details.description = "Actual shit."
 
 
 func init_SEEDS() -> void:
 	count = Big.new(2, true)
 	details.color = Color(1, 0.878431, 0.431373)
-	details.icon = preload("res://Sprites/Currency/seed.png")
+	details.icon = res.get_resource("seed")
 	set_safety_condition(SafetyType.LORED_PURCHASED, LORED.Type.SEEDS)
 
 
 func init_TREES() -> void:
 	details.color = Color(0.772549, 1, 0.247059)
-	details.icon = preload("res://Sprites/Currency/tree.png")
+	details.icon = res.get_resource("tree")
 
 
 func init_SOIL() -> void:
 	count = Big.new(25, true)
 	details.color = Color(0.737255, 0.447059, 0)
-	details.icon = preload("res://Sprites/Currency/soil.png")
+	details.icon = res.get_resource("soil")
 	set_safety_condition(SafetyType.LORED_PURCHASED, LORED.Type.SOIL)
 
 
 func init_AXES() -> void:
 	count = Big.new(5, true)
 	details.color = Color(0.691406, 0.646158, 0.586075)
-	details.icon = preload("res://Sprites/Currency/axe.png")
+	details.icon = res.get_resource("axe")
 	set_safety_condition(SafetyType.LORED_PURCHASED, LORED.Type.AXES)
 
 
 func init_WOOD() -> void:
 	count = Big.new(80, true)
 	details.color = Color(0.545098, 0.372549, 0.015686)
-	details.icon = preload("res://Sprites/Currency/wood.png")
+	details.icon = res.get_resource("wood")
 	set_safety_condition(SafetyType.LORED_PURCHASED, LORED.Type.WOOD)
 
 
 func init_HARDWOOD() -> void:
 	count = Big.new(95, true)
 	details.color = Color(0.92549, 0.690196, 0.184314)
-	details.icon = preload("res://Sprites/Currency/hard.png")
+	details.icon = res.get_resource("hard")
 	details.description = "( ͡⚆ ͜ʖ ͡⚆)"
 	weight = 3
 	set_safety_condition(SafetyType.LORED_PURCHASED, LORED.Type.HARDWOOD)
@@ -306,13 +306,13 @@ func init_HARDWOOD() -> void:
 
 func init_LIQUID_IRON() -> void:
 	details.color = Color(0.27, 0.888, .9)
-	details.icon = preload("res://Sprites/Currency/liq.png")
+	details.icon = res.get_resource("liq")
 
 
 func init_STEEL() -> void:
 	count = Big.new(25, true)
 	details.color = Color(0.607843, 0.802328, 0.878431)
-	details.icon = preload("res://Sprites/Currency/steel.png")
+	details.icon = res.get_resource("steel")
 	weight = 3
 	set_safety_condition(SafetyType.LORED_PURCHASED, LORED.Type.STEEL)
 
@@ -320,7 +320,7 @@ func init_STEEL() -> void:
 func init_SAND() -> void:
 	count = Big.new(250, true)
 	details.color = Color(.87, .70, .45)
-	details.icon = preload("res://Sprites/Currency/sand.png")
+	details.icon = res.get_resource("sand")
 	details.description = "It's roarse, and cough, and it gets eherweyeve!"
 	set_safety_condition(SafetyType.LORED_PURCHASED, LORED.Type.SAND)
 
@@ -328,69 +328,69 @@ func init_SAND() -> void:
 func init_GLASS() -> void:
 	count = Big.new(30, true)
 	details.color = Color(0.81, 0.93, 1.0)
-	details.icon = preload("res://Sprites/Currency/glass.png")
+	details.icon = res.get_resource("glass")
 	weight = 3
 	set_safety_condition(SafetyType.LORED_PURCHASED, LORED.Type.GLASS)
 
 
 func init_DRAW_PLATE() -> void:
 	details.color = Color(0.333333, 0.639216, 0.811765)
-	details.icon = preload("res://Sprites/Currency/draw.png")
+	details.icon = res.get_resource("draw")
 
 
 func init_WIRE() -> void:
 	count = Big.new(20, true)
 	details.color = Color(0.9, 0.6, 0.14)
-	details.icon = preload("res://Sprites/Currency/wire.png")
+	details.icon = res.get_resource("wire")
 	weight = 3
 	set_safety_condition(SafetyType.LORED_PURCHASED, LORED.Type.WIRE)
 
 
 func init_GALENA() -> void:
 	details.color = Color(0.701961, 0.792157, 0.929412)
-	details.icon = preload("res://Sprites/Currency/gale.png")
+	details.icon = res.get_resource("gale")
 
 
 func init_LEAD() -> void:
 	details.color = Color(0.53833, 0.714293, 0.984375)
-	details.icon = preload("res://Sprites/Currency/lead.png")
+	details.icon = res.get_resource("lead")
 
 
 func init_PETROLEUM() -> void:
 	details.color = Color(0.76, 0.53, 0.14)
-	details.icon = preload("res://Sprites/Currency/pet.png")
+	details.icon = res.get_resource("pet")
 
 
 func init_WOOD_PULP() -> void:
 	details.color = Color(0.94902, 0.823529, 0.54902)
-	details.icon = preload("res://Sprites/Currency/pulp.png")
+	details.icon = res.get_resource("pulp")
 
 
 func init_PAPER() -> void:
 	details.color = Color(0.792157, 0.792157, 0.792157)
-	details.icon = preload("res://Sprites/Currency/paper.png")
+	details.icon = res.get_resource("paper")
 
 
 func init_PLASTIC() -> void:
 	details.color = Color(0.85, 0.85, 0.85)
-	details.icon = preload("res://Sprites/Currency/plast.png")
+	details.icon = res.get_resource("plast")
 	weight = 2
 
 
 func init_TOBACCO() -> void:
 	details.color = Color(0.639216, 0.454902, 0.235294)
-	details.icon = preload("res://Sprites/Currency/toba.png")
+	details.icon = res.get_resource("toba")
 
 
 func init_CIGARETTES() -> void:
 	details.color = Color(0.929412, 0.584314, 0.298039)
-	details.icon = preload("res://Sprites/Currency/ciga.png")
+	details.icon = res.get_resource("ciga")
 	weight = 2
 
 
 func init_CARCINOGENS() -> void:
 	details.color = Color(0.772549, 0.223529, 0.192157)
-	details.icon = preload("res://Sprites/Currency/carc.png")
+	details.icon = res.get_resource("carc")
 	weight = 2
 
 
@@ -400,13 +400,13 @@ func init_EMBRYO() -> void:
 
 func init_TUMORS() -> void:
 	details.color = Color(1, .54, .54)
-	details.icon = preload("res://Sprites/Currency/tum.png")
+	details.icon = res.get_resource("tum")
 	persist.set_default_value(true)
 
 
 func init_FLOWER_SEED() -> void:
 	details.color = Color(1, 0.878431, 0.431373)
-	details.icon = preload("res://Sprites/Currency/seed.png")
+	details.icon = res.get_resource("seed")
 
 
 func init_MANA() -> void:
@@ -425,13 +425,13 @@ func init_SPIRIT() -> void:
 
 func init_JOY() -> void:
 	details.color = Color(1, 0.909804, 0)
-	details.icon = preload("res://Sprites/Currency/Joy.png")
+	details.icon = res.get_resource("Joy")
 	persist.set_default_value(true)
 
 
 func init_GRIEF() -> void:
 	details.color = Color(0.74902, 0.203922, 0.533333)
-	details.icon = preload("res://Sprites/Currency/Grief.png")
+	details.icon = res.get_resource("Grief")
 	persist.set_default_value(true)
 
 

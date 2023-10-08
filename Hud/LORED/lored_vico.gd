@@ -26,8 +26,6 @@ extends MarginContainer
 @onready var sleep_timer = $"Sleep Timer"
 @onready var level_up_texts = %"Level Up Texts"
 
-var level_icon = preload("res://Sprites/Hud/Level.png")
-
 var prefer_left_down: bool
 var has_lored := false
 var lored: LORED
@@ -57,7 +55,6 @@ func _ready():
 	status.hide()
 	progress_bar.hide()
 	fuel_bar.size.x = size.x
-	set_icons()
 	remove_checks()
 	
 	active_buffs.hide()
@@ -75,15 +72,6 @@ func _ready():
 	lv.advanced_details_unlocked.changed.connect(advanced_details_lock)
 	sleep_lock()
 
-
-
-func set_icons() -> void:
-	info.set_icon(load("res://Sprites/Hud/Info.png"))
-	jobs.set_icon(load("res://Sprites/Hud/Jobs.png"))
-	active_buffs.set_icon(load("res://Sprites/Hud/activeBuffs.png"))
-	sleep.set_icon(gv.icon_asleep)
-	view_special.set_icon(load("res://Sprites/Hud/View.png"))
-	level_up.set_icon(load("res://Sprites/Hud/Level.png"))
 
 
 func remove_checks() -> void:
@@ -353,13 +341,13 @@ func sleep_clicked() -> void:
 
 func sleep_changed() -> void:
 	if lored.asleep.is_true():
-		sleep.set_icon(gv.icon_awake)
+		sleep.set_icon(res.get_resource("awake"))
 		set_status_and_currency("[wave amp=20 freq=1]Sleeping.", lored.primary_currency)
 		animation.sleep()
 		start_spewing_sleep_text()
 		start_sleep_timer()
 	else:
-		sleep.set_icon(gv.icon_asleep)
+		sleep.set_icon(res.get_resource("Halt"))
 		sleep_text_timer.stop()
 		sleep_timer.stop()
 
@@ -400,7 +388,7 @@ func spew_sleep_text() -> void:
 
 
 func emote(_emote: Emote) -> void:
-	var emote_vico = em.emote_vico.instantiate() as EmoteVico
+	var emote_vico = res.get_resource("emote_vico").instantiate() as EmoteVico
 	emote_vico.setup(_emote)
 	emote_container.add_child(emote_vico)
 
