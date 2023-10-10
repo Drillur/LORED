@@ -5,6 +5,7 @@ extends Node
 var saved_vars := [
 	"upgrades_by_key",
 	"upgrade_menu_by_key",
+	"limit_break",
 ]
 
 
@@ -103,6 +104,7 @@ var upgrades_by_key := {}
 var upgrade_menus := {}
 var upgrade_menu_by_key := {}
 var purchasable_upgrade_count := Int.new(0)
+var limit_break := LimitBreak.new()
 
 
 

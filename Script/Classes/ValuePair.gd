@@ -158,7 +158,7 @@ func subtract_pending(amount: Big) -> void:
 
 func set_amount_to_deficit_if_necessary(amount) -> Big:
 	if not cap_current:
-		return
+		return amount
 	var deficit = get_deficit()
 	if deficit.less(amount):
 		return deficit

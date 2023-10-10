@@ -6,7 +6,6 @@ var saved_vars := [
 	"unlocked",
 ]
 
-
 enum Type {
 	STONE,
 	COAL,
@@ -484,6 +483,7 @@ func safety_check() -> void:
 
 func unlock() -> void:
 	unlocked = true
+
 
 
 func add(amount) -> void:

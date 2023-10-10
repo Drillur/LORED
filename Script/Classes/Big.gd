@@ -482,6 +482,15 @@ func roundDown() -> Big:
 		return self
 
 
+func round_up_tens() -> Big:
+	if mantissa == 1.0:
+		return self
+	if mantissa < 10.0:
+		mantissa = 10.0
+	calculate(self)
+	return self
+
+
 func log10(x):
 	return log(x) * 0.4342944819032518
 
