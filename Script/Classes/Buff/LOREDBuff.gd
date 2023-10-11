@@ -18,7 +18,7 @@ func _init(_type: Type, _lored: LORED) -> void:
 	object = _lored
 	
 	ticked.connect(get(key + "_tick"))
-	name = get_buff_name(type)
+	name = LOREDBuff.get_buff_name(type)
 	
 	match _type:
 		Type.WITCH:

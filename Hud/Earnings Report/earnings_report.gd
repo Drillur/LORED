@@ -266,9 +266,13 @@ func lost_resources() -> void:
 	
 	negative_resources.sort_custom(
 		func sort(a: int, b: int):
+			var cur_a = wa.get_currency(a)
+			var cur_b = wa.get_currency(b)
+			if cur_a.gain_over_loss == cur_b.gain_over_loss:
+				return cur_a.details.name.naturalnocasecmp_to(cur_b.details.name) < 0
 			return (
-				wa.get_currency(a).gain_over_loss
-				<= wa.get_currency(b).gain_over_loss
+				cur_a.gain_over_loss
+				< cur_b.gain_over_loss
 			)
 	)
 	var _i = 0

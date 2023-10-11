@@ -1,4 +1,4 @@
-[gd_scene load_steps=37 format=3 uid="uid://bseqrj5lg08it"]
+[gd_scene load_steps=38 format=3 uid="uid://bseqrj5lg08it"]
 
 [ext_resource type="Script" path="res://Scene/Root.gd" id="1_h7r77"]
 [ext_resource type="PackedScene" uid="uid://rmruae8fguk4" path="res://Hud/LORED/lored_container.tscn" id="2_egnhq"]
@@ -22,6 +22,7 @@
 [ext_resource type="Texture2D" uid="uid://bg61ibd6ds5os" path="res://Sprites/Hud/Hard Reset.png" id="13_0l83t"]
 [ext_resource type="Texture2D" uid="uid://bv5ukdy8ktnmp" path="res://Sprites/Hud/Rename.png" id="13_6v2xt"]
 [ext_resource type="Texture2D" uid="uid://c1omdjwk0lsh4" path="res://Sprites/Hud/Duplicate.png" id="14_5312t"]
+[ext_resource type="PackedScene" uid="uid://dm7yv851431s4" path="res://Hud/Upgrade/Upgrade Effect Widget.tscn" id="14_vidbt"]
 [ext_resource type="Texture2D" uid="uid://i5w3qd2sgfwm" path="res://Sprites/Hud/Load.png" id="15_bxrvx"]
 [ext_resource type="Texture2D" uid="uid://dbgwbxq3lcon1" path="res://Sprites/Hud/Delete.png" id="15_s64ty"]
 [ext_resource type="Texture2D" uid="uid://d31dpqjhgrtaq" path="res://Sprites/Hud/Discord.png" id="22_ejl1s"]
@@ -326,6 +327,48 @@ unique_name_in_owner = true
 layout_mode = 2
 icon = ExtResource("7_6y55p")
 text = "Stage 4"
+
+[node name="Upgrade Section" type="VBoxContainer" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="UPGRADE" type="MarginContainer" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Upgrade Section"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Upgrade Section/UPGRADE"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Upgrade Section/UPGRADE/HBoxContainer"]
+self_modulate = Color(1, 1, 1, 0.658824)
+layout_mode = 2
+size_flags_vertical = 4
+theme = ExtResource("13_0ehpq")
+bbcode_enabled = true
+text = "UPGRADE EFFECTS"
+fit_content = true
+autowrap_mode = 0
+
+[node name="ShowHide" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Upgrade Section/UPGRADE/HBoxContainer" node_paths=PackedStringArray("node") instance=ExtResource("5_7doml")]
+layout_mode = 2
+node = NodePath("../../../Upgrade")
+
+[node name="Upgrade" type="MarginContainer" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Upgrade Section"]
+layout_mode = 2
+theme_override_constants/margin_bottom = 40
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Upgrade Section/Upgrade"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Upgrade Effect Widget" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Upgrade Section/Upgrade/VBoxContainer" instance=ExtResource("14_vidbt")]
+layout_mode = 2
+upgrade_type = 168
 
 [node name="Save Section" type="VBoxContainer" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer"]
 unique_name_in_owner = true
@@ -644,7 +687,6 @@ shape = SubResource("RectangleShape2D_alvwj")
 [connection signal="sort_children" from="Left/V/Random Wishes" to="." method="_on_random_wishes_sort_children"]
 [connection signal="sort_children" from="Left/V/Main Wishes" to="." method="_on_main_wishes_sort_children"]
 [connection signal="pressed" from="Sidebar/MarginContainer/VBoxContainer/MarginContainer2/MarginContainer/Menu Button" to="." method="_on_menu_button_pressed"]
-[connection signal="visibility_changed" from="Sidebar/MarginContainer/VBoxContainer/MarginContainer2/MarginContainer/Menu Button" to="Sidebar/MarginContainer/VBoxContainer/MarginContainer2/MarginContainer/Menu Button" method="_on_visibility_changed"]
 [connection signal="resized" from="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer" to="." method="_on_menu_container_resized"]
 [connection signal="pressed" from="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game Section/Game/VBoxContainer/Wallet Button" to="." method="_on_wallet_button_pressed"]
 [connection signal="pressed" from="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game Section/Game/VBoxContainer/Upgrades Button" to="." method="_on_upgrades_button_pressed"]

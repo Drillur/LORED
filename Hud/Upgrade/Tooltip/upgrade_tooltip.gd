@@ -83,13 +83,8 @@ func purchased_changed() -> void:
 
 
 func update_description_its_growin() -> void:
-	var iron = lv.get_colored_name(LORED.Type.IRON)
-	var cop = lv.get_colored_name(LORED.Type.COPPER)
-	var effect1 = "[b]x" + upgrade.effect.get_effect_text() + "[/b]"
-	var effect2 = "[b]x" + upgrade.effect.get_effect2_text() + "[/b]"
 	description.text = upgrade.details.description 
-	description.text += "\n\n[center]%s: %s[/center]" % [iron, effect1]
-	description.text += "\n[center]%s: %s[/center]" % [cop, effect2]
+	description.text += "\n\n" + upgrade.effect.get_dynamic_text()
 
 
 func update_description_milkshake() -> void:

@@ -1,3 +1,4 @@
+@tool
 class_name Bar
 extends MarginContainer
 
@@ -42,7 +43,7 @@ func _ready() -> void:
 		danger_marker.queue_free()
 	if kill_background:
 		$bg.theme = gv.theme_invis
-	progress_bar.size.x = 2
+	progress_bar.set_deferred("size", Vector2(2, size.y))
 	if not animate:
 		delta_bar.hide()
 		set_process(false)
@@ -64,9 +65,9 @@ func _process(delta) -> void:
 
 func _on_resized():
 	update_progress_bar()
-	progress_bar.size.y = size.y
+	progress_bar.set_deferred("size", Vector2(progress_bar.size.x, size.y))
 	if animate:
-		delta_bar.size.y = size.y
+		delta_bar.set_deferred("size", Vector2(delta_bar.size.x, size.y))
 
 
 

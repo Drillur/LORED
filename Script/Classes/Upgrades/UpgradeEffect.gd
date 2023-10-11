@@ -525,6 +525,7 @@ func remove_effects() -> void:
 					method.call(in_hand)
 
 
+
 # - Get
 
 func get_text() -> String:
@@ -542,3 +543,15 @@ func get_effect_text() -> String:
 func get_effect2_text() -> String:
 	return effect2.get_text()
 
+
+func get_dynamic_text() -> String:
+	match upgrade_type:
+		Upgrade.Type.ITS_GROWIN_ON_ME:
+			return "[center][b]x%s[/b] [i]for[/i] %s\n[b]x%s[/b] [i]for[/i] %s" % [
+				effect.get_text(),
+				lv.get_colored_name(LORED.Type.IRON),
+				effect2.get_text(),
+				lv.get_colored_name(LORED.Type.COPPER)
+			]
+	
+	return "Freakin stinkin oops!"

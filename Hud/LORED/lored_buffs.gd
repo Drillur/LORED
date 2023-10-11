@@ -17,6 +17,6 @@ var color: Color:
 
 func setup(data: Dictionary) -> void:
 	lored = lv.get_lored(data["lored"])
-	var buffs = Buffs.get_buffs(lored)
+	var _buffs = Buffs.get_buffs(lored)
 	await ready
 	color = lored.details.color

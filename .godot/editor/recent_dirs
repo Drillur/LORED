@@ -1,3 +1,4 @@
+res://Hud/Upgrade
 res://Script/Autoload
 res://Hud/LORED
 res://Hud/Notice
@@ -16,6 +17,5 @@ res://Hud/Wallet
 res://Hud/Wish
 res://Hud/LORED/Tooltip
 res://Hud/Emote
-res://Hud/Upgrade
 res://Sprites/Hud
 res://Sprites/Currency
