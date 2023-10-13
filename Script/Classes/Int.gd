@@ -85,9 +85,21 @@ func is_not_positive() -> bool:
 	return is_negative()
 
 
+func greater(val) -> bool:
+	return not less_equal(val)
+
+
+func greater_equal(val) -> bool:
+	return not less(val)
+
+
 func equal(val) -> bool:
 	return is_equal_approx(current, val)
 
 
-func greater_equal(val) -> bool:
-	return val > current or equal(val)
+func less_equal(val) -> bool:
+	return less(val) or equal(val)
+
+
+func less(val) -> bool:
+	return current < val

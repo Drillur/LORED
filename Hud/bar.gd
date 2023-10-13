@@ -19,7 +19,8 @@ var color: Color:
 	set(val):
 		color = val
 		progress_bar.modulate = color
-		delta_bar.modulate = color
+		if animate:
+			delta_bar.modulate = color
 
 var progress: float:
 	set(val):

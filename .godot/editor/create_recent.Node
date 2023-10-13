@@ -1,10 +1,10 @@
+VBoxContainer
+MarginContainer
 TextureRect
 Sprite2D
-MarginContainer
 Timer
 RichTextLabel
 HBoxContainer
-VBoxContainer
 VSlider
 Control
 Panel

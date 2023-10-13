@@ -255,12 +255,15 @@ func get_progress_percent() -> float:
 
 
 func can_take_candy_from_a_baby() -> bool:
-	if has_stage1_currency:
-		if up.is_upgrade_purchased(Upgrade.Type.DONT_TAKE_CANDY_FROM_BABIES):
-			for cur in cost:
-				var currency = wa.get_currency(cur)
-				if currency.stage == 1:
-					var lored = lv.get_lored(currency.produced_by[0])
-					if lored.level < 5:
-						return false
+	if (
+		stage > 1
+		and has_stage1_currency
+		and up.is_upgrade_purchased(Upgrade.Type.DONT_TAKE_CANDY_FROM_BABIES)
+	):
+		for cur in cost:
+			var currency = wa.get_currency(cur)
+			if currency.stage == 1:
+				var lored = lv.get_lored(currency.produced_by[0])
+				if lored.level < 5:
+					return false
 	return true

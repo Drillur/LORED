@@ -21,6 +21,8 @@ var current: Big:
 		sync()
 		return current
 
+var affected_by_limit_break := false
+
 var added := Big.new(0, true)
 var subtracted := Big.new(0, true)
 var multiplied := Big.new(1, true)
@@ -83,6 +85,8 @@ func sync() -> void:
 		new_cur.m(multiplied)
 		new_cur.m(from_level)
 		new_cur.m(m_from_lored)
+		if affected_by_limit_break:
+			new_cur.m(up.limit_break.level.get_value())
 		new_cur.d(divided)
 		new_cur.d(d_from_lored)
 		current.set_to(new_cur)
@@ -173,6 +177,25 @@ func reset():
 	d_from_lored.reset()
 	m_from_lored.reset()
 	current.reset()
+
+
+
+func enable_limit_break() -> void:
+	if not affected_by_limit_break:
+		affected_by_limit_break = true
+		requires_sync = true
+		up.limit_break.level.changed.connect(limit_break_leveled_up)
+
+
+func disable_limit_break() -> void:
+	if affected_by_limit_break:
+		affected_by_limit_break = false
+		requires_sync = true
+		up.limit_break.level.changed.disconnect(limit_break_leveled_up)
+
+
+func limit_break_leveled_up() -> void:
+	requires_sync = true
 
 
 

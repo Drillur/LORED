@@ -226,7 +226,6 @@ func update_discord_state(text: String) -> void:
 	discord_sdk.refresh()
 
 
-
 func get_random_color() -> Color:
 	return Color(
 		randf(),
@@ -234,6 +233,11 @@ func get_random_color() -> Color:
 		randf(),
 		1
 	)
+
+
+func color_text(color: Color, text: String) -> String:
+	return "[color=#" + color.to_html() + "]" + text + "[/color]"
+
 
 
 

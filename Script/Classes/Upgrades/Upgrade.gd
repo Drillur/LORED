@@ -384,7 +384,7 @@ func _init(_type: int) -> void:
 	cost.stage = stage
 	cost.affordable.changed.connect(affordable_changed)
 	
-	effected_loreds_text = get_effected_loreds_text()
+	update_effected_loreds_text()
 	
 	if details.icon == null:
 		if loreds.size() < 10:
@@ -401,7 +401,7 @@ func _init(_type: int) -> void:
 	
 	has_description = details.description != ""
 	
-	SaveManager.connect("load_finished", load_finished)
+	SaveManager.load_finished.connect(load_finished)
 
 
 
@@ -833,7 +833,7 @@ func init_ITS_GROWIN_ON_ME() -> void:
 			"modifier": 0.05,
 		}
 	)
-	effect.set_dynamic(true)
+	effect.save_effect(true)
 	add_effected_lored(LORED.Type.IRON)
 	add_effected_lored(LORED.Type.COPPER)
 	cost = Cost.new({
@@ -948,7 +948,7 @@ func init_I_DRINK_YOUR_MILKSHAKE() -> void:
 			"modifier": 0.001,
 		}
 	)
-	effect.set_dynamic(true)
+	effect.save_effect(true)
 	add_effected_lored(LORED.Type.COAL)
 	cost = Cost.new({
 		Currency.Type.MALIGNANCY: Value.new("800e3"),
@@ -2284,9 +2284,8 @@ func init_LIMIT_BREAK() -> void:
 		"effect value": 1,
 		"xp": ValuePair.new(1000),
 	})
-	effect.set_dynamic(true)
-	add_effected_stage(1)
-	add_effected_stage(2)
+	details.color = gv.get_stage_color(2)
+	details.icon = res.get_resource("axe")
 	cost = Cost.new({
 		Currency.Type.TUMORS: Value.new("250"),
 	})
@@ -2898,7 +2897,7 @@ func init_ITS_SPREADIN_ON_ME() -> void:
 			"modifier": 0.05,
 		}
 	)
-	effect.set_dynamic(true)
+	effect.save_effect(true)
 	add_effected_lored(LORED.Type.IRON_ORE)
 	add_effected_lored(LORED.Type.COPPER_ORE)
 	add_effected_lored(LORED.Type.IRON)
@@ -3308,6 +3307,10 @@ func affordable_changed() -> void:
 
 # - Actions
 
+func update_effected_loreds_text() -> void:
+	effected_loreds_text = get_effected_loreds_text()
+
+
 func purchase() -> void:
 	if purchased.is_true() or will_apply_effect:
 		return
@@ -3373,8 +3376,12 @@ func prestige(_stage: int) -> void:
 		elif not special:
 			if persist.is_false_on_reset():
 				remove()
-		if effect.dynamic:
-			effect.reset_effects()
+		match type:
+			Type.LIMIT_BREAK:
+				up.limit_break.reset()
+			_:
+				if effect != null and effect.dynamic:
+					effect.reset_effects()
 	elif _stage > stage:
 		remove()
 
@@ -3391,6 +3398,15 @@ func reset() -> void:
 
 # - Get
 
+
+func get_dynamic_text() -> String:
+	match type:
+		Upgrade.Type.LIMIT_BREAK:
+			return "[center][b]x%s[/b] " % up.limit_break.level.text + effected_loreds_text
+		_:
+			return effect.get_dynamic_text()
+
+
 func get_effect_text() -> String:
 	return effect.get_text()
 
@@ -3398,6 +3414,17 @@ func get_effect_text() -> String:
 func get_effected_loreds_text() -> String:
 	if effected_loreds_text != "":
 		return effected_loreds_text
+	
+	match type:
+		Type.LIMIT_BREAK:
+			var s1 = gv.stage1.details.color_text % "1"
+			var s2 = gv.stage2.details.color_text % "2"
+			if up.limit_break.applies_to_stage_3():
+				var s3 = gv.stage3.details.color_text % "3"
+				if up.limit_break.applies_to_stage_4():
+					return "[i]for[/i] All LOREDs"
+				return "[i]for[/i] Stages %s, %s, and %s" % [s1, s2, s3]
+			return "[i]for[/i] Stages %s and %s" % [s1, s2]
 	
 	if loreds == lv.get_loreds_in_stage(1):
 		var _stage = gv.stage1.details.colored_name

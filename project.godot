@@ -20,6 +20,7 @@ config/Version="3.0.0"
 [autoload]
 
 res="*res://Script/Autoload/Resources.gd"
+SaveManager="*res://Script/Autoload/SaveManager.gd"
 gv="*res://Script/Autoload/Overseer.gd"
 wa="*res://Script/Autoload/Wallet.gd"
 lv="*res://Script/Autoload/LOREDs.gd"
@@ -28,7 +29,6 @@ df="*res://Script/Autoload/Difficulty.gd"
 wi="*res://Script/Autoload/Wishes.gd"
 em="*res://Script/Autoload/Emotes.gd"
 Buffs="*res://Script/Autoload/BuffManager.gd"
-SaveManager="*res://Script/Autoload/SaveManager.gd"
 DiscordSDKLoader="*res://addons/discord-sdk-gd/nodes/core_updater.gd"
 
 [debug]

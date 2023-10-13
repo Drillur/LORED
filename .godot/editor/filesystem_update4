@@ -29,3 +29,11 @@ res://Hud/LORED/lored_animation.gd
 res://Script/Classes/Upgrades/Upgrade.gd
 res://Script/Classes/Upgrades/UpgradeEffect.gd
 res://Hud/Upgrade/Tooltip/upgrade_tooltip.gd
+res://Script/Classes/Upgrades/LimitBreak.gd
+res://Script/Classes/Int.gd
+res://Script/Classes/Float.gd
+res://Script/Classes/Job.gd
+res://Script/Classes/Cost.gd
+res://Script/Classes/ValuePair.gd
+res://Script/Classes/Value.gd
+res://Script/Autoload/Overseer.gd

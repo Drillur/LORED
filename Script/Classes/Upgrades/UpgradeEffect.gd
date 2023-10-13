@@ -65,8 +65,6 @@ var in_hand: Big
 var effect2: Value
 var in_hand2: Big
 
-var xp: ValuePair
-
 var apply_methods: Array
 var remove_methods: Array
 var effected_upgrades: Array
@@ -114,10 +112,6 @@ func _init(_type: int, details: Dictionary) -> void:
 		effected_lored = details["effected_lored"]
 	if "replaced_upgrade" in details.keys():
 		replaced_upgrade = details["replaced_upgrade"]
-	if "xp" in details.keys():
-		xp = details["xp"]
-		xp.do_not_cap_current()
-		xp.total.set_to(get_limit_break_total_xp())
 	
 	set_base_text()
 	
@@ -159,14 +153,12 @@ func set_base_text() -> void:
 			text = key.replace("_", " ").capitalize() + " [b]x"
 
 
-func set_dynamic(val: bool) -> void:
+func save_effect(val: bool) -> void:
 	dynamic = val
 	if val:
 		saved_vars.append("effect")
 		if effect2 != null:
 			saved_vars.append("effect2")
-		if xp != null:
-			saved_vars.append("xp")
 
 
 func finish_init() -> void:
@@ -230,27 +222,6 @@ func reset_effects() -> void:
 
 
 
-func increase_limit_break_xp(amount: Big) -> void:
-	xp.add(amount)
-	#var prev_mod = Big.new(effect.get_value())
-	while xp.is_full():
-		level_up_limit_break()
-
-
-func level_up_limit_break(level: Big = Big.new(effect.get_value).a(1)) -> void:
-	effect.set_to(level)
-	xp.subtract(xp.get_total())
-	xp.total.set_to(get_limit_break_total_xp())
-
-
-func get_limit_break_total_xp() -> Big:
-	var level = effect.get_as_int() + 1
-	var exponent = sqrt(level) * 1.5
-	exponent = round(max(exponent, 3.0))
-	return Big.new("1e" + str(exponent))
-
-
-
 # - Actions
 
 func add_effected_lored(lored_type: int) -> void:
@@ -259,9 +230,6 @@ func add_effected_lored(lored_type: int) -> void:
 		Type.LORED_PERSIST:
 			apply_methods.append(lored.purchased.set_reset_value_true)
 			remove_methods.append(lored.purchased.set_reset_value_false)
-		Type.LIMIT_BREAK:
-			apply_methods.append(lored.connect_limit_break)
-			remove_methods.append(lored.disconnect_limit_break)
 		Type.BONUS_JOB_PRODUCTION:
 			var _job = lored.get_job(job) as Job
 			apply_methods.append(_job.add_bonus_production)
@@ -317,11 +285,10 @@ func add_effected_lored(lored_type: int) -> void:
 
 func apply() -> void:
 	if not applied:
-		if type != Type.LIMIT_BREAK:
-			if effect != null:
-				effect.changed.connect(refresh)
-			if effect2 != null:
-				effect2.changed.connect(refresh)
+		if effect != null:
+			effect.changed.connect(refresh)
+		if effect2 != null:
+			effect2.changed.connect(refresh)
 		
 		if replaced_upgrade >= 0:
 			var r_up = up.get_upgrade(replaced_upgrade)
@@ -355,11 +322,10 @@ func apply() -> void:
 
 func remove() -> void:
 	if applied:
-		if type != Type.LIMIT_BREAK:
-			if effect != null:
-				effect.changed.disconnect(refresh)
-			if effect2 != null:
-				effect2.changed.disconnect(refresh)
+		if effect != null:
+			effect.changed.disconnect(refresh)
+		if effect2 != null:
+			effect2.changed.disconnect(refresh)
 		
 		if replaced_upgrade >= 0:
 			var r_up = up.get_upgrade(replaced_upgrade)
@@ -392,8 +358,6 @@ func remove() -> void:
 
 func refresh() -> void:
 	match type:
-		Type.LIMIT_BREAK:
-			return
 		Type.BONUS_ACTION_ON_CURRENCY_GAIN:
 			match upgrade_type:
 				Upgrade.Type.ITS_SPREADIN_ON_ME:
@@ -448,9 +412,7 @@ func apply_effects() -> void:
 			in_hand2 = Big.new(effect2.get_value())
 		match type:
 			Type.LIMIT_BREAK:
-				apply_methods[0].get_object().currency_produced.connect(increase_limit_break_xp)
-				apply_methods[0].get_object().apply_limit_break.call(effect)
-				apply_methods[0].call(effect.increased)
+				up.limit_break.enable()
 			Type.BONUS_ACTION_ON_CURRENCY_GAIN:
 				match upgrade_type:
 					Upgrade.Type.ITS_SPREADIN_ON_ME:
@@ -497,9 +459,8 @@ func remove_effects() -> void:
 		
 		match type:
 			Type.LIMIT_BREAK:
-				remove_methods[0].get_object().currency_produced.disconnect(increase_limit_break_xp)
-				remove_methods[0].get_object().remove_limit_break.call(effect)
-				remove_methods[0].call(effect.increased)
+				up.limit_break.disable()
+				up.limit_break.reset()
 			Type.BONUS_ACTION_ON_CURRENCY_GAIN:
 				match upgrade_type:
 					Upgrade.Type.ITS_GROWIN_ON_ME:
@@ -517,7 +478,7 @@ func remove_effects() -> void:
 			Type.BONUS_JOB_PRODUCTION:
 				for method in remove_methods:
 					method.call(currency)
-			Type.AUTOBUYER, Type.FREE_LORED:
+			Type.AUTOBUYER, Type.UPGRADE_AUTOBUYER, Type.FREE_LORED:
 				for method in remove_methods:
 					method.call()
 			_:
@@ -552,6 +513,11 @@ func get_dynamic_text() -> String:
 				lv.get_colored_name(LORED.Type.IRON),
 				effect2.get_text(),
 				lv.get_colored_name(LORED.Type.COPPER)
+			]
+		Upgrade.Type.I_DRINK_YOUR_MILKSHAKE:
+			return "[center][b]x%s[/b] [i]for[/i] %s" % [
+				effect.get_text(),
+				lv.get_colored_name(LORED.Type.COAL)
 			]
 	
 	return "Freakin stinkin oops!"

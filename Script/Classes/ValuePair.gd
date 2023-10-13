@@ -306,10 +306,6 @@ func get_deficit_text_plus_one() -> String:
 	return get_deficit().a(1).text
 
 
-func get_full_text() -> String:
-	return get_current_text() + "/" + get_total_text()
-
-
 func get_text() -> String:
 	return get_current_text() + "/" + get_total_text()
 

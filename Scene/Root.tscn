@@ -366,9 +366,17 @@ theme_override_constants/margin_bottom = 40
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="Upgrade Effect Widget" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Upgrade Section/Upgrade/VBoxContainer" instance=ExtResource("14_vidbt")]
+[node name="limitbreak" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Upgrade Section/Upgrade/VBoxContainer" instance=ExtResource("14_vidbt")]
+layout_mode = 2
+upgrade_type = 1
+
+[node name="growin2" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Upgrade Section/Upgrade/VBoxContainer" instance=ExtResource("14_vidbt")]
 layout_mode = 2
 upgrade_type = 168
+
+[node name="milkshake" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Upgrade Section/Upgrade/VBoxContainer" instance=ExtResource("14_vidbt")]
+layout_mode = 2
+upgrade_type = 178
 
 [node name="Save Section" type="VBoxContainer" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer"]
 unique_name_in_owner = true
