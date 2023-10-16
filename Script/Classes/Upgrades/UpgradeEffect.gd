@@ -40,6 +40,7 @@ enum Type {
 	FREE_LORED,
 	UPGRADE_NAME,
 	LIMIT_BREAK,
+	APPLY_LORED_BUFF,
 	
 }
 
@@ -77,6 +78,7 @@ var modifier := 1.0
 var added_currency: int
 var upgrade_menu: int
 var job: int
+var buff: int
 
 var affected_loreds := []
 
@@ -112,6 +114,8 @@ func _init(_type: int, details: Dictionary) -> void:
 		effected_lored = details["effected_lored"]
 	if "replaced_upgrade" in details.keys():
 		replaced_upgrade = details["replaced_upgrade"]
+	if "buff" in details.keys():
+		buff = details["buff"]
 	
 	set_base_text()
 	
@@ -227,6 +231,8 @@ func reset_effects() -> void:
 func add_effected_lored(lored_type: int) -> void:
 	var lored = lv.get_lored(lored_type) as LORED
 	match type:
+		Type.UPGRADE_NAME, Type.APPLY_LORED_BUFF:
+			affected_loreds.append(lored_type)
 		Type.LORED_PERSIST:
 			apply_methods.append(lored.purchased.set_reset_value_true)
 			remove_methods.append(lored.purchased.set_reset_value_false)
@@ -279,8 +285,6 @@ func add_effected_lored(lored_type: int) -> void:
 		Type.FUEL_COST:
 			apply_methods.append(lored.fuel_cost.increase_multiplied)
 			remove_methods.append(lored.fuel_cost.decrease_multiplied)
-		Type.UPGRADE_NAME:
-			affected_loreds.append(lored_type)
 
 
 func apply() -> void:
@@ -411,6 +415,10 @@ func apply_effects() -> void:
 		if effect2 != null:
 			in_hand2 = Big.new(effect2.get_value())
 		match type:
+			Type.APPLY_LORED_BUFF:
+				for lored_type in affected_loreds:
+					var lored = lv.get_lored(lored_type)
+					Buffs.apply_buff_on_lored(lored, buff)
 			Type.LIMIT_BREAK:
 				up.limit_break.enable()
 			Type.BONUS_ACTION_ON_CURRENCY_GAIN:
@@ -458,6 +466,10 @@ func remove_effects() -> void:
 			return
 		
 		match type:
+			Type.APPLY_LORED_BUFF:
+				for lored_type in affected_loreds:
+					var lored = lv.get_lored(lored_type)
+					Buffs.remove_buff_from_lored(lored, buff)
 			Type.LIMIT_BREAK:
 				up.limit_break.disable()
 				up.limit_break.reset()

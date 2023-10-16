@@ -25,6 +25,7 @@ mouse_filter = 0
 script = ExtResource("1_cyi4v")
 
 [node name="bg" type="Panel" parent="."]
+clip_contents = true
 layout_mode = 2
 mouse_filter = 2
 theme = ExtResource("2_yan3f")
@@ -63,12 +64,14 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_dtm17")
 unique_name_in_owner = true
 custom_minimum_size = Vector2(2, 0)
 layout_mode = 0
-offset_right = 4.0
+offset_right = 2.0
+offset_bottom = 8.0
 mouse_filter = 2
 theme_override_styles/panel = ExtResource("3_lyuce")
 
 [node name="Edge" type="Panel" parent="bg/Progress Bar"]
 unique_name_in_owner = true
+visible = false
 custom_minimum_size = Vector2(2, 0)
 layout_mode = 1
 anchors_preset = 11
@@ -76,6 +79,7 @@ anchor_left = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = -2.0
+offset_bottom = 8.0
 grow_horizontal = 0
 grow_vertical = 2
 mouse_filter = 2
@@ -84,6 +88,8 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_pr56i")
 [node name="Delta Bar" type="Panel" parent="bg"]
 unique_name_in_owner = true
 layout_mode = 0
+offset_right = 2.0
+offset_bottom = 8.0
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_7ws81")
 

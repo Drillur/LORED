@@ -140,7 +140,7 @@ func emit_increase() -> void:
 		increase_queued = true
 		await increase_cooldown_finished
 		increase_queued = false
-	emit_signal("increased")
+	increased.emit()
 	increase_on_cooldown = true
 
 
@@ -310,10 +310,7 @@ func percent(n) -> float:
 
 
 func powerInt(n: int):
-	if n < 0:
-		printerr("BIG ERROR: NEGATIVE EXPONENTS NOT SUPPORTED!")
-		mantissa = 1.0
-		exponent = 0
+	if n == 1:
 		return self
 	if n == 0:
 		mantissa = 1.0

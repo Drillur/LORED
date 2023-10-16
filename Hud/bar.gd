@@ -1,4 +1,3 @@
-@tool
 class_name Bar
 extends MarginContainer
 
@@ -33,7 +32,6 @@ var delta_speed := 0.0
 var start_time := 0.0
 var threshold: float
 
-var has_attribute := false
 var attribute: ValuePair
 
 
@@ -44,7 +42,7 @@ func _ready() -> void:
 		danger_marker.queue_free()
 	if kill_background:
 		$bg.theme = gv.theme_invis
-	progress_bar.set_deferred("size", Vector2(2, size.y))
+	call_deferred("_on_resized")
 	if not animate:
 		delta_bar.hide()
 		set_process(false)
@@ -59,6 +57,7 @@ func _process(delta) -> void:
 			delta_bar.size.x -= delta_speed
 			fix_delta_bar_position()
 			if not should_update_delta_bar():
+				delta_bar.size.x = 1
 				delta_speed = 0.0
 	elif start_time != 0.0:
 		progress = (Time.get_unix_time_from_system() - start_time) / threshold
@@ -82,7 +81,6 @@ func show_edge() -> void:
 
 func attach_attribute(_attribute: ValuePair) -> void:
 	attribute = _attribute
-	has_attribute = true
 	attribute.changed.connect(update_progress)
 	update_progress()
 
@@ -95,9 +93,9 @@ func update_progress() -> void:
 
 func update_progress_bar() -> void:
 	progress_bar.size.x = min(progress * size.x, size.x)
-	
 	if animate:
-		delta_bar.size.x = abs(progress - previous_progress) * size.x
+		delta_bar.show()
+		delta_bar.size.x = min(abs(progress - previous_progress) * size.x, size.x)
 		fix_delta_bar_position()
 
 
@@ -138,6 +136,7 @@ func set_initial_progress(value: float):
 		value * size.x,
 		size.y
 	)
-	previous_progress = progress_bar.size.x
-	delta_bar.hide()
-	delta_bar.size.y = size.y
+	previous_progress = value
+	if animate:
+		delta_bar.hide()
+		delta_bar.size.y = size.y

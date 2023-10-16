@@ -1,9 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://bxeawsjtvi7uq"]
+[gd_scene load_steps=4 format=3 uid="uid://bxeawsjtvi7uq"]
 
 [ext_resource type="Theme" uid="uid://b8t7tkhvril5g" path="res://Theme/Standard.tres" id="1_o3vt0"]
 [ext_resource type="Script" path="res://Hud/LORED/lored_buffs.gd" id="1_rbv3y"]
 [ext_resource type="Theme" uid="uid://8dmfgxdrr5yh" path="res://Theme/Title.tres" id="2_m4t7u"]
-[ext_resource type="PackedScene" uid="uid://ci6ihywhb6pxn" path="res://Hud/LORED/buff_bar.tscn" id="3_2krbr"]
 
 [node name="LORED Buffs" type="MarginContainer"]
 offset_right = 40.0
@@ -46,6 +45,3 @@ autowrap_mode = 0
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 0
-
-[node name="Buff Bar" parent="VBoxContainer/Buffs" instance=ExtResource("3_2krbr")]
-layout_mode = 2

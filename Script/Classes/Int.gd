@@ -103,3 +103,5 @@ func less_equal(val) -> bool:
 
 func less(val) -> bool:
 	return current < val
+
+

@@ -23,6 +23,7 @@ enum Type {
 	HUMUS,
 	SEEDS,
 	TREES,
+	TREES2,
 	SOIL,
 	AXES,
 	AXES2,
@@ -128,7 +129,8 @@ func _init(_type: int) -> void:
 	
 	unlocked_changed.connect(became_unlocked)
 	
-	hookup_required_currencies()
+	if type != Type.REFUEL:
+		hookup_required_currencies()
 
 
 
@@ -274,6 +276,17 @@ func init_TREES() -> void:
 		Currency.Type.WATER: Value.new(6),
 		Currency.Type.SEEDS: Value.new(1),
 	})
+
+
+func init_TREES2() -> void:
+	name = "Photosynthesate"
+	duration = Value.new(60)
+	animation = preload("res://Sprites/animations/tree.tres")
+	add_produced_currency(Currency.Type.TREES, 0.5)
+	required_currencies = Cost.new({
+		Currency.Type.WATER: Value.new(30),
+	})
+	do_not_alter_rates = true
 
 
 func init_SEEDS() -> void:
@@ -512,10 +525,11 @@ func assign_lored(lored_type: int) -> void:
 	lored = lored_type
 	var _lored: LORED = lv.get_lored(lored) as LORED
 	crit = _lored.crit
-	_lored.fuel.connect("increased", fuel_increased)
-	_lored.fuel.connect("decreased", fuel_decreased)
+	_lored.fuel.current_increased.connect(fuel_increased)
+	_lored.fuel.current_decreased.connect(fuel_decreased)
 	if type == Type.REFUEL:
-		var half = Big.new(_lored.fuel.get_total()).d(2).toFloat()
+		_lored.fuel.total_changed.connect(lored_fuel_total_changed)
+		var half = Big.new(_lored.fuel.get_total()).d(2)
 		has_required_currencies = true
 		required_currencies = Cost.new({
 			_lored.fuel_currency: Value.new(half)
@@ -575,8 +589,9 @@ func lored_output_changed() -> void:
 
 
 func lored_input_changed() -> void:
-	required_currencies.increase_m_from_lored(lv.get_lored(lored).get_input())
-	refresh_required_rate()
+	if type != Type.REFUEL:
+		required_currencies.increase_m_from_lored(lv.get_lored(lored).get_input())
+		refresh_required_rate()
 
 
 func lored_haste_changed() -> void:
@@ -588,6 +603,12 @@ func lored_haste_changed() -> void:
 func lored_fuel_cost_changed() -> void:
 	fuel_cost.set_m_from_lored(lv.get_lored(lored).get_fuel_cost())
 	has_sufficient_fuel = lv.get_lored(lored).fuel.get_current().greater_equal(fuel_cost.get_value())
+
+
+func lored_fuel_total_changed() -> void:
+	var _lored = lv.get_lored(lored) as LORED
+	var half = Big.new(_lored.fuel.get_total()).d(2)
+	required_currencies.cost[_lored.fuel_currency].set_to(half)
 
 
 func required_currency_use_allowed_changed(allowed: bool) -> void:
@@ -778,7 +799,7 @@ func start() -> void:
 		required_currencies.spend(false)
 		in_hand_input.clear()
 		for cur in required_currencies.cost:
-			in_hand_input[cur] = required_currencies.cost[cur].get_value()
+			in_hand_input[cur] = Big.new(required_currencies.cost[cur].get_value())
 	
 	add_rate()
 	starting = false
@@ -856,8 +877,10 @@ func can_start() -> bool:
 		return false
 	if type != Type.REFUEL and lv.get_lored(lored).fuel.get_current_percent() <= lv.FUEL_DANGER:
 		return false
-	if has_method("can_start_job_special_requirements_" + key):
-		if not call("can_start_job_special_requirements_" + key):
+	
+	var special_requirement_method := "can_start_job_special_requirements_" + key
+	if has_method(special_requirement_method):
+		if not call(special_requirement_method):
 			return false
 	
 	if has_required_currencies:
@@ -868,6 +891,8 @@ func can_start() -> bool:
 		):
 			return false
 	
+	if type == Type.REFUEL:
+		return true
 	return has_sufficient_fuel
 
 

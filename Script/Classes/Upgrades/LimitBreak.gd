@@ -4,10 +4,9 @@ extends Resource
 
 
 const saved_vars := [
-#	"enabled",
-#	"xp",
-#	"level",
-#	"affected_stages",
+	"xp",
+	"level",
+	"affected_stages",
 ]
 
 func load_finished() -> void:
@@ -162,7 +161,7 @@ func get_required_xp(_level: int) -> Big:
 	var x = Big.new(2).power(_level - 1).round_up_tens().m(100)
 	if x.exponent < 3:
 		x.set_to(1000)
-	print("XP: ", x.text)
+	#print("XP: ", x.text)
 	return x
 
 

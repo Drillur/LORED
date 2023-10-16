@@ -20,3 +20,8 @@ func setup(data: Dictionary) -> void:
 	var _buffs = Buffs.get_buffs(lored)
 	await ready
 	color = lored.details.color
+	
+	for buff in Buffs.get_buffs(lored):
+		var buff_bar = res.get_resource("buff_bar").instantiate()
+		buff_bar.setup(buff)
+		buffs.add_child(buff_bar)

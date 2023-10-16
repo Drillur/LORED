@@ -1,0 +1,108 @@
+[gd_scene load_steps=6 format=3 uid="uid://daebdwbv0o3hm"]
+
+[ext_resource type="PackedScene" uid="uid://exe3ppvvv74m" path="res://Hud/bar.tscn" id="1_8wna0"]
+[ext_resource type="Script" path="res://Hud/Upgrade/limit_break_vico.gd" id="1_giriq"]
+[ext_resource type="Theme" uid="uid://bl4v2v143rihi" path="res://Theme/Background.tres" id="2_hd0s4"]
+[ext_resource type="Theme" uid="uid://cwt08llwihqii" path="res://Theme/ShadowText.tres" id="4_u7qvr"]
+[ext_resource type="Theme" uid="uid://dt7rd31blnvth" path="res://Theme/Invis.tres" id="5_lul50"]
+
+[node name="LimitBreakVico" type="MarginContainer"]
+offset_right = 40.0
+offset_bottom = 40.0
+size_flags_horizontal = 8
+script = ExtResource("1_giriq")
+
+[node name="Background" type="Panel" parent="."]
+layout_mode = 2
+theme = ExtResource("2_hd0s4")
+
+[node name="Bar" parent="." instance=ExtResource("1_8wna0")]
+unique_name_in_owner = true
+modulate = Color(0.501961, 0.501961, 0.501961, 1)
+layout_mode = 2
+kill_markers = true
+kill_background = true
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Name" type="RichTextLabel" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("4_u7qvr")
+bbcode_enabled = true
+text = "Limit Break"
+fit_content = true
+autowrap_mode = 0
+
+[node name="Level" type="RichTextLabel" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("4_u7qvr")
+bbcode_enabled = true
+text = "[b]x11,400[/b]"
+fit_content = true
+autowrap_mode = 0
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="xp" type="RichTextLabel" parent="MarginContainer/VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("4_u7qvr")
+bbcode_enabled = true
+text = "123e123"
+fit_content = true
+autowrap_mode = 0
+
+[node name="max xp" type="RichTextLabel" parent="MarginContainer/VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 10
+theme = ExtResource("4_u7qvr")
+bbcode_enabled = true
+text = "123e123"
+fit_content = true
+autowrap_mode = 0
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 2
+
+[node name="Texts" type="Control" parent="Control"]
+unique_name_in_owner = true
+layout_mode = 2
+anchors_preset = 0
+offset_top = 54.0
+offset_bottom = 54.0
+size_flags_horizontal = 0
+size_flags_vertical = 8
+
+[node name="LeftDown" type="Control" parent="Control"]
+unique_name_in_owner = true
+layout_mode = 2
+anchors_preset = 0
+offset_left = -10.0
+offset_right = -10.0
+size_flags_horizontal = 0
+size_flags_vertical = 8
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 2
+focus_mode = 0
+mouse_default_cursor_shape = 2
+theme = ExtResource("5_lul50")
+
+[connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]
+[connection signal="pressed" from="Button" to="." method="_on_button_pressed"]

@@ -626,7 +626,19 @@ func eligible_for_offline_earnings() -> bool:
 		var lored = lv.get_lored(x)
 		if (
 			lored.unlocked.is_true()
+			and lored.purchased.is_true()
 			and wa.is_currency_unlocked(lored.fuel_currency)
+		):
+			cont = true
+			break
+	if not cont:
+		return false
+	cont = false
+	for x in used_by:
+		var lored = lv.get_lored(x)
+		if (
+			lored.unlocked.is_true()
+			and lored.purchased.is_true()
 		):
 			cont = true
 			break

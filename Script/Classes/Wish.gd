@@ -847,7 +847,7 @@ func init_WATERBUDDY() -> void:
 	
 	objective = Objective.new(Objective.Type.LORED_LEVELED_UP, {
 		"object_type": LORED.Type.SEEDS,
-		"x": lv.get_level(LORED.Type.SEEDS) + 1,
+		"x": 1,
 	})
 	add_reward(Reward.new(Reward.Type.NEW_LORED, {
 		"object_type": LORED.Type.STEEL,

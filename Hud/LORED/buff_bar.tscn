@@ -1,13 +1,16 @@
-[gd_scene load_steps=3 format=3 uid="uid://ci6ihywhb6pxn"]
+[gd_scene load_steps=4 format=3 uid="uid://ci6ihywhb6pxn"]
 
+[ext_resource type="Script" path="res://Hud/LORED/buff_bar.gd" id="1_14w5v"]
 [ext_resource type="PackedScene" uid="uid://exe3ppvvv74m" path="res://Hud/bar.tscn" id="1_gyg5u"]
 [ext_resource type="Theme" uid="uid://b8t7tkhvril5g" path="res://Theme/Standard.tres" id="2_jhnxk"]
 
 [node name="Buff Bar" type="MarginContainer"]
 offset_right = 162.0
 offset_bottom = 23.0
+script = ExtResource("1_14w5v")
 
 [node name="Bar" parent="." instance=ExtResource("1_gyg5u")]
+unique_name_in_owner = true
 layout_mode = 2
 kill_markers = true
 kill_background = true
@@ -23,6 +26,7 @@ theme_override_constants/margin_bottom = 10
 layout_mode = 2
 
 [node name="Name" type="RichTextLabel" parent="MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
 theme = ExtResource("2_jhnxk")
@@ -32,9 +36,22 @@ fit_content = true
 autowrap_mode = 0
 
 [node name="Description" type="RichTextLabel" parent="MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 theme = ExtResource("2_jhnxk")
 bbcode_enabled = true
 text = "[i]+5 seconds' worth of resources"
 fit_content = true
 autowrap_mode = 0
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 2
+
+[node name="Texts" type="Control" parent="Control"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2

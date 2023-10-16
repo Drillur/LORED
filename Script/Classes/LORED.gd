@@ -4,15 +4,14 @@ extends Resource
 
 
 var saved_vars := [
+	"level",
 	"purchased",
 	"unlocked",
-	"level",
 	"unlocked_jobs",
 	#asleep - based on an option, append or erase this from this array
 ]
 
 func load_started() -> void:
-	
 	lv.lored_became_inactive(type)
 	stop_job()
 	unlocked.set_to(false)
@@ -25,6 +24,8 @@ func load_finished() -> void:
 	else:
 		lv.lored_locked(type)
 	set_level_to(level)
+	if stage == 1 and level >= 5:
+		became_an_adult.emit()
 	if purchased.is_true():
 		work()
 
@@ -89,6 +90,8 @@ signal leveled_up(level)
 signal job_started(job)
 signal spent_one_second_asleep
 signal currency_produced(amount)
+signal became_an_adult
+signal received_buff
 
 
 var killed := false
@@ -194,9 +197,9 @@ func _init(_type: int = 0) -> void:
 	gv.one_second.connect(work)
 	disconnect_second_work_thing()
 	
-	SaveManager.connect("load_finished", load_finished)
-	SaveManager.connect("load_started", load_started)
-	SaveManager.connect("load_started", clear_emote_queue)
+	SaveManager.load_finished.connect(load_finished)
+	SaveManager.load_started.connect(load_started)
+	SaveManager.load_started.connect(clear_emote_queue)
 	
 	gv.prestige.connect(prestige)
 	gv.prestiged.connect(force_purchase)
@@ -222,13 +225,13 @@ func _init(_type: int = 0) -> void:
 		if job.has_required_currencies:
 			base_fuel_cost += (0.05 * job.required_currencies.cost.size())
 		var modifier = 1 if fuel_currency == Currency.Type.COAL else 2
-		fuel_cost = Value.new(base_fuel_cost * modifier)
+		fuel_cost = Value.new(base_fuel_cost * modifier * stage)
 	else:
 		fuel_cost = Value.new(0.5)
 	
 	if type in [Type.MALIGNANCY, Type.TUMORS]:
 		fuel_cost = Value.new(0.5 * stage)
-	fuel = ValuePair.new(Big.new(fuel_cost.get_value()).m(100))
+	fuel = ValuePair.new(Big.new(fuel_cost.get_value()).m(100).m(stage))
 	if type == Type.STONE:
 		fuel.change_base(1.0)
 		fuel.reset()
@@ -468,6 +471,7 @@ func init_SOIL() -> void:
 func init_TREES() -> void:
 	details.name = "Biby"
 	add_job(Job.Type.TREES, true)
+	add_job(Job.Type.TREES2, true)
 	cost = Cost.new({
 		Currency.Type.GROWTH: Value.new(150),
 		Currency.Type.SOIL: Value.new(25),
@@ -1183,6 +1187,10 @@ func should_autobuy() -> bool:
 				last_reason_autobuy = "NO: required curs are negative net"
 				return false
 		
+		if up.is_upgrade_purchased(Upgrade.Type.LIMIT_BREAK):
+			last_reason_autobuy = "Limit Break is purchased"
+			return true
+		
 		if key_lored:
 			last_reason_autobuy = "is a key lored"
 			return true
@@ -1222,6 +1230,8 @@ func level_up() -> void:
 	if purchased.is_false():
 		purchased.set_to(true)
 	set_level_to(level + 1)
+	if stage == 1 and level == 5:
+		became_an_adult.emit()
 
 
 func set_level_to(_level: int) -> void:
@@ -1316,15 +1326,33 @@ func disconnect_limit_break(sig: Signal) -> void:
 
 
 
+# - Buffs
+
+
+func receive_buff() -> void:
+	if purchased.is_false():
+		if not purchased.became_true.is_connected(start_all_buffs):
+			purchased.became_true.connect(start_all_buffs)
+	received_buff.emit()
+
+
+func start_all_buffs() -> void:
+	if purchased.became_true.is_connected(start_all_buffs):
+		purchased.became_true.disconnect(start_all_buffs)
+	for buff in Buffs.get_buffs(self):
+		buff.start()
+
+
+
 # - Job
 
 func work(job_type: int = get_next_job_automatically()) -> void:
 	if (
 		purchased.is_false()
-		or gv.session_duration < 1
 		or unlocked.is_false()
 		or working.is_true()
 		or asleep.is_true()
+		or SaveManager.loading.is_true()
 	):
 		return
 	
@@ -1463,7 +1491,11 @@ func get_wish() -> String:
 		var upgrade_eta = up.get_eta(upgrade)
 		if upgrade_eta.equal(0):
 			continue
-		if up.is_upgrade_unlocked(upgrade) and upgrade_eta.less_equal(60):
+		if (
+			up.is_upgrade_unlocked(upgrade)
+			and upgrade_eta.less_equal(60)
+			and up.is_upgrade_menu_unlocked(up.get_upgrade(upgrade).upgrade_menu)
+		):
 			wished_upgrade = upgrade
 			possible_types["UPGRADE_PURCHASED"] = 30
 			total_weight += 30
@@ -1625,17 +1657,29 @@ func cap_gain_loss_if_uses_currency(cur: int) -> void:
 
 
 
-func get_produced_currency_rates() -> Dictionary:
-	var data := {}
+func get_primary_rate() -> Big:
+	var rate := Big.new(0)
 	for job in jobs.values():
 		if job.type == Job.Type.REFUEL or job.do_not_alter_rates:
 			continue
-		for cur in job.produced_currencies:
-			data[cur] = Big.new(job.produced_currencies[cur].get_value()).d(
-				job.duration.get_as_float()
+		if not job.produces_currency(primary_currency):
+			continue
+		if primary_currency in job.produced_currencies.keys():
+			rate.a(
+				Big.new(
+					job.produced_currencies[primary_currency].get_value()
+				).d(
+					job.duration.get_as_float()
+				)
 			)
-		for cur in job.bonus_production:
-			data[cur] = Big.new(job.bonus_production[cur]).m(output.get_value()).d(
-				job.duration.get_as_float()
+		if primary_currency in job.bonus_production.keys():
+			rate.a(
+				Big.new(
+					job.bonus_production[primary_currency]
+				).m(
+					output.get_value()
+				).d(
+					job.duration.get_as_float()
+				)
 			)
-	return data
+	return rate

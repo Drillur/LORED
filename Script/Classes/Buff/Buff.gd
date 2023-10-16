@@ -9,7 +9,6 @@ signal ticked
 
 signal refreshed
 signal debuffed
-signal ended
 
 var type: int
 var key: String
@@ -18,11 +17,17 @@ var object # LORED, Unit, anything!
 
 var timer := Timer.new()
 
-var name: String
+var details := Details.new()
+
+var active := Bool.new(false)
 
 var tick_rate: Float
 var ticks: Int
 var stacks: Int
+#var last_tick_clock: float
+
+var bonus_ticks: Int
+var affected_by_bonus_ticks := false
 
 var endless := false
 
@@ -35,8 +40,11 @@ func _init() -> void:
 	timer.timeout.connect(timer_timeout)
 	gv.add_child(timer)
 	
+	if affected_by_bonus_ticks:
+		bonus_ticks.set_to(0)
+	
 	if REFRESH_ON_NEW_STACK and not endless:
-		stacks.changed.connect(refresh)
+		stacks.increased.connect(refresh)
 
 
 
@@ -66,12 +74,27 @@ func set_stack_limit(val: int) -> void:
 
 
 func start() -> void:
+	active.set_to(true)
 	timer.start()
+	#last_tick_clock = Time.get_unix_time_from_system()
 
 
 func timer_timeout() -> void:
-	ticks.add(1)
+	if (
+		affected_by_bonus_ticks
+		and stacks.greater(1)
+		and bonus_ticks.less(bonus_ticks.base)
+	):
+		bonus_ticks.add(1)
+		if bonus_ticks.equal(bonus_ticks.base):
+			stacks.subtract(1)
+			bonus_ticks.set_to(0)
+	else:
+		ticks.add(1)
+	
 	ticked.emit()
+	#last_tick_clock = Time.get_unix_time_from_system()
+	
 	if endless:
 		print("Tick! (%s)" % ticks.get_value())
 	else:
@@ -107,7 +130,7 @@ func debuff() -> void:
 func remove() -> void:
 	timer.stop()
 	timer.queue_free()
-	ended.emit()
+	active.set_to(false)
 	Buffs.free_buff(self)
 
 

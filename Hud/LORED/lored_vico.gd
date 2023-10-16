@@ -25,6 +25,7 @@ extends MarginContainer
 @onready var sleep_text_timer = $"Sleep Text Timer"
 @onready var sleep_timer = $"Sleep Timer"
 @onready var level_up_texts = %"Level Up Texts"
+@onready var fuel_background = %"Fuel Background"
 
 var prefer_left_down: bool
 var has_lored := false
@@ -53,12 +54,13 @@ func _on_item_rect_changed():
 func _ready():
 	# ref
 	status.hide()
-	progress_bar.hide()
+	#progress_bar.hide()
 	fuel_bar.size.x = size.x
-	remove_checks()
 	
+	jobs.hide()
 	active_buffs.hide()
 	view_special.hide()
+	sleep.hide()
 	
 	sleep_text_timer.connect("timeout", spew_sleep_text)
 	sleep_text_timer.connect("timeout", start_spewing_sleep_text)
@@ -70,16 +72,6 @@ func _ready():
 	
 	lv.sleep_unlocked.changed.connect(sleep_lock)
 	lv.advanced_details_unlocked.changed.connect(advanced_details_lock)
-	sleep_lock()
-
-
-
-func remove_checks() -> void:
-	info.remove_check().remove_autobuyer()
-	jobs.remove_check().remove_autobuyer()
-	active_buffs.remove_check().remove_autobuyer()
-	sleep.remove_check().remove_autobuyer()
-	view_special.remove_check().remove_autobuyer()
 
 
 
@@ -95,6 +87,7 @@ func attach_lored(_lored: LORED) -> void:
 	sleep.button.connect("pressed", sleep_clicked)
 	lored.asleep.changed.connect(sleep_changed)
 	fuel_bar.attach_attribute(lored.fuel)
+	fuel_background.self_modulate = wa.get_color(lored.fuel_currency)
 	lored.connect("became_unable_to_work", start_idle)
 	lored.connect("leveled_up", flash_on_level_up)
 	lored.unlocked.became_true.connect(show)
@@ -102,6 +95,14 @@ func attach_lored(_lored: LORED) -> void:
 	lored.unlocked.became_false.connect(hide)
 	lored.purchased.changed.connect(purchased_changed)
 	lored.autobuy.changed.connect(autobuy_changed)
+	lored.received_buff.connect(buffs_lock)
+	lored.purchased.changed.connect(buffs_lock)
+	lored.purchased.changed.connect(sleep_lock)
+	lored.purchased.changed.connect(advanced_details_lock)
+	
+	advanced_details_lock()
+	buffs_lock()
+	sleep_lock()
 	
 	info.button.connect("mouse_entered", show_info_tooltip)
 	info.button.connect("mouse_exited", gv.clear_tooltip)
@@ -111,6 +112,8 @@ func attach_lored(_lored: LORED) -> void:
 	sleep.button.connect("mouse_exited", gv.clear_tooltip)
 	jobs.button.connect("mouse_entered", show_jobs_tooltip)
 	jobs.button.connect("mouse_exited", gv.clear_tooltip)
+	active_buffs.mouse_entered.connect(show_lored_buffs_tooltip)
+	active_buffs.mouse_exited.connect(gv.clear_tooltip)
 	
 	for job in lored.jobs:
 		lored.jobs[job].connect("cut_short", job_cut_short)
@@ -118,9 +121,9 @@ func attach_lored(_lored: LORED) -> void:
 	# ref
 	$bg.self_modulate = lored.details.color
 	progress_bar.color = lored.details.color
-	progress_bar.modulate.a = 0.25
+	progress_bar.modulate.a = 0.1
 	fuel_bar.color = wa.get_color(lored.fuel_currency)
-	fuel_bar.modulate = Color(0.75, 0.75, 0.75)
+	#fuel_bar.modulate = Color(0.75, 0.75, 0.75)
 	lored_name.modulate = lored.details.color
 	info.color = lored.details.alt_color
 	jobs.color = lored.details.alt_color
@@ -138,8 +141,6 @@ func attach_lored(_lored: LORED) -> void:
 	currency.hide_threshold()
 	lored_name.text = lored.details.name + ", " + lored.details.get_title()
 	lored_icon.texture = lored.details.icon
-	
-	advanced_details_lock()
 	
 	hide()
 
@@ -174,6 +175,10 @@ func show_sleep_tooltip() -> void:
 
 func show_jobs_tooltip() -> void:
 	gv.new_tooltip(gv.Tooltip.LORED_JOBS, get_preferred_side(), {"lored": lored.type})
+
+
+func show_lored_buffs_tooltip() -> void:
+	gv.new_tooltip(gv.Tooltip.LORED_BUFFS, get_preferred_side(), {"lored": lored.type})
 
 
 func get_preferred_side() -> Node:
@@ -223,16 +228,7 @@ func lored_leveled_up(_level: int) -> void:
 			"lored": lored.type,
 		})
 		text.go()
-#
-#		gv.throw_text_from_parent(
-#			level_up_texts, 
-#			{
-#				"text": lored.get_level_text(),
-#				"color": lored.details.color,
-#				"icon": level_icon,
-#				"icon modulate": lored.details.color,
-#			}
-#		)
+
 
 
 func job_completed() -> void:
@@ -281,15 +277,33 @@ func flash_on_level_up(_level: int) -> void:
 
 
 func sleep_lock() -> void:
-	sleep.visible = (lv.sleep_unlocked.is_true() and lored.unlocked)# or gv.dev_mode
+	sleep.visible = (
+		lv.sleep_unlocked.is_true()
+		and lored.unlocked.is_true()
+		and lored.purchased.is_true()
+	)# or gv.dev_mode
 	if sleep.visible:
 		gv.flash(sleep, lored.details.color)
 
 
 func advanced_details_lock() -> void:
-	jobs.visible = (lv.advanced_details_unlocked.is_true() and lored.unlocked) or gv.dev_mode
+	jobs.visible = (
+		lv.advanced_details_unlocked.is_true()
+		and lored.unlocked.is_true()
+		and lored.purchased.is_true()
+	)
 	if jobs.visible:
 		gv.flash(jobs, lored.details.color)
+
+
+func buffs_lock() -> void:
+	active_buffs.visible = (
+		Buffs.object_has_buff(lored)
+		and lored.unlocked.is_true()
+		and lored.purchased.is_true()
+	)
+	if active_buffs.visible:
+		gv.flash(active_buffs, lored.details.color)
 
 
 func autobuy_changed() -> void:

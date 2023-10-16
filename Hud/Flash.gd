@@ -19,6 +19,9 @@ func slow_flash(color: Color):
 
 
 func flash(color: Color) -> void:
+	if Engine.get_frames_per_second() < 60:
+		queue_free()
+		return
 	
 	show()
 	

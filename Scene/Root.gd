@@ -23,6 +23,10 @@ extends MarginContainer
 
 @onready var tooltip_position_display = $"Control/Tooltip/Tooltip Position Display"
 
+# RIGHT
+
+@onready var limit_break_vico = %LimitBreakVico
+
 # MENU
 
 @onready var game_section = %"Game Section"
@@ -33,9 +37,11 @@ extends MarginContainer
 @onready var sidebar_title_background = %"Sidebar Title Background"
 @onready var save_game = %"Save Game"
 @onready var total_notice_count = %"Total Notice Count"
+@onready var upgrade_section = %"Upgrade Section"
+@onready var upgrade_vicos = %UpgradeVicos
 
 var menu_container_size: float
-
+var upgrade_section_queued := false
 
 
 
@@ -91,6 +97,7 @@ func _ready():
 			b.hide()
 	
 	upgrade_container.connect("upgrade_menu_tab_changed", update_upgrades_button_color)
+	update_upgrades_button_color(0)
 	
 	gv.root_ready = true
 	
@@ -338,6 +345,19 @@ func _on_stage_4_pressed():
 	select_stage(4)
 
 
+func _on_upgrade_effect_vico_visibility_changed():
+	if upgrade_section_queued:
+		return
+	if not is_node_ready():
+		upgrade_section_queued = true
+		await ready
+	upgrade_section_queued = false
+	for child in upgrade_vicos.get_children():
+		if child.visible:
+			upgrade_section.show()
+			return
+	upgrade_section.hide()
+
 
 
 # - Ref
@@ -395,6 +415,7 @@ func wallet_lock(unlocked: bool) -> void:
 
 # - Actions
 
+
 func open_wallet(_show: bool) -> void:
 	if wa.wallet_unlocked or gv.dev_mode:
 		hide_menus()
@@ -421,6 +442,10 @@ func hide_menus() -> void:
 func select_stage(stage: int) -> void:
 	hide_menus()
 	lored_container.select_stage(stage)
+
+
+func _on_limitbreak_pressed():
+	limit_break_vico.visible = not limit_break_vico.visible
 
 
 
@@ -478,3 +503,6 @@ func _on_dev_pressed():
 
 func _on_dev_1_pressed():
 	Buffs.apply_buff_on_lored(lv.get_lored(LORED.Type.STONE), LOREDBuff.Type.WITCH)
+
+
+

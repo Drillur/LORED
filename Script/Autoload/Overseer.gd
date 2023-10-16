@@ -254,6 +254,7 @@ enum Tooltip {
 	JUST_TEXT,
 	WALLET_CURRENCY_TOOLTIP,
 	PRESTIGE_TOOLTIP,
+	LORED_BUFFS,
 }
 
 var TOOLTIP_KEYS := Tooltip.keys()

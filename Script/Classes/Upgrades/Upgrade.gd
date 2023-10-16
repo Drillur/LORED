@@ -830,7 +830,7 @@ func init_ITS_GROWIN_ON_ME() -> void:
 			"effect value": 1,
 			"effect value2": 1,
 			"bonus_action_type": UpgradeEffect.BONUS_ACTION.INCREASE_EFFECT1_OR_2,
-			"modifier": 0.05,
+			"modifier": 0.01,
 		}
 	)
 	effect.save_effect(true)
@@ -945,7 +945,7 @@ func init_I_DRINK_YOUR_MILKSHAKE() -> void:
 			"currency": Currency.Type.COAL,
 			"effect value": 1,
 			"bonus_action_type": UpgradeEffect.BONUS_ACTION.INCREASE_EFFECT,
-			"modifier": 0.001,
+			"modifier": 0.00001,
 		}
 	)
 	effect.save_effect(true)
@@ -2755,7 +2755,13 @@ func init_THE_WITCH_OF_LOREDELITH() -> void:
 	var shit = lv.get_lored(LORED.Type.WITCH).details.color_text
 	details.name = shit % "The Witch of Loredelith"
 	details.description = "Stage 1 LOREDs permanently gain Aurus's Bounty, Circe's powerful buff."
-	set_effect(UpgradeEffect.Type.HASTE, 1)
+	effect = UpgradeEffect.new(
+		UpgradeEffect.Type.APPLY_LORED_BUFF,
+		{
+			"upgrade_type": type,
+			"buff": LOREDBuff.Type.WITCH,
+		}
+	)
 	add_effected_stage(1)
 	cost = Cost.new({
 		Currency.Type.TUMORS: Value.new("1e12"),
@@ -3328,7 +3334,8 @@ func finalize_purchase() -> void:
 
 
 func apply() -> void:
-	effect.apply()
+	if effect != null:
+		effect.apply()
 
 
 func refund() -> void:

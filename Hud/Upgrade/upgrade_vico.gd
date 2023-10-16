@@ -18,7 +18,6 @@ var container: UpgradeContainer
 
 func _ready() -> void:
 	button.set_icon_min_size(Vector2(24, 24))
-	pass
 
 
 

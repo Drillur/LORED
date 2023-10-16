@@ -52,7 +52,7 @@ layout_mode = 2
 size_flags_horizontal = 0
 theme = ExtResource("3_ifira")
 bbcode_enabled = true
-text = "1,080"
+text = "123e123"
 fit_content = true
 autowrap_mode = 0
 

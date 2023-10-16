@@ -62,7 +62,6 @@ layout_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 kill_markers = true
-animate = true
 kill_background = true
 
 [node name="MarginContainer2" type="MarginContainer" parent="VBoxContainer/MarginContainer3"]

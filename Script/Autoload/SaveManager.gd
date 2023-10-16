@@ -93,6 +93,7 @@ var save_version := {
 var loaded_data: Dictionary
 var last_save_clock := Time.get_unix_time_from_system()
 var patched := false
+var loading := Bool.new(false)
 
 var test_data: String
 
@@ -123,13 +124,14 @@ func save_game(method := default_save_method) -> void:
 
 
 func load_game(method := default_load_method) -> void:
+	loading.set_to(true)
 	gv.close_all()
 	emit_signal("load_started")
 	loaded_data = get_save_data(method)
 	unpack_data(loaded_data)
 	gv.open_all()
 	load_finished.emit()
-	
+	loading.set_to(false)
 	update_save_version()
 
 

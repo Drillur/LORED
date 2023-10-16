@@ -38,16 +38,8 @@ func _init(_cost: Dictionary) -> void:
 	cost = _cost
 	base_cost = cost
 	longest_eta_cur = cost.keys()[0]
-	SaveManager.connect("load_finished", recheck)
-	for cur in cost:
-		var currency = wa.get_currency(cur) as Currency
-		for x in currency.produced_by:
-			if not x in produced_by:
-				produced_by.append(x)
-		if currency.stage == 1:
-			has_stage1_currency = true
-		currency.use_allowed_changed.connect(currency_use_allowed_changed)
-		currency.unlocked_changed.connect(currency_unlocked_changed)
+	SaveManager.load_finished.connect(recheck)
+	lv.loreds_initialized.connect(loreds_initialized)
 	connect_calls()
 	recheck()
 
@@ -65,6 +57,21 @@ func disconnect_calls() -> void:
 			wa.currency[cur].count.disconnect("increased", currency_increased)
 			wa.currency[cur].count.disconnect("decreased", currency_decreased)
 
+
+func loreds_initialized() -> void:
+	for cur in cost:
+		var currency = wa.get_currency(cur) as Currency
+		for x in currency.produced_by:
+			if not x in produced_by:
+				produced_by.append(x)
+				var lored = lv.get_lored(x)
+				if lored.stage == 1:
+					if not lored.became_an_adult.is_connected(baby_became_adult):
+						lored.became_an_adult.connect(baby_became_adult)
+		if currency.stage == 1:
+			has_stage1_currency = true
+		currency.use_allowed_changed.connect(currency_use_allowed_changed)
+		currency.unlocked_changed.connect(currency_unlocked_changed)
 
 
 func currency_use_allowed_changed(allowed: bool) -> void:
@@ -114,10 +121,10 @@ func recheck() -> void:
 func spend(from_player: bool) -> void:
 	if from_player:
 		for cur in cost:
-			wa.subtract_from_player(cur, cost[cur].get_value())
+			wa.subtract_from_player(cur, Big.new(cost[cur].get_value()))
 	else:
 		for cur in cost:
-			wa.subtract_from_lored(cur, cost[cur].get_value())
+			wa.subtract_from_lored(cur, Big.new(cost[cur].get_value()))
 
 
 func purchase(from_player: bool) -> void:
@@ -127,7 +134,7 @@ func purchase(from_player: bool) -> void:
 
 func refund() -> void:
 	for cur in cost:
-		wa.add(cur, cost[cur].get_value())
+		wa.add(cur, Big.new(cost[cur].get_value()))
 	purchased = false
 	recheck()
 	affordable.changed.emit()
@@ -263,7 +270,18 @@ func can_take_candy_from_a_baby() -> bool:
 		for cur in cost:
 			var currency = wa.get_currency(cur)
 			if currency.stage == 1:
-				var lored = lv.get_lored(currency.produced_by[0])
-				if lored.level < 5:
-					return false
+				for lored_type in currency.produced_by:
+					var lored = lv.get_lored(lored_type)
+					if lored.stage != 1:
+						continue
+					if lored.level >= 5:
+						return true
+				return false
 	return true
+
+
+func baby_became_adult() -> void:
+	if can_take_candy_from_a_baby() and affordable.is_true():
+		affordable.became_true.emit()
+	else:
+		recheck()
