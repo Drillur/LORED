@@ -8,6 +8,7 @@ var default_frames: SpriteFrames
 var animation_key := ""
 var previous_animation := ""
 var default_flip_h := false
+var capped_anim := Bool.new(false)
 
 
 
@@ -39,8 +40,15 @@ func play_job_animation(job: Job) -> void:
 	previous_animation = animation_key
 	
 	var animation_length = lv.ANIMATION_FRAMES[animation_key]
-	speed_scale = min(25, animation_length / job.duration.get_as_float())
-	play(animation_key)
+	speed_scale = animation_length / job.duration.get_as_float()
+	if speed_scale > 25:
+		capped_anim.set_to(true)
+		speed_scale = 8
+		if animation != animation_key or not is_playing():
+			play(animation_key)
+	else:
+		capped_anim.set_to(false)
+		play(animation_key)
 
 
 func sleep() -> void:

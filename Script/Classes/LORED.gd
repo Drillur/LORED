@@ -236,7 +236,7 @@ func _init(_type: int = 0) -> void:
 		fuel.change_base(1.0)
 		fuel.reset()
 	
-	fuel.current_increased.connect(work)
+	fuel.current.increased.connect(work)
 	
 	level = 0
 	

@@ -50,30 +50,31 @@ func update_lb_colors() -> void:
 func level_up() -> void:
 	gv.flash(self, up.limit_break.color)
 	
-	var text = FlyingText.new(
-		FlyingText.Type.JUST_TEXT,
-		texts,
-		texts,
-		[0, 0],
-	)
-	text.add({
-		"color": up.limit_break.color,
-		"text": "[b]x%s[/b]" % up.limit_break.level.text,
-	})
-	text.go()
+	if Engine.get_frames_per_second() >= 60:
+		var text = FlyingText.new(
+			FlyingText.Type.JUST_TEXT,
+			texts,
+			texts,
+			[0, 0],
+		)
+		text.add({
+			"color": up.limit_break.color,
+			"text": "[b]x%s[/b]" % up.limit_break.level.text,
+		})
+		text.go()
 
 
 func connect_calls() -> void:
-	up.limit_break.xp.current_changed.connect(update_lb_xp_cur)
-	up.limit_break.xp.total_changed.connect(update_lb_xp_max)
+	up.limit_break.xp.current.changed.connect(update_lb_xp_cur)
+	up.limit_break.xp.total.changed.connect(update_lb_xp_max)
 	up.limit_break.level.changed.connect(update_level)
 	up.limit_break.level.changed.connect(update_lb_colors)
 	up.limit_break.level.changed.connect(level_up)
 
 
 func disconnect_calls() -> void:
-	up.limit_break.xp.current_changed.disconnect(update_lb_xp_cur)
-	up.limit_break.xp.total_changed.disconnect(update_lb_xp_max)
+	up.limit_break.xp.current.changed.disconnect(update_lb_xp_cur)
+	up.limit_break.xp.total.changed.disconnect(update_lb_xp_max)
 	up.limit_break.level.changed.disconnect(update_level)
 	up.limit_break.level.changed.disconnect(update_lb_colors)
 	up.limit_break.level.changed.disconnect(level_up)

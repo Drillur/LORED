@@ -505,4 +505,9 @@ func _on_dev_1_pressed():
 	Buffs.apply_buff_on_lored(lv.get_lored(LORED.Type.STONE), LOREDBuff.Type.WITCH)
 
 
+func _on_dev_2_pressed():
+	up.limit_break.add_xp(Big.new("1e900"))
 
+
+func _on_dev_3_pressed():
+	up.limit_break.add_xp(up.limit_break.xp.get_total())

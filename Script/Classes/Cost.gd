@@ -177,19 +177,20 @@ func add_currency_to_cost(cur: int) -> void:
 
 
 func throw_texts(parent_node: Node) -> void:
-	var text = FlyingText.new(
-		FlyingText.Type.CURRENCY,
-		parent_node, # node used to determine text locations
-		parent_node, # node that will hold texts
-		[2, 2], # collision
-	)
-	for cur in cost:
-		text.add({
-			"cur": cur,
-			"text": "-" + cost[cur].get_text(),
-			"crit": false,
-		})
-	text.go()
+	if Engine.get_frames_per_second() >= 60:
+		var text = FlyingText.new(
+			FlyingText.Type.CURRENCY,
+			parent_node, # node used to determine text locations
+			parent_node, # node that will hold texts
+			[2, 2], # collision
+		)
+		for cur in cost:
+			text.add({
+				"cur": cur,
+				"text": "-" + cost[cur].get_text(),
+				"crit": false,
+			})
+		text.go()
 
 
 

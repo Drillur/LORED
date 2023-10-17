@@ -39,20 +39,19 @@ func flash() -> void:
 
 
 func throw_texts() -> void:
-	print("ok?")
-	var text = FlyingText.new(
-		FlyingText.Type.CURRENCY,
-		texts, # node used to determine text locations
-		texts, # node that will hold texts
-		[1, 1], # collision
-	)
-	if buff is LOREDBuff:
-		match buff.type:
-			LOREDBuff.Type.WITCH:
-				text.add({
-					"cur": buff.object.primary_currency,
-					"text": "+" + buff.witch_output.text,
-					"crit": false,
-				})
-	text.go()
-	print(1)
+	if Engine.get_frames_per_second() >= 60:
+		var text = FlyingText.new(
+			FlyingText.Type.CURRENCY,
+			texts, # node used to determine text locations
+			texts, # node that will hold texts
+			[1, 1], # collision
+		)
+		if buff is LOREDBuff:
+			match buff.type:
+				LOREDBuff.Type.WITCH:
+					text.add({
+						"cur": buff.object.primary_currency,
+						"text": "+" + buff.witch_output.text,
+						"crit": false,
+					})
+		text.go()

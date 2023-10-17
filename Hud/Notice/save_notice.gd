@@ -47,17 +47,18 @@ func saved() -> void:
 	timer.stop()
 	timer.start()
 	
-	var text = FlyingText.new(
-		FlyingText.Type.JUST_TEXT,
-		self,
-		self,
-		[0, 0],
-	)
-	text.add({
-		"color": SaveManager.save_file_color,
-		"text": "Saved!",
-	})
-	text.go()
+	if Engine.get_frames_per_second() >= 60:
+		var text = FlyingText.new(
+			FlyingText.Type.JUST_TEXT,
+			self,
+			self,
+			[0, 0],
+		)
+		text.add({
+			"color": SaveManager.save_file_color,
+			"text": "Saved!",
+		})
+		text.go()
 
 
 func timer_timeout() -> void:

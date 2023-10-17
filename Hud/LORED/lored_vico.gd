@@ -4,6 +4,17 @@ extends MarginContainer
 
 
 
+
+func load_finished() -> void:
+	visible = lored.unlocked.get_value()
+	lored_leveled_up(lored.level)
+
+
+func load_started() -> void:
+	stop_progress_bar()
+
+
+
 @onready var fuel_bar = %"Fuel Bar" as Bar
 @onready var info = %Info as IconButton
 @onready var jobs = %Jobs as IconButton
@@ -26,11 +37,15 @@ extends MarginContainer
 @onready var sleep_timer = $"Sleep Timer"
 @onready var level_up_texts = %"Level Up Texts"
 @onready var fuel_background = %"Fuel Background"
+@onready var animation_player = %AnimationPlayer
+@onready var fast_bar = %FastBar
 
 var prefer_left_down: bool
 var has_lored := false
 var lored: LORED
 var current_job: Job
+var pending_outputs := {}
+var last_text_clock := Time.get_unix_time_from_system()
 
 const sleep_text_pool := [
 	"[i]Z", "[i]z", "[i]Zz", "[i]zZ", "[i]Zzz", "[i]zzZ", "[i]zZz", "[i]ZzZ",
@@ -66,6 +81,10 @@ func _ready():
 	sleep_text_timer.connect("timeout", start_spewing_sleep_text)
 	sleep_timer.connect("timeout", spent_one_second_asleep)
 	sleep_timer.connect("timeout", start_sleep_timer)
+	
+	animation.capped_anim.became_true.connect(anim_capped)
+	animation.capped_anim.became_false.connect(anim_uncapped)
+	animation_player.animation_finished.connect(animation_player_animation_finished)
 	
 	SaveManager.connect("load_finished", load_finished)
 	SaveManager.connect("load_started", load_started)
@@ -131,6 +150,7 @@ func attach_lored(_lored: LORED) -> void:
 	sleep.color = lored.details.alt_color
 	view_special.color = lored.details.alt_color
 	level_up.color = lored.details.alt_color
+	fast_bar.self_modulate = lored.details.color
 	
 	info.button.mouse_default_cursor_shape = Control.CURSOR_ARROW
 	jobs.button.mouse_default_cursor_shape = Control.CURSOR_ARROW
@@ -155,6 +175,8 @@ func cost_update() -> void:
 func prestige(stage: int) -> void:
 	if stage >= lored.stage:
 		status.hide()
+		animation_player.stop()
+		animation.capped_anim.set_to(false)
 
 
 
@@ -188,13 +210,30 @@ func get_preferred_side() -> Node:
 
 # - Ref Shit
 
-func load_finished() -> void:
-	visible = lored.unlocked.get_value()
-	lored_leveled_up(lored.level)
 
-
-func load_started() -> void:
+func anim_capped() -> void:
 	stop_progress_bar()
+	play_fast_bar()
+
+
+func play_fast_bar() -> void:
+	if not animation_player.is_playing():
+		if animation.animation == "ww":
+			animation_player.speed_scale = max(animation_player.speed_scale, 0.25)
+		else:
+			animation_player.speed_scale = lv.ANIMATION_FRAMES[animation.animation] / lored.last_job.duration.get_as_float() / 75
+		animation_player.play("FastBar")
+
+
+func animation_player_animation_finished(animation_name: String) -> void:
+	if animation.capped_anim.is_true():
+		play_fast_bar()
+
+
+func anim_uncapped() -> void:
+	if animation_player.is_playing():
+		animation_player.stop()
+		animation_player.play("RESET")
 
 
 func purchased_changed() -> void:
@@ -216,7 +255,7 @@ func purchased_changed() -> void:
 
 
 func lored_leveled_up(_level: int) -> void:
-	if not lored.last_purchase_forced:
+	if not lored.last_purchase_forced and Engine.get_frames_per_second() >= 60:
 		
 		var text = FlyingText.new(
 			FlyingText.Type.LEVEL_UP,
@@ -232,25 +271,54 @@ func lored_leveled_up(_level: int) -> void:
 
 
 func job_completed() -> void:
-	if current_job.has_produced_currencies:
-		var text = FlyingText.new(
-			FlyingText.Type.CURRENCY,
-			output_texts,
-			output_texts,
-			[0, 0],
-		)
-		for cur in current_job.last_production:
-			text.add({
-				"cur": cur,
-				"text": "+" + current_job.last_production[cur].text,
-				"crit": false,
-			})
-		text.go()
-	stop_progress_bar()
+	if Engine.get_frames_per_second() < 60:
+		pending_outputs.clear()
+	elif current_job.has_produced_currencies:
+		
+		if animation.capped_anim.is_true():
+			for cur in current_job.last_production:
+				if not cur in pending_outputs:
+					pending_outputs[cur] = Big.new(current_job.last_production[cur])
+				else:
+					pending_outputs[cur].a(current_job.last_production[cur])
+			
+			if Time.get_unix_time_from_system() - last_text_clock > 1.0:
+				var text = FlyingText.new(
+					FlyingText.Type.CURRENCY,
+					output_texts,
+					output_texts,
+					[0, 0],
+				)
+				for cur in pending_outputs:
+					text.add({
+						"cur": cur,
+						"text": "+" + pending_outputs[cur].text,
+						"crit": false,
+					})
+				text.go()
+				pending_outputs.clear()
+				last_text_clock = Time.get_unix_time_from_system()
+		
+		else:
+			var text = FlyingText.new(
+				FlyingText.Type.CURRENCY,
+				output_texts,
+				output_texts,
+				[0, 0],
+			)
+			for cur in current_job.last_production:
+				text.add({
+					"cur": cur,
+					"text": "+" + current_job.last_production[cur].text,
+					"crit": false,
+				})
+			text.go()
+			last_text_clock = Time.get_unix_time_from_system()
+	progress_bar.stop()
 
 
 func job_cut_short() -> void:
-	if current_job.has_required_currencies:
+	if current_job.has_required_currencies and Engine.get_frames_per_second() >= 60:
 		var text = FlyingText.new(
 			FlyingText.Type.CURRENCY,
 			output_texts,
@@ -316,6 +384,7 @@ func autobuy_changed() -> void:
 
 # - Actions
 
+
 func purchase_level_up() -> void:
 	if lored.cost.affordable.is_true() or gv.dev_mode:
 		lored.manual_purchase()
@@ -325,7 +394,8 @@ func purchase_level_up() -> void:
 
 func start_job(_job: Job) -> void:
 	current_job = _job as Job
-	progress_bar.start(current_job.duration.get_as_float())
+	if animation.capped_anim.is_false():
+		progress_bar.start(current_job.duration.get_as_float())
 	set_status_and_currency(current_job.status_text, current_job.get_primary_currency())
 	animation.play_job_animation(current_job)
 
@@ -387,17 +457,18 @@ func start_spewing_sleep_text() -> void:
 
 
 func spew_sleep_text() -> void:
-	var text = FlyingText.new(
-		FlyingText.Type.SLEEP,
-		output_texts,
-		output_texts,
-		[1, 1],
-	)
-	text.add({
-		"color": lored.details.color,
-		"text": sleep_text_pool[randi() % sleep_text_pool.size()],
-	})
-	text.go()
+	if Engine.get_frames_per_second() >= 60:
+		var text = FlyingText.new(
+			FlyingText.Type.SLEEP,
+			output_texts,
+			output_texts,
+			[1, 1],
+		)
+		text.add({
+			"color": lored.details.color,
+			"text": sleep_text_pool[randi() % sleep_text_pool.size()],
+		})
+		text.go()
 
 
 
@@ -418,3 +489,5 @@ func display_parents(node) -> void:
 	if not node.visible:
 		node.show()
 	display_parents(node.get_parent())
+
+

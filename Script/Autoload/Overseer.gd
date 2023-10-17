@@ -210,6 +210,8 @@ func getRandomColor() -> Color:
 var flying_texts := []
 
 func flash(parent: Node, color = Color(1, 0, 0)) -> void:
+	if Engine.get_frames_per_second() < 60:
+		return
 	var _flash = res.get_resource("flash").instantiate()
 	parent.add_child(_flash)
 	_flash.flash(color)

@@ -525,10 +525,10 @@ func assign_lored(lored_type: int) -> void:
 	lored = lored_type
 	var _lored: LORED = lv.get_lored(lored) as LORED
 	crit = _lored.crit
-	_lored.fuel.current_increased.connect(fuel_increased)
-	_lored.fuel.current_decreased.connect(fuel_decreased)
+	_lored.fuel.current.increased.connect(fuel_increased)
+	_lored.fuel.current.decreased.connect(fuel_decreased)
 	if type == Type.REFUEL:
-		_lored.fuel.total_changed.connect(lored_fuel_total_changed)
+		_lored.fuel.total.changed.connect(lored_fuel_total_changed)
 		var half = Big.new(_lored.fuel.get_total()).d(2)
 		has_required_currencies = true
 		required_currencies = Cost.new({

@@ -16,8 +16,8 @@ func setup(_att: ValuePair, _prepended_text := "") -> void:
 	attribute = _att
 	prepended_text = _prepended_text
 	
-	attribute.connect("current_changed", update_current)
-	attribute.connect("total_changed", update_total)
+	attribute.current.changed.connect(update_current)
+	attribute.total.changed.connect(update_total)
 	
 	update_current()
 	update_total()

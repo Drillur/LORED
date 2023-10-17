@@ -96,9 +96,9 @@ func timer_timeout() -> void:
 	#last_tick_clock = Time.get_unix_time_from_system()
 	
 	if endless:
-		print("Tick! (%s)" % ticks.get_value())
+		pass #print("Tick! (%s)" % ticks.get_value())
 	else:
-		print("Tick! (%s/%s)" % [ticks.get_value(), ticks.base])
+		#print("Tick! (%s/%s)" % [ticks.get_value(), ticks.base])
 		if ticks.equal(ticks.base):
 			remove()
 

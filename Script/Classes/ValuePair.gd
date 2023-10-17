@@ -8,17 +8,6 @@ var saved_vars := [
 	"total",
 ]
 
-
-signal increased
-signal decreased
-
-signal current_changed
-signal current_increased
-signal current_decreased
-signal total_changed
-signal total_increased
-signal total_decreased
-
 signal filled
 signal emptied
 
@@ -44,58 +33,18 @@ var empty := false:
 
 func _init(base_value = 1.0) -> void:
 	current = Value.new(base_value)
-	current.connect("increased", emit_increase)
-	current.connect("increased", emit_current_increase)
-	current.connect("decreased", emit_decrease)
-	current.connect("decreased", emit_current_decrease)
-	current.connect("changed", emit_changed)
-	current.connect("changed", emit_current_changed)
 	total = Value.new(base_value)
-	total.connect("increased", emit_increase)
-	total.connect("increased", emit_total_increase)
-	total.connect("decreased", emit_decrease)
-	total.connect("decreased", emit_total_decrease)
-	total.connect("changed", emit_changed)
-	total.connect("changed", emit_total_changed)
 	
-	current.connect("changed", check_if_full)
-	current.connect("changed", check_if_empty)
+	current.changed.connect(emit_changed)
+	current.increased.connect(check_if_full)
+	current.decreased.connect(check_if_empty)
+	total.changed.connect(emit_changed)
+	total.changed.connect(check_if_full)
+	total.changed.connect(check_if_empty)
 
 
 
 # - Signals
-
-func emit_increase() -> void:
-	emit_signal("increased")
-
-
-func emit_decrease() -> void:
-	emit_signal("decreased")
-
-
-func emit_current_changed() -> void:
-	emit_signal("current_changed")
-
-
-func emit_current_increase() -> void:
-	emit_signal("current_increased")
-
-
-func emit_current_decrease() -> void:
-	emit_signal("current_decreased")
-
-
-func emit_total_changed() -> void:
-	emit_signal("total_changed")
-
-
-func emit_total_increase() -> void:
-	emit_signal("total_increased")
-
-
-func emit_total_decrease() -> void:
-	emit_signal("total_decreased")
-
 
 
 func check_if_full() -> void:

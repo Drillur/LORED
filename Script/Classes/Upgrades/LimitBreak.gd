@@ -4,7 +4,7 @@ extends Resource
 
 
 const saved_vars := [
-	"xp",
+	"total_xp",
 	"level",
 	"affected_stages",
 ]
@@ -32,8 +32,12 @@ const COLORS := {
 	14: Color(0, 1, 0),
 }
 
+var cached_xp_required := {}
+
+var stupid_msg_printed := false
 var applied := false
 var enabled := Bool.new(false)
+var total_xp := ValuePair.new(1)
 var xp := ValuePair.new(1)
 var level := Int.new(1)
 var affected_stages := [1, 2,]
@@ -45,10 +49,23 @@ var next_color: Color
 func _init() -> void:
 	set_colors()
 	
-	xp.total.set_from_level(get_required_xp(1))
+	var d = Time.get_unix_time_from_system()
+	var total_xp_so_far = Big.new(0)
+	for i in range(1, 3001): # 0.234 seconds
+		total_xp_so_far.a(calculate_required_xp(i))
+		cached_xp_required[i] = Big.new(total_xp_so_far)
+	
+	print("XP Cached in %s secs" % str(Time.get_unix_time_from_system() - d))
+	
+	total_xp.total.set_to(get_required_xp(1))
+	total_xp.set_to(0)
+	total_xp.do_not_cap_current()
+	total_xp.current.increased.connect(level_up_check)
+	total_xp.total.changed.connect(update_visual_xp)
+	
+	xp.total.set_to(total_xp.get_total())
 	xp.set_to(0)
 	xp.do_not_cap_current()
-	xp.current_increased.connect(level_up_check)
 	
 	level.changed.connect(level_up)
 	
@@ -111,19 +128,40 @@ func disconnect_calls() -> void:
 
 func add_xp(amount: Big) -> void:
 	xp.add(amount)
+	total_xp.add(amount)
 
 
 func level_up_check() -> void:
-	var gained_levels := 0
-	while xp.is_full():
-		gained_levels += 1
-		xp.subtract(xp.get_total())
-		xp.total.set_from_level(
-			get_required_xp(level.get_value() + gained_levels)
-		)
+	if total_xp.is_not_full():
+		return
 	
+	var left := level.get_value()
+	var mid := 0
+	var right := 3000
+	while left < right:
+		mid = left + (right - left) / 2
+		if get_required_xp(mid).less_equal(total_xp.get_value()):
+			left = mid + 1
+		else:
+			right = mid
+	
+	var gained_levels = left - level.get_value()
 	if gained_levels > 0:
 		level.add(gained_levels)
+		total_xp.total.set_to(
+			get_required_xp(level.get_value())
+		)
+
+
+func update_visual_xp() -> void:
+	var new_total_xp = Big.new(get_required_xp(level.get_value()))
+	var new_xp = Big.new(total_xp.get_current())
+	if level.greater(1):
+		new_total_xp.s(get_required_xp(level.get_value() - 1))
+		new_xp.s(get_required_xp(level.get_value() - 1))
+	new_total_xp.round_up_tens()
+	xp.total.set_to(new_total_xp)
+	xp.set_to(new_xp)
 
 
 func level_up() -> void:
@@ -148,9 +186,11 @@ func apply_to_stage_4() -> void:
 func reset() -> void:
 	level.reset()
 	xp.set_to(0)
-	xp.total.set_from_level(
-		get_required_xp(level.get_value())
+	total_xp.set_to(0)
+	total_xp.total.set_from_level(
+		calculate_required_xp(level.get_value())
 	)
+	xp.total.set_to(total_xp.get_total())
 
 
 
@@ -158,10 +198,18 @@ func reset() -> void:
 
 
 func get_required_xp(_level: int) -> Big:
+	if _level in cached_xp_required.keys():
+		return cached_xp_required[_level]
+	if not stupid_msg_printed:
+		printerr("Drillur only cached 3,000 Limit Break levels. You surpassed that! Screenshot this and post it on the Discord to bully him!")
+		stupid_msg_printed = true
+	return calculate_required_xp(_level)
+
+
+func calculate_required_xp(_level: int) -> Big:
 	var x = Big.new(2).power(_level - 1).round_up_tens().m(100)
 	if x.exponent < 3:
 		x.set_to(1000)
-	#print("XP: ", x.text)
 	return x
 
 
@@ -171,4 +219,5 @@ func applies_to_stage_3() -> bool:
 
 func applies_to_stage_4() -> bool:
 	return 4 in affected_stages
+
 

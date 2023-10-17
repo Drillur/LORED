@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://cc20piiohvlkw"]
+[gd_scene load_steps=25 format=3 uid="uid://cc20piiohvlkw"]
 
 [ext_resource type="Script" path="res://Hud/LORED/lored_vico.gd" id="1_0ael0"]
 [ext_resource type="Theme" uid="uid://b8t7tkhvril5g" path="res://Theme/Standard.tres" id="1_7ail2"]
@@ -8,7 +8,7 @@
 [ext_resource type="Theme" uid="uid://dt7rd31blnvth" path="res://Theme/Invis.tres" id="4_43dff"]
 [ext_resource type="Texture2D" uid="uid://b5sh16p1b12b1" path="res://Sprites/Currency/axe.png" id="4_g5nc0"]
 [ext_resource type="PackedScene" uid="uid://cb3ej8nlybhvm" path="res://Hud/icon_button.tscn" id="7_d7ftl"]
-[ext_resource type="SpriteFrames" uid="uid://cw62sjrj5glo1" path="res://Sprites/animations/toba.tres" id="8_mscl5"]
+[ext_resource type="SpriteFrames" path="res://Sprites/animations/stone.tres" id="8_po68r"]
 [ext_resource type="Script" path="res://Hud/LORED/lored_animation.gd" id="9_tchys"]
 [ext_resource type="Texture2D" uid="uid://beuki11l6kwux" path="res://Sprites/Hud/Info.png" id="11_o6yhx"]
 [ext_resource type="Texture2D" uid="uid://bkebt7vnjp4bt" path="res://Sprites/Hud/activeBuffs.png" id="12_kfyd2"]
@@ -16,6 +16,39 @@
 [ext_resource type="Texture2D" uid="uid://cootbhqtp6dj6" path="res://Sprites/Hud/View.png" id="14_clor7"]
 [ext_resource type="Texture2D" uid="uid://bi6fq33gkf5oh" path="res://Sprites/Hud/Halt.png" id="15_jf5nq"]
 [ext_resource type="Texture2D" uid="uid://bgx6xg4vtb0p4" path="res://Sprites/Hud/Level.png" id="16_qtvup"]
+
+[sub_resource type="Animation" id="Animation_yhox4"]
+resource_name = "FastBar"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Control/FastBar:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(0.210225, 1),
+"update": 0,
+"values": [Vector2(-20, -5), Vector2(250, -5)]
+}
+
+[sub_resource type="Animation" id="Animation_c7yri"]
+length = 0.001
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_nffyv"]
+_data = {
+"FastBar": SubResource("Animation_yhox4"),
+"RESET": SubResource("Animation_c7yri")
+}
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_82ulr"]
+bg_color = Color(1, 1, 1, 1)
+border_width_left = 8
+border_width_right = 8
+border_color = Color(0.839216, 0.839216, 0.839216, 1)
+border_blend = true
+shadow_color = Color(1, 1, 1, 0.431373)
+shadow_size = 3
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_iihta"]
 bg_color = Color(1, 1, 1, 0.0470588)
@@ -49,6 +82,14 @@ offset_right = 216.0
 offset_bottom = 132.0
 script = ExtResource("1_0ael0")
 
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+unique_name_in_owner = true
+root_node = NodePath("../VBoxContainer/MarginContainer")
+speed_scale = 0.5
+libraries = {
+"": SubResource("AnimationLibrary_nffyv")
+}
+
 [node name="bg" type="Panel" parent="."]
 layout_mode = 2
 theme = ExtResource("2_b2xx2")
@@ -65,6 +106,21 @@ layout_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 kill_markers = true
+
+[node name="Control" type="Control" parent="VBoxContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="FastBar" type="Panel" parent="VBoxContainer/MarginContainer/Control"]
+unique_name_in_owner = true
+modulate = Color(0.351563, 0.351563, 0.351563, 1)
+self_modulate = Color(0.117647, 0.517647, 0.870588, 1)
+layout_mode = 0
+offset_left = -20.0
+offset_top = -5.0
+offset_right = 3.05176e-05
+offset_bottom = 113.0
+rotation = 0.261799
+theme_override_styles/panel = SubResource("StyleBoxFlat_82ulr")
 
 [node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/MarginContainer"]
 layout_mode = 2
@@ -126,8 +182,9 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_iihta")
 unique_name_in_owner = true
 position = Vector2(2, 2)
 scale = Vector2(2, 2)
-sprite_frames = ExtResource("8_mscl5")
-animation = &"TOBACCO"
+sprite_frames = ExtResource("8_po68r")
+animation = &"STONE"
+frame_progress = 0.0209391
 centered = false
 script = ExtResource("9_tchys")
 

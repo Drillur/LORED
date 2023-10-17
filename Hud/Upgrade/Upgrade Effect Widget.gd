@@ -37,8 +37,8 @@ func _ready():
 	
 	match upgrade_type:
 		Upgrade.Type.LIMIT_BREAK:
-			up.limit_break.xp.current_changed.connect(update_lb_xp_cur)
-			up.limit_break.xp.total_changed.connect(update_lb_xp_max)
+			up.limit_break.xp.current.changed.connect(update_lb_xp_cur)
+			up.limit_break.xp.total.changed.connect(update_lb_xp_max)
 			up.limit_break.level.changed.connect(update_effect_text)
 			up.limit_break.level.changed.connect(update_lb_colors)
 			update_lb_xp_cur()

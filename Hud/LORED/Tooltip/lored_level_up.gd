@@ -79,7 +79,7 @@ func just_purchased() -> void:
 			lored.output.connect("changed", set_output_text)
 			lored.input.connect("changed", set_input_text)
 			lored.fuel_cost.connect("changed", set_fuel_cost_text)
-			lored.fuel.connect("total_changed", set_max_fuel_text)
+			lored.fuel.total.changed.connect(set_max_fuel_text)
 			set_output_text()
 			set_input_text()
 			set_fuel_cost_text()

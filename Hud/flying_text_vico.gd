@@ -91,9 +91,6 @@ func setup_sleep(data: Dictionary) -> void:
 
 
 func go(_duration: float, _velocity_range: Array) -> void:
-	if Engine.get_frames_per_second() < 60:
-		queue_free()
-		return
 	show()
 	if _duration > 0:
 		timer.start(_duration)
