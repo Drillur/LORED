@@ -15,10 +15,11 @@ extends MarginContainer
 @onready var next_fuel_cost = %"Next Fuel Cost"
 @onready var current_max_fuel = %"Current Max Fuel"
 @onready var next_max_fuel = %"Next Max Fuel"
-@onready var cost_increase = %"Cost Increase"
 @onready var details = %Details
 @onready var description = %Description
 @onready var details_container = %"Details Container"
+@onready var output_increase = %OutputIncrease
+@onready var input_increase = %InputIncrease
 
 var flash_allowed := false
 var lored: LORED
@@ -80,10 +81,14 @@ func just_purchased() -> void:
 			lored.input.connect("changed", set_input_text)
 			lored.fuel_cost.connect("changed", set_fuel_cost_text)
 			lored.fuel.total.changed.connect(set_max_fuel_text)
+			lored.output_increase.changed.connect(set_output_increase)
+			lored.input_increase.changed.connect(set_input_increase)
 			set_output_text()
 			set_input_text()
 			set_fuel_cost_text()
 			set_max_fuel_text()
+			set_output_increase()
+			set_input_increase()
 		else:
 			show_advanced_details(false)
 
@@ -106,9 +111,17 @@ func set_output_text() -> void:
 	next_output.text = lored.get_next_output_text()# + "x"
 
 
+func set_output_increase() -> void:
+	output_increase.text = "x" + lored.output_increase.text
+
+
 func set_input_text() -> void:
 	current_input.text = lored.get_input_text()# + "x"
 	next_input.text = lored.get_next_input_text()# + "x"
+
+
+func set_input_increase() -> void:
+	input_increase.text = "x" + lored.input_increase.text
 
 
 func set_fuel_cost_text() -> void:

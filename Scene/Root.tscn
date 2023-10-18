@@ -1,4 +1,4 @@
-[gd_scene load_steps=40 format=3 uid="uid://bseqrj5lg08it"]
+[gd_scene load_steps=41 format=3 uid="uid://bseqrj5lg08it"]
 
 [ext_resource type="Script" path="res://Scene/Root.gd" id="1_h7r77"]
 [ext_resource type="PackedScene" uid="uid://rmruae8fguk4" path="res://Hud/LORED/lored_container.tscn" id="2_egnhq"]
@@ -34,6 +34,7 @@
 [ext_resource type="Texture2D" uid="uid://bbj2j5ohabcp1" path="res://Sprites/Hud/Godot.svg" id="24_u1xhr"]
 [ext_resource type="Texture2D" uid="uid://bqdnbs21rmkig" path="res://Sprites/Hud/Stats.png" id="25_ops5o"]
 [ext_resource type="Texture2D" uid="uid://cpjtvs6ijbec0" path="res://Sprites/upgrades/Totalbiscuit.png" id="26_n0q24"]
+[ext_resource type="Texture2D" uid="uid://jbcyavxupodp" path="res://Sprites/reactions/Test.png" id="27_tj6dk"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fydh3"]
 bg_color = Color(0.0705882, 0.0705882, 0.0705882, 1)
@@ -119,6 +120,7 @@ theme_override_constants/margin_bottom = 15
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Right"]
 layout_mode = 2
+mouse_filter = 2
 
 [node name="LimitBreakVico" parent="Right/VBoxContainer" instance=ExtResource("3_ncp6f")]
 unique_name_in_owner = true
@@ -551,6 +553,11 @@ layout_mode = 2
 icon = ExtResource("26_n0q24")
 text = "LB Level Up"
 
+[node name="Dev4" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Cheat Section/Cheat/VBoxContainer" instance=ExtResource("4_3h2sv")]
+layout_mode = 2
+icon = ExtResource("27_tj6dk")
+text = "Test Ease"
+
 [node name="Meta Section" type="VBoxContainer" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
@@ -705,4 +712,5 @@ shape = SubResource("RectangleShape2D_alvwj")
 [connection signal="pressed" from="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Cheat Section/Cheat/VBoxContainer/Dev1" to="." method="_on_dev_1_pressed"]
 [connection signal="pressed" from="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Cheat Section/Cheat/VBoxContainer/Dev2" to="." method="_on_dev_2_pressed"]
 [connection signal="pressed" from="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Cheat Section/Cheat/VBoxContainer/Dev3" to="." method="_on_dev_3_pressed"]
+[connection signal="pressed" from="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Cheat Section/Cheat/VBoxContainer/Dev4" to="." method="_on_dev_4_pressed"]
 [connection signal="body_exited" from="Area2D" to="." method="_on_screen_area_body_exited"]

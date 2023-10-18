@@ -37,8 +37,7 @@ func load_started() -> void:
 @onready var sleep_timer = $"Sleep Timer"
 @onready var level_up_texts = %"Level Up Texts"
 @onready var fuel_background = %"Fuel Background"
-@onready var animation_player = %AnimationPlayer
-@onready var fast_bar = %FastBar
+@onready var prog_bg = %"prog bg"
 
 var prefer_left_down: bool
 var has_lored := false
@@ -82,10 +81,6 @@ func _ready():
 	sleep_timer.connect("timeout", spent_one_second_asleep)
 	sleep_timer.connect("timeout", start_sleep_timer)
 	
-	animation.capped_anim.became_true.connect(anim_capped)
-	animation.capped_anim.became_false.connect(anim_uncapped)
-	animation_player.animation_finished.connect(animation_player_animation_finished)
-	
 	SaveManager.connect("load_finished", load_finished)
 	SaveManager.connect("load_started", load_started)
 	
@@ -107,6 +102,7 @@ func attach_lored(_lored: LORED) -> void:
 	lored.asleep.changed.connect(sleep_changed)
 	fuel_bar.attach_attribute(lored.fuel)
 	fuel_background.self_modulate = wa.get_color(lored.fuel_currency)
+	prog_bg.self_modulate = lored.details.color
 	lored.connect("became_unable_to_work", start_idle)
 	lored.connect("leveled_up", flash_on_level_up)
 	lored.unlocked.became_true.connect(show)
@@ -140,7 +136,7 @@ func attach_lored(_lored: LORED) -> void:
 	# ref
 	$bg.self_modulate = lored.details.color
 	progress_bar.color = lored.details.color
-	progress_bar.modulate.a = 0.1
+	#progress_bar.modulate.a = 0.1
 	fuel_bar.color = wa.get_color(lored.fuel_currency)
 	#fuel_bar.modulate = Color(0.75, 0.75, 0.75)
 	lored_name.modulate = lored.details.color
@@ -150,7 +146,6 @@ func attach_lored(_lored: LORED) -> void:
 	sleep.color = lored.details.alt_color
 	view_special.color = lored.details.alt_color
 	level_up.color = lored.details.alt_color
-	fast_bar.self_modulate = lored.details.color
 	
 	info.button.mouse_default_cursor_shape = Control.CURSOR_ARROW
 	jobs.button.mouse_default_cursor_shape = Control.CURSOR_ARROW
@@ -175,7 +170,6 @@ func cost_update() -> void:
 func prestige(stage: int) -> void:
 	if stage >= lored.stage:
 		status.hide()
-		animation_player.stop()
 		animation.capped_anim.set_to(false)
 
 
@@ -209,31 +203,6 @@ func get_preferred_side() -> Node:
 
 
 # - Ref Shit
-
-
-func anim_capped() -> void:
-	stop_progress_bar()
-	play_fast_bar()
-
-
-func play_fast_bar() -> void:
-	if not animation_player.is_playing():
-		if animation.animation == "ww":
-			animation_player.speed_scale = max(animation_player.speed_scale, 0.25)
-		else:
-			animation_player.speed_scale = lv.ANIMATION_FRAMES[animation.animation] / lored.last_job.duration.get_as_float() / 75
-		animation_player.play("FastBar")
-
-
-func animation_player_animation_finished(animation_name: String) -> void:
-	if animation.capped_anim.is_true():
-		play_fast_bar()
-
-
-func anim_uncapped() -> void:
-	if animation_player.is_playing():
-		animation_player.stop()
-		animation_player.play("RESET")
 
 
 func purchased_changed() -> void:
@@ -394,8 +363,7 @@ func purchase_level_up() -> void:
 
 func start_job(_job: Job) -> void:
 	current_job = _job as Job
-	if animation.capped_anim.is_false():
-		progress_bar.start(current_job.duration.get_as_float())
+	progress_bar.start(current_job.duration.get_as_float())
 	set_status_and_currency(current_job.status_text, current_job.get_primary_currency())
 	animation.play_job_animation(current_job)
 

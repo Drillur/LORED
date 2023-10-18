@@ -102,7 +102,7 @@ autowrap_mode = 0
 
 [node name="Level" type="RichTextLabel" parent="VBoxContainer/Details Container/MarginContainer/VBoxContainer/Details"]
 layout_mode = 2
-size_flags_horizontal = 0
+size_flags_horizontal = 4
 theme = ExtResource("1_b4267")
 bbcode_enabled = true
 text = "+1"
@@ -138,9 +138,10 @@ text = "4"
 fit_content = true
 autowrap_mode = 0
 
-[node name="x" type="RichTextLabel" parent="VBoxContainer/Details Container/MarginContainer/VBoxContainer/Details"]
+[node name="OutputIncrease" type="RichTextLabel" parent="VBoxContainer/Details Container/MarginContainer/VBoxContainer/Details"]
+unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 0
+size_flags_horizontal = 4
 theme = ExtResource("1_b4267")
 bbcode_enabled = true
 text = "x2"
@@ -176,9 +177,10 @@ text = "4"
 fit_content = true
 autowrap_mode = 0
 
-[node name="x3" type="RichTextLabel" parent="VBoxContainer/Details Container/MarginContainer/VBoxContainer/Details"]
+[node name="InputIncrease" type="RichTextLabel" parent="VBoxContainer/Details Container/MarginContainer/VBoxContainer/Details"]
+unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 0
+size_flags_horizontal = 4
 theme = ExtResource("1_b4267")
 bbcode_enabled = true
 text = "x2"
@@ -216,7 +218,7 @@ autowrap_mode = 0
 
 [node name="x4" type="RichTextLabel" parent="VBoxContainer/Details Container/MarginContainer/VBoxContainer/Details"]
 layout_mode = 2
-size_flags_horizontal = 0
+size_flags_horizontal = 4
 theme = ExtResource("1_b4267")
 bbcode_enabled = true
 text = "x2"
@@ -254,7 +256,7 @@ autowrap_mode = 0
 
 [node name="x5" type="RichTextLabel" parent="VBoxContainer/Details Container/MarginContainer/VBoxContainer/Details"]
 layout_mode = 2
-size_flags_horizontal = 0
+size_flags_horizontal = 4
 theme = ExtResource("1_b4267")
 bbcode_enabled = true
 text = "x2"

@@ -449,56 +449,10 @@ func _on_limitbreak_pressed():
 
 
 
-# - Get
 
 
-func _on_dev_pressed():
-#	wa.add(Currency.Type.STONE, 10)
-#	wa.add(Currency.Type.COAL, 10)
-#	if lv.is_lored_unlocked(LORED.Type.IRON):
-#		lv.get_lored(LORED.Type.IRON)_.purchase()
-#		lv.get_lored(LORED.Type.COPPER).purchase()
-#		lv.get_lored(LORED.Type.COPPER_ORE).purchase()
-#		lv.get_lored(LORED.Type.IRON_ORE).purchase()
-	
-	var buff = Big.new(1.1)
-	print(lv.get_lored(LORED.Type.IRON).output.get_text())
-	lv.get_lored(LORED.Type.IRON).output.increase_multiplied(buff)
-	lv.get_lored(LORED.Type.IRON).output.alter_value(
-		lv.get_lored(LORED.Type.IRON).output.multiplied,
-		buff,
-		Big.new(buff).m(1.1)
-	)
-	print(lv.get_lored(LORED.Type.IRON).output.get_text())
-	
-	
-	var text = FlyingText.new(
-		FlyingText.Type.CURRENCY,
-		%Dev,
-		%Dev,
-		[1, 1],
-	)
-	text.add({
-		"cur": Currency.Type.LIQUID_IRON,
-		"text": "+" + Big.new(10).text,
-		"crit": false,
-	})
-	text.add({
-		"cur": Currency.Type.AXES,
-		"text": "+" + Big.new(15).text,
-		"crit": false,
-	})
-	text.add({
-		"cur": Currency.Type.CARCINOGENS,
-		"text": "+" + Big.new(20).text,
-		"crit": false,
-	})
-	text.go()
-	
-	
-	pass
 
-
+# - Dev
 
 
 func _on_dev_1_pressed():
@@ -511,3 +465,10 @@ func _on_dev_2_pressed():
 
 func _on_dev_3_pressed():
 	up.limit_break.add_xp(up.limit_break.xp.get_total())
+
+
+var i = 5
+func _on_dev_4_pressed():
+	var loggy = 1 + log(i)
+	printt(i, loggy)
+	i *= 0.9

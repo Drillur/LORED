@@ -9,12 +9,6 @@ offset_right = 162.0
 offset_bottom = 23.0
 script = ExtResource("1_14w5v")
 
-[node name="Bar" parent="." instance=ExtResource("1_gyg5u")]
-unique_name_in_owner = true
-layout_mode = 2
-kill_markers = true
-kill_background = true
-
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 2
 theme_override_constants/margin_left = 10
@@ -28,24 +22,45 @@ layout_mode = 2
 [node name="Name" type="RichTextLabel" parent="MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 4
+size_flags_horizontal = 0
 theme = ExtResource("2_jhnxk")
 bbcode_enabled = true
-text = "[b]Aurus' Dick"
+text = "[b]Buff Name"
 fit_content = true
 autowrap_mode = 0
 
-[node name="Description" type="RichTextLabel" parent="MarginContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Description" type="RichTextLabel" parent="MarginContainer/VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 theme = ExtResource("2_jhnxk")
 bbcode_enabled = true
-text = "[i]+5 seconds' worth of resources"
+text = "[i]Buff description!"
 fit_content = true
 autowrap_mode = 0
 
+[node name="Duration" type="RichTextLabel" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 10
+theme = ExtResource("2_jhnxk")
+bbcode_enabled = true
+text = "0.2s"
+fit_content = true
+autowrap_mode = 0
+
+[node name="Bar" parent="MarginContainer/VBoxContainer" instance=ExtResource("1_gyg5u")]
+unique_name_in_owner = true
+layout_mode = 2
+kill_markers = true
+
 [node name="Control" type="Control" parent="."]
 layout_mode = 2
+metadata/_edit_lock_ = true
+metadata/_edit_group_ = true
 
 [node name="Texts" type="Control" parent="Control"]
 unique_name_in_owner = true

@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3 uid="uid://cc20piiohvlkw"]
+[gd_scene load_steps=21 format=3 uid="uid://cc20piiohvlkw"]
 
 [ext_resource type="Script" path="res://Hud/LORED/lored_vico.gd" id="1_0ael0"]
 [ext_resource type="Theme" uid="uid://b8t7tkhvril5g" path="res://Theme/Standard.tres" id="1_7ail2"]
@@ -16,39 +16,6 @@
 [ext_resource type="Texture2D" uid="uid://cootbhqtp6dj6" path="res://Sprites/Hud/View.png" id="14_clor7"]
 [ext_resource type="Texture2D" uid="uid://bi6fq33gkf5oh" path="res://Sprites/Hud/Halt.png" id="15_jf5nq"]
 [ext_resource type="Texture2D" uid="uid://bgx6xg4vtb0p4" path="res://Sprites/Hud/Level.png" id="16_qtvup"]
-
-[sub_resource type="Animation" id="Animation_yhox4"]
-resource_name = "FastBar"
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Control/FastBar:position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 1),
-"transitions": PackedFloat32Array(0.210225, 1),
-"update": 0,
-"values": [Vector2(-20, -5), Vector2(250, -5)]
-}
-
-[sub_resource type="Animation" id="Animation_c7yri"]
-length = 0.001
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_nffyv"]
-_data = {
-"FastBar": SubResource("Animation_yhox4"),
-"RESET": SubResource("Animation_c7yri")
-}
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_82ulr"]
-bg_color = Color(1, 1, 1, 1)
-border_width_left = 8
-border_width_right = 8
-border_color = Color(0.839216, 0.839216, 0.839216, 1)
-border_blend = true
-shadow_color = Color(1, 1, 1, 0.431373)
-shadow_size = 3
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_iihta"]
 bg_color = Color(1, 1, 1, 0.0470588)
@@ -82,14 +49,6 @@ offset_right = 216.0
 offset_bottom = 132.0
 script = ExtResource("1_0ael0")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-unique_name_in_owner = true
-root_node = NodePath("../VBoxContainer/MarginContainer")
-speed_scale = 0.5
-libraries = {
-"": SubResource("AnimationLibrary_nffyv")
-}
-
 [node name="bg" type="Panel" parent="."]
 layout_mode = 2
 theme = ExtResource("2_b2xx2")
@@ -102,26 +61,6 @@ theme_override_constants/separation = 0
 clip_contents = true
 layout_mode = 2
 
-[node name="Progress Bar" parent="VBoxContainer/MarginContainer" instance=ExtResource("2_p04r2")]
-unique_name_in_owner = true
-layout_mode = 2
-kill_markers = true
-
-[node name="Control" type="Control" parent="VBoxContainer/MarginContainer"]
-layout_mode = 2
-
-[node name="FastBar" type="Panel" parent="VBoxContainer/MarginContainer/Control"]
-unique_name_in_owner = true
-modulate = Color(0.351563, 0.351563, 0.351563, 1)
-self_modulate = Color(0.117647, 0.517647, 0.870588, 1)
-layout_mode = 0
-offset_left = -20.0
-offset_top = -5.0
-offset_right = 3.05176e-05
-offset_bottom = 113.0
-rotation = 0.261799
-theme_override_styles/panel = SubResource("StyleBoxFlat_82ulr")
-
 [node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/MarginContainer"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
@@ -130,30 +69,35 @@ theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
 [node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/MarginContainer/MarginContainer"]
+custom_minimum_size = Vector2(0, 99)
 layout_mode = 2
-theme_override_constants/separation = 10
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/MarginContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 alignment = 1
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/MarginContainer/MarginContainer/VBoxContainer/HBoxContainer2"]
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/MarginContainer/MarginContainer/VBoxContainer/HBoxContainer2"]
 layout_mode = 2
 size_flags_horizontal = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/MarginContainer/MarginContainer/VBoxContainer/HBoxContainer2/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_constants/separation = 10
 alignment = 1
 
-[node name="Name and Icon" type="HBoxContainer" parent="VBoxContainer/MarginContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer"]
+[node name="Name and Icon" type="HBoxContainer" parent="VBoxContainer/MarginContainer/MarginContainer/VBoxContainer/HBoxContainer2/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(107, 0)
 layout_mode = 2
 
-[node name="LORED Icon" type="TextureRect" parent="VBoxContainer/MarginContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer/Name and Icon"]
+[node name="LORED Icon" type="TextureRect" parent="VBoxContainer/MarginContainer/MarginContainer/VBoxContainer/HBoxContainer2/MarginContainer/VBoxContainer/Name and Icon"]
 unique_name_in_owner = true
 layout_mode = 2
 texture = ExtResource("4_g5nc0")
 stretch_mode = 5
 
-[node name="LORED Name" type="RichTextLabel" parent="VBoxContainer/MarginContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer/Name and Icon"]
+[node name="LORED Name" type="RichTextLabel" parent="VBoxContainer/MarginContainer/MarginContainer/VBoxContainer/HBoxContainer2/MarginContainer/VBoxContainer/Name and Icon"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -163,13 +107,20 @@ bbcode_enabled = true
 text = "Carcinogens,"
 fit_content = true
 
-[node name="Currency" parent="VBoxContainer/MarginContainer/MarginContainer/VBoxContainer/HBoxContainer2/VBoxContainer" instance=ExtResource("3_omytn")]
+[node name="Currency" parent="VBoxContainer/MarginContainer/MarginContainer/VBoxContainer/HBoxContainer2/MarginContainer/VBoxContainer" instance=ExtResource("3_omytn")]
 unique_name_in_owner = true
 visible = false
 custom_minimum_size = Vector2(82, 0)
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/MarginContainer/MarginContainer/VBoxContainer/HBoxContainer2/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/MarginContainer/MarginContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
 
 [node name="Panel" type="Panel" parent="VBoxContainer/MarginContainer/MarginContainer/VBoxContainer/HBoxContainer2"]
 custom_minimum_size = Vector2(68, 68)
@@ -188,39 +139,48 @@ frame_progress = 0.0209391
 centered = false
 script = ExtResource("9_tchys")
 
-[node name="Fuel Bar" parent="VBoxContainer/MarginContainer/MarginContainer/VBoxContainer" instance=ExtResource("2_p04r2")]
+[node name="Status" type="RichTextLabel" parent="VBoxContainer/MarginContainer/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 4
+theme = ExtResource("1_7ail2")
+bbcode_enabled = true
+text = "Awaiting 123e123 Carcinogens..."
+fit_content = true
+autowrap_mode = 0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/MarginContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 10
+theme_override_constants/separation = 10
+
+[node name="Fuel Bar" parent="VBoxContainer/MarginContainer/MarginContainer/VBoxContainer/HBoxContainer" instance=ExtResource("2_p04r2")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
 size_flags_vertical = 8
 animate = true
 
-[node name="Fuel Background" type="Panel" parent="VBoxContainer/MarginContainer/MarginContainer/VBoxContainer/Fuel Bar"]
+[node name="Fuel Background" type="Panel" parent="VBoxContainer/MarginContainer/MarginContainer/VBoxContainer/HBoxContainer/Fuel Bar"]
 unique_name_in_owner = true
 show_behind_parent = true
 layout_mode = 2
 theme = ExtResource("1_7ail2")
 theme_override_styles/panel = SubResource("StyleBoxFlat_km2b0")
 
-[node name="Control" type="Control" parent="VBoxContainer/MarginContainer/MarginContainer/VBoxContainer/Fuel Bar"]
-layout_mode = 2
-
-[node name="Status" type="RichTextLabel" parent="VBoxContainer/MarginContainer/MarginContainer/VBoxContainer/Fuel Bar/Control"]
+[node name="Progress Bar" parent="VBoxContainer/MarginContainer/MarginContainer/VBoxContainer/HBoxContainer" instance=ExtResource("2_p04r2")]
 unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 4.0
-offset_top = -20.0
-offset_right = -4.0
-offset_bottom = -13.0
-grow_horizontal = 2
-grow_vertical = 2
+layout_mode = 2
+size_flags_horizontal = 3
+kill_markers = true
+
+[node name="prog bg" type="Panel" parent="VBoxContainer/MarginContainer/MarginContainer/VBoxContainer/HBoxContainer/Progress Bar"]
+unique_name_in_owner = true
+show_behind_parent = true
+custom_minimum_size = Vector2(82, 0)
+layout_mode = 2
 theme = ExtResource("1_7ail2")
-bbcode_enabled = true
-text = "Awaiting 123e123 Carcinogens..."
-fit_content = true
-autowrap_mode = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_km2b0")
 
 [node name="bg" type="Panel" parent="VBoxContainer/MarginContainer"]
 layout_mode = 2

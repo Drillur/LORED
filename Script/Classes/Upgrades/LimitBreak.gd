@@ -49,13 +49,13 @@ var next_color: Color
 func _init() -> void:
 	set_colors()
 	
-	var d = Time.get_unix_time_from_system()
+	#var d = Time.get_unix_time_from_system()
 	var total_xp_so_far = Big.new(0)
 	for i in range(1, 3001): # 0.234 seconds
 		total_xp_so_far.a(calculate_required_xp(i))
 		cached_xp_required[i] = Big.new(total_xp_so_far)
 	
-	print("XP Cached in %s secs" % str(Time.get_unix_time_from_system() - d))
+	#print("XP Cached in %s secs" % str(Time.get_unix_time_from_system() - d))
 	
 	total_xp.total.set_to(get_required_xp(1))
 	total_xp.set_to(0)
@@ -207,7 +207,7 @@ func get_required_xp(_level: int) -> Big:
 
 
 func calculate_required_xp(_level: int) -> Big:
-	var x = Big.new(2).power(_level - 1).round_up_tens().m(100)
+	var x = Big.new(3).power(_level - 1).round_up_tens().m(100)
 	if x.exponent < 3:
 		x.set_to(1000)
 	return x

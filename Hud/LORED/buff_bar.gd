@@ -6,6 +6,7 @@ extends MarginContainer
 @onready var name_label = %Name
 @onready var description = %Description
 @onready var texts = %Texts
+@onready var duration = %Duration
 
 var buff: Buff
 
@@ -20,8 +21,8 @@ func setup(_buff: Buff) -> void:
 	buff = _buff
 	if not is_node_ready():
 		await ready
-	name_label.text = buff.details.name
-	description.text = buff.details.description
+	name_label.text = "[b]" + buff.details.name
+	description.text = "[i]" + buff.details.description
 	bar.color = buff.details.color
 	bar.modulate = Color(1,1,1, 0.25)
 	buff.ticked.connect(flash)
@@ -32,6 +33,7 @@ func setup(_buff: Buff) -> void:
 
 func _process(delta):
 	bar.progress = buff.get_progress()
+	duration.text = str(buff.get_time_left()).pad_decimals(1) + "s"
 
 
 func flash() -> void:

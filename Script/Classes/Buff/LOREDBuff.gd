@@ -35,6 +35,7 @@ func _init(_type: Type, _lored: LORED) -> void:
 			object.haste.changed.connect(WITCH_update_output)
 			object.output.changed.connect(WITCH_update_output)
 			object.haste.changed.connect(WITCH_update_tick_rate)
+			gv.prestiged.connect(WITCH_update_tick_rate)
 			stacks.changed.connect(WITCH_update_output)
 			WITCH_update_output()
 	
@@ -52,11 +53,15 @@ func WITCH_tick() -> void:
 
 func WITCH_update_tick_rate() -> void:
 	if witch_added_rate:
-		wa.get_currency(object.primary_currency).subtract_gain_rate(Big.new(witch_output).d(tick_rate.get_value()))
+		wa.get_currency(object.primary_currency).subtract_gain_rate(
+			Big.new(witch_output).d(tick_rate.get_value())
+		)
 	
-	tick_rate.set_to(5 / object.haste.get_as_float())
+	tick_rate.set_to(1 + (4 / object.haste.get_as_float()))
 	
-	wa.get_currency(object.primary_currency).add_gain_rate(Big.new(witch_output).d(tick_rate.get_value()))
+	wa.get_currency(object.primary_currency).add_gain_rate(
+		Big.new(witch_output).d(tick_rate.get_value())
+	)
 	witch_added_rate = true
 
 

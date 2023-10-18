@@ -21,6 +21,7 @@ stretch_mode = 5
 
 [node name="Icon Shadow" type="TextureRect" parent="HBoxContainer/Icon"]
 unique_name_in_owner = true
+visible = false
 modulate = Color(0, 0, 0, 1)
 show_behind_parent = true
 layout_mode = 1

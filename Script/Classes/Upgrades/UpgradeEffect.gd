@@ -21,14 +21,12 @@ func load_finished() -> void:
 enum Type {
 	HASTE,
 	OUTPUT_AND_INPUT,
+	OUTPUT_ONLY,
 	SPECIFIC_INPUT,
-	SPECIFIC_COST,
-	COST,
 	INPUT,
 	CRIT,
 	FUEL,
 	FUEL_COST,
-	ERASE_CURRENCY_FROM_COST,
 	BONUS_ACTION_ON_CURRENCY_GAIN,
 	BONUS_ACTION_ON_CURRENCY_USE,
 	BONUS_JOB_PRODUCTION,
@@ -139,16 +137,14 @@ func _init(_type: int, details: Dictionary) -> void:
 
 func set_base_text() -> void:
 	match type:
-		Type.COST:
-			text = "Cost [b]x"
 		Type.SPECIFIC_INPUT:
 			text = wa.get_icon_and_name_text(effected_input) + " Input [b]x"
-		Type.SPECIFIC_COST:
-			text = wa.get_currency_name(effected_input) + " Cost [b]x"
 		Type.FUEL:
 			text = "Max Fuel [b]x"
 		Type.OUTPUT_AND_INPUT:
 			text = "Output and Input [b]x"
+		Type.OUTPUT_ONLY:
+			text = "Output [b]x"
 		Type.AUTOBUYER, Type.UPGRADE_AUTOBUYER:
 			text = "Autobuyer"
 		Type.CRIT:
@@ -240,14 +236,6 @@ func add_effected_lored(lored_type: int) -> void:
 			var _job = lored.get_job(job) as Job
 			apply_methods.append(_job.add_bonus_production)
 			remove_methods.append(_job.remove_bonus_production)
-		Type.COST:
-			for cur in lored.cost.cost:
-				apply_methods.append(
-					lored.cost.cost[cur].increase_multiplied
-				)
-				remove_methods.append(
-					lored.cost.cost[cur].decrease_multiplied
-				)
 		Type.FREE_LORED:
 			apply_methods.append(lored.purchased.set_reset_value_true)
 			remove_methods.append(lored.purchased.set_reset_value_false)
@@ -258,13 +246,6 @@ func add_effected_lored(lored_type: int) -> void:
 			for att in lored.get_attributes_by_currency(effected_input):
 				apply_methods.append(att.increase_multiplied)
 				remove_methods.append(att.decrease_multiplied)
-		Type.SPECIFIC_COST:
-			apply_methods.append(
-				lored.cost.cost[effected_input].increase_multiplied
-			)
-			remove_methods.append(
-				lored.cost.cost[effected_input].decrease_multiplied
-			)
 		Type.HASTE:
 			apply_methods.append(lored.haste.increase_multiplied)
 			remove_methods.append(lored.haste.decrease_multiplied)
@@ -273,6 +254,9 @@ func add_effected_lored(lored_type: int) -> void:
 			apply_methods.append(lored.input.increase_multiplied)
 			remove_methods.append(lored.output.decrease_multiplied)
 			remove_methods.append(lored.input.decrease_multiplied)
+		Type.OUTPUT_ONLY:
+			apply_methods.append(lored.output.increase_multiplied)
+			remove_methods.append(lored.output.decrease_multiplied)
 		Type.INPUT:
 			apply_methods.append(lored.input.increase_multiplied)
 			remove_methods.append(lored.input.decrease_multiplied)
@@ -304,10 +288,6 @@ func apply() -> void:
 				r_up.effect.apply()
 		
 		match type:
-			Type.ERASE_CURRENCY_FROM_COST:
-				var lored = lv.get_lored(effected_lored)
-				var cost = lored.cost as Cost
-				cost.erase_currency_from_cost(currency)
 			Type.BONUS_ACTION_ON_CURRENCY_GAIN:
 				var cur = wa.get_currency(currency)
 				cur.increased_by_lored.connect(currency_collected)
@@ -316,7 +296,8 @@ func apply() -> void:
 				cur.decreased_by_lored.connect(currency_used)
 			Type.UPGRADE_NAME:
 				for lored in lv.get_lored_in_list(affected_loreds):
-					lored.cost_increase.increase_multiplied(0.9)
+					lored.output_increase.multiply(1.1)
+					lored.input_increase.multiply(1.1)
 					lored.fuel_cost.increase_multiplied(10)
 					lored.fuel.increase_multiplied(10)
 					lored.fuel.fill_up()
@@ -341,10 +322,6 @@ func remove() -> void:
 				r_up.effect.apply()
 		
 		match type:
-			Type.ERASE_CURRENCY_FROM_COST:
-				var lored = lv.get_lored(effected_lored)
-				var cost = lored.cost as Cost
-				cost.add_currency_to_cost(currency)
 			Type.BONUS_ACTION_ON_CURRENCY_GAIN:
 				var cur = wa.get_currency(currency)
 				cur.increased_by_lored.disconnect(currency_collected)
@@ -353,7 +330,8 @@ func remove() -> void:
 				cur.decreased_by_lored.disconnect(currency_used)
 			Type.UPGRADE_NAME:
 				for lored in lv.get_lored_in_list(affected_loreds):
-					lored.cost_increase.decrease_multiplied(0.9)
+					lored.output_increase.divide(1.1)
+					lored.input_increase.divide(1.1)
 					lored.fuel_cost.decrease_multiplied(10)
 					lored.fuel.decrease_multiplied(10)
 		

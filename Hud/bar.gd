@@ -64,6 +64,8 @@ func _process(delta) -> void:
 
 
 func _on_resized():
+	if not is_node_ready():
+		await ready
 	update_progress_bar()
 	progress_bar.set_deferred("size", Vector2(progress_bar.size.x, size.y))
 	if animate:
@@ -106,7 +108,7 @@ func start(_threshold: float) -> void:
 	start_time = Time.get_unix_time_from_system()
 	threshold = _threshold
 	set_process(true)
-	show()
+	#show()
 
 
 
@@ -125,7 +127,7 @@ func fix_delta_bar_position() -> void:
 func stop() -> void:
 	start_time = 0.0
 	set_process(false)
-	hide()
+	#hide()
 
 
 

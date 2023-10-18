@@ -141,10 +141,15 @@ var extra_normal_menu_unlocked := false
 
 
 func _ready():
+	var d = Time.get_unix_time_from_system()
+	
 	for lored in LORED.Type.values():
 		loreds[lored] = LORED.new(lored)
 		loreds_by_key[loreds[lored].key] = loreds[lored]
 		connect("loreds_initialized", loreds[lored].loreds_initialized)
+	
+	print("LOREDs initialized in %s secs" % str(Time.get_unix_time_from_system() - d))
+	
 	loreds_are_initialized = true
 	for lored in LORED.Type.values():
 		gv.add_lored_to_stage(loreds[lored].stage, lored)

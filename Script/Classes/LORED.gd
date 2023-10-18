@@ -156,12 +156,14 @@ var pronoun_boy := "boy"
 var default_frames: SpriteFrames
 
 var cost: Cost
-var cost_increase := Value.new(3)
 
 var vico: LOREDVico
 
 var jobs := {}
 var sorted_jobs := []
+
+var output_increase := Float.new(2)
+var input_increase := Float.new(2)
 
 var fuel_cost: Value
 var output := Value.new(1)
@@ -184,6 +186,8 @@ func _init(_type: int = 0) -> void:
 	asleep.changed.connect(asleep_updated)
 	
 	call("init_" + key)
+	
+	cost.cache_costs()
 	
 	details.set_title(key.replace("_", " ").capitalize() + " LORED")
 	
@@ -1121,10 +1125,9 @@ func autobuy_check() -> void:
 	if val:
 		#printt(key, last_reason_autobuy)
 		automatic_purchase()
-		autobuy_on_cooldown = true
-		await gv.get_tree().physics_frame
-		autobuy_on_cooldown = false
-		autobuy_check()
+#		autobuy_on_cooldown = true
+#		await gv.get_tree().physics_frame
+#		autobuy_on_cooldown = false
 	else:
 		last_reason_autobuy = ""
 
@@ -1187,9 +1190,9 @@ func should_autobuy() -> bool:
 				last_reason_autobuy = "NO: required curs are negative net"
 				return false
 		
-		if up.is_upgrade_purchased(Upgrade.Type.LIMIT_BREAK):
-			last_reason_autobuy = "Limit Break is purchased"
-			return true
+#		if up.is_upgrade_purchased(Upgrade.Type.LIMIT_BREAK):
+#			last_reason_autobuy = "Limit Break is purchased"
+#			return true
 		
 		if key_lored:
 			last_reason_autobuy = "is a key lored"
@@ -1212,8 +1215,15 @@ func should_autobuy() -> bool:
 func automatic_purchase() -> void:
 	last_purchase_automatic = true
 	last_purchase_forced = false
-	cost.spend(false)
-	purchase()
+	var gained_levels = cost.spend_as_much_as_possible(level, false)
+	times_purchased += 1
+	if purchased.is_false():
+		purchased.set_to(true)
+	set_level_to(level + gained_levels)
+	if stage == 1 and level == 5:
+		became_an_adult.emit()
+#	if gained_levels > 1:
+#		printt(key, "leveled up %s times" % str(gained_levels))
 
 
 func purchase() -> void:
@@ -1235,9 +1245,9 @@ func level_up() -> void:
 
 
 func set_level_to(_level: int) -> void:
-	cost.increase(_level, cost_increase.get_as_float())
-	output.set_from_level(Big.new(2).power(_level - 1))
-	input.set_from_level(Big.new(2).power(_level - 1))
+	cost.increase(_level)
+	output.set_from_level(Big.new(output_increase.get_value()).power(_level - 1))
+	input.set_from_level(Big.new(input_increase.get_value()).power(_level - 1))
 	var fuel_percent = fuel.get_current_percent()
 	fuel.set_from_level(Big.new(2).power(_level - 1))
 	fuel.set_to_percent(fuel_percent)

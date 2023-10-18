@@ -5,9 +5,11 @@ extends RefCounted
 
 signal use_allowed_changed(allowed)
 
+const CACHE_SIZE := 1000
 
 var cost := {}
 var base_cost := {}
+var cache := {}
 
 var produced_by := []
 
@@ -27,6 +29,7 @@ var purchased := false:
 				connect_calls()
 var currencies_are_unlocked := false
 var has_stage1_currency := false
+var cached := false
 
 var stage: int
 var longest_eta_cur: int = -1
@@ -114,6 +117,7 @@ func currency_decreased() -> void:
 
 # - Action
 
+
 func recheck() -> void:
 	affordable.set_to(can_afford())
 
@@ -125,6 +129,34 @@ func spend(from_player: bool) -> void:
 	else:
 		for cur in cost:
 			wa.subtract_from_lored(cur, Big.new(cost[cur].get_value()))
+
+
+func spend_as_much_as_possible(level: int, from_player: bool) -> int:
+	var left := level
+	var mid := 0
+	var right := CACHE_SIZE
+	while left < right:
+		mid = left + (right - left) / 2
+		if can_afford_at_level(mid):
+			left = mid + 1
+		else:
+			right = mid
+	level = left - level
+	if from_player:
+		for cur in cost:
+			wa.subtract_from_player(cur, cache[level][cur])
+	else:
+		for cur in cost:
+			wa.subtract_from_lored(cur, cache[level][cur])
+	return level
+
+
+func can_afford_at_level(level: int) -> bool:
+	for cur in cost:
+		if cache[level][cur].greater(wa.get_count(cur)):
+			return false
+	return true
+
 
 
 func purchase(from_player: bool) -> void:
@@ -140,16 +172,24 @@ func refund() -> void:
 	affordable.changed.emit()
 
 
+func cache_costs() -> void:
+	for i in range(0, CACHE_SIZE + 1):
+		var cost_at_i := {}
+		for cur in cost:
+			cost_at_i[cur] = Big.new(3).power(i).m(cost[cur].get_value())
+		cache[i] = cost_at_i
+	cached = true
+
+
 func reset() -> void:
 	for cur in cost:
 		cost[cur].reset()
 	recheck()
 
 
-func increase(times_purchased: int, cost_increase: float) -> void:
+func increase(level: int) -> void:
 	for cur in cost:
-		var new_val = Big.new(cost_increase).power(times_purchased)
-		cost[cur].set_from_level(new_val)
+		cost[cur].set_to(cache[level][cur])
 	recheck()
 
 

@@ -63,7 +63,6 @@ func setup_currency(data: Dictionary) -> void:
 	if crit:
 		text = "[font_size=14]" + text
 	label.text = text
-	
 
 
 func setup_level_up(data: Dictionary) -> void:

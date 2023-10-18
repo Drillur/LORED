@@ -794,8 +794,8 @@ func init_ENTHUSIASM() -> void:
 
 func init_CON_FRICKIN_CRETE() -> void:
 	details.name = "CON-FRICKIN-CRETE"
-	set_effect(UpgradeEffect.Type.SPECIFIC_COST, 0.5, Currency.Type.CONCRETE)
-	add_effected_lored(LORED.Type.OIL)
+	set_effect(UpgradeEffect.Type.OUTPUT_ONLY, 2)
+	add_effected_lored(LORED.Type.TARBALLS)
 	cost = Cost.new({
 		Currency.Type.MALIGNANCY: Value.new("12e3"),
 	})
@@ -830,7 +830,7 @@ func init_ITS_GROWIN_ON_ME() -> void:
 			"effect value": 1,
 			"effect value2": 1,
 			"bonus_action_type": UpgradeEffect.BONUS_ACTION.INCREASE_EFFECT1_OR_2,
-			"modifier": 0.01,
+			"modifier": 0.0001,
 		}
 	)
 	effect.save_effect(true)
@@ -871,9 +871,8 @@ func init_YOU_LITTLE_HARD_WORKER_YOU() -> void:
 
 func init_COMPULSORY_JUICE() -> void:
 	details.name = "Compulsory Juice"
-	set_effect(UpgradeEffect.Type.COST, 0.5)
-	add_effected_lored(LORED.Type.IRON_ORE)
-	add_effected_lored(LORED.Type.COPPER_ORE)
+	set_effect(UpgradeEffect.Type.OUTPUT_ONLY, 2.5)
+	add_effected_lored(LORED.Type.STONE)
 	cost = Cost.new({
 		Currency.Type.MALIGNANCY: Value.new("50e3"),
 	})
@@ -1024,7 +1023,7 @@ func init_UPGRADE_NAME() -> void:
 	details.name = "upgrade_name"
 	var test = gv.get_stage(1)
 	var text = test.details.colored_name
-	details.description = "Reduces the cost increase of " + text + " LOREDs by 10%, but increases their [b]maximum fuel[/b] and [b]fuel cost[/b] by 1,000%."
+	details.description = "Increases the output and input [b]increase[/b] of " + text + " LOREDs by 10%, but also increases their [b]maximum fuel[/b] and [b]fuel cost[/b] by 1,000%."
 	set_effect(UpgradeEffect.Type.UPGRADE_NAME)
 	add_effected_stage(1)
 	cost = Cost.new({
@@ -1131,7 +1130,7 @@ func init_MOUND() -> void:
 
 func init_FOOD_TRUCKS() -> void:
 	details.name = "Food Trucks"
-	set_effect(UpgradeEffect.Type.COST, 0.5)
+	set_effect(UpgradeEffect.Type.OUTPUT_ONLY, 2)
 	add_effected_stage(1)
 	cost = Cost.new({
 		Currency.Type.MALIGNANCY: Value.new("1e13"),
@@ -1153,7 +1152,7 @@ func init_OPPAI_GUY() -> void:
 
 func init_MALEVOLENT() -> void:
 	details.name = "Malevolent"
-	set_effect(UpgradeEffect.Type.HASTE, 4)
+	set_effect(UpgradeEffect.Type.HASTE, 2)
 	add_effected_lored(LORED.Type.TARBALLS)
 	add_effected_lored(LORED.Type.CONCRETE)
 	add_effected_lored(LORED.Type.MALIGNANCY)
@@ -2442,8 +2441,8 @@ func init_RASENGAN() -> void:
 
 func init_MUDSLIDE() -> void:
 	details.name = "Mudslide"
-	set_effect(UpgradeEffect.Type.SPECIFIC_COST, 0.75, Currency.Type.GLASS)
-	add_effected_lored(LORED.Type.HUMUS)
+	set_effect(UpgradeEffect.Type.OUTPUT_ONLY, 1.25)
+	add_effected_lored(LORED.Type.GLASS)
 	cost = Cost.new({
 		Currency.Type.TUMORS: Value.new("1e7"),
 	})
@@ -2451,8 +2450,8 @@ func init_MUDSLIDE() -> void:
 
 func init_THE_GREAT_JOURNEY() -> void:
 	details.name = "The Great Journey"
-	set_effect(UpgradeEffect.Type.SPECIFIC_COST, 0.8, Currency.Type.STEEL)
-	add_effected_lored(LORED.Type.GLASS)
+	set_effect(UpgradeEffect.Type.OUTPUT_ONLY, 1.2)
+	add_effected_lored(LORED.Type.STEEL)
 	cost = Cost.new({
 		Currency.Type.TUMORS: Value.new("1e7"),
 	})
@@ -2460,8 +2459,8 @@ func init_THE_GREAT_JOURNEY() -> void:
 
 func init_BEAVER() -> void:
 	details.name = "The Great Journey"
-	set_effect(UpgradeEffect.Type.SPECIFIC_COST, 0.8, Currency.Type.WOOD)
-	add_effected_lored(LORED.Type.WATER)
+	set_effect(UpgradeEffect.Type.OUTPUT_ONLY, 1.2)
+	add_effected_lored(LORED.Type.WOOD)
 	cost = Cost.new({
 		Currency.Type.TUMORS: Value.new("1e7"),
 	})
@@ -2469,8 +2468,8 @@ func init_BEAVER() -> void:
 
 func init_MODS_ENABLED() -> void:
 	details.name = "Mods Enabled"
-	set_effect(UpgradeEffect.Type.SPECIFIC_COST, 0.75, Currency.Type.GLASS)
-	add_effected_lored(LORED.Type.PETROLEUM)
+	set_effect(UpgradeEffect.Type.OUTPUT_ONLY, 1.25)
+	add_effected_lored(LORED.Type.GLASS)
 	cost = Cost.new({
 		Currency.Type.TUMORS: Value.new("1e7"),
 	})
@@ -2921,14 +2920,8 @@ func init_ITS_SPREADIN_ON_ME() -> void:
 
 func init_WHAT_IN_COUSIN_FUCKIN_TARNATION() -> void:
 	details.name = "what in cousin-fuckin tarnation alabama betty crocker miss fuckin betty white shit is this"
-	effect = UpgradeEffect.new(
-		UpgradeEffect.Type.ERASE_CURRENCY_FROM_COST,
-		{
-			"upgrade_type": type,
-			"currency": Currency.Type.GROWTH,
-			"effected_lored": LORED.Type.TARBALLS,
-		}
-	)
+	set_effect(UpgradeEffect.Type.OUTPUT_ONLY, 10)
+	add_effected_lored(LORED.Type.MALIGNANCY)
 	details.icon = wa.get_icon(Currency.Type.MALIGNANCY)
 	details.color = wa.get_color(Currency.Type.MALIGNANCY)
 	cost = Cost.new({
