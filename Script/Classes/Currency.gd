@@ -63,6 +63,7 @@ enum Type {
 enum SafetyType { SAFE, LORED_PURCHASED, }
 
 signal increased_by_lored(amount)
+signal increased_by_buff(amount)
 signal increased(amount)
 signal decreased_by_lored(amount)
 signal unlocked_changed(unlocked)
@@ -85,6 +86,7 @@ var count: Big
 var subtracted_by_loreds := Big.new(0, true)
 var subtracted_by_player := Big.new(0, true)
 var added_by_loreds := Big.new(0, true)
+var added_by_buffs := Big.new(0, true)
 
 var safe := Bool.new(true)
 var unlocked := false:
@@ -97,11 +99,13 @@ var unlocked := false:
 				saved_vars.append("subtracted_by_loreds")
 				saved_vars.append("subtracted_by_player")
 				saved_vars.append("added_by_loreds")
+				saved_vars.append("added_by_buffs")
 			else:
 				saved_vars.erase("count")
 				saved_vars.erase("subtracted_by_loreds")
 				saved_vars.erase("subtracted_by_player")
 				saved_vars.erase("added_by_loreds")
+				saved_vars.erase("added_by_buffs")
 var persist := Bool.new(false)
 var use_allowed := true:
 	set(val):
@@ -445,8 +449,6 @@ func set_safety_condition(_type: SafetyType, _subject: int) -> void:
 		SafetyType.LORED_PURCHASED:
 			lv.get_lored(safety_subject).purchased.changed.connect(safety_check)
 			safety_check()
-		SafetyType.SAFE:
-			safe.set_to(true)
 
 
 
@@ -468,8 +470,8 @@ func prestige(_stage: int) -> void:
 
 
 
-
 # - Actions
+
 
 func reset():
 	count.reset()
@@ -499,6 +501,14 @@ func add_from_lored(amount) -> void:
 	add(amount)
 	added_by_loreds.a(amount)
 	increased_by_lored.emit(amount)
+
+
+func add_from_buff(amount) -> void:
+	if not amount is Big:
+		amount = Big.new(amount)
+	add(amount)
+	added_by_buffs.a(amount)
+	increased_by_buff.emit(amount)
 
 
 func subtract(amount) -> void:

@@ -1,4 +1,4 @@
-res://Scene/Root.tscn
+res://Hud/LORED/lored_vico.tscn
 res://Theme/Standard.tres
 res://Theme/Invis.tres
 res://Theme/TextButton.tres
@@ -8,31 +8,22 @@ res://Scene/Root.gd
 res://Theme/Background.tres
 res://Theme/ShadowText.tres
 res://Theme/Title.tres
+res://Scene/Root.tscn
 res://Hud/MenuButton.tscn
 res://Hud/LORED/lored_container.tscn
 res://Hud/Upgrade/Upgrade Effect Widget.tscn
 res://Hud/Price.tscn
-res://Hud/LORED/lored_vico.tscn
-res://Script/Classes/Upgrades/LimitBreak.gd
-res://Hud/Upgrade/Upgrade Effect Widget.gd
-res://Hud/Upgrade/limit_break_vico.gd
-res://Hud/attribute_text_vico.gd
-res://Script/Classes/Job.gd
-res://Script/Classes/LORED.gd
-res://Hud/LORED/Tooltip/lored_level_up.gd
-res://Script/Classes/ValuePair.gd
-res://Script/Classes/Upgrades/Upgrade.gd
-res://Script/Classes/Buff/LOREDBuff.gd
-res://Hud/LORED/buff_bar.tscn
-res://Hud/LORED/buff_bar.gd
-res://Hud/LORED/lored_buffs.tscn
-res://Hud/flying_text_vico.gd
-res://Script/Classes/Cost.gd
-res://Script/Classes/Upgrades/UpgradeEffect.gd
-res://Hud/LORED/Tooltip/lored_level_up.tscn
-res://Script/Autoload/LOREDs.gd
-res://Script/Classes/Float.gd
-res://Hud/LORED/lored_vico.gd
 res://Hud/bar.gd
-res://Hud/LORED/new_lored_vico.tscn
-res://Hud/currency_vico.tscn
+res://Hud/LORED/lored_vico.gd
+res://Script/Classes/Buff/LOREDBuff.gd
+res://Script/Autoload/Overseer.gd
+res://Script/Classes/Upgrades/Upgrade.gd
+res://Script/Classes/Upgrades/UpgradeEffect.gd
+res://Script/Classes/Cost.gd
+res://Hud/Upgrade/Tooltip/upgrade_tooltip.gd
+res://Hud/Upgrade/Upgrade Effect Widget.gd
+res://Script/Classes/Currency.gd
+res://Script/Classes/Upgrades/LimitBreak.gd
+res://Script/Classes/LORED.gd
+res://Script/Autoload/Wallet.gd
+res://Script/Autoload/LOREDs.gd

@@ -25,8 +25,10 @@ func _ready():
 	upgrade = up.get_upgrade(upgrade_type) as Upgrade
 	name_label.text = upgrade.details.name
 	
-	upgrade.purchased.became_true.connect(show)
+	upgrade.purchased.became_true.connect(show_self)
 	upgrade.purchased.became_false.connect(hide)
+	upgrade.effect.is_overwritten.became_true.connect(hide)
+	upgrade.effect.is_overwritten.became_false.connect(show_self)
 	
 	button.modulate = upgrade.details.color
 	button.mouse_entered.connect(show_tooltip)
@@ -71,6 +73,11 @@ func update_lb_colors() -> void:
 	bar.color = up.limit_break.color
 	xp.modulate = up.limit_break.color
 	max_xp.modulate = up.limit_break.next_color
+
+
+func show_self() -> void:
+	if upgrade.purchased.is_true() and upgrade.effect.is_overwritten.is_false():
+		show()
 
 
 

@@ -382,6 +382,11 @@ layout_mode = 2
 upgrade_type = 1
 tooltip_parent = NodePath("../../../../../../../../../../Control/RightDown")
 
+[node name="spreadin" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Upgrade Section/Upgrade/UpgradeVicos" node_paths=PackedStringArray("tooltip_parent") instance=ExtResource("14_vidbt")]
+layout_mode = 2
+upgrade_type = 54
+tooltip_parent = NodePath("../../../../../../../../../../Control/RightDown")
+
 [node name="growin" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Upgrade Section/Upgrade/UpgradeVicos" node_paths=PackedStringArray("tooltip_parent") instance=ExtResource("14_vidbt")]
 layout_mode = 2
 upgrade_type = 168
@@ -707,6 +712,7 @@ shape = SubResource("RectangleShape2D_alvwj")
 [connection signal="pressed" from="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game Section/Game/VBoxContainer/Stage4" to="." method="_on_stage_4_pressed"]
 [connection signal="pressed" from="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Upgrade Section/Upgrade/UpgradeVicos/limitbreak" to="." method="_on_limitbreak_pressed"]
 [connection signal="visibility_changed" from="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Upgrade Section/Upgrade/UpgradeVicos/limitbreak" to="." method="_on_upgrade_effect_vico_visibility_changed"]
+[connection signal="visibility_changed" from="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Upgrade Section/Upgrade/UpgradeVicos/spreadin" to="." method="_on_upgrade_effect_vico_visibility_changed"]
 [connection signal="visibility_changed" from="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Upgrade Section/Upgrade/UpgradeVicos/growin" to="." method="_on_upgrade_effect_vico_visibility_changed"]
 [connection signal="visibility_changed" from="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Upgrade Section/Upgrade/UpgradeVicos/milkshake" to="." method="_on_upgrade_effect_vico_visibility_changed"]
 [connection signal="pressed" from="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Cheat Section/Cheat/VBoxContainer/Dev1" to="." method="_on_dev_1_pressed"]

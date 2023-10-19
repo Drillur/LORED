@@ -37,7 +37,6 @@ func load_started() -> void:
 @onready var sleep_timer = $"Sleep Timer"
 @onready var level_up_texts = %"Level Up Texts"
 @onready var fuel_background = %"Fuel Background"
-@onready var prog_bg = %"prog bg"
 
 var prefer_left_down: bool
 var has_lored := false
@@ -102,7 +101,6 @@ func attach_lored(_lored: LORED) -> void:
 	lored.asleep.changed.connect(sleep_changed)
 	fuel_bar.attach_attribute(lored.fuel)
 	fuel_background.self_modulate = wa.get_color(lored.fuel_currency)
-	prog_bg.self_modulate = lored.details.color
 	lored.connect("became_unable_to_work", start_idle)
 	lored.connect("leveled_up", flash_on_level_up)
 	lored.unlocked.became_true.connect(show)
@@ -113,6 +111,7 @@ func attach_lored(_lored: LORED) -> void:
 	lored.received_buff.connect(buffs_lock)
 	lored.purchased.changed.connect(buffs_lock)
 	lored.purchased.changed.connect(sleep_lock)
+	lored.unlocked.changed.connect(sleep_lock)
 	lored.purchased.changed.connect(advanced_details_lock)
 	
 	advanced_details_lock()
@@ -136,7 +135,7 @@ func attach_lored(_lored: LORED) -> void:
 	# ref
 	$bg.self_modulate = lored.details.color
 	progress_bar.color = lored.details.color
-	#progress_bar.modulate.a = 0.1
+	progress_bar.modulate.a = 0.1
 	fuel_bar.color = wa.get_color(lored.fuel_currency)
 	#fuel_bar.modulate = Color(0.75, 0.75, 0.75)
 	lored_name.modulate = lored.details.color

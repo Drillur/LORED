@@ -61,6 +61,12 @@ theme_override_constants/separation = 0
 clip_contents = true
 layout_mode = 2
 
+[node name="Progress Bar" parent="VBoxContainer/MarginContainer" instance=ExtResource("2_p04r2")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+kill_markers = true
+
 [node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/MarginContainer"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
@@ -69,7 +75,6 @@ theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
 [node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/MarginContainer/MarginContainer"]
-custom_minimum_size = Vector2(0, 99)
 layout_mode = 2
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/MarginContainer/MarginContainer/VBoxContainer"]
@@ -139,45 +144,16 @@ frame_progress = 0.0209391
 centered = false
 script = ExtResource("9_tchys")
 
-[node name="Status" type="RichTextLabel" parent="VBoxContainer/MarginContainer/MarginContainer/VBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 4
-theme = ExtResource("1_7ail2")
-bbcode_enabled = true
-text = "Awaiting 123e123 Carcinogens..."
-fit_content = true
-autowrap_mode = 0
-
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/MarginContainer/MarginContainer/VBoxContainer"]
-layout_mode = 2
-size_flags_vertical = 10
-theme_override_constants/separation = 10
-
-[node name="Fuel Bar" parent="VBoxContainer/MarginContainer/MarginContainer/VBoxContainer/HBoxContainer" instance=ExtResource("2_p04r2")]
+[node name="Fuel Bar" parent="VBoxContainer/MarginContainer/MarginContainer/VBoxContainer" instance=ExtResource("2_p04r2")]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 8
 animate = true
 
-[node name="Fuel Background" type="Panel" parent="VBoxContainer/MarginContainer/MarginContainer/VBoxContainer/HBoxContainer/Fuel Bar"]
+[node name="Fuel Background" type="Panel" parent="VBoxContainer/MarginContainer/MarginContainer/VBoxContainer/Fuel Bar"]
 unique_name_in_owner = true
 show_behind_parent = true
-layout_mode = 2
-theme = ExtResource("1_7ail2")
-theme_override_styles/panel = SubResource("StyleBoxFlat_km2b0")
-
-[node name="Progress Bar" parent="VBoxContainer/MarginContainer/MarginContainer/VBoxContainer/HBoxContainer" instance=ExtResource("2_p04r2")]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-kill_markers = true
-
-[node name="prog bg" type="Panel" parent="VBoxContainer/MarginContainer/MarginContainer/VBoxContainer/HBoxContainer/Progress Bar"]
-unique_name_in_owner = true
-show_behind_parent = true
-custom_minimum_size = Vector2(82, 0)
 layout_mode = 2
 theme = ExtResource("1_7ail2")
 theme_override_styles/panel = SubResource("StyleBoxFlat_km2b0")
@@ -187,55 +163,55 @@ layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_8qmng")
 metadata/_edit_lock_ = true
 
-[node name="Control" type="MarginContainer" parent="VBoxContainer"]
+[node name="Interaction" type="MarginContainer" parent="VBoxContainer"]
 layout_mode = 2
 
-[node name="bg" type="Panel" parent="VBoxContainer/Control"]
+[node name="bg" type="Panel" parent="VBoxContainer/Interaction"]
 layout_mode = 2
 theme = ExtResource("1_7ail2")
 theme_override_styles/panel = SubResource("StyleBoxFlat_ltk7m")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/Control"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/Interaction"]
 layout_mode = 2
 theme_override_constants/separation = 0
 alignment = 1
 
-[node name="Info" parent="VBoxContainer/Control/HBoxContainer" instance=ExtResource("7_d7ftl")]
+[node name="Info" parent="VBoxContainer/Interaction/HBoxContainer" instance=ExtResource("7_d7ftl")]
 unique_name_in_owner = true
 layout_mode = 2
 icon = ExtResource("11_o6yhx")
 kill_autobuyer = true
 kill_check = true
 
-[node name="Active Buffs" parent="VBoxContainer/Control/HBoxContainer" instance=ExtResource("7_d7ftl")]
+[node name="Active Buffs" parent="VBoxContainer/Interaction/HBoxContainer" instance=ExtResource("7_d7ftl")]
 unique_name_in_owner = true
 layout_mode = 2
 icon = ExtResource("12_kfyd2")
 kill_autobuyer = true
 kill_check = true
 
-[node name="Jobs" parent="VBoxContainer/Control/HBoxContainer" instance=ExtResource("7_d7ftl")]
+[node name="Jobs" parent="VBoxContainer/Interaction/HBoxContainer" instance=ExtResource("7_d7ftl")]
 unique_name_in_owner = true
 layout_mode = 2
 icon = ExtResource("13_6wd2y")
 kill_autobuyer = true
 kill_check = true
 
-[node name="View Special" parent="VBoxContainer/Control/HBoxContainer" instance=ExtResource("7_d7ftl")]
+[node name="View Special" parent="VBoxContainer/Interaction/HBoxContainer" instance=ExtResource("7_d7ftl")]
 unique_name_in_owner = true
 layout_mode = 2
 icon = ExtResource("14_clor7")
 kill_autobuyer = true
 kill_check = true
 
-[node name="Sleep" parent="VBoxContainer/Control/HBoxContainer" instance=ExtResource("7_d7ftl")]
+[node name="Sleep" parent="VBoxContainer/Interaction/HBoxContainer" instance=ExtResource("7_d7ftl")]
 unique_name_in_owner = true
 layout_mode = 2
 icon = ExtResource("15_jf5nq")
 kill_autobuyer = true
 kill_check = true
 
-[node name="Level Up" parent="VBoxContainer/Control/HBoxContainer" instance=ExtResource("7_d7ftl")]
+[node name="Level Up" parent="VBoxContainer/Interaction/HBoxContainer" instance=ExtResource("7_d7ftl")]
 unique_name_in_owner = true
 layout_mode = 2
 icon = ExtResource("16_qtvup")
@@ -308,8 +284,22 @@ offset_top = -166.0
 offset_bottom = -10.0
 grow_horizontal = 0
 grow_vertical = 0
-rotation = -0.00185959
 mouse_filter = 2
+
+[node name="Status" type="RichTextLabel" parent="Control"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+offset_left = 15.0
+offset_top = 64.0
+offset_right = 193.0
+offset_bottom = 79.0
+size_flags_horizontal = 4
+theme = ExtResource("1_7ail2")
+bbcode_enabled = true
+text = "Awaiting 123e123 Carcinogens..."
+fit_content = true
+autowrap_mode = 0
 
 [node name="Sleep Text Timer" type="Timer" parent="."]
 one_shot = true

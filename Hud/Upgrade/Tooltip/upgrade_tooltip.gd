@@ -64,6 +64,9 @@ func setup(data: Dictionary) -> void:
 	
 	if up.is_upgrade_purchased(upgrade.type):
 		match upgrade.type:
+			Upgrade.Type.ITS_SPREADIN_ON_ME:
+				upgrade.effect.effect.increased.connect(update_dynamic_description)
+				update_dynamic_description()
 			Upgrade.Type.ITS_GROWIN_ON_ME:
 				upgrade.effect.effect.increased.connect(update_dynamic_description)
 				upgrade.effect.effect2.increased.connect(update_dynamic_description)

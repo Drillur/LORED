@@ -254,3 +254,7 @@ func currencies_in_list_are_unlocked(list: Array) -> bool:
 		if not is_currency_unlocked(cur):
 			return false
 	return true
+
+
+func is_currency_safe_to_spend(cur: int) -> bool:
+	return get_currency(cur).safe.get_value()

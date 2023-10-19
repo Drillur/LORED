@@ -7,10 +7,6 @@ enum Type {
 	WITCH,
 }
 
-# WITCH
-var witch_output: Big
-var witch_added_rate := false
-
 
 
 func _init(_type: Type, _lored: LORED) -> void:
@@ -27,17 +23,19 @@ func _init(_type: Type, _lored: LORED) -> void:
 			details.color = currency.details.color
 			details.description = "+5 seconds' worth of %s" % currency.details.icon_and_colored_name
 			set_ticks(-1)
-			set_tick_rate(5 / object.haste.get_as_float())
+			set_tick_rate(WITCH_get_tick_rate())
 			affected_by_bonus_ticks = true
 			bonus_ticks = Int.new(5)
 			set_stack_limit(2)
 			
+			gv.about_to_prestige.connect(WITCH_subtract_rate)
 			object.haste.changed.connect(WITCH_update_output)
 			object.output.changed.connect(WITCH_update_output)
 			object.haste.changed.connect(WITCH_update_tick_rate)
-			gv.prestiged.connect(WITCH_update_tick_rate)
 			stacks.changed.connect(WITCH_update_output)
-			WITCH_update_output()
+			gv.prestiged.connect(WITCH_add_rate)
+			
+			witch_output = WITCH_get_output()
 	
 	super()
 
@@ -46,35 +44,52 @@ func _init(_type: Type, _lored: LORED) -> void:
 # - WITCH
 
 
+var witch_output: Big
+var witch_added_rate := false
+
+
 func WITCH_tick() -> void:
 	var currency = wa.get_currency(object.primary_currency) as Currency
-	currency.add_from_lored(witch_output)
+	currency.add_from_buff(witch_output)
 
 
 func WITCH_update_tick_rate() -> void:
+	WITCH_subtract_rate()
+	tick_rate.set_to(WITCH_get_tick_rate())
+	WITCH_add_rate()
+
+
+func WITCH_get_tick_rate() -> float:
+	return 1 + (4 / object.haste.get_as_float())
+
+
+func WITCH_update_output() -> void:
+	WITCH_subtract_rate()
+	witch_output = WITCH_get_output()
+	WITCH_add_rate()
+
+
+func WITCH_get_output() -> Big:
+	var base = object.get_primary_rate()
+	return base.m(5).powerInt(stacks.get_value())
+
+
+func WITCH_add_rate() -> void:
+	return
+	if not witch_added_rate:
+		wa.get_currency(object.primary_currency).add_gain_rate(
+			Big.new(witch_output).d(tick_rate.get_value())
+		)
+		witch_added_rate = true
+
+
+func WITCH_subtract_rate() -> void:
+	return
 	if witch_added_rate:
 		wa.get_currency(object.primary_currency).subtract_gain_rate(
 			Big.new(witch_output).d(tick_rate.get_value())
 		)
-	
-	tick_rate.set_to(1 + (4 / object.haste.get_as_float()))
-	
-	wa.get_currency(object.primary_currency).add_gain_rate(
-		Big.new(witch_output).d(tick_rate.get_value())
-	)
-	witch_added_rate = true
-
-
-func WITCH_update_output() -> void:
-	if witch_added_rate:
-		wa.get_currency(object.primary_currency).subtract_gain_rate(Big.new(witch_output).d(tick_rate.get_value()))
-	
-	witch_output = object.get_primary_rate()
-	witch_output.m(5).powerInt(stacks.get_value())
-	
-	wa.get_currency(object.primary_currency).add_gain_rate(Big.new(witch_output).d(tick_rate.get_value()))
-	witch_added_rate = true
-
+		witch_added_rate = false
 
 
 

@@ -116,6 +116,7 @@ func connect_calls() -> void:
 			printerr("Limit Break was already connected!")
 			return
 		currency.increased_by_lored.connect(add_xp)
+		currency.increased_by_buff.connect(add_xp)
 
 
 func disconnect_calls() -> void:
@@ -124,6 +125,7 @@ func disconnect_calls() -> void:
 			printerr("Limit Break wasn't connected!")
 			return
 		currency.increased_by_lored.disconnect(add_xp)
+		currency.increased_by_buff.disconnect(add_xp)
 
 
 func add_xp(amount: Big) -> void:

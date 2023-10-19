@@ -2803,7 +2803,7 @@ func init_AUTO_PERSIST() -> void:
 	effect = UpgradeEffect.new(
 		UpgradeEffect.Type.UPGRADE_PERSIST, {
 			"upgrade_type": type,
-			"effected_upgrades": [
+			"affected_upgrades": [
 				Type.MOUND,
 				Type.SIDIUS_IRON,
 				Type.SLAPAPOW,
@@ -2899,7 +2899,7 @@ func init_ITS_SPREADIN_ON_ME() -> void:
 			"replaced_upgrade": Type.ITS_GROWIN_ON_ME,
 			"effect value": 1,
 			"bonus_action_type": UpgradeEffect.BONUS_ACTION.INCREASE_EFFECT,
-			"modifier": 0.05,
+			"modifier": 0.0001,
 		}
 	)
 	effect.save_effect(true)
@@ -3289,6 +3289,7 @@ func affordable_changed() -> void:
 		autobuy
 		and unlocked.is_true()
 		and affordable
+		and cost.is_safe_to_purchase()
 	):
 		purchase()
 	else:
@@ -3305,6 +3306,7 @@ func affordable_changed() -> void:
 
 
 # - Actions
+
 
 func update_effected_loreds_text() -> void:
 	effected_loreds_text = get_effected_loreds_text()
@@ -3383,7 +3385,8 @@ func prestige(_stage: int) -> void:
 				if effect != null and effect.dynamic:
 					effect.reset_effects()
 	elif _stage > stage:
-		remove()
+		if persist.is_false_on_reset():
+			remove()
 
 
 
@@ -3440,7 +3443,7 @@ func get_effected_loreds_text() -> String:
 		return "[i]for [/i]" + _stage
 	
 	if effect != null and effect.type == UpgradeEffect.Type.UPGRADE_AUTOBUYER:
-		var upmen = up.get_upgrade_menu(UpgradeMenu.Type.NORMAL) as UpgradeMenu
+		var upmen = up.get_upgrade_menu(effect.upgrade_menu) as UpgradeMenu
 		return "[i]for [/i]" + upmen.details.colored_name
 	# if loreds.size() > 8: probably a stage.
 	var arr := []

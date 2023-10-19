@@ -108,7 +108,13 @@ func start(_threshold: float) -> void:
 	start_time = Time.get_unix_time_from_system()
 	threshold = _threshold
 	set_process(true)
-	#show()
+	show()
+
+
+func stop() -> void:
+	start_time = 0.0
+	set_process(false)
+	hide()
 
 
 
@@ -121,13 +127,6 @@ func fix_delta_bar_position() -> void:
 		delta_bar.position.x = progress_bar.size.x - delta_bar.size.x
 	else:
 		delta_bar.position.x = progress_bar.size.x
-
-
-
-func stop() -> void:
-	start_time = 0.0
-	set_process(false)
-	#hide()
 
 
 

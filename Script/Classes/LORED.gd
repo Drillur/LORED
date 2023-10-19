@@ -925,6 +925,7 @@ func attach_vico(_vico: LOREDVico) -> void:
 
 func purchased_updated() -> void:
 	if purchased.is_true():
+		lv.erase_lored_from_never_purchased(type)
 		for cur in produced_currencies:
 			wa.unlock_currency(cur)
 			wa.set_wish_eligible_currency(cur, true)
@@ -1117,6 +1118,7 @@ func manual_purchase() -> void:
 	purchase()
 
 var last_reason_autobuy: String
+var amount_to_autobuy := -1
 
 func autobuy_check() -> void:
 	var val = should_autobuy()
@@ -1124,7 +1126,7 @@ func autobuy_check() -> void:
 #		printt(key, last_reason_autobuy)
 	if val:
 		#printt(key, last_reason_autobuy)
-		automatic_purchase()
+		automatic_purchase(amount_to_autobuy)
 #		autobuy_on_cooldown = true
 #		await gv.get_tree().physics_frame
 #		autobuy_on_cooldown = false
@@ -1133,6 +1135,7 @@ func autobuy_check() -> void:
 
 
 func should_autobuy() -> bool:
+	amount_to_autobuy = -1
 	if (
 		autobuy.is_true()
 		and not autobuy_on_cooldown
@@ -1158,7 +1161,12 @@ func should_autobuy() -> bool:
 		
 		if purchased.is_false():
 			last_reason_autobuy = "wasn't purchased"
+			amount_to_autobuy = 1
 			return true
+		
+		if not cost.is_safe_to_purchase():
+			last_reason_autobuy = "Cost was not safe to purchase!"
+			return false
 		
 		if ( # upgrade conditions
 			(
@@ -1196,10 +1204,14 @@ func should_autobuy() -> bool:
 		
 		if key_lored:
 			last_reason_autobuy = "is a key lored"
+			if required_currencies.size() > 0:
+				amount_to_autobuy = 1
 			return true
 		
 		if wa.currencies_have_negative_net(produced_currencies):
 			last_reason_autobuy = "produced curs are negative net"
+			if required_currencies.size() > 0:
+				amount_to_autobuy = 1
 			return true
 	
 #	if key == "COAL":
@@ -1212,10 +1224,14 @@ func should_autobuy() -> bool:
 	return false
 
 
-func automatic_purchase() -> void:
+func automatic_purchase(levels_to_buy := -1) -> void:
 	last_purchase_automatic = true
 	last_purchase_forced = false
-	var gained_levels = cost.spend_as_much_as_possible(level, false)
+	var gained_levels: int
+	if levels_to_buy == -1:
+		gained_levels = cost.buy_up_to_x_times(false, level)
+	else:
+		gained_levels = cost.buy_up_to_x_times(false, level, level + levels_to_buy)
 	times_purchased += 1
 	if purchased.is_false():
 		purchased.set_to(true)

@@ -56,7 +56,7 @@ var upgrade_type: int
 
 var applied := false
 var dynamic := false
-var is_overwritten := false
+var is_overwritten := Bool.new(false)
 
 var effect: Value
 var in_hand: Big
@@ -66,7 +66,7 @@ var in_hand2: Big
 
 var apply_methods: Array
 var remove_methods: Array
-var effected_upgrades: Array
+var affected_upgrades: Array
 
 var effected_input: int
 var effected_lored: int
@@ -80,7 +80,7 @@ var buff: int
 
 var affected_loreds := []
 
-var replaced_upgrade := -1
+var replaced_upgrade_type := -1
 
 
 
@@ -104,14 +104,14 @@ func _init(_type: int, details: Dictionary) -> void:
 		added_currency = details["added_currency"]
 	if "upgrade_menu" in details.keys():
 		upgrade_menu = details["upgrade_menu"]
-	if "effected_upgrades" in details.keys():
-		effected_upgrades = details["effected_upgrades"]
+	if "affected_upgrades" in details.keys():
+		affected_upgrades = details["affected_upgrades"]
 	if "job" in details.keys():
 		job = details["job"]
 	if "effected_lored" in details.keys():
 		effected_lored = details["effected_lored"]
 	if "replaced_upgrade" in details.keys():
-		replaced_upgrade = details["replaced_upgrade"]
+		replaced_upgrade_type = details["replaced_upgrade"]
 	if "buff" in details.keys():
 		buff = details["buff"]
 	
@@ -164,7 +164,7 @@ func save_effect(val: bool) -> void:
 func finish_init() -> void:
 	match type:
 		Type.UPGRADE_PERSIST:
-			for _type in effected_upgrades:
+			for _type in affected_upgrades:
 				var upgrade = up.get_upgrade(_type)
 				apply_methods.append(upgrade.enable_persist)
 				remove_methods.append(upgrade.disable_persist)
@@ -278,18 +278,15 @@ func apply() -> void:
 		if effect2 != null:
 			effect2.changed.connect(refresh)
 		
-		if replaced_upgrade >= 0:
-			var r_up = up.get_upgrade(replaced_upgrade)
-			var was_applied = r_up.effect.applied
-			if was_applied:
-				r_up.effect.remove()
-			r_up.is_overwritten = true
-			if was_applied:
-				r_up.effect.apply()
+		if replaced_upgrade_type >= 0:
+			var replaced_effect = up.get_upgrade(replaced_upgrade_type).effect as UpgradeEffect
+			if replaced_effect.applied:
+				replaced_effect.remove()
+			replaced_effect.is_overwritten.set_to(true)
 		
 		match type:
 			Type.BONUS_ACTION_ON_CURRENCY_GAIN:
-				var cur = wa.get_currency(currency)
+				var cur = wa.get_currency(currency) as Currency
 				cur.increased_by_lored.connect(currency_collected)
 			Type.BONUS_ACTION_ON_CURRENCY_USE:
 				var cur = wa.get_currency(currency)
@@ -312,14 +309,11 @@ func remove() -> void:
 		if effect2 != null:
 			effect2.changed.disconnect(refresh)
 		
-		if replaced_upgrade >= 0:
-			var r_up = up.get_upgrade(replaced_upgrade)
-			var was_applied = r_up.effect.applied
-			if was_applied:
-				r_up.effect.remove()
-			r_up.is_overwritten = false
-			if was_applied:
-				r_up.effect.apply()
+		if replaced_upgrade_type >= 0:
+			var replaced_upgrade = up.get_upgrade(replaced_upgrade_type) as Upgrade
+			replaced_upgrade.effect.is_overwritten.set_to(false)
+			if replaced_upgrade.purchased.is_true():
+				replaced_upgrade.effect.apply()
 		
 		match type:
 			Type.BONUS_ACTION_ON_CURRENCY_GAIN:
@@ -358,12 +352,7 @@ func refresh() -> void:
 				Upgrade.Type.ITS_GROWIN_ON_ME:
 					var iron := lv.get_lored(LORED.Type.IRON)
 					var copper := lv.get_lored(LORED.Type.COPPER)
-					#iron.output.alter_value(iron.output.multiplied, in_hand, effect.get_value())
-					iron.output.alter_value(
-						iron.output.multiplied,
-						in_hand,
-						effect.get_value()
-					)
+					iron.output.alter_value(iron.output.multiplied, in_hand, effect.get_value())
 					iron.input.alter_value(iron.input.multiplied, in_hand, effect.get_value())
 					copper.output.alter_value(copper.output.multiplied, in_hand2, effect2.get_value())
 					copper.input.alter_value(copper.input.multiplied, in_hand2, effect2.get_value())
@@ -383,10 +372,8 @@ func refresh() -> void:
 
 
 func apply_effects() -> void:
-	if not applied:
+	if not applied and is_overwritten.is_false():
 		applied = true
-		if is_overwritten:
-			return
 		
 		if effect != null:
 			in_hand = Big.new(effect.get_value())
@@ -429,19 +416,18 @@ func apply_effects() -> void:
 			Type.BONUS_JOB_PRODUCTION:
 				for method in apply_methods:
 					method.call(currency, modifier)
-			Type.AUTOBUYER, Type.UPGRADE_AUTOBUYER, Type.FREE_LORED:
-				for method in apply_methods:
-					method.call()
 			_:
-				for method in apply_methods:
-					method.call(in_hand)
+				if effect == null:
+					for method in apply_methods:
+						method.call()
+				else:
+					for method in apply_methods:
+						method.call(in_hand)
 
 
 func remove_effects() -> void:
 	if applied:
 		applied = false
-		if is_overwritten:
-			return
 		
 		match type:
 			Type.APPLY_LORED_BUFF:
@@ -453,6 +439,19 @@ func remove_effects() -> void:
 				up.limit_break.reset()
 			Type.BONUS_ACTION_ON_CURRENCY_GAIN:
 				match upgrade_type:
+					Upgrade.Type.ITS_SPREADIN_ON_ME:
+						var iron := lv.get_lored(LORED.Type.IRON)
+						var copper := lv.get_lored(LORED.Type.COPPER)
+						var irono := lv.get_lored(LORED.Type.IRON_ORE)
+						var copo := lv.get_lored(LORED.Type.COPPER_ORE)
+						iron.output.decrease_multiplied(in_hand)
+						iron.input.decrease_multiplied(in_hand)
+						copper.output.decrease_multiplied(in_hand)
+						copper.input.decrease_multiplied(in_hand)
+						irono.output.decrease_multiplied(in_hand)
+						irono.input.decrease_multiplied(in_hand)
+						copo.output.decrease_multiplied(in_hand)
+						copo.input.decrease_multiplied(in_hand)
 					Upgrade.Type.ITS_GROWIN_ON_ME:
 						var iron := lv.get_lored(LORED.Type.IRON)
 						var copper := lv.get_lored(LORED.Type.COPPER)
@@ -468,12 +467,13 @@ func remove_effects() -> void:
 			Type.BONUS_JOB_PRODUCTION:
 				for method in remove_methods:
 					method.call(currency)
-			Type.AUTOBUYER, Type.UPGRADE_AUTOBUYER, Type.FREE_LORED:
-				for method in remove_methods:
-					method.call()
 			_:
-				for method in remove_methods:
-					method.call(in_hand)
+				if effect == null:
+					for method in remove_methods:
+						method.call()
+				else:
+					for method in remove_methods:
+						method.call(in_hand)
 
 
 
@@ -497,6 +497,14 @@ func get_effect2_text() -> String:
 
 func get_dynamic_text() -> String:
 	match upgrade_type:
+		Upgrade.Type.ITS_SPREADIN_ON_ME:
+			return "[center][b]x%s[/b] [i]for[/i] %s, %s, %s, and %s" % [
+				effect.get_text(),
+				lv.get_colored_name(LORED.Type.IRON_ORE),
+				lv.get_colored_name(LORED.Type.COPPER_ORE),
+				lv.get_colored_name(LORED.Type.IRON),
+				lv.get_colored_name(LORED.Type.COPPER)
+			]
 		Upgrade.Type.ITS_GROWIN_ON_ME:
 			return "[center][b]x%s[/b] [i]for[/i] %s\n[b]x%s[/b] [i]for[/i] %s" % [
 				effect.get_text(),

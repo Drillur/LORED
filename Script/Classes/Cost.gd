@@ -5,7 +5,7 @@ extends RefCounted
 
 signal use_allowed_changed(allowed)
 
-const CACHE_SIZE := 1000
+const CACHE_SIZE := 200
 
 var cost := {}
 var base_cost := {}
@@ -131,10 +131,10 @@ func spend(from_player: bool) -> void:
 			wa.subtract_from_lored(cur, Big.new(cost[cur].get_value()))
 
 
-func spend_as_much_as_possible(level: int, from_player: bool) -> int:
+func buy_up_to_x_times(from_player: bool, level: int, x := CACHE_SIZE) -> int:
 	var left := level
 	var mid := 0
-	var right := CACHE_SIZE
+	var right := clampi(x, 0, CACHE_SIZE)
 	while left < right:
 		mid = left + (right - left) / 2
 		if can_afford_at_level(mid):
@@ -156,7 +156,6 @@ func can_afford_at_level(level: int) -> bool:
 		if cache[level][cur].greater(wa.get_count(cur)):
 			return false
 	return true
-
 
 
 func purchase(from_player: bool) -> void:
@@ -236,9 +235,17 @@ func throw_texts(parent_node: Node) -> void:
 
 # - Get
 
+
 func can_afford() -> bool:
 	for cur in cost:
 		if wa.get_count(cur).less(cost[cur].get_value()):
+			return false
+	return true
+
+
+func is_safe_to_purchase() -> bool:
+	for cur in cost:
+		if not wa.is_currency_safe_to_spend(cur):
 			return false
 	return true
 

@@ -636,9 +636,11 @@ func get_stage_icon(stage: int) -> Texture:
 signal hard_reset
 signal prestige(stage)
 signal prestiged
+signal about_to_prestige
 var last_reset_stage := 1
 
 func prestige_now(stage: int) -> void:
+	about_to_prestige.emit()
 	run_duration = 0
 	prestige.emit(stage)
 	prestiged.emit()
