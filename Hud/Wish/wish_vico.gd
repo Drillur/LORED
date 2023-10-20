@@ -139,10 +139,11 @@ func turn_in() -> void:
 
 
 func dismiss() -> void:
-	if wish.is_main_wish():
-		return
-	if wish.ready_to_turn_in:
-		return
+	if not gv.dev_mode:
+		if wish.is_main_wish():
+			return
+		if wish.ready_to_turn_in:
+			return
 	
 	if dismiss_node.visible:
 		gv.clear_tooltip()

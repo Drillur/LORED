@@ -8,13 +8,13 @@ var saved_vars := [
 	"times_purchased",
 	"purchased",
 	"effect",
-	"will_apply_effect",
+	"pending_prestige",
 ]
 
 
 func load_finished() -> void:
 	if purchased.is_true():
-		if will_apply_effect:
+		if pending_prestige:
 			refund()
 		unlocked.became_true.emit()
 		unlocked.emit_changed()
@@ -226,6 +226,7 @@ enum Type {
 	THIS_GAME_IS_SO_ESEY,
 	WAIT_THATS_NOT_FAIR,
 	PROCEDURE,
+	LIL_SAUCY_BOSSY,
 	ROUTINE,
 	
 	
@@ -309,13 +310,13 @@ var autobuy := false:
 
 var special: bool
 
-var will_apply_effect := false
+var pending_prestige := false
 
 var vico: UpgradeVico:
 	set(val):
 		vico = val
 
-var persist := Bool.new(false)
+var persist := Persist.new()
 
 var effect: UpgradeEffect
 
@@ -354,20 +355,24 @@ func _init(_type: int) -> void:
 		1:
 			if special:
 				upgrade_menu = UpgradeMenu.Type.MALIGNANT
+				persist.s1.set_to(true)
 			else:
 				upgrade_menu = UpgradeMenu.Type.NORMAL
 		2:
 			if special:
 				upgrade_menu = UpgradeMenu.Type.RADIATIVE
+				persist.s2.set_to(true)
 			else:
 				upgrade_menu = UpgradeMenu.Type.EXTRA_NORMAL
 		3:
 			if special:
+				persist.s3.set_to(true)
 				upgrade_menu = UpgradeMenu.Type.SPIRIT
 			else:
 				upgrade_menu = UpgradeMenu.Type.RUNED_DIAL
 		4:
 			if special:
+				persist.s4.set_to(true)
 				upgrade_menu = UpgradeMenu.Type.S4N
 			else:
 				upgrade_menu = UpgradeMenu.Type.S4M
@@ -1223,16 +1228,16 @@ func init_PROCEDURE() -> void:
 	required_upgrade = Type.UPGRADE_NAME
 
 
-func init_ROUTINE() -> void:
-	details.name = "[i]Routine[/i]"
-	var metas = gv.get_stage(1).details.color_text % "Metastasizes"
-	var norm = up.get_upgrade_menu(UpgradeMenu.Type.NORMAL).details.colored_name
-	var meta2 = gv.get_stage(1).details.color_text % "Metastasis"
-	details.description = "%s immediately. %s upgrades will persist through %s. After that, this Upgrade will be reset." % [metas, norm, meta2]
+func init_LIL_SAUCY_BOSSY() -> void:
+	details.name = "Lil' [i]Saucy Bossy[/i]"
+	var x = up.get_upgrade_menu(UpgradeMenu.Type.NORMAL).details.colored_name
+	var y = gv.get_stage(1).details.color_text % "Metastasis"
+	details.description = "%s upgrades will persist through %s." % [x, y]
 	effect = UpgradeEffect.new(
 		UpgradeEffect.Type.UPGRADE_PERSIST, {
 			"upgrade_type": type,
-			"effected_upgrades": [
+			"stage": 1,
+			"affected_upgrades": [
 				Type.GRINDER,
 				Type.LIGHTER_SHOVEL,
 				Type.TEXAS,
@@ -1265,13 +1270,28 @@ func init_ROUTINE() -> void:
 			]
 		}
 	)
+	var upmenu = up.get_upgrade_menu(UpgradeMenu.Type.NORMAL) as UpgradeMenu
+	details.icon = upmenu.details.icon
+	details.color = upmenu.details.color
+	cost = Cost.new({
+		Currency.Type.MALIGNANCY: Value.new("1e20"),
+	})
+	await up.all_upgrades_initialized
+	required_upgrade = Type.RED_NECROMANCY
+
+
+func init_ROUTINE() -> void:
+	details.name = "[i]Routine[/i]"
+	var metas = gv.get_stage(1).details.color_text % "Metastasizes"
+	var meta2 = gv.get_stage(1).details.color_text % "Metastasis"
+	details.description = "%s immediately. This Upgrade does not persist through %s." % [metas, meta2]
 	details.icon = res.get_resource("s1m")
 	details.color = gv.get_stage_color(1)
 	cost = Cost.new({
 		Currency.Type.MALIGNANCY: Value.new("1e20"),
 	})
 	await up.all_upgrades_initialized
-	required_upgrade = Type.RED_NECROMANCY
+	required_upgrade = Type.LIL_SAUCY_BOSSY
 
 
 func init_CANOPY() -> void:
@@ -2803,6 +2823,7 @@ func init_AUTO_PERSIST() -> void:
 	effect = UpgradeEffect.new(
 		UpgradeEffect.Type.UPGRADE_PERSIST, {
 			"upgrade_type": type,
+			"stage": 2,
 			"affected_upgrades": [
 				Type.MOUND,
 				Type.SIDIUS_IRON,
@@ -2919,7 +2940,7 @@ func init_ITS_SPREADIN_ON_ME() -> void:
 
 
 func init_WHAT_IN_COUSIN_FUCKIN_TARNATION() -> void:
-	details.name = "what in cousin-fuckin tarnation alabama betty crocker miss fuckin betty white shit is this"
+	details.name = "Hellfire! I have [i]never![/i]"
 	set_effect(UpgradeEffect.Type.OUTPUT_ONLY, 10)
 	add_effected_lored(LORED.Type.MALIGNANCY)
 	details.icon = wa.get_icon(Currency.Type.MALIGNANCY)
@@ -2955,7 +2976,13 @@ func init_JOINTSHACK() -> void:
 
 func init_DUST() -> void:
 	details.name = "Dust"
-	set_effect(UpgradeEffect.Type.LORED_PERSIST)
+	effect = UpgradeEffect.new(
+		UpgradeEffect.Type.LORED_PERSIST,
+		{
+			"upgrade_type": type,
+			"stage": 1
+		}
+	)
 	add_effected_stage(1)
 	var a = up.get_menu_color_text(UpgradeMenu.Type.MALIGNANT) % "Metastasizing"
 	var b = gv.get_stage(Stage.Type.STAGE1).details.colored_name
@@ -3313,12 +3340,12 @@ func update_effected_loreds_text() -> void:
 
 
 func purchase() -> void:
-	if purchased.is_true() or will_apply_effect:
+	if purchased.is_true() or pending_prestige:
 		return
 	cost.purchase(true)
 	purchased.set_to(true)
 	if special:
-		will_apply_effect = true
+		pending_prestige = true
 	else:
 		finalize_purchase()
 
@@ -3331,6 +3358,7 @@ func finalize_purchase() -> void:
 func apply() -> void:
 	if effect != null:
 		effect.apply()
+	pending_prestige = false
 
 
 func refund() -> void:
@@ -3343,21 +3371,13 @@ func refund() -> void:
 func remove() -> void:
 	if purchased.is_true():
 		if special:
-			will_apply_effect = false
+			pending_prestige = false
 		if effect.applied:
 			effect.remove()
 			effect.reset_effects()
 		cost.purchased = false
 		purchased.set_to(false)
-
-
-
-func enable_persist() -> void:
-	persist.set_reset_value(true)
-
-
-func disable_persist() -> void:
-	persist.reset()
+		reset_effects()
 
 
 
@@ -3371,23 +3391,27 @@ func disable_autobuy() -> void:
 
 
 func prestige(_stage: int) -> void:
-	if _stage == stage:
-		if will_apply_effect:
-			apply()
-			will_apply_effect = false
-		elif not special:
-			if persist.is_false_on_reset():
-				remove()
-		match type:
-			Type.LIMIT_BREAK:
-				up.limit_break.reset()
-			_:
-				if effect != null and effect.dynamic:
-					effect.reset_effects()
-	elif _stage > stage:
-		if persist.is_false_on_reset():
+	if persist.through_stage(_stage):
+		if _stage == stage:
+			if pending_prestige:
+				apply()
+			else:
+				reset_effects()
+	else:
+		if pending_prestige:
+			refund()
+		else:
 			remove()
+	
 
+
+func reset_effects() -> void:
+	match type:
+		Type.LIMIT_BREAK:
+			up.limit_break.reset()
+		_:
+			if effect != null and effect.dynamic:
+				effect.reset_effects()
 
 
 func reset() -> void:
@@ -3395,7 +3419,7 @@ func reset() -> void:
 	if effect != null and effect.dynamic:
 		effect.reset_effects()
 	times_purchased = 0
-	will_apply_effect = false
+	pending_prestige = false
 
 
 

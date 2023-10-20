@@ -76,20 +76,20 @@ func WITCH_get_output() -> Big:
 
 func WITCH_add_rate() -> void:
 	return
-	if not witch_added_rate:
-		wa.get_currency(object.primary_currency).add_gain_rate(
-			Big.new(witch_output).d(tick_rate.get_value())
-		)
-		witch_added_rate = true
+#	if not witch_added_rate:
+#		wa.get_currency(object.primary_currency).add_gain_rate(
+#			Big.new(witch_output).d(tick_rate.get_value())
+#		)
+#		witch_added_rate = true
 
 
 func WITCH_subtract_rate() -> void:
 	return
-	if witch_added_rate:
-		wa.get_currency(object.primary_currency).subtract_gain_rate(
-			Big.new(witch_output).d(tick_rate.get_value())
-		)
-		witch_added_rate = false
+#	if witch_added_rate:
+#		wa.get_currency(object.primary_currency).subtract_gain_rate(
+#			Big.new(witch_output).d(tick_rate.get_value())
+#		)
+#		witch_added_rate = false
 
 
 

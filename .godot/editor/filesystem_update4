@@ -13,17 +13,20 @@ res://Hud/MenuButton.tscn
 res://Hud/LORED/lored_container.tscn
 res://Hud/Upgrade/Upgrade Effect Widget.tscn
 res://Hud/Price.tscn
-res://Hud/bar.gd
-res://Hud/LORED/lored_vico.gd
-res://Script/Classes/Buff/LOREDBuff.gd
-res://Script/Autoload/Overseer.gd
 res://Script/Classes/Upgrades/Upgrade.gd
-res://Script/Classes/Upgrades/UpgradeEffect.gd
-res://Script/Classes/Cost.gd
-res://Hud/Upgrade/Tooltip/upgrade_tooltip.gd
-res://Hud/Upgrade/Upgrade Effect Widget.gd
-res://Script/Classes/Currency.gd
-res://Script/Classes/Upgrades/LimitBreak.gd
+res://Hud/LORED/buff_bar.gd
+res://Script/Classes/Buff/LOREDBuff.gd
 res://Script/Classes/LORED.gd
-res://Script/Autoload/Wallet.gd
-res://Script/Autoload/LOREDs.gd
+res://Script/Classes/Wish.gd
+res://Script/Classes/Upgrades/UpgradeEffect.gd
+res://Script/Classes/Currency.gd
+res://Script/Autoload/Overseer.gd
+res://Script/Classes/Persist.gd
+res://Theme/Subtle Background.tres
+res://Hud/Wish/wish_vico.gd
+res://Hud/Wish/wish_vico.tscn
+res://Script/Autoload/Wishes.gd
+res://Hud/Upgrade/upgrade_vico.tscn
+res://Script/Classes/Upgrades/Routine.gd
+res://Hud/Upgrade/upgrade_vico.gd
+res://Hud/Upgrade/upgrade_container.tscn

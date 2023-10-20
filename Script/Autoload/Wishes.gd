@@ -79,6 +79,7 @@ func start() -> void:
 
 # - Actions
 
+
 func find_new_main_wish(_nothing = null) -> void:
 	if not lv.purchased_every_unlocked_lored_once():
 		return
@@ -214,3 +215,8 @@ func is_wish_completed(wish_type: int) -> bool:
 
 func is_game_just_beginning() -> bool:
 	return not Wish.Type.STUFF in completed_wishes and not lv.is_lored_purchased(LORED.Type.COAL)
+
+
+
+
+

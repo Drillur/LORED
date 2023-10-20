@@ -467,8 +467,5 @@ func _on_dev_3_pressed():
 	up.limit_break.add_xp(up.limit_break.xp.get_total())
 
 
-var i = 5
 func _on_dev_4_pressed():
-	var loggy = 1 + log(i)
-	printt(i, loggy)
-	i *= 0.9
+	pass

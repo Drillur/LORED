@@ -106,7 +106,7 @@ var unlocked := false:
 				saved_vars.erase("subtracted_by_player")
 				saved_vars.erase("added_by_loreds")
 				saved_vars.erase("added_by_buffs")
-var persist := Bool.new(false)
+var persist := Persist.new()
 var use_allowed := true:
 	set(val):
 		if use_allowed != val:
@@ -156,8 +156,8 @@ func _init(_type := Type.STONE) -> void:
 	if safety_type == SafetyType.SAFE:
 		safe.set_to(true)
 	
-	if persist.is_false_by_default() and stage == 0:
-		persist.set_default_value(true)
+	if stage == 0:
+		persist.s4.set_to(true)
 	
 	if count == null:
 		count = Big.new(0, true)
@@ -237,7 +237,7 @@ func init_MALIGNANCY() -> void:
 	count = Big.new(10, true)
 	details.color = Color(0.88, .12, .35)
 	details.icon = res.get_resource("malig")
-	persist.set_default_value(true)
+	persist.s1.set_to(true)
 	set_safety_condition(SafetyType.LORED_PURCHASED, LORED.Type.TARBALLS)
 
 
@@ -404,7 +404,7 @@ func init_EMBRYO() -> void:
 func init_TUMORS() -> void:
 	details.color = Color(1, .54, .54)
 	details.icon = res.get_resource("tum")
-	persist.set_default_value(true)
+	persist.s2.set_to(true)
 
 
 func init_FLOWER_SEED() -> void:
@@ -423,19 +423,19 @@ func init_BLOOD() -> void:
 
 func init_SPIRIT() -> void:
 	details.color = Color(0.88, .12, .35)
-	persist.set_default_value(true)
+	persist.s3.set_to(true)
 
 
 func init_JOY() -> void:
 	details.color = Color(1, 0.909804, 0)
 	details.icon = res.get_resource("Joy")
-	persist.set_default_value(true)
+	persist.s4.set_to(true)
 
 
 func init_GRIEF() -> void:
 	details.color = Color(0.74902, 0.203922, 0.533333)
 	details.icon = res.get_resource("Grief")
-	persist.set_default_value(true)
+	persist.s4.set_to(true)
 
 
 
@@ -456,17 +456,13 @@ func set_safety_condition(_type: SafetyType, _subject: int) -> void:
 
 
 func prestige(_stage: int) -> void:
-	if (
-		_stage >= stage
-		and stage > 0
-		and (
-			persist.is_not_true()
-			or _stage > stage
-		)
-	):
+	if persist.through_stage(_stage):
+		return
+	if _stage >= stage:
 		count.reset()
-	if count.less(count.base):
-		count.set_to(count.base)
+		if count.less(count.base):
+			printerr("I didn't think this shit would ever print")
+			count.set_to(count.base)
 
 
 

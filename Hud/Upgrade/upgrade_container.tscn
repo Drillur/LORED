@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://dlt6lvasr6c46"]
+[gd_scene load_steps=11 format=3 uid="uid://dlt6lvasr6c46"]
 
 [ext_resource type="Theme" uid="uid://b8t7tkhvril5g" path="res://Theme/Standard.tres" id="1_nf00e"]
 [ext_resource type="Script" path="res://Hud/Upgrade/upgrade_container.gd" id="1_t6e5m"]
@@ -11,12 +11,6 @@
 [ext_resource type="Texture2D" uid="uid://ddqh8qp3j67w6" path="res://Sprites/Hud/Tab/s2n.png" id="8_s38y8"]
 [ext_resource type="Texture2D" uid="uid://bvc8ucj014dpj" path="res://Sprites/Hud/Tab/s2m.png" id="9_phk4l"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_cakvs"]
-size = Vector2(498, 38.7506)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_qajed"]
-size = Vector2(498, 38.7504)
-
 [node name="Upgrade Container" type="MarginContainer"]
 custom_minimum_size = Vector2(424, 500)
 offset_right = 424.0
@@ -28,27 +22,6 @@ script = ExtResource("1_t6e5m")
 [node name="bg" type="Panel" parent="."]
 layout_mode = 2
 theme = ExtResource("1_wef1c")
-
-[node name="body" type="StaticBody2D" parent="."]
-unique_name_in_owner = true
-collision_layer = 2
-collision_mask = 2
-
-[node name="Collision2" type="CollisionShape2D" parent="body"]
-unique_name_in_owner = true
-position = Vector2(424.375, 250)
-rotation = -1.5708
-shape = SubResource("RectangleShape2D_cakvs")
-one_way_collision = true
-one_way_collision_margin = 10.0
-
-[node name="Collision3" type="CollisionShape2D" parent="body" groups=["Collision"]]
-unique_name_in_owner = true
-position = Vector2(-16.3752, 254)
-rotation = 1.5708
-shape = SubResource("RectangleShape2D_qajed")
-one_way_collision = true
-one_way_collision_margin = 10.0
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 2
@@ -106,6 +79,7 @@ tab_alignment = 1
 tabs_visible = false
 
 [node name="Q" type="MarginContainer" parent="MarginContainer/VBoxContainer/Tabs"]
+visible = false
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
@@ -308,7 +282,6 @@ unique_name_in_owner = true
 layout_mode = 2
 
 [node name="W" type="MarginContainer" parent="MarginContainer/VBoxContainer/Tabs"]
-visible = false
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
@@ -320,6 +293,7 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 theme = ExtResource("1_nf00e")
+scroll_vertical = 599
 horizontal_scroll_mode = 0
 
 [node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/Tabs/W/ScrollContainer1"]
@@ -568,17 +542,27 @@ alignment = 1
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="PROCEDURE" parent="MarginContainer/VBoxContainer/Tabs/W/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer12" instance=ExtResource("2_enitg")]
-unique_name_in_owner = true
-layout_mode = 2
-
 [node name="HBoxContainer13" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/W/ScrollContainer1/MarginContainer/Upgrades"]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 20
 alignment = 1
 
-[node name="ROUTINE" parent="MarginContainer/VBoxContainer/Tabs/W/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer13" instance=ExtResource("2_enitg")]
+[node name="PROCEDURE" parent="MarginContainer/VBoxContainer/Tabs/W/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer13" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="LIL_SAUCY_BOSSY" parent="MarginContainer/VBoxContainer/Tabs/W/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer13" instance=ExtResource("2_enitg")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer14" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Tabs/W/ScrollContainer1/MarginContainer/Upgrades"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="ROUTINE" parent="MarginContainer/VBoxContainer/Tabs/W/ScrollContainer1/MarginContainer/Upgrades/HBoxContainer14" instance=ExtResource("2_enitg")]
 unique_name_in_owner = true
 layout_mode = 2
 

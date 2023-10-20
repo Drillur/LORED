@@ -94,8 +94,6 @@ signal became_an_adult
 signal received_buff
 
 
-var killed := false
-
 var type: int
 var stage: int
 var last_job: Job
@@ -130,6 +128,7 @@ var emote_queue := []
 
 var key_lored := false
 var autobuy := Bool.new(false)
+var persist := Persist.new()
 
 var autobuy_on_cooldown := false
 
@@ -1051,10 +1050,12 @@ func remove_limit_break(modifier: Big) -> void:
 
 
 
-
 # - Actions
 
+
 func prestige(_stage: int) -> void:
+	if persist.through_stage(_stage):
+		return
 	if _stage >= stage:
 		reset(false)
 		if not gv.run_incremented.is_connected(first_second_of_run_autobuy_check):
@@ -1102,7 +1103,7 @@ func reset(hard: bool):
 
 
 func force_purchase() -> void:
-	if purchased.is_true_on_reset():
+	if purchased.is_false() and purchased.is_true_on_reset():
 		if unlocked.is_false():
 			unlocked.set_to(true)
 		last_purchase_automatic = true
@@ -1709,3 +1710,4 @@ func get_primary_rate() -> Big:
 				)
 			)
 	return rate
+

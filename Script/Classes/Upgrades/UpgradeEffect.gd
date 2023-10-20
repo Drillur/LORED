@@ -77,6 +77,7 @@ var added_currency: int
 var upgrade_menu: int
 var job: int
 var buff: int
+var stage: int
 
 var affected_loreds := []
 
@@ -114,6 +115,8 @@ func _init(_type: int, details: Dictionary) -> void:
 		replaced_upgrade_type = details["replaced_upgrade"]
 	if "buff" in details.keys():
 		buff = details["buff"]
+	if "stage" in details.keys():
+		stage = details["stage"]
 	
 	set_base_text()
 	
@@ -126,13 +129,13 @@ func _init(_type: int, details: Dictionary) -> void:
 			Type.UPGRADE_PERSIST,
 		]
 	):
-		up.all_upgrades_initialized.connect(finish_init)
+		up.all_upgrades_initialized.connect(upgrades_initialized)
 	
 	if type == Type.CURRENCY_PERSIST:
 		for cur in gv.get_currencies_in_stage(details["stage"]):
 			var _currency = wa.get_currency(cur)
-			apply_methods.append(_currency.persist.set_true)
-			remove_methods.append(_currency.persist.reset)
+			apply_methods.append(_currency.persist.get("s" + str(stage)).set_true)
+			remove_methods.append(_currency.persist.get("s" + str(stage)).set_false)
 
 
 func set_base_text() -> void:
@@ -161,13 +164,13 @@ func save_effect(val: bool) -> void:
 			saved_vars.append("effect2")
 
 
-func finish_init() -> void:
+func upgrades_initialized() -> void:
 	match type:
 		Type.UPGRADE_PERSIST:
 			for _type in affected_upgrades:
 				var upgrade = up.get_upgrade(_type)
-				apply_methods.append(upgrade.enable_persist)
-				remove_methods.append(upgrade.disable_persist)
+				apply_methods.append(upgrade.persist.get("s" + str(stage)).set_true)
+				remove_methods.append(upgrade.persist.get("s" + str(stage)).set_false)
 		Type.UPGRADE_AUTOBUYER:
 			for _type in up.get_upgrades_in_menu(upgrade_menu):
 				var upgrade = up.get_upgrade(_type)
@@ -230,8 +233,8 @@ func add_effected_lored(lored_type: int) -> void:
 		Type.UPGRADE_NAME, Type.APPLY_LORED_BUFF:
 			affected_loreds.append(lored_type)
 		Type.LORED_PERSIST:
-			apply_methods.append(lored.purchased.set_reset_value_true)
-			remove_methods.append(lored.purchased.set_reset_value_false)
+			apply_methods.append(lored.persist.get("s" + str(stage)).set_true)
+			remove_methods.append(lored.persist.get("s" + str(stage)).set_false)
 		Type.BONUS_JOB_PRODUCTION:
 			var _job = lored.get_job(job) as Job
 			apply_methods.append(_job.add_bonus_production)

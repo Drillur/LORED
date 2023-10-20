@@ -31,7 +31,7 @@ func setup(_buff: Buff) -> void:
 
 
 
-func _process(delta):
+func _process(_delta):
 	bar.progress = buff.get_progress()
 	duration.text = str(buff.get_time_left()).pad_decimals(1) + "s"
 

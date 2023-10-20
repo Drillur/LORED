@@ -187,6 +187,7 @@ class Objective:
 		ACCEPTABLE_FUEL,
 		COLLECT_CURRENCY,
 		SLEEP,
+		LIMIT_BREAK_LEVEL,
 	}
 	
 	signal completed
@@ -200,7 +201,8 @@ class Objective:
 	var icon_path: String:
 		set(val):
 			icon_path = val
-			icon = load(icon_path)
+			if icon == null:
+				icon = load(icon_path)
 	var color: Color
 	var text: String
 	
@@ -224,6 +226,14 @@ class Objective:
 	
 	func init_LOADED_OBJECTIVE(_data: Dictionary) -> void:
 		progress = ValuePair.new(1)
+	
+	
+	func init_LIMIT_BREAK_LEVEL(_data: Dictionary) -> void:
+		progress = ValuePair.new(_data["level"])
+		icon = up.get_upgrade(Upgrade.Type.LIMIT_BREAK).details.icon
+		icon_path = icon.get_path()
+		color = up.get_upgrade(Upgrade.Type.LIMIT_BREAK).details.color
+		text = "Limit Break Level"
 	
 	
 	func init_LORED_LEVELED_UP(data: Dictionary) -> void:
@@ -287,7 +297,8 @@ class Objective:
 		if progress.is_full():
 			completed.emit()
 			return
-		if has_method("already_completed_" + key) and call("already_completed_" + key):
+		var already_completed_method := "already_completed_" + key
+		if has_method(already_completed_method) and call(already_completed_method):
 			progress.set_to_percent(1)
 		else:
 			if has_method("stop_"  + key):
@@ -297,6 +308,23 @@ class Objective:
 	
 	func progress_filled() -> void:
 		completed.emit()
+	
+	
+	
+	func start_LIMIT_BREAK_LEVEL() -> void:
+		progress.set_to(up.limit_break.level.get_value())
+		if progress.is_not_full():
+			up.limit_break.level.changed.connect(update_LIMIT_BREAK_LEVEL)
+	
+	
+	func update_LIMIT_BREAK_LEVEL() -> void:
+		progress.set_to(up.limit_break.level.get_value())
+		if progress.is_full():
+			up.limit_break.level.changed.disconnect(update_LIMIT_BREAK_LEVEL)
+	
+	
+	func already_completed_LIMIT_BREAK_LEVEL() -> bool:
+		return up.limit_break.level.greater_equal(progress.total.get_as_int())
 	
 	
 	
@@ -453,7 +481,6 @@ var lucky_multiplier := 1.0
 
 var turned_in := false
 var ready_to_turn_in := false
-var killed := false
 
 var help_text: String
 var thank_text: String
@@ -499,11 +526,6 @@ func _init(_type: int) -> void:
 	if thank_icon == null:
 		thank_icon_path = "res://Sprites/reactions/Test.png"
 
-
-func idk(x: float) -> float:
-	if x > 50:
-		return 1.0
-	return (50 - (50 * (1 - exp(-x/5)))) / 10 + 1
 
 
 func init_RANDOM() -> void:
@@ -1260,14 +1282,14 @@ func init_EASIER() -> void:
 func init_TO_DA_LIMIT() -> void:
 	giver = LORED.Type.AXES
 	var lb = up.get_upgrade(Upgrade.Type.LIMIT_BREAK).details.colored_name
-	help_text = "I'm an advanced general intelligence unit, and not only have you never once requested my input, but you have tasked me with creating axes, an act which requires putting a rock on a stick.\n\nIt appears that you are approaching the limit of what is possible given our current personnel and environment. We will soon be forced to search for new friends and abilities.\n\nIn the meantime, I recommend pursuing perfection."
+	var limit = "[rainbow freq=0.15][wave amp=20 freq=1]limit[/wave][/rainbow]"
+	help_text = "I'm an advanced general intelligence unit, and not only have you never once requested my input, but you have tasked me with creating axes, an act which requires putting a rock on a stick.\n\nIt appears that you are approaching the %s of what is possible given our current personnel and environment. We will soon be forced to search for new friends and abilities.\n\nIn the meantime, I recommend pursuing perfection." % limit
 	thank_text = "The diminishing returns of %s are beginning to show in earnest. Let's get the heck out of here." % lb
 	#discord_state = "About to meet a new group of LOREDs!"
 	
-	objective = Objective.new(Objective.Type.UPGRADE_PURCHASED, {
-		"object_type": Upgrade.Type.THE_WITCH_OF_LOREDELITH,
+	objective = Objective.new(Objective.Type.LIMIT_BREAK_LEVEL, {
+		"level": 1000,
 	})
-	add_reward(Reward.new(Reward.Type.AUTO_WISH_TURNIN, {}))
 
 
 
@@ -1317,7 +1339,6 @@ func kill() -> void:
 	objective.wake_up_sleeping_lored()
 	if is_instance_valid(vico):
 		vico.queue_free()
-	killed = true
 	end()
 
 
