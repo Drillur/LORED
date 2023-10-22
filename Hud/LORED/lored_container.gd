@@ -10,14 +10,17 @@ extends MarginContainer
 @onready var scroll_container_4 = %ScrollContainer4
 
 signal lored_vicos_ready
+signal lored_details_requested(lored)
 
 
 
 func _ready():
 	_on_tab_container_tab_changed(0)
 	for lored in lv.get_all_loreds():
-		lored.attach_vico(get_node("%" + lored.key))
+		var node = get_node("%" + lored.key)
+		lored.attach_vico(node)
 		connect("lored_vicos_ready", lored.lored_vicos_ready)
+		node.lored_details_requested.connect(emit_details)
 	emit_signal("lored_vicos_ready")
 	
 	for i in range(1, 5):
@@ -50,3 +53,6 @@ func hide_all_vbox_and_hbox_containers(node: Node = self) -> void:
 	for child in node.get_children():
 		hide_all_vbox_and_hbox_containers(child)
 
+
+func emit_details(lored: LORED) -> void:
+	lored_details_requested.emit(lored)

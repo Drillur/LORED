@@ -1,7 +1,9 @@
 VBoxContainer
+MarginContainer
+Button
+TabContainer
 Panel
 GridContainer
-MarginContainer
 ProgressBar
 TextureProgressBar
 TextureRect
@@ -10,7 +12,6 @@ HBoxContainer
 Control
 ColorRect
 AnimationPlayer
-Button
 RichTextLabel
 Sprite2D
 Timer
@@ -29,4 +30,3 @@ LOREDVico
 Camera2D
 Container
 HScrollBar
-MenuButton

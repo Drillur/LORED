@@ -10,7 +10,6 @@ var saved_vars := [
 
 
 func load_finished() -> void:
-	refresh_emote_timer()
 	start_all_main_emotes()
 	if random_emotes_allowed:
 		print("random emotes allowed")

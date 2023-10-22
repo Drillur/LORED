@@ -12,7 +12,15 @@ signal pressed
 @onready var texts = $Texts
 
 @export var icon: Texture2D
-@export var text: String
+@export var text: String:
+	set(val):
+		text = val
+		if not is_node_ready():
+			await ready
+		if text == "GameName":
+			label.text = "[b][i]LORED\n[color=#000000cc]" + ProjectSettings.get("application/config/Version")
+		else:
+			label.text = text
 
 @export var color := Color.WHITE:
 	set(val):
@@ -29,11 +37,6 @@ signal pressed
 
 
 func _ready():
-	if text == "GameName":
-		label.text = "[b][i]LORED\n[color=#000000cc]" + ProjectSettings.get("application/config/Version")
-	else:
-		label.text = text
-	
 	color = color
 	
 	set_icon(icon)

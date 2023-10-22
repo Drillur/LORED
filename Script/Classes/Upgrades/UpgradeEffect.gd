@@ -4,18 +4,12 @@ extends RefCounted
 
 
 var saved_vars := [
-	"applied",
 ]
 
 
 func load_started() -> void:
 	remove()
 
-
-func load_finished() -> void:
-	if applied:
-		applied = false
-		apply()
 
 
 enum Type {
@@ -39,7 +33,7 @@ enum Type {
 	UPGRADE_NAME,
 	LIMIT_BREAK,
 	APPLY_LORED_BUFF,
-	
+	PRESTIGE_IMMEDIATELY,
 }
 
 enum BONUS_ACTION {
@@ -121,7 +115,6 @@ func _init(_type: int, details: Dictionary) -> void:
 	set_base_text()
 	
 	SaveManager.connect("load_started", load_started)
-	SaveManager.connect("load_finished", load_finished)
 	
 	if (
 		type in [
@@ -280,7 +273,6 @@ func apply() -> void:
 			effect.changed.connect(refresh)
 		if effect2 != null:
 			effect2.changed.connect(refresh)
-		
 		if replaced_upgrade_type >= 0:
 			var replaced_effect = up.get_upgrade(replaced_upgrade_type).effect as UpgradeEffect
 			if replaced_effect.applied:
@@ -336,6 +328,8 @@ func remove() -> void:
 
 
 func refresh() -> void:
+	if in_hand == null:
+		return
 	match type:
 		Type.BONUS_ACTION_ON_CURRENCY_GAIN:
 			match upgrade_type:
@@ -387,6 +381,8 @@ func apply_effects() -> void:
 				for lored_type in affected_loreds:
 					var lored = lv.get_lored(lored_type)
 					Buffs.apply_buff_on_lored(lored, buff)
+			Type.PRESTIGE_IMMEDIATELY:
+				gv.prestige_now(stage)
 			Type.LIMIT_BREAK:
 				up.limit_break.enable()
 			Type.BONUS_ACTION_ON_CURRENCY_GAIN:

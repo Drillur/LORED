@@ -105,6 +105,7 @@ var upgrade_menus := {}
 var upgrade_menu_by_key := {}
 var purchasable_upgrade_count := Int.new(0)
 var limit_break := LimitBreak.new()
+var routine := RoutineUpgrade.new()
 
 
 
@@ -212,14 +213,6 @@ func get_colored_upgrade_menu_icon_and_name(menu: int) -> String:
 
 func get_menu_icon_and_name(menu: int) -> String:
 	return upgrade_menus[menu].icon_text + " " + get_menu_name(menu)
-
-
-func get_current_upgrade_count_in_menu_text(menu: int) -> String:
-	return str(get_current_upgrade_count_in_menu(menu))
-
-
-func get_upgrade_total_in_menu_text(menu: int) -> String:
-	return str(get_upgrade_total_in_menu(menu))
 
 
 func get_random_upgrade_description() -> String:

@@ -28,6 +28,9 @@ var type: int
 var key: String
 
 var prestige_name: String
+var noun: String
+var present_verb: String
+var past_verb: String
 var details := Details.new()
 
 var times_prestiged := 0
@@ -64,6 +67,9 @@ func MALIGNANT():
 	details.color = Color(0.878431, 0.121569, 0.34902)
 	details.icon = load("res://Sprites/Hud/Tab/s1m.png")
 	prestige_name = "Metastasize"
+	noun = "Metastasis"
+	past_verb = "Metastasized"
+	present_verb = prestige_name
 func EXTRA_NORMAL(): 
 	details.color = Color(0.47451, 0.870588, 0.694118)
 	details.icon = load("res://Sprites/Hud/Tab/s2n.png")
@@ -71,6 +77,9 @@ func RADIATIVE():
 	details.color = Color(1, 0.541176, 0.541176)
 	details.icon = load("res://Sprites/Hud/Tab/s2m.png")
 	prestige_name = "Chemotherapy"
+	noun = "Chemotherapy"
+	past_verb = "taken Chemotherapy"
+	present_verb = "undergo Chemotherapy"
 func RUNED_DIAL(): 
 	details.color = Color(1, 0.541176, 0.541176)
 func SPIRIT(): 

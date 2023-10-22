@@ -215,7 +215,7 @@ func add_currency_to_cost(cur: int) -> void:
 
 
 
-func throw_texts(parent_node: Node) -> void:
+func throw_texts(parent_node: Node, bought: bool) -> void:
 	if Engine.get_frames_per_second() >= 60:
 		var text = FlyingText.new(
 			FlyingText.Type.CURRENCY,
@@ -226,7 +226,7 @@ func throw_texts(parent_node: Node) -> void:
 		for cur in cost:
 			text.add({
 				"cur": cur,
-				"text": "-" + cost[cur].get_text(),
+				"text": ("-" if bought else "+") + cost[cur].get_text(),
 				"crit": false,
 			})
 		text.go()

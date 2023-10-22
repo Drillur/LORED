@@ -14,10 +14,10 @@ var saved_vars := [
 
 func load_finished() -> void:
 	if purchased.is_true():
-		if pending_prestige:
+		if pending_prestige.is_true():
 			refund()
-		unlocked.became_true.emit()
-		unlocked.emit_changed()
+		else:
+			apply()
 
 
 
@@ -284,13 +284,16 @@ var effected_loreds_text: String
 var loreds: Array
 
 var unlocked := Bool.new(true)
-var purchased := Bool.new(false)
-
 func unlocked_updated() -> void:
 	affordable_changed()
+	if unlocked.is_false() and purchased.is_true():
+		if pending_prestige.is_true():
+			refund()
+		else:
+			remove()
 	if vico != null:
 		vico.cost_update()
-
+var purchased := Bool.new(false)
 func purchased_updated() -> void:
 	affordable_changed()
 	upgrade_purchased_changed.emit(self)
@@ -305,21 +308,9 @@ var autobuy := false:
 				became_affordable_and_unpurchased.emit(type, false)
 			affordable_changed()
 			autobuy_changed.emit()
-
-
-
+var pending_prestige := Bool.new(false)
+var purchase_finalized := Bool.new(false)
 var special: bool
-
-var pending_prestige := false
-
-var vico: UpgradeVico:
-	set(val):
-		vico = val
-
-var persist := Persist.new()
-
-var effect: UpgradeEffect
-
 var has_required_upgrade := false
 var required_upgrade: int:
 	set(val):
@@ -330,6 +321,11 @@ var required_upgrade: int:
 		upgrade.purchased.became_false.connect(required_upgrade_unpurchased)
 		unlocked.set_to(up.is_upgrade_purchased(required_upgrade))
 
+var vico: UpgradeVico:
+	set(val):
+		vico = val
+var persist := Persist.new()
+var effect: UpgradeEffect
 var cost: Cost
 
 
@@ -377,11 +373,10 @@ func _init(_type: int) -> void:
 			else:
 				upgrade_menu = UpgradeMenu.Type.S4M
 	
-	if special:
-		gv.get("stage" + str(stage)).just_reset.connect(finalize_purchase)
+	if type == Type.ROUTINE:
+		special = false
 	
-	if type != Type.ROUTINE:
-		up.add_upgrade_to_menu(upgrade_menu, type)
+	up.add_upgrade_to_menu(upgrade_menu, type)
 	
 	if not has_method("init_" + key):
 		return
@@ -1283,13 +1278,19 @@ func init_LIL_SAUCY_BOSSY() -> void:
 func init_ROUTINE() -> void:
 	details.name = "[i]Routine[/i]"
 	var metas = gv.get_stage(1).details.color_text % "Metastasizes"
-	var meta2 = gv.get_stage(1).details.color_text % "Metastasis"
-	details.description = "%s immediately. This Upgrade does not persist through %s." % [metas, meta2]
+	details.description = "%s immediately. After one second, becomes purchasable again." % metas
 	details.icon = res.get_resource("s1m")
 	details.color = gv.get_stage_color(1)
+	effect = UpgradeEffect.new(
+		UpgradeEffect.Type.PRESTIGE_IMMEDIATELY, {
+			"upgrade_type": type,
+			"stage": 1,
+		}
+	)
 	cost = Cost.new({
 		Currency.Type.MALIGNANCY: Value.new("1e20"),
 	})
+	persist.s1.set_to(true)
 	await up.all_upgrades_initialized
 	required_upgrade = Type.LIL_SAUCY_BOSSY
 
@@ -3340,17 +3341,17 @@ func update_effected_loreds_text() -> void:
 
 
 func purchase() -> void:
-	if purchased.is_true() or pending_prestige:
+	if purchased.is_true() or pending_prestige.is_true():
 		return
 	cost.purchase(true)
 	purchased.set_to(true)
 	if special:
-		pending_prestige = true
+		pending_prestige.set_to(true)
 	else:
 		finalize_purchase()
 
 
-func finalize_purchase() -> void:
+func finalize_purchase() -> void: # - THIS SHIT aint being called for special upgrades. that's right!
 	apply()
 	times_purchased += 1
 
@@ -3358,7 +3359,8 @@ func finalize_purchase() -> void:
 func apply() -> void:
 	if effect != null:
 		effect.apply()
-	pending_prestige = false
+	pending_prestige.set_to(false)
+	purchase_finalized.set_to(true)
 
 
 func refund() -> void:
@@ -3370,8 +3372,9 @@ func refund() -> void:
 
 func remove() -> void:
 	if purchased.is_true():
+		purchase_finalized.set_to(false)
 		if special:
-			pending_prestige = false
+			pending_prestige.set_to(false)
 		if effect.applied:
 			effect.remove()
 			effect.reset_effects()
@@ -3382,6 +3385,8 @@ func remove() -> void:
 
 
 func enable_autobuy() -> void:
+	if gv.session_duration < 1.0:
+		await gv.one_second
 	autobuy = true
 
 
@@ -3393,12 +3398,12 @@ func disable_autobuy() -> void:
 func prestige(_stage: int) -> void:
 	if persist.through_stage(_stage):
 		if _stage == stage:
-			if pending_prestige:
-				apply()
+			if pending_prestige.is_true():
+				finalize_purchase()
 			else:
 				reset_effects()
 	else:
-		if pending_prestige:
+		if pending_prestige.is_true():
 			refund()
 		else:
 			remove()
@@ -3419,7 +3424,7 @@ func reset() -> void:
 	if effect != null and effect.dynamic:
 		effect.reset_effects()
 	times_purchased = 0
-	pending_prestige = false
+	pending_prestige.set_to(false)
 
 
 

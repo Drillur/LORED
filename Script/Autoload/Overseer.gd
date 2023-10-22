@@ -643,6 +643,7 @@ func prestige_now(stage: int) -> void:
 	about_to_prestige.emit()
 	run_duration = 0
 	prestige.emit(stage)
+	get_stage(stage).prestiged.emit()
 	prestiged.emit()
 
 

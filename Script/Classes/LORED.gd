@@ -1239,6 +1239,8 @@ func automatic_purchase(levels_to_buy := -1) -> void:
 	set_level_to(level + gained_levels)
 	if stage == 1 and level == 5:
 		became_an_adult.emit()
+	
+	autobuy_check()
 #	if gained_levels > 1:
 #		printt(key, "leveled up %s times" % str(gained_levels))
 

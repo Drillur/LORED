@@ -25,8 +25,8 @@ func _ready():
 	upgrade = up.get_upgrade(upgrade_type) as Upgrade
 	name_label.text = upgrade.details.name
 	
-	upgrade.purchased.became_true.connect(show_self)
-	upgrade.purchased.became_false.connect(hide)
+	upgrade.purchase_finalized.became_true.connect(show_self)
+	upgrade.purchase_finalized.became_false.connect(hide)
 	upgrade.effect.is_overwritten.became_true.connect(hide)
 	upgrade.effect.is_overwritten.became_false.connect(show_self)
 	

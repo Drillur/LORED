@@ -37,6 +37,9 @@ func load_started() -> void:
 @onready var sleep_timer = $"Sleep Timer"
 @onready var level_up_texts = %"Level Up Texts"
 @onready var fuel_background = %"Fuel Background"
+@onready var details = %Details
+
+signal lored_details_requested(lored)
 
 var prefer_left_down: bool
 var has_lored := false
@@ -79,6 +82,7 @@ func _ready():
 	sleep_text_timer.connect("timeout", start_spewing_sleep_text)
 	sleep_timer.connect("timeout", spent_one_second_asleep)
 	sleep_timer.connect("timeout", start_sleep_timer)
+	details.pressed.connect(emit_details)
 	
 	SaveManager.connect("load_finished", load_finished)
 	SaveManager.connect("load_started", load_started)
@@ -145,6 +149,7 @@ func attach_lored(_lored: LORED) -> void:
 	sleep.color = lored.details.alt_color
 	view_special.color = lored.details.alt_color
 	level_up.color = lored.details.alt_color
+	details.modulate = lored.details.color
 	
 	info.button.mouse_default_cursor_shape = Control.CURSOR_ARROW
 	jobs.button.mouse_default_cursor_shape = Control.CURSOR_ARROW
@@ -458,3 +463,5 @@ func display_parents(node) -> void:
 	display_parents(node.get_parent())
 
 
+func emit_details() -> void:
+	lored_details_requested.emit(lored)

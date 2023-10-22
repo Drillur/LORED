@@ -124,9 +124,12 @@ func select_tab(tab: int) -> void:
 
 func set_count_text() -> void:
 	var cur_menu = tabs.current_tab
-	var cur_upgrades = up.get_current_upgrade_count_in_menu_text(cur_menu)
-	var total_upgrades = up.get_upgrade_total_in_menu_text(cur_menu)
-	count.text = "[i][b]" + cur_upgrades + "[/b]/" + total_upgrades
+	var cur_upgrades = up.get_current_upgrade_count_in_menu(cur_menu)
+	var total_upgrades = up.get_upgrade_total_in_menu(cur_menu)
+	if cur_menu == UpgradeMenu.Type.MALIGNANT:
+		total_upgrades -= 1
+		cur_upgrades = min(cur_upgrades, total_upgrades)
+	count.text = "[i][b]" + str(cur_upgrades) + "[/b]/" + str(total_upgrades)
 
 
 

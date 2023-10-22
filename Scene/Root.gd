@@ -40,6 +40,8 @@ extends MarginContainer
 @onready var upgrade_section = %"Upgrade Section"
 @onready var upgrade_vicos = %UpgradeVicos
 
+@onready var right_bar = %RightBar
+
 var menu_container_size: float
 var upgrade_section_queued := false
 
@@ -70,6 +72,11 @@ func _ready():
 	update_menu_size_once()
 	wallet.color_changed.connect(on_wallet_color_changed)
 	wallet_button.color = gv.get_stage_color(Stage.Type.STAGE1)
+	
+	
+	# RIGHTBAR
+	
+	lored_container.lored_details_requested.connect(right_bar.setup_lored_details)
 	
 	
 	wa.wallet_unlocked_changed.connect(display_wallet_button)
@@ -460,7 +467,7 @@ func _on_dev_1_pressed():
 
 
 func _on_dev_2_pressed():
-	up.limit_break.add_xp(Big.new("1e900"))
+	up.routine.test()
 
 
 func _on_dev_3_pressed():
@@ -468,4 +475,4 @@ func _on_dev_3_pressed():
 
 
 func _on_dev_4_pressed():
-	pass
+	wa.add(Currency.Type.MALIGNANCY, "1e20")

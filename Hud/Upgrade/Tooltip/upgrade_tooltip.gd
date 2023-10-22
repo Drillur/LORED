@@ -6,6 +6,8 @@ var color: Color:
 	set(val):
 		color = val
 		title_bg.modulate = val
+		pending_prestige_background.modulate = val
+		pending_prestige_breaker.modulate = val
 
 @onready var title_bg = %"title bg"
 @onready var title = %Title
@@ -19,6 +21,14 @@ var color: Color:
 @onready var required_upgrade = %required_upgrade
 @onready var required_upgrade_title_bg = %"required upgrade title bg"
 @onready var random_upgrade_description = %random_upgrade_description
+
+@onready var pending_prestige = %"Pending Prestige"
+@onready var pending_prestige_title = %"Pending Prestige Title"
+@onready var pending_prestige_description = %"Pending Prestige Description"
+@onready var pending_prestige_background = %"Pending Prestige Background"
+@onready var pending_prestige_breaker = %breaker
+
+var is_pending_prestige_set := false
 
 var upgrade: Upgrade
 
@@ -56,6 +66,10 @@ func setup(data: Dictionary) -> void:
 		update_effect_text()
 		recipients.show()
 		effect.show()
+	
+	pending_prestige_changed()
+	upgrade.pending_prestige.changed.connect(pending_prestige_changed)
+	upgrade.pending_prestige.became_true.connect(pending_prestige_became_true)
 	
 	match upgrade.type:
 		Upgrade.Type.JOHN_PETER_BAIN_TOTALBISCUIT:
@@ -104,6 +118,21 @@ func set_random_upgrade_description() -> void:
 	random_upgrade_description.text = up.get_random_upgrade_description()
 	var text_length = random_upgrade_description.text.length()
 	random_upgrade_description.custom_minimum_size.x = min(280, max(50 + text_length * 2, custom_minimum_size.x))
+
+
+func pending_prestige_changed() -> void:
+	pending_prestige.visible = upgrade.pending_prestige.get_value()
+	if upgrade.pending_prestige.is_true():
+		if not is_pending_prestige_set:
+			is_pending_prestige_set = true
+			pending_prestige_title.text = pending_prestige_title.text % up.get_upgrade_menu(upgrade.upgrade_menu).noun
+			pending_prestige_description.text = pending_prestige_description.text % up.get_upgrade_menu(upgrade.upgrade_menu).present_verb
+
+
+func pending_prestige_became_true() -> void:
+	gv.flash(pending_prestige, color)
+
+
 
 
 func get_price_node() -> Node:

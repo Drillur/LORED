@@ -8,6 +8,7 @@ extends MarginContainer
 @onready var check = %CheckBox
 @onready var center = %Center
 @onready var lock = %Lock
+@onready var pending_prestige = %PendingPrestige
 
 var tooltip_parent: Control
 
@@ -35,6 +36,7 @@ func setup(_upgrade: Upgrade):
 	check.self_modulate = upgrade.details.color
 	lock.modulate = upgrade.details.color
 	button.autobuyer.modulate = upgrade.details.color
+	pending_prestige.modulate = up.get_upgrade_menu(upgrade.upgrade_menu).details.color
 	
 	button.mouse_entered.connect(show_tooltip)
 	button.mouse_exited.connect(gv.clear_tooltip)
@@ -42,6 +44,8 @@ func setup(_upgrade: Upgrade):
 	
 	upgrade.purchased.connect_and_call("changed", purchased_changed)
 	upgrade.unlocked.connect_and_call("changed", unlocked_changed)
+	upgrade.pending_prestige.connect_and_call("changed", pending_prestige_changed)
+	upgrade.pending_prestige.became_false.connect(pending_prestige_became_false)
 	upgrade.autobuy_changed.connect(autobuyer_display)
 	
 	check.hide()
@@ -111,14 +115,23 @@ func autobuyer_display() -> void:
 		button.autobuyer.stop()
 
 
+func pending_prestige_changed() -> void:
+	pending_prestige.visible = upgrade.pending_prestige.get_value()
+
+
+func pending_prestige_became_false() -> void:
+	upgrade.cost.throw_texts(center, false)
+
+
 
 # - Actions
 
 func purchase() -> void:
+	#printt(upgrade.key, upgrade.unlocked.get_value(), upgrade.purchased.get_value(), upgrade.effect.applied if upgrade.effect != null else "")
 	if upgrade.purchased.is_false():
 		if upgrade.unlocked.is_true() and (upgrade.cost.affordable.is_true() or gv.dev_mode):
 			upgrade.purchase()
-			upgrade.cost.throw_texts(center)
+			upgrade.cost.throw_texts(center, true)
 		elif upgrade.unlocked.is_true():
 			gv.get_tooltip().get_price_node().flash()
 		else:
@@ -134,5 +147,5 @@ func flash() -> void:
 # - DEV
 
 func _on_button_right_mouse_pressed():
-	if gv.dev_mode:
+	if upgrade.pending_prestige.is_true():
 		upgrade.refund()

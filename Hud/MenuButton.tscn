@@ -1,8 +1,9 @@
-[gd_scene load_steps=7 format=3 uid="uid://bfi0uovwegdxj"]
+[gd_scene load_steps=8 format=3 uid="uid://bfi0uovwegdxj"]
 
 [ext_resource type="Script" path="res://Hud/MenuButton.gd" id="1_pwhdq"]
 [ext_resource type="Texture2D" uid="uid://djwo8cenuwp14" path="res://Sprites/Hud/Menu.png" id="2_rnf1g"]
 [ext_resource type="Theme" uid="uid://dt7rd31blnvth" path="res://Theme/Invis.tres" id="2_w2of4"]
+[ext_resource type="Texture2D" uid="uid://dqdklgt8ebwrv" path="res://Sprites/Hud/arrow-left.png" id="4_2vhnf"]
 [ext_resource type="Theme" uid="uid://b8t7tkhvril5g" path="res://Theme/Standard.tres" id="4_eba2e"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_icq3d"]
@@ -64,7 +65,7 @@ offset_right = 24.0
 offset_bottom = 24.0
 size_flags_horizontal = 0
 mouse_filter = 2
-texture = ExtResource("2_rnf1g")
+texture = ExtResource("4_2vhnf")
 expand_mode = 2
 stretch_mode = 5
 

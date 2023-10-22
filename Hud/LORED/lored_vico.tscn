@@ -69,40 +69,43 @@ kill_markers = true
 
 [node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/MarginContainer"]
 layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/MarginContainer/MarginContainer"]
+layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/MarginContainer/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/MarginContainer/MarginContainer/MarginContainer"]
 layout_mode = 2
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/MarginContainer/MarginContainer/VBoxContainer"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/MarginContainer/MarginContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 alignment = 1
 
-[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/MarginContainer/MarginContainer/VBoxContainer/HBoxContainer2"]
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/MarginContainer/MarginContainer/MarginContainer/VBoxContainer/HBoxContainer2"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/MarginContainer/MarginContainer/VBoxContainer/HBoxContainer2/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/MarginContainer/MarginContainer/MarginContainer/VBoxContainer/HBoxContainer2/MarginContainer"]
 layout_mode = 2
 size_flags_horizontal = 0
 theme_override_constants/separation = 10
 alignment = 1
 
-[node name="Name and Icon" type="HBoxContainer" parent="VBoxContainer/MarginContainer/MarginContainer/VBoxContainer/HBoxContainer2/MarginContainer/VBoxContainer"]
+[node name="Name and Icon" type="HBoxContainer" parent="VBoxContainer/MarginContainer/MarginContainer/MarginContainer/VBoxContainer/HBoxContainer2/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(107, 0)
 layout_mode = 2
 
-[node name="LORED Icon" type="TextureRect" parent="VBoxContainer/MarginContainer/MarginContainer/VBoxContainer/HBoxContainer2/MarginContainer/VBoxContainer/Name and Icon"]
+[node name="LORED Icon" type="TextureRect" parent="VBoxContainer/MarginContainer/MarginContainer/MarginContainer/VBoxContainer/HBoxContainer2/MarginContainer/VBoxContainer/Name and Icon"]
 unique_name_in_owner = true
 layout_mode = 2
 texture = ExtResource("4_g5nc0")
 stretch_mode = 5
 
-[node name="LORED Name" type="RichTextLabel" parent="VBoxContainer/MarginContainer/MarginContainer/VBoxContainer/HBoxContainer2/MarginContainer/VBoxContainer/Name and Icon"]
+[node name="LORED Name" type="RichTextLabel" parent="VBoxContainer/MarginContainer/MarginContainer/MarginContainer/VBoxContainer/HBoxContainer2/MarginContainer/VBoxContainer/Name and Icon"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -112,7 +115,7 @@ bbcode_enabled = true
 text = "Carcinogens,"
 fit_content = true
 
-[node name="Currency" parent="VBoxContainer/MarginContainer/MarginContainer/VBoxContainer/HBoxContainer2/MarginContainer/VBoxContainer" instance=ExtResource("3_omytn")]
+[node name="Currency" parent="VBoxContainer/MarginContainer/MarginContainer/MarginContainer/VBoxContainer/HBoxContainer2/MarginContainer/VBoxContainer" instance=ExtResource("3_omytn")]
 unique_name_in_owner = true
 visible = false
 custom_minimum_size = Vector2(82, 0)
@@ -120,21 +123,21 @@ layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 4
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/MarginContainer/MarginContainer/VBoxContainer/HBoxContainer2/MarginContainer/VBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/MarginContainer/MarginContainer/MarginContainer/VBoxContainer/HBoxContainer2/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/MarginContainer/MarginContainer/VBoxContainer/HBoxContainer2"]
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/MarginContainer/MarginContainer/MarginContainer/VBoxContainer/HBoxContainer2"]
 layout_mode = 2
 
-[node name="Panel" type="Panel" parent="VBoxContainer/MarginContainer/MarginContainer/VBoxContainer/HBoxContainer2"]
+[node name="Panel" type="Panel" parent="VBoxContainer/MarginContainer/MarginContainer/MarginContainer/VBoxContainer/HBoxContainer2"]
 custom_minimum_size = Vector2(68, 68)
 layout_mode = 2
 size_flags_horizontal = 8
 theme = ExtResource("4_43dff")
 theme_override_styles/panel = SubResource("StyleBoxFlat_iihta")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="VBoxContainer/MarginContainer/MarginContainer/VBoxContainer/HBoxContainer2/Panel"]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="VBoxContainer/MarginContainer/MarginContainer/MarginContainer/VBoxContainer/HBoxContainer2/Panel"]
 unique_name_in_owner = true
 position = Vector2(2, 2)
 scale = Vector2(2, 2)
@@ -144,22 +147,30 @@ frame_progress = 0.0209391
 centered = false
 script = ExtResource("9_tchys")
 
-[node name="Fuel Bar" parent="VBoxContainer/MarginContainer/MarginContainer/VBoxContainer" instance=ExtResource("2_p04r2")]
+[node name="Fuel Bar" parent="VBoxContainer/MarginContainer/MarginContainer/MarginContainer/VBoxContainer" instance=ExtResource("2_p04r2")]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 8
 animate = true
 
-[node name="Fuel Background" type="Panel" parent="VBoxContainer/MarginContainer/MarginContainer/VBoxContainer/Fuel Bar"]
+[node name="Fuel Background" type="Panel" parent="VBoxContainer/MarginContainer/MarginContainer/MarginContainer/VBoxContainer/Fuel Bar"]
 unique_name_in_owner = true
 show_behind_parent = true
 layout_mode = 2
 theme = ExtResource("1_7ail2")
 theme_override_styles/panel = SubResource("StyleBoxFlat_km2b0")
 
+[node name="Details" type="Button" parent="VBoxContainer/MarginContainer/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+mouse_default_cursor_shape = 2
+theme = ExtResource("4_43dff")
+
 [node name="bg" type="Panel" parent="VBoxContainer/MarginContainer"]
 layout_mode = 2
+mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_8qmng")
 metadata/_edit_lock_ = true
 

@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://bvb7sgyflbxkp"]
+[gd_scene load_steps=7 format=3 uid="uid://bvb7sgyflbxkp"]
 
 [ext_resource type="PackedScene" uid="uid://cb3ej8nlybhvm" path="res://Hud/icon_button.tscn" id="1_36ve1"]
 [ext_resource type="Script" path="res://Hud/Upgrade/upgrade_vico.gd" id="1_y3gc6"]
@@ -9,6 +9,13 @@
 bg_color = Color(0.117647, 0.117647, 0.117647, 1)
 shadow_color = Color(0.117647, 0.117647, 0.117647, 1)
 shadow_size = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_asiqu"]
+bg_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
 
 [node name="Upgrade Vico" type="MarginContainer"]
 custom_minimum_size = Vector2(50, 50)
@@ -81,5 +88,15 @@ anchor_right = 0.5
 anchor_bottom = 0.5
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="PendingPrestige" type="Panel" parent="Control/Center"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(8, 8)
+layout_mode = 2
+offset_left = -4.0
+offset_top = -29.0
+offset_right = 4.0
+offset_bottom = -21.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_asiqu")
 
 [connection signal="right_mouse_pressed" from="Button" to="." method="_on_button_right_mouse_pressed"]

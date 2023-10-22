@@ -15,13 +15,14 @@ extends MarginContainer
 
 
 func _ready():
+	hide()
 	name_label.text = up.get_upgrade_name(Upgrade.Type.LIMIT_BREAK)
 	update_level()
 	update_lb_xp_cur()
 	update_lb_xp_max()
 	update_lb_colors()
-	up.get_upgrade(Upgrade.Type.LIMIT_BREAK).purchased.became_true.connect(show)
-	up.get_upgrade(Upgrade.Type.LIMIT_BREAK).purchased.became_false.connect(hide)
+	up.get_upgrade(Upgrade.Type.LIMIT_BREAK).purchase_finalized.became_true.connect(show)
+	up.get_upgrade(Upgrade.Type.LIMIT_BREAK).purchase_finalized.became_false.connect(hide)
 	bar.attach_attribute(up.limit_break.xp)
 	button.mouse_entered.connect(show_tooltip)
 	button.mouse_exited.connect(gv.clear_tooltip)

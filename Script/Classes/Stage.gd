@@ -18,7 +18,7 @@ enum Type {
 }
 
 signal stage_unlocked_changed(stage, unlocked)
-signal just_reset
+signal prestiged
 
 var type: int
 var key: String
