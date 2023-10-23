@@ -9,23 +9,32 @@ extends MarginContainer
 @onready var icon = %Icon
 @onready var icon_shadow = %"Icon Shadow"
 
+var lored: LORED
 var currency: Currency
-
 var first_setup := true
-
 var display_rate := true
 
 
 
-func setup(_currency: int) -> void:
+func attach_lored(_lored: LORED) -> void:
+	lored = _lored
+	lored.active_currency.changed.connect(setup)
+	setup()
+
+
+func clear_lored() -> void:
+	disconnect_calls()
+	lored = null
+
+
+
+func setup(cur: int = lored.active_currency.get_value()) -> void:
 	if not first_setup:
-		if _currency == currency.type:
-			return
-		currency.count.disconnect("changed", update_count)
-		currency.net_rate.disconnect("changed", update_rate)
+		if cur != currency.type:
+			disconnect_calls()
 	
 	first_setup = false
-	currency = wa.get_currency(_currency) as Currency
+	currency = wa.get_currency(cur) as Currency
 	icon.texture = currency.details.icon
 	icon_shadow.texture = icon.texture
 	count.self_modulate = currency.details.color
@@ -38,6 +47,13 @@ func setup(_currency: int) -> void:
 	
 	update_count()
 	update_rate()
+	
+	show()
+
+
+func disconnect_calls() -> void:
+	currency.count.disconnect("changed", update_count)
+	currency.net_rate.disconnect("changed", update_rate)
 
 
 

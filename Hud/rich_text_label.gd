@@ -3,7 +3,12 @@ extends RichTextLabel
 
 
 
+@export var _text: String:
+	set(val):
+		text = val
+
 var temp = 0
+
 
 
 func h_shrink_begin() -> void:

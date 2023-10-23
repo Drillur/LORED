@@ -14,6 +14,7 @@ extends MarginContainer
 @export var animate := false
 @export var kill_background := false
 
+
 var color: Color:
 	set(val):
 		color = val
@@ -32,6 +33,7 @@ var delta_speed := 0.0
 var start_time := 0.0
 var threshold: float
 
+var timer: Timer
 var attribute: ValuePair
 
 
@@ -61,6 +63,8 @@ func _process(delta) -> void:
 				delta_speed = 0.0
 	elif start_time != 0.0:
 		progress = (Time.get_unix_time_from_system() - start_time) / threshold
+	elif timer != null:
+		progress = 1 - (timer.time_left / timer.wait_time)
 
 
 func _on_resized():
@@ -82,6 +86,8 @@ func show_edge() -> void:
 
 
 func attach_attribute(_attribute: ValuePair) -> void:
+	if attribute != null:
+		attribute.changed.disconnect(update_progress)
 	attribute = _attribute
 	attribute.changed.connect(update_progress)
 	update_progress()
@@ -141,3 +147,14 @@ func set_initial_progress(value: float):
 	if animate:
 		delta_bar.hide()
 		delta_bar.size.y = size.y
+
+
+
+# - Timer based
+
+
+func attach_timer(_timer: Timer) -> void:
+	if timer != null:
+		timer = null
+	timer = _timer
+	set_process(true)

@@ -87,7 +87,7 @@ enum ReasonCannotWork {
 signal became_unable_to_work
 signal completed_job
 signal leveled_up(level)
-signal job_started(job)
+signal job_started
 signal spent_one_second_asleep
 signal currency_produced(amount)
 signal became_an_adult
@@ -100,6 +100,7 @@ var last_job: Job
 var primary_currency: int
 var fuel_currency: int
 var reason_cannot_work := 0
+var active_currency: Int
 
 var produced_currencies := []
 var required_currencies := []
@@ -151,6 +152,7 @@ var pronoun_him := "him"
 var pronoun_his := "his"
 var pronoun_man := "man"
 var pronoun_boy := "boy"
+var status := LoudString.new("Idle")
 
 var default_frames: SpriteFrames
 
@@ -186,6 +188,7 @@ func _init(_type: int = 0) -> void:
 	
 	call("init_" + key)
 	
+	active_currency = Int.new(primary_currency)
 	cost.cache_costs()
 	
 	details.set_title(key.replace("_", " ").capitalize() + " LORED")
@@ -207,6 +210,7 @@ func _init(_type: int = 0) -> void:
 	gv.prestige.connect(prestige)
 	gv.prestiged.connect(force_purchase)
 	gv.prestiged.connect(autobuy_check)
+	cost.became_safe.connect(autobuy_check)
 	gv.hard_reset.connect(hard_reset)
 	
 	# stage and fuel
@@ -949,6 +953,7 @@ func asleep_updated() -> void:
 	if asleep.is_true():
 		time_went_to_bed = Time.get_unix_time_from_system()
 		lv.lored_went_to_sleep(type)
+		active_currency.reset()
 	else:
 		lv.lored_became_inactive(type)
 		if time_went_to_bed != 0:
@@ -1068,6 +1073,8 @@ func hard_reset() -> void:
 
 func reset(hard: bool):
 	emoting.set_to(false)
+	status.reset()
+	active_currency.reset()
 	purchased.set_to(false)
 	if hard:
 		output.reset()
@@ -1416,8 +1423,10 @@ func start_job(_type: int) -> void:
 	working.set_to(true)
 	if vico == null:
 		return
+	status.set_to(last_job.status_text)
+	active_currency.set_to(last_job.get_primary_currency())
 	vico.start_job(last_job)
-	emit_signal("job_started", last_job)
+	job_started.emit()
 
 
 func stop_job() -> void:
@@ -1455,17 +1464,16 @@ func cannot_work(reason: int) -> void:
 		ReasonCannotWork.INSUFFICIENT_FUEL:
 			var _fuel = Big.new(fuel.get_total()).d(2).text
 			var cur = wa.get_icon_and_name_text(fuel_currency)
-			vico.set_status_and_currency(
-				"Awaiting %s %s." % [_fuel, cur],
-				 fuel_currency
-			)
+			status.set_to("Awaiting %s %s." % [_fuel, cur])
+			active_currency.set_to(fuel_currency)
 		ReasonCannotWork.INSUFFICIENT_CURRENCIES:
 			if stage in [1, 2]:
 				var job_name = jobs[sorted_jobs[1]].name
-				vico.set_status_and_currency("Will %s ASAP!" % job_name, primary_currency)
+				status.set_to("Will %s ASAP" % job_name)
 			else:
-				vico.set_status_and_currency("Cannot work!", primary_currency)
-	emit_signal("became_unable_to_work")
+				status.set_to("Unable to work")
+			active_currency.reset()
+	became_unable_to_work.emit()
 
 
 

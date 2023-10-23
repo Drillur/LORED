@@ -88,6 +88,9 @@ func setup(data: Dictionary) -> void:
 			Upgrade.Type.I_DRINK_YOUR_MILKSHAKE:
 				upgrade.effect.effect.increased.connect(update_dynamic_description)
 				update_dynamic_description()
+			Upgrade.Type.CAPITAL_PUNISHMENT:
+				gv.stage1.prestiged.connect(update_dynamic_description)
+				update_dynamic_description()
 
 
 
@@ -101,7 +104,7 @@ func purchased_changed() -> void:
 
 func update_dynamic_description() -> void:
 	description.text = upgrade.details.description 
-	description.text += "\n\n" + upgrade.effect.get_dynamic_text()
+	description.text += "\n\n" + upgrade.get_dynamic_text()
 
 
 func upgrade_unlocked_changed() -> void:

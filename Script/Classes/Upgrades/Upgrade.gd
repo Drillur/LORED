@@ -383,6 +383,7 @@ func _init(_type: int) -> void:
 	call("init_" + key)
 	cost.stage = stage
 	cost.affordable.changed.connect(affordable_changed)
+	cost.became_safe.connect(affordable_changed)
 	
 	update_effected_loreds_text()
 	
@@ -2936,7 +2937,7 @@ func init_ITS_SPREADIN_ON_ME() -> void:
 	await up.all_upgrades_initialized
 	required_upgrade = Type.AUTO_PERSIST
 	
-	var itsgrowin = up.get_upgrade(Type.ITS_GROWIN_ON_ME).details.icon_and_name_text
+	var itsgrowin = up.get_upgrade(Type.ITS_GROWIN_ON_ME).details.icon_and_colored_name
 	details.description = "Whenever %s pops, %s, %s, %s, and %s all receive an [b]output and input boost[/b]. This Upgrade replaces %s." % [growth, irono, copo, iron, cop, itsgrowin]
 
 
@@ -2997,7 +2998,6 @@ func init_DUST() -> void:
 
 func init_CAPITAL_PUNISHMENT() -> void:
 	details.name = "[b]Capital Punishment[/b]"
-	set_effect(UpgradeEffect.Type.HASTE, 1)
 	details.icon = wa.get_icon(Currency.Type.TUMORS)
 	details.color = gv.get_stage_color(Stage.Type.STAGE1)
 	cost = Cost.new({
@@ -3007,9 +3007,10 @@ func init_CAPITAL_PUNISHMENT() -> void:
 	required_upgrade = Type.ITS_SPREADIN_ON_ME
 	
 	var a = wa.get_icon_and_name_text(Currency.Type.TUMORS)
-	var b = up.get_upgrade_name(Type.PROCEDURE)
+	var b = up.get_upgrade(Upgrade.Type.PROCEDURE).details.icon_and_colored_name
 	var c = gv.get_stage(Stage.Type.STAGE1).details.colored_name
 	details.description = "%s gained from %s are multiplied by your %s run count." % [a, b, c]
+	has_description = true
 
 
 func init_AROUSAL() -> void:
@@ -3312,11 +3313,10 @@ func required_upgrade_unpurchased() -> void:
 
 
 func affordable_changed() -> void:
-	var affordable = cost.affordable.get_value()
 	if (
 		autobuy
 		and unlocked.is_true()
-		and affordable
+		and cost.affordable.get_value()
 		and cost.is_safe_to_purchase()
 	):
 		purchase()
@@ -3324,7 +3324,7 @@ func affordable_changed() -> void:
 		if (
 			unlocked.is_true()
 			and purchased.is_false()
-			and affordable
+			and cost.affordable.get_value()
 			and up.is_upgrade_menu_unlocked(upgrade_menu)
 		):
 			became_affordable_and_unpurchased.emit(type, true)
@@ -3375,7 +3375,7 @@ func remove() -> void:
 		purchase_finalized.set_to(false)
 		if special:
 			pending_prestige.set_to(false)
-		if effect.applied:
+		if effect != null and effect.applied:
 			effect.remove()
 			effect.reset_effects()
 		cost.purchased = false
@@ -3434,7 +3434,9 @@ func reset() -> void:
 func get_dynamic_text() -> String:
 	match type:
 		Upgrade.Type.LIMIT_BREAK:
-			return "[center][b]x%s[/b] " % up.limit_break.level.text + effected_loreds_text
+			return "[center][b]x%s[/b]" % up.limit_break.level.text + effected_loreds_text
+		Upgrade.Type.CAPITAL_PUNISHMENT:
+			return "[center][b]x%s[/b]" % Big.get_float_text(max(1, gv.stage1.times_reset))
 		_:
 			return effect.get_dynamic_text()
 

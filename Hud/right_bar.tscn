@@ -1,9 +1,14 @@
-[gd_scene load_steps=8 format=3 uid="uid://dmxljcsin6f3o"]
+[gd_scene load_steps=16 format=3 uid="uid://dmxljcsin6f3o"]
 
 [ext_resource type="PackedScene" uid="uid://bfi0uovwegdxj" path="res://Hud/MenuButton.tscn" id="1_dq02i"]
 [ext_resource type="Script" path="res://Hud/right_bar.gd" id="1_gfjby"]
 [ext_resource type="Texture2D" uid="uid://dqdklgt8ebwrv" path="res://Sprites/Hud/arrow-left.png" id="2_84lg0"]
 [ext_resource type="Theme" uid="uid://b8t7tkhvril5g" path="res://Theme/Standard.tres" id="3_d4si2"]
+[ext_resource type="PackedScene" uid="uid://b411lpbrvvmuj" path="res://Hud/rich_text_label.tscn" id="5_fflj3"]
+[ext_resource type="SpriteFrames" path="res://Sprites/animations/coal.tres" id="5_hjws0"]
+[ext_resource type="StyleBox" uid="uid://30we7hw128pu" path="res://Theme/RoundedBackground.tres" id="5_qdjqu"]
+[ext_resource type="PackedScene" uid="uid://exe3ppvvv74m" path="res://Hud/bar.tscn" id="5_quvv0"]
+[ext_resource type="PackedScene" uid="uid://bhw3xnrs1osqd" path="res://Hud/currency_vico.tscn" id="8_y2bg6"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vd0ej"]
 bg_color = Color(0.0705882, 0.0705882, 0.0705882, 1)
@@ -16,7 +21,7 @@ shadow_color = Color(0.8, 0.8, 0.8, 0.298039)
 shadow_size = 8
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_71v4j"]
-bg_color = Color(0.1, 0.1, 0.1, 1)
+bg_color = Color(0.101961, 0.101961, 0.101961, 1)
 corner_radius_top_left = 5
 corner_radius_top_right = 5
 corner_radius_bottom_right = 5
@@ -30,7 +35,24 @@ corner_radius_top_right = 5
 corner_radius_bottom_right = 5
 corner_radius_bottom_left = 5
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_fhfne"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vx6g7"]
+bg_color = Color(1, 1, 1, 0.0588235)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wy4xl"]
+bg_color = Color(1, 1, 1, 0.03)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
 [node name="RightBar" type="MarginContainer"]
+custom_minimum_size = Vector2(280, 0)
 offset_right = 232.0
 offset_bottom = 79.0
 theme_override_constants/margin_left = 16
@@ -47,7 +69,7 @@ unique_name_in_owner = true
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_vd0ej")
 
-[node name="Sidebar Background2" type="Panel" parent="MarginContainer"]
+[node name="Background2" type="Panel" parent="MarginContainer"]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_71v4j")
 
@@ -108,6 +130,195 @@ layout_mode = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/Tabs/LORED"]
 layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/Tabs/LORED/VBoxContainer"]
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 2
+
+[node name="Control" type="Control" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/Tabs/LORED/VBoxContainer/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="LORED Animation" type="AnimatedSprite2D" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/Tabs/LORED/VBoxContainer/MarginContainer/Control"]
+unique_name_in_owner = true
+scale = Vector2(4, 4)
+sprite_frames = ExtResource("5_hjws0")
+animation = &"COAL"
+
+[node name="Status and Progress" type="MarginContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/Tabs/LORED/VBoxContainer"]
+clip_contents = true
+custom_minimum_size = Vector2(0, 66)
+layout_mode = 2
+
+[node name="Background" type="Panel" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/Tabs/LORED/VBoxContainer/Status and Progress"]
+layout_mode = 2
+theme_override_styles/panel = ExtResource("5_qdjqu")
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/Tabs/LORED/VBoxContainer/Status and Progress"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/Tabs/LORED/VBoxContainer/Status and Progress/MarginContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="Status" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/Tabs/LORED/VBoxContainer/Status and Progress/MarginContainer/VBoxContainer" instance=ExtResource("5_fflj3")]
+layout_mode = 2
+text = "Cooking."
+
+[node name="Progress" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/Tabs/LORED/VBoxContainer/Status and Progress/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Text" type="MarginContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/Tabs/LORED/VBoxContainer/Status and Progress/MarginContainer/VBoxContainer/Progress"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_right = 10
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/Tabs/LORED/VBoxContainer/Status and Progress/MarginContainer/VBoxContainer/Progress/Text"]
+layout_mode = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="Current Progress Text" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/Tabs/LORED/VBoxContainer/Status and Progress/MarginContainer/VBoxContainer/Progress/Text/HBoxContainer" instance=ExtResource("5_fflj3")]
+layout_mode = 2
+text = "0.4s"
+
+[node name="Total Progres Text" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/Tabs/LORED/VBoxContainer/Status and Progress/MarginContainer/VBoxContainer/Progress/Text/HBoxContainer" instance=ExtResource("5_fflj3")]
+layout_mode = 2
+size_flags_horizontal = 8
+text = "1.3s"
+
+[node name="Progress Bar" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/Tabs/LORED/VBoxContainer/Status and Progress/MarginContainer/VBoxContainer/Progress" instance=ExtResource("5_quvv0")]
+unique_name_in_owner = true
+layout_mode = 2
+kill_markers = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/Tabs/LORED/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Primary Currency" type="MarginContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/Tabs/LORED/VBoxContainer/HBoxContainer"]
+clip_contents = true
+custom_minimum_size = Vector2(0, 66)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Background" type="Panel" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/Tabs/LORED/VBoxContainer/HBoxContainer/Primary Currency"]
+layout_mode = 2
+theme_override_styles/panel = ExtResource("5_qdjqu")
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/Tabs/LORED/VBoxContainer/HBoxContainer/Primary Currency"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="LORED Primary Currency" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/Tabs/LORED/VBoxContainer/HBoxContainer/Primary Currency/MarginContainer" instance=ExtResource("8_y2bg6")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(82, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="LOREDPrimaryCurrencyButton" type="Button" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/Tabs/LORED/VBoxContainer/HBoxContainer/Primary Currency"]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+mouse_default_cursor_shape = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_fhfne")
+theme_override_styles/hover = SubResource("StyleBoxFlat_vx6g7")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_wy4xl")
+
+[node name="LORED Fuel Currency Container" type="MarginContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/Tabs/LORED/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+clip_contents = true
+custom_minimum_size = Vector2(0, 66)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Background" type="Panel" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/Tabs/LORED/VBoxContainer/HBoxContainer/LORED Fuel Currency Container"]
+layout_mode = 2
+theme_override_styles/panel = ExtResource("5_qdjqu")
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/Tabs/LORED/VBoxContainer/HBoxContainer/LORED Fuel Currency Container"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="LORED Fuel Currency" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/Tabs/LORED/VBoxContainer/HBoxContainer/LORED Fuel Currency Container/MarginContainer" instance=ExtResource("8_y2bg6")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(82, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="LOREDFuelCurrencyButton" type="Button" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/Tabs/LORED/VBoxContainer/HBoxContainer/LORED Fuel Currency Container"]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+mouse_default_cursor_shape = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_fhfne")
+theme_override_styles/hover = SubResource("StyleBoxFlat_vx6g7")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_wy4xl")
+
+[node name="Fuel" type="MarginContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/Tabs/LORED/VBoxContainer"]
+custom_minimum_size = Vector2(0, 66)
+layout_mode = 2
+
+[node name="Background" type="Panel" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/Tabs/LORED/VBoxContainer/Fuel"]
+layout_mode = 2
+theme_override_styles/panel = ExtResource("5_qdjqu")
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/Tabs/LORED/VBoxContainer/Fuel"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/Tabs/LORED/VBoxContainer/Fuel/MarginContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="Fuel" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/Tabs/LORED/VBoxContainer/Fuel/MarginContainer/VBoxContainer" instance=ExtResource("5_fflj3")]
+layout_mode = 2
+text = "Fuel - 10%"
+
+[node name="Progress" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/Tabs/LORED/VBoxContainer/Fuel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Text" type="MarginContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/Tabs/LORED/VBoxContainer/Fuel/MarginContainer/VBoxContainer/Progress"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_right = 10
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/Tabs/LORED/VBoxContainer/Fuel/MarginContainer/VBoxContainer/Progress/Text"]
+layout_mode = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="Current Fuel Text" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/Tabs/LORED/VBoxContainer/Fuel/MarginContainer/VBoxContainer/Progress/Text/HBoxContainer" instance=ExtResource("5_fflj3")]
+layout_mode = 2
+text = "123e123"
+
+[node name="Total Fuel Text" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/Tabs/LORED/VBoxContainer/Fuel/MarginContainer/VBoxContainer/Progress/Text/HBoxContainer" instance=ExtResource("5_fflj3")]
+layout_mode = 2
+size_flags_horizontal = 8
+text = "123e123"
+
+[node name="Fuel Bar" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/Tabs/LORED/VBoxContainer/Fuel/MarginContainer/VBoxContainer/Progress" instance=ExtResource("5_quvv0")]
+unique_name_in_owner = true
+layout_mode = 2
+animate = true
 
 [node name="Control" type="Control" parent="."]
 layout_mode = 2

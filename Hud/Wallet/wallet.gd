@@ -65,12 +65,19 @@ var sort: int = -1:
 						connect_rate()
 			adjust_sort_icons()
 
+var opened_to_cur: int
+
 var current_tab_container: VBoxContainer
+var timer = Timer.new()
 
 
 
 
 func _ready():
+	timer.one_shot = true
+	timer.wait_time = 0.5
+	add_child(timer)
+	timer.timeout.connect(timer_timeout)
 	options.hide()
 	for stage in range(1, 5):
 		add_stage_currencies(stage)
@@ -114,6 +121,7 @@ func _on_visibility_changed():
 			elif sort in [Sort.RATE_ASCENDING, Sort.RATE_DESCENDING]:
 				connect_rate()
 	else:
+		timer.stop()
 		disconnect_count()
 		disconnect_rate()
 		options.hide()
@@ -165,6 +173,7 @@ func currency_mouse_entered(cur: int) -> void:
 
 
 # - Actions
+
 
 func hide_tabs() -> void:
 	for i in 4:
@@ -318,5 +327,13 @@ func sort_tab(tab := str(tabs.current_tab + 1)) -> void:
 		container.add_child(node)
 
 
+func open_to_currency(cur: int) -> void:
+	select_tab(wa.get_currency_stage(cur) - 1)
+	opened_to_cur = cur
+	timer.start()
+	show()
 
+
+func timer_timeout() -> void:
+	gv.flash(content[opened_to_cur], wa.get_color(opened_to_cur))
 

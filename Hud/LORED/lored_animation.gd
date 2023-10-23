@@ -7,7 +7,7 @@ var lored: LORED
 var default_frames: SpriteFrames
 var animation_key := ""
 var previous_animation := ""
-var default_flip_h := false
+#var default_flip_h := false
 var capped_anim := Bool.new(false)
 
 
@@ -15,9 +15,9 @@ var capped_anim := Bool.new(false)
 func setup(_lored: LORED) -> void:
 	lored = _lored
 	default_frames = lored.default_frames
-	if lored.key in ["IRON_ORE", "COPPER_ORE", "IRON", "JOULES", "LIQUID_IRON", "HARDWOOD"]:
-		default_flip_h = true
-		flip_h = default_flip_h
+#	if lored.type in lv.FLIPPED_FRAMES:
+#		default_flip_h = true
+#		flip_h = default_flip_h
 	animation_key = lored.key
 	
 	sleep()
@@ -26,10 +26,10 @@ func setup(_lored: LORED) -> void:
 func resize() -> void:
 	if animation_key in lv.SMALLER_ANIMATIONS:
 		scale = Vector2(2, 2)
-		flip_h = default_flip_h
+		#flip_h = default_flip_h
 	else:
 		scale = Vector2(0.5, 0.5)
-		flip_h = false
+		#flip_h = false
 
 
 

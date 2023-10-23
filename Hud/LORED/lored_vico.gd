@@ -69,8 +69,7 @@ func _on_item_rect_changed():
 
 func _ready():
 	# ref
-	status.hide()
-	#progress_bar.hide()
+	progress_bar.hide()
 	fuel_bar.size.x = size.x
 	
 	jobs.hide()
@@ -117,7 +116,10 @@ func attach_lored(_lored: LORED) -> void:
 	lored.purchased.changed.connect(sleep_lock)
 	lored.unlocked.changed.connect(sleep_lock)
 	lored.purchased.changed.connect(advanced_details_lock)
+	lored.status.changed.connect(status_changed)
+	lored.unlocked.changed.connect(unlocked_changed)
 	
+	unlocked_changed()
 	advanced_details_lock()
 	buffs_lock()
 	sleep_lock()
@@ -161,6 +163,8 @@ func attach_lored(_lored: LORED) -> void:
 	lored_name.text = lored.details.name + ", " + lored.details.get_title()
 	lored_icon.texture = lored.details.icon
 	
+	currency.attach_lored(lored)
+	
 	hide()
 
 
@@ -173,7 +177,6 @@ func cost_update() -> void:
 
 func prestige(stage: int) -> void:
 	if stage >= lored.stage:
-		status.hide()
 		animation.capped_anim.set_to(false)
 
 
@@ -209,18 +212,25 @@ func get_preferred_side() -> Node:
 # - Ref Shit
 
 
+func unlocked_changed() -> void:
+	if lored.unlocked.is_false():
+		currency.hide()
+		name_and_icon.show()
+	else:
+		name_and_icon.hide()
+		currency.show()
+
+
 func purchased_changed() -> void:
 	var purchased = lored.purchased.get_value()
 	if not purchased:
 		stop_progress_bar()
 		active_buffs.hide()
 		view_special.hide()
-		currency.hide()
-		name_and_icon.show()
+		#currency.hide()
 	else:
 		name_and_icon.hide()
 		currency.show()
-		currency.setup(lored.primary_currency)
 		if lv.sleep_unlocked.is_true():
 			sleep.show()
 		if lv.advanced_details_unlocked.is_true():
@@ -367,8 +377,8 @@ func purchase_level_up() -> void:
 
 func start_job(_job: Job) -> void:
 	current_job = _job as Job
-	progress_bar.start(current_job.duration.get_as_float())
-	set_status_and_currency(current_job.status_text, current_job.get_primary_currency())
+	progress_bar.attach_timer(current_job.timer)
+	progress_bar.show()
 	animation.play_job_animation(current_job)
 
 
@@ -377,15 +387,8 @@ func stop_progress_bar() -> void:
 	animation.sleep()
 
 
-func set_status_and_currency(_status: String, _currency: int) -> void:
-	if _status == "":
-		status.hide()
-	else:
-		status.show()
-		status.text = "[i]" + _status
-	
-	currency.show()
-	currency.setup(_currency)
+func status_changed() -> void:
+	status.text = "[i]%s[/i]" % lored.status.get_value()
 
 
 func sleep_clicked() -> void:
@@ -398,7 +401,7 @@ func sleep_clicked() -> void:
 func sleep_changed() -> void:
 	if lored.asleep.is_true():
 		sleep.set_icon(res.get_resource("awake"))
-		set_status_and_currency("[wave amp=20 freq=1]Sleeping.", lored.primary_currency)
+		lored.status.set_to("[wave amp=20 freq=1]Sleeping.[/wave]")
 		animation.sleep()
 		start_spewing_sleep_text()
 		start_sleep_timer()
@@ -410,7 +413,7 @@ func sleep_changed() -> void:
 
 func start_idle() -> void:
 	if lored.reason_cannot_work == LORED.ReasonCannotWork.UNKNOWN:
-		set_status_and_currency("", lored.primary_currency)
+		lored.status.set_to("Idle")
 	animation.sleep()
 
 

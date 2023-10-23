@@ -137,7 +137,7 @@ func _init(_type: int) -> void:
 func init_REFUEL() -> void:
 	name = "Refuel"
 	duration = Value.new(4)
-	status_text = "Refueling!"
+	status_text = "Refueling"
 	animation = preload("res://Sprites/animations/Refuel.tres")
 
 
@@ -146,6 +146,7 @@ func init_STONE() -> void:
 	duration = Value.new(2.5)
 	animation = preload("res://Sprites/animations/stone.tres")
 	add_produced_currency(Currency.Type.STONE, 1)
+	status_text = "Picking up %s" % wa.get_currency(produced_currencies.keys()[0]).details.colored_name
 
 
 func init_COAL() -> void:
@@ -153,6 +154,7 @@ func init_COAL() -> void:
 	duration = Value.new(3.25)
 	animation = preload("res://Sprites/animations/coal.tres")
 	add_produced_currency(Currency.Type.COAL, 1)
+	status_text = "Digging for %s" % wa.get_currency(produced_currencies.keys()[0]).details.colored_name
 
 
 func init_IRON_ORE() -> void:
@@ -160,6 +162,7 @@ func init_IRON_ORE() -> void:
 	duration = Value.new(4)
 	animation = preload("res://Sprites/animations/irono.tres")
 	add_produced_currency(Currency.Type.IRON_ORE, 1)
+	status_text = "Murdering %s" % wa.get_currency(produced_currencies.keys()[0]).details.colored_name
 
 
 func init_COPPER_ORE() -> void:
@@ -167,6 +170,7 @@ func init_COPPER_ORE() -> void:
 	duration = Value.new(4)
 	animation = preload("res://Sprites/animations/copo.tres")
 	add_produced_currency(Currency.Type.COPPER_ORE, 1)
+	status_text = "Mining %s" % wa.get_currency(produced_currencies.keys()[0]).details.colored_name
 
 
 func init_IRON() -> void:
@@ -177,6 +181,7 @@ func init_IRON() -> void:
 	required_currencies = Cost.new({
 		Currency.Type.IRON_ORE: Value.new(1)
 	})
+	status_text = "Toasting %s" % wa.get_currency(produced_currencies.keys()[0]).details.colored_name
 
 
 func init_COPPER() -> void:
@@ -187,6 +192,7 @@ func init_COPPER() -> void:
 	required_currencies = Cost.new({
 		Currency.Type.COPPER_ORE: Value.new(1)
 	})
+	status_text = "Cooking %s" % wa.get_currency(produced_currencies.keys()[0]).details.colored_name
 
 
 func init_GROWTH() -> void:
@@ -198,6 +204,7 @@ func init_GROWTH() -> void:
 		Currency.Type.IRON: Value.new(1),
 		Currency.Type.COPPER: Value.new(1),
 	})
+	status_text = "Popping %s" % wa.get_currency(produced_currencies.keys()[0]).details.colored_name
 
 
 func init_JOULES() -> void:
@@ -208,6 +215,7 @@ func init_JOULES() -> void:
 	required_currencies = Cost.new({
 		Currency.Type.COAL: Value.new(1),
 	})
+	status_text = "Redirecting %s" % wa.get_currency(produced_currencies.keys()[0]).details.colored_name
 
 
 func init_CONCRETE() -> void:
@@ -218,6 +226,7 @@ func init_CONCRETE() -> void:
 	required_currencies = Cost.new({
 		Currency.Type.STONE: Value.new(1)
 	})
+	status_text = "Mashing %s" % wa.get_currency(produced_currencies.keys()[0]).details.colored_name
 
 
 func init_OIL() -> void:
@@ -225,6 +234,7 @@ func init_OIL() -> void:
 	duration = Value.new(0.5)
 	animation = preload("res://Sprites/animations/oil.tres")
 	add_produced_currency(Currency.Type.OIL, 0.075)
+	status_text = "Succing %s" % wa.get_currency(produced_currencies.keys()[0]).details.colored_name
 
 
 func init_TARBALLS() -> void:
@@ -235,6 +245,7 @@ func init_TARBALLS() -> void:
 	required_currencies = Cost.new({
 		Currency.Type.OIL: Value.new(1)
 	})
+	status_text = "Mutating %s" % wa.get_currency(produced_currencies.keys()[0]).details.colored_name
 
 
 func init_MALIGNANCY() -> void:
@@ -246,6 +257,7 @@ func init_MALIGNANCY() -> void:
 		Currency.Type.TARBALLS: Value.new(1),
 		Currency.Type.GROWTH: Value.new(1),
 	})
+	status_text = "Manifesting %s" % wa.get_currency(produced_currencies.keys()[0]).details.colored_name
 
 
 func init_WATER() -> void:
@@ -254,6 +266,7 @@ func init_WATER() -> void:
 	animation = preload("res://Sprites/animations/water.tres")
 	two_part_animation = true
 	add_produced_currency(Currency.Type.WATER, 1)
+	status_text = "Splashing %s" % wa.get_currency(produced_currencies.keys()[0]).details.colored_name
 
 
 func init_HUMUS() -> void:
@@ -265,6 +278,7 @@ func init_HUMUS() -> void:
 		Currency.Type.GROWTH: Value.new(0.5),
 		Currency.Type.WATER: Value.new(1),
 	})
+	status_text = "Shitting %s" % wa.get_currency(produced_currencies.keys()[0]).details.colored_name
 
 
 func init_TREES() -> void:
@@ -276,6 +290,7 @@ func init_TREES() -> void:
 		Currency.Type.WATER: Value.new(6),
 		Currency.Type.SEEDS: Value.new(1),
 	})
+	status_text = "Growing %s" % wa.get_currency(produced_currencies.keys()[0]).details.colored_name
 
 
 func init_TREES2() -> void:
@@ -287,6 +302,7 @@ func init_TREES2() -> void:
 		Currency.Type.WATER: Value.new(30),
 	})
 	do_not_alter_rates = true
+	status_text = "Growing %s" % wa.get_currency(produced_currencies.keys()[0]).details.colored_name
 
 
 func init_SEEDS() -> void:
@@ -298,6 +314,7 @@ func init_SEEDS() -> void:
 	required_currencies = Cost.new({
 		Currency.Type.WATER: Value.new(1.5),
 	})
+	status_text = "Pollenating %s" % wa.get_currency(produced_currencies.keys()[0]).details.colored_name
 
 
 func init_SOIL() -> void:
@@ -308,6 +325,7 @@ func init_SOIL() -> void:
 	required_currencies = Cost.new({
 		Currency.Type.HUMUS: Value.new(1.5),
 	})
+	status_text = "Scraping %s" % wa.get_currency(produced_currencies.keys()[0]).details.colored_name
 
 
 func init_AXES() -> void:
@@ -319,6 +337,7 @@ func init_AXES() -> void:
 		Currency.Type.HARDWOOD: Value.new(0.8),
 		Currency.Type.STEEL: Value.new(0.25),
 	})
+	status_text = "Assembling %s" % wa.get_currency(produced_currencies.keys()[0]).details.colored_name
 
 
 func init_AXES2() -> void:
@@ -330,6 +349,7 @@ func init_AXES2() -> void:
 		Currency.Type.STEEL: Value.new(2.5),
 	})
 	do_not_alter_rates = true
+	status_text = "Assembling %s" % wa.get_currency(produced_currencies.keys()[0]).details.colored_name
 
 
 func init_WOOD() -> void:
@@ -341,6 +361,7 @@ func init_WOOD() -> void:
 		Currency.Type.AXES: Value.new(5),
 		Currency.Type.TREES: Value.new(1),
 	})
+	status_text = "Obliterate %s" % wa.get_currency(produced_currencies.keys()[0]).details.colored_name
 
 
 func init_HARDWOOD() -> void:
@@ -352,6 +373,7 @@ func init_HARDWOOD() -> void:
 		Currency.Type.WOOD: Value.new(2),
 		Currency.Type.CONCRETE: Value.new(1),
 	})
+	status_text = "Seducing %s" % wa.get_currency(produced_currencies.keys()[0]).details.colored_name
 
 
 func init_LIQUID_IRON() -> void:
@@ -362,6 +384,7 @@ func init_LIQUID_IRON() -> void:
 	required_currencies = Cost.new({
 		Currency.Type.IRON: Value.new(10),
 	})
+	status_text = "Stewing %s" % wa.get_currency(produced_currencies.keys()[0]).details.colored_name
 
 
 func init_STEEL() -> void:
@@ -372,6 +395,7 @@ func init_STEEL() -> void:
 	required_currencies = Cost.new({
 		Currency.Type.LIQUID_IRON: Value.new(8),
 	})
+	status_text = "Slamming %s" % wa.get_currency(produced_currencies.keys()[0]).details.colored_name
 
 
 func init_SAND() -> void:
@@ -382,6 +406,7 @@ func init_SAND() -> void:
 	required_currencies = Cost.new({
 		Currency.Type.HUMUS: Value.new(1.5),
 	})
+	status_text = "Levitating %s" % wa.get_currency(produced_currencies.keys()[0]).details.colored_name
 
 
 func init_GLASS() -> void:
@@ -392,6 +417,7 @@ func init_GLASS() -> void:
 	required_currencies = Cost.new({
 		Currency.Type.SAND: Value.new(6),
 	})
+	status_text = "Glassing %s" % wa.get_currency(produced_currencies.keys()[0]).details.colored_name
 
 
 func init_DRAW_PLATE() -> void:
@@ -402,6 +428,7 @@ func init_DRAW_PLATE() -> void:
 	required_currencies = Cost.new({
 		Currency.Type.STEEL: Value.new(0.5),
 	})
+	status_text = "Doodling %s" % wa.get_currency(produced_currencies.keys()[0]).details.colored_name
 
 
 func init_WIRE() -> void:
@@ -413,6 +440,7 @@ func init_WIRE() -> void:
 		Currency.Type.COPPER: Value.new(5),
 		Currency.Type.DRAW_PLATE: Value.new(0.4),
 	})
+	status_text = "Sewing %s" % wa.get_currency(produced_currencies.keys()[0]).details.colored_name
 
 
 func init_GALENA() -> void:
@@ -420,6 +448,7 @@ func init_GALENA() -> void:
 	duration = Value.new(4)
 	animation = preload("res://Sprites/animations/gale.tres")
 	add_produced_currency(Currency.Type.GALENA, 1)
+	status_text = "Jackhammering %s" % wa.get_currency(produced_currencies.keys()[0]).details.colored_name
 
 
 func init_LEAD() -> void:
@@ -430,6 +459,7 @@ func init_LEAD() -> void:
 	required_currencies = Cost.new({
 		Currency.Type.GALENA: Value.new(1),
 	})
+	status_text = "Filtering %s" % wa.get_currency(produced_currencies.keys()[0]).details.colored_name
 
 
 func init_PETROLEUM() -> void:
@@ -440,6 +470,7 @@ func init_PETROLEUM() -> void:
 	required_currencies = Cost.new({
 		Currency.Type.OIL: Value.new(3),
 	})
+	status_text = "Processing %s" % wa.get_currency(produced_currencies.keys()[0]).details.colored_name
 
 
 func init_WOOD_PULP() -> void:
@@ -451,6 +482,7 @@ func init_WOOD_PULP() -> void:
 		Currency.Type.STONE: Value.new(10),
 		Currency.Type.WOOD: Value.new(5),
 	})
+	status_text = "Stripping %s" % wa.get_currency(Currency.Type.WOOD).details.colored_name
 
 
 func init_PAPER() -> void:
@@ -461,6 +493,7 @@ func init_PAPER() -> void:
 	required_currencies = Cost.new({
 		Currency.Type.WOOD_PULP: Value.new(0.6),
 	})
+	status_text = "Paperifying %s" % wa.get_currency(produced_currencies.keys()[0]).details.colored_name
 
 
 func init_PLASTIC() -> void:
@@ -472,6 +505,7 @@ func init_PLASTIC() -> void:
 		Currency.Type.COAL: Value.new(5),
 		Currency.Type.PETROLEUM: Value.new(1),
 	})
+	status_text = "Polluting %s" % wa.get_currency(produced_currencies.keys()[0]).details.colored_name
 
 
 func init_TOBACCO() -> void:
@@ -483,6 +517,7 @@ func init_TOBACCO() -> void:
 		Currency.Type.WATER: Value.new(2),
 		Currency.Type.SEEDS: Value.new(1),
 	})
+	status_text = "Smoking %s" % wa.get_currency(produced_currencies.keys()[0]).details.colored_name
 
 
 func init_CIGARETTES() -> void:
@@ -495,6 +530,7 @@ func init_CIGARETTES() -> void:
 		Currency.Type.TOBACCO: Value.new(1),
 		Currency.Type.PAPER: Value.new(0.25),
 	})
+	status_text = "Smoking %s" % wa.get_currency(produced_currencies.keys()[0]).details.colored_name
 
 
 func init_CARCINOGENS() -> void:
@@ -507,6 +543,7 @@ func init_CARCINOGENS() -> void:
 		Currency.Type.CIGARETTES: Value.new(6),
 		Currency.Type.PLASTIC: Value.new(5),
 	})
+	status_text = "#note %s" % wa.get_currency(produced_currencies.keys()[0]).details.colored_name
 
 
 func init_TUMORS() -> void:
@@ -519,6 +556,8 @@ func init_TUMORS() -> void:
 		Currency.Type.MALIGNANCY: Value.new(5),
 		Currency.Type.CARCINOGENS: Value.new(3),
 	})
+	status_text = "Growing %s" % wa.get_currency(produced_currencies.keys()[0]).details.colored_name
+
 
 
 func assign_lored(lored_type: int) -> void:
@@ -545,8 +584,12 @@ func assign_lored(lored_type: int) -> void:
 	if has_required_currencies:
 		required_currencies.stage = _lored.stage
 	
-	_lored.connect("job_started", another_job_started)
 	_lored.purchased.changed.connect(lored_purchased_changed)
+	
+	timer = Timer.new()
+	timer.one_shot = true
+	lv.add_child(timer)
+	timer.timeout.connect(complete)
 
 
 
@@ -646,9 +689,6 @@ func fuel_decreased() -> void:
 		if lv.get_lored(lored).fuel.get_current().less(fuel_cost.get_value()):
 			has_sufficient_fuel = false
 
-
-func another_job_started(_job: Job) -> void:
-	pass # called whenever the lored starts any job i guess
 
 
 func lored_purchased_changed() -> void:
@@ -811,11 +851,6 @@ func start() -> void:
 
 
 func start_timer() -> void:
-	if not is_instance_valid(timer):
-		timer = Timer.new()
-		timer.one_shot = true
-		lv.add_child(timer)
-		timer.timeout.connect(complete)
 	timer.start(duration.get_as_float())
 
 

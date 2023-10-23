@@ -3,6 +3,7 @@ extends RefCounted
 
 
 
+signal became_safe
 signal use_allowed_changed(allowed)
 
 const CACHE_SIZE := 200
@@ -43,6 +44,8 @@ func _init(_cost: Dictionary) -> void:
 	longest_eta_cur = cost.keys()[0]
 	SaveManager.load_finished.connect(recheck)
 	lv.loreds_initialized.connect(loreds_initialized)
+	for cur in cost:
+		wa.get_currency(cur).safe.became_true.connect(currency_became_safe)
 	connect_calls()
 	recheck()
 
@@ -95,6 +98,13 @@ func currency_unlocked_changed(unlocked: bool) -> void:
 			currencies_are_unlocked = true
 	else:
 		currencies_are_unlocked = false
+
+
+func currency_became_safe() -> void:
+	for cur in cost:
+		if not wa.is_currency_safe_to_spend(cur):
+			return
+	became_safe.emit()
 
 
 

@@ -40,7 +40,7 @@ extends MarginContainer
 @onready var upgrade_section = %"Upgrade Section"
 @onready var upgrade_vicos = %UpgradeVicos
 
-@onready var right_bar = %RightBar
+@onready var right_bar = %RightBar as RightBar
 
 var menu_container_size: float
 var upgrade_section_queued := false
@@ -76,7 +76,7 @@ func _ready():
 	
 	# RIGHTBAR
 	
-	lored_container.lored_details_requested.connect(right_bar.setup_lored_details)
+	lored_container.lored_details_requested.connect(right_bar.setup_lored)
 	
 	
 	wa.wallet_unlocked_changed.connect(display_wallet_button)

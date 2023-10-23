@@ -74,6 +74,12 @@ func STAGE4():
 
 # - Actions
 
+
+func prestige() -> void:
+	times_reset += 1
+	prestiged.emit()
+
+
 func add_lored(lored: int) -> void:
 	if not lored in loreds:
 		loreds.append(lored)

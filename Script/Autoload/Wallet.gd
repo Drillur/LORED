@@ -145,6 +145,9 @@ func set_use_allowed(cur: int, allowed: bool) -> void:
 	get_currency(cur).use_allowed = allowed
 
 
+func open_wallet_to_currency(cur: int) -> void:
+	wallet.open_to_currency(cur)
+
 
 
 # - Get
