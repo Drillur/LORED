@@ -313,7 +313,7 @@ func get_active_lored_count() -> int:
 
 
 func get_level(lored: int) -> int:
-	return get_lored(lored).level
+	return get_lored(lored).level.get_value()
 
 
 func get_fuel_percent(lored: int) -> float:

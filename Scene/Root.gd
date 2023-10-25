@@ -3,25 +3,26 @@ extends MarginContainer
 
 
 @onready var tooltip_parent = %Tooltip
-@onready var lored_container = $"LORED Container" as LOREDContainer
-@onready var upgrade_container = $"Upgrade Container" as UpgradeContainer
+@onready var lored_container = %"LORED Container" as LOREDContainer
+@onready var upgrade_container = %"Upgrade Container" as UpgradeContainer
 @onready var random_wishes = %"Random Wishes"
 @onready var main_wishes = %"Main Wishes"
-@onready var control = $Control
+@onready var control = %Control
 @onready var menu_button = %"Menu Button" as _MenuButton
 @onready var upgrades_button = %"Upgrades Button" as _MenuButton
-@onready var wallet = $Wallet as WalletVico
+@onready var wallet = %Wallet as WalletVico
 @onready var wallet_button = %"Wallet Button" as _MenuButton
 @onready var stage1 = %Stage1 as _MenuButton
 @onready var stage2 = %Stage2 as _MenuButton
 @onready var stage3 = %Stage3 as _MenuButton
 @onready var stage4 = %Stage4 as _MenuButton
 @onready var purchasable_upgrade_count = %"Purchasable Upgrade Count"
-@onready var offline_report = $"Offline Report"
+@onready var offline_report = %"Offline Report"
 @onready var fps = %FPS
 @onready var screen_area = %ScreenArea
 
-@onready var tooltip_position_display = $"Control/Tooltip/Tooltip Position Display"
+# DEBUG
+@onready var tooltip_position_display = %"Tooltip Position Display"
 
 # RIGHT
 
@@ -42,7 +43,6 @@ extends MarginContainer
 
 @onready var right_bar = %RightBar as RightBar
 
-var menu_container_size: float
 var upgrade_section_queued := false
 
 
@@ -55,6 +55,7 @@ func _ready():
 		wallet_button.hide()
 		$Left/Dev.hide()
 	
+	call_deferred("window_resized")
 	get_tree().root.size_changed.connect(window_resized)
 	
 	# MENU
@@ -125,7 +126,6 @@ func _ready():
 
 func update_menu_size_once() -> void:
 	await menu_container.resized
-	update_menu_container_size()
 	_on_menu_container_resized()
 	close_menu()
 
@@ -310,6 +310,10 @@ func update_notice_count() -> void:
 
 
 func window_resized() -> void:
+	call_deferred("fix_screen_size")
+
+
+func fix_screen_size() -> void:
 	var win: Vector2 = get_viewport_rect().size
 	size = Vector2(win.x / scale.x, win.y / scale.y)
 	
@@ -317,7 +321,6 @@ func window_resized() -> void:
 	screen_area.shape.size.y = size.y * 1.1
 	screen_area.position = Vector2(size.x / 2, size.y / 2)
 	
-	update_menu_container_size()
 	_on_menu_container_resized()
 
 
@@ -329,7 +332,7 @@ func _on_screen_area_body_exited(body):
 func _on_menu_container_resized():
 	if not is_node_ready():
 		await ready
-	menu_scroll.custom_minimum_size.y = min(menu_container.size.y, menu_container_size)
+	menu_scroll.custom_minimum_size.y = min(menu_container.size.y, gv.menu_container_size)
 
 
 func on_wallet_color_changed(val: Color) -> void:
@@ -374,9 +377,6 @@ func update_fps() -> void:
 		await get_tree().create_timer(1).timeout
 		fps.text = "FPS: [i]" + str(Engine.get_frames_per_second())
 
-
-func update_menu_container_size() -> void:
-	menu_container_size = get_viewport().size.y - 88 - 26
 
 
 func display_wallet_button(unlocked: bool) -> void:
@@ -453,9 +453,6 @@ func select_stage(stage: int) -> void:
 
 func _on_limitbreak_pressed():
 	limit_break_vico.visible = not limit_break_vico.visible
-
-
-
 
 
 

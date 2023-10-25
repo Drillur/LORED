@@ -37,14 +37,11 @@ func setup(_cost: Cost) -> void:
 	content.values()[content.size() - 1].get_node("MarginContainer").add_theme_constant_override("margin_bottom", 0)
 	cost.affordable.connect_and_call("changed", affordable_changed)
 	
-	bar.set_initial_progress(cost.get_progress_percent())
-	
 	if cost.affordable.is_true():
+		update_progress_bar()
 		bar.hide_edge()
-		bar.set_deferred("progress", 1.0)
 	else:
 		connect_calls()
-		update_progress_bar()
 
 
 
@@ -67,7 +64,7 @@ func disconnect_calls() -> void:
 
 
 func update_progress_bar() -> void:
-	bar.progress = cost.get_progress_percent()
+	bar.set_deferred("progress", cost.get_progress_percent())
 
 
 func set_eta_text() -> void:

@@ -3,7 +3,7 @@ extends MarginContainer
 
 
 @onready var title = %Title
-@onready var title_bg = %"title bg"
+#@onready var title_bg = %"title bg"
 @onready var duration = %Duration
 @onready var produced_currencies_parent = %"Produced Currencies Parent"
 @onready var required_currencies_parent = %"Required Currencies Parent"
@@ -18,7 +18,7 @@ func setup(_job: Job) -> void:
 	if not is_node_ready():
 		await ready
 	
-	title_bg.modulate = lv.get_lored(job.lored).details.color
+	#title_bg.modulate = lv.get_lored(job.lored).details.color
 	glow.self_modulate = lv.get_lored(job.lored).details.alt_color
 	
 	title.text = job.name

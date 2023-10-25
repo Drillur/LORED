@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://exe3ppvvv74m"]
+[gd_scene load_steps=6 format=3 uid="uid://exe3ppvvv74m"]
 
 [ext_resource type="Script" path="res://Hud/bar.gd" id="1_cyi4v"]
 [ext_resource type="Theme" uid="uid://b8t7tkhvril5g" path="res://Theme/Standard.tres" id="2_yan3f"]
@@ -12,9 +12,6 @@ shadow_color = Color(0, 0, 0, 0.54902)
 anti_aliasing = false
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pr56i"]
-bg_color = Color(1, 1, 1, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7ws81"]
 bg_color = Color(1, 1, 1, 1)
 
 [node name="Bar" type="MarginContainer"]
@@ -71,7 +68,6 @@ theme_override_styles/panel = ExtResource("3_lyuce")
 
 [node name="Edge" type="Panel" parent="bg/Progress Bar"]
 unique_name_in_owner = true
-visible = false
 custom_minimum_size = Vector2(2, 0)
 layout_mode = 1
 anchors_preset = 11
@@ -84,16 +80,3 @@ grow_horizontal = 0
 grow_vertical = 2
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_pr56i")
-
-[node name="Delta Bar" type="Panel" parent="bg"]
-unique_name_in_owner = true
-layout_mode = 0
-offset_right = 2.0
-offset_bottom = 8.0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_7ws81")
-
-[node name="Timer" type="Timer" parent="bg/Delta Bar"]
-unique_name_in_owner = true
-
-[connection signal="resized" from="." to="." method="_on_resized"]

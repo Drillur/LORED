@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://dmxljcsin6f3o"]
+[gd_scene load_steps=20 format=3 uid="uid://dmxljcsin6f3o"]
 
 [ext_resource type="PackedScene" uid="uid://bfi0uovwegdxj" path="res://Hud/MenuButton.tscn" id="1_dq02i"]
 [ext_resource type="Script" path="res://Hud/right_bar.gd" id="1_gfjby"]
@@ -9,6 +9,10 @@
 [ext_resource type="StyleBox" uid="uid://30we7hw128pu" path="res://Theme/RoundedBackground.tres" id="5_qdjqu"]
 [ext_resource type="PackedScene" uid="uid://exe3ppvvv74m" path="res://Hud/bar.tscn" id="5_quvv0"]
 [ext_resource type="PackedScene" uid="uid://bhw3xnrs1osqd" path="res://Hud/currency_vico.tscn" id="8_y2bg6"]
+[ext_resource type="PackedScene" uid="uid://ddupv5ku3o3m2" path="res://Hud/ShowHide.tscn" id="10_rk2hf"]
+[ext_resource type="Texture2D" uid="uid://bgx6xg4vtb0p4" path="res://Sprites/Hud/Level.png" id="10_vmuff"]
+[ext_resource type="Texture2D" uid="uid://bi6fq33gkf5oh" path="res://Sprites/Hud/Halt.png" id="11_o4u6j"]
+[ext_resource type="SpriteFrames" uid="uid://g71x1b7vd3pt" path="res://Sprites/animations/autobuyer.tres" id="11_wed84"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vd0ej"]
 bg_color = Color(0.0705882, 0.0705882, 0.0705882, 1)
@@ -53,13 +57,18 @@ corner_radius_bottom_left = 5
 
 [node name="RightBar" type="MarginContainer"]
 custom_minimum_size = Vector2(280, 0)
-offset_right = 232.0
-offset_bottom = 79.0
-theme_override_constants/margin_left = 16
-theme_override_constants/margin_top = 16
-theme_override_constants/margin_right = 16
-theme_override_constants/margin_bottom = 16
+offset_right = 280.0
+offset_bottom = 822.0
+size_flags_vertical = 0
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 5
 script = ExtResource("1_gfjby")
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 5
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 2
@@ -102,7 +111,6 @@ text = "Carl"
 color = Color(0, 0, 0, 1)
 
 [node name="Menu Contents" type="MarginContainer" parent="MarginContainer/VBoxContainer"]
-unique_name_in_owner = true
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 size_flags_vertical = 3
@@ -118,116 +126,123 @@ layout_mode = 2
 theme = ExtResource("3_d4si2")
 horizontal_scroll_mode = 0
 
-[node name="Tabs" type="TabContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll"]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_right = 5
+
+[node name="Tabs" type="TabContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/MarginContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 tabs_visible = false
 
-[node name="LORED" type="MarginContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/Tabs"]
+[node name="LORED Content" type="MarginContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/MarginContainer/Tabs"]
+unique_name_in_owner = true
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/Tabs/LORED"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/MarginContainer/Tabs/LORED Content"]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/Tabs/LORED/VBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/MarginContainer/Tabs/LORED Content/VBoxContainer"]
 custom_minimum_size = Vector2(128, 128)
 layout_mode = 2
 
-[node name="Control" type="Control" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/Tabs/LORED/VBoxContainer/MarginContainer"]
+[node name="Control" type="Control" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/MarginContainer/Tabs/LORED Content/VBoxContainer/MarginContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="LORED Animation" type="AnimatedSprite2D" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/Tabs/LORED/VBoxContainer/MarginContainer/Control"]
+[node name="LORED Animation" type="AnimatedSprite2D" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/MarginContainer/Tabs/LORED Content/VBoxContainer/MarginContainer/Control"]
 unique_name_in_owner = true
 scale = Vector2(4, 4)
 sprite_frames = ExtResource("5_hjws0")
 animation = &"COAL"
 
-[node name="Status and Progress" type="MarginContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/Tabs/LORED/VBoxContainer"]
+[node name="Status and Progress" type="MarginContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/MarginContainer/Tabs/LORED Content/VBoxContainer"]
 clip_contents = true
 custom_minimum_size = Vector2(0, 66)
 layout_mode = 2
 
-[node name="Background" type="Panel" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/Tabs/LORED/VBoxContainer/Status and Progress"]
+[node name="Background" type="Panel" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/MarginContainer/Tabs/LORED Content/VBoxContainer/Status and Progress"]
 layout_mode = 2
 theme_override_styles/panel = ExtResource("5_qdjqu")
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/Tabs/LORED/VBoxContainer/Status and Progress"]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/MarginContainer/Tabs/LORED Content/VBoxContainer/Status and Progress"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/Tabs/LORED/VBoxContainer/Status and Progress/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/MarginContainer/Tabs/LORED Content/VBoxContainer/Status and Progress/MarginContainer"]
 layout_mode = 2
 alignment = 1
 
-[node name="Status" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/Tabs/LORED/VBoxContainer/Status and Progress/MarginContainer/VBoxContainer" instance=ExtResource("5_fflj3")]
+[node name="Status" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/MarginContainer/Tabs/LORED Content/VBoxContainer/Status and Progress/MarginContainer/VBoxContainer" instance=ExtResource("5_fflj3")]
 layout_mode = 2
 text = "Cooking."
 
-[node name="Progress" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/Tabs/LORED/VBoxContainer/Status and Progress/MarginContainer/VBoxContainer"]
+[node name="Progress" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/MarginContainer/Tabs/LORED Content/VBoxContainer/Status and Progress/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Text" type="MarginContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/Tabs/LORED/VBoxContainer/Status and Progress/MarginContainer/VBoxContainer/Progress"]
+[node name="Text" type="MarginContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/MarginContainer/Tabs/LORED Content/VBoxContainer/Status and Progress/MarginContainer/VBoxContainer/Progress"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_right = 10
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/Tabs/LORED/VBoxContainer/Status and Progress/MarginContainer/VBoxContainer/Progress/Text"]
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/MarginContainer/Tabs/LORED Content/VBoxContainer/Status and Progress/MarginContainer/VBoxContainer/Progress/Text"]
 layout_mode = 2
 theme_override_constants/separation = 10
 alignment = 1
 
-[node name="Current Progress Text" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/Tabs/LORED/VBoxContainer/Status and Progress/MarginContainer/VBoxContainer/Progress/Text/HBoxContainer" instance=ExtResource("5_fflj3")]
+[node name="Current Progress Text" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/MarginContainer/Tabs/LORED Content/VBoxContainer/Status and Progress/MarginContainer/VBoxContainer/Progress/Text/HBoxContainer" instance=ExtResource("5_fflj3")]
 layout_mode = 2
 text = "0.4s"
 
-[node name="Total Progres Text" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/Tabs/LORED/VBoxContainer/Status and Progress/MarginContainer/VBoxContainer/Progress/Text/HBoxContainer" instance=ExtResource("5_fflj3")]
+[node name="Total Progres Text" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/MarginContainer/Tabs/LORED Content/VBoxContainer/Status and Progress/MarginContainer/VBoxContainer/Progress/Text/HBoxContainer" instance=ExtResource("5_fflj3")]
 layout_mode = 2
 size_flags_horizontal = 8
 text = "1.3s"
 
-[node name="Progress Bar" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/Tabs/LORED/VBoxContainer/Status and Progress/MarginContainer/VBoxContainer/Progress" instance=ExtResource("5_quvv0")]
+[node name="Progress Bar" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/MarginContainer/Tabs/LORED Content/VBoxContainer/Status and Progress/MarginContainer/VBoxContainer/Progress" instance=ExtResource("5_quvv0")]
 unique_name_in_owner = true
 layout_mode = 2
 kill_markers = true
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/Tabs/LORED/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/MarginContainer/Tabs/LORED Content/VBoxContainer"]
+visible = false
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="Primary Currency" type="MarginContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/Tabs/LORED/VBoxContainer/HBoxContainer"]
+[node name="Primary Currency" type="MarginContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/MarginContainer/Tabs/LORED Content/VBoxContainer/HBoxContainer"]
 clip_contents = true
 custom_minimum_size = Vector2(0, 66)
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Background" type="Panel" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/Tabs/LORED/VBoxContainer/HBoxContainer/Primary Currency"]
+[node name="Background" type="Panel" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/MarginContainer/Tabs/LORED Content/VBoxContainer/HBoxContainer/Primary Currency"]
 layout_mode = 2
 theme_override_styles/panel = ExtResource("5_qdjqu")
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/Tabs/LORED/VBoxContainer/HBoxContainer/Primary Currency"]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/MarginContainer/Tabs/LORED Content/VBoxContainer/HBoxContainer/Primary Currency"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="LORED Primary Currency" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/Tabs/LORED/VBoxContainer/HBoxContainer/Primary Currency/MarginContainer" instance=ExtResource("8_y2bg6")]
+[node name="LORED Primary Currency" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/MarginContainer/Tabs/LORED Content/VBoxContainer/HBoxContainer/Primary Currency/MarginContainer" instance=ExtResource("8_y2bg6")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(82, 0)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="LOREDPrimaryCurrencyButton" type="Button" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/Tabs/LORED/VBoxContainer/HBoxContainer/Primary Currency"]
+[node name="LOREDPrimaryCurrencyButton" type="Button" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/MarginContainer/Tabs/LORED Content/VBoxContainer/HBoxContainer/Primary Currency"]
 unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 0
@@ -236,32 +251,32 @@ theme_override_styles/normal = SubResource("StyleBoxEmpty_fhfne")
 theme_override_styles/hover = SubResource("StyleBoxFlat_vx6g7")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_wy4xl")
 
-[node name="LORED Fuel Currency Container" type="MarginContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/Tabs/LORED/VBoxContainer/HBoxContainer"]
+[node name="LORED Fuel Currency Container" type="MarginContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/MarginContainer/Tabs/LORED Content/VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
 clip_contents = true
 custom_minimum_size = Vector2(0, 66)
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Background" type="Panel" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/Tabs/LORED/VBoxContainer/HBoxContainer/LORED Fuel Currency Container"]
+[node name="Background" type="Panel" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/MarginContainer/Tabs/LORED Content/VBoxContainer/HBoxContainer/LORED Fuel Currency Container"]
 layout_mode = 2
 theme_override_styles/panel = ExtResource("5_qdjqu")
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/Tabs/LORED/VBoxContainer/HBoxContainer/LORED Fuel Currency Container"]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/MarginContainer/Tabs/LORED Content/VBoxContainer/HBoxContainer/LORED Fuel Currency Container"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="LORED Fuel Currency" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/Tabs/LORED/VBoxContainer/HBoxContainer/LORED Fuel Currency Container/MarginContainer" instance=ExtResource("8_y2bg6")]
+[node name="LORED Fuel Currency" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/MarginContainer/Tabs/LORED Content/VBoxContainer/HBoxContainer/LORED Fuel Currency Container/MarginContainer" instance=ExtResource("8_y2bg6")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(82, 0)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="LOREDFuelCurrencyButton" type="Button" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/Tabs/LORED/VBoxContainer/HBoxContainer/LORED Fuel Currency Container"]
+[node name="LOREDFuelCurrencyButton" type="Button" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/MarginContainer/Tabs/LORED Content/VBoxContainer/HBoxContainer/LORED Fuel Currency Container"]
 unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 0
@@ -270,55 +285,266 @@ theme_override_styles/normal = SubResource("StyleBoxEmpty_fhfne")
 theme_override_styles/hover = SubResource("StyleBoxFlat_vx6g7")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_wy4xl")
 
-[node name="Fuel" type="MarginContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/Tabs/LORED/VBoxContainer"]
+[node name="Fuel" type="MarginContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/MarginContainer/Tabs/LORED Content/VBoxContainer"]
 custom_minimum_size = Vector2(0, 66)
 layout_mode = 2
 
-[node name="Background" type="Panel" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/Tabs/LORED/VBoxContainer/Fuel"]
+[node name="Background" type="Panel" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/MarginContainer/Tabs/LORED Content/VBoxContainer/Fuel"]
 layout_mode = 2
 theme_override_styles/panel = ExtResource("5_qdjqu")
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/Tabs/LORED/VBoxContainer/Fuel"]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/MarginContainer/Tabs/LORED Content/VBoxContainer/Fuel"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/Tabs/LORED/VBoxContainer/Fuel/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/MarginContainer/Tabs/LORED Content/VBoxContainer/Fuel/MarginContainer"]
 layout_mode = 2
 alignment = 1
 
-[node name="Fuel" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/Tabs/LORED/VBoxContainer/Fuel/MarginContainer/VBoxContainer" instance=ExtResource("5_fflj3")]
+[node name="Fuel" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/MarginContainer/Tabs/LORED Content/VBoxContainer/Fuel/MarginContainer/VBoxContainer" instance=ExtResource("5_fflj3")]
 layout_mode = 2
 text = "Fuel - 10%"
 
-[node name="Progress" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/Tabs/LORED/VBoxContainer/Fuel/MarginContainer/VBoxContainer"]
+[node name="Progress" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/MarginContainer/Tabs/LORED Content/VBoxContainer/Fuel/MarginContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="Text" type="MarginContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/Tabs/LORED/VBoxContainer/Fuel/MarginContainer/VBoxContainer/Progress"]
+[node name="Text" type="MarginContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/MarginContainer/Tabs/LORED Content/VBoxContainer/Fuel/MarginContainer/VBoxContainer/Progress"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_right = 10
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/Tabs/LORED/VBoxContainer/Fuel/MarginContainer/VBoxContainer/Progress/Text"]
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/MarginContainer/Tabs/LORED Content/VBoxContainer/Fuel/MarginContainer/VBoxContainer/Progress/Text"]
 layout_mode = 2
 theme_override_constants/separation = 10
 alignment = 1
 
-[node name="Current Fuel Text" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/Tabs/LORED/VBoxContainer/Fuel/MarginContainer/VBoxContainer/Progress/Text/HBoxContainer" instance=ExtResource("5_fflj3")]
+[node name="Current Fuel Text" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/MarginContainer/Tabs/LORED Content/VBoxContainer/Fuel/MarginContainer/VBoxContainer/Progress/Text/HBoxContainer" instance=ExtResource("5_fflj3")]
 layout_mode = 2
 text = "123e123"
 
-[node name="Total Fuel Text" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/Tabs/LORED/VBoxContainer/Fuel/MarginContainer/VBoxContainer/Progress/Text/HBoxContainer" instance=ExtResource("5_fflj3")]
+[node name="Total Fuel Text" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/MarginContainer/Tabs/LORED Content/VBoxContainer/Fuel/MarginContainer/VBoxContainer/Progress/Text/HBoxContainer" instance=ExtResource("5_fflj3")]
 layout_mode = 2
 size_flags_horizontal = 8
 text = "123e123"
 
-[node name="Fuel Bar" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/Tabs/LORED/VBoxContainer/Fuel/MarginContainer/VBoxContainer/Progress" instance=ExtResource("5_quvv0")]
+[node name="Fuel Bar" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/MarginContainer/Tabs/LORED Content/VBoxContainer/Fuel/MarginContainer/VBoxContainer/Progress" instance=ExtResource("5_quvv0")]
 unique_name_in_owner = true
 layout_mode = 2
 animate = true
+
+[node name="Interaction" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/MarginContainer/Tabs/LORED Content/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Level Up" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/MarginContainer/Tabs/LORED Content/VBoxContainer/Interaction" instance=ExtResource("1_dq02i")]
+unique_name_in_owner = true
+layout_mode = 2
+icon = ExtResource("10_vmuff")
+text = "Level Up"
+
+[node name="MarginContainer2" type="MarginContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/MarginContainer/Tabs/LORED Content/VBoxContainer/Interaction/Level Up"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 50
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/MarginContainer/Tabs/LORED Content/VBoxContainer/Interaction/Level Up/MarginContainer2"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="Lored level 2" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/MarginContainer/Tabs/LORED Content/VBoxContainer/Interaction/Level Up/MarginContainer2/HBoxContainer" instance=ExtResource("5_fflj3")]
+custom_minimum_size = Vector2(30, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 4
+mouse_filter = 2
+text = "1,000"
+
+[node name="MarginContainer2" type="MarginContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/MarginContainer/Tabs/LORED Content/VBoxContainer/Interaction/Level Up/MarginContainer2/HBoxContainer"]
+custom_minimum_size = Vector2(16, 0)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="LORED Affordable Check" type="CheckBox" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/MarginContainer/Tabs/LORED Content/VBoxContainer/Interaction/Level Up/MarginContainer2/HBoxContainer/MarginContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+theme = ExtResource("3_d4si2")
+button_pressed = true
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/MarginContainer/Tabs/LORED Content/VBoxContainer/Interaction/Level Up/MarginContainer2/HBoxContainer"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Control" type="Control" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/MarginContainer/Tabs/LORED Content/VBoxContainer/Interaction/Level Up/MarginContainer2/HBoxContainer/MarginContainer"]
+show_behind_parent = true
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+mouse_filter = 2
+
+[node name="Autobuyer" type="AnimatedSprite2D" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/MarginContainer/Tabs/LORED Content/VBoxContainer/Interaction/Level Up/MarginContainer2/HBoxContainer/MarginContainer/Control"]
+unique_name_in_owner = true
+sprite_frames = ExtResource("11_wed84")
+frame_progress = 0.691775
+
+[node name="Sleep" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/MarginContainer/Tabs/LORED Content/VBoxContainer/Interaction" instance=ExtResource("1_dq02i")]
+unique_name_in_owner = true
+layout_mode = 2
+icon = ExtResource("11_o4u6j")
+text = "Sleep"
+
+[node name="Attributes Section" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/MarginContainer/Tabs/LORED Content/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="ATTRIBUTES" type="MarginContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/MarginContainer/Tabs/LORED Content/VBoxContainer/Attributes Section"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/MarginContainer/Tabs/LORED Content/VBoxContainer/Attributes Section/ATTRIBUTES"]
+layout_mode = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="RichTextLabel" type="RichTextLabel" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/MarginContainer/Tabs/LORED Content/VBoxContainer/Attributes Section/ATTRIBUTES/HBoxContainer"]
+self_modulate = Color(1, 1, 1, 0.658824)
+layout_mode = 2
+size_flags_vertical = 4
+theme = ExtResource("3_d4si2")
+bbcode_enabled = true
+text = "ATTRIBUTES"
+fit_content = true
+autowrap_mode = 0
+
+[node name="ShowHide" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/MarginContainer/Tabs/LORED Content/VBoxContainer/Attributes Section/ATTRIBUTES/HBoxContainer" node_paths=PackedStringArray("node") instance=ExtResource("10_rk2hf")]
+layout_mode = 2
+node = NodePath("../../../Attributes")
+
+[node name="Attributes" type="MarginContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/MarginContainer/Tabs/LORED Content/VBoxContainer/Attributes Section"]
+layout_mode = 2
+theme_override_constants/margin_bottom = 40
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/MarginContainer/Tabs/LORED Content/VBoxContainer/Attributes Section/Attributes"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+
+[node name="Details" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/MarginContainer/Tabs/LORED Content/VBoxContainer/Attributes Section/Attributes/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="LORED Level" type="RichTextLabel" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/MarginContainer/Tabs/LORED Content/VBoxContainer/Attributes Section/Attributes/MarginContainer/Details"]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("3_d4si2")
+bbcode_enabled = true
+text = "Level 14"
+fit_content = true
+autowrap_mode = 0
+
+[node name="Advanced Details" type="GridContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/MarginContainer/Tabs/LORED Content/VBoxContainer/Attributes Section/Attributes/MarginContainer/Details"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/h_separation = 16
+theme_override_constants/v_separation = 8
+columns = 2
+
+[node name="LORED output" type="RichTextLabel" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/MarginContainer/Tabs/LORED Content/VBoxContainer/Attributes Section/Attributes/MarginContainer/Details/Advanced Details"]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("3_d4si2")
+bbcode_enabled = true
+text = "Output: [b]14"
+fit_content = true
+autowrap_mode = 0
+
+[node name="LORED input" type="RichTextLabel" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/MarginContainer/Tabs/LORED Content/VBoxContainer/Attributes Section/Attributes/MarginContainer/Details/Advanced Details"]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("3_d4si2")
+bbcode_enabled = true
+text = "Input: [b]14"
+fit_content = true
+autowrap_mode = 0
+
+[node name="LORED haste" type="RichTextLabel" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/MarginContainer/Tabs/LORED Content/VBoxContainer/Attributes Section/Attributes/MarginContainer/Details/Advanced Details"]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("3_d4si2")
+bbcode_enabled = true
+text = "Haste: [b]14"
+fit_content = true
+autowrap_mode = 0
+
+[node name="LORED crit" type="RichTextLabel" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/MarginContainer/Tabs/LORED Content/VBoxContainer/Attributes Section/Attributes/MarginContainer/Details/Advanced Details"]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("3_d4si2")
+bbcode_enabled = true
+text = "Crit: [b]14"
+fit_content = true
+autowrap_mode = 0
+
+[node name="LORED fuel cost" type="RichTextLabel" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/MarginContainer/Tabs/LORED Content/VBoxContainer/Attributes Section/Attributes/MarginContainer/Details"]
+unique_name_in_owner = true
+layout_mode = 2
+theme = ExtResource("3_d4si2")
+bbcode_enabled = true
+text = "0.2 Fuel Cost per second"
+fit_content = true
+autowrap_mode = 0
+
+[node name="Jobs Section" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/MarginContainer/Tabs/LORED Content/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="JOBS" type="MarginContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/MarginContainer/Tabs/LORED Content/VBoxContainer/Jobs Section"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/MarginContainer/Tabs/LORED Content/VBoxContainer/Jobs Section/JOBS"]
+layout_mode = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="RichTextLabel" type="RichTextLabel" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/MarginContainer/Tabs/LORED Content/VBoxContainer/Jobs Section/JOBS/HBoxContainer"]
+self_modulate = Color(1, 1, 1, 0.658824)
+layout_mode = 2
+size_flags_vertical = 4
+theme = ExtResource("3_d4si2")
+bbcode_enabled = true
+text = "JOBS"
+fit_content = true
+autowrap_mode = 0
+
+[node name="ShowHide" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/MarginContainer/Tabs/LORED Content/VBoxContainer/Jobs Section/JOBS/HBoxContainer" node_paths=PackedStringArray("node") instance=ExtResource("10_rk2hf")]
+layout_mode = 2
+node = NodePath("../../../Jobs")
+
+[node name="Jobs" type="MarginContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/MarginContainer/Tabs/LORED Content/VBoxContainer/Jobs Section"]
+layout_mode = 2
+theme_override_constants/margin_bottom = 40
+
+[node name="LORED Jobs" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/MarginContainer/Tabs/LORED Content/VBoxContainer/Jobs Section/Jobs"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 0
 
 [node name="Control" type="Control" parent="."]
 layout_mode = 2
@@ -328,5 +554,5 @@ metadata/_edit_lock_ = true
 [node name="LeftDown" type="Control" parent="Control"]
 layout_mode = 1
 anchors_preset = 0
-offset_left = -10.0
-offset_right = -10.0
+offset_left = -16.0
+offset_right = -16.0

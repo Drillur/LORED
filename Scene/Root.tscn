@@ -74,17 +74,27 @@ border_color = Color(1, 0, 0, 1)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_alvwj"]
 size = Vector2(1280, 720)
 
-[node name="Root" type="MarginContainer"]
+[node name="Main" type="MarginContainer"]
 offset_right = 1280.0
-offset_bottom = 720.0
+offset_bottom = 2114.0
 script = ExtResource("1_h7r77")
-metadata/_edit_horizontal_guides_ = []
-metadata/_edit_vertical_guides_ = []
 
-[node name="LORED Container" parent="." instance=ExtResource("2_egnhq")]
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 0
 
-[node name="Left" type="MarginContainer" parent="."]
+[node name="Back" type="MarginContainer" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="LORED Container" parent="HBoxContainer/Back" instance=ExtResource("2_egnhq")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Wishes" type="MarginContainer" parent="HBoxContainer/Back"]
 layout_mode = 2
 size_flags_horizontal = 0
 mouse_filter = 2
@@ -92,64 +102,30 @@ theme_override_constants/margin_left = 20
 theme_override_constants/margin_top = 20
 theme_override_constants/margin_bottom = 20
 
-[node name="V" type="VBoxContainer" parent="Left"]
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/Back/Wishes"]
 layout_mode = 2
 size_flags_horizontal = 0
 mouse_filter = 2
 theme_override_constants/separation = 20
 alignment = 2
 
-[node name="Random Wishes" type="VBoxContainer" parent="Left/V"]
+[node name="Random Wishes" type="VBoxContainer" parent="HBoxContainer/Back/Wishes/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 10
 
-[node name="Main Wishes" type="VBoxContainer" parent="Left/V"]
+[node name="Main Wishes" type="VBoxContainer" parent="HBoxContainer/Back/Wishes/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 10
 
-[node name="Right" type="MarginContainer" parent="."]
-layout_mode = 2
-size_flags_horizontal = 8
-mouse_filter = 2
-theme_override_constants/margin_left = 0
-theme_override_constants/margin_top = 20
-theme_override_constants/margin_right = 30
-theme_override_constants/margin_bottom = 20
-
-[node name="VBoxContainer" type="VBoxContainer" parent="Right"]
-layout_mode = 2
-size_flags_horizontal = 8
-mouse_filter = 2
-
-[node name="LimitBreakVico" parent="Right/VBoxContainer" instance=ExtResource("3_ncp6f")]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="Notice" type="MarginContainer" parent="Right/VBoxContainer"]
-layout_mode = 2
-theme_override_constants/margin_top = 32
-
-[node name="SaveNotice" parent="Right/VBoxContainer/Notice" instance=ExtResource("3_ugub1")]
-layout_mode = 2
-
-[node name="Upgrade Container" parent="." instance=ExtResource("3_3omr7")]
-visible = false
-layout_mode = 2
-
-[node name="Offline Report" parent="." instance=ExtResource("8_gl0q2")]
-visible = false
-layout_mode = 2
-
-[node name="Texts Parent" type="Control" parent="."]
+[node name="Overlay" type="MarginContainer" parent="HBoxContainer/Back"]
 layout_mode = 2
 mouse_filter = 2
-metadata/_edit_lock_ = true
 
-[node name="Sidebar" type="MarginContainer" parent="."]
+[node name="Sidebar" type="MarginContainer" parent="HBoxContainer/Back/Overlay"]
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
@@ -158,31 +134,31 @@ theme_override_constants/margin_top = 16
 theme_override_constants/margin_right = 16
 theme_override_constants/margin_bottom = 16
 
-[node name="MarginContainer" type="MarginContainer" parent="Sidebar"]
+[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/Back/Overlay/Sidebar"]
 layout_mode = 2
 
-[node name="Sidebar Background" type="Panel" parent="Sidebar/MarginContainer"]
+[node name="Sidebar Background" type="Panel" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_fydh3")
 
-[node name="Sidebar Background2" type="Panel" parent="Sidebar/MarginContainer"]
+[node name="Sidebar Background2" type="Panel" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer"]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_qs83t")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Sidebar/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer"]
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="MarginContainer2" type="MarginContainer" parent="Sidebar/MarginContainer/VBoxContainer"]
+[node name="MarginContainer2" type="MarginContainer" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="Sidebar Title Background" type="Panel" parent="Sidebar/MarginContainer/VBoxContainer/MarginContainer2"]
+[node name="Sidebar Title Background" type="Panel" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/MarginContainer2"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_asv2k")
 
-[node name="MarginContainer" type="MarginContainer" parent="Sidebar/MarginContainer/VBoxContainer/MarginContainer2"]
+[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/MarginContainer2"]
 custom_minimum_size = Vector2(0, 62)
 layout_mode = 2
 theme_override_constants/margin_left = 0
@@ -190,20 +166,20 @@ theme_override_constants/margin_top = 0
 theme_override_constants/margin_right = 0
 theme_override_constants/margin_bottom = 0
 
-[node name="Menu Button" parent="Sidebar/MarginContainer/VBoxContainer/MarginContainer2/MarginContainer" instance=ExtResource("4_3h2sv")]
+[node name="Menu Button" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/MarginContainer2/MarginContainer" instance=ExtResource("4_3h2sv")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(36, 42)
 layout_mode = 2
 text = "GameName"
 color = Color(0, 0, 0, 1)
 
-[node name="Control" type="Control" parent="Sidebar/MarginContainer/VBoxContainer/MarginContainer2/MarginContainer/Menu Button"]
+[node name="Control" type="Control" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/MarginContainer2/MarginContainer/Menu Button"]
 visible = false
 layout_mode = 2
 size_flags_horizontal = 8
 mouse_filter = 2
 
-[node name="Total Notice Count" parent="Sidebar/MarginContainer/VBoxContainer/MarginContainer2/MarginContainer/Menu Button/Control" instance=ExtResource("7_3ao4c")]
+[node name="Total Notice Count" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/MarginContainer2/MarginContainer/Menu Button/Control" instance=ExtResource("7_3ao4c")]
 unique_name_in_owner = true
 layout_mode = 2
 offset_left = -8.0
@@ -211,7 +187,7 @@ offset_top = -6.0
 offset_right = 7.0
 offset_bottom = 9.0
 
-[node name="Menu Contents" type="MarginContainer" parent="Sidebar/MarginContainer/VBoxContainer"]
+[node name="Menu Contents" type="MarginContainer" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
@@ -221,40 +197,40 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="MenuScroll" type="ScrollContainer" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents"]
+[node name="MenuScroll" type="ScrollContainer" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 2000)
 layout_mode = 2
 theme = ExtResource("13_0ehpq")
 horizontal_scroll_mode = 0
 
-[node name="MenuContainer" type="MarginContainer" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll"]
+[node name="MenuContainer" type="MarginContainer" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/margin_right = 16
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 0
 
-[node name="Game Section" type="VBoxContainer" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer"]
+[node name="Game Section" type="VBoxContainer" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="GAME" type="MarginContainer" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game Section"]
+[node name="GAME" type="MarginContainer" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game Section"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game Section/GAME"]
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game Section/GAME"]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="RichTextLabel" type="RichTextLabel" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game Section/GAME/HBoxContainer"]
+[node name="RichTextLabel" type="RichTextLabel" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game Section/GAME/HBoxContainer"]
 self_modulate = Color(1, 1, 1, 0.658824)
 layout_mode = 2
 size_flags_vertical = 4
@@ -264,30 +240,30 @@ text = "GAME"
 fit_content = true
 autowrap_mode = 0
 
-[node name="ShowHide" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game Section/GAME/HBoxContainer" node_paths=PackedStringArray("node") instance=ExtResource("5_7doml")]
+[node name="ShowHide" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game Section/GAME/HBoxContainer" node_paths=PackedStringArray("node") instance=ExtResource("5_7doml")]
 layout_mode = 2
 node = NodePath("../../../Game")
 
-[node name="Game" type="MarginContainer" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game Section"]
+[node name="Game" type="MarginContainer" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game Section"]
 layout_mode = 2
 theme_override_constants/margin_bottom = 40
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game Section/Game"]
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game Section/Game"]
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="Wallet Button" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game Section/Game/VBoxContainer" instance=ExtResource("4_3h2sv")]
+[node name="Wallet Button" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game Section/Game/VBoxContainer" instance=ExtResource("4_3h2sv")]
 unique_name_in_owner = true
 layout_mode = 2
 icon = ExtResource("6_fxkih")
 text = "Wallet"
 
-[node name="Control" type="Control" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game Section/Game/VBoxContainer/Wallet Button"]
+[node name="Control" type="Control" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game Section/Game/VBoxContainer/Wallet Button"]
 layout_mode = 2
 size_flags_horizontal = 8
 mouse_filter = 2
 
-[node name="Notifications" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game Section/Game/VBoxContainer/Wallet Button/Control" instance=ExtResource("7_3ao4c")]
+[node name="Notifications" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game Section/Game/VBoxContainer/Wallet Button/Control" instance=ExtResource("7_3ao4c")]
 visible = false
 layout_mode = 1
 offset_left = -25.0
@@ -296,18 +272,18 @@ offset_right = -10.0
 offset_bottom = 25.0
 grow_horizontal = 1
 
-[node name="Upgrades Button" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game Section/Game/VBoxContainer" instance=ExtResource("4_3h2sv")]
+[node name="Upgrades Button" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game Section/Game/VBoxContainer" instance=ExtResource("4_3h2sv")]
 unique_name_in_owner = true
 layout_mode = 2
 icon = ExtResource("6_sjgrn")
 text = "Upgrades"
 
-[node name="Control" type="Control" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game Section/Game/VBoxContainer/Upgrades Button"]
+[node name="Control" type="Control" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game Section/Game/VBoxContainer/Upgrades Button"]
 layout_mode = 2
 size_flags_horizontal = 8
 mouse_filter = 2
 
-[node name="Purchasable Upgrade Count" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game Section/Game/VBoxContainer/Upgrades Button/Control" instance=ExtResource("7_3ao4c")]
+[node name="Purchasable Upgrade Count" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game Section/Game/VBoxContainer/Upgrades Button/Control" instance=ExtResource("7_3ao4c")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
@@ -317,47 +293,47 @@ offset_right = -10.0
 offset_bottom = 25.0
 grow_horizontal = 1
 
-[node name="Stage1" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game Section/Game/VBoxContainer" instance=ExtResource("4_3h2sv")]
+[node name="Stage1" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game Section/Game/VBoxContainer" instance=ExtResource("4_3h2sv")]
 unique_name_in_owner = true
 layout_mode = 2
 icon = ExtResource("6_lo011")
 text = "Stage 1"
 
-[node name="Stage2" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game Section/Game/VBoxContainer" instance=ExtResource("4_3h2sv")]
+[node name="Stage2" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game Section/Game/VBoxContainer" instance=ExtResource("4_3h2sv")]
 unique_name_in_owner = true
 layout_mode = 2
 icon = ExtResource("7_6y55p")
 text = "Stage 2"
 
-[node name="Stage3" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game Section/Game/VBoxContainer" instance=ExtResource("4_3h2sv")]
+[node name="Stage3" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game Section/Game/VBoxContainer" instance=ExtResource("4_3h2sv")]
 unique_name_in_owner = true
 layout_mode = 2
 icon = ExtResource("7_6y55p")
 text = "Stage 3"
 
-[node name="Stage4" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game Section/Game/VBoxContainer" instance=ExtResource("4_3h2sv")]
+[node name="Stage4" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game Section/Game/VBoxContainer" instance=ExtResource("4_3h2sv")]
 unique_name_in_owner = true
 layout_mode = 2
 icon = ExtResource("7_6y55p")
 text = "Stage 4"
 
-[node name="Upgrade Section" type="VBoxContainer" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer"]
+[node name="Upgrade Section" type="VBoxContainer" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="UPGRADE" type="MarginContainer" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Upgrade Section"]
+[node name="UPGRADE" type="MarginContainer" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Upgrade Section"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Upgrade Section/UPGRADE"]
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Upgrade Section/UPGRADE"]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="RichTextLabel" type="RichTextLabel" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Upgrade Section/UPGRADE/HBoxContainer"]
+[node name="RichTextLabel" type="RichTextLabel" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Upgrade Section/UPGRADE/HBoxContainer"]
 self_modulate = Color(1, 1, 1, 0.658824)
 layout_mode = 2
 size_flags_vertical = 4
@@ -367,56 +343,56 @@ text = "UPGRADE EFFECTS"
 fit_content = true
 autowrap_mode = 0
 
-[node name="ShowHide" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Upgrade Section/UPGRADE/HBoxContainer" node_paths=PackedStringArray("node") instance=ExtResource("5_7doml")]
+[node name="ShowHide" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Upgrade Section/UPGRADE/HBoxContainer" node_paths=PackedStringArray("node") instance=ExtResource("5_7doml")]
 layout_mode = 2
 node = NodePath("../../../Upgrade")
 
-[node name="Upgrade" type="MarginContainer" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Upgrade Section"]
+[node name="Upgrade" type="MarginContainer" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Upgrade Section"]
 layout_mode = 2
 theme_override_constants/margin_bottom = 40
 
-[node name="UpgradeVicos" type="VBoxContainer" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Upgrade Section/Upgrade"]
+[node name="UpgradeVicos" type="VBoxContainer" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Upgrade Section/Upgrade"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="limitbreak" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Upgrade Section/Upgrade/UpgradeVicos" node_paths=PackedStringArray("tooltip_parent") instance=ExtResource("14_vidbt")]
+[node name="limitbreak" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Upgrade Section/Upgrade/UpgradeVicos" node_paths=PackedStringArray("tooltip_parent") instance=ExtResource("14_vidbt")]
 layout_mode = 2
 upgrade_type = 1
 tooltip_parent = NodePath("../../../../../../../../../../Control/RightDown")
 
-[node name="spreadin" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Upgrade Section/Upgrade/UpgradeVicos" node_paths=PackedStringArray("tooltip_parent") instance=ExtResource("14_vidbt")]
+[node name="spreadin" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Upgrade Section/Upgrade/UpgradeVicos" node_paths=PackedStringArray("tooltip_parent") instance=ExtResource("14_vidbt")]
 layout_mode = 2
 upgrade_type = 54
 tooltip_parent = NodePath("../../../../../../../../../../Control/RightDown")
 
-[node name="growin" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Upgrade Section/Upgrade/UpgradeVicos" node_paths=PackedStringArray("tooltip_parent") instance=ExtResource("14_vidbt")]
+[node name="growin" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Upgrade Section/Upgrade/UpgradeVicos" node_paths=PackedStringArray("tooltip_parent") instance=ExtResource("14_vidbt")]
 layout_mode = 2
 upgrade_type = 168
 tooltip_parent = NodePath("../../../../../../../../../../Control/RightDown")
 
-[node name="milkshake" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Upgrade Section/Upgrade/UpgradeVicos" node_paths=PackedStringArray("tooltip_parent") instance=ExtResource("14_vidbt")]
+[node name="milkshake" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Upgrade Section/Upgrade/UpgradeVicos" node_paths=PackedStringArray("tooltip_parent") instance=ExtResource("14_vidbt")]
 layout_mode = 2
 mouse_filter = 2
 upgrade_type = 178
 tooltip_parent = NodePath("../../../../../../../../../../Control/RightDown")
 
-[node name="Save Section" type="VBoxContainer" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer"]
+[node name="Save Section" type="VBoxContainer" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="SAVE" type="MarginContainer" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save Section"]
+[node name="SAVE" type="MarginContainer" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save Section"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save Section/SAVE"]
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save Section/SAVE"]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="RichTextLabel" type="RichTextLabel" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save Section/SAVE/HBoxContainer"]
+[node name="RichTextLabel" type="RichTextLabel" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save Section/SAVE/HBoxContainer"]
 self_modulate = Color(1, 1, 1, 0.658824)
 layout_mode = 2
 size_flags_vertical = 4
@@ -426,98 +402,98 @@ text = "SAVE"
 fit_content = true
 autowrap_mode = 0
 
-[node name="ShowHide" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save Section/SAVE/HBoxContainer" node_paths=PackedStringArray("node") instance=ExtResource("5_7doml")]
+[node name="ShowHide" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save Section/SAVE/HBoxContainer" node_paths=PackedStringArray("node") instance=ExtResource("5_7doml")]
 layout_mode = 2
 node = NodePath("../../../Save")
 
-[node name="Save" type="MarginContainer" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save Section"]
+[node name="Save" type="MarginContainer" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save Section"]
 layout_mode = 2
 theme_override_constants/margin_bottom = 40
 
-[node name="Save" type="VBoxContainer" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save Section/Save"]
+[node name="Save" type="VBoxContainer" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save Section/Save"]
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="Save Game" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save Section/Save/Save" groups=["Menu_Save"] instance=ExtResource("4_3h2sv")]
+[node name="Save Game" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save Section/Save/Save" groups=["Menu_Save"] instance=ExtResource("4_3h2sv")]
 unique_name_in_owner = true
 layout_mode = 2
 icon = ExtResource("10_mipnr")
 text = "Save Now"
 
-[node name="Load Game" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save Section/Save/Save" groups=["Menu_Save"] instance=ExtResource("4_3h2sv")]
+[node name="Load Game" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save Section/Save/Save" groups=["Menu_Save"] instance=ExtResource("4_3h2sv")]
 unique_name_in_owner = true
 layout_mode = 2
 icon = ExtResource("15_bxrvx")
 text = "Load"
 
-[node name="Export Save" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save Section/Save/Save" groups=["Menu_Save"] instance=ExtResource("4_3h2sv")]
+[node name="Export Save" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save Section/Save/Save" groups=["Menu_Save"] instance=ExtResource("4_3h2sv")]
 unique_name_in_owner = true
 layout_mode = 2
 icon = ExtResource("12_bqm8u")
 text = "Export"
 
-[node name="New Game" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save Section/Save/Save" groups=["Menu_Save"] instance=ExtResource("4_3h2sv")]
+[node name="New Game" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save Section/Save/Save" groups=["Menu_Save"] instance=ExtResource("4_3h2sv")]
 unique_name_in_owner = true
 layout_mode = 2
 icon = ExtResource("10_8u1ic")
 text = "New Game"
 
-[node name="Hard Reset" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save Section/Save/Save" instance=ExtResource("4_3h2sv")]
+[node name="Hard Reset" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save Section/Save/Save" instance=ExtResource("4_3h2sv")]
 unique_name_in_owner = true
 layout_mode = 2
 icon = ExtResource("13_0l83t")
 text = "Hard Reset"
 color = Color(1, 0, 0, 1)
 
-[node name="MarginContainer" type="MarginContainer" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save Section/Save/Save"]
+[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save Section/Save/Save"]
 layout_mode = 2
 theme_override_constants/margin_top = 20
 
-[node name="Save" type="VBoxContainer" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save Section/Save/Save/MarginContainer"]
+[node name="Save" type="VBoxContainer" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save Section/Save/Save/MarginContainer"]
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="Save Color Button" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save Section/Save/Save/MarginContainer/Save" groups=["Menu_Save"] instance=ExtResource("4_3h2sv")]
+[node name="Save Color Button" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save Section/Save/Save/MarginContainer/Save" groups=["Menu_Save"] instance=ExtResource("4_3h2sv")]
 unique_name_in_owner = true
 layout_mode = 2
 icon = ExtResource("12_st5ae")
 text = "Set Color"
 
-[node name="Rename Save Button" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save Section/Save/Save/MarginContainer/Save" groups=["Menu_Save"] instance=ExtResource("4_3h2sv")]
+[node name="Rename Save Button" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save Section/Save/Save/MarginContainer/Save" groups=["Menu_Save"] instance=ExtResource("4_3h2sv")]
 unique_name_in_owner = true
 layout_mode = 2
 icon = ExtResource("13_6v2xt")
 text = "Rename"
 
-[node name="Duplicate Save Button" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save Section/Save/Save/MarginContainer/Save" groups=["Menu_Save"] instance=ExtResource("4_3h2sv")]
+[node name="Duplicate Save Button" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save Section/Save/Save/MarginContainer/Save" groups=["Menu_Save"] instance=ExtResource("4_3h2sv")]
 unique_name_in_owner = true
 layout_mode = 2
 icon = ExtResource("14_5312t")
 text = "Duplicate"
 
-[node name="Delete Save Button" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save Section/Save/Save/MarginContainer/Save" instance=ExtResource("4_3h2sv")]
+[node name="Delete Save Button" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save Section/Save/Save/MarginContainer/Save" instance=ExtResource("4_3h2sv")]
 unique_name_in_owner = true
 layout_mode = 2
 icon = ExtResource("15_s64ty")
 text = "Delete"
 color = Color(1, 0, 0, 1)
 
-[node name="Cheat Section" type="VBoxContainer" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer"]
+[node name="Cheat Section" type="VBoxContainer" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="CHEAT" type="MarginContainer" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Cheat Section"]
+[node name="CHEAT" type="MarginContainer" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Cheat Section"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Cheat Section/CHEAT"]
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Cheat Section/CHEAT"]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="RichTextLabel" type="RichTextLabel" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Cheat Section/CHEAT/HBoxContainer"]
+[node name="RichTextLabel" type="RichTextLabel" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Cheat Section/CHEAT/HBoxContainer"]
 self_modulate = Color(1, 1, 1, 0.658824)
 layout_mode = 2
 size_flags_vertical = 4
@@ -527,61 +503,61 @@ text = "HACKER-ZONE 2000"
 fit_content = true
 autowrap_mode = 0
 
-[node name="ShowHide" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Cheat Section/CHEAT/HBoxContainer" node_paths=PackedStringArray("node") instance=ExtResource("5_7doml")]
+[node name="ShowHide" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Cheat Section/CHEAT/HBoxContainer" node_paths=PackedStringArray("node") instance=ExtResource("5_7doml")]
 layout_mode = 2
 node = NodePath("../../../Cheat")
 
-[node name="Cheat" type="MarginContainer" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Cheat Section"]
+[node name="Cheat" type="MarginContainer" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Cheat Section"]
 layout_mode = 2
 theme_override_constants/margin_bottom = 40
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Cheat Section/Cheat"]
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Cheat Section/Cheat"]
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="FPS" type="RichTextLabel" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Cheat Section/Cheat/VBoxContainer"]
+[node name="FPS" type="RichTextLabel" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Cheat Section/Cheat/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 bbcode_enabled = true
 text = "Big text"
 fit_content = true
 
-[node name="Dev1" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Cheat Section/Cheat/VBoxContainer" instance=ExtResource("4_3h2sv")]
+[node name="Dev1" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Cheat Section/Cheat/VBoxContainer" instance=ExtResource("4_3h2sv")]
 layout_mode = 2
 icon = ExtResource("23_6kk07")
 text = "Create buff"
 
-[node name="Dev2" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Cheat Section/Cheat/VBoxContainer" instance=ExtResource("4_3h2sv")]
+[node name="Dev2" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Cheat Section/Cheat/VBoxContainer" instance=ExtResource("4_3h2sv")]
 layout_mode = 2
 icon = ExtResource("27_jvurx")
 text = "Test Routine"
 
-[node name="Dev3" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Cheat Section/Cheat/VBoxContainer" instance=ExtResource("4_3h2sv")]
+[node name="Dev3" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Cheat Section/Cheat/VBoxContainer" instance=ExtResource("4_3h2sv")]
 layout_mode = 2
 icon = ExtResource("26_n0q24")
 text = "LB Level Up"
 
-[node name="Dev4" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Cheat Section/Cheat/VBoxContainer" instance=ExtResource("4_3h2sv")]
+[node name="Dev4" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Cheat Section/Cheat/VBoxContainer" instance=ExtResource("4_3h2sv")]
 layout_mode = 2
 icon = ExtResource("28_6ie80")
 text = "Add Malig"
 
-[node name="Meta Section" type="VBoxContainer" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer"]
+[node name="Meta Section" type="VBoxContainer" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="META" type="MarginContainer" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Meta Section"]
+[node name="META" type="MarginContainer" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Meta Section"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Meta Section/META"]
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Meta Section/META"]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="RichTextLabel" type="RichTextLabel" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Meta Section/META/HBoxContainer"]
+[node name="RichTextLabel" type="RichTextLabel" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Meta Section/META/HBoxContainer"]
 self_modulate = Color(1, 1, 1, 0.658824)
 layout_mode = 2
 size_flags_vertical = 4
@@ -591,76 +567,76 @@ text = "META"
 fit_content = true
 autowrap_mode = 0
 
-[node name="ShowHide" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Meta Section/META/HBoxContainer" node_paths=PackedStringArray("node") instance=ExtResource("5_7doml")]
+[node name="ShowHide" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Meta Section/META/HBoxContainer" node_paths=PackedStringArray("node") instance=ExtResource("5_7doml")]
 layout_mode = 2
 node = NodePath("../../../Meta")
 
-[node name="Meta" type="MarginContainer" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Meta Section"]
+[node name="Meta" type="MarginContainer" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Meta Section"]
 layout_mode = 2
 theme_override_constants/margin_bottom = 0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Meta Section/Meta"]
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Meta Section/Meta"]
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="Settings Button" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Meta Section/Meta/VBoxContainer" instance=ExtResource("4_3h2sv")]
+[node name="Settings Button" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Meta Section/Meta/VBoxContainer" instance=ExtResource("4_3h2sv")]
 unique_name_in_owner = true
 layout_mode = 2
 icon = ExtResource("12_34j7m")
 text = "Settings"
 color = Color(0.137255, 0.698039, 0.552941, 1)
 
-[node name="Statistics Button" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Meta Section/Meta/VBoxContainer" instance=ExtResource("4_3h2sv")]
+[node name="Statistics Button" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Meta Section/Meta/VBoxContainer" instance=ExtResource("4_3h2sv")]
 unique_name_in_owner = true
 layout_mode = 2
 icon = ExtResource("25_ops5o")
 text = "Statistics"
 color = Color(0.74902, 0.639216, 0.0352941, 1)
 
-[node name="Patch Notes Button" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Meta Section/Meta/VBoxContainer" instance=ExtResource("4_3h2sv")]
+[node name="Patch Notes Button" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Meta Section/Meta/VBoxContainer" instance=ExtResource("4_3h2sv")]
 unique_name_in_owner = true
 layout_mode = 2
 icon = ExtResource("24_qdxv7")
 text = "Patch Notes"
 color = Color(0.996078, 0.443137, 0.172549, 1)
 
-[node name="MarginContainer" type="MarginContainer" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Meta Section/Meta/VBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Meta Section/Meta/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/margin_top = 20
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Meta Section/Meta/VBoxContainer/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Meta Section/Meta/VBoxContainer/MarginContainer"]
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="Discord" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Meta Section/Meta/VBoxContainer/MarginContainer/VBoxContainer" instance=ExtResource("4_3h2sv")]
+[node name="Discord" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Meta Section/Meta/VBoxContainer/MarginContainer/VBoxContainer" instance=ExtResource("4_3h2sv")]
 layout_mode = 2
 icon = ExtResource("22_ejl1s")
 text = "Discord"
 color = Color(0.345098, 0.396078, 0.94902, 1)
 
-[node name="Itchio" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Meta Section/Meta/VBoxContainer/MarginContainer/VBoxContainer" instance=ExtResource("4_3h2sv")]
+[node name="Itchio" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Meta Section/Meta/VBoxContainer/MarginContainer/VBoxContainer" instance=ExtResource("4_3h2sv")]
 layout_mode = 2
 icon = ExtResource("23_mvmsj")
 text = "Itch.io"
 color = Color(0.980392, 0.360784, 0.360784, 1)
 
-[node name="Steam" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Meta Section/Meta/VBoxContainer/MarginContainer/VBoxContainer" instance=ExtResource("4_3h2sv")]
+[node name="Steam" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Meta Section/Meta/VBoxContainer/MarginContainer/VBoxContainer" instance=ExtResource("4_3h2sv")]
 layout_mode = 2
 icon = ExtResource("24_ila10")
 text = "Steam"
 
-[node name="Godot" parent="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Meta Section/Meta/VBoxContainer/MarginContainer/VBoxContainer" instance=ExtResource("4_3h2sv")]
+[node name="Godot" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Meta Section/Meta/VBoxContainer/MarginContainer/VBoxContainer" instance=ExtResource("4_3h2sv")]
 layout_mode = 2
 icon = ExtResource("24_u1xhr")
 text = "Godot Engine"
 color = Color(0.345098, 0.654902, 0.862745, 1)
 
-[node name="Control" type="Control" parent="Sidebar"]
+[node name="Control" type="Control" parent="HBoxContainer/Back/Overlay/Sidebar"]
 layout_mode = 2
 mouse_filter = 2
 metadata/_edit_lock_ = true
 
-[node name="RightDown" type="Control" parent="Sidebar/Control"]
+[node name="RightDown" type="Control" parent="HBoxContainer/Back/Overlay/Sidebar/Control"]
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
@@ -669,12 +645,58 @@ offset_left = 10.0
 offset_right = 10.0
 grow_horizontal = 0
 
-[node name="RightBar" parent="." instance=ExtResource("36_alffs")]
+[node name="Upgrade Container" parent="HBoxContainer/Back/Overlay" instance=ExtResource("3_3omr7")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="Right" type="MarginContainer" parent="HBoxContainer/Back/Overlay"]
+layout_mode = 2
+size_flags_horizontal = 8
+mouse_filter = 2
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/Back/Overlay/Right"]
+layout_mode = 2
+size_flags_horizontal = 8
+mouse_filter = 2
+
+[node name="LimitBreakVico" parent="HBoxContainer/Back/Overlay/Right/VBoxContainer" instance=ExtResource("3_ncp6f")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Notice" type="MarginContainer" parent="HBoxContainer/Back/Overlay/Right/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_top = 32
+
+[node name="SaveNotice" parent="HBoxContainer/Back/Overlay/Right/VBoxContainer/Notice" instance=ExtResource("3_ugub1")]
+layout_mode = 2
+
+[node name="Offline Report" parent="HBoxContainer/Back/Overlay" instance=ExtResource("8_gl0q2")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="Wallet" parent="HBoxContainer/Back/Overlay" instance=ExtResource("6_pdtq1")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="RightBar" parent="HBoxContainer" instance=ExtResource("36_alffs")]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 8
 
+[node name="Texts Parent" type="Control" parent="."]
+layout_mode = 2
+mouse_filter = 2
+metadata/_edit_lock_ = true
+
 [node name="Control" type="Control" parent="."]
+unique_name_in_owner = true
 layout_mode = 2
 mouse_filter = 2
 metadata/_edit_lock_ = true
@@ -688,14 +710,11 @@ mouse_filter = 2
 metadata/_edit_lock_ = true
 
 [node name="Tooltip Position Display" type="Panel" parent="Control/Tooltip"]
+unique_name_in_owner = true
 visible = false
 layout_mode = 2
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_ge2kb")
-
-[node name="Wallet" parent="." instance=ExtResource("6_pdtq1")]
-visible = false
-layout_mode = 2
 
 [node name="Area2D" type="Area2D" parent="."]
 visible = false
@@ -708,23 +727,10 @@ unique_name_in_owner = true
 position = Vector2(640, 360)
 shape = SubResource("RectangleShape2D_alvwj")
 
-[connection signal="sort_children" from="Left/V/Random Wishes" to="." method="_on_random_wishes_sort_children"]
-[connection signal="sort_children" from="Left/V/Main Wishes" to="." method="_on_main_wishes_sort_children"]
-[connection signal="pressed" from="Sidebar/MarginContainer/VBoxContainer/MarginContainer2/MarginContainer/Menu Button" to="." method="_on_menu_button_pressed"]
-[connection signal="resized" from="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer" to="." method="_on_menu_container_resized"]
-[connection signal="pressed" from="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game Section/Game/VBoxContainer/Wallet Button" to="." method="_on_wallet_button_pressed"]
-[connection signal="pressed" from="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game Section/Game/VBoxContainer/Upgrades Button" to="." method="_on_upgrades_button_pressed"]
-[connection signal="pressed" from="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game Section/Game/VBoxContainer/Stage1" to="." method="_on_stage_1_pressed"]
-[connection signal="pressed" from="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game Section/Game/VBoxContainer/Stage2" to="." method="_on_stage_2_pressed"]
-[connection signal="pressed" from="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game Section/Game/VBoxContainer/Stage3" to="." method="_on_stage_3_pressed"]
-[connection signal="pressed" from="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game Section/Game/VBoxContainer/Stage4" to="." method="_on_stage_4_pressed"]
-[connection signal="pressed" from="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Upgrade Section/Upgrade/UpgradeVicos/limitbreak" to="." method="_on_limitbreak_pressed"]
-[connection signal="visibility_changed" from="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Upgrade Section/Upgrade/UpgradeVicos/limitbreak" to="." method="_on_upgrade_effect_vico_visibility_changed"]
-[connection signal="visibility_changed" from="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Upgrade Section/Upgrade/UpgradeVicos/spreadin" to="." method="_on_upgrade_effect_vico_visibility_changed"]
-[connection signal="visibility_changed" from="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Upgrade Section/Upgrade/UpgradeVicos/growin" to="." method="_on_upgrade_effect_vico_visibility_changed"]
-[connection signal="visibility_changed" from="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Upgrade Section/Upgrade/UpgradeVicos/milkshake" to="." method="_on_upgrade_effect_vico_visibility_changed"]
-[connection signal="pressed" from="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Cheat Section/Cheat/VBoxContainer/Dev1" to="." method="_on_dev_1_pressed"]
-[connection signal="pressed" from="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Cheat Section/Cheat/VBoxContainer/Dev2" to="." method="_on_dev_2_pressed"]
-[connection signal="pressed" from="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Cheat Section/Cheat/VBoxContainer/Dev3" to="." method="_on_dev_3_pressed"]
-[connection signal="pressed" from="Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Cheat Section/Cheat/VBoxContainer/Dev4" to="." method="_on_dev_4_pressed"]
-[connection signal="body_exited" from="Area2D" to="." method="_on_screen_area_body_exited"]
+[connection signal="pressed" from="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/MarginContainer2/MarginContainer/Menu Button" to="." method="_on_menu_button_pressed"]
+[connection signal="pressed" from="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game Section/Game/VBoxContainer/Wallet Button" to="." method="_on_wallet_button_pressed"]
+[connection signal="pressed" from="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game Section/Game/VBoxContainer/Upgrades Button" to="." method="_on_upgrades_button_pressed"]
+[connection signal="pressed" from="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game Section/Game/VBoxContainer/Stage1" to="." method="_on_stage_1_pressed"]
+[connection signal="pressed" from="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game Section/Game/VBoxContainer/Stage2" to="." method="_on_stage_2_pressed"]
+[connection signal="pressed" from="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game Section/Game/VBoxContainer/Stage3" to="." method="_on_stage_3_pressed"]
+[connection signal="pressed" from="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game Section/Game/VBoxContainer/Stage4" to="." method="_on_stage_4_pressed"]

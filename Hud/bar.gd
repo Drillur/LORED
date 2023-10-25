@@ -4,8 +4,6 @@ extends MarginContainer
 
 
 @onready var progress_bar = %"Progress Bar"
-@onready var delta_bar = %"Delta Bar"
-@onready var delta_timer = %Timer
 @onready var edge = %Edge
 @onready var warning_marker = %"Warning Marker"
 @onready var danger_marker = %"Danger Marker"
@@ -14,24 +12,24 @@ extends MarginContainer
 @export var animate := false
 @export var kill_background := false
 
-
 var color: Color:
 	set(val):
 		color = val
 		progress_bar.modulate = color
-		if animate:
-			delta_bar.modulate = color
 
 var progress: float:
 	set(val):
 		if progress != val:
-			previous_progress = progress
 			progress = val
-			update_progress_bar()
-var previous_progress := 0.0
-var delta_speed := 0.0
-var start_time := 0.0
-var threshold: float
+			if animate:
+				var tween = get_tree().create_tween()
+				tween.tween_property(
+					bar_size, "current", min(progress * size.x, size.x), 0.5
+				).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_OUT)
+			else:
+				bar_size.set_to(min(progress * size.x, size.x))
+
+var bar_size := Int.new(0)
 
 var timer: Timer
 var attribute: ValuePair
@@ -44,37 +42,42 @@ func _ready() -> void:
 		danger_marker.queue_free()
 	if kill_background:
 		$bg.theme = gv.theme_invis
+	resized.connect(_on_resized)
 	call_deferred("_on_resized")
-	if not animate:
-		delta_bar.hide()
-		set_process(false)
-		delta_bar.queue_free()
+	set_process(false)
+	bar_size.changed.connect(bar_size_changed)
+#	if animate:
+#		animate = false
+#		set_deferred("animate", true)
 
 
 
 func _process(delta) -> void:
-	if animate:
-		if should_update_delta_bar():
-			delta_speed += delta / 2
-			delta_bar.size.x -= delta_speed
-			fix_delta_bar_position()
-			if not should_update_delta_bar():
-				delta_bar.size.x = 1
-				delta_speed = 0.0
-	elif start_time != 0.0:
-		progress = (Time.get_unix_time_from_system() - start_time) / threshold
-	elif timer != null:
-		progress = 1 - (timer.time_left / timer.wait_time)
+	progress = 1 - (timer.time_left / timer.wait_time)
+
+
 
 
 func _on_resized():
-	if not is_node_ready():
-		await ready
-	update_progress_bar()
-	progress_bar.set_deferred("size", Vector2(progress_bar.size.x, size.y))
+	progress_bar.size.y = size.y
 	if animate:
-		delta_bar.set_deferred("size", Vector2(delta_bar.size.x, size.y))
+		var tween = get_tree().create_tween()
+		tween.tween_property(
+			bar_size, "current", min(progress * size.x, size.x), 0.5
+		).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_OUT)
 
+
+func bar_size_changed() -> void:
+	progress_bar.size.x = bar_size.get_value()
+
+
+
+# - Action
+
+
+func stop() -> void:
+	set_process(false)
+	progress = 0.0
 
 
 func hide_edge() -> void:
@@ -90,63 +93,13 @@ func attach_attribute(_attribute: ValuePair) -> void:
 		attribute.changed.disconnect(update_progress)
 	attribute = _attribute
 	attribute.changed.connect(update_progress)
-	update_progress()
+	call_deferred("update_progress")
 
 
 
 func update_progress() -> void:
 	# attribute only
 	progress = attribute.get_current_percent()
-
-
-func update_progress_bar() -> void:
-	progress_bar.size.x = min(progress * size.x, size.x)
-	if animate:
-		delta_bar.show()
-		delta_bar.size.x = min(abs(progress - previous_progress) * size.x, size.x)
-		fix_delta_bar_position()
-
-
-
-# - One-shot progression
-
-func start(_threshold: float) -> void:
-	start_time = Time.get_unix_time_from_system()
-	threshold = _threshold
-	set_process(true)
-	show()
-
-
-func stop() -> void:
-	start_time = 0.0
-	set_process(false)
-	hide()
-
-
-
-func should_update_delta_bar() -> bool:
-	return delta_bar.size.x > 1
-
-
-func fix_delta_bar_position() -> void:
-	if previous_progress < progress:
-		delta_bar.position.x = progress_bar.size.x - delta_bar.size.x
-	else:
-		delta_bar.position.x = progress_bar.size.x
-
-
-
-func set_initial_progress(value: float):
-	for i in 2:
-		await get_tree().physics_frame
-	progress_bar.size = Vector2(
-		value * size.x,
-		size.y
-	)
-	previous_progress = value
-	if animate:
-		delta_bar.hide()
-		delta_bar.size.y = size.y
 
 
 
@@ -158,3 +111,4 @@ func attach_timer(_timer: Timer) -> void:
 		timer = null
 	timer = _timer
 	set_process(true)
+

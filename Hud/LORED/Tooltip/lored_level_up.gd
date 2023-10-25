@@ -40,11 +40,11 @@ func setup(data: Dictionary) -> void:
 	price.color = color
 	
 	lored.purchased.became_true.connect(just_purchased)
-	lored.connect("leveled_up", set_level_text)
+	lored.level.changed.connect(set_level_text)
 	
 	just_purchased()
 	
-	set_level_text(lored.level)
+	set_level_text()
 	
 	flash_allowed = true
 
@@ -99,9 +99,9 @@ func show_advanced_details(_show: bool) -> void:
 			node.visible = _show
 
 
-func set_level_text(_level: int) -> void:
+func set_level_text() -> void:
 	current_level.text = lored.get_level_text()
-	next_level.text = lored.get_next_level_text()
+	next_level.text = str(lored.level.get_value() + 1)
 	if flash_allowed:
 		gv.flash(details_container, lored.details.color)
 

@@ -21,6 +21,7 @@ unique_name_in_owner = true
 modulate = Color(0.501961, 0.501961, 0.501961, 1)
 layout_mode = 2
 kill_markers = true
+animate = true
 kill_background = true
 
 [node name="MarginContainer" type="MarginContainer" parent="."]

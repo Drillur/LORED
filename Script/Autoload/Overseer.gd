@@ -15,6 +15,11 @@ var saved_vars := [
 ]
 
 
+func load_finished():
+	current_clock = Time.get_unix_time_from_system()
+	session_duration = 0
+
+
 
 enum Platform {PC, HTML,}
 
@@ -29,13 +34,15 @@ var theme_text_button_alternate := preload("res://Theme/TextButtonAlternate.tres
 const game_color := Color(1, 0, 0.235)
 
 var texts_parent: Control
-
+var menu_container_size: float
 
 
 func _ready() -> void:
 	randomize()
 	SaveManager.load_finished.connect(load_finished)
 	SaveManager.load_finished.connect(get_offline_earnings)
+	get_tree().root.size_changed.connect(update_menu_container_size)
+	call_deferred("update_menu_container_size")
 	session_tracker()
 	for i in range(0, 5):
 		set("stage" + str(i), Stage.new(i))
@@ -75,9 +82,9 @@ func _ready() -> void:
 
 
 
-func load_finished():
-	current_clock = Time.get_unix_time_from_system()
-	session_duration = 0
+func update_menu_container_size() -> void:
+	menu_container_size = get_viewport().size.y - 88 - 26
+
 
 
 # - Clock

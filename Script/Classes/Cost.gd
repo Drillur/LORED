@@ -332,7 +332,7 @@ func can_take_candy_from_a_baby() -> bool:
 					var lored = lv.get_lored(lored_type)
 					if lored.stage != 1:
 						continue
-					if lored.level >= 5:
+					if lored.level.greater_equal(5):
 						return true
 				return false
 	return true

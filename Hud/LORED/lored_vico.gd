@@ -7,7 +7,7 @@ extends MarginContainer
 
 func load_finished() -> void:
 	visible = lored.unlocked.get_value()
-	lored_leveled_up(lored.level)
+	lored_leveled_up()
 
 
 func load_started() -> void:
@@ -16,8 +16,6 @@ func load_started() -> void:
 
 
 @onready var fuel_bar = %"Fuel Bar" as Bar
-@onready var info = %Info as IconButton
-@onready var jobs = %Jobs as IconButton
 @onready var sleep = %Sleep as IconButton
 @onready var progress_bar = %"Progress Bar" as Bar
 @onready var level_up = %"Level Up" as IconButton
@@ -72,7 +70,6 @@ func _ready():
 	progress_bar.hide()
 	fuel_bar.size.x = size.x
 	
-	jobs.hide()
 	active_buffs.hide()
 	view_special.hide()
 	sleep.hide()
@@ -87,7 +84,6 @@ func _ready():
 	SaveManager.connect("load_started", load_started)
 	
 	lv.sleep_unlocked.changed.connect(sleep_lock)
-	lv.advanced_details_unlocked.changed.connect(advanced_details_lock)
 
 
 
@@ -97,7 +93,8 @@ func attach_lored(_lored: LORED) -> void:
 	
 	# signals
 	gv.prestige.connect(prestige)
-	lored.connect("leveled_up", lored_leveled_up)
+	lored.level.changed.connect(lored_leveled_up)
+	lored.level.changed.connect(flash_on_level_up)
 	lored.cost.affordable.connect_and_call("changed", cost_update)
 	level_up.button.connect("pressed", purchase_level_up)
 	sleep.button.connect("pressed", sleep_clicked)
@@ -105,7 +102,6 @@ func attach_lored(_lored: LORED) -> void:
 	fuel_bar.attach_attribute(lored.fuel)
 	fuel_background.self_modulate = wa.get_color(lored.fuel_currency)
 	lored.connect("became_unable_to_work", start_idle)
-	lored.connect("leveled_up", flash_on_level_up)
 	lored.unlocked.became_true.connect(show)
 	lored.unlocked.became_true.connect(display_all_parent_nodes)
 	lored.unlocked.became_false.connect(hide)
@@ -115,23 +111,17 @@ func attach_lored(_lored: LORED) -> void:
 	lored.purchased.changed.connect(buffs_lock)
 	lored.purchased.changed.connect(sleep_lock)
 	lored.unlocked.changed.connect(sleep_lock)
-	lored.purchased.changed.connect(advanced_details_lock)
 	lored.status.changed.connect(status_changed)
 	lored.unlocked.changed.connect(unlocked_changed)
 	
 	unlocked_changed()
-	advanced_details_lock()
 	buffs_lock()
 	sleep_lock()
 	
-	info.button.connect("mouse_entered", show_info_tooltip)
-	info.button.connect("mouse_exited", gv.clear_tooltip)
 	level_up.button.connect("mouse_entered", show_level_up_tooltip)
 	level_up.button.connect("mouse_exited", gv.clear_tooltip)
 	sleep.button.connect("mouse_entered", show_sleep_tooltip)
 	sleep.button.connect("mouse_exited", gv.clear_tooltip)
-	jobs.button.connect("mouse_entered", show_jobs_tooltip)
-	jobs.button.connect("mouse_exited", gv.clear_tooltip)
 	active_buffs.mouse_entered.connect(show_lored_buffs_tooltip)
 	active_buffs.mouse_exited.connect(gv.clear_tooltip)
 	
@@ -145,16 +135,12 @@ func attach_lored(_lored: LORED) -> void:
 	fuel_bar.color = wa.get_color(lored.fuel_currency)
 	#fuel_bar.modulate = Color(0.75, 0.75, 0.75)
 	lored_name.modulate = lored.details.color
-	info.color = lored.details.alt_color
-	jobs.color = lored.details.alt_color
 	active_buffs.color = lored.details.alt_color
 	sleep.color = lored.details.alt_color
 	view_special.color = lored.details.alt_color
 	level_up.color = lored.details.alt_color
 	details.modulate = lored.details.color
 	
-	info.button.mouse_default_cursor_shape = Control.CURSOR_ARROW
-	jobs.button.mouse_default_cursor_shape = Control.CURSOR_ARROW
 	active_buffs.button.mouse_default_cursor_shape = Control.CURSOR_ARROW
 	animation.setup(lored)
 	animation.modulate = lored.details.alt_color
@@ -233,11 +219,9 @@ func purchased_changed() -> void:
 		currency.show()
 		if lv.sleep_unlocked.is_true():
 			sleep.show()
-		if lv.advanced_details_unlocked.is_true():
-			jobs.show()
 
 
-func lored_leveled_up(_level: int) -> void:
+func lored_leveled_up() -> void:
 	if not lored.last_purchase_forced and Engine.get_frames_per_second() >= 60:
 		
 		var text = FlyingText.new(
@@ -323,7 +307,7 @@ func flash_level_up_button() -> void:
 	gv.flash(level_up, Color(0, 1, 0))
 
 
-func flash_on_level_up(_level: int) -> void:
+func flash_on_level_up() -> void:
 	gv.flash(self, lored.details.color)
 
 
@@ -335,16 +319,6 @@ func sleep_lock() -> void:
 	)# or gv.dev_mode
 	if sleep.visible:
 		gv.flash(sleep, lored.details.color)
-
-
-func advanced_details_lock() -> void:
-	jobs.visible = (
-		lv.advanced_details_unlocked.is_true()
-		and lored.unlocked.is_true()
-		and lored.purchased.is_true()
-	)
-	if jobs.visible:
-		gv.flash(jobs, lored.details.color)
 
 
 func buffs_lock() -> void:
@@ -375,6 +349,13 @@ func purchase_level_up() -> void:
 		gv.get_tooltip().get_price_node().flash()
 
 
+func sleep_clicked() -> void:
+	if lored.asleep.is_true():
+		lored.wake_up()
+	else:
+		lored.go_to_sleep()
+
+
 func start_job(_job: Job) -> void:
 	current_job = _job as Job
 	progress_bar.attach_timer(current_job.timer)
@@ -391,13 +372,6 @@ func status_changed() -> void:
 	status.text = "[i]%s[/i]" % lored.status.get_value()
 
 
-func sleep_clicked() -> void:
-	if lored.asleep.is_true():
-		lored.wake_up()
-	else:
-		lored.go_to_sleep()
-
-
 func sleep_changed() -> void:
 	if lored.asleep.is_true():
 		sleep.set_icon(res.get_resource("awake"))
@@ -405,6 +379,7 @@ func sleep_changed() -> void:
 		animation.sleep()
 		start_spewing_sleep_text()
 		start_sleep_timer()
+		progress_bar.stop()
 	else:
 		sleep.set_icon(res.get_resource("Halt"))
 		sleep_text_timer.stop()
@@ -412,7 +387,7 @@ func sleep_changed() -> void:
 
 
 func start_idle() -> void:
-	if lored.reason_cannot_work == LORED.ReasonCannotWork.UNKNOWN:
+	if lored.reason_cannot_work.equal(LORED.ReasonCannotWork.UNKNOWN):
 		lored.status.set_to("Idle")
 	animation.sleep()
 

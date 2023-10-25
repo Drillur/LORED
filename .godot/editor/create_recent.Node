@@ -1,10 +1,11 @@
-Button
-Control
-AnimatedSprite2D
-MarginContainer
-HBoxContainer
-VBoxContainer
 GridContainer
+MarginContainer
+VBoxContainer
+HBoxContainer
+CheckBox
+Control
+Button
+AnimatedSprite2D
 VScrollBar
 RichTextLabel
 TabContainer
@@ -17,7 +18,6 @@ AnimationPlayer
 Sprite2D
 Timer
 VSlider
-CheckBox
 ScrollContainer
 TileMap
 SubViewport

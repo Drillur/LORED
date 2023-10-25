@@ -1,8 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://23dog5ok2vsp"]
+[gd_scene load_steps=4 format=3 uid="uid://23dog5ok2vsp"]
 
 [ext_resource type="Script" path="res://Hud/LORED/Tooltip/lored_job.gd" id="1_v2sti"]
 [ext_resource type="Theme" uid="uid://b8t7tkhvril5g" path="res://Theme/Standard.tres" id="2_srluh"]
-[ext_resource type="Theme" uid="uid://8dmfgxdrr5yh" path="res://Theme/Title.tres" id="3_xkpmm"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_agfqv"]
 bg_color = Color(1, 1, 1, 0)
@@ -30,38 +29,27 @@ layout_mode = 2
 theme = ExtResource("2_srluh")
 theme_override_styles/panel = SubResource("StyleBoxFlat_agfqv")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
-layout_mode = 2
-theme_override_constants/separation = 0
-
-[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer"]
-layout_mode = 2
-
-[node name="title bg" type="Panel" parent="VBoxContainer/MarginContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-theme = ExtResource("3_xkpmm")
-
-[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/MarginContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="Title" type="RichTextLabel" parent="VBoxContainer/MarginContainer/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Title" type="RichTextLabel" parent="MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-theme = ExtResource("3_xkpmm")
-theme_override_font_sizes/italics_font_size = 12
+theme = ExtResource("2_srluh")
 bbcode_enabled = true
 text = "Refuel"
 fit_content = true
 autowrap_mode = 0
 
-[node name="MarginContainer3" type="MarginContainer" parent="VBoxContainer"]
+[node name="MarginContainer3" type="MarginContainer" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/margin_left = 10
@@ -69,11 +57,11 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/MarginContainer3"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/MarginContainer3"]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="Duration" type="RichTextLabel" parent="VBoxContainer/MarginContainer3/VBoxContainer"]
+[node name="Duration" type="RichTextLabel" parent="MarginContainer/VBoxContainer/MarginContainer3/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 0
@@ -85,11 +73,11 @@ text = "[i]2.45 sec"
 fit_content = true
 autowrap_mode = 0
 
-[node name="Produced Currencies Parent" type="VBoxContainer" parent="VBoxContainer/MarginContainer3/VBoxContainer"]
+[node name="Produced Currencies Parent" type="VBoxContainer" parent="MarginContainer/VBoxContainer/MarginContainer3/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="Required Currencies Parent" type="VBoxContainer" parent="VBoxContainer/MarginContainer3/VBoxContainer"]
+[node name="Required Currencies Parent" type="VBoxContainer" parent="MarginContainer/VBoxContainer/MarginContainer3/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2

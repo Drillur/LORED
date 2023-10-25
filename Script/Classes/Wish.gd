@@ -329,16 +329,16 @@ class Objective:
 	
 	
 	func start_LORED_LEVELED_UP() -> void:
-		lv.get_lored(object_type).leveled_up.connect(update_LORED_LEVELED_UP)
+		lv.get_lored(object_type).level.changed.connect(update_LORED_LEVELED_UP)
 	
 	
-	func update_LORED_LEVELED_UP(_level: int) -> void:
+	func update_LORED_LEVELED_UP() -> void:
 		progress.add(1)
-		lv.get_lored(object_type).leveled_up.disconnect(update_LORED_LEVELED_UP)
+		lv.get_lored(object_type).level.changed.disconnect(update_LORED_LEVELED_UP)
 	
 	
 	func already_completed_LORED_LEVELED_UP() -> bool:
-		return lv.get_lored(object_type).level >= x
+		return lv.get_lored(object_type).level.greater_equal(x)
 	
 	
 	
@@ -1316,7 +1316,8 @@ func objective_completed() -> void:
 	if ready_to_turn_in:
 		return
 	ready_to_turn_in = true
-	emit_signal("became_ready_to_turn_in")
+	objective.progress.fill_up()
+	became_ready_to_turn_in.emit()
 
 
 

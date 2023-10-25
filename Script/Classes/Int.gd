@@ -97,6 +97,10 @@ func equal(val) -> bool:
 	return is_equal_approx(current, val)
 
 
+func not_equal(val) -> bool:
+	return not equal(val)
+
+
 func less_equal(val) -> bool:
 	return less(val) or equal(val)
 

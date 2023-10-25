@@ -175,11 +175,11 @@ func connect_COAL_GREET() -> void:
 
 
 func await_COAL_WHOA() -> void:
-	lv.get_lored(LORED.Type.COAL).connect("leveled_up", connect_COAL_WHOA)
-func connect_COAL_WHOA(level: int) -> void:
-	if level == 2:
+	lv.get_lored(LORED.Type.COAL).level.changed.connect(connect_COAL_WHOA)
+func connect_COAL_WHOA() -> void:
+	if lv.get_level(LORED.Type.COAL) == 2:
 		ready = true
-		lv.get_lored(LORED.Type.COAL).disconnect("leveled_up", connect_COAL_WHOA)
+		lv.get_lored(LORED.Type.COAL).level.changed.disconnect(connect_COAL_WHOA)
 
 
 func await_STONE_HAPPY() -> void:

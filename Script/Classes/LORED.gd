@@ -23,8 +23,8 @@ func load_finished() -> void:
 		lv.lored_unlocked(type)
 	else:
 		lv.lored_locked(type)
-	set_level_to(level)
-	if stage == 1 and level >= 5:
+	set_level_to(level.get_value())
+	if stage == 1 and level.greater_equal(5):
 		became_an_adult.emit()
 	if purchased.is_true():
 		work()
@@ -86,7 +86,6 @@ enum ReasonCannotWork {
 
 signal became_unable_to_work
 signal completed_job
-signal leveled_up(level)
 signal job_started
 signal spent_one_second_asleep
 signal currency_produced(amount)
@@ -94,12 +93,12 @@ signal became_an_adult
 signal received_buff
 
 
-var type: int
+var type: Type
 var stage: int
 var last_job: Job
-var primary_currency: int
-var fuel_currency: int
-var reason_cannot_work := 0
+var primary_currency: Currency.Type
+var fuel_currency: Currency.Type
+var reason_cannot_work := Int.new(0)
 var active_currency: Int
 
 var produced_currencies := []
@@ -119,12 +118,7 @@ var emote_queue := []
 		times_purchased = val
 		if val == 1:
 			first_purchase_ever()
-@export var level := 0:
-	set(val):
-		if level == val:
-			return
-		level = val
-		emit_signal("leveled_up", level)
+@export var level := Int.new(0)
 
 
 var key_lored := false
@@ -244,8 +238,6 @@ func _init(_type: int = 0) -> void:
 		fuel.reset()
 	
 	fuel.current.increased.connect(work)
-	
-	level = 0
 	
 	sort_jobs()
 
@@ -1083,7 +1075,7 @@ func reset(hard: bool):
 		fuel.reset()
 		fuel_cost.reset()
 		cost.reset()
-		level = 0
+		level.reset()
 		autobuy.set_to(false)
 		times_purchased = 0
 		time_spent_asleep = 0.0
@@ -1180,7 +1172,7 @@ func should_autobuy() -> bool:
 			(
 				stage == 1
 				and up.is_upgrade_purchased(Upgrade.Type.DONT_TAKE_CANDY_FROM_BABIES)
-				and level < 5
+				and level.less(5)
 			) or (
 				type in [Type.MALIGNANCY, Type.IRON, Type.COPPER]
 				and up.is_upgrade_purchased(Upgrade.Type.THE_WITCH_OF_LOREDELITH)
@@ -1237,17 +1229,17 @@ func automatic_purchase(levels_to_buy := -1) -> void:
 	last_purchase_forced = false
 	var gained_levels: int
 	if levels_to_buy == -1:
-		gained_levels = cost.buy_up_to_x_times(false, level)
+		gained_levels = cost.buy_up_to_x_times(false, level.get_value())
 	else:
-		gained_levels = cost.buy_up_to_x_times(false, level, level + levels_to_buy)
+		gained_levels = cost.buy_up_to_x_times(false, level.get_value(), level.get_value() + levels_to_buy)
 	times_purchased += 1
 	if purchased.is_false():
 		purchased.set_to(true)
-	set_level_to(level + gained_levels)
-	if stage == 1 and level == 5:
+	set_level_to(level.get_value() + gained_levels)
+	if stage == 1 and level.equal(5):
 		became_an_adult.emit()
 	
-	autobuy_check()
+	#autobuy_check() cannot do because stack overflow
 #	if gained_levels > 1:
 #		printt(key, "leveled up %s times" % str(gained_levels))
 
@@ -1265,8 +1257,8 @@ func first_purchase_ever() -> void:
 func level_up() -> void:
 	if purchased.is_false():
 		purchased.set_to(true)
-	set_level_to(level + 1)
-	if stage == 1 and level == 5:
+	set_level_to(level.get_value() + 1)
+	if stage == 1 and level.equal(5):
 		became_an_adult.emit()
 
 
@@ -1283,7 +1275,7 @@ func set_level_to(_level: int) -> void:
 	if purchased.is_true():
 		add_fuel_rate()
 	
-	level = _level
+	level.set_to(_level)
 
 
 
@@ -1417,7 +1409,7 @@ func get_next_job_automatically() -> int:
 
 func start_job(_type: int) -> void:
 	lv.lored_became_active(type)
-	reason_cannot_work = ReasonCannotWork.CAN_WORK
+	reason_cannot_work.set_to(ReasonCannotWork.CAN_WORK)
 	last_job = jobs[_type]
 	last_job.start()
 	working.set_to(true)
@@ -1459,7 +1451,7 @@ func determine_why_cannot_work() -> void:
 func cannot_work(reason: int) -> void:
 	if reason == ReasonCannotWork.CAN_WORK:
 		return
-	reason_cannot_work = reason
+	reason_cannot_work.set_to(reason)
 	match reason:
 		ReasonCannotWork.INSUFFICIENT_FUEL:
 			var _fuel = Big.new(fuel.get_total()).d(2).text
@@ -1510,7 +1502,7 @@ func get_wish() -> String:
 			wished_currency = fuel_currency
 			possible_types["COLLECT_CURRENCY"] = 50
 		total_weight += 50
-	elif reason_cannot_work != ReasonCannotWork.CAN_WORK and required_currencies.size() > 1:
+	elif reason_cannot_work.not_equal(ReasonCannotWork.CAN_WORK) and required_currencies.size() > 1:
 		wished_currency = required_currencies[randi() % (required_currencies.size() - 1) + 1]
 		possible_types["COLLECT_CURRENCY"] = 50
 		total_weight += 50
@@ -1567,11 +1559,7 @@ func can_afford() -> bool:
 
 
 func get_level_text() -> String:
-	return str(level)
-
-
-func get_next_level_text() -> String:
-	return str(level + 1)
+	return level.text
 
 
 func get_output() -> Big:
