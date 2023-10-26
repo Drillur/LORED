@@ -80,12 +80,12 @@ func _ready():
 	lored_container.lored_details_requested.connect(right_bar.setup_lored)
 	
 	
-	wa.wallet_unlocked_changed.connect(display_wallet_button)
+	wa.wallet_unlocked.changed.connect(display_wallet_button)
 	
 	up.purchasable_upgrade_count.changed.connect(update_purchasable_upgrade_count)
 	up.menu_unlocked_changed.connect(display_upgrades_button)
 	up.menu_unlocked_changed.connect(flash_upgrade_button)
-	wa.wallet_unlocked_changed.connect(wallet_lock)
+	wa.wallet_unlocked.changed.connect(wallet_lock)
 	
 	update_purchasable_upgrade_count()
 	
@@ -107,7 +107,7 @@ func _ready():
 	upgrade_container.connect("upgrade_menu_tab_changed", update_upgrades_button_color)
 	update_upgrades_button_color(0)
 	
-	gv.root_ready = true
+	gv.root_ready.set_to(true)
 	
 	lv.start()
 	em.start()
@@ -379,10 +379,10 @@ func update_fps() -> void:
 
 
 
-func display_wallet_button(unlocked: bool) -> void:
-	wallet_button.visible = unlocked
+func display_wallet_button() -> void:
+	wallet_button.visible = wa.wallet_unlocked.get_value()
 	update_section_visibility(game_section)
-	if unlocked:
+	if wallet_button.visible:
 		gv.flash(wallet_button, wallet.color)
 
 
@@ -413,8 +413,8 @@ func display_stage_button(stage: int, unlocked: bool) -> void:
 			gv.flash(b, _stage.details.color)
 
 
-func wallet_lock(unlocked: bool) -> void:
-	wallet_button.visible = unlocked
+func wallet_lock() -> void:
+	wallet_button.visible = wa.wallet_unlocked.get_value()
 	if wallet_button.visible:
 		gv.flash(wallet_button, gv.get_stage_color(1))
 
@@ -424,7 +424,7 @@ func wallet_lock(unlocked: bool) -> void:
 
 
 func open_wallet(_show: bool) -> void:
-	if wa.wallet_unlocked or gv.dev_mode:
+	if wa.wallet_unlocked.is_true() or gv.dev_mode:
 		hide_menus()
 		if _show:
 			wallet.show()

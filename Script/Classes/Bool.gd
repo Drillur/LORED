@@ -45,6 +45,10 @@ func _init(_base: bool = false) -> void:
 # - Action
 
 
+func invert() -> void:
+	set_to(not current)
+
+
 func set_true() -> void:
 	set_to(true)
 

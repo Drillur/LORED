@@ -66,11 +66,6 @@ signal increased_by_lored(amount)
 signal increased_by_buff(amount)
 signal increased(amount)
 signal decreased_by_lored(amount)
-signal unlocked_changed(unlocked)
-signal use_allowed_changed(allowed)
-signal current_net_changed
-signal total_net_became_negative
-signal total_net_became_positive
 
 var type: Type
 var stage: Stage.Type
@@ -89,39 +84,27 @@ var added_by_loreds := Big.new(0, true)
 var added_by_buffs := Big.new(0, true)
 
 var safe := Bool.new(true)
-var unlocked := false:
-	set(val):
-		if unlocked != val:
-			unlocked = val
-			unlocked_changed.emit(val)
-			if val:
-				saved_vars.append("count")
-				saved_vars.append("subtracted_by_loreds")
-				saved_vars.append("subtracted_by_player")
-				saved_vars.append("added_by_loreds")
-				saved_vars.append("added_by_buffs")
-			else:
-				saved_vars.erase("count")
-				saved_vars.erase("subtracted_by_loreds")
-				saved_vars.erase("subtracted_by_player")
-				saved_vars.erase("added_by_loreds")
-				saved_vars.erase("added_by_buffs")
+var unlocked := Bool.new(false)
+func unlocked_changed() -> void:
+	if unlocked.is_true():
+		saved_vars.append("count")
+		saved_vars.append("subtracted_by_loreds")
+		saved_vars.append("subtracted_by_player")
+		saved_vars.append("added_by_loreds")
+		saved_vars.append("added_by_buffs")
+	else:
+		saved_vars.erase("count")
+		saved_vars.erase("subtracted_by_loreds")
+		saved_vars.erase("subtracted_by_player")
+		saved_vars.erase("added_by_loreds")
+		saved_vars.erase("added_by_buffs")
+
 var persist := Persist.new()
-var use_allowed := true:
-	set(val):
-		if use_allowed != val:
-			use_allowed = val
-			use_allowed_changed.emit(val)
+var use_allowed := Bool.new(true)
 var used_for_fuel := false
 
-var positive_rate := true:
-	set(val):
-		if positive_rate != val:
-			positive_rate = val
-			if val:
-				total_net_became_positive.emit()
-			else:
-				total_net_became_negative.emit()
+var positive_rate := Bool.new(true)
+
 var net_rate := Value.new(0)
 var gain_rate := Value.new(0)
 var loss_rate := Value.new(0)
@@ -139,6 +122,8 @@ func _init(_type := Type.STONE) -> void:
 	type = _type
 	key = Type.keys()[type]
 	details.name = key.replace("_", " ").capitalize()
+	
+	unlocked.changed.connect(unlocked_changed)
 	
 	if type <= Type.OIL:
 		stage = Stage.Type.STAGE1
@@ -444,7 +429,7 @@ func init_GRIEF() -> void:
 func set_safety_condition(_type: SafetyType, _subject: int) -> void:
 	safety_type = _type
 	safety_subject = _subject
-	await lv.loreds_initialized
+	await lv.loreds_initialized.became_true
 	match safety_type:
 		SafetyType.LORED_PURCHASED:
 			lv.get_lored(safety_subject).purchased.changed.connect(safety_check)
@@ -480,7 +465,7 @@ func safety_check() -> void:
 
 
 func unlock() -> void:
-	unlocked = true
+	unlocked.set_to(true)
 
 
 
@@ -567,10 +552,10 @@ func sync_rate() -> void:
 	var gain = gain_rate.get_value()
 	var loss = loss_rate.get_value()
 	if gain.greater_equal(loss):
-		positive_rate = true
+		positive_rate.set_to(true)
 		net_rate.set_to(Big.new(gain).s(loss))
 	else:
-		positive_rate = false
+		positive_rate.set_to(false)
 		net_rate.set_to(Big.new(loss).s(gain))
 
 
@@ -650,7 +635,7 @@ func eligible_for_offline_earnings() -> bool:
 			break
 	if not cont:
 		return false
-	return unlocked
+	return unlocked.get_value()
 
 
 func set_gain_over_loss() -> void:
@@ -669,7 +654,7 @@ func get_count_text() -> String:
 
 
 func is_unlocked() -> bool:
-	return unlocked
+	return unlocked.get_value()
 
 
 func is_locked() -> bool:
@@ -681,7 +666,7 @@ func get_eta(threshold: Big) -> Big:
 		count.greater_equal(threshold)
 		or net_rate.get_value().equal(0)
 		or not lv.any_loreds_in_list_are_purchased(produced_by)
-		or not positive_rate
+		or positive_rate.is_false()
 	):
 		return Big.new(0)
 	

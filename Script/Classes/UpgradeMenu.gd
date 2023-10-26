@@ -22,7 +22,6 @@ enum Type {
 
 signal purchasable_upgrade_count_increased
 signal purchasable_upgrade_count_decreased
-signal unlocked_changed(unlocked)
 
 var type: int
 var key: String
@@ -34,17 +33,14 @@ var past_verb: String
 var details := Details.new()
 
 var times_prestiged := 0
-var unlocked := false:
-	set(val):
-		if unlocked != val:
-			unlocked = val
-			unlocked_changed.emit(val)
-			up.menu_unlocked_changed.emit(type, val)
-			if val:
-				for x in upgrades:
-					var upgrade = up.get_upgrade(x) as Upgrade
-					if upgrade.cost.affordable.is_true():
-						upgrade.affordable_changed()
+var unlocked := Bool.new(false)
+func unlocked_changed() -> void:
+	up.menu_unlocked_changed.emit(type, unlocked.get_value())
+	if unlocked.is_true():
+		for x in upgrades:
+			var upgrade = up.get_upgrade(x) as Upgrade
+			if upgrade.cost.affordable.is_true():
+				upgrade.affordable_changed()
 
 var upgrades := []
 var purchased_upgrades := []
@@ -56,6 +52,7 @@ func _init(_type: int) -> void:
 	type = _type
 	key = Type.keys()[type]
 	details.name = key.capitalize().replace("_", " ") + " Upgrades"
+	unlocked.changed.connect(unlocked_changed)
 	call(key)
 
 
@@ -116,7 +113,7 @@ func add_upgrade(upgrade: int) -> void:
 
 
 func unlock() -> void:
-	unlocked = true
+	unlocked.set_to(true)
 
 
 

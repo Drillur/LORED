@@ -43,9 +43,7 @@ var completed_wishes := []
 var completed_random_wishes := 0
 var automated_sleep := false
 var automated_turn_in := false
-var random_wish_limit := 0:
-	set(val):
-		random_wish_limit = val
+var random_wish_limit := 0
 
 var wish_amount_divider := 1.0
 
@@ -182,20 +180,20 @@ func has_start_conditions(wish: int) -> bool:
 
 
 func condition_STUFF() -> void:
-	if not gv.session_incremented.is_connected(start_STUFF):
-		gv.session_incremented.connect(start_STUFF)
+	if not gv.session_duration.changed.is_connected(start_STUFF):
+		gv.session_duration.changed.connect(start_STUFF)
 		lv.get_lored(LORED.Type.COAL).purchased.became_true.connect(skip_STUFF)
 
 
-func start_STUFF(session_duration: int) -> void:
-	if session_duration >= 5:
-		gv.session_incremented.disconnect(start_STUFF)
+func start_STUFF() -> void:
+	if gv.session_duration.greater_equal(5):
+		gv.session_duration.changed.disconnect(start_STUFF)
 		lv.get_lored(LORED.Type.COAL).purchased.became_true.disconnect(skip_STUFF)
 		new_wish(Wish.Type.STUFF)
 
 
 func skip_STUFF() -> void:
-	gv.session_incremented.disconnect(start_STUFF)
+	gv.session_duration.changed.disconnect(start_STUFF)
 	lv.get_lored(LORED.Type.COAL).purchased.became_true.disconnect(skip_STUFF)
 	complete_wish(Wish.Type.STUFF)
 	find_new_main_wish()

@@ -65,10 +65,6 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 5
 script = ExtResource("1_gfjby")
-theme_override_constants/margin_left = 6
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 5
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 2

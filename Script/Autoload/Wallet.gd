@@ -10,8 +10,6 @@ var saved_vars := [
 
 
 signal currency_just_unlocked(cur, unlocked)
-signal wallet_unlocked_changed(unlocked)
-signal keep_wallet_sorted_changed(keep_sorted)
 
 var currency := {}
 var currency_by_key := {}
@@ -19,17 +17,9 @@ var currency_by_key := {}
 var unlocked_currencies := []
 var wish_eligible_currencies := []
 var total_weight := 0
-var wallet_unlocked := false:
-	set(val):
-		if wallet_unlocked != val:
-			wallet_unlocked = val
-			emit_signal("wallet_unlocked_changed", val)
 
-var keep_wallet_sorted := false:
-	set(val):
-		if keep_wallet_sorted != val:
-			keep_wallet_sorted = val
-			keep_wallet_sorted_changed.emit(val)
+var wallet_unlocked := Bool.new(false)
+var keep_wallet_sorted := Bool.new(false)
 
 var wallet: WalletVico
 
@@ -47,7 +37,7 @@ func _ready():
 
 
 func close() -> void:
-	wallet_unlocked = false
+	wallet_unlocked.set_to(false)
 	unlocked_currencies.clear()
 	total_weight = 0
 	wallet.hide_tabs()
@@ -58,7 +48,7 @@ func close() -> void:
 
 func wallet_lock(wish: int) -> void:
 	if wish == Wish.Type.JOBS:
-		wallet_unlocked = not wallet_unlocked
+		wallet_unlocked.invert()
 
 
 
@@ -142,7 +132,7 @@ func subtract_loss_rate(cur: int, amount) -> void:
 
 
 func set_use_allowed(cur: int, allowed: bool) -> void:
-	get_currency(cur).use_allowed = allowed
+	get_currency(cur).use_allowed.set_to(allowed)
 
 
 func open_wallet_to_currency(cur: int) -> void:
@@ -222,7 +212,7 @@ func get_icon_and_colored_name(cur: int) -> String:
 
 
 func is_rate_positive(cur: int) -> bool:
-	return get_currency(cur).positive_rate
+	return get_currency(cur).positive_rate.get_value()
 
 
 func is_rate_negative(cur: int) -> bool:
@@ -230,7 +220,7 @@ func is_rate_negative(cur: int) -> bool:
 
 
 func is_use_allowed(cur: int) -> bool:
-	return get_currency(cur).use_allowed
+	return get_currency(cur).use_allowed.get_value()
 
 
 func get_currencies_in_stage(stage: int) -> Array:
@@ -249,7 +239,7 @@ func currencies_have_negative_net(currencies: Array) -> bool:
 
 
 func is_currency_unlocked(cur: int) -> bool:
-	return get_currency(cur).unlocked
+	return get_currency(cur).unlocked.get_value()
 
 
 func currencies_in_list_are_unlocked(list: Array) -> bool:

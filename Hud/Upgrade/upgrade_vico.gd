@@ -46,7 +46,7 @@ func setup(_upgrade: Upgrade):
 	upgrade.unlocked.connect_and_call("changed", unlocked_changed)
 	upgrade.pending_prestige.connect_and_call("changed", pending_prestige_changed)
 	upgrade.pending_prestige.became_false.connect(pending_prestige_became_false)
-	upgrade.autobuy_changed.connect(autobuyer_display)
+	upgrade.autobuy.changed.connect(autobuyer_display)
 	
 	check.hide()
 	
@@ -65,7 +65,7 @@ func cost_update() -> void:
 	var val = upgrade.cost.affordable.get_value()
 	if (
 		val
-		and upgrade.autobuy
+		and upgrade.autobuy.is_true()
 		or upgrade.purchased.is_true()
 		or upgrade.unlocked.is_false()
 	):
@@ -105,7 +105,7 @@ func unlocked_changed() -> void:
 
 func autobuyer_display() -> void:
 	button.autobuyer.visible = (
-		upgrade.autobuy
+		upgrade.autobuy.is_true()
 		and upgrade.unlocked.is_true()
 		and upgrade.purchased.is_false()
 	)

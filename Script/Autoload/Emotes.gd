@@ -25,9 +25,7 @@ var random_emotes_allowed := false:
 	set(val):
 		if random_emotes_allowed != val:
 			random_emotes_allowed = val
-			if not val:
-				if emote_cooldown_timer.is_connected("timeout", new_random_emote):
-					emote_cooldown_timer.disconnect("timeout", new_random_emote)
+			emote_cooldown_timer.stop()
 
 
 
@@ -36,7 +34,7 @@ func _ready():
 	emote_cooldown_timer = Timer.new()
 	emote_cooldown_timer.one_shot = true
 	add_child(emote_cooldown_timer)
-	emote_cooldown_timer.connect("timeout", new_random_emote)
+	emote_cooldown_timer.timeout.connect(new_random_emote)
 	
 	SaveManager.load_finished.connect(load_finished)
 	gv.hard_reset.connect(reset)

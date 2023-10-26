@@ -56,7 +56,6 @@ signal began_working
 signal stopped_working
 signal completed
 signal cut_short
-signal unlocked_changed(unlocked)
 signal currency_produced(amount)
 
 var type: int
@@ -76,15 +75,14 @@ var two_part_animation := false
 var part_one_played := false
 
 var unlocked_by_default := false
-var unlocked := false:
-	set(val):
-		if unlocked != val:
-			unlocked = val
-			if val:
-				append_producer_and_user()
-			else:
-				erase_producer_and_user()
-			unlocked_changed.emit(val)
+var unlocked := Bool.new(false)
+func unlocked_changed() -> void:
+	if unlocked.is_true():
+		append_producer_and_user()
+		emit_workable()
+	else:
+		erase_producer_and_user()
+
 var starting := false
 var added_rate := false
 var working := false
@@ -116,6 +114,8 @@ func _init(_type: int) -> void:
 	type = _type
 	key = Type.keys()[type]
 	
+	unlocked.changed.connect(unlocked_changed)
+	
 	call("init_" + key)
 	
 	fuel_cost = Value.new(duration.get_as_float())
@@ -124,10 +124,9 @@ func _init(_type: int) -> void:
 	has_produced_currencies = not produced_currencies.is_empty()
 	
 	if has_required_currencies:
+		required_currencies.repeatable = true
 		for cur in required_currencies.cost:
 			required_currencies.cost[cur].changed.connect(refresh_required_rate)
-	
-	unlocked_changed.connect(became_unlocked)
 	
 	if type != Type.REFUEL:
 		hookup_required_currencies()
@@ -615,7 +614,7 @@ func erase_producer_and_user() -> void:
 func hookup_required_currencies() -> void:
 	if has_required_currencies:
 		required_currencies.affordable.became_true.connect(emit_workable)
-		required_currencies.use_allowed_changed.connect(required_currency_use_allowed_changed)
+		required_currencies.use_allowed.became_true.connect(emit_workable)
 
 
 func add_produced_currency(currency: int, amount: float) -> void:
@@ -654,23 +653,13 @@ func lored_fuel_total_changed() -> void:
 	required_currencies.cost[_lored.fuel_currency].set_to(half)
 
 
-func required_currency_use_allowed_changed(allowed: bool) -> void:
-	if allowed:
-		emit_workable()
-
-
-func became_unlocked(_unlocked: bool) -> void:
-	if _unlocked:
-		emit_workable()
-
-
 func emit_workable() -> void:
 	if (
 		unlocked
 		and (
 			not has_required_currencies
 			or (
-				required_currencies.use_allowed
+				required_currencies.use_allowed.is_true()
 				and required_currencies.affordable.is_true()
 			)
 		)
@@ -836,7 +825,7 @@ func start() -> void:
 		lv.get_lored(lored).fuel.add_pending(in_hand_output["REFUEL"])
 	
 	if has_required_currencies:
-		required_currencies.spend(false)
+		required_currencies.purchase(false)
 		in_hand_input.clear()
 		for cur in required_currencies.cost:
 			in_hand_input[cur] = Big.new(required_currencies.cost[cur].get_value())

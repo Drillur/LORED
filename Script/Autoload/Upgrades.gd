@@ -228,7 +228,7 @@ func get_upgrade_total_in_menu(menu: int) -> int:
 
 
 func is_menu_unlocked(menu: int) -> bool:
-	return upgrade_menus[menu].unlocked
+	return upgrade_menus[menu].unlocked.get_value()
 
 
 func is_upgrade_purchased(upgrade: int) -> bool:
@@ -240,7 +240,7 @@ func is_upgrade_unlocked(upgrade: int) -> bool:
 
 
 func is_upgrade_menu_unlocked(menu: int) -> bool:
-	return upgrade_menus[menu].unlocked
+	return upgrade_menus[menu].unlocked.get_value()
 
 
 func get_prestige_name(menu: int) -> String:

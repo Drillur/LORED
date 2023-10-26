@@ -5,10 +5,10 @@ extends Resource
 
 var saved_vars := [
 	"unlocked",
-	"times_purchased",
 	"purchased",
 	"effect",
 	"pending_prestige",
+	"cost",
 ]
 
 
@@ -266,14 +266,11 @@ enum Type {
 signal upgrade_purchased_changed(upgrade)
 signal just_reset
 signal became_affordable_and_unpurchased(type, val)
-signal autobuy_changed
 
 var type: int
 var key: String
 var stage: int
 var upgrade_menu: int
-
-var times_purchased := 0
 
 var details := Details.new()
 
@@ -284,7 +281,7 @@ var effected_loreds_text: String
 var loreds: Array
 
 var unlocked := Bool.new(true)
-func unlocked_updated() -> void:
+func unlocked_changed() -> void:
 	affordable_changed()
 	if unlocked.is_false() and purchased.is_true():
 		if pending_prestige.is_true():
@@ -294,20 +291,17 @@ func unlocked_updated() -> void:
 	if vico != null:
 		vico.cost_update()
 var purchased := Bool.new(false)
-func purchased_updated() -> void:
+func purchase_changed() -> void:
 	affordable_changed()
 	upgrade_purchased_changed.emit(self)
 	up.emit_signal("upgrade_purchased", type)
 
 
-var autobuy := false:
-	set(val):
-		if autobuy != val:
-			autobuy = val
-			if val:
-				became_affordable_and_unpurchased.emit(type, false)
-			affordable_changed()
-			autobuy_changed.emit()
+var autobuy := Bool.new(false)
+func autobuy_changed() -> void:
+	if autobuy.is_true():
+		became_affordable_and_unpurchased.emit(type, false)
+	affordable_changed()
 var pending_prestige := Bool.new(false)
 var purchase_finalized := Bool.new(false)
 var special: bool
@@ -344,8 +338,9 @@ func _init(_type: int) -> void:
 		special = false #s3
 	gv.hard_reset.connect(reset)
 	gv.prestige.connect(prestige)
-	purchased.changed.connect(purchased_updated)
-	unlocked.changed.connect(unlocked_updated)
+	purchased.changed.connect(purchase_changed)
+	unlocked.changed.connect(unlocked_changed)
+	autobuy.changed.connect(autobuy_changed)
 	
 	match stage:
 		1:
@@ -3314,7 +3309,7 @@ func required_upgrade_unpurchased() -> void:
 
 func affordable_changed() -> void:
 	if (
-		autobuy
+		autobuy.is_true()
 		and unlocked.is_true()
 		and cost.affordable.get_value()
 		and cost.is_safe_to_purchase()
@@ -3353,7 +3348,6 @@ func purchase() -> void:
 
 func finalize_purchase() -> void: # - THIS SHIT aint being called for special upgrades. that's right!
 	apply()
-	times_purchased += 1
 
 
 func apply() -> void:
@@ -3385,13 +3379,13 @@ func remove() -> void:
 
 
 func enable_autobuy() -> void:
-	if gv.session_duration < 1.0:
+	if gv.session_duration.less(1):
 		await gv.one_second
-	autobuy = true
+	autobuy.set_to(true)
 
 
 func disable_autobuy() -> void:
-	autobuy = false
+	autobuy.set_to(false)
 
 
 
@@ -3423,7 +3417,7 @@ func reset() -> void:
 	remove()
 	if effect != null and effect.dynamic:
 		effect.reset_effects()
-	times_purchased = 0
+	cost.reset()
 	pending_prestige.set_to(false)
 
 

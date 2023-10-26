@@ -84,17 +84,12 @@ const ANIMATION_FRAMES := {
 
 signal started
 signal purchased_every_lored_once
-signal loreds_initialized
 
 var loreds := {}
 var loreds_by_key := {}
 var lored_container: LOREDContainer
 
-var loreds_are_initialized := false:
-	set(val):
-		if loreds_are_initialized != val:
-			loreds_are_initialized = val
-			emit_signal("loreds_initialized")
+var loreds_initialized := Bool.new(false)
 
 var sleep_unlocked := Bool.new()
 var advanced_details_unlocked := Bool.new()
@@ -146,11 +141,11 @@ func _ready():
 	for lored in LORED.Type.values():
 		loreds[lored] = LORED.new(lored)
 		loreds_by_key[loreds[lored].key] = loreds[lored]
-		connect("loreds_initialized", loreds[lored].loreds_initialized)
+		loreds_initialized.became_true.connect(loreds[lored].loreds_initialized)
 	
 	print("LOREDs initialized in %s secs" % str(Time.get_unix_time_from_system() - d))
 	
-	loreds_are_initialized = true
+	loreds_initialized.set_to(true)
 	for lored in LORED.Type.values():
 		gv.add_lored_to_stage(loreds[lored].stage, lored)
 	

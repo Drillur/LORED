@@ -50,7 +50,7 @@ func setup(data: Dictionary) -> void:
 
 
 func just_purchased() -> void:
-	if lored.times_purchased == 0:
+	if lored.get_times_purchased() == 0:
 		details.hide()
 		show_advanced_details(false)
 		title.text = "Invite"

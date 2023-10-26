@@ -42,8 +42,7 @@ func setup(data: Dictionary) -> void:
 	
 	color = currency.details.color
 	
-	currency.use_allowed_changed.connect(use_allowed_changed)
-	use_allowed_changed(currency.use_allowed)
+	currency.use_allowed.connect_and_call("changed", use_allowed_changed)
 	
 	title.text = currency.details.name
 	if currency.details.description == "":
@@ -86,11 +85,8 @@ func setup(data: Dictionary) -> void:
 
 
 
-func use_allowed_changed(allowed: bool) -> void:
-	if allowed:
-		use_allowed.hide()
-	else:
-		use_allowed.show()
+func use_allowed_changed() -> void:
+	use_allowed.visible = currency.use_allowed.get_value()
 
 
 func sort_users() -> void:

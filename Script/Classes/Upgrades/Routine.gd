@@ -27,7 +27,7 @@ func _init():
 	
 	output = Big.new(0, true)
 	cost = Big.new(0, true)
-	gv.root_ready_finished.connect(root_ready)
+	gv.root_ready.became_true.connect(root_ready)
 
 
 func root_ready() -> void:

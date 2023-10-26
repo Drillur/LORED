@@ -8,6 +8,7 @@ var saved_vars := [
 	"purchased",
 	"unlocked",
 	"unlocked_jobs",
+	"cost",
 	#asleep - based on an option, append or erase this from this array
 ]
 
@@ -113,11 +114,6 @@ var emote_queue := []
 @export var purchased := Bool.new(false)
 @export var asleep := Bool.new(false)
 @export var time_spent_asleep := 0.0
-@export var times_purchased := 0:
-	set(val):
-		times_purchased = val
-		if val == 1:
-			first_purchase_ever()
 @export var level := Int.new(0)
 
 
@@ -131,9 +127,7 @@ var autobuy_on_cooldown := false
 var working := Bool.new(false)
 
 var time_went_to_bed := 0.0
-var fuel_rate_added := false:
-	set(val):
-		fuel_rate_added = val
+var fuel_rate_added := false
 var emoting := Bool.new(false)
 
 var last_purchase_automatic := false
@@ -181,6 +175,8 @@ func _init(_type: int = 0) -> void:
 	asleep.changed.connect(asleep_updated)
 	
 	call("init_" + key)
+	
+	cost.repeatable = true
 	
 	active_currency = Int.new(primary_currency)
 	cost.cache_costs()
@@ -884,14 +880,14 @@ func loreds_initialized() -> void:
 func unlock_job(job_type: int) -> void:
 	if not job_type in unlocked_jobs:
 		unlocked_jobs.append(job_type)
-		jobs[job_type].unlocked = true
+		jobs[job_type].unlocked.set_to(true)
 		add_job_produced_and_required_currencies(job_type)
 
 
 func lock_job(job_type: int) -> void:
 	if job_type in unlocked_jobs:
 		unlocked_jobs.erase(job_type)
-		jobs[job_type].unlocked = false
+		jobs[job_type].unlocked.set_to(false)
 		remove_job_produced_and_required_currencies(job_type)
 
 
@@ -958,12 +954,10 @@ func unlocked_updated() -> void:
 		lv.lored_unlocked(type)
 		autobuy_check()
 		saved_vars.append("fuel")
-		saved_vars.append("times_purchased")
 		saved_vars.append("time_spent_asleep")
 	else:
 		lv.lored_locked(type)
 		saved_vars.erase("fuel")
-		saved_vars.erase("times_purchased")
 		saved_vars.erase("time_spent_asleep")
 
 
@@ -982,16 +976,16 @@ func autobuy_changed() -> void:
 		if not cost.affordable.became_true.is_connected(autobuy_check):
 			cost.affordable.became_true.connect(autobuy_check)
 			for cur in produced_currencies:
-				wa.get_currency(cur).total_net_became_negative.connect(autobuy_check)
+				wa.get_currency(cur).positive_rate.became_false.connect(autobuy_check)
 			for cur in required_currencies:
-				wa.get_currency(cur).total_net_became_positive.connect(autobuy_check)
+				wa.get_currency(cur).positive_rate.became_false.connect(autobuy_check)
 	else:
 		if cost.affordable.became_true.is_connected(autobuy_check):
 			cost.affordable.became_true.disconnect(autobuy_check)
 			for cur in produced_currencies:
-				wa.get_currency(cur).total_net_became_negative.disconnect(autobuy_check)
+				wa.get_currency(cur).positive_rate.became_false.disconnect(autobuy_check)
 			for cur in required_currencies:
-				wa.get_currency(cur).total_net_became_positive.disconnect(autobuy_check)
+				wa.get_currency(cur).positive_rate.became_false.disconnect(autobuy_check)
 
 
 
@@ -1023,11 +1017,11 @@ func clear_emote_queue() -> void:
 	emote_queue.clear()
 
 
-func first_second_of_run_autobuy_check(val: int) -> void:
-	if val >= 1:
+func first_second_of_run_autobuy_check() -> void:
+	if gv.run_duration.greater_equal(1):
 		autobuy_check()
-		if gv.run_incremented.is_connected(first_second_of_run_autobuy_check):
-			gv.run_incremented.disconnect(first_second_of_run_autobuy_check)
+		if gv.run_duration.changed.is_connected(first_second_of_run_autobuy_check):
+			gv.run_duration.changed.disconnect(first_second_of_run_autobuy_check)
 
 
 
@@ -1055,8 +1049,8 @@ func prestige(_stage: int) -> void:
 		return
 	if _stage >= stage:
 		reset(false)
-		if not gv.run_incremented.is_connected(first_second_of_run_autobuy_check):
-			gv.run_incremented.connect(first_second_of_run_autobuy_check)
+		if not gv.run_duration.changed.is_connected(first_second_of_run_autobuy_check):
+			gv.run_duration.changed.connect(first_second_of_run_autobuy_check)
 
 
 func hard_reset() -> void:
@@ -1077,7 +1071,6 @@ func reset(hard: bool):
 		cost.reset()
 		level.reset()
 		autobuy.set_to(false)
-		times_purchased = 0
 		time_spent_asleep = 0.0
 		purchased.reset()
 		unlocked.reset()
@@ -1114,8 +1107,9 @@ func force_purchase() -> void:
 func manual_purchase() -> void:
 	last_purchase_automatic = false
 	last_purchase_forced = false
-	cost.spend(true)
+	cost.purchase(true)
 	purchase()
+	first_purchase_ever()
 
 var last_reason_autobuy: String
 var amount_to_autobuy := -1
@@ -1140,7 +1134,7 @@ func should_autobuy() -> bool:
 		autobuy.is_true()
 		and not autobuy_on_cooldown
 		and unlocked.is_true()
-		and gv.run_duration >= 1
+		and gv.run_duration.greater_equal(1)
 		and can_afford()
 		and asleep.is_false()
 	):
@@ -1214,12 +1208,6 @@ func should_autobuy() -> bool:
 				amount_to_autobuy = 1
 			return true
 	
-#	if key == "COAL":
-#		print("autobuy ", autobuy.is_true())
-#		print("autobuy cd ", autobuy_on_cooldown)
-#		print("gv.run_duration >= 1 ", gv.run_duration >= 1)
-#		print("can_afford() ", can_afford())
-	
 	last_reason_autobuy = "NO: bottom"
 	return false
 
@@ -1232,7 +1220,6 @@ func automatic_purchase(levels_to_buy := -1) -> void:
 		gained_levels = cost.buy_up_to_x_times(false, level.get_value())
 	else:
 		gained_levels = cost.buy_up_to_x_times(false, level.get_value(), level.get_value() + levels_to_buy)
-	times_purchased += 1
 	if purchased.is_false():
 		purchased.set_to(true)
 	set_level_to(level.get_value() + gained_levels)
@@ -1245,12 +1232,11 @@ func automatic_purchase(levels_to_buy := -1) -> void:
 
 
 func purchase() -> void:
-	times_purchased += 1
 	level_up()
 
 
 func first_purchase_ever() -> void:
-	if times_purchased == 1:
+	if get_times_purchased() == 1:
 		wa.unlock_currencies(produced_currencies)
 
 
@@ -1709,3 +1695,6 @@ func get_primary_rate() -> Big:
 			)
 	return rate
 
+
+func get_times_purchased() -> int:
+	return cost.times_purchased.get_value()

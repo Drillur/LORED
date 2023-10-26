@@ -5,7 +5,8 @@ extends RichTextLabel
 
 @export var _text: String:
 	set(val):
-		text = val
+		if text != val:
+			text = val
 
 var temp = 0
 

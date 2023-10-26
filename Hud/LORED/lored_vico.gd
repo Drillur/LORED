@@ -108,14 +108,12 @@ func attach_lored(_lored: LORED) -> void:
 	lored.purchased.changed.connect(purchased_changed)
 	lored.autobuy.changed.connect(autobuy_changed)
 	lored.received_buff.connect(buffs_lock)
-	lored.purchased.changed.connect(buffs_lock)
+	lored.purchased.connect_and_call("changed", buffs_lock)
 	lored.purchased.changed.connect(sleep_lock)
 	lored.unlocked.changed.connect(sleep_lock)
 	lored.status.changed.connect(status_changed)
-	lored.unlocked.changed.connect(unlocked_changed)
+	lored.unlocked.connect_and_call("changed", unlocked_changed)
 	
-	unlocked_changed()
-	buffs_lock()
 	sleep_lock()
 	
 	level_up.button.connect("mouse_entered", show_level_up_tooltip)

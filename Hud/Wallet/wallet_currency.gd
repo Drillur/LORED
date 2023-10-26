@@ -38,12 +38,11 @@ func setup(cur: int) -> void:
 	
 	icon_and_name.text = currency.details.icon_text + " " + currency.details.colored_name
 	
-	currency.unlocked_changed.connect(display_and_update)
-	display_and_update(currency.unlocked)
+	currency.unlocked.connect_and_call("changed", display_and_update)
 
 
-func display_and_update(unlocked: bool) -> void:
-	if unlocked:
+func display_and_update() -> void:
+	if currency.unlocked.is_true():
 		show()
 		currency.count.connect("changed", update_count)
 		currency.net_rate.connect("changed", update_rate)
@@ -71,7 +70,7 @@ func update_rate() -> void:
 	if currency.net_rate.current.equal(0):
 		rate.text = "[i]0/s"
 		return
-	var _sign = "" if currency.positive_rate else "-"
+	var _sign = "" if currency.positive_rate.is_true() else "-"
 	rate.text = "[i]" + _sign + currency.net_rate.get_text() + "/s"
 
 

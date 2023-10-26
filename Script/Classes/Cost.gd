@@ -3,26 +3,27 @@ extends RefCounted
 
 
 
+const saved_vars := [
+	"times_purchased"
+]
+
 signal became_safe
-signal use_allowed_changed(allowed)
 
 const CACHE_SIZE := 200
 
 var cost := {}
-var base_cost := {}
 var cache := {}
 
 var produced_by := []
 
 var affordable := Bool.new(false)
-var use_allowed := true: # set by player in Wallet
-	set(val):
-		if use_allowed != val:
-			use_allowed = val
-			use_allowed_changed.emit(val)
+var use_allowed := Bool.new(true) # set by player in Wallet
 var purchased := false:
 	set(val):
 		if purchased != val:
+			times_purchased.add(1)
+			if repeatable:
+				return
 			purchased = val
 			if val:
 				disconnect_calls()
@@ -31,6 +32,9 @@ var purchased := false:
 var currencies_are_unlocked := false
 var has_stage1_currency := false
 var cached := false
+var repeatable := false
+
+var times_purchased := Int.new(0)
 
 var stage: int
 var longest_eta_cur: int = -1
@@ -40,10 +44,9 @@ var longest_eta_cur: int = -1
 
 func _init(_cost: Dictionary) -> void:
 	cost = _cost
-	base_cost = cost
 	longest_eta_cur = cost.keys()[0]
 	SaveManager.load_finished.connect(recheck)
-	lv.loreds_initialized.connect(loreds_initialized)
+	lv.loreds_initialized.became_true.connect(loreds_initialized)
 	for cur in cost:
 		wa.get_currency(cur).safe.became_true.connect(currency_became_safe)
 	connect_calls()
@@ -76,28 +79,20 @@ func loreds_initialized() -> void:
 						lored.became_an_adult.connect(baby_became_adult)
 		if currency.stage == 1:
 			has_stage1_currency = true
-		currency.use_allowed_changed.connect(currency_use_allowed_changed)
-		currency.unlocked_changed.connect(currency_unlocked_changed)
+		currency.use_allowed.changed.connect(currency_use_allowed_changed)
+		currency.unlocked.changed.connect(currency_unlocked_changed)
 
 
-func currency_use_allowed_changed(allowed: bool) -> void:
-	if not allowed:
-		use_allowed = false
-	else:
-		for cur in cost:
-			if not wa.is_use_allowed(cur):
-				return
-		use_allowed = true
-
-
-func currency_unlocked_changed(unlocked: bool) -> void:
-	if unlocked:
-		if currencies_are_unlocked:
+func currency_use_allowed_changed() -> void:
+	for cur in cost:
+		if not wa.is_use_allowed(cur):
+			use_allowed.set_to(false)
 			return
-		if wa.currencies_in_list_are_unlocked(cost.keys()):
-			currencies_are_unlocked = true
-	else:
-		currencies_are_unlocked = false
+	use_allowed.set_to(true)
+
+
+func currency_unlocked_changed() -> void:
+	currencies_are_unlocked = wa.currencies_in_list_are_unlocked(cost.keys())
 
 
 func currency_became_safe() -> void:
@@ -132,15 +127,6 @@ func recheck() -> void:
 	affordable.set_to(can_afford())
 
 
-func spend(from_player: bool) -> void:
-	if from_player:
-		for cur in cost:
-			wa.subtract_from_player(cur, Big.new(cost[cur].get_value()))
-	else:
-		for cur in cost:
-			wa.subtract_from_lored(cur, Big.new(cost[cur].get_value()))
-
-
 func buy_up_to_x_times(from_player: bool, level: int, x := CACHE_SIZE) -> int:
 	var left := level
 	var mid := 0
@@ -151,14 +137,15 @@ func buy_up_to_x_times(from_player: bool, level: int, x := CACHE_SIZE) -> int:
 			left = mid + 1
 		else:
 			right = mid
-	level = left - level
+	var gained_levels: int = left - level
+	times_purchased.add(gained_levels)
 	if from_player:
 		for cur in cost:
-			wa.subtract_from_player(cur, cache[level][cur])
+			wa.subtract_from_player(cur, cache[gained_levels][cur])
 	else:
 		for cur in cost:
-			wa.subtract_from_lored(cur, cache[level][cur])
-	return level
+			wa.subtract_from_lored(cur, cache[gained_levels][cur])
+	return gained_levels
 
 
 func can_afford_at_level(level: int) -> bool:
@@ -169,7 +156,12 @@ func can_afford_at_level(level: int) -> bool:
 
 
 func purchase(from_player: bool) -> void:
-	spend(from_player)
+	if from_player:
+		for cur in cost:
+			wa.subtract_from_player(cur, Big.new(cost[cur].get_value()))
+	else:
+		for cur in cost:
+			wa.subtract_from_lored(cur, Big.new(cost[cur].get_value()))
 	purchased = true
 
 
@@ -191,6 +183,7 @@ func cache_costs() -> void:
 
 
 func reset() -> void:
+	times_purchased.reset()
 	for cur in cost:
 		cost[cur].reset()
 	recheck()
@@ -206,22 +199,6 @@ func increase_m_from_lored(amount) -> void:
 	for cur in cost:
 		cost[cur].set_m_from_lored(amount)
 	recheck()
-
-
-func erase_currency_from_cost(cur: int) -> void:
-	if cur in cost.keys():
-		if not purchased:
-			cost[cur].disconnect("increased", currency_increased)
-		cost.erase(cur)
-		recheck()
-
-
-func add_currency_to_cost(cur: int) -> void:
-	if not cur in base_cost.keys():
-		cost[cur] = Value.new(base_cost[cur].get_value())
-		if not purchased:
-			cost[cur].increased.connect(currency_increased)
-		connect_calls()
 
 
 
@@ -285,7 +262,7 @@ func get_eta() -> Big:
 		for i in cost.size():
 			var cur = wa.get_currency(cost.keys()[i]) as Currency
 			
-			if not cur.positive_rate:
+			if cur.positive_rate.is_false():
 				longest_eta_cur = -1
 				return Big.new(0)
 			

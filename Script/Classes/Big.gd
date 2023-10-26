@@ -19,8 +19,8 @@ var increase_on_cooldown := false:
 	set(val):
 		increase_on_cooldown = val
 		if val:
-			if not gv.root_ready:
-				await gv.root_ready_finished
+			if gv.root_ready.is_false():
+				await gv.root_ready.became_true
 			await gv.get_tree().physics_frame
 			increase_on_cooldown = false
 			emit_signal("increase_cooldown_finished")
@@ -30,8 +30,8 @@ var decrease_on_cooldown := false:
 	set(val):
 		decrease_on_cooldown = val
 		if val:
-			if not gv.root_ready:
-				await gv.root_ready_finished
+			if gv.root_ready.is_false():
+				await gv.root_ready.became_true
 			await gv.get_tree().physics_frame
 			decrease_on_cooldown = false
 			emit_signal("decrease_cooldown_finished")
@@ -41,8 +41,8 @@ var change_on_cooldown := false:
 	set(val):
 		change_on_cooldown = val
 		if val:
-			if not gv.root_ready:
-				await gv.root_ready_finished
+			if gv.root_ready.is_false():
+				await gv.root_ready.became_true
 			await gv.get_tree().physics_frame
 			change_on_cooldown = false
 			emit_signal("change_cooldown_finished")

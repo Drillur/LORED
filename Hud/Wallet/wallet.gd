@@ -58,7 +58,7 @@ var sort: int = -1:
 				sort_all_tabs()
 			else:
 				sort_tab()
-				if wa.keep_wallet_sorted:
+				if wa.keep_wallet_sorted.is_true():
 					if sort in [Sort.COUNT_ASCENDING, Sort.COUNT_DESCENDING]:
 						connect_count()
 					elif sort in [Sort.RATE_ASCENDING, Sort.RATE_DESCENDING]:
@@ -88,7 +88,7 @@ func _ready():
 	sort_name.pressed.connect(sort_by_name)
 	sort_count.pressed.connect(sort_by_count)
 	sort_rate.pressed.connect(sort_by_rate)
-	wa.keep_wallet_sorted_changed.connect(check_keep_sorted)
+	wa.keep_wallet_sorted.changed.connect(check_keep_sorted)
 	hamburger.set_icon(res.get_resource("Menu"))
 	hamburger.remove_optionals()
 	hamburger.modulate = Color(0, 0, 0)
@@ -115,7 +115,7 @@ func _on_visibility_changed():
 	if visible:
 		if not sort in [Sort.NAME_ASCENDING, Sort.NAME_DESCENDING]:
 			sort_tab()
-		if wa.keep_wallet_sorted:
+		if wa.keep_wallet_sorted.is_true():
 			if sort in [Sort.COUNT_ASCENDING, Sort.COUNT_DESCENDING]:
 				connect_count()
 			elif sort in [Sort.RATE_ASCENDING, Sort.RATE_DESCENDING]:
@@ -128,7 +128,7 @@ func _on_visibility_changed():
 
 
 func _on_keep_wallet_sorted_pressed():
-	wa.keep_wallet_sorted = not wa.keep_wallet_sorted
+	wa.keep_wallet_sorted.invert()
 
 
 
@@ -153,9 +153,9 @@ func adjust_sort_container_position() -> void:
 	sort_container.position = Vector2(0, -308 if tabs.tabs_visible else -338)
 
 
-func check_keep_sorted(keep_sorted: bool) -> void:
-	keep_wallet_sorted.button_pressed = keep_sorted
-	if keep_sorted:
+func check_keep_sorted() -> void:
+	keep_wallet_sorted.button_pressed = wa.keep_wallet_sorted.get_value()
+	if keep_wallet_sorted.button_pressed:
 		if sort in [Sort.COUNT_ASCENDING, Sort.COUNT_DESCENDING]:
 			connect_count()
 		elif sort in [Sort.RATE_ASCENDING, Sort.RATE_DESCENDING]:
@@ -196,7 +196,7 @@ func select_tab(tab: int) -> void:
 	current_tab_container = get("stage_" + str(tab + 1) + "_container")
 	if not sort in [Sort.NAME_ASCENDING, Sort.NAME_DESCENDING]:
 		sort_tab()
-	if wa.keep_wallet_sorted:
+	if wa.keep_wallet_sorted.is_true():
 		if sort in [Sort.COUNT_ASCENDING, Sort.COUNT_DESCENDING]:
 			connect_count()
 		elif sort in [Sort.RATE_ASCENDING, Sort.RATE_DESCENDING]:
@@ -301,8 +301,8 @@ func sort_tab(tab := str(tabs.current_tab + 1)) -> void:
 					return a.currency.count.less(b.currency.count)
 				Sort.RATE_ASCENDING, Sort.RATE_DESCENDING:
 					if (
-						not a.currency.positive_rate
-						and not b.currency.positive_rate
+						a.currency.positive_rate.is_false()
+						and b.currency.positive_rate.is_false()
 					):
 						if a.currency.net_rate.get_value().equal(b.currency.net_rate.get_value()):
 							return a.name.naturalnocasecmp_to(b.name) < 0
@@ -310,9 +310,9 @@ func sort_tab(tab := str(tabs.current_tab + 1)) -> void:
 							return a.currency.net_rate.get_value().less(b.currency.net_rate.get_value())
 						else:
 							return a.currency.net_rate.get_value().greater(b.currency.net_rate.get_value())
-					elif not a.currency.positive_rate:
+					elif a.currency.positive_rate.is_false():
 						return sort == Sort.RATE_DESCENDING
-					elif not b.currency.positive_rate:
+					elif b.currency.positive_rate.is_false():
 						return sort == Sort.RATE_ASCENDING
 					else:
 						if a.currency.net_rate.get_value().equal(b.currency.net_rate.get_value()):

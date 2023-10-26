@@ -17,7 +17,7 @@ var saved_vars := [
 
 func load_finished():
 	current_clock = Time.get_unix_time_from_system()
-	session_duration = 0
+	session_duration.reset()
 
 
 
@@ -90,20 +90,12 @@ func update_menu_container_size() -> void:
 # - Clock
 
 signal one_second
-signal session_incremented(session)
-signal run_incremented(val)
 
 var last_clock: float
 var current_clock: float = Time.get_unix_time_from_system()
-var session_duration: int:
-	set(val):
-		session_duration = val
-		session_incremented.emit(session_duration)
+var session_duration := Int.new(0)
 var total_duration_played: int
-var run_duration: int:
-	set(val):
-		run_duration = val
-		run_incremented.emit(run_duration)
+var run_duration := Int.new(0)
 
 func _notification(what) -> void:
 	if what == MainLoop.NOTIFICATION_APPLICATION_FOCUS_OUT:
@@ -117,7 +109,7 @@ func _notification(what) -> void:
 
 
 func session_tracker() -> void:
-	await root_ready_finished
+	await root_ready.became_true
 	var t = Timer.new()
 	t.one_shot = false
 	t.wait_time = 1
@@ -128,9 +120,9 @@ func session_tracker() -> void:
 
 func second_passed() -> void:
 	current_clock = Time.get_unix_time_from_system()
-	session_duration += 1
+	session_duration.add(1)
 	total_duration_played += 1
-	run_duration += 1
+	run_duration.add(1)
 	if SaveManager.get_time_since_last_save() >= 30:
 		SaveManager.save_game()
 	one_second.emit()
@@ -140,20 +132,8 @@ func second_passed() -> void:
 # - Handy
 
 signal opened
-signal root_ready_finished
-var root_ready := false:
-	set(val):
-		root_ready = val
-		if val:
-			emit_signal("root_ready_finished")
+var root_ready := Bool.new(false)
 var closed := true
-
-
-func reload_scene() -> void:
-	root_ready = false
-	close_all()
-	get_tree().reload_current_scene()
-	open_all()
 
 
 func close_all() -> void:
@@ -648,7 +628,7 @@ var last_reset_stage := 1
 
 func prestige_now(stage: int) -> void:
 	about_to_prestige.emit()
-	run_duration = 0
+	run_duration.reset()
 	prestige.emit(stage)
 	get_stage(stage).prestige()
 	prestiged.emit()

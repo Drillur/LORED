@@ -105,7 +105,7 @@ var TYPE_KEYS := Type.keys()
 var type: int
 var key: String
 
-var ready := false:
+var ready := false: # do not replace with Bool. as it is set up, must emit sending self as an arg.
 	set(val):
 		ready = val
 		if val:
