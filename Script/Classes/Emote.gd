@@ -4,8 +4,8 @@ extends RefCounted
 
 
 enum Type {
-	TEST,
-	
+	# add new emotes below, but above random_stone
+	COAL_HUM,
 	STONE_HAPPY, STONE_HAPPY_COAL0, STONE_HAPPY_STONE0, STONE_HAPPY_COAL1,
 	COAL_WHOA,
 	COAL_GREET,
@@ -190,11 +190,38 @@ func connect_STONE_HAPPY(wish_type: int) -> void:
 		wi.disconnect("wish_completed", connect_STONE_HAPPY)
 
 
-
-func TEST():
+func COAL_HUM() -> void:
 	speaker = LORED.Type.COAL
-	dialogue = "Once upon a time, there was a little baby boy who was a stinky. But then, he did something insane! He freaked out! Like, wow. Isn't that crazy? I think so, anyway. Yep! Signing off!"
-
+	match em.coal_hum:
+		23:
+			dialogue = "ok the dev is outta ideas. more importantly, he wants to save you from yourself. it's been %s, dude. bye" % gv.parse_time_int(gv.session_duration.get_value())
+			em.coal_hum = -1
+		22: dialogue = "[b][shake rate=40.0 level=5 connected=1]CLICK THE[/shake] [shake rate=80.0 level=5 connected=1]BUTTOOOOOOOOOOOOOOON![/shake][/b]"
+		21: dialogue = "[shake rate=30.0 level=5 connected=1]EEEEEEEEEEEEEEEEEEEEEEEEEEEEEE!!!!!!!![/shake]"
+		20: dialogue = "[b]HELL NAWH, CLICK THE MOTHERFUCKING BUTTON YOU GODDAMN PIECE OF SHIT. I'M ACTUALLY FUCKING DONE AT THIS POINT, ALRIGHT? CLICK. THE BUTTON. YOU FUCKFACE.[/b]"
+		19:
+			var a = lv.get_colored_name(LORED.Type.STONE)
+			dialogue = "Look at %s. He's totally out of fuel. He's been waiting for you this entire time. If you don't do it for me, do it for him."
+		18: dialogue = "Look, I--I... I just... holy crap. Click the button. Please."
+		17: dialogue = "I'd rather you not level me up at this point. It would just mean that I have to spend this entire game with [b]you.[/b]"
+		16: dialogue = "Gotcha, nerd! Now that I told you to do it, you won't. It won't be cool or funny anymore. IT'LL BE CRINGE, JUST LIKE YOU!"
+		15: dialogue = "How about this: I dare you to screenshot this and post it online."
+		14: dialogue = "[shake rate=30.0 level=5 connected=1]BROOOOOOOOOOOOOOOOO!!!!!!!!!!!!!!!![/shake]"
+		13: dialogue = "[shake rate=20.0 level=5 connected=1]WHAT ARE YOU DOING!!![/shake] [b]CLICK THE BUTTON!!![/b]"
+		12: dialogue = "Nah, nah, I ain't mad. I'm calm."
+		11: dialogue = "LEVEL ME UP, BRO!! WHAT ARE YOU DOING??!"
+		10: dialogue = "CLICK THE STAR BUTTON."
+		9: dialogue = "If you ain't afk and you're just trickin me, I swear to frickin frick, bro."
+		8: dialogue = "You had better be afk, bro! Frfr ong, bro, tch."
+		7: dialogue = "For the love of [b]gawd[/b], click the freakin star button!!!"
+		6: dialogue = "Don't you want to play the game, bro?"
+		5: dialogue = "Are you ever going to level me up?"
+		4: dialogue = "*Clicks tongue, turns into a sick beat box.*"
+		3: dialogue = "*Whistles.*"
+		2: dialogue = "Dododooo!"
+		1: dialogue = "Hmhmhmmm!"
+		0: dialogue = "Lalala!~"
+	em.coal_hum += 1
 
 
 func STONE_HAPPY():

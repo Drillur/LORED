@@ -1,0 +1,40 @@
+[gd_scene load_steps=4 format=3 uid="uid://dowun7x403k8u"]
+
+[ext_resource type="Script" path="res://Hud/Header.gd" id="1_b34j0"]
+[ext_resource type="Theme" uid="uid://8dmfgxdrr5yh" path="res://Theme/Title.tres" id="1_qjl0c"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_er08p"]
+bg_color = Color(0.662745, 0.662745, 0.662745, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[node name="Header" type="MarginContainer"]
+offset_right = 65.0
+offset_bottom = 62.0
+script = ExtResource("1_b34j0")
+
+[node name="Background" type="Panel" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_er08p")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+custom_minimum_size = Vector2(0, 62)
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="Label" type="RichTextLabel" parent="MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme = ExtResource("1_qjl0c")
+bbcode_enabled = true
+text = "Settings"
+fit_content = true
+autowrap_mode = 0

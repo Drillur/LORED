@@ -1,0 +1,101 @@
+[gd_scene load_steps=5 format=3 uid="uid://baphpe1y2f1d1"]
+
+[ext_resource type="Theme" uid="uid://b8t7tkhvril5g" path="res://Theme/Standard.tres" id="1_8wmrj"]
+[ext_resource type="Script" path="res://Hud/Menu/SettingsVico.gd" id="1_rdjvt"]
+[ext_resource type="PackedScene" uid="uid://dowun7x403k8u" path="res://Hud/Header.tscn" id="2_eg55a"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hsv4o"]
+bg_color = Color(0.1, 0.1, 0.1, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+shadow_color = Color(0.8, 0.8, 0.8, 0.298039)
+
+[node name="Settings" type="MarginContainer"]
+custom_minimum_size = Vector2(0, 300)
+offset_right = 243.0
+offset_bottom = 183.0
+script = ExtResource("1_rdjvt")
+
+[node name="Background2" type="Panel" parent="."]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_hsv4o")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Header" parent="VBoxContainer" instance=ExtResource("2_eg55a")]
+layout_mode = 2
+text = "Settings"
+color = Color(0.137255, 0.698039, 0.552941, 1)
+
+[node name="Content" type="MarginContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="TabContainer" type="TabContainer" parent="VBoxContainer/Content"]
+layout_mode = 2
+theme = ExtResource("1_8wmrj")
+
+[node name="Video" type="ScrollContainer" parent="VBoxContainer/Content/TabContainer"]
+layout_mode = 2
+theme = ExtResource("1_8wmrj")
+horizontal_scroll_mode = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Content/TabContainer/Video"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 6
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/Content/TabContainer/Video/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="Fullscreen" type="CheckButton" parent="VBoxContainer/Content/TabContainer/Video/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+mouse_default_cursor_shape = 2
+theme = ExtResource("1_8wmrj")
+text = "Fullscreen"
+
+[node name="Video2" type="ScrollContainer" parent="VBoxContainer/Content/TabContainer"]
+visible = false
+layout_mode = 2
+theme = ExtResource("1_8wmrj")
+horizontal_scroll_mode = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Content/TabContainer/Video2"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 6
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/Content/TabContainer/Video2/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="Fullscreen" type="CheckButton" parent="VBoxContainer/Content/TabContainer/Video2/MarginContainer/VBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+mouse_default_cursor_shape = 2
+theme = ExtResource("1_8wmrj")
+text = "Fullscreen"
+
+[connection signal="toggled" from="VBoxContainer/Content/TabContainer/Video/MarginContainer/VBoxContainer/Fullscreen" to="." method="_on_fullscreen_toggled"]
+[connection signal="toggled" from="VBoxContainer/Content/TabContainer/Video2/MarginContainer/VBoxContainer/Fullscreen" to="." method="_on_fullscreen_toggled"]

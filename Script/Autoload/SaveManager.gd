@@ -159,6 +159,7 @@ func pack_all_saved_vars() -> Dictionary:
 	data["LOREDs"] = pack_saved_vars(lv)
 	data["Upgrades"] = pack_saved_vars(up)
 	data["Wishes"] = pack_saved_vars(wi)
+	data["Settings"] = pack_saved_vars(Settings)
 	return data
 
 
@@ -169,6 +170,7 @@ func unpack_data(data: Dictionary) -> void:
 	unpack_vars(lv, data["LOREDs"])
 	unpack_vars(up, data["Upgrades"])
 	unpack_vars(wi, data["Wishes"])
+	unpack_vars(wi, data["Settings"])
 
 
 

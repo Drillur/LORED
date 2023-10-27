@@ -32,6 +32,7 @@ signal pressed
 		if val == Color.BLACK:
 			label.modulate = val
 
+@export var display_node: Node
 @export var drop_down: Node
 
 
@@ -47,17 +48,19 @@ func _ready():
 		drop_down.hide()
 		drop_down_visibility_changed()
 	
-	if get_parent().name == "Save" and color == Color.WHITE:
+	if (get_parent().name == "Save" or "Save" in name) and color == Color.WHITE:
 		await SaveManager.save_color_changed
 		color = SaveManager.save_file_color
 
 
 
 func _on_button_pressed():
-	if drop_down == null:
-		emit_signal("pressed")
-	else:
+	if drop_down != null:
 		drop_down.visible = not drop_down.visible
+	elif display_node != null:
+		display_node.visible = not display_node.visible
+	
+	pressed.emit()
 	
 	match name:
 		"Save Game":

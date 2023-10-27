@@ -32,6 +32,10 @@ func setup(_buff: Buff) -> void:
 
 
 func _process(_delta):
+	update_bar_and_duration()
+
+
+func update_bar_and_duration() -> void:
 	bar.progress = buff.get_progress()
 	duration.text = str(buff.get_time_left()).pad_decimals(1) + "s"
 

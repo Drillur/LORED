@@ -1,14 +1,17 @@
-GridContainer
-MarginContainer
-VBoxContainer
-HBoxContainer
+CheckButton
 CheckBox
+RichTextLabel
+VBoxContainer
+MarginContainer
+ScrollContainer
+HScrollBar
+TabContainer
+GridContainer
+HBoxContainer
 Control
 Button
 AnimatedSprite2D
 VScrollBar
-RichTextLabel
-TabContainer
 Panel
 ProgressBar
 TextureProgressBar
@@ -18,7 +21,6 @@ AnimationPlayer
 Sprite2D
 Timer
 VSlider
-ScrollContainer
 TileMap
 SubViewport
 SubViewportContainer
@@ -29,4 +31,3 @@ StaticBody2D
 RigidBody2D
 LOREDVico
 Camera2D
-Container

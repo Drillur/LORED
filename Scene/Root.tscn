@@ -1,4 +1,4 @@
-[gd_scene load_steps=43 format=3 uid="uid://bseqrj5lg08it"]
+[gd_scene load_steps=44 format=3 uid="uid://bseqrj5lg08it"]
 
 [ext_resource type="Script" path="res://Scene/Root.gd" id="1_h7r77"]
 [ext_resource type="PackedScene" uid="uid://rmruae8fguk4" path="res://Hud/LORED/lored_container.tscn" id="2_egnhq"]
@@ -37,6 +37,7 @@
 [ext_resource type="Texture2D" uid="uid://bdpxtltnk88hw" path="res://Sprites/Hud/Tab/s1m.png" id="27_jvurx"]
 [ext_resource type="Texture2D" uid="uid://dfeythvu1og7s" path="res://Sprites/Currency/malig.png" id="28_6ie80"]
 [ext_resource type="PackedScene" uid="uid://dmxljcsin6f3o" path="res://Hud/right_bar.tscn" id="36_alffs"]
+[ext_resource type="PackedScene" uid="uid://baphpe1y2f1d1" path="res://Hud/Menu/settings.tscn" id="37_w5pyv"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fydh3"]
 bg_color = Color(0.0705882, 0.0705882, 0.0705882, 1)
@@ -209,6 +210,7 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 40
 
 [node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer"]
 layout_mode = 2
@@ -414,25 +416,25 @@ theme_override_constants/margin_bottom = 40
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="Save Game" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save Section/Save/Save" groups=["Menu_Save"] instance=ExtResource("4_3h2sv")]
+[node name="Save Game" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save Section/Save/Save" instance=ExtResource("4_3h2sv")]
 unique_name_in_owner = true
 layout_mode = 2
 icon = ExtResource("10_mipnr")
 text = "Save Now"
 
-[node name="Load Game" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save Section/Save/Save" groups=["Menu_Save"] instance=ExtResource("4_3h2sv")]
+[node name="Load Game" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save Section/Save/Save" instance=ExtResource("4_3h2sv")]
 unique_name_in_owner = true
 layout_mode = 2
 icon = ExtResource("15_bxrvx")
 text = "Load"
 
-[node name="Export Save" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save Section/Save/Save" groups=["Menu_Save"] instance=ExtResource("4_3h2sv")]
+[node name="Export Save" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save Section/Save/Save" instance=ExtResource("4_3h2sv")]
 unique_name_in_owner = true
 layout_mode = 2
 icon = ExtResource("12_bqm8u")
 text = "Export"
 
-[node name="New Game" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save Section/Save/Save" groups=["Menu_Save"] instance=ExtResource("4_3h2sv")]
+[node name="New Game" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save Section/Save/Save" instance=ExtResource("4_3h2sv")]
 unique_name_in_owner = true
 layout_mode = 2
 icon = ExtResource("10_8u1ic")
@@ -453,19 +455,19 @@ theme_override_constants/margin_top = 20
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="Save Color Button" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save Section/Save/Save/MarginContainer/Save" groups=["Menu_Save"] instance=ExtResource("4_3h2sv")]
+[node name="Save Color Button" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save Section/Save/Save/MarginContainer/Save" instance=ExtResource("4_3h2sv")]
 unique_name_in_owner = true
 layout_mode = 2
 icon = ExtResource("12_st5ae")
 text = "Set Color"
 
-[node name="Rename Save Button" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save Section/Save/Save/MarginContainer/Save" groups=["Menu_Save"] instance=ExtResource("4_3h2sv")]
+[node name="Rename Save Button" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save Section/Save/Save/MarginContainer/Save" instance=ExtResource("4_3h2sv")]
 unique_name_in_owner = true
 layout_mode = 2
 icon = ExtResource("13_6v2xt")
 text = "Rename"
 
-[node name="Duplicate Save Button" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save Section/Save/Save/MarginContainer/Save" groups=["Menu_Save"] instance=ExtResource("4_3h2sv")]
+[node name="Duplicate Save Button" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save Section/Save/Save/MarginContainer/Save" instance=ExtResource("4_3h2sv")]
 unique_name_in_owner = true
 layout_mode = 2
 icon = ExtResource("14_5312t")
@@ -573,18 +575,19 @@ node = NodePath("../../../Meta")
 
 [node name="Meta" type="MarginContainer" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Meta Section"]
 layout_mode = 2
-theme_override_constants/margin_bottom = 0
+theme_override_constants/margin_bottom = 40
 
 [node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Meta Section/Meta"]
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="Settings Button" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Meta Section/Meta/VBoxContainer" instance=ExtResource("4_3h2sv")]
+[node name="Settings Button" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Meta Section/Meta/VBoxContainer" node_paths=PackedStringArray("display_node") instance=ExtResource("4_3h2sv")]
 unique_name_in_owner = true
 layout_mode = 2
 icon = ExtResource("12_34j7m")
 text = "Settings"
 color = Color(0.137255, 0.698039, 0.552941, 1)
+display_node = NodePath("../../../../../../../../../../../Settings")
 
 [node name="Statistics Button" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Meta Section/Meta/VBoxContainer" instance=ExtResource("4_3h2sv")]
 unique_name_in_owner = true
@@ -630,6 +633,12 @@ layout_mode = 2
 icon = ExtResource("24_u1xhr")
 text = "Godot Engine"
 color = Color(0.345098, 0.654902, 0.862745, 1)
+
+[node name="Save and Quit" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer" instance=ExtResource("4_3h2sv")]
+unique_name_in_owner = true
+layout_mode = 2
+icon = ExtResource("10_mipnr")
+text = "Save and Quit"
 
 [node name="Control" type="Control" parent="HBoxContainer/Back/Overlay/Sidebar"]
 layout_mode = 2
@@ -685,6 +694,13 @@ unique_name_in_owner = true
 visible = false
 layout_mode = 2
 
+[node name="Settings" parent="HBoxContainer/Back/Overlay" instance=ExtResource("37_w5pyv")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
 [node name="RightBar" parent="HBoxContainer" instance=ExtResource("36_alffs")]
 unique_name_in_owner = true
 layout_mode = 2
@@ -734,3 +750,4 @@ shape = SubResource("RectangleShape2D_alvwj")
 [connection signal="pressed" from="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game Section/Game/VBoxContainer/Stage2" to="." method="_on_stage_2_pressed"]
 [connection signal="pressed" from="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game Section/Game/VBoxContainer/Stage3" to="." method="_on_stage_3_pressed"]
 [connection signal="pressed" from="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game Section/Game/VBoxContainer/Stage4" to="." method="_on_stage_4_pressed"]
+[connection signal="pressed" from="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save and Quit" to="." method="_on_save_and_quit_pressed"]

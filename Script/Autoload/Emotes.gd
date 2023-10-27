@@ -17,7 +17,8 @@ func load_finished() -> void:
 
 
 
-var emote_cooldown_timer: Timer
+var emote_cooldown_timer := Timer.new()
+var coal_hum_timer := Timer.new()
 var emotes := []
 
 var completed_emotes := []
@@ -27,14 +28,20 @@ var random_emotes_allowed := false:
 			random_emotes_allowed = val
 			emote_cooldown_timer.stop()
 
+var coal_hum := 0
+
 
 
 func _ready():
 	wi.connect("wish_completed", unlock_random_emotes)
-	emote_cooldown_timer = Timer.new()
 	emote_cooldown_timer.one_shot = true
 	add_child(emote_cooldown_timer)
 	emote_cooldown_timer.timeout.connect(new_random_emote)
+	
+	lv.get_lored(LORED.Type.COAL).purchased.became_true.connect(coal_purchased)
+	coal_hum_timer.one_shot = true
+	add_child(coal_hum_timer)
+	coal_hum_timer.timeout.connect(coal_hum_timeout)
 	
 	SaveManager.load_finished.connect(load_finished)
 	gv.hard_reset.connect(reset)
@@ -54,19 +61,36 @@ func reset() -> void:
 
 # - Start
 
+
 func start() -> void:
 	start_all_main_emotes()
 
 
 
 func start_all_main_emotes() -> void:
+	if not lv.is_lored_purchased(LORED.Type.COAL):
+		coal_hum_timer.start(3)
 	emote_when_ready(Emote.Type.COAL_GREET)
 	emote_when_ready(Emote.Type.COAL_WHOA)
 	emote_when_ready(Emote.Type.STONE_HAPPY)
 
 
 
+# - Signal
+
+
+func coal_hum_timeout() -> void:
+	emote_now(Emote.new(Emote.Type.COAL_HUM))
+	coal_hum_timer.start(10)
+
+
+func coal_purchased() -> void:
+	coal_hum_timer.stop()
+
+
+
 # - Actions
+
 
 func new_random_emote() -> void:
 	var lored := lv.get_random_awake_lored()

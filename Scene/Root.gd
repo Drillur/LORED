@@ -20,6 +20,7 @@ extends MarginContainer
 @onready var offline_report = %"Offline Report"
 @onready var fps = %FPS
 @onready var screen_area = %ScreenArea
+@onready var settings = %Settings
 
 # DEBUG
 @onready var tooltip_position_display = %"Tooltip Position Display"
@@ -40,6 +41,9 @@ extends MarginContainer
 @onready var total_notice_count = %"Total Notice Count"
 @onready var upgrade_section = %"Upgrade Section"
 @onready var upgrade_vicos = %UpgradeVicos
+@onready var settings_button = %"Settings Button"
+@onready var statistics_button = %"Statistics Button"
+@onready var patch_notes_button = %"Patch Notes Button"
 
 @onready var right_bar = %RightBar as RightBar
 
@@ -57,6 +61,8 @@ func _ready():
 	
 	call_deferred("window_resized")
 	get_tree().root.size_changed.connect(window_resized)
+	
+	settings_button.pressed.connect(close_menu)
 	
 	# MENU
 	
@@ -132,8 +138,9 @@ func update_menu_size_once() -> void:
 
 
 func _input(event):
-	if Input.is_action_just_pressed("Tilde"):
-		up.get_upgrade(Upgrade.Type.GRINDER).refund()
+	if Input.is_action_just_pressed("Quit"):
+		get_tree().quit()
+		return
 	
 	var esc_pressed = Input.is_action_just_pressed("ESC")
 	var left_clicked = Input.is_action_just_pressed("LeftClick")
@@ -158,6 +165,9 @@ func _input(event):
 		elif wallet.visible:
 			node = wallet
 			button = wallet_button
+		elif settings.visible:
+			node = settings
+			button = settings_button
 		
 		if (esc_pressed
 			or (
@@ -229,7 +239,7 @@ func _input(event):
 
 
 func should_hide_a_menu() -> bool:
-	return menu_contents.visible or upgrade_container.visible or wallet.visible or offline_report.visible
+	return settings.visible or menu_contents.visible or upgrade_container.visible or wallet.visible or offline_report.visible
 
 
 func _on_menu_button_pressed():
@@ -327,6 +337,11 @@ func fix_screen_size() -> void:
 func _on_screen_area_body_exited(body):
 	body.queue_free()
 
+
+func _on_save_and_quit_pressed():
+	hide()
+	SaveManager.save_game()
+	get_tree().quit()
 
 
 func _on_menu_container_resized():
@@ -473,3 +488,4 @@ func _on_dev_3_pressed():
 
 func _on_dev_4_pressed():
 	wa.add(Currency.Type.MALIGNANCY, "1e20")
+

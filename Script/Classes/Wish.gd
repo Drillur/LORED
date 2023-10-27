@@ -604,8 +604,12 @@ func init_RANDOM() -> void:
 func init_STUFF() -> void:
 	giver = LORED.Type.STONE
 	help_text = "I want to pick up rocks, but I'm out of [b]fuel!![/b] Help!"
+	var a = lv.get_colored_name(LORED.Type.COAL)
 	var img_text = res.get_icon_text("Level")
-	help_text += "\n\nClick on Coal's " + img_text + " Level Up button to make him become active!"
+	help_text += "\n\nClick on %s's %s Level Up button to make him become active!" % [
+		a,
+		img_text
+	]
 	thank_text = "That's the stuff. Thanks!"
 	objective = Objective.new(Objective.Type.LORED_LEVELED_UP, {
 		"object_type": LORED.Type.COAL,

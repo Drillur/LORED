@@ -228,6 +228,13 @@ func color_text(color: Color, text: String) -> String:
 	return "[color=#" + color.to_html() + "]" + text + "[/color]"
 
 
+func get_script_variables(script: Script) -> Array:
+	var variable_names := []
+	for property in script.get_script_property_list():
+		if property.usage == PROPERTY_USAGE_SCRIPT_VARIABLE:
+			variable_names.append(property.name)
+	return variable_names
+
 
 
 # - Tooltip
@@ -506,6 +513,10 @@ func get_time_text_from_dict(dict: Dictionary) -> String:
 			elif minutes > 0:
 				return str(minutes) + " minutes"
 	return str(seconds) + " seconds"
+
+
+func parse_time_int(val: int) -> String:
+	return get_time_text_from_dict(get_time_dict(val))
 
 
 func parse_time(big: Big) -> String:
