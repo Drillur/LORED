@@ -3,11 +3,6 @@ extends RichTextLabel
 
 
 
-@export var _text: String:
-	set(val):
-		if text != val:
-			text = val
-
 var temp = 0
 
 

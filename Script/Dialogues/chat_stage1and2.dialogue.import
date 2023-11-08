@@ -1,0 +1,15 @@
+[remap]
+
+importer="dialogue_manager_compiler_10"
+type="Resource"
+uid="uid://be4608gkofdvt"
+path="res://.godot/imported/chat_stage1and2.dialogue-950b3f5b1071061f06d588bb03592426.tres"
+
+[deps]
+
+source_file="res://Script/Dialogues/chat_stage1and2.dialogue"
+dest_files=["res://.godot/imported/chat_stage1and2.dialogue-950b3f5b1071061f06d588bb03592426.tres"]
+
+[params]
+
+defaults=true

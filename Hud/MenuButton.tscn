@@ -23,6 +23,7 @@ corner_radius_bottom_left = 5
 custom_minimum_size = Vector2(36, 36)
 offset_right = 36.0
 offset_bottom = 36.0
+mouse_filter = 0
 script = ExtResource("1_pwhdq")
 icon = ExtResource("2_rnf1g")
 text = "Menu"
@@ -50,13 +51,14 @@ layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 10
 
-[node name="Control" type="Control" parent="MarginContainer/HBoxContainer"]
+[node name="IconContainer" type="Control" parent="MarginContainer/HBoxContainer"]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
 size_flags_vertical = 4
 mouse_filter = 2
 
-[node name="Icon" type="TextureRect" parent="MarginContainer/HBoxContainer/Control"]
+[node name="Icon" type="TextureRect" parent="MarginContainer/HBoxContainer/IconContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
@@ -86,6 +88,7 @@ mouse_filter = 2
 
 [connection signal="button_down" from="Button" to="." method="_on_button_button_down"]
 [connection signal="button_up" from="Button" to="." method="_on_button_button_up"]
+[connection signal="gui_input" from="Button" to="." method="_on_button_gui_input"]
 [connection signal="mouse_entered" from="Button" to="." method="_on_button_mouse_entered"]
 [connection signal="mouse_exited" from="Button" to="." method="_on_button_mouse_exited"]
 [connection signal="pressed" from="Button" to="." method="_on_button_pressed"]

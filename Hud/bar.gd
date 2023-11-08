@@ -52,7 +52,7 @@ func _ready() -> void:
 
 
 
-func _process(delta) -> void:
+func _process(_delta) -> void:
 	progress = 1 - (timer.time_left / timer.wait_time)
 
 

@@ -44,6 +44,8 @@ enum Tabs { LORED, }
 @onready var lored_haste = %"LORED haste"
 @onready var lored_crit = %"LORED crit"
 @onready var lored_fuel_cost = %"LORED fuel cost"
+@onready var chat = %Chat
+var dialogue_balloon: DialogueBalloon
 
 var lored: LORED
 
@@ -62,6 +64,7 @@ var color: Color:
 				scroll.get_v_scroll_bar().modulate = lored.details.color
 				level_up.color = lored.details.color
 				sleep.color = lored.details.color
+				chat.color = lored.details.color
 				autobuyer.modulate = lored.details.color
 				lored_affordable_check.modulate = lored.details.color
 
@@ -83,7 +86,8 @@ func _ready():
 	sleep.mouse_entered.connect(show_sleep_tooltip)
 	sleep.mouse_exited.connect(gv.clear_tooltip)
 	level_up.pressed.connect(purchase_level_up)
-	sleep.pressed.connect(sleep_clicked)
+	sleep.pressed.connect(sleep_pressed)
+	chat.pressed.connect(chat_pressed)
 	
 	call_deferred("window_resized")
 
@@ -312,11 +316,18 @@ func purchase_level_up() -> void:
 		gv.get_tooltip().get_price_node().flash()
 
 
-func sleep_clicked() -> void:
+func sleep_pressed() -> void:
 	if lored.asleep.is_true():
 		lored.wake_up()
 	else:
 		lored.go_to_sleep()
+
+
+func chat_pressed() -> void:
+	var dialogue_key: String = lored.key + "_HUB"
+	if dialogue_key in Dialogue.Type.keys():
+		var type = Dialogue.Type[dialogue_key]
+		dialogue_balloon.start(res.get_resource("dialogue_COAL"), "hub")
 
 
 func show_level_up_tooltip() -> void:

@@ -1,15 +1,17 @@
+MarginContainer
+ScrollContainer
+CanvasLayer
+Button
+Timer
+VBoxContainer
+HBoxContainer
 CheckButton
 CheckBox
 RichTextLabel
-VBoxContainer
-MarginContainer
-ScrollContainer
 HScrollBar
 TabContainer
 GridContainer
-HBoxContainer
 Control
-Button
 AnimatedSprite2D
 VScrollBar
 Panel
@@ -19,7 +21,6 @@ TextureRect
 ColorRect
 AnimationPlayer
 Sprite2D
-Timer
 VSlider
 TileMap
 SubViewport
@@ -29,5 +30,3 @@ Area2D
 Path2D
 StaticBody2D
 RigidBody2D
-LOREDVico
-Camera2D

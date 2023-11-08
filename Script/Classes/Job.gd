@@ -914,7 +914,6 @@ func can_start() -> bool:
 			or not required_currencies.can_take_candy_from_a_baby()
 		):
 			return false
-	
 	if type == Type.REFUEL:
 		return true
 	return has_sufficient_fuel
@@ -926,9 +925,11 @@ func can_start_job_special_requirements_REFUEL() -> bool:
 		return false
 	if ( # if coal's fuel < 50%
 		_lored.fuel_currency == Currency.Type.COAL
-		and _lored.type != LORED.Type.COAL
+		and lored != LORED.Type.COAL
 		and lv.get_lored(LORED.Type.COAL).fuel.get_current_percent() <= lv.FUEL_WARNING
 	):
+		if lored == LORED.Type.COAL and key == "REFUEL":
+			print("Coal refuel fail")
 		return false
 	return true
 

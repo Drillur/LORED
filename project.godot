@@ -31,10 +31,15 @@ em="*res://Script/Autoload/Emotes.gd"
 Buffs="*res://Script/Autoload/BuffManager.gd"
 Settings="*res://Script/Autoload/Settings.gd"
 DiscordSDKLoader="*res://addons/discord-sdk-gd/nodes/core_updater.gd"
+DialogueManager="*res://addons/dialogue_manager/dialogue_manager.gd"
 
 [debug]
 
 gdscript/warnings/integer_division=0
+
+[dialogue_manager]
+
+general/states=["lv"]
 
 [display]
 
@@ -43,7 +48,7 @@ window/size/viewport_height=720
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/discord-sdk-gd/plugin.cfg")
+enabled=PackedStringArray("res://addons/dialogue_manager/plugin.cfg", "res://addons/discord-sdk-gd/plugin.cfg")
 
 [input]
 
@@ -160,6 +165,10 @@ Quit={
 [input_devices]
 
 pointing/emulate_touch_from_mouse=true
+
+[internationalization]
+
+locale/translations_pot_files=PackedStringArray("res://Script/Dialogues/chat_stage1and2.dialogue")
 
 [layer_names]
 

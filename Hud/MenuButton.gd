@@ -6,6 +6,7 @@ extends MarginContainer
 
 signal pressed
 
+@onready var icon_container = %IconContainer
 @onready var texture_rect = %Icon
 @onready var button = $Button
 @onready var label = %Label
@@ -69,6 +70,11 @@ func _on_button_pressed():
 			SaveManager.save_game()
 
 
+func _on_button_gui_input(event):
+	gui_input.emit(event)
+
+
+
 func drop_down_visibility_changed() -> void:
 	if drop_down.visible:
 		texture_rect.rotation_degrees = 0
@@ -98,7 +104,11 @@ func _on_button_button_up():
 
 
 func set_icon(_icon: Texture) -> void:
-	texture_rect.texture = _icon
+	if _icon == null:
+		icon_container.hide()
+	else:
+		texture_rect.texture = _icon
+		icon_container.show()
 
 
 
@@ -108,3 +118,4 @@ func set_text_visibility(val: bool) -> void:
 
 func set_color(val: Color) -> void:
 	color = val
+

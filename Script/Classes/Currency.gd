@@ -103,9 +103,7 @@ var persist := Persist.new()
 var use_allowed := Bool.new(true)
 var used_for_fuel := false
 
-var positive_rate := Bool.new(true)
-
-var net_rate := Value.new(0)
+var net_rate := Big.new(0, true)
 var gain_rate := Value.new(0)
 var loss_rate := Value.new(0)
 
@@ -552,10 +550,10 @@ func sync_rate() -> void:
 	var gain = gain_rate.get_value()
 	var loss = loss_rate.get_value()
 	if gain.greater_equal(loss):
-		positive_rate.set_to(true)
+		net_rate.positive.set_to(true)
 		net_rate.set_to(Big.new(gain).s(loss))
 	else:
-		positive_rate.set_to(false)
+		net_rate.positive.set_to(false)
 		net_rate.set_to(Big.new(loss).s(gain))
 
 
@@ -664,14 +662,14 @@ func is_locked() -> bool:
 func get_eta(threshold: Big) -> Big:
 	if (
 		count.greater_equal(threshold)
-		or net_rate.get_value().equal(0)
+		or net_rate.equal(0)
 		or not lv.any_loreds_in_list_are_purchased(produced_by)
-		or positive_rate.is_false()
+		or net_rate.positive.is_false()
 	):
 		return Big.new(0)
 	
 	var deficit = Big.new(threshold).s(count)
-	return deficit.d(net_rate.get_value())
+	return deficit.d(net_rate)
 
 
 func get_eta_text(threshold: Big) -> String:

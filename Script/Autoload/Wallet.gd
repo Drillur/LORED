@@ -212,7 +212,7 @@ func get_icon_and_colored_name(cur: int) -> String:
 
 
 func is_rate_positive(cur: int) -> bool:
-	return get_currency(cur).positive_rate.get_value()
+	return get_currency(cur).net_rate.positive.get_value()
 
 
 func is_rate_negative(cur: int) -> bool:

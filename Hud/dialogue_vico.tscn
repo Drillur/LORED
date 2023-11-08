@@ -1,0 +1,153 @@
+[gd_scene load_steps=10 format=3 uid="uid://egwjm66ccqku"]
+
+[ext_resource type="Script" path="res://Hud/dialogue_vico.gd" id="1_55fkl"]
+[ext_resource type="Texture2D" uid="uid://jbcyavxupodp" path="res://Sprites/reactions/Test.png" id="1_ntjq3"]
+[ext_resource type="StyleBox" uid="uid://30we7hw128pu" path="res://Theme/RoundedBackground.tres" id="1_pgqax"]
+[ext_resource type="PackedScene" uid="uid://b411lpbrvvmuj" path="res://Hud/rich_text_label.tscn" id="2_axmr6"]
+[ext_resource type="Theme" uid="uid://bl4v2v143rihi" path="res://Theme/Background.tres" id="2_g8ijq"]
+[ext_resource type="PackedScene" uid="uid://bfi0uovwegdxj" path="res://Hud/MenuButton.tscn" id="5_y6wcq"]
+[ext_resource type="Theme" uid="uid://dt7rd31blnvth" path="res://Theme/Invis.tres" id="6_pvi5j"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_o6ofg"]
+bg_color = Color(0.0470588, 0.0470588, 0.0470588, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+shadow_color = Color(1, 1, 1, 0.6)
+shadow_size = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vq2qd"]
+bg_color = Color(1, 1, 1, 0.0980392)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[node name="DialogueVico" type="MarginContainer"]
+custom_minimum_size = Vector2(400, 0)
+offset_right = 400.0
+offset_bottom = 212.0
+script = ExtResource("1_55fkl")
+
+[node name="Shadow" type="Panel" parent="."]
+unique_name_in_owner = true
+modulate = Color(0, 0, 0, 1)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_o6ofg")
+
+[node name="Background" type="Panel" parent="."]
+layout_mode = 2
+theme = ExtResource("2_g8ijq")
+theme_override_styles/panel = ExtResource("1_pgqax")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 0
+theme_override_constants/margin_bottom = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Text and Pose" type="MarginContainer" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 84)
+layout_mode = 2
+
+[node name="TextBackground" type="Panel" parent="MarginContainer/VBoxContainer/Text and Pose"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_vq2qd")
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/Text and Pose"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Text and Pose/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="pose" type="TextureRect" parent="MarginContainer/VBoxContainer/Text and Pose/MarginContainer/HBoxContainer"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+texture = ExtResource("1_ntjq3")
+stretch_mode = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Text and Pose/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+alignment = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/Text and Pose/MarginContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/margin_left = 10
+
+[node name="speaker name" parent="MarginContainer/VBoxContainer/Text and Pose/MarginContainer/HBoxContainer/VBoxContainer/MarginContainer" instance=ExtResource("2_axmr6")]
+layout_mode = 2
+size_flags_horizontal = 1
+size_flags_vertical = 0
+text = "[b]Carl"
+
+[node name="text" parent="MarginContainer/VBoxContainer/Text and Pose/MarginContainer/HBoxContainer/VBoxContainer" instance=ExtResource("2_axmr6")]
+layout_mode = 2
+size_flags_horizontal = 1
+text = "[i][b]What[/b] else? I write runes and tend graves. Whatever \"something else\" is, I am sure it doesn't exist, so what exactly do you mean?"
+autowrap_mode = 3
+visible_characters_behavior = 1
+
+[node name="SkipPrinting" type="Button" parent="MarginContainer/VBoxContainer/Text and Pose"]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("6_pvi5j")
+metadata/_edit_lock_ = true
+
+[node name="RepliesSection" type="MarginContainer" parent="MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="Replies" type="VBoxContainer" parent="MarginContainer/VBoxContainer/RepliesSection"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Reply0" parent="MarginContainer/VBoxContainer/RepliesSection/Replies" instance=ExtResource("5_y6wcq")]
+unique_name_in_owner = true
+layout_mode = 2
+icon = null
+text = "1. (Close Chat) Oh, I see."
+
+[node name="Reply1" parent="MarginContainer/VBoxContainer/RepliesSection/Replies" instance=ExtResource("5_y6wcq")]
+unique_name_in_owner = true
+layout_mode = 2
+icon = null
+text = "No Reply"
+
+[node name="Reply2" parent="MarginContainer/VBoxContainer/RepliesSection/Replies" instance=ExtResource("5_y6wcq")]
+unique_name_in_owner = true
+layout_mode = 2
+icon = null
+text = "No Reply"
+
+[node name="TextTimer" type="Timer" parent="."]
+unique_name_in_owner = true
+one_shot = true
+
+[connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/Text and Pose/SkipPrinting" to="." method="_on_skip_printing_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/RepliesSection/Replies/Reply0" to="." method="_on_reply_0_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/RepliesSection/Replies/Reply1" to="." method="_on_reply_1_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/RepliesSection/Replies/Reply2" to="." method="_on_reply_2_pressed"]

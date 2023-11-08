@@ -262,7 +262,7 @@ func get_eta() -> Big:
 		for i in cost.size():
 			var cur = wa.get_currency(cost.keys()[i]) as Currency
 			
-			if cur.positive_rate.is_false():
+			if cur.net_rate.positive.is_false():
 				longest_eta_cur = -1
 				return Big.new(0)
 			

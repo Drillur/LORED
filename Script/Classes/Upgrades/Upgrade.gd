@@ -3231,7 +3231,7 @@ func init_UPGRADE_DESCRIPTION() -> void:
 	details.name = "upgrade_description"
 	var a = gv.get_stage(1).details.colored_name
 	var b = gv.get_stage(2).details.colored_name
-	details.description = "Reduces the cost incresase of %s and %s LOREDs by 10%, but increases their [b]maximum fuel[/b] and [b]fuel cost[/b] by 1,000%." % [a, b]
+	details.description = "Reduces the cost incresase of %s and %s" % [a, b] + " LOREDs by 10%, but increases their [b]maximum fuel[/b] and [b]fuel cost[/b] by 1,000%."
 	set_effect(UpgradeEffect.Type.UPGRADE_NAME)
 	details.icon = gv.get_stage_icon(2)
 	details.color = gv.get_stage_color(2)

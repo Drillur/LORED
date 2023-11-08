@@ -1,4 +1,4 @@
-[gd_scene load_steps=44 format=3 uid="uid://bseqrj5lg08it"]
+[gd_scene load_steps=46 format=3 uid="uid://bseqrj5lg08it"]
 
 [ext_resource type="Script" path="res://Scene/Root.gd" id="1_h7r77"]
 [ext_resource type="PackedScene" uid="uid://rmruae8fguk4" path="res://Hud/LORED/lored_container.tscn" id="2_egnhq"]
@@ -38,6 +38,8 @@
 [ext_resource type="Texture2D" uid="uid://dfeythvu1og7s" path="res://Sprites/Currency/malig.png" id="28_6ie80"]
 [ext_resource type="PackedScene" uid="uid://dmxljcsin6f3o" path="res://Hud/right_bar.tscn" id="36_alffs"]
 [ext_resource type="PackedScene" uid="uid://baphpe1y2f1d1" path="res://Hud/Menu/settings.tscn" id="37_w5pyv"]
+[ext_resource type="PackedScene" uid="uid://egwjm66ccqku" path="res://Hud/dialogue_vico.tscn" id="39_c4o0p"]
+[ext_resource type="PackedScene" uid="uid://dm8iqw3g2voq6" path="res://Hud/dialogue_vico2.tscn" id="40_2me01"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fydh3"]
 bg_color = Color(0.0705882, 0.0705882, 0.0705882, 1)
@@ -125,6 +127,7 @@ theme_override_constants/separation = 10
 [node name="Overlay" type="MarginContainer" parent="HBoxContainer/Back"]
 layout_mode = 2
 mouse_filter = 2
+metadata/_edit_lock_ = true
 
 [node name="Sidebar" type="MarginContainer" parent="HBoxContainer/Back/Overlay"]
 layout_mode = 2
@@ -527,7 +530,7 @@ fit_content = true
 [node name="Dev1" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Cheat Section/Cheat/VBoxContainer" instance=ExtResource("4_3h2sv")]
 layout_mode = 2
 icon = ExtResource("23_6kk07")
-text = "Create buff"
+text = "EXAMPLE DIAGLUE"
 
 [node name="Dev2" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Cheat Section/Cheat/VBoxContainer" instance=ExtResource("4_3h2sv")]
 layout_mode = 2
@@ -706,6 +709,18 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 8
 
+[node name="DialogueContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_bottom = 48
+metadata/_edit_lock_ = true
+
+[node name="Dialogue" parent="DialogueContainer" instance=ExtResource("39_c4o0p")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+
 [node name="Texts Parent" type="Control" parent="."]
 layout_mode = 2
 mouse_filter = 2
@@ -743,6 +758,9 @@ unique_name_in_owner = true
 position = Vector2(640, 360)
 shape = SubResource("RectangleShape2D_alvwj")
 
+[node name="DialogueBalloon" parent="." instance=ExtResource("40_2me01")]
+unique_name_in_owner = true
+
 [connection signal="pressed" from="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/MarginContainer2/MarginContainer/Menu Button" to="." method="_on_menu_button_pressed"]
 [connection signal="pressed" from="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game Section/Game/VBoxContainer/Wallet Button" to="." method="_on_wallet_button_pressed"]
 [connection signal="pressed" from="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game Section/Game/VBoxContainer/Upgrades Button" to="." method="_on_upgrades_button_pressed"]
@@ -750,4 +768,5 @@ shape = SubResource("RectangleShape2D_alvwj")
 [connection signal="pressed" from="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game Section/Game/VBoxContainer/Stage2" to="." method="_on_stage_2_pressed"]
 [connection signal="pressed" from="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game Section/Game/VBoxContainer/Stage3" to="." method="_on_stage_3_pressed"]
 [connection signal="pressed" from="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game Section/Game/VBoxContainer/Stage4" to="." method="_on_stage_4_pressed"]
+[connection signal="pressed" from="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Cheat Section/Cheat/VBoxContainer/Dev1" to="." method="_on_dev_1_pressed"]
 [connection signal="pressed" from="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save and Quit" to="." method="_on_save_and_quit_pressed"]

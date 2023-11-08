@@ -67,10 +67,9 @@ func update_count() -> void:
 
 
 func update_rate() -> void:
-	if currency.net_rate.current.equal(0):
+	if currency.net_rate.equal(0):
 		rate.text = "[i]0/s"
 		return
-	var _sign = "" if currency.positive_rate.is_true() else "-"
-	rate.text = "[i]" + _sign + currency.net_rate.get_text() + "/s"
+	rate.text = "[i]" + currency.net_rate.get_text() + "/s"
 
 

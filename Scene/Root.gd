@@ -46,6 +46,8 @@ extends MarginContainer
 @onready var patch_notes_button = %"Patch Notes Button"
 
 @onready var right_bar = %RightBar as RightBar
+@onready var dialogue_vico = %Dialogue
+@onready var dialogue_balloon = %DialogueBalloon
 
 var upgrade_section_queued := false
 
@@ -84,7 +86,7 @@ func _ready():
 	# RIGHTBAR
 	
 	lored_container.lored_details_requested.connect(right_bar.setup_lored)
-	
+	right_bar.dialogue_balloon = dialogue_balloon
 	
 	wa.wallet_unlocked.changed.connect(display_wallet_button)
 	
@@ -168,6 +170,8 @@ func _input(event):
 		elif settings.visible:
 			node = settings
 			button = settings_button
+		elif dialogue_vico.visible:
+			node = dialogue_vico
 		
 		if (esc_pressed
 			or (
@@ -239,7 +243,7 @@ func _input(event):
 
 
 func should_hide_a_menu() -> bool:
-	return settings.visible or menu_contents.visible or upgrade_container.visible or wallet.visible or offline_report.visible
+	return dialogue_vico.visible or settings.visible or menu_contents.visible or upgrade_container.visible or wallet.visible or offline_report.visible
 
 
 func _on_menu_button_pressed():
@@ -475,7 +479,9 @@ func _on_limitbreak_pressed():
 
 
 func _on_dev_1_pressed():
-	Buffs.apply_buff_on_lored(lv.get_lored(LORED.Type.STONE), LOREDBuff.Type.WITCH)
+	#Buffs.apply_buff_on_lored(lv.get_lored(LORED.Type.STONE), LOREDBuff.Type.WITCH)
+	dialogue_balloon.start(res.get_resource("chat_stage1and2"), "STONE")
+	#dialogue_balloon.show()
 
 
 func _on_dev_2_pressed():

@@ -132,13 +132,15 @@ var loreds_required_for_extra_normal_menu := [
 var extra_normal_menu_unlocked := false
 
 
-
+var gay = "Okay"
 
 
 func _ready():
 	var d = Time.get_unix_time_from_system()
 	
 	for lored in LORED.Type.values():
+		if lored == LORED.Type.NO_LORED:
+			continue
 		loreds[lored] = LORED.new(lored)
 		loreds_by_key[loreds[lored].key] = loreds[lored]
 		loreds_initialized.became_true.connect(loreds[lored].loreds_initialized)
@@ -146,7 +148,7 @@ func _ready():
 	print("LOREDs initialized in %s secs" % str(Time.get_unix_time_from_system() - d))
 	
 	loreds_initialized.set_to(true)
-	for lored in LORED.Type.values():
+	for lored in loreds.keys():
 		gv.add_lored_to_stage(loreds[lored].stage, lored)
 	
 	wi.wish_completed.connect(sleep_lock)

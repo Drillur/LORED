@@ -77,6 +77,8 @@ enum Type {
 	
 	# put s4 loreds here
 	S4PLACEHOLDER,
+	
+	NO_LORED,
 }
 enum ReasonCannotWork {
 	CAN_WORK,
@@ -162,7 +164,7 @@ var crit := Value.new(0)
 
 
 
-func _init(_type: int = 0) -> void:
+func _init(_type: Type) -> void:
 	type = _type
 	key = Type.keys()[type]
 	
@@ -976,16 +978,16 @@ func autobuy_changed() -> void:
 		if not cost.affordable.became_true.is_connected(autobuy_check):
 			cost.affordable.became_true.connect(autobuy_check)
 			for cur in produced_currencies:
-				wa.get_currency(cur).positive_rate.became_false.connect(autobuy_check)
+				wa.get_currency(cur).net_rate.positive.became_false.connect(autobuy_check)
 			for cur in required_currencies:
-				wa.get_currency(cur).positive_rate.became_false.connect(autobuy_check)
+				wa.get_currency(cur).net_rate.positive.became_false.connect(autobuy_check)
 	else:
 		if cost.affordable.became_true.is_connected(autobuy_check):
 			cost.affordable.became_true.disconnect(autobuy_check)
 			for cur in produced_currencies:
-				wa.get_currency(cur).positive_rate.became_false.disconnect(autobuy_check)
+				wa.get_currency(cur).net_rate.positive.became_false.disconnect(autobuy_check)
 			for cur in required_currencies:
-				wa.get_currency(cur).positive_rate.became_false.disconnect(autobuy_check)
+				wa.get_currency(cur).net_rate.positive.became_false.disconnect(autobuy_check)
 
 
 

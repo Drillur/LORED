@@ -1,8 +1,17 @@
-[gd_scene load_steps=5 format=3 uid="uid://baphpe1y2f1d1"]
+[gd_scene load_steps=6 format=3 uid="uid://baphpe1y2f1d1"]
 
 [ext_resource type="Theme" uid="uid://b8t7tkhvril5g" path="res://Theme/Standard.tres" id="1_8wmrj"]
 [ext_resource type="Script" path="res://Hud/Menu/SettingsVico.gd" id="1_rdjvt"]
 [ext_resource type="PackedScene" uid="uid://dowun7x403k8u" path="res://Hud/Header.tscn" id="2_eg55a"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_v32bn"]
+bg_color = Color(0.0470588, 0.0470588, 0.0470588, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+shadow_color = Color(1, 1, 1, 0.6)
+shadow_size = 5
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hsv4o"]
 bg_color = Color(0.1, 0.1, 0.1, 1)
@@ -17,6 +26,12 @@ custom_minimum_size = Vector2(0, 300)
 offset_right = 243.0
 offset_bottom = 183.0
 script = ExtResource("1_rdjvt")
+
+[node name="Shadow" type="Panel" parent="."]
+unique_name_in_owner = true
+modulate = Color(0, 0, 0, 1)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_v32bn")
 
 [node name="Background2" type="Panel" parent="."]
 layout_mode = 2

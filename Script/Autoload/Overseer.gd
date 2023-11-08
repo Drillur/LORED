@@ -12,6 +12,7 @@ var saved_vars := [
 	"stage2",
 	"stage3",
 	"stage4",
+	"dialogue",
 ]
 
 
@@ -47,6 +48,7 @@ func _ready() -> void:
 	for i in range(0, 5):
 		set("stage" + str(i), Stage.new(i))
 		get("stage" + str(i)).stage_unlocked_changed.connect(emit_stage_unlocked)
+	init_dialogues()
 	
 	discord_sdk.app_id = 1139940673747951696
 	
@@ -130,6 +132,11 @@ func second_passed() -> void:
 
 
 # - Handy
+
+
+const CHAT_INTERVAL_STANDARD := 0.035
+const CHAT_INTERVAL_PUNCTUATION := 0.25
+const PUNCTUATION_MARKS := ["!", ",", ".", "?"]
 
 signal opened
 var root_ready := Bool.new(false)
@@ -661,3 +668,20 @@ func emit_stage_unlocked(stage: int, unlocked: bool) -> void:
 	stage_unlocked.emit(stage, unlocked)
 
 
+
+# - Dialogues
+
+
+var dialogue_initialized := Bool.new(false)
+var dialogue := {}
+
+
+func init_dialogues() -> void:
+	await root_ready.became_true
+	for d in Dialogue.Type.values():
+		dialogue[d] = Dialogue.new(d)
+	dialogue_initialized.set_to(true)
+
+
+func is_dialogue_read(type: Dialogue.Type) -> bool:
+	return dialogue[type].read.get_value()

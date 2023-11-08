@@ -9,7 +9,6 @@ extends MarginContainer
 
 
 func load_finished() -> void:
-	print(Settings.fullscreen.get_value())
 	# VIDEO
 	fullscreen.button_pressed = Settings.fullscreen.get_value()
 
@@ -19,7 +18,7 @@ func _ready():
 	SaveManager.load_finished.connect(load_finished)
 
 
-func _input(event):
+func _input(_event):
 	if Input.is_action_just_pressed("Fullscreen"):
 		fullscreen.button_pressed = not fullscreen.button_pressed
 

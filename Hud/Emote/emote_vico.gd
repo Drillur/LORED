@@ -16,10 +16,6 @@ extends MarginContainer
 
 var emote: Emote
 
-const standard_interval := 0.035
-const punctuation_interval := 0.25
-const PUNCTUATION_MARKS := ["!", ",", ".", "?"]
-
 
 
 func _ready() -> void:
@@ -96,10 +92,10 @@ func display_text() -> void:
 		if dialogue_text.visible_ratio == 1:
 			break
 		
-		if parsed_text[dialogue_text.visible_characters - 1] in PUNCTUATION_MARKS:
-			display_text_timer.start(punctuation_interval)
+		if parsed_text[dialogue_text.visible_characters - 1] in gv.PUNCTUATION_MARKS:
+			display_text_timer.start(gv.CHAT_INTERVAL_PUNCTUATION)
 		else:
-			display_text_timer.start(standard_interval)
+			display_text_timer.start(gv.CHAT_INTERVAL_STANDARD)
 		
 		await display_text_timer.timeout
 	

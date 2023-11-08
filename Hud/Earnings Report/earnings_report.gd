@@ -246,9 +246,9 @@ func negative_fuel() -> void:
 	
 	var text: String
 	
-	text = "[center]" + speech_negative_fuel[lored][0] % coal_text if coal_ratio < 1.0 else jo_text
+	text = "[center]" + speech_negative_fuel[lored][0] % (coal_text if coal_ratio < 1.0 else jo_text)
 	if coal_ratio < 1.0 and jo_ratio < 1.0:
-		text += "\n\n" + "[center]" + (speech_negative_fuel[lored][1] % jo_text)
+		text += "\n\n" + (speech_negative_fuel[lored][1] % jo_text)
 	
 	dialogue_negative_fuel.text = "[i]" + text
 

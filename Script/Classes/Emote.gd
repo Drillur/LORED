@@ -201,7 +201,7 @@ func COAL_HUM() -> void:
 		20: dialogue = "[b]HELL NAWH, CLICK THE MOTHERFUCKING BUTTON YOU GODDAMN PIECE OF SHIT. I'M ACTUALLY FUCKING DONE AT THIS POINT, ALRIGHT? CLICK. THE BUTTON. YOU FUCKFACE.[/b]"
 		19:
 			var a = lv.get_colored_name(LORED.Type.STONE)
-			dialogue = "Look at %s. He's totally out of fuel. He's been waiting for you this entire time. If you don't do it for me, do it for him."
+			dialogue = "Look at %s. He's totally out of fuel. He's been waiting for you this entire time. If you don't do it for me, do it for him." % a
 		18: dialogue = "Look, I--I... I just... holy crap. Click the button. Please."
 		17: dialogue = "I'd rather you not level me up at this point. It would just mean that I have to spend this entire game with [b]you.[/b]"
 		16: dialogue = "Gotcha, nerd! Now that I told you to do it, you won't. It won't be cool or funny anymore. IT'LL BE CRINGE, JUST LIKE YOU!"

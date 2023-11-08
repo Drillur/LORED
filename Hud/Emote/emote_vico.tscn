@@ -32,8 +32,8 @@ border_blend = true
 
 [node name="EmoteVico" type="MarginContainer"]
 custom_minimum_size = Vector2(75, 52)
-offset_right = 76.0
-offset_bottom = 52.0
+offset_right = 108.0
+offset_bottom = 87.0
 size_flags_horizontal = 8
 size_flags_vertical = 8
 mouse_filter = 2

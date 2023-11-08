@@ -48,6 +48,8 @@ var change_on_cooldown := false:
 			emit_signal("change_cooldown_finished")
 var change_queued := false
 
+var positive := Bool.new(true)
+
 @export var mantissa: float = 0.0:
 	set(val):
 		if mantissa != val:
@@ -61,7 +63,10 @@ var change_queued := false
 
 var text: String:
 	set(val):
-		text = val
+		if positive.is_true():
+			text = val
+		else:
+			text = "-" + val
 		text_requires_update = false
 	get:
 		if text_requires_update:
@@ -547,6 +552,9 @@ static func get_big_float_text(value: float) -> String:
 		output += string[i]
 	
 	return output # 342,945
+
+func get_text() -> String:
+	return text
 
 func toScientific():
 	return Big.get_float_text(mantissa) + "e" + format_exponent(exponent)

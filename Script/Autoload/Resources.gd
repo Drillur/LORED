@@ -14,6 +14,7 @@ func _ready():
 func store_all_resources() -> void:
 	dir_contents("res://Hud/")
 	dir_contents("res://Sprites/")
+	dir_contents("res://Script/Dialogues/")
 
 
 func dir_contents(path):
@@ -28,7 +29,12 @@ func dir_contents(path):
 			if dir.current_is_dir():
 				dir_contents(path + "/" + file_name)
 			else:
-				if file_name.ends_with(".png") or file_name.ends_with(".svg") or file_name.ends_with(".tscn"):
+				if (
+					file_name.ends_with(".png")
+					or file_name.ends_with(".svg")
+					or file_name.ends_with(".tscn")
+					or file_name.ends_with(".dialogue")
+				):
 					var _name := file_name.split(".")[0]
 					var _path = path + "/" + file_name
 					if bag.has_resource(_name):
