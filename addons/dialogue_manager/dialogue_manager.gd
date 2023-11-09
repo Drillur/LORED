@@ -106,6 +106,15 @@ func get_next_dialogue_line(resource: DialogueResource, key: String = "", extra_
 	assert(resource != null, DialogueConstants.translate("runtime.no_resource"))
 	assert(resource.lines.size() > 0, DialogueConstants.translate("runtime.no_content").format({ file_path = resource.resource_path }))
 
+	# Inject any "using" states into the game_states
+	for state_name in resource.using_states:
+		var autoload = get_tree().root.get_node_or_null(state_name)
+		if autoload == null:
+			printerr(DialogueConstants.translate("runtime.unknown_autoload").format({ autoload = state_name }))
+		else:
+			extra_game_states = [autoload] + extra_game_states
+
+	# Get the line data
 	var dialogue: DialogueLine = await get_line(resource, key, extra_game_states)
 
 	# If our dialogue is nothing then we hit the end
@@ -1345,8 +1354,3 @@ func resolve_color_method(color: Color, method_name: String, args: Array):
 			return color.to_rgba32()
 		"to_rgba64":
 			return color.to_rgba64()
-
-
-
-func get_coal_fuel() -> String:
-	return lv.get_lored(LORED.Type.COAL).fuel_cost.get_text()

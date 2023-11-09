@@ -4,8 +4,8 @@ extends CanvasLayer
 
 @onready var balloon: MarginContainer = %Balloon
 @onready var character_label: RichTextLabel = %CharacterLabel
-@onready var dialogue_label: DialogueLabel = %DialogueLabel as DialogueLabel
-@onready var responses_menu: DialogueResponsesMenu = %ResponsesMenu
+@onready var dialogue_label: DialogueLabelCustom = %DialogueLabel as DialogueLabelCustom
+@onready var responses_menu: DialogueResponsesMenuCustom = %ResponsesMenu
 
 @onready var text_background = %TextBackground
 @onready var skip_typing = %SkipTyping
@@ -65,7 +65,6 @@ var dialogue_line: DialogueLine:
 		dialogue_label.hide()
 		dialogue_label.dialogue_line = dialogue_line
 		
-		#response_section.hide()
 		if dialogue_line.has_responses():
 			response_section.show()
 			responses_menu.set_responses(dialogue_line.responses, color)

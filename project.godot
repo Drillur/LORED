@@ -32,6 +32,7 @@ Buffs="*res://Script/Autoload/BuffManager.gd"
 Settings="*res://Script/Autoload/Settings.gd"
 DiscordSDKLoader="*res://addons/discord-sdk-gd/nodes/core_updater.gd"
 DialogueManager="*res://addons/dialogue_manager/dialogue_manager.gd"
+handbook="*res://Script/Dialogues/DialogueHandbook.gd"
 
 [debug]
 

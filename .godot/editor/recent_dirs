@@ -1,3 +1,4 @@
+res://Script/Dialogues
 res://Script/Autoload
 res://Hud
 res://Hud/Menu
@@ -19,4 +20,3 @@ res://Hud/Wish
 res://Hud/LORED/Tooltip
 res://Hud/Emote
 res://Sprites/Hud
-res://Sprites/Currency

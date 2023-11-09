@@ -1,15 +1,15 @@
 [gd_scene load_steps=13 format=3 uid="uid://dm8iqw3g2voq6"]
 
-[ext_resource type="Script" path="res://Hud/DialogueBalloon.gd" id="1_l5ey4"]
-[ext_resource type="Theme" uid="uid://bl4v2v143rihi" path="res://Theme/Background.tres" id="2_6v3j1"]
-[ext_resource type="StyleBox" uid="uid://30we7hw128pu" path="res://Theme/RoundedBackground.tres" id="3_60k8q"]
-[ext_resource type="Theme" uid="uid://b8t7tkhvril5g" path="res://Theme/Standard.tres" id="4_dpkub"]
-[ext_resource type="Texture2D" uid="uid://jbcyavxupodp" path="res://Sprites/reactions/Test.png" id="4_qf8jd"]
-[ext_resource type="PackedScene" uid="uid://ckvgyvclnwggo" path="res://addons/dialogue_manager/dialogue_label.tscn" id="5_5p5ya"]
-[ext_resource type="PackedScene" uid="uid://b411lpbrvvmuj" path="res://Hud/rich_text_label.tscn" id="5_hemk0"]
-[ext_resource type="Theme" uid="uid://dt7rd31blnvth" path="res://Theme/Invis.tres" id="6_0rinn"]
-[ext_resource type="Script" path="res://addons/dialogue_manager/dialogue_reponses_menu.gd" id="6_ir3ui"]
-[ext_resource type="PackedScene" uid="uid://bfi0uovwegdxj" path="res://Hud/MenuButton.tscn" id="7_fyuv7"]
+[ext_resource type="Script" path="res://Hud/Dialogue/DialogueBalloon.gd" id="1_q2lk0"]
+[ext_resource type="Theme" uid="uid://bl4v2v143rihi" path="res://Theme/Background.tres" id="2_71vfy"]
+[ext_resource type="StyleBox" uid="uid://30we7hw128pu" path="res://Theme/RoundedBackground.tres" id="3_n6pin"]
+[ext_resource type="Theme" uid="uid://b8t7tkhvril5g" path="res://Theme/Standard.tres" id="4_ky7sc"]
+[ext_resource type="Script" path="res://Hud/Dialogue/response_menu.gd" id="5_rg84n"]
+[ext_resource type="PackedScene" uid="uid://bfi0uovwegdxj" path="res://Hud/MenuButton.tscn" id="6_h7l15"]
+[ext_resource type="Texture2D" uid="uid://jbcyavxupodp" path="res://Sprites/reactions/Test.png" id="7_135w3"]
+[ext_resource type="PackedScene" uid="uid://ckvgyvclnwggo" path="res://addons/dialogue_manager/dialogue_label.tscn" id="8_akl6m"]
+[ext_resource type="Script" path="res://Hud/Dialogue/dialogue_label.gd" id="9_nooqw"]
+[ext_resource type="Theme" uid="uid://dt7rd31blnvth" path="res://Theme/Invis.tres" id="10_kyihs"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_o6ofg"]
 bg_color = Color(0.0470588, 0.0470588, 0.0470588, 1)
@@ -28,7 +28,7 @@ corner_radius_bottom_right = 5
 corner_radius_bottom_left = 5
 
 [node name="DialogueBalloon" type="CanvasLayer"]
-script = ExtResource("1_l5ey4")
+script = ExtResource("1_q2lk0")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 custom_minimum_size = Vector2(420, 0)
@@ -54,8 +54,8 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_o6ofg")
 
 [node name="Background" type="Panel" parent="MarginContainer"]
 layout_mode = 2
-theme = ExtResource("2_6v3j1")
-theme_override_styles/panel = ExtResource("3_60k8q")
+theme = ExtResource("2_71vfy")
+theme_override_styles/panel = ExtResource("3_n6pin")
 
 [node name="MarginContainer" type="MarginContainer" parent="MarginContainer"]
 layout_mode = 2
@@ -67,6 +67,50 @@ theme_override_constants/margin_bottom = 0
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/MarginContainer"]
 layout_mode = 2
 theme_override_constants/separation = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="ResponseSection" type="MarginContainer" parent="MarginContainer/MarginContainer/VBoxContainer/MarginContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="scroll" type="ScrollContainer" parent="MarginContainer/MarginContainer/VBoxContainer/MarginContainer/ResponseSection"]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 0
+theme = ExtResource("4_ky7sc")
+horizontal_scroll_mode = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/MarginContainer/VBoxContainer/MarginContainer/ResponseSection/scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+theme_override_constants/margin_right = 5
+
+[node name="ResponsesMenu" type="VBoxContainer" parent="MarginContainer/MarginContainer/VBoxContainer/MarginContainer/ResponseSection/scroll/MarginContainer" node_paths=PackedStringArray("response_template", "scroll_container")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 8
+mouse_filter = 2
+theme_override_constants/separation = 0
+script = ExtResource("5_rg84n")
+response_template = NodePath("ResponseExample")
+scroll_container = NodePath("../..")
+
+[node name="ResponseExample" parent="MarginContainer/MarginContainer/VBoxContainer/MarginContainer/ResponseSection/scroll/MarginContainer/ResponsesMenu" instance=ExtResource("6_h7l15")]
+unique_name_in_owner = true
+layout_mode = 2
+icon = null
+text = "1. (Close Chat) Oh, I see."
 
 [node name="Balloon" type="MarginContainer" parent="MarginContainer/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
@@ -95,7 +139,7 @@ unique_name_in_owner = true
 visible = false
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
-texture = ExtResource("4_qf8jd")
+texture = ExtResource("7_135w3")
 stretch_mode = 3
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/MarginContainer/VBoxContainer/Balloon/MarginContainer/HBoxContainer"]
@@ -113,83 +157,30 @@ theme_override_constants/margin_left = 10
 unique_name_in_owner = true
 layout_mode = 2
 mouse_filter = 1
-theme = ExtResource("4_dpkub")
+theme = ExtResource("4_ky7sc")
 bbcode_enabled = true
 text = "Character"
 fit_content = true
 scroll_active = false
 
-[node name="DialogueLabel" parent="MarginContainer/MarginContainer/VBoxContainer/Balloon/MarginContainer/HBoxContainer/VBoxContainer" instance=ExtResource("5_5p5ya")]
+[node name="DialogueLabel" parent="MarginContainer/MarginContainer/VBoxContainer/Balloon/MarginContainer/HBoxContainer/VBoxContainer" instance=ExtResource("8_akl6m")]
 unique_name_in_owner = true
 layout_mode = 2
 text = "[i][b]What[/b] else? I write runes and tend graves. Whatever \"something else\" is, I am sure it doesn't exist, so what exactly do you mean? btw this is enough text for 3 lines"
-seconds_per_step = 0.025
-pause_at_characters = ",.!?"
-
-[node name="text" parent="MarginContainer/MarginContainer/VBoxContainer/Balloon/MarginContainer/HBoxContainer/VBoxContainer" instance=ExtResource("5_hemk0")]
-visible = false
-layout_mode = 2
-size_flags_horizontal = 1
-text = "[i][b]What[/b] else? I write runes and tend graves. Whatever \"something else\" is, I am sure it doesn't exist, so what exactly do you mean?"
-autowrap_mode = 3
-visible_characters_behavior = 1
+script = ExtResource("9_nooqw")
 
 [node name="SkipTyping" type="Button" parent="MarginContainer/MarginContainer/VBoxContainer/Balloon"]
 unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 0
-theme = ExtResource("6_0rinn")
+theme = ExtResource("10_kyihs")
 metadata/_edit_lock_ = true
-
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/MarginContainer/VBoxContainer"]
-layout_mode = 2
-mouse_filter = 2
-
-[node name="ResponseSection" type="MarginContainer" parent="MarginContainer/MarginContainer/VBoxContainer/MarginContainer"]
-unique_name_in_owner = true
-visible = false
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
-
-[node name="scroll" type="ScrollContainer" parent="MarginContainer/MarginContainer/VBoxContainer/MarginContainer/ResponseSection"]
-unique_name_in_owner = true
-layout_mode = 2
-mouse_filter = 0
-theme = ExtResource("4_dpkub")
-horizontal_scroll_mode = 0
-
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/MarginContainer/VBoxContainer/MarginContainer/ResponseSection/scroll"]
-layout_mode = 2
-size_flags_horizontal = 3
-mouse_filter = 2
-theme_override_constants/margin_right = 5
-
-[node name="ResponsesMenu" type="VBoxContainer" parent="MarginContainer/MarginContainer/VBoxContainer/MarginContainer/ResponseSection/scroll/MarginContainer" node_paths=PackedStringArray("response_template", "scroll_container")]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 8
-mouse_filter = 2
-theme_override_constants/separation = 0
-script = ExtResource("6_ir3ui")
-response_template = NodePath("ResponseExample")
-scroll_container = NodePath("../..")
-
-[node name="ResponseExample" parent="MarginContainer/MarginContainer/VBoxContainer/MarginContainer/ResponseSection/scroll/MarginContainer/ResponsesMenu" instance=ExtResource("7_fyuv7")]
-unique_name_in_owner = true
-layout_mode = 2
-icon = null
-text = "1. (Close Chat) Oh, I see."
 
 [node name="TextTimer" type="Timer" parent="MarginContainer"]
 unique_name_in_owner = true
 one_shot = true
 
+[connection signal="response_selected" from="MarginContainer/MarginContainer/VBoxContainer/MarginContainer/ResponseSection/scroll/MarginContainer/ResponsesMenu" to="." method="_on_responses_menu_response_selected"]
 [connection signal="finished_typing" from="MarginContainer/MarginContainer/VBoxContainer/Balloon/MarginContainer/HBoxContainer/VBoxContainer/DialogueLabel" to="." method="_on_dialogue_label_finished_typing"]
 [connection signal="finished_typing" from="MarginContainer/MarginContainer/VBoxContainer/Balloon/MarginContainer/HBoxContainer/VBoxContainer/DialogueLabel" to="MarginContainer/MarginContainer/VBoxContainer/MarginContainer/ResponseSection/scroll/MarginContainer/ResponsesMenu" method="_on_dialogue_label_finished_typing"]
 [connection signal="gui_input" from="MarginContainer/MarginContainer/VBoxContainer/Balloon/SkipTyping" to="." method="_on_balloon_gui_input"]
-[connection signal="response_selected" from="MarginContainer/MarginContainer/VBoxContainer/MarginContainer/ResponseSection/scroll/MarginContainer/ResponsesMenu" to="." method="_on_responses_menu_response_selected"]

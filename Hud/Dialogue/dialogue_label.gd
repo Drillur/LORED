@@ -1,7 +1,8 @@
 @icon("./assets/icon.svg")
 
 ## A RichTextLabel specifically for use with [b]Dialogue Manager[/b] dialogue.
-class_name DialogueLabel extends RichTextLabel
+class_name DialogueLabelCustom
+extends RichTextLabel
 
 
 ## Emitted for each letter typed out.
@@ -187,5 +188,3 @@ func _should_auto_pause() -> bool:
 #		return false
 	
 	return parsed_text[visible_characters - 1] in split_pause_at_characters
-
-
