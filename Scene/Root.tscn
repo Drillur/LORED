@@ -1,4 +1,4 @@
-[gd_scene load_steps=46 format=3 uid="uid://bseqrj5lg08it"]
+[gd_scene load_steps=45 format=3 uid="uid://bseqrj5lg08it"]
 
 [ext_resource type="Script" path="res://Scene/Root.gd" id="1_h7r77"]
 [ext_resource type="PackedScene" uid="uid://rmruae8fguk4" path="res://Hud/LORED/lored_container.tscn" id="2_egnhq"]
@@ -38,8 +38,7 @@
 [ext_resource type="Texture2D" uid="uid://dfeythvu1og7s" path="res://Sprites/Currency/malig.png" id="28_6ie80"]
 [ext_resource type="PackedScene" uid="uid://dmxljcsin6f3o" path="res://Hud/right_bar.tscn" id="36_alffs"]
 [ext_resource type="PackedScene" uid="uid://baphpe1y2f1d1" path="res://Hud/Menu/settings.tscn" id="37_w5pyv"]
-[ext_resource type="PackedScene" uid="uid://egwjm66ccqku" path="res://Hud/dialogue_vico.tscn" id="39_c4o0p"]
-[ext_resource type="PackedScene" uid="uid://dm8iqw3g2voq6" path="res://Hud/dialogue_vico2.tscn" id="40_2me01"]
+[ext_resource type="PackedScene" uid="uid://dm8iqw3g2voq6" path="res://Hud/dialogue_balloon.tscn" id="40_2me01"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fydh3"]
 bg_color = Color(0.0705882, 0.0705882, 0.0705882, 1)
@@ -708,18 +707,6 @@ size_flags_vertical = 4
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 8
-
-[node name="DialogueContainer" type="MarginContainer" parent="."]
-layout_mode = 2
-mouse_filter = 2
-theme_override_constants/margin_bottom = 48
-metadata/_edit_lock_ = true
-
-[node name="Dialogue" parent="DialogueContainer" instance=ExtResource("39_c4o0p")]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 8
 
 [node name="Texts Parent" type="Control" parent="."]
 layout_mode = 2

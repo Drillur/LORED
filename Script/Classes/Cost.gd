@@ -9,7 +9,7 @@ const saved_vars := [
 
 signal became_safe
 
-const CACHE_SIZE := 200
+const CACHE_SIZE := 50
 
 var cost := {}
 var cache := {}

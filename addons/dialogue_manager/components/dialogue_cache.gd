@@ -5,14 +5,6 @@ const DialogueConstants = preload("../constants.gd")
 const DialogueSettings = preload("./settings.gd")
 
 
-# Keeps track of errors and dependencies.
-# {
-# 	<dialogue file path> = {
-# 		path = <dialogue file path>,
-# 		dependencies = [<dialogue file path>, <dialogue file path>],
-# 		errors = [<error>, <error>]
-# 	}
-# }
 var _cache: Dictionary = {}
 
 
@@ -100,7 +92,7 @@ func _get_dialogue_files_in_filesystem(path: String = "res://") -> PackedStringA
 			elif file_name.get_extension() == "dialogue":
 				files.append(file_path)
 			file_name = dir.get_next()
-
+	
 	return files
 
 

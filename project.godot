@@ -39,7 +39,7 @@ gdscript/warnings/integer_division=0
 
 [dialogue_manager]
 
-general/states=["lv"]
+general/new_with_template=false
 
 [display]
 

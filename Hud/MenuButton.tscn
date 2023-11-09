@@ -23,7 +23,6 @@ corner_radius_bottom_left = 5
 custom_minimum_size = Vector2(36, 36)
 offset_right = 36.0
 offset_bottom = 36.0
-mouse_filter = 0
 script = ExtResource("1_pwhdq")
 icon = ExtResource("2_rnf1g")
 text = "Menu"

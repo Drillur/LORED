@@ -54,7 +54,7 @@ func set_responses(next_responses: Array, _color: Color) -> void:
 			if not response.is_allowed:
 				item.name = String(item.name) + "Disallowed"
 				item.disabled = true
-			item.text = response.text
+			item.text = str(get_child_count() + 1) + ". ..."
 			add_child(item)
 			item.color = color
 		
@@ -117,11 +117,15 @@ func _on_response_mouse_entered(item: Control) -> void:
 func _on_response_gui_input(event: InputEvent, item: Control) -> void:
 	if "Disallowed" in item.name: return
 	
-	get_viewport().set_input_as_handled()
-	if event is InputEventMouseButton and event.is_pressed() and event.button_index == 1:
+	if event is InputEventMouseButton and event.is_released() and event.button_index == 1:
 		response_selected.emit(_responses[item.get_index()])
-	elif event.is_action_pressed("ui_accept") and item in get_menu_items():
+	elif event.is_action_released("ui_accept") and item in get_menu_items():
 		response_selected.emit(_responses[item.get_index()])
+
+
+func _on_dialogue_label_finished_typing():
+	update_response_text()
+	flash_responses()
 
 
 func flash_responses() -> void:
@@ -129,5 +133,9 @@ func flash_responses() -> void:
 		gv.flash(response, color)
 
 
-func _on_dialogue_label_finished_typing():
-	flash_responses()
+func update_response_text() -> void:
+	var i = 0
+	for response in _responses:
+		response = response as DialogueResponse
+		get_child(i).text = str(i + 1) + ". " + response.text
+		i += 1

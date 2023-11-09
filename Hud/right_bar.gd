@@ -324,10 +324,10 @@ func sleep_pressed() -> void:
 
 
 func chat_pressed() -> void:
-	var dialogue_key: String = lored.key + "_HUB"
-	if dialogue_key in Dialogue.Type.keys():
-		var type = Dialogue.Type[dialogue_key]
-		dialogue_balloon.start(res.get_resource("dialogue_COAL"), "hub")
+	if lored.stage in [1, 2]:
+		var dialogue: DialogueResource = res.get_resource("chat_stage1and2")
+		if lored.key in dialogue.get_titles():
+			dialogue_balloon.start(dialogue, lored.key)
 
 
 func show_level_up_tooltip() -> void:

@@ -8,6 +8,7 @@ res://Scene/Root.gd
 res://Theme/Background.tres
 res://Theme/ShadowText.tres
 res://Theme/Title.tres
+res://addons/dialogue_manager/dialogue_reponses_menu.gd
 res://Scene/Root.tscn
 res://Hud/LORED/lored_container.tscn
 res://Hud/Upgrade/Upgrade Effect Widget.tscn
@@ -15,12 +16,13 @@ res://Hud/Price.tscn
 res://Hud/LORED/lored_vico.tscn
 res://Hud/right_bar.tscn
 res://Hud/Menu/settings.tscn
-res://addons/dialogue_manager/example_balloon/example_balloon.tscn
-res://addons/dialogue_manager/dialogue_reponses_menu.gd
-res://Hud/DialogueBalloon.gd
 res://Hud/MenuButton.tscn
-res://addons/dialogue_manager/dialogue_label.gd
 res://Hud/dialogue_vico.tscn
-res://addons/dialogue_manager/dialogue_line.gd
+res://Hud/DialogueBalloon.gd
+res://addons/dialogue_manager/dialogue_label.gd
 res://Hud/right_bar.gd
-res://Script/Autoload/Resources.gd
+res://addons/dialogue_manager/dialogue_line.gd
+res://Hud/dialogue_balloon.tscn
+res://addons/dialogue_manager/components/dialogue_cache.gd
+res://Script/Classes/Cost.gd
+res://addons/dialogue_manager/dialogue_manager.gd

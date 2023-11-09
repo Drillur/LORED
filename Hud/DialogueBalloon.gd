@@ -4,7 +4,7 @@ extends CanvasLayer
 
 @onready var balloon: MarginContainer = %Balloon
 @onready var character_label: RichTextLabel = %CharacterLabel
-@onready var dialogue_label: DialogueLabel = %DialogueLabel
+@onready var dialogue_label: DialogueLabel = %DialogueLabel as DialogueLabel
 @onready var responses_menu: DialogueResponsesMenu = %ResponsesMenu
 
 @onready var text_background = %TextBackground
@@ -12,6 +12,8 @@ extends CanvasLayer
 @onready var pose = %pose
 @onready var scroll = %scroll
 @onready var response_section = %ResponseSection
+
+@onready var content = $MarginContainer
 
 ## The dialogue resource
 var resource: DialogueResource
@@ -63,9 +65,12 @@ var dialogue_line: DialogueLine:
 		dialogue_label.hide()
 		dialogue_label.dialogue_line = dialogue_line
 		
-		response_section.hide()
+		#response_section.hide()
 		if dialogue_line.has_responses():
+			response_section.show()
 			responses_menu.set_responses(dialogue_line.responses, color)
+		else:
+			response_section.hide()
 		
 		# Show our balloon
 		show()
@@ -126,16 +131,12 @@ func _on_mutated(_mutation: Dictionary) -> void:
 func _on_balloon_gui_input(event: InputEvent) -> void:
 	# If the user clicks on the balloon while it's typing then skip typing
 	if dialogue_label.is_typing and event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed():
-		#get_viewport().set_input_as_handled()
 		dialogue_label.skip_typing()
 		return
-
+	
 	if not is_waiting_for_input: return
 	if dialogue_line.has_responses(): return
-
-	# When there are no response options the balloon itself is the clickable thing
-	#get_viewport().set_input_as_handled()
-
+	
 	if event is InputEventMouseButton and event.is_pressed() and event.button_index == 1:
 		next(dialogue_line.next_id)
 	elif event.is_action_pressed("ui_accept") and get_viewport().gui_get_focus_owner() == balloon:
@@ -143,9 +144,9 @@ func _on_balloon_gui_input(event: InputEvent) -> void:
 
 
 func _on_responses_menu_response_selected(response: DialogueResponse) -> void:
-	next(response.next_id)
+	if not dialogue_label.is_typing:
+		next(response.next_id)
 
 
 func _on_dialogue_label_finished_typing():
-	if dialogue_line.has_responses():
-		response_section.show()
+	pass

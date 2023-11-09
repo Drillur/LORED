@@ -32,14 +32,17 @@ script = ExtResource("1_l5ey4")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 custom_minimum_size = Vector2(420, 0)
-anchors_preset = 5
+anchors_preset = 7
 anchor_left = 0.5
+anchor_top = 1.0
 anchor_right = 0.5
-offset_left = -200.0
-offset_top = 16.0
-offset_right = 200.0
-offset_bottom = 100.0
+anchor_bottom = 1.0
+offset_left = -210.0
+offset_top = -100.0
+offset_right = 210.0
+offset_bottom = -16.0
 grow_horizontal = 2
+grow_vertical = 0
 size_flags_horizontal = 4
 size_flags_vertical = 0
 
@@ -138,7 +141,11 @@ focus_mode = 0
 theme = ExtResource("6_0rinn")
 metadata/_edit_lock_ = true
 
-[node name="ResponseSection" type="MarginContainer" parent="MarginContainer/MarginContainer/VBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="ResponseSection" type="MarginContainer" parent="MarginContainer/MarginContainer/VBoxContainer/MarginContainer"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
@@ -148,28 +155,31 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="scroll" type="ScrollContainer" parent="MarginContainer/MarginContainer/VBoxContainer/ResponseSection"]
+[node name="scroll" type="ScrollContainer" parent="MarginContainer/MarginContainer/VBoxContainer/MarginContainer/ResponseSection"]
 unique_name_in_owner = true
 layout_mode = 2
+mouse_filter = 0
 theme = ExtResource("4_dpkub")
 horizontal_scroll_mode = 0
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/MarginContainer/VBoxContainer/ResponseSection/scroll"]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/MarginContainer/VBoxContainer/MarginContainer/ResponseSection/scroll"]
 layout_mode = 2
 size_flags_horizontal = 3
+mouse_filter = 2
 theme_override_constants/margin_right = 5
 
-[node name="ResponsesMenu" type="VBoxContainer" parent="MarginContainer/MarginContainer/VBoxContainer/ResponseSection/scroll/MarginContainer" node_paths=PackedStringArray("response_template", "scroll_container")]
+[node name="ResponsesMenu" type="VBoxContainer" parent="MarginContainer/MarginContainer/VBoxContainer/MarginContainer/ResponseSection/scroll/MarginContainer" node_paths=PackedStringArray("response_template", "scroll_container")]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 8
+mouse_filter = 2
 theme_override_constants/separation = 0
 script = ExtResource("6_ir3ui")
 response_template = NodePath("ResponseExample")
 scroll_container = NodePath("../..")
 
-[node name="ResponseExample" parent="MarginContainer/MarginContainer/VBoxContainer/ResponseSection/scroll/MarginContainer/ResponsesMenu" instance=ExtResource("7_fyuv7")]
+[node name="ResponseExample" parent="MarginContainer/MarginContainer/VBoxContainer/MarginContainer/ResponseSection/scroll/MarginContainer/ResponsesMenu" instance=ExtResource("7_fyuv7")]
 unique_name_in_owner = true
 layout_mode = 2
 icon = null
@@ -180,6 +190,6 @@ unique_name_in_owner = true
 one_shot = true
 
 [connection signal="finished_typing" from="MarginContainer/MarginContainer/VBoxContainer/Balloon/MarginContainer/HBoxContainer/VBoxContainer/DialogueLabel" to="." method="_on_dialogue_label_finished_typing"]
-[connection signal="finished_typing" from="MarginContainer/MarginContainer/VBoxContainer/Balloon/MarginContainer/HBoxContainer/VBoxContainer/DialogueLabel" to="MarginContainer/MarginContainer/VBoxContainer/ResponseSection/scroll/MarginContainer/ResponsesMenu" method="_on_dialogue_label_finished_typing"]
+[connection signal="finished_typing" from="MarginContainer/MarginContainer/VBoxContainer/Balloon/MarginContainer/HBoxContainer/VBoxContainer/DialogueLabel" to="MarginContainer/MarginContainer/VBoxContainer/MarginContainer/ResponseSection/scroll/MarginContainer/ResponsesMenu" method="_on_dialogue_label_finished_typing"]
 [connection signal="gui_input" from="MarginContainer/MarginContainer/VBoxContainer/Balloon/SkipTyping" to="." method="_on_balloon_gui_input"]
-[connection signal="response_selected" from="MarginContainer/MarginContainer/VBoxContainer/ResponseSection/scroll/MarginContainer/ResponsesMenu" to="." method="_on_responses_menu_response_selected"]
+[connection signal="response_selected" from="MarginContainer/MarginContainer/VBoxContainer/MarginContainer/ResponseSection/scroll/MarginContainer/ResponsesMenu" to="." method="_on_responses_menu_response_selected"]

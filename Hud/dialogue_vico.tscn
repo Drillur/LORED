@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://egwjm66ccqku"]
+[gd_scene load_steps=10 format=3 uid="uid://bbekv6oufd3al"]
 
 [ext_resource type="Script" path="res://Hud/dialogue_vico.gd" id="1_55fkl"]
 [ext_resource type="Texture2D" uid="uid://jbcyavxupodp" path="res://Sprites/reactions/Test.png" id="1_ntjq3"]

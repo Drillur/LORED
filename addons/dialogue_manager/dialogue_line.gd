@@ -1,5 +1,6 @@
 ## A line of dialogue returned from [code]DialogueManager[/code].
-class_name DialogueLine extends RefCounted
+class_name DialogueLine
+extends RefCounted
 
 
 const _DialogueConstants = preload("./constants.gd")
@@ -23,6 +24,7 @@ var character_replacements: Array[Dictionary] = []
 ## The dialogue being spoken.
 var text: String = "":
 	set(val):
+		
 		while "{LORED:" in val:
 			var lored_key = val.split("{LORED:")[1].split("}")[0]
 			var lored_name = lv.get_colored_name(LORED.Type[lored_key])
@@ -69,7 +71,7 @@ func _init(data: Dictionary = {}) -> void:
 		next_id = data.next_id
 		type = data.type
 		extra_game_states = data.extra_game_states
-
+		
 		match type:
 			_DialogueConstants.TYPE_DIALOGUE:
 				character = data.character
@@ -82,7 +84,6 @@ func _init(data: Dictionary = {}) -> void:
 				inline_mutations = data.inline_mutations
 				time = data.time
 				tags = data.tags
-
 			_DialogueConstants.TYPE_MUTATION:
 				mutation = data.mutation
 

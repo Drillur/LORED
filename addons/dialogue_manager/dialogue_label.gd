@@ -77,12 +77,6 @@ func _process(delta: float) -> void:
 			self.is_typing = false
 
 
-func _unhandled_input(event: InputEvent) -> void:
-	if is_typing and visible_ratio < 1 and event.is_action_pressed(skip_action):
-		get_viewport().set_input_as_handled()
-		skip_typing()
-
-
 ## Start typing out the text
 func type_out() -> void:
 	text = dialogue_line.text

@@ -12,12 +12,90 @@ COAL: [[Don't mind me! Just diggin' around!|Sure do love me some diggin!|Dig, di
 ~ what_is_fuel
 COAL: Dude! Don't you have a car or something? What about a phone? Lots of things need fuel. So do we! Duh! My fuel is {{wa.get_icon_and_name_text(Currency.Type.COAL)}}, which is convenient because that's what I produce!
 - What happens if you run out of fuel?
-	COAL: Tee hee! There's a secret about that! Actually, nobody can take any  {{wa.get_icon_and_name_text(Currency.Type.COAL)}} if I have less than 50% fuel! You could say I'm a pretty important guy.
+	COAL: Tee hee! There's a secret about that! Actually, nobody can take any {{wa.get_icon_and_name_text(Currency.Type.COAL)}} if I have less than 50% fuel! You could say I'm a pretty important guy.
 	- What if other LOREDs run out of fuel?
 		COAL: Oh, then they just can't do anything. Suckers.
 		- Yeah, what a bunch of suckers!
 			COAL: Yeah, man!!!
 			- [b]Yeah!!!!!![/b] => END
+			- But how does fuel work?
+				=> how_does_fuel_work
+- But how does fuel work?
+	=> how_does_fuel_work
+
+~ how_does_fuel_work
+COAL: Oh, well... We all have our own fuel drain rate! Mine is {{DialogueManager.get_coal_fuel()}} per second. So when I start working a job, I will lose that much fuel multiplied by the duration of the job! Get it?
+- Yes.
+	COAL: Great! Glad we had this chat. ... Bye. => END
+- No.
+	COAL: Okay, how about an example?
+	COAL: Pretend I am a cell phone! Your cell phone, in fact! And pretend that you just opened up TikTok, YouTube, Instagram, Video Editor, and Snapchat, [b]and[/b] you started screen-recording [b]and[/b] actual-recording at the same time too!
+	COAL: How screwed is your battery? All of those... ahem... [b]JOBS..?![/b] just used a bunch of [b]FUEL[/b]. PHONE FUEL!
+	COAL: GET IT NOW?
+	- Yes.
+		COAL: Good! Because I don't know what else I'd say to help you along here! Uh... Yeah, good job or whatever! Bye. => END
+	- No.
+		COAL: ... [wave amp=20 freq=1]*Inhales deeply.*[/wave]
+		COAL: Fine. It's fine! My sole purpose right now is to get you to understand things about this game! And I certainly have the patience to make this a reality!
+		COAL: Certainly!
+		COAL: Okay, so... Uh... What exactly are you confused about?
+		- Can you just explain how it works like a normal tutorial?
+			COAL: Oh!
+			COAL: I didn't really think of that. ... Sure! I'll give it a shot!
+			COAL: *Clears throat.*
+			=>< actual_fuel_tutorial
+			COAL: Do you get it now?
+			- Yes.
+				COAL: Oh. Really? Neat! So... so do you think I should have just tried to act like a regular tutorial from the very beginning?
+				- Yes.
+					COAL: Oh, what do you know? Just be happy with your new knowledge and let me dig some holes!
+					- Okay, bye. => END!
+				- No. What matters is that we finally got there in the end!
+					COAL: Hee hee hee! Yeah!
+					=> END
+			- No.
+				COAL: I had a feeling you might say that.
+				COAL: My advice to you is to click the star buttons as often as you can, repeatedly. Make sure {{wa.get_icon_and_name_text(Currency.Type.COAL)}} net output is positive. And... just... leave me alone.
+				COAL: Good luck!
+				=> END
+		- I just don't know what fuel is at all.
+			COAL: Oh! Well! Then let me explain! Fuel in the real world is a material such as coal, gas, or oil that is burned to produce heat or power! Like, your car burns petroleum--[b]fuel[/b]--to produce power.
+			COAL: That makes your car go vroomy vroomy. Another example of fuel is... let's say... your continued ignorance of fuel! That is [b]FUEL[/b] for my [b]ANGER[/b]! Does that make sense?
+			COAL: I... oh, boy... Okay, so, if I can now just assume you have a basic understanding of fuel in the real world, I will then believe in your ability to suspend your disbelief that fuel can exist in fictional realities, too.
+			COAL: Okay?
+			COAL: {{wa.get_icon_and_name_text(Currency.Type.COAL)}} is a type of [b]FUEL[/b] in this game. I produce {{wa.get_icon_and_name_text(Currency.Type.COAL)}}. I even use {{wa.get_icon_and_name_text(Currency.Type.COAL)}} as fuel. {LORED:STONE} uses {{wa.get_icon_and_name_text(Currency.Type.COAL)}} as fuel, too.
+			COAL: We [b]BURN FUEL[/b] to then [b]WORK JOBS[/b]. If we have insufficient [b]FUEL[/b], we may not [b]WORK JOBS[/b].
+			COAL: Oh, you know what I should have said from the very start?!
+			COAL: [shake rate=20 level=10]IF YOU RUN OUT OF FUEL, YOU CAN'T PLAY THE GAME ANYMORE.[/shake] [b]SO DON'T RUN OUT OF FUEL!!![/b]
+			COAL: [shake rate=20 level=10]I DON'T EVEN CARE IF YOU UNDERSTAND ANYMORE, JUST CLICK THE SHINY BUTTONS AND YOU WILL BE FINE!!![/shake]
+			COAL: [shake rate=20 level=10]*Panting.*[/shake]
+			COAL: Get it now?
+			- Yes.
+				COAL: Thank freaking gawd.
+				COAL: If I ever hear the word [b]fuel[/b] again, it will be too soon. 
+				COAL: Now please leave me alone. => END
+			- No.
+				[shake rate=20 level=10]COAL[/shake]: [shake rate=20 level=10]YOU ARE ABSOLUTELY KIDDING ME!!![/shake]
+				COAL: THERE IS NO WAY YOU ARE SERIOUS!!! DUDE!!!!!
+				COAL: THERE AIN'T NO GAWT-DAYUMED WAY IN GAWT-DAYUMED HAYL THAT YOU ARE BEING FOR REEEEEEEEEAL RIGHT NOW!!!
+				COAL: You're just goading me to see what I'll freaking [shake rate=20 level=10]SAY!!![/shake]
+				COAL: WELL I WON'T BE APART OF YOUR GAMES, YOU LITTLE FREAKO!!!
+				COAL: I grew up being [b]TROLLED[/b] by [b]CHILDREN[/b] on [b]CALL OF DUTY[/b], AND [shake rate=20 level=10]I TOLD MYSELF THAT THAT WOULD NEVER HAPPEN TO ME AGAIN!!!!!!!!!!!!!!!!!!!!!!!!!![/shake]
+				[shake rate=20 level=10]COAL[/shake]: [shake rate=20 level=10][b]I AM SO DONE WITH YOU!!! GOODBYE!!!!!!!!!!![/b][/shake]
+				=> END!
+
+~ actual_fuel_tutorial
+COAL: LOREDs require fuel to perform tasks. They will automatically pull resources from the available resource pool to use as fuel.
+COAL: In times of high fuel usage, it may be possible that LOREDs would be waiting around for their chance to grab fuel. To mitigate this and increase stability, each LORED has their own fuel storage.
+COAL: LOREDs will not load their fuel storage if it is greater than 50%. When it is below 50%, they will begin looking for a chance to load fuel, but it is not mandatory for them to do so as soon as possible.
+COAL: However, when they are below 15% fuel, they will have no choice but to wait for a chance to grab fuel from the available resource pool.
+COAL: If you find multiple LOREDs are at this point--awaiting {{wa.get_icon_and_name_text(Currency.Type.COAL)}} for example--it would be beneficial to upgrade... uh, me. Or whoever is producing the fuel resource you are low on.
+COAL: This feature is a great feature and everybody loves it.
+COAL: Do you want to hear that explanation again?
+- Yes.
+	=> actual_fuel_tutorial
+- No.
+	=> END
 
 ~ STONE
 STONE: [[Lalala~!|Hrk!|Oh, you spooked me!]]

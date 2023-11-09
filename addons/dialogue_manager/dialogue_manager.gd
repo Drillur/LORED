@@ -1345,3 +1345,8 @@ func resolve_color_method(color: Color, method_name: String, args: Array):
 			return color.to_rgba32()
 		"to_rgba64":
 			return color.to_rgba64()
+
+
+
+func get_coal_fuel() -> String:
+	return lv.get_lored(LORED.Type.COAL).fuel_cost.get_text()
