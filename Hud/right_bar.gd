@@ -38,7 +38,6 @@ enum Tabs { LORED, }
 @onready var autobuyer = %Autobuyer
 @onready var lored_affordable_check = %"LORED Affordable Check"
 @onready var lored_level = %"LORED Level"
-@onready var lored_level_2 = %"Lored level 2"
 @onready var lored_output = %"LORED output"
 @onready var lored_input = %"LORED input"
 @onready var lored_haste = %"LORED haste"
@@ -283,7 +282,6 @@ func lored_affordable_changed() -> void:
 
 func lored_level_changed() -> void:
 	lored_level.text = "Level [b]%s" % lored.get_level_text()
-	lored_level_2.text = "[center]" + lored.get_level_text()
 
 
 func lored_output_changed() -> void:

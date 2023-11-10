@@ -33,6 +33,7 @@ func _init(_type: Type, _lored: LORED) -> void:
 			object.output.changed.connect(WITCH_update_output)
 			object.haste.changed.connect(WITCH_update_tick_rate)
 			stacks.changed.connect(WITCH_update_output)
+			up.get_upgrade(Upgrade.Type.GRIMOIRE).purchased.changed.connect(WITCH_update_output)
 			gv.prestiged.connect(WITCH_add_rate)
 			
 			witch_output = WITCH_get_output()
@@ -71,6 +72,8 @@ func WITCH_update_output() -> void:
 
 func WITCH_get_output() -> Big:
 	var base = object.get_primary_rate()
+	if up.is_upgrade_purchased(Upgrade.Type.GRIMOIRE):
+		base.m(max(1, gv.stage1.times_reset))
 	return base.m(5).powerInt(stacks.get_value())
 
 

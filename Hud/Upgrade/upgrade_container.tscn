@@ -1,15 +1,16 @@
-[gd_scene load_steps=11 format=3 uid="uid://dlt6lvasr6c46"]
+[gd_scene load_steps=12 format=3 uid="uid://dlt6lvasr6c46"]
 
 [ext_resource type="Theme" uid="uid://b8t7tkhvril5g" path="res://Theme/Standard.tres" id="1_nf00e"]
 [ext_resource type="Script" path="res://Hud/Upgrade/upgrade_container.gd" id="1_t6e5m"]
 [ext_resource type="Theme" uid="uid://bl4v2v143rihi" path="res://Theme/Background.tres" id="1_wef1c"]
 [ext_resource type="PackedScene" uid="uid://bvb7sgyflbxkp" path="res://Hud/Upgrade/upgrade_vico.tscn" id="2_enitg"]
 [ext_resource type="Theme" uid="uid://8dmfgxdrr5yh" path="res://Theme/Title.tres" id="3_l07lh"]
+[ext_resource type="PackedScene" uid="uid://dowun7x403k8u" path="res://Hud/Header.tscn" id="4_fb0co"]
 [ext_resource type="Texture2D" uid="uid://cu1jwsvhvsxfn" path="res://Sprites/Hud/Tab/s1n.png" id="6_rp56p"]
 [ext_resource type="Texture2D" uid="uid://bdpxtltnk88hw" path="res://Sprites/Hud/Tab/s1m.png" id="7_d5yiu"]
-[ext_resource type="PackedScene" uid="uid://c0518n1uf8jt2" path="res://Hud/text_button.tscn" id="8_f0t26"]
 [ext_resource type="Texture2D" uid="uid://ddqh8qp3j67w6" path="res://Sprites/Hud/Tab/s2n.png" id="8_s38y8"]
 [ext_resource type="Texture2D" uid="uid://bvc8ucj014dpj" path="res://Sprites/Hud/Tab/s2m.png" id="9_phk4l"]
+[ext_resource type="PackedScene" uid="uid://bfi0uovwegdxj" path="res://Hud/MenuButton.tscn" id="12_wr36q"]
 
 [node name="Upgrade Container" type="MarginContainer"]
 custom_minimum_size = Vector2(424, 500)
@@ -31,6 +32,7 @@ layout_mode = 2
 theme_override_constants/separation = 0
 
 [node name="Title" type="MarginContainer" parent="MarginContainer/VBoxContainer"]
+visible = false
 layout_mode = 2
 
 [node name="title bg" type="Panel" parent="MarginContainer/VBoxContainer/Title"]
@@ -68,6 +70,11 @@ bbcode_enabled = true
 text = "[i][b]24[/b]/28"
 fit_content = true
 autowrap_mode = 0
+
+[node name="Header" parent="MarginContainer/VBoxContainer" instance=ExtResource("4_fb0co")]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Normal Upgrades"
 
 [node name="Tabs" type="TabContainer" parent="MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
@@ -293,7 +300,6 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 theme = ExtResource("1_nf00e")
-scroll_vertical = 100
 horizontal_scroll_mode = 0
 
 [node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/Tabs/W/ScrollContainer1"]
@@ -1723,17 +1729,14 @@ unique_name_in_owner = true
 layout_mode = 2
 theme = ExtResource("3_l07lh")
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/Prestige"]
-modulate = Color(0.482353, 0.247059, 0, 1)
-layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
-
-[node name="Prestige Button" parent="MarginContainer/VBoxContainer/Prestige/MarginContainer" instance=ExtResource("8_f0t26")]
+[node name="Prestige Button" parent="MarginContainer/VBoxContainer/Prestige" instance=ExtResource("12_wr36q")]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(36, 56)
 layout_mode = 2
+icon = null
+text = "Metastasize"
+color = Color(0, 0, 0, 1)
+center_content = true
 
 [node name="Control" type="Control" parent="."]
 layout_mode = 2

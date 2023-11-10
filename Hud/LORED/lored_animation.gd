@@ -3,6 +3,13 @@ extends AnimatedSprite2D
 
 
 
+enum DoNotModulateList {
+	DRAW_PLATE,
+	WIRE,
+}
+
+
+
 var lored: LORED
 var default_frames: SpriteFrames
 var animation_key := ""
@@ -19,17 +26,16 @@ func setup(_lored: LORED) -> void:
 #		default_flip_h = true
 #		flip_h = default_flip_h
 	animation_key = lored.key
-	
+	if not lored.key in DoNotModulateList:
+		modulate = lored.details.alt_color
 	sleep()
 
 
 func resize() -> void:
 	if animation_key in lv.SMALLER_ANIMATIONS:
 		scale = Vector2(2, 2)
-		#flip_h = default_flip_h
 	else:
 		scale = Vector2(0.5, 0.5)
-		#flip_h = false
 
 
 
@@ -57,3 +63,4 @@ func sleep() -> void:
 	resize()
 	speed_scale = 1
 	play("ww")
+

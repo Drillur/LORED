@@ -3229,13 +3229,10 @@ func init_RED_NECROMANCY() -> void:
 
 func init_UPGRADE_DESCRIPTION() -> void:
 	details.name = "upgrade_description"
-	var a = gv.get_stage(1).details.colored_name
-	var b = gv.get_stage(2).details.colored_name
-	details.description = "Reduces the cost incresase of %s and %s" % [a, b] + " LOREDs by 10%, but increases their [b]maximum fuel[/b] and [b]fuel cost[/b] by 1,000%."
+	var test = gv.get_stage(2)
+	var text = test.details.colored_name
+	details.description = "Increases the output and input [b]increase[/b] of " + text + " LOREDs by 10%, but also increases their [b]maximum fuel[/b] and [b]fuel cost[/b] by 1,000%."
 	set_effect(UpgradeEffect.Type.UPGRADE_NAME)
-	details.icon = gv.get_stage_icon(2)
-	details.color = gv.get_stage_color(2)
-	add_effected_stage(1)
 	add_effected_stage(2)
 	cost = Cost.new({
 		Currency.Type.MALIGNANCY: Value.new("1e24"),

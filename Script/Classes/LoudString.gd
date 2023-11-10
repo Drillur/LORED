@@ -34,3 +34,7 @@ func set_to(val: String) -> void:
 
 func get_value() -> String:
 	return current
+
+
+func get_text() -> String:
+	return current

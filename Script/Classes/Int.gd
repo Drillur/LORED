@@ -65,6 +65,11 @@ func divide(amount) -> void:
 
 # - Get
 
+
+func get_text() -> String:
+	return text
+
+
 func get_value() -> int:
 	return current
 

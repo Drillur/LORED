@@ -19,10 +19,11 @@ var read_sections := []
 # - Action
 
 
-func mark_section_read(section_key: String) -> void:
+func mark_section_read(section_key: String) -> String:
 	var section: Section = Section[section_key]
 	if not section in read_sections:
 		read_sections.append(section)
+	return ""
 
 
 

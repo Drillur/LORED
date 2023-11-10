@@ -7,7 +7,6 @@ extends MarginContainer
 
 func load_finished() -> void:
 	visible = lored.unlocked.get_value()
-	lored_leveled_up()
 
 
 func load_started() -> void:
@@ -36,6 +35,7 @@ func load_started() -> void:
 @onready var level_up_texts = %"Level Up Texts"
 @onready var fuel_background = %"Fuel Background"
 @onready var details = %Details
+@onready var level = %Level
 
 signal lored_details_requested(lored)
 
@@ -73,6 +73,7 @@ func _ready():
 	active_buffs.hide()
 	view_special.hide()
 	sleep.hide()
+	level.hide()
 	
 	sleep_text_timer.connect("timeout", spew_sleep_text)
 	sleep_text_timer.connect("timeout", start_spewing_sleep_text)
@@ -93,8 +94,8 @@ func attach_lored(_lored: LORED) -> void:
 	
 	# signals
 	gv.prestige.connect(prestige)
-	lored.level.changed.connect(lored_leveled_up)
-	lored.level.changed.connect(flash_on_level_up)
+	lored.level.changed.connect(level_changed)
+	lored.level.increased.connect(level_increased)
 	lored.cost.affordable.connect_and_call("changed", cost_update)
 	level_up.button.connect("pressed", purchase_level_up)
 	sleep.button.connect("pressed", sleep_clicked)
@@ -138,10 +139,10 @@ func attach_lored(_lored: LORED) -> void:
 	view_special.color = lored.details.alt_color
 	level_up.color = lored.details.alt_color
 	details.modulate = lored.details.color
+	level.modulate = lored.details.color
 	
 	active_buffs.button.mouse_default_cursor_shape = Control.CURSOR_ARROW
 	animation.setup(lored)
-	animation.modulate = lored.details.alt_color
 	level_up.show_check() if lored.cost.affordable.is_true() else level_up.hide_check()
 	currency.hide_threshold()
 	lored_name.text = lored.details.name + ", " + lored.details.get_title()
@@ -206,33 +207,37 @@ func unlocked_changed() -> void:
 
 
 func purchased_changed() -> void:
-	var purchased = lored.purchased.get_value()
-	if not purchased:
-		stop_progress_bar()
-		active_buffs.hide()
-		view_special.hide()
-		#currency.hide()
-	else:
+	if lored.purchased.is_true():
 		name_and_icon.hide()
 		currency.show()
 		if lv.sleep_unlocked.is_true():
 			sleep.show()
+		level.show()
+	else:
+		stop_progress_bar()
+		active_buffs.hide()
+		view_special.hide()
+		level.hide()
 
 
-func lored_leveled_up() -> void:
-	if not lored.last_purchase_forced and Engine.get_frames_per_second() >= 60:
-		
-		var text = FlyingText.new(
-			FlyingText.Type.LEVEL_UP,
-			level_up_texts,
-			level_up_texts,
-			[0, 0],
-		)
-		text.add({
-			"lored": lored.type,
-		})
-		text.go()
+func level_changed() -> void:
+	level.text = "[font_size=8]LV [font_size=12]%s" % lored.level.get_text()
 
+
+func level_increased() -> void:
+	if Engine.get_frames_per_second() >= 60:
+		gv.flash(self, lored.details.color)
+		if not lored.last_purchase_forced:
+			var text = FlyingText.new(
+				FlyingText.Type.LEVEL_UP,
+				level_up_texts,
+				level_up_texts,
+				[0, 0],
+			)
+			text.add({
+				"lored": lored.type,
+			})
+			text.go()
 
 
 func job_completed() -> void:
@@ -303,10 +308,6 @@ func job_cut_short() -> void:
 
 func flash_level_up_button() -> void:
 	gv.flash(level_up, Color(0, 1, 0))
-
-
-func flash_on_level_up() -> void:
-	gv.flash(self, lored.details.color)
 
 
 func sleep_lock() -> void:

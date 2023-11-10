@@ -8,4 +8,22 @@ res://Scene/Root.gd
 res://Theme/Background.tres
 res://Theme/ShadowText.tres
 res://Theme/Title.tres
+res://Scene/Root.tscn
+res://Hud/LORED/lored_container.tscn
+res://Hud/Upgrade/Upgrade Effect Widget.tscn
+res://Hud/Price.tscn
+res://Hud/LORED/lored_vico.tscn
+res://Hud/right_bar.tscn
+res://Hud/Menu/settings.tscn
+res://Hud/dialogue_vico.tscn
+res://Script/Classes/Buff/LOREDBuff.gd
+res://Script/Classes/Upgrades/Upgrade.gd
+res://Hud/LORED/lored_animation.gd
+res://Hud/LORED/lored_vico.gd
 res://Script/Dialogues/DialogueHandbook.gd
+res://Script/Classes/Int.gd
+res://Hud/right_bar.gd
+res://Hud/Upgrade/upgrade_container.tscn
+res://Hud/Upgrade/upgrade_container.gd
+res://Script/Classes/LoudString.gd
+res://Hud/MenuButton.tscn

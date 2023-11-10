@@ -3,12 +3,12 @@ extends MarginContainer
 
 
 
+@onready var header = %Header
 @onready var right_down = %Right
 @onready var tabs = %Tabs
 @onready var bg = $bg
 @onready var title_bg = %"title bg"
 @onready var title = %Title
-@onready var count = %Count
 @onready var s1n = %S1N
 @onready var s1m = %S1M
 @onready var s2n = %S2N
@@ -23,7 +23,7 @@ extends MarginContainer
 @onready var scroll_container_7 = %ScrollContainer7
 @onready var prestige_container = %Prestige
 @onready var prestige_bg = %"prestige bg"
-@onready var prestige_button = %"Prestige Button" as TextButton
+@onready var prestige_button = %"Prestige Button" as _MenuButton
 
 signal upgrade_menu_tab_changed(tab)
 
@@ -34,8 +34,11 @@ var color: Color:
 		tabs.add_theme_color_override("font_selected_color", color)
 		title_bg.modulate = color
 		prestige_bg.modulate = color
-		count.modulate = color
-		prestige_button.color = color
+		header.color = color
+		#prestige_button.color = color
+
+var count_text := LoudString.new("")
+var title_text := LoudString.new("Upgrades")
 
 
 
@@ -49,6 +52,9 @@ func _ready():
 	prestige_button.mouse_entered.connect(show_prestige_tooltip)
 	prestige_button.mouse_exited.connect(gv.clear_tooltip)
 	prestige_button.pressed.connect(prestige)
+	
+	count_text.changed.connect(count_or_tab_changed)
+	title_text.changed.connect(count_or_tab_changed)
 	
 	
 	for i in UpgradeMenu.Type.size():
@@ -79,9 +85,9 @@ func _on_tab_changed(tab):
 	gv.clear_tooltip()
 	set_count_text()
 	if not up.is_upgrade_menu_unlocked(UpgradeMenu.Type.MALIGNANT):
-		title.text = "Upgrades"
+		title_text.set_to("[center]Upgrades")
 	else:
-		title.text = up.get_menu_name(tab)
+		title_text.set_to("[center]" + up.get_menu_name(tab))
 	if tab in [1,3,5,7]:
 		prestige_container.show()
 		prestige_button.text = up.get_prestige_name(tab)
@@ -99,11 +105,11 @@ func _on_resized():
 func _on_visibility_changed():
 	if visible:
 		gv.clear_tooltip()
-	
 
 
 
 # - Signal
+
 
 func update_count(type: int) -> void:
 	if up.get_upgrade(type).upgrade_menu == tabs.current_tab:
@@ -114,9 +120,14 @@ func show_prestige_tooltip() -> void:
 	gv.new_tooltip(gv.Tooltip.PRESTIGE_TOOLTIP, right_down, {"menu": tabs.current_tab})
 
 
+func count_or_tab_changed() -> void:
+	header.text = title_text.get_value() + "\n" + count_text.get_value()
+
+
 
 
 # - Actions
+
 
 func select_tab(tab: int) -> void:
 	tabs.current_tab = tab
@@ -129,7 +140,7 @@ func set_count_text() -> void:
 	if cur_menu == UpgradeMenu.Type.MALIGNANT:
 		total_upgrades -= 1
 		cur_upgrades = min(cur_upgrades, total_upgrades)
-	count.text = "[i][b]" + str(cur_upgrades) + "[/b]/" + str(total_upgrades)
+	count_text.set_to("[i][b]" + str(cur_upgrades) + "[/b]/" + str(total_upgrades))
 
 
 

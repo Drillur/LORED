@@ -11,6 +11,7 @@ signal pressed
 @onready var button = $Button
 @onready var label = %Label
 @onready var texts = $Texts
+@onready var h_box = %HBox
 
 @export var icon: Texture2D
 @export var text: String:
@@ -33,6 +34,8 @@ signal pressed
 		if val == Color.BLACK:
 			label.modulate = val
 
+@export var center_content := false
+
 @export var display_node: Node
 @export var drop_down: Node
 
@@ -52,6 +55,9 @@ func _ready():
 	if (get_parent().name == "Save" or "Save" in name) and color == Color.WHITE:
 		await SaveManager.save_color_changed
 		color = SaveManager.save_file_color
+	
+	if center_content:
+		h_box.alignment = HBoxContainer.ALIGNMENT_CENTER
 
 
 
@@ -118,4 +124,3 @@ func set_text_visibility(val: bool) -> void:
 
 func set_color(val: Color) -> void:
 	color = val
-
