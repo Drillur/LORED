@@ -29,6 +29,9 @@ func _ready():
 	for cur in Currency.Type.values():
 		currency[cur] = Currency.new(cur)
 		currency_by_key[currency[cur].key] = currency[cur]
+	for flower in Flowers.Type.values():
+		currency[flower] = Currency.new(flower)
+		currency_by_key[currency[flower].key] = currency[flower]
 	for cur in currency.keys():
 		gv.add_currency_to_stage(get_currency_stage(cur), cur)
 	

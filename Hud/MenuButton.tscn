@@ -26,7 +26,6 @@ offset_bottom = 36.0
 script = ExtResource("1_pwhdq")
 icon = ExtResource("2_rnf1g")
 text = "Menu"
-center_content = null
 
 [node name="Button" type="Button" parent="."]
 layout_mode = 2

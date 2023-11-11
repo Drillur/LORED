@@ -483,9 +483,10 @@ func _on_dev_1_pressed():
 	close_menu()
 	dialogue_balloon.start(res.get_resource("chat_stage1and2"), "STONE")
 
-
+var i = 0
 func _on_dev_2_pressed():
-	up.routine.test()
+	Flowers.DEBUG__test_tier_weight(i)
+	i += 1
 
 
 func _on_dev_3_pressed():

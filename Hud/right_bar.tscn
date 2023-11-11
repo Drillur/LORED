@@ -113,7 +113,6 @@ layout_mode = 2
 icon = ExtResource("2_84lg0")
 text = "Carl"
 color = Color(0, 0, 0, 1)
-center_content = null
 
 [node name="Menu Contents" type="MarginContainer" parent="MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(200, 0)
@@ -365,7 +364,6 @@ unique_name_in_owner = true
 layout_mode = 2
 icon = ExtResource("10_vmuff")
 text = "Level Up"
-center_content = null
 
 [node name="MarginContainer2" type="MarginContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/MarginContainer/Tabs/LORED Content/VBoxContainer/Interaction/MarginContainer/VBoxContainer/Level Up"]
 layout_mode = 2
@@ -412,14 +410,12 @@ unique_name_in_owner = true
 layout_mode = 2
 icon = ExtResource("11_o4u6j")
 text = "Sleep"
-center_content = null
 
 [node name="Chat" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/MarginContainer/Tabs/LORED Content/VBoxContainer/Interaction/MarginContainer/VBoxContainer" instance=ExtResource("1_dq02i")]
 unique_name_in_owner = true
 layout_mode = 2
 icon = ExtResource("13_lp1jp")
 text = "Chat"
-center_content = null
 
 [node name="Attributes Section" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Menu Contents/Scroll/MarginContainer/Tabs/LORED Content/VBoxContainer"]
 unique_name_in_owner = true

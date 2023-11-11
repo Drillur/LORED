@@ -111,7 +111,6 @@ unique_name_in_owner = true
 layout_mode = 2
 icon = null
 text = "1. (Close Chat) Oh, I see."
-center_content = null
 
 [node name="Balloon" type="MarginContainer" parent="MarginContainer/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true

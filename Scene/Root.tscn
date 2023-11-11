@@ -175,7 +175,6 @@ custom_minimum_size = Vector2(36, 42)
 layout_mode = 2
 text = "GameName"
 color = Color(0, 0, 0, 1)
-center_content = null
 
 [node name="Control" type="Control" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/MarginContainer2/MarginContainer/Menu Button"]
 visible = false
@@ -262,7 +261,6 @@ unique_name_in_owner = true
 layout_mode = 2
 icon = ExtResource("6_fxkih")
 text = "Wallet"
-center_content = null
 
 [node name="Control" type="Control" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game Section/Game/VBoxContainer/Wallet Button"]
 layout_mode = 2
@@ -283,7 +281,6 @@ unique_name_in_owner = true
 layout_mode = 2
 icon = ExtResource("6_sjgrn")
 text = "Upgrades"
-center_content = null
 
 [node name="Control" type="Control" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game Section/Game/VBoxContainer/Upgrades Button"]
 layout_mode = 2
@@ -305,28 +302,24 @@ unique_name_in_owner = true
 layout_mode = 2
 icon = ExtResource("6_lo011")
 text = "Stage 1"
-center_content = null
 
 [node name="Stage2" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game Section/Game/VBoxContainer" instance=ExtResource("4_3h2sv")]
 unique_name_in_owner = true
 layout_mode = 2
 icon = ExtResource("7_6y55p")
 text = "Stage 2"
-center_content = null
 
 [node name="Stage3" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game Section/Game/VBoxContainer" instance=ExtResource("4_3h2sv")]
 unique_name_in_owner = true
 layout_mode = 2
 icon = ExtResource("7_6y55p")
 text = "Stage 3"
-center_content = null
 
 [node name="Stage4" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game Section/Game/VBoxContainer" instance=ExtResource("4_3h2sv")]
 unique_name_in_owner = true
 layout_mode = 2
 icon = ExtResource("7_6y55p")
 text = "Stage 4"
-center_content = null
 
 [node name="Upgrade Section" type="VBoxContainer" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer"]
 unique_name_in_owner = true
@@ -430,28 +423,24 @@ unique_name_in_owner = true
 layout_mode = 2
 icon = ExtResource("10_mipnr")
 text = "Save Now"
-center_content = null
 
 [node name="Load Game" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save Section/Save/Save" instance=ExtResource("4_3h2sv")]
 unique_name_in_owner = true
 layout_mode = 2
 icon = ExtResource("15_bxrvx")
 text = "Load"
-center_content = null
 
 [node name="Export Save" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save Section/Save/Save" instance=ExtResource("4_3h2sv")]
 unique_name_in_owner = true
 layout_mode = 2
 icon = ExtResource("12_bqm8u")
 text = "Export"
-center_content = null
 
 [node name="New Game" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save Section/Save/Save" instance=ExtResource("4_3h2sv")]
 unique_name_in_owner = true
 layout_mode = 2
 icon = ExtResource("10_8u1ic")
 text = "New Game"
-center_content = null
 
 [node name="Hard Reset" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save Section/Save/Save" instance=ExtResource("4_3h2sv")]
 unique_name_in_owner = true
@@ -459,7 +448,6 @@ layout_mode = 2
 icon = ExtResource("13_0l83t")
 text = "Hard Reset"
 color = Color(1, 0, 0, 1)
-center_content = null
 
 [node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save Section/Save/Save"]
 layout_mode = 2
@@ -474,21 +462,18 @@ unique_name_in_owner = true
 layout_mode = 2
 icon = ExtResource("12_st5ae")
 text = "Set Color"
-center_content = null
 
 [node name="Rename Save Button" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save Section/Save/Save/MarginContainer/Save" instance=ExtResource("4_3h2sv")]
 unique_name_in_owner = true
 layout_mode = 2
 icon = ExtResource("13_6v2xt")
 text = "Rename"
-center_content = null
 
 [node name="Duplicate Save Button" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save Section/Save/Save/MarginContainer/Save" instance=ExtResource("4_3h2sv")]
 unique_name_in_owner = true
 layout_mode = 2
 icon = ExtResource("14_5312t")
 text = "Duplicate"
-center_content = null
 
 [node name="Delete Save Button" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save Section/Save/Save/MarginContainer/Save" instance=ExtResource("4_3h2sv")]
 unique_name_in_owner = true
@@ -496,7 +481,6 @@ layout_mode = 2
 icon = ExtResource("15_s64ty")
 text = "Delete"
 color = Color(1, 0, 0, 1)
-center_content = null
 
 [node name="Cheat Section" type="VBoxContainer" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer"]
 unique_name_in_owner = true
@@ -546,25 +530,21 @@ fit_content = true
 layout_mode = 2
 icon = ExtResource("23_6kk07")
 text = "EXAMPLE DIAGLUE"
-center_content = null
 
 [node name="Dev2" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Cheat Section/Cheat/VBoxContainer" instance=ExtResource("4_3h2sv")]
 layout_mode = 2
 icon = ExtResource("27_jvurx")
-text = "Test Routine"
-center_content = null
+text = "Test Tier Rolling"
 
 [node name="Dev3" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Cheat Section/Cheat/VBoxContainer" instance=ExtResource("4_3h2sv")]
 layout_mode = 2
 icon = ExtResource("26_n0q24")
 text = "LB Level Up"
-center_content = null
 
 [node name="Dev4" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Cheat Section/Cheat/VBoxContainer" instance=ExtResource("4_3h2sv")]
 layout_mode = 2
 icon = ExtResource("28_6ie80")
 text = "Add Malig"
-center_content = null
 
 [node name="Meta Section" type="VBoxContainer" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer"]
 unique_name_in_owner = true
@@ -609,7 +589,6 @@ layout_mode = 2
 icon = ExtResource("12_34j7m")
 text = "Settings"
 color = Color(0.137255, 0.698039, 0.552941, 1)
-center_content = null
 display_node = NodePath("../../../../../../../../../../../Settings")
 
 [node name="Statistics Button" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Meta Section/Meta/VBoxContainer" instance=ExtResource("4_3h2sv")]
@@ -618,7 +597,6 @@ layout_mode = 2
 icon = ExtResource("25_ops5o")
 text = "Statistics"
 color = Color(0.74902, 0.639216, 0.0352941, 1)
-center_content = null
 
 [node name="Patch Notes Button" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Meta Section/Meta/VBoxContainer" instance=ExtResource("4_3h2sv")]
 unique_name_in_owner = true
@@ -626,7 +604,6 @@ layout_mode = 2
 icon = ExtResource("24_qdxv7")
 text = "Patch Notes"
 color = Color(0.996078, 0.443137, 0.172549, 1)
-center_content = null
 
 [node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Meta Section/Meta/VBoxContainer"]
 layout_mode = 2
@@ -641,34 +618,29 @@ layout_mode = 2
 icon = ExtResource("22_ejl1s")
 text = "Discord"
 color = Color(0.345098, 0.396078, 0.94902, 1)
-center_content = null
 
 [node name="Itchio" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Meta Section/Meta/VBoxContainer/MarginContainer/VBoxContainer" instance=ExtResource("4_3h2sv")]
 layout_mode = 2
 icon = ExtResource("23_mvmsj")
 text = "Itch.io"
 color = Color(0.980392, 0.360784, 0.360784, 1)
-center_content = null
 
 [node name="Steam" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Meta Section/Meta/VBoxContainer/MarginContainer/VBoxContainer" instance=ExtResource("4_3h2sv")]
 layout_mode = 2
 icon = ExtResource("24_ila10")
 text = "Steam"
-center_content = null
 
 [node name="Godot" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Meta Section/Meta/VBoxContainer/MarginContainer/VBoxContainer" instance=ExtResource("4_3h2sv")]
 layout_mode = 2
 icon = ExtResource("24_u1xhr")
 text = "Godot Engine"
 color = Color(0.345098, 0.654902, 0.862745, 1)
-center_content = null
 
 [node name="Save and Quit" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer" instance=ExtResource("4_3h2sv")]
 unique_name_in_owner = true
 layout_mode = 2
 icon = ExtResource("10_mipnr")
 text = "Save and Quit"
-center_content = null
 
 [node name="Control" type="Control" parent="HBoxContainer/Back/Overlay/Sidebar"]
 layout_mode = 2
@@ -784,4 +756,5 @@ unique_name_in_owner = true
 [connection signal="pressed" from="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game Section/Game/VBoxContainer/Stage3" to="." method="_on_stage_3_pressed"]
 [connection signal="pressed" from="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Game Section/Game/VBoxContainer/Stage4" to="." method="_on_stage_4_pressed"]
 [connection signal="pressed" from="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Cheat Section/Cheat/VBoxContainer/Dev1" to="." method="_on_dev_1_pressed"]
+[connection signal="pressed" from="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Cheat Section/Cheat/VBoxContainer/Dev2" to="." method="_on_dev_2_pressed"]
 [connection signal="pressed" from="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Save and Quit" to="." method="_on_save_and_quit_pressed"]

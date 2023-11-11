@@ -46,10 +46,162 @@ enum Type {
 	EMBRYO,
 	TUMORS,
 	
+	# -------
+	# Stage 3 
+	
 	FLOWER_SEED,
 	MANA,
 	BLOOD,
 	SPIRIT,
+	
+	# Flowers
+	
+	NEBULA_NECTAR, # - - - 5
+	MOONLIGHT_BLOSSOM, # produces mana
+	BLOODROOT, # produces blood
+	MALIGNANT_MAGNOLIA, # produces 
+	STARDUST_ORCHID,
+	CELESTIA_ROSE,
+	TWILIGHT_DAISY,
+	EMBER_TULIP,
+	PHOENIX_PETAL,
+	QUEEN_OF_THE_NIGHT,
+	RADIANT_DAHLIA,
+	STARLILY,
+	BLACK_ROSE,
+	STARFIRE_SUNFLOWER,
+	SLIPPER_GINGER,
+	CHOCOLATE_COSMOS,
+	CORPSE_LILY,
+	ENCHANTED_IRIS,
+	SHIMMERING_ROSE,
+	ENIGMA_DAFFODIL,
+	FROSTFIRE_SNAP,
+	JADE_VINE,
+	TITAN_ARUM,
+	PETALWING_LILY,
+	GHOST_ORCHID, # - - - 4
+	CELESTIAL_ZINNIA,
+	SPARKLEFERN,
+	LUMINARA_STARLILY,
+	MOONFLOWER,
+	BLACK_ORCHID,
+	RAINBOW_EUCALYPTUS,
+	SERAPHINA_SPARKLEFERN,
+	EVERBLOOM,
+	FLAMINGO_FLOWER,
+	AMETHYST_LILY,
+	SAPPHIRE_POPPY,
+	EBONY_DAISY,
+	CRYSTAL_TWILIGHT_BLOSSOM,
+	EMBERGLADE,
+	VELVET_PANSY,
+	TRANQUIL_LILY,
+	WHISPERING_WISTERIA,
+	ASTRAL_PETUNIA,
+	IMPERIAL_IRIS,
+	DREAMLEAF_FERN,
+	MOONLIGHT_ORCHID, # - - - 3
+	RADIANT_ROSE,
+	DREAMSHADE,
+	AURORA_LILY,
+	SILVERBELL_BELLFLOWER,
+	CRYSTAL_LOTUS,
+	BLUE_PUYA,
+	MARBLE_TULIP,
+	JACARANDA,
+	ANGELIC_DAFFODIL,
+	ETERNAL_BLOSSOM,
+	PETALWISP,
+	FROSTBLOOM_JASMINE,
+	CELESTIAL_GLADIOLUS,
+	CHERRY_BLOSSOM,
+	WISPFLOWER,
+	PRISMATIC_IRIS,
+	VELVET_VIOLET,
+	OPALINE_PETUNIA,
+	ENCHANTED_CARNATION,
+	ROSE, # - - - 2
+	ORCHID,
+	LILY,
+	DAISY,
+	IRIS,
+	CARNATION,
+	PANSY,
+	CHRYSANTHEMUM,
+	GERBERA,
+	PEONY,
+	SNAPDRAGON,
+	LAVENDER,
+	LOTUS,
+	POPPY,
+	HIBISCUS,
+	DAFFODIL,
+	ZINNIA,
+	JASMINE,
+	LAVATERA,
+	STATICE,
+	PROTEA,
+	LISIANTHUS,
+	CAMELLIA,
+	RANUNCULUS,
+	FOXGLOVE,
+	WISTERIA, # - - - 1
+	YARROW,
+	GAILLARDIA,
+	SWEETPEA,
+	MORNING_GLORY,
+	PETUNIA,
+	GAZANIA,
+	MILKWEED,
+	PITCHER_PLANT,
+	COCKSCOMB,
+	PINCUSHION,
+	JACOBS_LADDER,
+	BABYS_BREATH,
+	BEE_BALM,
+	ROSEMARY,
+	SUNFLOWER,
+	DANDELION,
+	GERANIUM,
+	MARIGOLD,
+	TULIP,
+	VIOLET,
+	HYDRANGEA,
+	GINGER_ROOT,
+	RAGWORT, # - - - 0
+	GOOGRASS,
+	STINKWEED,
+	SNEEZEWEED,
+	BITTERWEED,
+	GOUTWEED,
+	SKUNK_CABBAGE,
+	DEADNETTLE,
+	KNAPWEED,
+	KNOTWEED,
+	SNOTWEED,
+	SCHLONKWEED,
+	POOPGRASS,
+	ASSGRASS,
+	PEEWEED,
+	BOOGERBLOSSOM,
+	HEMHORROID_HERB,
+	DONKY_DAISY,
+	SCHLONKY_DAISY,
+	BLEACHBLOOM,
+	SLIMEWEED,
+	PUS_POSY,
+	OOZEWORT,
+	SCABLEAF,
+	GURGLEGRASS,
+	BLISTERBRANCH,
+	PIMPLEGRASS,
+	SPLATROOT,
+	RETCHLEAF,
+	SLOPDRAGON,
+	EVERSTAIN,
+	# Flowers
+	# -------
 	
 	# stage 3 goes above here
 	
@@ -107,6 +259,8 @@ var net_rate := Big.new(0, true)
 var gain_rate := Value.new(0)
 var loss_rate := Value.new(0)
 
+var is_flower := false
+
 var weight := 1
 var last_crit_modifier := 1.0
 
@@ -134,7 +288,10 @@ func _init(_type := Type.STONE) -> void:
 	else:
 		stage = Stage.Type.NO_STAGE
 	
-	call("init_" + key)
+	is_flower = type >= Type.NEBULA_NECTAR and type <= Type.EVERSTAIN
+	
+	if has_method("init_" + key):
+		call("init_" + key)
 	
 	if safety_type == SafetyType.SAFE:
 		safe.set_to(true)
@@ -145,7 +302,10 @@ func _init(_type := Type.STONE) -> void:
 	if count == null:
 		count = Big.new(0, true)
 	if details.icon == null:
-		details.icon = res.get_resource("Delete")
+		if is_flower:
+			details.icon = res.get_resource("001")
+		else:
+			details.icon = res.get_resource("Delete")
 	
 	gv.prestige.connect(prestige)
 	gv.hard_reset.connect(reset)
@@ -419,6 +579,114 @@ func init_GRIEF() -> void:
 	details.color = Color(0.74902, 0.203922, 0.533333)
 	details.icon = res.get_resource("Grief")
 	persist.s4.set_to(true)
+
+
+func init_BABYS_BREATH() -> void:
+	details.icon = res.get_resource("004")
+	details.name = "Baby's Breath"
+func init_MILKWEED() -> void:
+	details.icon = res.get_resource("007")
+func init_BEE_BALM() -> void:
+	details.icon = res.get_resource("012")
+func init_VIOLET() -> void:
+	details.icon = res.get_resource("018")
+func init_PINCUSHION() -> void:
+	details.icon = res.get_resource("020")
+func init_LAVENDER() -> void:
+	details.icon = res.get_resource("021")
+func init_RAGWORT() -> void:
+	details.icon = res.get_resource("027")
+func init_SCHLONKWEED() -> void:
+	details.icon = res.get_resource("027")
+func init_PUS_POSY() -> void:
+	details.icon = res.get_resource("027")
+func init_GOOGRASS() -> void:
+	details.icon = res.get_resource("028")
+func init_POOPGRASS() -> void:
+	details.icon = res.get_resource("028")
+func init_OOZEWORT() -> void:
+	details.icon = res.get_resource("028")
+func init_STINKWEED() -> void:
+	details.icon = res.get_resource("029")
+func init_ASSGRASS() -> void:
+	details.icon = res.get_resource("029")
+func init_SCABLEAF() -> void:
+	details.icon = res.get_resource("029")
+func init_SNEEZEWEED() -> void:
+	details.icon = res.get_resource("030")
+func init_PEEWEED() -> void:
+	details.icon = res.get_resource("030")
+func init_GURGLEGRASS() -> void:
+	details.icon = res.get_resource("030")
+func init_BITTERWEED() -> void:
+	details.icon = res.get_resource("031")
+func init_BOOGERBLOSSOM() -> void:
+	details.icon = res.get_resource("031")
+func init_BLISTERBRANCH() -> void:
+	details.icon = res.get_resource("031")
+func init_GOUTWEED() -> void:
+	details.icon = res.get_resource("032")
+func init_HEMHORROID_HERB() -> void:
+	details.icon = res.get_resource("032")
+func init_PIMPLEGRASS() -> void:
+	details.icon = res.get_resource("032")
+func init_DEADKNETTLE() -> void:
+	details.icon = res.get_resource("033")
+func init_DONKY_DAISY() -> void:
+	details.icon = res.get_resource("033")
+func init_SPLATROOT() -> void:
+	details.icon = res.get_resource("033")
+func init_KNAPWEED() -> void:
+	details.icon = res.get_resource("034")
+func init_SCHLONKY_DAISY() -> void:
+	details.icon = res.get_resource("034")
+func init_RETCHLEAF() -> void:
+	details.icon = res.get_resource("034")
+func init_KNOTWEED() -> void:
+	details.icon = res.get_resource("035")
+func init_BLEACHBLOOM() -> void:
+	details.icon = res.get_resource("035")
+func init_SLOPDRAGON() -> void:
+	details.icon = res.get_resource("035")
+func init_SNOTWEED() -> void:
+	details.icon = res.get_resource("036")
+func init_SLIMEWEED() -> void:
+	details.icon = res.get_resource("036")
+func init_EVERSTAIN() -> void:
+	details.icon = res.get_resource("036")
+func init_DAISY() -> void:
+	details.icon = res.get_resource("043")
+func init_ROSEMARY() -> void:
+	details.icon = res.get_resource("051")
+func init_JACOBS_LADDER() -> void:
+	details.name = "Jacob's Ladder"
+	details.icon = res.get_resource("053")
+func init_HYDRANGEA() -> void:
+	details.icon = res.get_resource("056")
+func init_DANDELION() -> void:
+	details.icon = res.get_resource("062")
+func init_YARROW() -> void:
+	details.icon = res.get_resource("062")
+func init_SUNFLOWER() -> void:
+	details.icon = res.get_resource("063")
+func init_GINGER_ROOT() -> void:
+	details.icon = res.get_resource("078")
+func init_TULIP() -> void:
+	details.icon = res.get_resource("079")
+func init_MORNING_GLORY() -> void:
+	details.icon = res.get_resource("084")
+func init_CARNATION() -> void:
+	details.icon = res.get_resource("090")
+func init_ROSE() -> void:
+	details.icon = res.get_resource("091")
+func init_GERANIUM() -> void:
+	details.icon = res.get_resource("093")
+func init_COCKSCOMB() -> void:
+	details.icon = res.get_resource("096")
+func init_PITCHER_PLANT() -> void:
+	details.icon = res.get_resource("096")
+func init_MARIGOLD() -> void:
+	details.icon = res.get_resource("099")
 
 
 
