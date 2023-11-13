@@ -1,15 +1,15 @@
+HBoxContainer
 MarginContainer
+TextureRect
 VBoxContainer
 TextureProgressBar
 Control
 Panel
 Button
-TextureRect
 GridContainer
 ScrollContainer
 CanvasLayer
 Timer
-HBoxContainer
 CheckButton
 CheckBox
 RichTextLabel

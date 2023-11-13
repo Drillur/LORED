@@ -1,24 +1,39 @@
-[gd_scene load_steps=8 format=3 uid="uid://cy7emeyok7vf8"]
+[gd_scene load_steps=12 format=3 uid="uid://cy7emeyok7vf8"]
 
+[ext_resource type="Script" path="res://Hud/Hotbar/hotbar.gd" id="1_7qlj5"]
 [ext_resource type="Theme" uid="uid://bl4v2v143rihi" path="res://Theme/Background.tres" id="1_x1q2f"]
-[ext_resource type="StyleBox" uid="uid://yiei74gm0gpk" path="res://Theme/RoundedTop.tres" id="2_d8ljw"]
 [ext_resource type="StyleBox" uid="uid://30we7hw128pu" path="res://Theme/RoundedBackground.tres" id="2_wa3u7"]
 [ext_resource type="PackedScene" uid="uid://dkje4yw8kpbj5" path="res://Hud/Hotbar/hotbar_slot.tscn" id="3_3moyv"]
+[ext_resource type="Texture2D" uid="uid://7g4j85olgewr" path="res://Sprites/reactions/COPPER1.png" id="3_jwv33"]
 [ext_resource type="PackedScene" uid="uid://b411lpbrvvmuj" path="res://Hud/rich_text_label.tscn" id="3_rrmo2"]
+[ext_resource type="Theme" uid="uid://crf5gyv8gm6r1" path="res://Theme/Subtle Background.tres" id="4_2y37h"]
+[ext_resource type="StyleBox" uid="uid://dyca4nc2uq71" path="res://Theme/RoundedBackgroundNoShadow.tres" id="5_r6tme"]
 [ext_resource type="PackedScene" uid="uid://exe3ppvvv74m" path="res://Hud/bar.tscn" id="6_wb2ee"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_l2kvr"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_y7cjx"]
 bg_color = Color(0.101961, 0.101961, 0.101961, 1)
 corner_radius_top_left = 5
-corner_radius_top_right = 5
+corner_radius_top_right = 1
 corner_radius_bottom_right = 1
-corner_radius_bottom_left = 1
+corner_radius_bottom_left = 5
 shadow_size = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rb8n1"]
+bg_color = Color(0.0705882, 0.0705882, 0.0705882, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 5
+shadow_color = Color(0, 0, 0, 0.298039)
 
 [node name="Hotbar" type="MarginContainer"]
 custom_minimum_size = Vector2(280, 0)
 offset_right = 280.0
-offset_bottom = 104.0
+offset_bottom = 193.0
+size_flags_horizontal = 4
+size_flags_vertical = 10
+theme_override_constants/margin_bottom = 16
+script = ExtResource("1_7qlj5")
 
 [node name="Control" type="Control" parent="."]
 layout_mode = 2
@@ -27,39 +42,6 @@ size_flags_horizontal = 4
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
 theme_override_constants/separation = 0
-
-[node name="Title" type="MarginContainer" parent="VBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 4
-
-[node name="Background" type="Panel" parent="VBoxContainer/Title"]
-layout_mode = 2
-theme = ExtResource("1_x1q2f")
-theme_override_styles/panel = ExtResource("2_d8ljw")
-
-[node name="Shadow" type="Panel" parent="VBoxContainer/Title/Background"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_l2kvr")
-
-[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Title"]
-layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
-
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/Title/MarginContainer"]
-layout_mode = 2
-theme_override_constants/separation = 0
-
-[node name="LORED" parent="VBoxContainer/Title/MarginContainer/VBoxContainer" instance=ExtResource("3_rrmo2")]
-layout_mode = 2
-text = "[i]Carl, Coal LORED"
 
 [node name="Abilities" type="MarginContainer" parent="VBoxContainer"]
 layout_mode = 2
@@ -87,19 +69,158 @@ theme_override_constants/margin_bottom = 10
 
 [node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/Abilities/MarginContainer"]
 layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Info" type="MarginContainer" parent="VBoxContainer/Abilities/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+
+[node name="Background" type="Panel" parent="VBoxContainer/Abilities/MarginContainer/VBoxContainer/Info"]
+layout_mode = 2
+theme = ExtResource("4_2y37h")
+theme_override_styles/panel = ExtResource("5_r6tme")
+
+[node name="Shadow" type="Panel" parent="VBoxContainer/Abilities/MarginContainer/VBoxContainer/Info/Background"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_y7cjx")
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Abilities/MarginContainer/VBoxContainer/Info"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="HBoxContainer" parent="VBoxContainer/Abilities/MarginContainer/VBoxContainer/Info/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Currency0" parent="VBoxContainer/Abilities/MarginContainer/VBoxContainer/Info/MarginContainer/VBoxContainer" instance=ExtResource("3_rrmo2")]
+layout_mode = 2
+text = "[img=<15>]res://Sprites/Currency/flower_seeds.png[/img] [i]Seeds: [b]14"
+
+[node name="Currency1" parent="VBoxContainer/Abilities/MarginContainer/VBoxContainer/Info/MarginContainer/VBoxContainer" instance=ExtResource("3_rrmo2")]
+layout_mode = 2
+text = "[img=<15>]res://Sprites/Currency/flower_seeds.png[/img] [i]Seeds: [b]14"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/Abilities/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Resource0" parent="VBoxContainer/Abilities/MarginContainer/VBoxContainer/HBoxContainer" instance=ExtResource("6_wb2ee")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+animate = true
+
+[node name="Resource1" parent="VBoxContainer/Abilities/MarginContainer/VBoxContainer/HBoxContainer" instance=ExtResource("6_wb2ee")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+animate = true
 
 [node name="HotbarSlotContainer" type="GridContainer" parent="VBoxContainer/Abilities/MarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 columns = 6
 
-[node name="HotbarSlot" parent="VBoxContainer/Abilities/MarginContainer/VBoxContainer/HotbarSlotContainer" instance=ExtResource("3_3moyv")]
+[node name="HotbarSlot0" parent="VBoxContainer/Abilities/MarginContainer/VBoxContainer/HotbarSlotContainer" instance=ExtResource("3_3moyv")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HotbarSlot1" parent="VBoxContainer/Abilities/MarginContainer/VBoxContainer/HotbarSlotContainer" instance=ExtResource("3_3moyv")]
+unique_name_in_owner = true
 layout_mode = 2
 
 [node name="HotbarSlot2" parent="VBoxContainer/Abilities/MarginContainer/VBoxContainer/HotbarSlotContainer" instance=ExtResource("3_3moyv")]
-layout_mode = 2
-
-[node name="Fuel" parent="VBoxContainer/Abilities/MarginContainer/VBoxContainer" instance=ExtResource("6_wb2ee")]
 unique_name_in_owner = true
 layout_mode = 2
-animate = true
+
+[node name="HotbarSlot3" parent="VBoxContainer/Abilities/MarginContainer/VBoxContainer/HotbarSlotContainer" instance=ExtResource("3_3moyv")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HotbarSlot4" parent="VBoxContainer/Abilities/MarginContainer/VBoxContainer/HotbarSlotContainer" instance=ExtResource("3_3moyv")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HotbarSlot5" parent="VBoxContainer/Abilities/MarginContainer/VBoxContainer/HotbarSlotContainer" instance=ExtResource("3_3moyv")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HotbarSlot6" parent="VBoxContainer/Abilities/MarginContainer/VBoxContainer/HotbarSlotContainer" instance=ExtResource("3_3moyv")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HotbarSlot7" parent="VBoxContainer/Abilities/MarginContainer/VBoxContainer/HotbarSlotContainer" instance=ExtResource("3_3moyv")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HotbarSlot8" parent="VBoxContainer/Abilities/MarginContainer/VBoxContainer/HotbarSlotContainer" instance=ExtResource("3_3moyv")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HotbarSlot9" parent="VBoxContainer/Abilities/MarginContainer/VBoxContainer/HotbarSlotContainer" instance=ExtResource("3_3moyv")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HotbarSlot10" parent="VBoxContainer/Abilities/MarginContainer/VBoxContainer/HotbarSlotContainer" instance=ExtResource("3_3moyv")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HotbarSlot11" parent="VBoxContainer/Abilities/MarginContainer/VBoxContainer/HotbarSlotContainer" instance=ExtResource("3_3moyv")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Title" type="MarginContainer" parent="VBoxContainer"]
+show_behind_parent = true
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+
+[node name="Background" type="Panel" parent="VBoxContainer/Title"]
+layout_mode = 2
+theme = ExtResource("1_x1q2f")
+theme_override_styles/panel = SubResource("StyleBoxFlat_rb8n1")
+
+[node name="Shadow" type="Panel" parent="VBoxContainer/Title/Background"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_y7cjx")
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Title"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="HBoxContainer" parent="VBoxContainer/Title/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer/Title/MarginContainer/VBoxContainer"]
+visible = false
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+texture = ExtResource("3_jwv33")
+stretch_mode = 3
+
+[node name="LORED Name" parent="VBoxContainer/Title/MarginContainer/VBoxContainer" instance=ExtResource("3_rrmo2")]
+layout_mode = 2
+text = "[i]Carl"
+
+[node name="LORED Title" parent="VBoxContainer/Title/MarginContainer/VBoxContainer" instance=ExtResource("3_rrmo2")]
+layout_mode = 2
+text = "[i][font_size=12]Coal LORED"

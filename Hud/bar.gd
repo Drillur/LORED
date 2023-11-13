@@ -32,7 +32,7 @@ var progress: float:
 var bar_size := Int.new(0)
 
 var timer: Timer
-var attribute: ValuePair
+var value_pair: ValuePair
 
 
 
@@ -89,17 +89,17 @@ func show_edge() -> void:
 
 
 func attach_attribute(_attribute: ValuePair) -> void:
-	if attribute != null:
-		attribute.changed.disconnect(update_progress)
-	attribute = _attribute
-	attribute.changed.connect(update_progress)
+	if value_pair != null:
+		value_pair.changed.disconnect(update_progress)
+	value_pair = _attribute
+	value_pair.changed.connect(update_progress)
 	call_deferred("update_progress")
 
 
 
 func update_progress() -> void:
-	# attribute only
-	progress = attribute.get_current_percent()
+	# value_pair only
+	progress = value_pair.get_current_percent()
 
 
 

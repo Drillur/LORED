@@ -7,7 +7,7 @@ const saved_vars := ["flower_seeds", "wallet"]
 
 
 enum Type {
-	NEBULA_NECTAR, # - - - 5
+	NEBULA_NECTAR = Currency.Type.NEBULA_NECTAR, # - - - 5
 	MOONLIGHT_BLOSSOM, # produces mana
 	BLOODROOT, # produces blood
 	MALIGNANT_MAGNOLIA, # produces 
@@ -198,26 +198,7 @@ func setup_tier_lists():
 
 
 
-#func add_random_flower(output_modifier = 1, roll_bonus := 0):
-#
-#	var flower = get_random_flower(roll_bonus)
-#
-#	if output_modifier is Big:
-#		output_modifier = output_modifier.toFloat() as float
-#
-#	var amount: int = int(output_modifier)
-#
-#	add_flower(flower, amount)
-
-
-
-func get_random_flower(roll_bonus := 0) -> String:
-	var tier := roll_for_tier(roll_bonus)
-	var tier_list: Array = get("tier_" + str(tier) + "_list")
-	var flower_index: int = tier_list[randi() % tier_list.size()]
-	var flower: String = Type.keys()[flower_index]
-	
-	return flower
+# - Internal
 
 
 func roll_for_tier(roll_bonus: int) -> int: 
@@ -239,7 +220,42 @@ func roll_for_tier(roll_bonus: int) -> int:
 
 
 
-func get_flower_tier(type: Type) -> int:
+# - Action
+
+
+func add_random_flower(from_lored: bool, amount = 1, roll_bonus := 0):
+	var flower: Currency.Type = get_random_flower(roll_bonus)
+	if amount is Big:
+		amount = amount.toInt()
+	if from_lored:
+		wa.add_from_lored(flower, amount)
+	else:
+		wa.add(flower, amount)
+
+
+func store_new_flower_seed(count: int, roll_bonus: int):
+	var new_seed = FlowerSeed.new(count, roll_bonus)
+	flower_seeds.append(new_seed)
+
+
+func plant_flower_seed(_seed: FlowerSeed = get_most_recent_flower_seed()):
+	gv.subtractFromResource(gv.Resource.FLOWER_SEED, _seed.count)
+	_seed.sprout()
+	flower_seeds.erase(_seed)
+
+
+
+# - Get
+
+
+func get_random_flower(roll_bonus := 0) -> Currency.Type:
+	var tier := roll_for_tier(roll_bonus)
+	var tier_list: Array = get("tier_" + str(tier) + "_list")
+	var flower_index: Currency.Type = tier_list[randi() % tier_list.size()]
+	return flower_index
+
+
+func get_flower_tier(type: Currency.Type) -> int:
 	return 5 if type in tier_5_list else (
 		4 if type in tier_4_list else (
 			3 if type in tier_3_list else (
@@ -251,32 +267,7 @@ func get_flower_tier(type: Type) -> int:
 	)
 
 
-func get_flower_name(flower) -> String:
-	if flower is int:
-		flower = Type.keys()[flower]
-	
-	return flower_names[flower]
-
-
-func get_plural_flower_name(flower) -> String:
-	if flower is int:
-		flower = Type.keys()[flower]
-	var name = flower_names[flower]
-	if name.ends_with("y"):
-		name = name.rsplit("y")[0] + "ies"
-	else:
-		name += "s"
-	return name
-
-
-
-
-func store_new_flower_seed(count: int, roll_bonus: int):
-	var new_seed = FlowerSeed.new(count, roll_bonus)
-	flower_seeds.append(new_seed)
-
-
-func seed_is_available() -> bool:
+func is_seed_available() -> bool:
 	return not flower_seeds.is_empty()
 
 
@@ -285,16 +276,16 @@ func get_most_recent_flower_seed() -> FlowerSeed:
 	return flower_seeds[most_recent_seed_position]
 
 
-func plant_flower_seed(_seed: FlowerSeed = get_most_recent_flower_seed()):
-	gv.subtractFromResource(gv.Resource.FLOWER_SEED, _seed.count)
-	_seed.sprout()
-	flower_seeds.erase(_seed)
+func get_currency(type: Type) -> Currency:
+	var cur: Currency.Type = int(type)
+	return wa.get_currency(cur)
 
 
 
 
 
 # - Debug
+
 
 func DEBUG__test_tier_weight(roll_bonus: int = 0):
 	
@@ -314,4 +305,38 @@ func DEBUG__test_tier_weight(roll_bonus: int = 0):
 		"\n3: ", float(rolled_tiers.count(3)) / rolled_tiers.size() * 100, "%",
 		"\n4: ", float(rolled_tiers.count(4)) / rolled_tiers.size() * 100, "%",
 		"\n5: ", float(rolled_tiers.count(5)) / rolled_tiers.size() * 100, "%"
+	)
+
+
+func DEBUG__test_random_flower(roll_bonus: int = 0):
+	
+	randomize()
+	
+	var rolled_flowers = {
+		0: {},
+		1: {},
+		2: {},
+		3: {},
+		4: {},
+		5: {},
+	}
+	var keys = Type.keys()
+	
+	for _i in range(1, 10000):
+		var flower := get_random_flower(roll_bonus) # cap: 50.
+		var key = keys[flower - Type.NEBULA_NECTAR]
+		var tier = get_flower_tier(flower)
+		if not key in rolled_flowers[tier]:
+			rolled_flowers[tier][key] = 1
+		else:
+			rolled_flowers[tier][key] += 1
+	
+	print(
+		"Roll_bonus: ", roll_bonus,
+		"\nFlowers (tier 0): ", rolled_flowers[0],
+		"\nFlowers (tier 1): ", rolled_flowers[1],
+		"\nFlowers (tier 2): ", rolled_flowers[2],
+		"\nFlowers (tier 3): ", rolled_flowers[3],
+		"\nFlowers (tier 4): ", rolled_flowers[4],
+		"\nFlowers (tier 5): ", rolled_flowers[5],
 	)

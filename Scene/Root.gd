@@ -477,16 +477,17 @@ func _on_limitbreak_pressed():
 
 
 # - Dev
-
-
+var unit: Unit
 func _on_dev_1_pressed():
-	close_menu()
-	dialogue_balloon.start(res.get_resource("chat_stage1and2"), "STONE")
+	unit = Unit.new(Unit.Type.GARDEN)
+	var pick_flower = unit.get_ability(UnitAbility.Type.PICK_FLOWER)
+	print("desc: ", pick_flower.get_description())
+	print("cost: ", pick_flower.get_cost_text())
 
 var i = 0
 func _on_dev_2_pressed():
-	Flowers.DEBUG__test_tier_weight(i)
-	i += 1
+	Flowers.DEBUG__test_random_flower(i)
+	i += 5
 
 
 func _on_dev_3_pressed():

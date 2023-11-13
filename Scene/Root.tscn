@@ -1,8 +1,9 @@
-[gd_scene load_steps=45 format=3 uid="uid://bseqrj5lg08it"]
+[gd_scene load_steps=46 format=3 uid="uid://bseqrj5lg08it"]
 
 [ext_resource type="Script" path="res://Scene/Root.gd" id="1_h7r77"]
 [ext_resource type="PackedScene" uid="uid://rmruae8fguk4" path="res://Hud/LORED/lored_container.tscn" id="2_egnhq"]
 [ext_resource type="PackedScene" uid="uid://dlt6lvasr6c46" path="res://Hud/Upgrade/upgrade_container.tscn" id="3_3omr7"]
+[ext_resource type="PackedScene" uid="uid://cy7emeyok7vf8" path="res://Hud/Hotbar/hotbar.tscn" id="3_05qrh"]
 [ext_resource type="PackedScene" uid="uid://daebdwbv0o3hm" path="res://Hud/Upgrade/limit_break_vico.tscn" id="3_ncp6f"]
 [ext_resource type="PackedScene" uid="uid://cvi1rqoeg6bj0" path="res://Hud/Notice/save_notice.tscn" id="3_ugub1"]
 [ext_resource type="PackedScene" uid="uid://bfi0uovwegdxj" path="res://Hud/MenuButton.tscn" id="4_3h2sv"]
@@ -122,6 +123,9 @@ unique_name_in_owner = true
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 10
+
+[node name="Hotbar" parent="HBoxContainer/Back" instance=ExtResource("3_05qrh")]
+layout_mode = 2
 
 [node name="Overlay" type="MarginContainer" parent="HBoxContainer/Back"]
 layout_mode = 2

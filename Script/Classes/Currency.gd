@@ -12,15 +12,15 @@ enum Type {
 	IRON_ORE,
 	COPPER_ORE,
 	IRON,
-	COPPER,
+	COPPER, # 5
 	GROWTH,
 	JOULES,
 	CONCRETE,
 	MALIGNANCY,
-	TARBALLS,
-	OIL,
+	TARBALLS, # 10
+	OIL, # 11
 	
-	WATER,
+	WATER, # 12
 	HUMUS,
 	SEEDS,
 	TREES,
@@ -28,7 +28,7 @@ enum Type {
 	AXES,
 	WOOD,
 	HARDWOOD,
-	LIQUID_IRON,
+	LIQUID_IRON, # 20
 	STEEL,
 	SAND,
 	GLASS,
@@ -38,28 +38,29 @@ enum Type {
 	LEAD,
 	PETROLEUM,
 	WOOD_PULP,
-	PAPER,
+	PAPER, # 30
 	PLASTIC,
 	TOBACCO,
 	CIGARETTES,
 	CARCINOGENS,
 	EMBRYO,
-	TUMORS,
+	TUMORS, # 36
 	
 	# -------
 	# Stage 3 
 	
-	FLOWER_SEED,
+	FLOWER_SEED, # 37
 	MANA,
 	BLOOD,
-	SPIRIT,
+	SPIRIT, # 40
+	RANDOM_FLOWER,
 	
 	# Flowers
 	
-	NEBULA_NECTAR, # - - - 5
-	MOONLIGHT_BLOSSOM, # produces mana
-	BLOODROOT, # produces blood
-	MALIGNANT_MAGNOLIA, # produces 
+	NEBULA_NECTAR,
+	MOONLIGHT_BLOSSOM,
+	BLOODROOT,
+	MALIGNANT_MAGNOLIA,
 	STARDUST_ORCHID,
 	CELESTIA_ROSE,
 	TWILIGHT_DAISY,
@@ -581,6 +582,8 @@ func init_GRIEF() -> void:
 	persist.s4.set_to(true)
 
 
+func init_RANDOM_FLOWER() -> void:
+	details.icon = res.get_resource("001")
 func init_BABYS_BREATH() -> void:
 	details.icon = res.get_resource("004")
 	details.name = "Baby's Breath"
@@ -670,7 +673,7 @@ func init_YARROW() -> void:
 func init_SUNFLOWER() -> void:
 	details.icon = res.get_resource("063")
 func init_GINGER_ROOT() -> void:
-	details.icon = res.get_resource("078")
+	details.icon = res.get_resource("ginger_01")
 func init_TULIP() -> void:
 	details.icon = res.get_resource("079")
 func init_MORNING_GLORY() -> void:
@@ -687,6 +690,8 @@ func init_PITCHER_PLANT() -> void:
 	details.icon = res.get_resource("096")
 func init_MARIGOLD() -> void:
 	details.icon = res.get_resource("099")
+func init_SWEETPEA() -> void:
+	details.icon = res.get_resource("peas_01")
 
 
 

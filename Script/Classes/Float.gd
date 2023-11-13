@@ -69,6 +69,10 @@ func get_value() -> float:
 	return current
 
 
+func get_text() -> String:
+	return text
+
+
 func is_positive() -> bool:
 	return current >= 0
 
@@ -95,6 +99,10 @@ func greater_equal(val) -> bool:
 
 func equal(val) -> bool:
 	return is_equal_approx(current, val)
+
+
+func not_equal(val) -> bool:
+	return not equal(val)
 
 
 func less_equal(val) -> bool:
