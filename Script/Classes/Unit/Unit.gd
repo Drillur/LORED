@@ -23,7 +23,7 @@ var blood: UnitResource
 var unit_resources: Dictionary # specific use-case
 
 var abilities := {}
-var hotbar_currencies := []
+var hotbar_currencies: Array
 
 
 

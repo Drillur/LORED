@@ -58,6 +58,7 @@ func _init(_type: Type, _unit: Unit) -> void:
 		Type.PICK_FLOWER:
 			school = School.NATURE
 			details.description = "Pick {output} {currency:RANDOM_FLOWER}."
+			details.icon = res.get_resource("001")
 			cost_text = "Costs {stamina_cost}."
 			output = Float.new(1)
 			cost.add_cost(UnitResource.Type.STAMINA, 2)

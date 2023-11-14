@@ -6,7 +6,7 @@
 [ext_resource type="Theme" uid="uid://b8t7tkhvril5g" path="res://Theme/Standard.tres" id="4_ky7sc"]
 [ext_resource type="Script" path="res://Hud/Dialogue/response_menu.gd" id="5_rg84n"]
 [ext_resource type="PackedScene" uid="uid://bfi0uovwegdxj" path="res://Hud/MenuButton.tscn" id="6_h7l15"]
-[ext_resource type="Texture2D" uid="uid://jbcyavxupodp" path="res://Sprites/reactions/Test.png" id="7_135w3"]
+[ext_resource type="Texture2D" uid="uid://bk36g8mktedsa" path="res://Sprites/reactions/STONE2.png" id="7_o8w2h"]
 [ext_resource type="PackedScene" uid="uid://ckvgyvclnwggo" path="res://addons/dialogue_manager/dialogue_label.tscn" id="8_akl6m"]
 [ext_resource type="Script" path="res://Hud/Dialogue/dialogue_label.gd" id="9_nooqw"]
 [ext_resource type="Theme" uid="uid://dt7rd31blnvth" path="res://Theme/Invis.tres" id="10_kyihs"]
@@ -139,7 +139,7 @@ unique_name_in_owner = true
 visible = false
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
-texture = ExtResource("7_135w3")
+texture = ExtResource("7_o8w2h")
 stretch_mode = 3
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/MarginContainer/VBoxContainer/Balloon/MarginContainer/HBoxContainer"]
@@ -166,7 +166,7 @@ scroll_active = false
 [node name="DialogueLabel" parent="MarginContainer/MarginContainer/VBoxContainer/Balloon/MarginContainer/HBoxContainer/VBoxContainer" instance=ExtResource("8_akl6m")]
 unique_name_in_owner = true
 layout_mode = 2
-text = "[i][b]What[/b] else? I write runes and tend graves. Whatever \"something else\" is, I am sure it doesn't exist, so what exactly do you mean? btw this is enough text for 3 lines"
+text = "[i]This sure is a bunch of text that I am speaking right now!"
 script = ExtResource("9_nooqw")
 
 [node name="SkipTyping" type="Button" parent="MarginContainer/MarginContainer/VBoxContainer/Balloon"]

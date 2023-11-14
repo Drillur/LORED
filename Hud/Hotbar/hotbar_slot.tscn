@@ -42,6 +42,7 @@ texture = ExtResource("1_drtxe")
 
 [node name="Cooldown" type="MarginContainer" parent="."]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 
 [node name="Background" type="Panel" parent="Cooldown"]
@@ -95,3 +96,5 @@ theme_override_constants/shadow_offset_x = 1
 theme_override_constants/shadow_outline_size = 4
 theme_override_constants/outline_size = 4
 text = "[i][b]F"
+
+[connection signal="pressed" from="Button" to="." method="_on_button_pressed"]

@@ -21,6 +21,7 @@ extends MarginContainer
 @onready var fps = %FPS
 @onready var screen_area = %ScreenArea
 @onready var settings = %Settings
+@onready var hotbar = %Hotbar
 
 # DEBUG
 @onready var tooltip_position_display = %"Tooltip Position Display"
@@ -480,9 +481,7 @@ func _on_limitbreak_pressed():
 var unit: Unit
 func _on_dev_1_pressed():
 	unit = Unit.new(Unit.Type.GARDEN)
-	var pick_flower = unit.get_ability(UnitAbility.Type.PICK_FLOWER)
-	print("desc: ", pick_flower.get_description())
-	print("cost: ", pick_flower.get_cost_text())
+	hotbar.setup(unit)
 
 var i = 0
 func _on_dev_2_pressed():
