@@ -1,8 +1,10 @@
-[gd_scene load_steps=6 format=3 uid="uid://exe3ppvvv74m"]
+[gd_scene load_steps=8 format=3 uid="uid://exe3ppvvv74m"]
 
 [ext_resource type="Script" path="res://Hud/bar.gd" id="1_cyi4v"]
 [ext_resource type="Theme" uid="uid://b8t7tkhvril5g" path="res://Theme/Standard.tres" id="2_yan3f"]
 [ext_resource type="StyleBox" uid="uid://d2c8tugtevfef" path="res://Theme/ProgressBar.tres" id="3_lyuce"]
+[ext_resource type="FontFile" uid="uid://cubavfw1lomep" path="res://Fonts/Roboto-Black.ttf" id="4_4w8r0"]
+[ext_resource type="FontFile" uid="uid://1w6nq6sovkc2" path="res://Fonts/Roboto-MediumItalic.ttf" id="5_1hfmm"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dtm17"]
 bg_color = Color(0.796078, 0.796078, 0.796078, 1)
@@ -16,7 +18,7 @@ bg_color = Color(1, 1, 1, 1)
 
 [node name="Bar" type="MarginContainer"]
 custom_minimum_size = Vector2(40, 8)
-offset_right = 75.0
+offset_right = 119.0
 offset_bottom = 8.0
 mouse_filter = 0
 script = ExtResource("1_cyi4v")
@@ -80,3 +82,46 @@ grow_horizontal = 0
 grow_vertical = 2
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_pr56i")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Control"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = -6.0
+offset_bottom = 11.0
+grow_horizontal = 2
+alignment = 1
+
+[node name="Label" type="RichTextLabel" parent="Control/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_outline_size = 3
+theme_override_constants/outline_size = 2
+theme_override_fonts/normal_font = ExtResource("4_4w8r0")
+theme_override_font_sizes/normal_font_size = 14
+bbcode_enabled = true
+text = "123e456"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+
+[node name="LabelName" type="RichTextLabel" parent="Control/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_outline_size = 3
+theme_override_constants/outline_size = 2
+theme_override_fonts/normal_font = ExtResource("5_1hfmm")
+theme_override_font_sizes/normal_font_size = 12
+bbcode_enabled = true
+text = "None"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0

@@ -52,8 +52,7 @@ enum Type {
 	FLOWER_SEED, # 37
 	MANA,
 	BLOOD,
-	SPIRIT, # 40
-	RANDOM_FLOWER,
+	RANDOM_FLOWER, # 40
 	
 	# Flowers
 	
@@ -204,6 +203,8 @@ enum Type {
 	# Flowers
 	# -------
 	
+	SPIRIT,
+	
 	# stage 3 goes above here
 	
 	
@@ -303,10 +304,13 @@ func _init(_type := Type.STONE) -> void:
 	if count == null:
 		count = Big.new(0, true)
 	if details.icon == null:
+		wa.curs_without_icons.append(key)
 		if is_flower:
 			details.icon = res.get_resource("001")
 		else:
 			details.icon = res.get_resource("Delete")
+	if details.color == Color.BLACK:
+		details.color = Color.WHITE
 	
 	gv.prestige.connect(prestige)
 	gv.hard_reset.connect(reset)

@@ -8,6 +8,15 @@ enum Type {
 	WITCH,
 }
 
+enum ErrorType {
+	NONE,
+	GCD,
+	UNIT_IS_DEAD,
+	ABILITY_IS_NULL,
+	ABILITY_COOLDOWN,
+	ABILITY_NOT_AFFORDABLE,
+}
+
 signal initialized
 
 
@@ -16,13 +25,17 @@ var key: String
 
 var lored: LORED
 
-var health: UnitResource
+var manager: UnitManager
+
+var health := UnitResource.new(UnitResource.Type.HEALTH, 10)
 var stamina: UnitResource
 var mana: UnitResource
 var blood: UnitResource
-var unit_resources: Dictionary # specific use-case
+var unit_resources: Dictionary # UnitResources are referenced here so can access with UnitResource.Type as key
+var cooldown := Cooldown.new(1.5)
 
 var abilities := {}
+
 var hotbar_currencies: Array
 
 
@@ -38,7 +51,15 @@ func _init(_type: Type) -> void:
 			add_ability(UnitAbility.Type.PICK_FLOWER)
 			hotbar_currencies.append(wa.get_currency(Currency.Type.SEEDS))
 			hotbar_currencies.append(wa.get_currency(Currency.Type.FLOWER_SEED))
+	
+	manager = UnitManager.new()
+	gv.add_child(manager)
+	manager.setup(self)
 	initialized.emit()
+
+
+
+# - Internal
 
 
 func setup_unit_resource(resource_type: UnitResource.Type, base_value: float) -> void:
@@ -55,7 +76,6 @@ func setup_unit_resource(resource_type: UnitResource.Type, base_value: float) ->
 		UnitResource.Type.BLOOD:
 			blood = UnitResource.new(resource_type, base_value)
 			unit_resources[resource_type] = blood
-	
 
 
 func set_lored() -> void:
@@ -66,6 +86,8 @@ func set_lored() -> void:
 
 func add_ability(ability_type: UnitAbility.Type) -> void:
 	abilities[ability_type] = UnitAbility.new(ability_type, self)
+	abilities[ability_type].just_cast.connect(cooldown.activate)
+
 
 
 
@@ -76,14 +98,13 @@ func get_ability(ability_type: UnitAbility.Type) -> UnitAbility:
 	return abilities[ability_type]
 
 
-#func get_resource(resource_type: UnitResource) -> UnitResource:
-#	match resource_type:
-#		UnitResource.Type.HEALTH:
-#			return health
-#		UnitResource.Type.BLOOD:
-#			return blood
-#		UnitResource.Type.STAMINA:
-#			return stamina
-#		UnitResource.Type.MANA:
-#			return mana
-#	return stamina
+func is_alive() -> bool:
+	return health.get_value() > 0
+
+
+func can_cast() -> bool:
+	if not is_alive():
+		return false
+	if cooldown.is_active():
+		return false
+	return true

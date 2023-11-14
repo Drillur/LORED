@@ -7,15 +7,20 @@ extends MarginContainer
 @onready var edge = %Edge
 @onready var warning_marker = %"Warning Marker"
 @onready var danger_marker = %"Danger Marker"
+@onready var label = %Label
+@onready var label_name = %LabelName
 
 @export var kill_markers := false
 @export var animate := false
 @export var kill_background := false
+@export var kill_text := true
 
 var color: Color:
 	set(val):
 		color = val
 		progress_bar.modulate = color
+		if not kill_text:
+			label.modulate = color
 
 var progress: float:
 	set(val):
@@ -32,7 +37,7 @@ var progress: float:
 var bar_size := Int.new(0)
 
 var timer: Timer
-var value_pair: ValuePair
+var value: Resource
 
 
 
@@ -42,6 +47,8 @@ func _ready() -> void:
 		danger_marker.queue_free()
 	if kill_background:
 		$bg.theme = gv.theme_invis
+	if kill_text:
+		$Control.queue_free()
 	resized.connect(_on_resized)
 	call_deferred("_on_resized")
 	set_process(false)
@@ -89,17 +96,34 @@ func show_edge() -> void:
 
 
 func attach_attribute(_attribute: ValuePair) -> void:
-	if value_pair != null:
-		value_pair.changed.disconnect(update_progress)
-	value_pair = _attribute
-	value_pair.changed.connect(update_progress)
+	remove_value()
+	value = _attribute
+	value.changed.connect(update_progress)
+	value.filled.connect(update_progress)
 	call_deferred("update_progress")
+
+
+func attach_float_pair(_float_pair: FloatPair) -> void:
+	remove_value()
+	value = _float_pair
+	value.changed.connect(update_progress)
+	value.filled.connect(update_progress)
+	call_deferred("update_progress")
+
+
+func remove_value() -> void:
+	if value != null:
+		value.changed.disconnect(update_progress)
+		value.filled.disconnect(update_progress)
+		value = null
 
 
 
 func update_progress() -> void:
 	# value_pair only
-	progress = value_pair.get_current_percent()
+	progress = value.get_current_percent()
+	if not kill_text:
+		label.text = "[center]" + str(floor(value.current.get_value()))
 
 
 

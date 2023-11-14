@@ -17,6 +17,8 @@ extends MarginContainer
 @onready var hotbar_slot_9 = %HotbarSlot9 as HotbarSlot
 @onready var hotbar_slot_10 = %HotbarSlot10 as HotbarSlot
 @onready var hotbar_slot_11 = %HotbarSlot11 as HotbarSlot
+@onready var stamina_bar = %Stamina as Bar
+@onready var mana_bar = %Mana as Bar
 
 var unit: Unit
 var currency_0: Currency
@@ -25,6 +27,10 @@ var currency_1: Currency
 
 
 func _ready() -> void:
+	stamina_bar.color = UnitResource.get_color(UnitResource.Type.STAMINA)
+	stamina_bar.label_name.text = "Stamina"
+	mana_bar.color = UnitResource.get_color(UnitResource.Type.MANA)
+	mana_bar.label_name.text = "Mana"
 	for i in 12:
 		var hotbar_slot: HotbarSlot = get("hotbar_slot_" + str(i))
 		hotbar_slot.hotkey_pressed.connect(hotkey_pressed)
@@ -34,8 +40,20 @@ func _ready() -> void:
 func setup(_unit: Unit) -> void:
 	if unit:
 		disconnect_currencies()
+		stamina_bar.remove_value()
+		mana_bar.remove_value()
 	unit = _unit
 	connect_currencies()
+	
+	for resource in unit.unit_resources:
+		match resource:
+			UnitResource.Type.STAMINA:
+				stamina_bar.show()
+				stamina_bar.attach_float_pair(unit.stamina.value)
+			UnitResource.Type.MANA:
+				mana_bar.show()
+				mana_bar.attach_float_pair(unit.mana.value)
+	
 	var i = 0
 	for ability in unit.abilities.values():
 		var hotbar_slot: HotbarSlot = get("hotbar_slot_" + str(i))
@@ -76,4 +94,4 @@ func currency_1_changed() -> void:
 
 
 func hotkey_pressed(ability: UnitAbility) -> void:
-	print(ability.key, " to be cast!")
+	ability.cast()

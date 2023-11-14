@@ -1,9 +1,10 @@
+RichTextLabel
 HBoxContainer
+Control
 MarginContainer
 TextureRect
 VBoxContainer
 TextureProgressBar
-Control
 Panel
 Button
 GridContainer
@@ -12,7 +13,6 @@ CanvasLayer
 Timer
 CheckButton
 CheckBox
-RichTextLabel
 HScrollBar
 TabContainer
 AnimatedSprite2D

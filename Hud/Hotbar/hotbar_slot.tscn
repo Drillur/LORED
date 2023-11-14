@@ -1,6 +1,5 @@
-[gd_scene load_steps=8 format=3 uid="uid://dkje4yw8kpbj5"]
+[gd_scene load_steps=7 format=3 uid="uid://dkje4yw8kpbj5"]
 
-[ext_resource type="Texture2D" uid="uid://b5sh16p1b12b1" path="res://Sprites/Currency/axe.png" id="1_drtxe"]
 [ext_resource type="Theme" uid="uid://b8t7tkhvril5g" path="res://Theme/Standard.tres" id="1_klbkb"]
 [ext_resource type="Script" path="res://Hud/Hotbar/hotbar_slot.gd" id="1_t1e6d"]
 [ext_resource type="Theme" uid="uid://dt7rd31blnvth" path="res://Theme/Invis.tres" id="1_yrwqr"]
@@ -38,11 +37,9 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 mouse_filter = 2
-texture = ExtResource("1_drtxe")
 
 [node name="Cooldown" type="MarginContainer" parent="."]
 unique_name_in_owner = true
-visible = false
 layout_mode = 2
 
 [node name="Background" type="Panel" parent="Cooldown"]
@@ -53,8 +50,7 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_j2k0l")
 [node name="Cooldown Progress" type="TextureProgressBar" parent="Cooldown"]
 unique_name_in_owner = true
 layout_mode = 2
-step = 3.0
-value = 33.0
+value = 84.0
 fill_mode = 5
 texture_progress = ExtResource("3_3hc5a")
 tint_progress = Color(0, 0, 0, 1)

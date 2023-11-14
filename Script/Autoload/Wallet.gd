@@ -35,6 +35,7 @@ func _ready():
 	for cur in currency.keys():
 		gv.add_currency_to_stage(get_currency_stage(cur), cur)
 	
+	print("Currencies without icons: ", curs_without_icons)
 	wi.wish_completed.connect(wallet_lock)
 	wi.wish_uncompleted.connect(wallet_lock)
 
@@ -254,3 +255,10 @@ func currencies_in_list_are_unlocked(list: Array) -> bool:
 
 func is_currency_safe_to_spend(cur: int) -> bool:
 	return get_currency(cur).safe.get_value()
+
+
+
+# - Debug
+
+
+var curs_without_icons := []

@@ -23,6 +23,9 @@ enum School {
 	HEMOMANCY,
 }
 
+signal just_cast
+signal currency_gained(cur, amount)
+
 var type: Type
 var school: School
 
@@ -36,7 +39,7 @@ var cost: UnitAbilityCost
 var cast_time: Float
 var initial_heal: Float
 var initial_barrier: Float
-var cooldown: Float
+var cooldown: Cooldown
 var output: Float
 
 var applied_buffs := []
@@ -50,6 +53,7 @@ var cost_text: String
 
 func _init(_type: Type, _unit: Unit) -> void:
 	unit = _unit
+	unit.initialized.connect(unit_initialized)
 	type = _type
 	key = Type.keys()[type]
 	details.name = key.replace("_", " ").capitalize()
@@ -61,6 +65,7 @@ func _init(_type: Type, _unit: Unit) -> void:
 			details.icon = res.get_resource("001")
 			cost_text = "Costs {stamina_cost}."
 			output = Float.new(1)
+			cooldown = Cooldown.new(8)
 			cost.add_cost(UnitResource.Type.STAMINA, 2)
 		Type.MEND:
 			school = School.HIEROMANCY
@@ -71,8 +76,38 @@ func _init(_type: Type, _unit: Unit) -> void:
 			initial_heal = Float.new(1)
 
 
+func unit_initialized() -> void:
+	if cost.cost == {}:
+		cost = null
+
+
+
+# - Action
+
+
+func cast() -> void:
+	if has_cost():
+		cost.spend()
+	if has_cooldown():
+		cooldown.activate()
+	match type:
+		Type.PICK_FLOWER:
+			var flower: Currency.Type = Flowers.get_random_flower()
+			Flowers.add_random_flower(false, output.get_value())
+			currency_gained.emit(flower, output.get_value())
+	just_cast.emit()
+
+
 
 # - Get
+
+
+func can_cast() -> bool:
+	if has_cost() and not cost.affordable.is_true():
+		return false
+	if has_cooldown() and cooldown.is_active():
+		return false
+	return true
 
 
 func get_description() -> String:
@@ -116,3 +151,11 @@ func get_cost_text() -> String:
 				"1 " + currency.details.icon_and_colored_name
 		})
 	return text
+
+
+func has_cooldown() -> bool:
+	return cooldown != null
+
+
+func has_cost() -> bool:
+	return cost != null
