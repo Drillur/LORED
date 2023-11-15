@@ -31,7 +31,7 @@ var health := UnitResource.new(UnitResource.Type.HEALTH, 10)
 var stamina: UnitResource
 var mana: UnitResource
 var blood: UnitResource
-var unit_resources: Dictionary # UnitResources are referenced here so can access with UnitResource.Type as key
+var resources: Dictionary # UnitResources are referenced here so can access with UnitResource.Type as key
 var cooldown := Cooldown.new(1.5)
 
 var abilities := {}
@@ -66,16 +66,16 @@ func setup_unit_resource(resource_type: UnitResource.Type, base_value: float) ->
 	match resource_type:
 		UnitResource.Type.HEALTH:
 			health = UnitResource.new(resource_type, base_value)
-			unit_resources[resource_type] = health
+			resources[resource_type] = health
 		UnitResource.Type.STAMINA:
 			stamina = UnitResource.new(resource_type, base_value)
-			unit_resources[resource_type] = stamina
+			resources[resource_type] = stamina
 		UnitResource.Type.MANA:
 			mana = UnitResource.new(resource_type, base_value)
-			unit_resources[resource_type] = mana
+			resources[resource_type] = mana
 		UnitResource.Type.BLOOD:
 			blood = UnitResource.new(resource_type, base_value)
-			unit_resources[resource_type] = blood
+			resources[resource_type] = blood
 
 
 func set_lored() -> void:

@@ -14,6 +14,7 @@ enum Type {
 	
 	# GARDEN/WITCH
 	PICK_FLOWER,
+	SIFT_SEEDS,
 }
 
 enum School {
@@ -41,6 +42,7 @@ var initial_heal: Float
 var initial_barrier: Float
 var cooldown: Cooldown
 var output: Float
+var output_range: FloatPair
 
 var applied_buffs := []
 
@@ -61,23 +63,36 @@ func _init(_type: Type, _unit: Unit) -> void:
 	match type:
 		Type.PICK_FLOWER:
 			school = School.NATURE
-			details.description = "Pick {output} {currency:RANDOM_FLOWER}."
+			var a = wa.get_icon_and_name_text(Currency.Type.RANDOM_FLOWER)
+			details.description = "Pick {output} %s." % a
 			details.icon = res.get_resource("001")
-			cost_text = "Costs {stamina_cost}."
+			cost_text = "Costs {resource_cost}."
 			output = Float.new(1)
 			cooldown = Cooldown.new(8)
-			cost.add_cost(UnitResource.Type.STAMINA, 2)
+			cost.add_resource_cost(UnitResource.Type.STAMINA, 2)
+		Type.SIFT_SEEDS:
+			school = School.NATURE
+			var a = wa.get_icon_and_name_text(Currency.Type.SEEDS)
+			var b = wa.get_currency(Currency.Type.RANDOM_FLOWER).details.icon_and_plural_name_text
+			details.description = "Sift through available %s in search of {output_range} %s." % [a, b]
+			details.icon = res.get_resource("seed")
+			cost_text = "Costs {currency_cost}."
+			output_range = FloatPair.new(0, 2)
+			cast_time = Float.new(2)
+			cost.add_resource_cost(UnitResource.Type.STAMINA, 2)
+			cost.add_currency_cost(Currency.Type.SEEDS, 10)
 		Type.MEND:
 			school = School.HIEROMANCY
 			details.description = "Restores {initial_heal} to a single target. Gets the job done."
 			details.icon = res.get_resource("082")
-			cost_text = "Costs {mana_cost}."
+			cost_text = "Costs {resource_cost} and {currency_cost}."
 			cast_time = Float.new(3)
 			initial_heal = Float.new(1)
+			#cost.add_currency_cost(Currency.Type., 2)
 
 
 func unit_initialized() -> void:
-	if cost.cost == {}:
+	if cost.resource_cost == {} and cost.currency_cost == {}:
 		cost = null
 
 
@@ -113,14 +128,9 @@ func can_cast() -> bool:
 func get_description() -> String:
 	var text := details.description
 	if "{output}" in text:
-		text = text.format({"output": Big.get_float_text(output.get_value())})
-	if "{currency" in text:
-		var cur_key: String = text.split("{currency:")[1].split("}")[0]
-		var currency: Currency = wa.get_currency(Currency.Type[cur_key])
-		if output:
-			text = text.format({
-				"currency:" + cur_key: currency.details.get_icon_and_colored_name(output.get_value())
-			})
+		text = text.format({"output": output.get_text()})
+	if "{output_range}" in text:
+		text = text.format({"output_range": output_range.get_text_with_hyphon()})
 #	if "{applied_buffs}" in text:
 #		var applied_buff_text := ""
 #		for x in applied_buffs:
@@ -140,16 +150,22 @@ func get_cost_text() -> String:
 #		text = text.format({"mana_cost": gv.wrap_text_by_type(mana_cost.get_total_text(), "mana")})
 	if "{stamina_cost}" in text:
 		var type = UnitResource.Type.STAMINA
-		var unit_resource: UnitResource = unit.unit_resources[type] as UnitResource
+		var unit_resource: UnitResource = unit.resources[type] as UnitResource
 		var resource_text = unit_resource.details.icon_and_colored_name
 		var cost_text = cost.cost[type].get_text()
 		text = text.format({"stamina_cost": cost_text + " " + resource_text})
-	if "{flower_cost}" in text:
-		var currency = Flowers.get_currency(cost.flower_cost) as Currency
+	if "{currency_cost}" in text:
+		var currency = wa.get_currency(cost.currency_cost.keys()[0]) as Currency
 		text = text.format({
-			"flower_cost":
+			"currency_cost":
 				"1 " + currency.details.icon_and_colored_name
 		})
+	if "{resource_cost}" in text:
+		var type = cost.resource_cost.keys()[0] as Currency
+		var unit_resource: UnitResource = unit.resources[type] as UnitResource
+		var resource_text = unit_resource.details.icon_and_colored_name
+		var cost_text = cost.cost[type].get_text()
+		text = text.format({"resource_cost": cost_text + " " + resource_text})
 	return text
 
 

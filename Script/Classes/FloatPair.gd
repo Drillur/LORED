@@ -63,3 +63,7 @@ func get_current_and_total_text() -> String:
 
 func get_current_percent() -> float:
 	return get_value() / get_total()
+
+
+func get_text_with_hyphon() -> String:
+	return current.get_text() + "-" + total.get_text()

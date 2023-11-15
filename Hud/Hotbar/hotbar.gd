@@ -45,7 +45,7 @@ func setup(_unit: Unit) -> void:
 	unit = _unit
 	connect_currencies()
 	
-	for resource in unit.unit_resources:
+	for resource in unit.resources:
 		match resource:
 			UnitResource.Type.STAMINA:
 				stamina_bar.show()

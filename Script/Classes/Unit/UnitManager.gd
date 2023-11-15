@@ -11,8 +11,8 @@ var recovering_resources := []
 
 func setup(_unit: Unit) -> void:
 	unit = _unit
-	for resource in unit.unit_resources:
-		var unit_resource: UnitResource = unit.unit_resources[resource]
+	for resource in unit.resources:
+		var unit_resource: UnitResource = unit.resources[resource]
 		if unit_resource.recovers_over_time():
 			recovering_resources.append(unit_resource)
 			unit_resource.value.current.decreased.connect(unit_resource_decreased)
