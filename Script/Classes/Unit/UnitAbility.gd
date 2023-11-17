@@ -3,6 +3,8 @@ extends Resource
 
 
 enum Type {
+	NONE,
+	
 	MEND,
 	
 	CURE,
@@ -120,9 +122,7 @@ func cast() -> void:
 func can_cast() -> bool:
 	if has_cost() and not cost.affordable.is_true():
 		return false
-	if has_cooldown() and cooldown.is_active():
-		return false
-	return true
+	return has_no_cooldown() or cooldown.is_nearly_or_already_inactive()
 
 
 func get_description() -> String:
@@ -171,6 +171,10 @@ func get_cost_text() -> String:
 
 func has_cooldown() -> bool:
 	return cooldown != null
+
+
+func has_no_cooldown() -> bool:
+	return cooldown == null
 
 
 func has_cost() -> bool:

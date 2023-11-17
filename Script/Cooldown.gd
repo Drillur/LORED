@@ -75,3 +75,13 @@ func get_time_left_text() -> String:
 			text = "[color=#ffff00]" + text
 		return text
 	return text % str(round(get_time_left()))
+
+
+
+# - Get (LORED-specific)
+
+func is_nearly_or_already_inactive() -> bool:
+	return (
+		is_not_active()
+		or get_time_left() < 0.5
+	)

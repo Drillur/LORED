@@ -94,4 +94,4 @@ func currency_1_changed() -> void:
 
 
 func hotkey_pressed(ability: UnitAbility) -> void:
-	ability.cast()
+	ability.unit.cast(ability.type)
