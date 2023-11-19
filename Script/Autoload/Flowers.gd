@@ -278,8 +278,7 @@ func get_most_recent_flower_seed() -> FlowerSeed:
 
 
 func get_currency(type: Type) -> Currency:
-	var cur: Currency.Type = int(type)
-	return wa.get_currency(cur)
+	return wa.get_currency(int(type))
 
 
 

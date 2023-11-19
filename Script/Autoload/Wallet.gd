@@ -94,6 +94,10 @@ func add_from_lored(cur: int, amount) -> void:
 	currency[cur].add_from_lored(amount)
 
 
+func add_from_player(cur: Currency.Type, amount) -> void:
+	currency[cur].add_from_player(amount)
+
+
 func subtract_from_lored(cur: int, amount) -> void:
 	currency[cur].subtract_from_lored(amount)
 

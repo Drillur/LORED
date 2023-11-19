@@ -1,7 +1,8 @@
-[gd_scene load_steps=12 format=3 uid="uid://cy7emeyok7vf8"]
+[gd_scene load_steps=14 format=3 uid="uid://cy7emeyok7vf8"]
 
 [ext_resource type="Script" path="res://Hud/Hotbar/hotbar.gd" id="1_7qlj5"]
 [ext_resource type="Theme" uid="uid://bl4v2v143rihi" path="res://Theme/Background.tres" id="1_x1q2f"]
+[ext_resource type="Theme" uid="uid://b8t7tkhvril5g" path="res://Theme/Standard.tres" id="2_mmexq"]
 [ext_resource type="StyleBox" uid="uid://30we7hw128pu" path="res://Theme/RoundedBackground.tres" id="2_wa3u7"]
 [ext_resource type="PackedScene" uid="uid://dkje4yw8kpbj5" path="res://Hud/Hotbar/hotbar_slot.tscn" id="3_3moyv"]
 [ext_resource type="Texture2D" uid="uid://7g4j85olgewr" path="res://Sprites/reactions/COPPER1.png" id="3_jwv33"]
@@ -10,13 +11,8 @@
 [ext_resource type="StyleBox" uid="uid://dyca4nc2uq71" path="res://Theme/RoundedBackgroundNoShadow.tres" id="5_r6tme"]
 [ext_resource type="PackedScene" uid="uid://exe3ppvvv74m" path="res://Hud/bar.tscn" id="6_wb2ee"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_y7cjx"]
-bg_color = Color(0.101961, 0.101961, 0.101961, 1)
-corner_radius_top_left = 5
-corner_radius_top_right = 1
-corner_radius_bottom_right = 1
-corner_radius_bottom_left = 5
-shadow_size = 5
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1f2fw"]
+bg_color = Color(0.054902, 0.054902, 0.054902, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rb8n1"]
 bg_color = Color(0.0705882, 0.0705882, 0.0705882, 1)
@@ -26,10 +22,18 @@ corner_radius_bottom_right = 1
 corner_radius_bottom_left = 5
 shadow_color = Color(0, 0, 0, 0.298039)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_y7cjx"]
+bg_color = Color(0.101961, 0.101961, 0.101961, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 5
+shadow_size = 5
+
 [node name="Hotbar" type="MarginContainer"]
 custom_minimum_size = Vector2(280, 0)
-offset_right = 280.0
-offset_bottom = 193.0
+offset_right = 339.0
+offset_bottom = 226.0
 size_flags_horizontal = 4
 size_flags_vertical = 10
 theme_override_constants/margin_bottom = 16
@@ -37,7 +41,29 @@ script = ExtResource("1_7qlj5")
 
 [node name="Control" type="Control" parent="."]
 layout_mode = 2
-size_flags_horizontal = 4
+
+[node name="CastBarContainer" type="MarginContainer" parent="Control"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = -52.0
+offset_bottom = -16.0
+grow_horizontal = 2
+
+[node name="Background" type="Panel" parent="Control/CastBarContainer"]
+layout_mode = 2
+theme = ExtResource("2_mmexq")
+theme_override_styles/panel = SubResource("StyleBoxFlat_1f2fw")
+
+[node name="CastBar" parent="Control/CastBarContainer" instance=ExtResource("6_wb2ee")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(40, 16)
+layout_mode = 2
+size_flags_horizontal = 3
+kill_markers = true
+kill_text = false
+keep_text_centered = true
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
@@ -51,15 +77,6 @@ layout_mode = 2
 theme = ExtResource("1_x1q2f")
 theme_override_styles/panel = ExtResource("2_wa3u7")
 
-[node name="Shadow" type="Panel" parent="VBoxContainer/Abilities/Background"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_styles/panel = ExtResource("2_wa3u7")
-
 [node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Abilities"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
@@ -71,6 +88,17 @@ theme_override_constants/margin_bottom = 10
 layout_mode = 2
 theme_override_constants/separation = 10
 
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/Abilities/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="casting_ability" parent="VBoxContainer/Abilities/MarginContainer/VBoxContainer/VBoxContainer" instance=ExtResource("3_rrmo2")]
+layout_mode = 2
+text = "[img=<15>]res://Sprites/Currency/flower_seeds.png[/img] [i]Seeds: [b]14"
+
+[node name="queued_ability" parent="VBoxContainer/Abilities/MarginContainer/VBoxContainer/VBoxContainer" instance=ExtResource("3_rrmo2")]
+layout_mode = 2
+text = "[img=<15>]res://Sprites/Currency/flower_seeds.png[/img] [i]Seeds: [b]14"
+
 [node name="Info" type="MarginContainer" parent="VBoxContainer/Abilities/MarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
@@ -80,16 +108,6 @@ size_flags_vertical = 8
 layout_mode = 2
 theme = ExtResource("4_2y37h")
 theme_override_styles/panel = ExtResource("5_r6tme")
-
-[node name="Shadow" type="Panel" parent="VBoxContainer/Abilities/MarginContainer/VBoxContainer/Info/Background"]
-visible = false
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_y7cjx")
 
 [node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Abilities/MarginContainer/VBoxContainer/Info"]
 layout_mode = 2
@@ -116,6 +134,7 @@ layout_mode = 2
 
 [node name="Stamina" parent="VBoxContainer/Abilities/MarginContainer/VBoxContainer/HBoxContainer" instance=ExtResource("6_wb2ee")]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 kill_text = false
@@ -225,3 +244,15 @@ text = "[i]Carl"
 [node name="LORED Title" parent="VBoxContainer/Title/MarginContainer/VBoxContainer" instance=ExtResource("3_rrmo2")]
 layout_mode = 2
 text = "[i][font_size=12]Coal LORED"
+
+[node name="BottomRight" type="Control" parent="."]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8
+
+[node name="RightUp" type="Control" parent="BottomRight"]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 0
+offset_left = 16.0
+offset_right = 16.0

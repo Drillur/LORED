@@ -113,7 +113,6 @@ func add_stacks(amount: int) -> void:
 		stacks.set_to(get_stack_limit())
 	else:
 		stacks.add(amount)
-	print("Stacks increased to ", stacks.text)
 
 
 func remove_stacks(amount: int) -> void:
@@ -140,7 +139,6 @@ func remove() -> void:
 
 func update_timer_wait_time() -> void:
 	timer.wait_time = tick_rate.get_value()
-
 
 
 

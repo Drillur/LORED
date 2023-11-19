@@ -366,3 +366,7 @@ func get_lored_in_list(list: Array) -> Array:
 	for x in list:
 		arr.append(get_lored(x))
 	return arr
+
+
+func get_unit(lored: LORED.Type) -> Unit:
+	return get_lored(lored).unit

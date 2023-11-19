@@ -18,8 +18,8 @@ bg_color = Color(1, 1, 1, 1)
 
 [node name="Bar" type="MarginContainer"]
 custom_minimum_size = Vector2(40, 8)
-offset_right = 119.0
-offset_bottom = 8.0
+offset_right = 141.0
+offset_bottom = 18.0
 mouse_filter = 0
 script = ExtResource("1_cyi4v")
 
@@ -99,6 +99,7 @@ alignment = 1
 [node name="Label" type="RichTextLabel" parent="Control/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_vertical = 4
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/shadow_outline_size = 3
@@ -106,7 +107,7 @@ theme_override_constants/outline_size = 2
 theme_override_fonts/normal_font = ExtResource("4_4w8r0")
 theme_override_font_sizes/normal_font_size = 14
 bbcode_enabled = true
-text = "123e456"
+text = "Arcane Focus"
 fit_content = true
 scroll_active = false
 autowrap_mode = 0
@@ -114,6 +115,7 @@ autowrap_mode = 0
 [node name="LabelName" type="RichTextLabel" parent="Control/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_vertical = 4
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/shadow_outline_size = 3
@@ -121,7 +123,7 @@ theme_override_constants/outline_size = 2
 theme_override_fonts/normal_font = ExtResource("5_1hfmm")
 theme_override_font_sizes/normal_font_size = 12
 bbcode_enabled = true
-text = "None"
+text = "0.4/10"
 fit_content = true
 scroll_active = false
 autowrap_mode = 0

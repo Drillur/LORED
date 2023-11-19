@@ -218,6 +218,7 @@ enum SafetyType { SAFE, LORED_PURCHASED, }
 
 signal increased_by_lored(amount)
 signal increased_by_buff(amount)
+#signal increased_by_player(amount)
 signal increased(amount)
 signal decreased_by_lored(amount)
 
@@ -235,6 +236,7 @@ var count: Big
 var subtracted_by_loreds := Big.new(0, true)
 var subtracted_by_player := Big.new(0, true)
 var added_by_loreds := Big.new(0, true)
+var added_by_player := Big.new(0, true)
 var added_by_buffs := Big.new(0, true)
 
 var safe := Bool.new(true)
@@ -561,8 +563,9 @@ func init_FLOWER_SEED() -> void:
 
 
 func init_MANA() -> void:
-	# alt: Color(0.721569, 0.34902, 0.901961)
-	details.color = Color(0, 0.709804, 1)
+	details.color = Color(0.721569, 0.34902, 0.901961) # violet
+	details.alt_color = Color(0, 0.709804, 1) # blue
+	details.icon = res.get_resource("Mana")
 
 
 func init_BLOOD() -> void:
@@ -757,6 +760,14 @@ func add_from_lored(amount) -> void:
 	add(amount)
 	added_by_loreds.a(amount)
 	increased_by_lored.emit(amount)
+
+
+func add_from_player(amount) -> void:
+	if not amount is Big:
+		amount = Big.new(amount)
+	add(amount)
+	added_by_player.a(amount)
+	#increased_by_player.emit(amount)
 
 
 func add_from_buff(amount) -> void:

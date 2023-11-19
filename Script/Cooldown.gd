@@ -40,6 +40,11 @@ func activate() -> void:
 	active.set_to(true)
 
 
+func stop() -> void:
+	timer.stop()
+	active.set_to(false)
+
+
 
 # - Get
 
@@ -60,6 +65,10 @@ func get_duration() -> float:
 	return duration.get_value()
 
 
+func get_duration_text() -> String:
+	return str(get_duration()).pad_decimals(1)
+
+
 func get_progress() -> float: # 0.0 to 1.0
 	if is_not_active():
 		return 1.0
@@ -68,7 +77,6 @@ func get_progress() -> float: # 0.0 to 1.0
 
 func get_time_left_text() -> String:
 	var text = "[b][i][font_size=16]%s"
-	var time_left: float = get_time_left()
 	if get_time_left() < 10:
 		text = text % str(get_time_left()).pad_decimals(1)
 		if get_time_left() < 0.5:
@@ -79,6 +87,7 @@ func get_time_left_text() -> String:
 
 
 # - Get (LORED-specific)
+
 
 func is_nearly_or_already_inactive() -> bool:
 	return (

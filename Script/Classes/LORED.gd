@@ -72,7 +72,7 @@ enum Type {
 	TUMORS,
 	
 	WITCH, # 36
-	# put s3 loreds here
+	ARCANE,
 	BLOOD, # leave BLOOD at the bottom. see: init_stage()
 	
 	# put s4 loreds here
@@ -103,6 +103,7 @@ var primary_currency: Currency.Type
 var fuel_currency: Currency.Type
 var reason_cannot_work := Int.new(0)
 var active_currency: Int
+var unit: Unit
 
 var produced_currencies := []
 var required_currencies := []
@@ -784,9 +785,6 @@ func init_WITCH() -> void:
 	details.name = "Circe"
 	cost = Cost.new({
 		Currency.Type.HARDWOOD: Value.new(50),
-		Currency.Type.WIRE: Value.new(150),
-		Currency.Type.GLASS: Value.new(150),
-		Currency.Type.STEEL: Value.new(100),
 	})
 	details.color = Color(0.937255, 0.501961, 0.776471)
 	fuel_currency = Currency.Type.COAL
@@ -794,6 +792,20 @@ func init_WITCH() -> void:
 	details.description = "Loves her garden. In good favor with Aurus."
 	primary_currency = Currency.Type.FLOWER_SEED
 	set_female_pronouns()
+
+
+func init_ARCANE() -> void:
+	details.name = "Arvandus"
+	details.set_title("the Magister")
+	cost = Cost.new({
+		Currency.Type.STEEL: Value.new(100),
+	})
+	details.color = wa.get_currency(Currency.Type.MANA).details.alt_color
+	fuel_currency = Currency.Type.COAL
+	details.icon = res.get_resource("Mana")
+	details.description = "Clever and uptight."
+	primary_currency = Currency.Type.MANA
+	unit = await Unit.new(Unit.Type.ARCANE)
 
 
 func init_BLOOD() -> void:
@@ -1700,3 +1712,7 @@ func get_primary_rate() -> Big:
 
 func get_times_purchased() -> int:
 	return cost.times_purchased.get_value()
+
+
+func has_unit() -> bool:
+	return unit != null

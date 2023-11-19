@@ -2,6 +2,8 @@ class_name UnitManager
 extends Node
 
 
+# This is owned by the Unit itself. it is a CHILD of gv.
+
 
 var unit: Unit
 
@@ -29,6 +31,11 @@ func _process(delta):
 		resource = resource as UnitResource
 		if resource.value.is_not_full():
 			resource.value.add(resource.recovery_rate.get_value() * delta)
+	if unit.is_casting() and unit.get_ability(unit.casting_ability).channeled:
+		var ability = unit.get_ability(unit.casting_ability)
+		match ability.type:
+			UnitAbility.Type.ARCANE_FOCUS:
+				unit.add_mana(ability.channeled_output.get_value() * delta)
 
 
 func unit_resource_decreased() -> void:

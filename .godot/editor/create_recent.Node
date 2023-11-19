@@ -1,9 +1,9 @@
+VBoxContainer
+MarginContainer
+Control
 RichTextLabel
 HBoxContainer
-Control
-MarginContainer
 TextureRect
-VBoxContainer
 TextureProgressBar
 Panel
 Button

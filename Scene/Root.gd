@@ -478,15 +478,13 @@ func _on_limitbreak_pressed():
 
 
 # - Dev
-var unit: Unit
 func _on_dev_1_pressed():
-	unit = Unit.new(Unit.Type.GARDEN)
-	hotbar.setup(unit)
+	hotbar.setup(lv.get_unit(LORED.Type.ARCANE))
+	wa.add(Currency.Type.SEEDS, 100)
+	close_menu()
 
-var i = 0
 func _on_dev_2_pressed():
-	Flowers.DEBUG__test_random_flower(i)
-	i += 5
+	pass
 
 
 func _on_dev_3_pressed():

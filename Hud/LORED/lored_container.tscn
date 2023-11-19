@@ -326,6 +326,10 @@ alignment = 1
 unique_name_in_owner = true
 layout_mode = 2
 
+[node name="ARCANE" parent="TabContainer/Stage 3/ScrollContainer3/MarginContainer/VBoxContainer/HBoxContainer" instance=ExtResource("1_4k0y7")]
+unique_name_in_owner = true
+layout_mode = 2
+
 [node name="WITCH" parent="TabContainer/Stage 3/ScrollContainer3/MarginContainer/VBoxContainer/HBoxContainer" instance=ExtResource("1_4k0y7")]
 unique_name_in_owner = true
 layout_mode = 2

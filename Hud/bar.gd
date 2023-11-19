@@ -14,13 +14,12 @@ extends MarginContainer
 @export var animate := false
 @export var kill_background := false
 @export var kill_text := true
+@export var keep_text_centered := false
 
 var color: Color:
 	set(val):
 		color = val
 		progress_bar.modulate = color
-		if not kill_text:
-			label.modulate = color
 
 var progress: float:
 	set(val):
@@ -49,6 +48,9 @@ func _ready() -> void:
 		$bg.theme = gv.theme_invis
 	if kill_text:
 		$Control.queue_free()
+	else:
+		if keep_text_centered:
+			center_text()
 	resized.connect(_on_resized)
 	call_deferred("_on_resized")
 	set_process(false)
@@ -61,6 +63,11 @@ func _ready() -> void:
 
 func _process(_delta) -> void:
 	progress = 1 - (timer.time_left / timer.wait_time)
+	if not kill_text:
+		label_name.text = "%s/%s" % [
+			str(timer.wait_time - timer.time_left).pad_decimals(1),
+			Big.get_float_text(timer.wait_time)
+		]
 
 
 
@@ -118,12 +125,15 @@ func remove_value() -> void:
 		value = null
 
 
-
 func update_progress() -> void:
 	# value_pair only
 	progress = value.get_current_percent()
 	if not kill_text:
-		label.text = "[center]" + str(floor(value.current.get_value()))
+		label.text = str(floor(value.current.get_value()))
+
+
+func center_text() -> void:
+	label.get_parent().anchors_preset = Control.PRESET_FULL_RECT
 
 
 
@@ -136,3 +146,7 @@ func attach_timer(_timer: Timer) -> void:
 	timer = _timer
 	set_process(true)
 
+
+func remove_timer() -> void:
+	timer = null
+	set_process(false)

@@ -27,7 +27,7 @@ func add_resource_cost(resource: UnitResource.Type, amount: float) -> void:
 
 func add_currency_cost(cur: Currency.Type, amount: float) -> void:
 	if cur in currency_cost.keys():
-		printerr("cur is already in dict")
+		printerr("cur is already in currency_cost dict")
 		return
 	currency_cost[cur] = Float.new(amount)
 	var currency = wa.get_currency(cur) as Currency
@@ -77,9 +77,10 @@ func check_if_affordable() -> void:
 
 
 func spend() -> void:
+	for cur in currency_cost:
+		wa.subtract(cur, currency_cost[cur].get_value())
 	for resource in resource_cost:
 		resources[resource].subtract(resource_cost[resource].get_value())
-		print(resource_cost[resource].get_value(), " ", UnitResource.Type.keys()[resource], " spent! - ", resources[resource].value.get_current_and_total_text())
 
 
 

@@ -13,6 +13,7 @@ extends MarginContainer
 @onready var control = $Control
 
 signal hotkey_pressed(ability)
+signal display_tooltip(ability)
 
 var ability: UnitAbility:
 	set(val):
@@ -20,7 +21,8 @@ var ability: UnitAbility:
 			remove_ability()
 		ability = val
 		button.mouse_default_cursor_shape = CURSOR_POINTING_HAND
-		ability.cooldown.active.changed.connect(cooldown_changed)
+		if ability.has_cooldown():
+			ability.cooldown.active.changed.connect(cooldown_changed)
 		ability.unit.cooldown.active.changed.connect(cooldown_changed)
 		ability.currency_gained.connect(ability_currency_gained)
 		hotkey.show()
@@ -44,6 +46,7 @@ func _ready():
 	input_action = "HotbarSlot" + str(get_index() + 1)
 	hotkey.hide()
 	cooldown.hide()
+	button.mouse_exited.connect(gv.clear_tooltip)
 
 
 
@@ -81,10 +84,10 @@ func throw_error_text(_text: String, _color: Color) -> void:
 # - Signal
 
 
-func _process(delta):
+func _process(_delta):
 	var progress: float
 	var text: String
-	if ability.cooldown.get_time_left() > ability.unit.cooldown.get_time_left():
+	if ability.has_cooldown() and ability.cooldown.get_time_left() > ability.unit.cooldown.get_time_left():
 		progress = 100 - (ability.cooldown.get_progress() * 100)
 		text = ability.cooldown.get_time_left_text()
 	else:
@@ -94,7 +97,7 @@ func _process(delta):
 	cooldown_text.text = text
 
 
-func _input(event):
+func _input(_event):
 	if (
 		Input.is_action_just_pressed(input_action)
 		and can_cast()
@@ -107,8 +110,13 @@ func _on_button_pressed():
 		hotkey_pressed.emit(ability)
 
 
+func _on_button_mouse_entered():
+	if has_ability():
+		display_tooltip.emit(ability)
+
+
 func cooldown_changed() -> void:
-	if ability.cooldown.is_active() or ability.unit.cooldown.is_active():
+	if ability.unit.cooldown.is_active() or (ability.has_cooldown() and ability.cooldown.is_active()):
 		set_process(true)
 		cooldown.show()
 	else:
@@ -119,7 +127,7 @@ func cooldown_changed() -> void:
 
 func ability_currency_gained(cur: Currency.Type, amount) -> void:
 	match ability.type:
-		UnitAbility.Type.PICK_FLOWER:
+		UnitAbility.Type.PICK_FLOWER, UnitAbility.Type.SIFT_SEEDS:
 			var text = FlyingText.new(
 				FlyingText.Type.CURRENCY,
 				control,
@@ -156,6 +164,8 @@ func can_cast() -> bool:
 			throw_error_text("Unit is dead.", Color.RED)
 		elif ability.unit.cooldown.is_active():
 			throw_error_text("On cooldown.", Color.RED)
+		elif ability.unit.is_casting():
+			throw_error_text("Already casting.", Color.RED)
 		return false
 	if not ability.can_cast():
 		if ability.cost.affordable.is_false():
