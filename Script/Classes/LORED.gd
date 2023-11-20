@@ -792,6 +792,7 @@ func init_WITCH() -> void:
 	details.description = "Loves her garden. In good favor with Aurus."
 	primary_currency = Currency.Type.FLOWER_SEED
 	set_female_pronouns()
+	unit = await Unit.new(Unit.Type.GARDEN)
 
 
 func init_ARCANE() -> void:

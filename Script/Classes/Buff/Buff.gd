@@ -146,11 +146,15 @@ func update_timer_wait_time() -> void:
 
 
 func get_progress() -> float:
-	return 1 - (timer.time_left / timer.wait_time)
+	return (
+		float(ticks.base - get_ticks_remaining()) / ticks.base + (
+			(1 - (timer.time_left / timer.wait_time)) / ticks.base
+		)
+	)
 
 
 func get_time_left() -> float:
-	return timer.time_left
+	return timer.wait_time * (get_ticks_remaining() - 1) + timer.time_left
 
 
 func get_ticks_remaining() -> int:
@@ -159,3 +163,7 @@ func get_ticks_remaining() -> int:
 
 func get_stack_limit() -> int:
 	return stacks.base
+
+
+func get_time_left_text() -> String:
+	return str(get_time_left()).pad_decimals(1)

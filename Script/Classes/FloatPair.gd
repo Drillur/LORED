@@ -9,6 +9,8 @@ signal emptied
 var current: Float
 var total: Float
 
+var clamp := true
+
 
 
 func _init(base_value: float, base_total: float):
@@ -16,6 +18,10 @@ func _init(base_value: float, base_total: float):
 	total = Float.new(base_total)
 	current.changed.connect(emit_changed)
 	total.changed.connect(emit_changed)
+
+
+func do_not_clamp() -> void:
+	clamp = false
 
 
 
@@ -34,7 +40,10 @@ func subtract(amount: float) -> void:
 
 
 func clamp_current() -> void:
-	current.current = clampf(current.current, 0, total.current)
+	if clamp:
+		current.current = clampf(current.current, 0.0, total.current)
+	else:
+		current.current = max(current.current, 0.0)
 
 
 func fill() -> void:

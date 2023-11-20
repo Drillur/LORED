@@ -54,6 +54,9 @@ func store_buff(object, buff: Buff) -> void:
 		object.receive_buff()
 		if object.purchased.is_true():
 			buff.start()
+	elif object is Unit:
+		buff.start()
+		object.received_buff.emit(buff)
 	else:
 		buff.start()
 

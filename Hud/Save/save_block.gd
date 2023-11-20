@@ -39,5 +39,5 @@ func _ready() -> void:
 
 
 
-func save_color_changed(_color: Color) -> void:
-	color = _color
+func save_color_changed() -> void:
+	color = SaveManager.save_file_color

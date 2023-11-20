@@ -11,7 +11,7 @@ var saved_vars := [
 signal save_finished
 signal load_finished
 signal load_started
-signal save_color_changed(val)
+signal save_color_changed
 
 enum SaveMethod {
 	TO_FILE,
@@ -82,7 +82,7 @@ var save_file_color: Color:
 	set(val):
 		if save_file_color != val:
 			save_file_color = val
-			save_color_changed.emit(val)
+			save_color_changed.emit()
 
 var save_version := {
 	"major": 3,

@@ -26,17 +26,17 @@ enum Platform {PC, HTML,}
 
 var dev_mode := true#false
 const PLATFORM := Platform.PC
+const game_color := Color(1, 0, 0.235)
+const ONE_FRAME = 1.0/60
 
 var theme_standard := preload("res://Theme/Standard.tres")
 var theme_invis := preload("res://Theme/Invis.tres")
 var theme_text_button := preload("res://Theme/TextButton.tres")
 var theme_text_button_alternate := preload("res://Theme/TextButtonAlternate.tres")
 
-const game_color := Color(1, 0, 0.235)
 
 var texts_parent: Control
 var menu_container_size: float
-
 
 func _ready() -> void:
 	randomize()

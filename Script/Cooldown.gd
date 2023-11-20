@@ -94,3 +94,7 @@ func is_nearly_or_already_inactive() -> bool:
 		is_not_active()
 		or get_time_left() < 0.5
 	)
+
+
+func is_almost_done() -> bool:
+	return get_time_left() <= gv.ONE_FRAME

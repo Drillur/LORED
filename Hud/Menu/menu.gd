@@ -141,7 +141,8 @@ func _ready():
 
 # - Signal
 
-func save_color_changed(_color: Color) -> void:
+func save_color_changed() -> void:
+	var _color = SaveManager.save_file_color
 	while _color.r + _color.g + _color.b < 1:
 		_color.r = min(1, _color.r * 1.15)
 		_color.g = min(1, _color.g * 1.15)

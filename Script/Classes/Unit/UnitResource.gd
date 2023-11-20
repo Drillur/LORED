@@ -26,12 +26,12 @@ func _init(_type: Type, base_value: float):
 			details.name = "Stamina"
 			details.description = "A quickly regenerating resource used for many abilities."
 			details.icon = res.get_resource("Stamina")
-			recovery_rate = Float.new(5/3)
+			recovery_rate = Float.new(5.0/3)
 		Type.MANA:
 			details.name = "Mana"
 			details.description = "A slowly regenerating resource used for advanced abilities."
 			details.icon = res.get_resource("water")
-			recovery_rate = Float.new(1/3)
+			recovery_rate = Float.new(0.1/3)
 		Type.HEALTH:
 			details.name = "Health"
 			details.description = "This unit's ability to recover. If it drops to 0, he or she will be incapable of recovering and effectively be dead."

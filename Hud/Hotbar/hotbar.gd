@@ -22,18 +22,29 @@ extends MarginContainer
 @onready var tooltip_parent = %RightUp
 @onready var cast_bar = %CastBar as Bar
 @onready var cast_bar_container = %CastBarContainer
+@onready var buff_container = %BuffContainer
 
 var unit: Unit
 var currency_0: Currency
 var currency_1: Currency
 
+var buffs := {}
+
+var stored_mana_gain: float
+var mana_timer := Timer.new()
+
 
 
 func _ready() -> void:
+	add_child(mana_timer)
+	mana_timer.one_shot = true
+	mana_timer.wait_time = 1.0
+	mana_timer.timeout.connect(display_mana_gain)
+	
 	stamina_bar.color = UnitResource.get_color(UnitResource.Type.STAMINA)
-	stamina_bar.label_name.text = "Stamina"
+	stamina_bar.label_name.text = "[color=#%s]%s[/color]" % [stamina_bar.color.to_html(), "Stamina"]
 	mana_bar.color = UnitResource.get_color(UnitResource.Type.MANA)
-	mana_bar.label_name.text = "Mana"
+	mana_bar.label_name.text = wa.get_currency(Currency.Type.MANA).details.color_text % "Mana"
 	cast_bar_container.hide()
 	for i in 12:
 		var hotbar_slot: HotbarSlot = get("hotbar_slot_" + str(i))
@@ -43,13 +54,15 @@ func _ready() -> void:
 
 
 func setup(_unit: Unit) -> void:
-	if unit:
+	if has_unit():
 		disconnect_currencies()
 		stamina_bar.remove_value()
 		mana_bar.remove_value()
 		cast_bar.remove_timer()
 		unit.started_casting.disconnect(unit_started_casting)
 		unit.stopped_casting.disconnect(unit_finished_casting)
+		unit.mana_gained.disconnect(unit_mana_gained)
+		unit.received_buff.disconnect(unit_received_buff)
 	unit = _unit
 	connect_currencies()
 	cast_bar.attach_timer(unit.cast_timer)
@@ -57,8 +70,8 @@ func setup(_unit: Unit) -> void:
 	cast_bar.color = unit.lored.details.color
 	unit.started_casting.connect(unit_started_casting)
 	unit.stopped_casting.connect(unit_finished_casting)
-	unit.DEBUG_casting_ability.changed.connect(update_shit)
-	unit.DEBUG_queued_ability.changed.connect(update_shit)
+	unit.mana_gained.connect(unit_mana_gained)
+	unit.received_buff.connect(unit_received_buff)
 	
 	for resource in unit.resources:
 		match resource:
@@ -128,12 +141,43 @@ func unit_started_casting() -> void:
 	cast_bar.set_process(true)
 	var ability = unit.get_ability(unit.casting_ability)
 	cast_bar.label.text = ability.details.colored_name
+	gv.flash(cast_bar, ability.details.color)
 	cast_bar_container.show()
 
 
 func unit_finished_casting() -> void:
 	cast_bar_container.hide()
 	cast_bar.set_process(false)
+
+
+func unit_mana_gained(amount: float) -> void:
+	stored_mana_gain += amount
+	if mana_timer.is_stopped():
+		display_mana_gain()
+
+
+func display_mana_gain() -> void:
+	if stored_mana_gain >= 0.1:
+		var text = FlyingText.new(
+			FlyingText.Type.CURRENCY,
+			currency_0_text,
+			gv.texts_parent,
+			[0, 0],
+		)
+		text.add({
+			"cur": int(Currency.Type.MANA),
+			"text": "+" + Big.get_float_text(stored_mana_gain),
+			"crit": false,
+		})
+		text.go()
+		stored_mana_gain = 0.0
+		mana_timer.start()
+
+
+func unit_received_buff(buff: UnitBuff) -> void:
+	buffs[buff] = res.get_resource("buff_vico").instantiate()
+	buff_container.add_child(buffs[buff])
+	buffs[buff].setup(buff)
 
 
 

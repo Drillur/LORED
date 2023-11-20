@@ -18,7 +18,8 @@ func _ready():
 
 
 
-func update_colors(val: Color) -> void:
+func update_colors() -> void:
+	var val = SaveManager.save_file_color
 	background.modulate = val
 	icon.modulate = val
 

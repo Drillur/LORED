@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://cy7emeyok7vf8"]
+[gd_scene load_steps=12 format=3 uid="uid://cy7emeyok7vf8"]
 
 [ext_resource type="Script" path="res://Hud/Hotbar/hotbar.gd" id="1_7qlj5"]
 [ext_resource type="Theme" uid="uid://bl4v2v143rihi" path="res://Theme/Background.tres" id="1_x1q2f"]
@@ -7,8 +7,6 @@
 [ext_resource type="PackedScene" uid="uid://dkje4yw8kpbj5" path="res://Hud/Hotbar/hotbar_slot.tscn" id="3_3moyv"]
 [ext_resource type="Texture2D" uid="uid://7g4j85olgewr" path="res://Sprites/reactions/COPPER1.png" id="3_jwv33"]
 [ext_resource type="PackedScene" uid="uid://b411lpbrvvmuj" path="res://Hud/rich_text_label.tscn" id="3_rrmo2"]
-[ext_resource type="Theme" uid="uid://crf5gyv8gm6r1" path="res://Theme/Subtle Background.tres" id="4_2y37h"]
-[ext_resource type="StyleBox" uid="uid://dyca4nc2uq71" path="res://Theme/RoundedBackgroundNoShadow.tres" id="5_r6tme"]
 [ext_resource type="PackedScene" uid="uid://exe3ppvvv74m" path="res://Hud/bar.tscn" id="6_wb2ee"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1f2fw"]
@@ -32,31 +30,40 @@ shadow_size = 5
 
 [node name="Hotbar" type="MarginContainer"]
 custom_minimum_size = Vector2(280, 0)
-offset_right = 339.0
-offset_bottom = 226.0
+offset_right = 280.0
+offset_bottom = 272.0
 size_flags_horizontal = 4
 size_flags_vertical = 10
 theme_override_constants/margin_bottom = 16
 script = ExtResource("1_7qlj5")
 
-[node name="Control" type="Control" parent="."]
+[node name="Background" type="Panel" parent="."]
+layout_mode = 2
+theme = ExtResource("1_x1q2f")
+theme_override_styles/panel = ExtResource("2_wa3u7")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="CastBarContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 36)
 layout_mode = 2
 
-[node name="CastBarContainer" type="MarginContainer" parent="Control"]
-unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 10
-anchor_right = 1.0
-offset_top = -52.0
-offset_bottom = -16.0
-grow_horizontal = 2
-
-[node name="Background" type="Panel" parent="Control/CastBarContainer"]
+[node name="Background" type="Panel" parent="MarginContainer/VBoxContainer/CastBarContainer"]
 layout_mode = 2
 theme = ExtResource("2_mmexq")
 theme_override_styles/panel = SubResource("StyleBoxFlat_1f2fw")
 
-[node name="CastBar" parent="Control/CastBarContainer" instance=ExtResource("6_wb2ee")]
+[node name="CastBar" parent="MarginContainer/VBoxContainer/CastBarContainer" instance=ExtResource("6_wb2ee")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(40, 16)
 layout_mode = 2
@@ -65,152 +72,173 @@ kill_markers = true
 kill_text = false
 keep_text_centered = true
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
-layout_mode = 2
-theme_override_constants/separation = 0
-
-[node name="Abilities" type="MarginContainer" parent="VBoxContainer"]
-layout_mode = 2
-
-[node name="Background" type="Panel" parent="VBoxContainer/Abilities"]
-layout_mode = 2
-theme = ExtResource("1_x1q2f")
-theme_override_styles/panel = ExtResource("2_wa3u7")
-
-[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Abilities"]
-layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
-
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/Abilities/MarginContainer"]
-layout_mode = 2
-theme_override_constants/separation = 10
-
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/Abilities/MarginContainer/VBoxContainer"]
-layout_mode = 2
-
-[node name="casting_ability" parent="VBoxContainer/Abilities/MarginContainer/VBoxContainer/VBoxContainer" instance=ExtResource("3_rrmo2")]
-layout_mode = 2
-text = "[img=<15>]res://Sprites/Currency/flower_seeds.png[/img] [i]Seeds: [b]14"
-
-[node name="queued_ability" parent="VBoxContainer/Abilities/MarginContainer/VBoxContainer/VBoxContainer" instance=ExtResource("3_rrmo2")]
-layout_mode = 2
-text = "[img=<15>]res://Sprites/Currency/flower_seeds.png[/img] [i]Seeds: [b]14"
-
-[node name="Info" type="MarginContainer" parent="VBoxContainer/Abilities/MarginContainer/VBoxContainer"]
+[node name="Info" type="MarginContainer" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 8
 
-[node name="Background" type="Panel" parent="VBoxContainer/Abilities/MarginContainer/VBoxContainer/Info"]
+[node name="Background" type="Panel" parent="MarginContainer/VBoxContainer/Info"]
 layout_mode = 2
-theme = ExtResource("4_2y37h")
-theme_override_styles/panel = ExtResource("5_r6tme")
+theme = ExtResource("1_x1q2f")
+theme_override_styles/panel = ExtResource("2_wa3u7")
 
-[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Abilities/MarginContainer/VBoxContainer/Info"]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/Info"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Info/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Currency0" parent="MarginContainer/VBoxContainer/Info/MarginContainer/VBoxContainer" instance=ExtResource("3_rrmo2")]
+layout_mode = 2
+text = "[img=<15>]res://Sprites/Currency/flower_seeds.png[/img] [i]Seeds: [b]14"
+
+[node name="Currency1" parent="MarginContainer/VBoxContainer/Info/MarginContainer/VBoxContainer" instance=ExtResource("3_rrmo2")]
+layout_mode = 2
+text = "[img=<15>]res://Sprites/Currency/flower_seeds.png[/img] [i]Seeds: [b]14"
+
+[node name="Left" type="Control" parent="MarginContainer/VBoxContainer/Info"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 4
+
+[node name="BuffContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Info/Left"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -50.0
+offset_right = -10.0
+grow_horizontal = 0
+grow_vertical = 2
+alignment = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Abilities" type="MarginContainer" parent="MarginContainer/VBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Background" type="Panel" parent="MarginContainer/VBoxContainer/VBoxContainer/Abilities"]
+layout_mode = 2
+theme = ExtResource("1_x1q2f")
+theme_override_styles/panel = ExtResource("2_wa3u7")
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/Abilities"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="VBoxContainer" type="HBoxContainer" parent="VBoxContainer/Abilities/MarginContainer/VBoxContainer/Info/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/Abilities/MarginContainer"]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="Currency0" parent="VBoxContainer/Abilities/MarginContainer/VBoxContainer/Info/MarginContainer/VBoxContainer" instance=ExtResource("3_rrmo2")]
+[node name="DEBUG" type="VBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/Abilities/MarginContainer/VBoxContainer"]
+visible = false
+layout_mode = 2
+
+[node name="casting_ability" parent="MarginContainer/VBoxContainer/VBoxContainer/Abilities/MarginContainer/VBoxContainer/DEBUG" instance=ExtResource("3_rrmo2")]
 layout_mode = 2
 text = "[img=<15>]res://Sprites/Currency/flower_seeds.png[/img] [i]Seeds: [b]14"
 
-[node name="Currency1" parent="VBoxContainer/Abilities/MarginContainer/VBoxContainer/Info/MarginContainer/VBoxContainer" instance=ExtResource("3_rrmo2")]
+[node name="queued_ability" parent="MarginContainer/VBoxContainer/VBoxContainer/Abilities/MarginContainer/VBoxContainer/DEBUG" instance=ExtResource("3_rrmo2")]
 layout_mode = 2
 text = "[img=<15>]res://Sprites/Currency/flower_seeds.png[/img] [i]Seeds: [b]14"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/Abilities/MarginContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/Abilities/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 16)
 layout_mode = 2
 
-[node name="Stamina" parent="VBoxContainer/Abilities/MarginContainer/VBoxContainer/HBoxContainer" instance=ExtResource("6_wb2ee")]
+[node name="Stamina" parent="MarginContainer/VBoxContainer/VBoxContainer/Abilities/MarginContainer/VBoxContainer/HBoxContainer" instance=ExtResource("6_wb2ee")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 kill_text = false
 
-[node name="Mana" parent="VBoxContainer/Abilities/MarginContainer/VBoxContainer/HBoxContainer" instance=ExtResource("6_wb2ee")]
+[node name="Mana" parent="MarginContainer/VBoxContainer/VBoxContainer/Abilities/MarginContainer/VBoxContainer/HBoxContainer" instance=ExtResource("6_wb2ee")]
 unique_name_in_owner = true
-visible = false
 layout_mode = 2
 size_flags_horizontal = 3
-animate = true
+kill_text = false
 
-[node name="HotbarSlotContainer" type="GridContainer" parent="VBoxContainer/Abilities/MarginContainer/VBoxContainer"]
+[node name="HotbarSlotContainer" type="GridContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/Abilities/MarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 columns = 6
 
-[node name="HotbarSlot0" parent="VBoxContainer/Abilities/MarginContainer/VBoxContainer/HotbarSlotContainer" instance=ExtResource("3_3moyv")]
+[node name="HotbarSlot0" parent="MarginContainer/VBoxContainer/VBoxContainer/Abilities/MarginContainer/VBoxContainer/HotbarSlotContainer" instance=ExtResource("3_3moyv")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="HotbarSlot1" parent="VBoxContainer/Abilities/MarginContainer/VBoxContainer/HotbarSlotContainer" instance=ExtResource("3_3moyv")]
+[node name="HotbarSlot1" parent="MarginContainer/VBoxContainer/VBoxContainer/Abilities/MarginContainer/VBoxContainer/HotbarSlotContainer" instance=ExtResource("3_3moyv")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="HotbarSlot2" parent="VBoxContainer/Abilities/MarginContainer/VBoxContainer/HotbarSlotContainer" instance=ExtResource("3_3moyv")]
+[node name="HotbarSlot2" parent="MarginContainer/VBoxContainer/VBoxContainer/Abilities/MarginContainer/VBoxContainer/HotbarSlotContainer" instance=ExtResource("3_3moyv")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="HotbarSlot3" parent="VBoxContainer/Abilities/MarginContainer/VBoxContainer/HotbarSlotContainer" instance=ExtResource("3_3moyv")]
+[node name="HotbarSlot3" parent="MarginContainer/VBoxContainer/VBoxContainer/Abilities/MarginContainer/VBoxContainer/HotbarSlotContainer" instance=ExtResource("3_3moyv")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="HotbarSlot4" parent="VBoxContainer/Abilities/MarginContainer/VBoxContainer/HotbarSlotContainer" instance=ExtResource("3_3moyv")]
+[node name="HotbarSlot4" parent="MarginContainer/VBoxContainer/VBoxContainer/Abilities/MarginContainer/VBoxContainer/HotbarSlotContainer" instance=ExtResource("3_3moyv")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="HotbarSlot5" parent="VBoxContainer/Abilities/MarginContainer/VBoxContainer/HotbarSlotContainer" instance=ExtResource("3_3moyv")]
+[node name="HotbarSlot5" parent="MarginContainer/VBoxContainer/VBoxContainer/Abilities/MarginContainer/VBoxContainer/HotbarSlotContainer" instance=ExtResource("3_3moyv")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="HotbarSlot6" parent="VBoxContainer/Abilities/MarginContainer/VBoxContainer/HotbarSlotContainer" instance=ExtResource("3_3moyv")]
+[node name="HotbarSlot6" parent="MarginContainer/VBoxContainer/VBoxContainer/Abilities/MarginContainer/VBoxContainer/HotbarSlotContainer" instance=ExtResource("3_3moyv")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="HotbarSlot7" parent="VBoxContainer/Abilities/MarginContainer/VBoxContainer/HotbarSlotContainer" instance=ExtResource("3_3moyv")]
+[node name="HotbarSlot7" parent="MarginContainer/VBoxContainer/VBoxContainer/Abilities/MarginContainer/VBoxContainer/HotbarSlotContainer" instance=ExtResource("3_3moyv")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="HotbarSlot8" parent="VBoxContainer/Abilities/MarginContainer/VBoxContainer/HotbarSlotContainer" instance=ExtResource("3_3moyv")]
+[node name="HotbarSlot8" parent="MarginContainer/VBoxContainer/VBoxContainer/Abilities/MarginContainer/VBoxContainer/HotbarSlotContainer" instance=ExtResource("3_3moyv")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="HotbarSlot9" parent="VBoxContainer/Abilities/MarginContainer/VBoxContainer/HotbarSlotContainer" instance=ExtResource("3_3moyv")]
+[node name="HotbarSlot9" parent="MarginContainer/VBoxContainer/VBoxContainer/Abilities/MarginContainer/VBoxContainer/HotbarSlotContainer" instance=ExtResource("3_3moyv")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="HotbarSlot10" parent="VBoxContainer/Abilities/MarginContainer/VBoxContainer/HotbarSlotContainer" instance=ExtResource("3_3moyv")]
+[node name="HotbarSlot10" parent="MarginContainer/VBoxContainer/VBoxContainer/Abilities/MarginContainer/VBoxContainer/HotbarSlotContainer" instance=ExtResource("3_3moyv")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="HotbarSlot11" parent="VBoxContainer/Abilities/MarginContainer/VBoxContainer/HotbarSlotContainer" instance=ExtResource("3_3moyv")]
+[node name="HotbarSlot11" parent="MarginContainer/VBoxContainer/VBoxContainer/Abilities/MarginContainer/VBoxContainer/HotbarSlotContainer" instance=ExtResource("3_3moyv")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Title" type="MarginContainer" parent="VBoxContainer"]
+[node name="Title" type="MarginContainer" parent="MarginContainer/VBoxContainer/VBoxContainer"]
 show_behind_parent = true
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 8
 
-[node name="Background" type="Panel" parent="VBoxContainer/Title"]
+[node name="Background" type="Panel" parent="MarginContainer/VBoxContainer/VBoxContainer/Title"]
 layout_mode = 2
 theme = ExtResource("1_x1q2f")
 theme_override_styles/panel = SubResource("StyleBoxFlat_rb8n1")
 
-[node name="Shadow" type="Panel" parent="VBoxContainer/Title/Background"]
+[node name="Shadow" type="Panel" parent="MarginContainer/VBoxContainer/VBoxContainer/Title/Background"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -219,29 +247,29 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_y7cjx")
 
-[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Title"]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/Title"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="VBoxContainer" type="HBoxContainer" parent="VBoxContainer/Title/MarginContainer"]
+[node name="VBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxContainer/Title/MarginContainer"]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="TextureRect" type="TextureRect" parent="VBoxContainer/Title/MarginContainer/VBoxContainer"]
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/VBoxContainer/VBoxContainer/Title/MarginContainer/VBoxContainer"]
 visible = false
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 texture = ExtResource("3_jwv33")
 stretch_mode = 3
 
-[node name="LORED Name" parent="VBoxContainer/Title/MarginContainer/VBoxContainer" instance=ExtResource("3_rrmo2")]
+[node name="LORED Name" parent="MarginContainer/VBoxContainer/VBoxContainer/Title/MarginContainer/VBoxContainer" instance=ExtResource("3_rrmo2")]
 layout_mode = 2
 text = "[i]Carl"
 
-[node name="LORED Title" parent="VBoxContainer/Title/MarginContainer/VBoxContainer" instance=ExtResource("3_rrmo2")]
+[node name="LORED Title" parent="MarginContainer/VBoxContainer/VBoxContainer/Title/MarginContainer/VBoxContainer" instance=ExtResource("3_rrmo2")]
 layout_mode = 2
 text = "[i][font_size=12]Coal LORED"
 

@@ -25,6 +25,7 @@ func _init(_type: Type, unit: Unit) -> void:
 		Type.CORE_RIFT:
 			var ability_type = UnitAbility.Type.CORE_RIFT
 			output = Float.new(unit.get_ability(ability_type).output.get_value())
+			details.icon = res.get_resource("Mana")
 			details.color = unit.get_ability(ability_type).details.color
 			var a = wa.get_currency(Currency.Type.MANA).details.icon_and_name_text
 			details.description = "Recovering {output} %s each second." % a

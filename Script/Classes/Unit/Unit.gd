@@ -21,6 +21,8 @@ enum ErrorType {
 signal initialized
 signal started_casting
 signal stopped_casting
+signal mana_gained(amount)
+signal received_buff(buff)
 
 var type: Type
 var key: String
@@ -63,6 +65,7 @@ func _init(_type: Type) -> void:
 			add_ability(UnitAbility.Type.ARCANE_FOCUS)
 			add_ability(UnitAbility.Type.SUPPLEMANCE)
 			hotbar_currencies.append(wa.get_currency(Currency.Type.MANA))
+			mana.value.do_not_clamp()
 		Type.GARDEN:
 			lored = lv.get_lored(LORED.Type.WITCH)
 			setup_unit_resource(UnitResource.Type.STAMINA, 10)
@@ -70,7 +73,7 @@ func _init(_type: Type) -> void:
 			add_ability(UnitAbility.Type.SIFT_SEEDS)
 			hotbar_currencies.append(wa.get_currency(Currency.Type.SEEDS))
 			hotbar_currencies.append(wa.get_currency(Currency.Type.FLOWER_SEED))
-	cooldown.active.became_false.connect(check_for_queued_ability)
+	cooldown.active.became_false.connect(cast_queued_ability)
 	
 	manager = UnitManager.new()
 	gv.add_child(manager)
@@ -78,7 +81,7 @@ func _init(_type: Type) -> void:
 	
 	cast_timer.one_shot = true
 	cast_timer.timeout.connect(cast_timer_timeout)
-	cast_timer.timeout.connect(check_for_queued_ability)
+	cast_timer.timeout.connect(cast_queued_ability)
 	manager.add_child(cast_timer)
 	
 	initialized.emit()
@@ -88,21 +91,19 @@ func _init(_type: Type) -> void:
 # - Signal
 
 
-func check_for_queued_ability() -> void:
+func cast_queued_ability() -> void:
 	if has_queued_ability():
-		if is_casting():
-			cast_ability()
-			stop_casting()
-#		if is_casting_but_not_channeling():
-#			cast_ability()
-#			stop_casting()
+		if cooldown.is_active() and cooldown.is_almost_done():
+			cooldown.stop()
+			return
+		if is_casting_but_not_channeling():
+			return
 		if can_cast() and get_ability(queued_ability).can_cast():
-			print("ABOUT TO CAST")
 			cast(queued_ability)
 			# i could see a problem where can_cast() fails because a resource or currency cost is 0.0000001 short
 			# and then in the next frame there is enough to cast. time will tell if this
 			# happens, and if it does, if it feels bad.
-		clear_queued_ability()
+			clear_queued_ability()
 
 
 func cast_timer_timeout() -> void:
@@ -150,7 +151,7 @@ func add_ability(ability_type: UnitAbility.Type) -> void:
 func clear_queued_ability() -> void:
 	var ability := get_ability(queued_ability)
 	if ability.has_cooldown():
-		ability.cooldown.active.became_false.disconnect(check_for_queued_ability)
+		ability.cooldown.active.became_false.disconnect(cast_queued_ability)
 	queued_ability = UnitAbility.Type.NONE
 	DEBUG_queued_ability.set_to(queued_ability)
 
@@ -162,12 +163,14 @@ func clear_queued_ability() -> void:
 
 func cast(ability_type: UnitAbility.Type) -> void:
 	var ability := get_ability(ability_type) as UnitAbility
-	if cooldown.is_active() or (ability.has_cooldown() and ability.cooldown.is_active()):
-		print("WHUAT")
-		# by this point, both cooldowns are at < 0.5s time_left.
+	if should_enqueue(ability):
+		# by this point, both cooldowns time_left are > 0.01666 and < 0.5
+		print("enqueuing ", UnitAbility.Type.keys()[ability_type])
+		#print(cooldown.get_time_left())
 		enqueue_ability(ability_type)
 	else:
 		if is_casting():
+			print("stopped casting ", UnitAbility.Type.keys()[casting_ability])
 			stop_casting()
 		if ability.has_cast_time():
 			casting_ability = ability_type
@@ -186,16 +189,11 @@ func enqueue_ability(ability_type: UnitAbility.Type) -> void:
 	DEBUG_queued_ability.set_to(queued_ability)
 	var ability := get_ability(queued_ability)
 	if ability.has_cooldown():
-		ability.cooldown.active.became_false.connect(check_for_queued_ability)
+		ability.cooldown.active.became_false.connect(cast_queued_ability)
 
 
 func add_mana(amount: float) -> void:
-	var surplus = mana.value.get_surplus(amount)
-	if surplus > 0:
-		mana.value.fill()
-		wa.add(Currency.Type.MANA, surplus)
-	else:
-		mana.value.add(amount)
+	mana.value.add(amount)
 
 
 func stop_casting() -> void:
@@ -228,6 +226,22 @@ func can_cast() -> bool:
 			if cast_timer.time_left > 0.5:
 				return false
 	return cooldown.is_nearly_or_already_inactive()
+
+
+func should_enqueue(ability: UnitAbility) -> bool:
+	if cooldown.is_active():
+		if ability.has_cooldown() and ability.cooldown.is_active():
+			if cooldown.is_almost_done() and ability.cooldown.is_almost_done():
+				return false
+			return true
+		if cooldown.is_almost_done():
+			return false
+		return true
+	if ability.has_cooldown() and ability.cooldown.is_active():
+		if ability.cooldown.is_almost_done():
+			return false
+		return true
+	return false
 
 
 func has_queued_ability() -> bool:
