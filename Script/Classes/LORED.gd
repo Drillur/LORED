@@ -103,7 +103,6 @@ var primary_currency: Currency.Type
 var fuel_currency: Currency.Type
 var reason_cannot_work := Int.new(0)
 var active_currency: Int
-var unit: Unit
 
 var produced_currencies := []
 var required_currencies := []
@@ -792,7 +791,6 @@ func init_WITCH() -> void:
 	details.description = "Loves her garden. In good favor with Aurus."
 	primary_currency = Currency.Type.FLOWER_SEED
 	set_female_pronouns()
-	unit = await Unit.new(Unit.Type.GARDEN)
 
 
 func init_ARCANE() -> void:
@@ -803,10 +801,9 @@ func init_ARCANE() -> void:
 	})
 	details.color = wa.get_currency(Currency.Type.MANA).details.alt_color
 	fuel_currency = Currency.Type.COAL
-	details.icon = res.get_resource("Mana")
+	details.icon = res.get_resource("water")
 	details.description = "Clever and uptight."
 	primary_currency = Currency.Type.MANA
-	unit = await Unit.new(Unit.Type.ARCANE)
 
 
 func init_BLOOD() -> void:
@@ -1713,7 +1710,3 @@ func get_primary_rate() -> Big:
 
 func get_times_purchased() -> int:
 	return cost.times_purchased.get_value()
-
-
-func has_unit() -> bool:
-	return unit != null

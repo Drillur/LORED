@@ -565,7 +565,7 @@ func init_FLOWER_SEED() -> void:
 func init_MANA() -> void:
 	details.color = Color(0.721569, 0.34902, 0.901961) # violet
 	details.alt_color = Color(0, 0.709804, 1) # blue
-	details.icon = res.get_resource("Mana")
+	details.icon = res.get_resource("water")
 
 
 func init_BLOOD() -> void:

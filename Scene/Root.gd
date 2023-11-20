@@ -479,8 +479,6 @@ func _on_limitbreak_pressed():
 
 # - Dev
 func _on_dev_1_pressed():
-	hotbar.setup(lv.get_unit(LORED.Type.ARCANE))
-	wa.add(Currency.Type.SEEDS, 100)
 	close_menu()
 
 func _on_dev_2_pressed():

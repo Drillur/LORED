@@ -13,7 +13,7 @@ signal debuffed
 var type: int
 var key: String
 
-var object # LORED, Unit, anything!
+var object # LORED, anything!
 
 var timer := Timer.new()
 
