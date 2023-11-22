@@ -13,7 +13,18 @@ extends CanvasLayer
 @onready var scroll = %scroll
 @onready var response_section = %ResponseSection
 
-@onready var content = $MarginContainer
+@onready var collapsed = %Collapsed
+@onready var collapsed_label = %"Collapsed Label"
+@onready var collapsed_button = %"Collapsed Button"
+@onready var collapsed_arrow = %"Collapsed Arrow"
+@onready var close_chat_button = %"Close Chat"
+
+@onready var request = %Request
+@onready var request_label = %"Request Label"
+@onready var request_button = %"Request Button"
+@onready var decline_request = %"Decline Request"
+
+@onready var content = %Main
 
 ## The dialogue resource
 var resource: DialogueResource
@@ -34,6 +45,9 @@ var color: Color:
 			text_background.modulate = val
 			skip_typing.modulate = val
 			pose.modulate = val
+			collapsed_label.modulate = val
+			collapsed_button.modulate = val
+			close_chat_button.color = val
 			for response_button in responses_menu.get_children():
 				response_button.color = val
 
@@ -103,6 +117,8 @@ func _ready() -> void:
 
 ## Start some dialogue
 func start(dialogue_resource: DialogueResource, title: String, extra_game_states: Array = []) -> void:
+	collapsed.hide()
+	content.show()
 	temporary_game_states = [self] + extra_game_states
 	is_waiting_for_input = false
 	resource = dialogue_resource
@@ -111,7 +127,7 @@ func start(dialogue_resource: DialogueResource, title: String, extra_game_states
 
 ## Go to the next line
 func next(next_id: String) -> void:
-	self.dialogue_line = await resource.get_next_dialogue_line(next_id, temporary_game_states)
+	dialogue_line = await resource.get_next_dialogue_line(next_id, temporary_game_states)
 
 
 ### Signals
@@ -149,3 +165,35 @@ func _on_responses_menu_response_selected(response: DialogueResponse) -> void:
 
 func _on_dialogue_label_finished_typing():
 	pass
+
+
+func hide_chat() -> void:
+	content.hide()
+	collapsed.show()
+
+
+func _on_collapsed_button_pressed():
+	collapsed.hide()
+	content.show()
+
+
+func _on_close_chat_pressed():
+	close_chat()
+
+
+func close_chat() -> void:
+	content.hide()
+	collapsed.hide()
+	if not request.visible:
+		dialogue_line = null
+		hide()
+
+
+
+# - Get
+
+
+func is_collapsed() -> bool:
+	return collapsed.visible
+
+

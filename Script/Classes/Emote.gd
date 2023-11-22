@@ -198,7 +198,7 @@ func COAL_HUM() -> void:
 			em.coal_hum = -1
 		22: dialogue = "[b][shake rate=40.0 level=5 connected=1]CLICK THE[/shake] [shake rate=80.0 level=5 connected=1]BUTTOOOOOOOOOOOOOOON![/shake][/b]"
 		21: dialogue = "[shake rate=30.0 level=5 connected=1]EEEEEEEEEEEEEEEEEEEEEEEEEEEEEE!!!!!!!![/shake]"
-		20: dialogue = "[b]HELL NAWH, CLICK THE MOTHERFUCKING BUTTON YOU GODDAMN PIECE OF SHIT. I'M ACTUALLY FUCKING DONE AT THIS POINT, ALRIGHT? CLICK. THE BUTTON. YOU FUCKFACE.[/b]"
+		20: dialogue = "[b]HELL NAWH, CLICK THE ----ING BUTTON YOU PIECE OF ----. I'M ACTUALLY ----ING DONE AT THIS POINT, ALRIGHT? CLICK. THE BUTTON. YOU ----FACE.[/b]"
 		19:
 			var a = lv.get_colored_name(LORED.Type.STONE)
 			dialogue = "Look at %s. He's totally out of fuel. He's been waiting for you this entire time. If you don't do it for me, do it for him." % a

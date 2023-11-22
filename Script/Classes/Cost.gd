@@ -55,16 +55,16 @@ func _init(_cost: Dictionary) -> void:
 
 func connect_calls() -> void:
 	for cur in cost:
-		if not wa.currency[cur].count.is_connected("increased", currency_increased):
-			wa.currency[cur].count.connect("increased", currency_increased)
-			wa.currency[cur].count.connect("decreased", currency_decreased)
+		if not wa.currency[cur].count.increased.is_connected(currency_increased):
+			wa.currency[cur].count.increased.connect(currency_increased)
+			wa.currency[cur].count.decreased.connect(currency_decreased)
 
 
 func disconnect_calls() -> void:
 	for cur in cost:
-		if wa.currency[cur].count.is_connected("increased", currency_increased):
-			wa.currency[cur].count.disconnect("increased", currency_increased)
-			wa.currency[cur].count.disconnect("decreased", currency_decreased)
+		if wa.currency[cur].count.increased.is_connected(currency_increased):
+			wa.currency[cur].count.increased.disconnect(currency_increased)
+			wa.currency[cur].count.decreased.disconnect(currency_decreased)
 
 
 func loreds_initialized() -> void:
@@ -106,16 +106,12 @@ func currency_became_safe() -> void:
 # - Notify
 
 func currency_increased() -> void:
-	if affordable.is_true():
-		return
-	if can_afford():
+	if affordable.is_false() and can_afford():
 		affordable.set_to(true)
 
 
 func currency_decreased() -> void:
-	if affordable.is_false():
-		return
-	if not can_afford():
+	if affordable.is_true() and cannot_afford():
 		affordable.set_to(false)
 
 
@@ -230,6 +226,10 @@ func can_afford() -> bool:
 	return true
 
 
+func cannot_afford() -> bool:
+	return not can_afford()
+
+
 func is_safe_to_purchase() -> bool:
 	for cur in cost:
 		if not wa.is_currency_safe_to_spend(cur):
@@ -320,3 +320,17 @@ func baby_became_adult() -> void:
 		affordable.became_true.emit()
 	else:
 		recheck()
+
+
+
+# - Debug
+
+
+func report() -> void:
+	print("---Cost Report (", self, ")---")
+	print("Cost (Affordable: ", affordable.get_value(), "):")
+	for cur in cost:
+		var currency = wa.get_currency(cur)
+		printt(" ", currency.key, cost[cur].get_text())
+	printt("Use allowed:", use_allowed.get_value())
+	printt("Can take candy from a baby:", can_take_candy_from_a_baby())

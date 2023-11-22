@@ -26,8 +26,8 @@
 [ext_resource type="PackedScene" uid="uid://dm7yv851431s4" path="res://Hud/Upgrade/Upgrade Effect Widget.tscn" id="14_vidbt"]
 [ext_resource type="Texture2D" uid="uid://i5w3qd2sgfwm" path="res://Sprites/Hud/Load.png" id="15_bxrvx"]
 [ext_resource type="Texture2D" uid="uid://dbgwbxq3lcon1" path="res://Sprites/Hud/Delete.png" id="15_s64ty"]
+[ext_resource type="Texture2D" uid="uid://we2ve6twp6sc" path="res://Sprites/Currency/coal.png" id="21_u1378"]
 [ext_resource type="Texture2D" uid="uid://d31dpqjhgrtaq" path="res://Sprites/Hud/Discord.png" id="22_ejl1s"]
-[ext_resource type="Texture2D" uid="uid://bkebt7vnjp4bt" path="res://Sprites/Hud/activeBuffs.png" id="23_6kk07"]
 [ext_resource type="Texture2D" uid="uid://kdslypb5pkh8" path="res://Sprites/Hud/ItchIo.svg" id="23_mvmsj"]
 [ext_resource type="Texture2D" uid="uid://bwk6j2a1sf2d7" path="res://Sprites/Hud/steam-logo-transparent.png" id="24_ila10"]
 [ext_resource type="Texture2D" uid="uid://dpest0qdhsgcn" path="res://Sprites/Hud/PatchNotes.png" id="24_qdxv7"]
@@ -528,8 +528,9 @@ fit_content = true
 
 [node name="Dev1" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Cheat Section/Cheat/VBoxContainer" instance=ExtResource("4_3h2sv")]
 layout_mode = 2
-icon = ExtResource("23_6kk07")
-text = "EXAMPLE DIAGLUE"
+icon = ExtResource("21_u1378")
+text = "Add Coal"
+color = Color(1, 0, 0.866667, 1)
 
 [node name="Dev2" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Cheat Section/Cheat/VBoxContainer" instance=ExtResource("4_3h2sv")]
 layout_mode = 2

@@ -185,7 +185,7 @@ func _input(event):
 			if node == menu_contents:
 				close_menu()
 			elif node == dialogue_balloon.content:
-				dialogue_balloon.hide()
+				dialogue_balloon.hide_chat()
 			else:
 				node.hide()
 			gv.clear_tooltip()
@@ -245,7 +245,7 @@ func _input(event):
 
 
 func should_hide_a_menu() -> bool:
-	return dialogue_balloon.visible or settings.visible or menu_contents.visible or upgrade_container.visible or wallet.visible or offline_report.visible
+	return (dialogue_balloon.visible and not dialogue_balloon.is_collapsed()) or settings.visible or menu_contents.visible or upgrade_container.visible or wallet.visible or offline_report.visible
 
 
 func _on_menu_button_pressed():
@@ -479,7 +479,7 @@ func _on_limitbreak_pressed():
 
 # - Dev
 func _on_dev_1_pressed():
-	close_menu()
+	wa.add(Currency.Type.COAL, 10)
 
 func _on_dev_2_pressed():
 	pass

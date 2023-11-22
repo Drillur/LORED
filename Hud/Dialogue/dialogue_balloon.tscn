@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://dm8iqw3g2voq6"]
+[gd_scene load_steps=16 format=3 uid="uid://dm8iqw3g2voq6"]
 
 [ext_resource type="Script" path="res://Hud/Dialogue/DialogueBalloon.gd" id="1_q2lk0"]
 [ext_resource type="Theme" uid="uid://bl4v2v143rihi" path="res://Theme/Background.tres" id="2_71vfy"]
@@ -10,6 +10,9 @@
 [ext_resource type="PackedScene" uid="uid://ckvgyvclnwggo" path="res://addons/dialogue_manager/dialogue_label.tscn" id="8_akl6m"]
 [ext_resource type="Script" path="res://Hud/Dialogue/dialogue_label.gd" id="9_nooqw"]
 [ext_resource type="Theme" uid="uid://dt7rd31blnvth" path="res://Theme/Invis.tres" id="10_kyihs"]
+[ext_resource type="PackedScene" uid="uid://cb3ej8nlybhvm" path="res://Hud/icon_button.tscn" id="11_c1lcb"]
+[ext_resource type="Texture2D" uid="uid://dw237u5o8vvyj" path="res://Sprites/Hud/Cancel.png" id="12_ylns3"]
+[ext_resource type="Texture2D" uid="uid://b5e7ngok522rk" path="res://Sprites/Hud/Time.png" id="13_3246y"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_o6ofg"]
 bg_color = Color(0.0470588, 0.0470588, 0.0470588, 1)
@@ -30,49 +33,48 @@ corner_radius_bottom_left = 5
 [node name="DialogueBalloon" type="CanvasLayer"]
 script = ExtResource("1_q2lk0")
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
+[node name="Main" type="MarginContainer" parent="."]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(420, 0)
-anchors_preset = 7
-anchor_left = 0.5
+anchors_preset = 12
 anchor_top = 1.0
-anchor_right = 0.5
+anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -210.0
+offset_left = 430.0
 offset_top = -100.0
-offset_right = 210.0
+offset_right = -430.0
 offset_bottom = -16.0
 grow_horizontal = 2
 grow_vertical = 0
 size_flags_horizontal = 4
 size_flags_vertical = 0
 
-[node name="Shadow" type="Panel" parent="MarginContainer"]
-unique_name_in_owner = true
+[node name="Shadow" type="Panel" parent="Main"]
 modulate = Color(0, 0, 0, 1)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_o6ofg")
 
-[node name="Background" type="Panel" parent="MarginContainer"]
+[node name="Background" type="Panel" parent="Main"]
 layout_mode = 2
 theme = ExtResource("2_71vfy")
 theme_override_styles/panel = ExtResource("3_n6pin")
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="Main"]
 layout_mode = 2
 theme_override_constants/margin_left = 0
 theme_override_constants/margin_top = 0
 theme_override_constants/margin_right = 0
 theme_override_constants/margin_bottom = 0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Main/MarginContainer"]
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/MarginContainer/VBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="Main/MarginContainer/VBoxContainer"]
 layout_mode = 2
 mouse_filter = 2
 
-[node name="ResponseSection" type="MarginContainer" parent="MarginContainer/MarginContainer/VBoxContainer/MarginContainer"]
+[node name="ResponseSection" type="MarginContainer" parent="Main/MarginContainer/VBoxContainer/MarginContainer"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
@@ -82,20 +84,20 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="scroll" type="ScrollContainer" parent="MarginContainer/MarginContainer/VBoxContainer/MarginContainer/ResponseSection"]
+[node name="scroll" type="ScrollContainer" parent="Main/MarginContainer/VBoxContainer/MarginContainer/ResponseSection"]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_filter = 0
 theme = ExtResource("4_ky7sc")
 horizontal_scroll_mode = 0
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/MarginContainer/VBoxContainer/MarginContainer/ResponseSection/scroll"]
+[node name="MarginContainer" type="MarginContainer" parent="Main/MarginContainer/VBoxContainer/MarginContainer/ResponseSection/scroll"]
 layout_mode = 2
 size_flags_horizontal = 3
 mouse_filter = 2
 theme_override_constants/margin_right = 5
 
-[node name="ResponsesMenu" type="VBoxContainer" parent="MarginContainer/MarginContainer/VBoxContainer/MarginContainer/ResponseSection/scroll/MarginContainer" node_paths=PackedStringArray("response_template", "scroll_container")]
+[node name="ResponsesMenu" type="VBoxContainer" parent="Main/MarginContainer/VBoxContainer/MarginContainer/ResponseSection/scroll/MarginContainer" node_paths=PackedStringArray("response_template", "scroll_container")]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -106,35 +108,35 @@ script = ExtResource("5_rg84n")
 response_template = NodePath("ResponseExample")
 scroll_container = NodePath("../..")
 
-[node name="ResponseExample" parent="MarginContainer/MarginContainer/VBoxContainer/MarginContainer/ResponseSection/scroll/MarginContainer/ResponsesMenu" instance=ExtResource("6_h7l15")]
+[node name="ResponseExample" parent="Main/MarginContainer/VBoxContainer/MarginContainer/ResponseSection/scroll/MarginContainer/ResponsesMenu" instance=ExtResource("6_h7l15")]
 unique_name_in_owner = true
 layout_mode = 2
 icon = null
 text = "1. (Close Chat) Oh, I see."
 
-[node name="Balloon" type="MarginContainer" parent="MarginContainer/MarginContainer/VBoxContainer"]
+[node name="Balloon" type="MarginContainer" parent="Main/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 84)
 layout_mode = 2
 mouse_filter = 0
 
-[node name="TextBackground" type="Panel" parent="MarginContainer/MarginContainer/VBoxContainer/Balloon"]
+[node name="TextBackground" type="Panel" parent="Main/MarginContainer/VBoxContainer/Balloon"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_vq2qd")
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/MarginContainer/VBoxContainer/Balloon"]
+[node name="MarginContainer" type="MarginContainer" parent="Main/MarginContainer/VBoxContainer/Balloon"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/MarginContainer/VBoxContainer/Balloon/MarginContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Main/MarginContainer/VBoxContainer/Balloon/MarginContainer"]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="pose" type="TextureRect" parent="MarginContainer/MarginContainer/VBoxContainer/Balloon/MarginContainer/HBoxContainer"]
+[node name="pose" type="TextureRect" parent="Main/MarginContainer/VBoxContainer/Balloon/MarginContainer/HBoxContainer"]
 unique_name_in_owner = true
 visible = false
 custom_minimum_size = Vector2(64, 64)
@@ -142,18 +144,18 @@ layout_mode = 2
 texture = ExtResource("7_o8w2h")
 stretch_mode = 3
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/MarginContainer/VBoxContainer/Balloon/MarginContainer/HBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Main/MarginContainer/VBoxContainer/Balloon/MarginContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 0
 alignment = 1
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/MarginContainer/VBoxContainer/Balloon/MarginContainer/HBoxContainer/VBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="Main/MarginContainer/VBoxContainer/Balloon/MarginContainer/HBoxContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_constants/margin_left = 10
 
-[node name="CharacterLabel" type="RichTextLabel" parent="MarginContainer/MarginContainer/VBoxContainer/Balloon/MarginContainer/HBoxContainer/VBoxContainer/MarginContainer"]
+[node name="CharacterLabel" type="RichTextLabel" parent="Main/MarginContainer/VBoxContainer/Balloon/MarginContainer/HBoxContainer/VBoxContainer/MarginContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_filter = 1
@@ -163,24 +165,158 @@ text = "Character"
 fit_content = true
 scroll_active = false
 
-[node name="DialogueLabel" parent="MarginContainer/MarginContainer/VBoxContainer/Balloon/MarginContainer/HBoxContainer/VBoxContainer" instance=ExtResource("8_akl6m")]
+[node name="DialogueLabel" parent="Main/MarginContainer/VBoxContainer/Balloon/MarginContainer/HBoxContainer/VBoxContainer" instance=ExtResource("8_akl6m")]
 unique_name_in_owner = true
 layout_mode = 2
 text = "[i]This sure is a bunch of text that I am speaking right now!"
 script = ExtResource("9_nooqw")
 
-[node name="SkipTyping" type="Button" parent="MarginContainer/MarginContainer/VBoxContainer/Balloon"]
+[node name="SkipTyping" type="Button" parent="Main/MarginContainer/VBoxContainer/Balloon"]
 unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 0
 theme = ExtResource("10_kyihs")
 metadata/_edit_lock_ = true
 
-[node name="TextTimer" type="Timer" parent="MarginContainer"]
+[node name="TextTimer" type="Timer" parent="Main"]
 unique_name_in_owner = true
 one_shot = true
 
-[connection signal="response_selected" from="MarginContainer/MarginContainer/VBoxContainer/MarginContainer/ResponseSection/scroll/MarginContainer/ResponsesMenu" to="." method="_on_responses_menu_response_selected"]
-[connection signal="finished_typing" from="MarginContainer/MarginContainer/VBoxContainer/Balloon/MarginContainer/HBoxContainer/VBoxContainer/DialogueLabel" to="." method="_on_dialogue_label_finished_typing"]
-[connection signal="finished_typing" from="MarginContainer/MarginContainer/VBoxContainer/Balloon/MarginContainer/HBoxContainer/VBoxContainer/DialogueLabel" to="MarginContainer/MarginContainer/VBoxContainer/MarginContainer/ResponseSection/scroll/MarginContainer/ResponsesMenu" method="_on_dialogue_label_finished_typing"]
-[connection signal="gui_input" from="MarginContainer/MarginContainer/VBoxContainer/Balloon/SkipTyping" to="." method="_on_balloon_gui_input"]
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -92.0
+offset_bottom = -16.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+theme_override_constants/separation = 10
+alignment = 2
+
+[node name="Collapsed" type="MarginContainer" parent="VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+
+[node name="Shadow" type="Panel" parent="VBoxContainer/Collapsed"]
+modulate = Color(0, 0, 0, 1)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_o6ofg")
+
+[node name="Background" type="Panel" parent="VBoxContainer/Collapsed"]
+layout_mode = 2
+theme = ExtResource("2_71vfy")
+theme_override_styles/panel = ExtResource("3_n6pin")
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Collapsed"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="Collapsed Label" type="RichTextLabel" parent="VBoxContainer/Collapsed/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+theme = ExtResource("4_ky7sc")
+bbcode_enabled = true
+text = "[center][i][img=<15>]res://Sprites/Hud/Chat.png[/img] Ongoing Chat"
+fit_content = true
+scroll_active = false
+
+[node name="Collapsed Button" type="Button" parent="VBoxContainer/Collapsed"]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+mouse_default_cursor_shape = 2
+theme = ExtResource("10_kyihs")
+metadata/_edit_lock_ = true
+
+[node name="MarginContainer2" type="MarginContainer" parent="VBoxContainer/Collapsed"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 5
+metadata/_edit_lock_ = true
+
+[node name="Close Chat" parent="VBoxContainer/Collapsed/MarginContainer2" instance=ExtResource("11_c1lcb")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 8
+icon = ExtResource("12_ylns3")
+kill_autobuyer = true
+kill_check = true
+
+[node name="Request" type="MarginContainer" parent="VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+
+[node name="Shadow" type="Panel" parent="VBoxContainer/Request"]
+modulate = Color(0, 0, 0, 1)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_o6ofg")
+
+[node name="Background" type="Panel" parent="VBoxContainer/Request"]
+layout_mode = 2
+theme = ExtResource("2_71vfy")
+theme_override_styles/panel = ExtResource("3_n6pin")
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Request"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="Request Label" type="RichTextLabel" parent="VBoxContainer/Request/MarginContainer"]
+unique_name_in_owner = true
+clip_contents = false
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+theme = ExtResource("4_ky7sc")
+bbcode_enabled = true
+text = "[center][i][img=<15>]res://Sprites/Hud/Chat.png[/img] [wave amp=20 connected=1 freq=1]Whoa, look at you!"
+fit_content = true
+scroll_active = false
+
+[node name="Request Button" type="Button" parent="VBoxContainer/Request"]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+mouse_default_cursor_shape = 2
+theme = ExtResource("10_kyihs")
+metadata/_edit_lock_ = true
+
+[node name="MarginContainer2" type="MarginContainer" parent="VBoxContainer/Request"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 5
+metadata/_edit_lock_ = true
+
+[node name="Decline Request" parent="VBoxContainer/Request/MarginContainer2" instance=ExtResource("11_c1lcb")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 8
+icon = ExtResource("13_3246y")
+kill_autobuyer = true
+kill_check = true
+
+[connection signal="response_selected" from="Main/MarginContainer/VBoxContainer/MarginContainer/ResponseSection/scroll/MarginContainer/ResponsesMenu" to="." method="_on_responses_menu_response_selected"]
+[connection signal="finished_typing" from="Main/MarginContainer/VBoxContainer/Balloon/MarginContainer/HBoxContainer/VBoxContainer/DialogueLabel" to="." method="_on_dialogue_label_finished_typing"]
+[connection signal="finished_typing" from="Main/MarginContainer/VBoxContainer/Balloon/MarginContainer/HBoxContainer/VBoxContainer/DialogueLabel" to="Main/MarginContainer/VBoxContainer/MarginContainer/ResponseSection/scroll/MarginContainer/ResponsesMenu" method="_on_dialogue_label_finished_typing"]
+[connection signal="gui_input" from="Main/MarginContainer/VBoxContainer/Balloon/SkipTyping" to="." method="_on_balloon_gui_input"]
+[connection signal="pressed" from="VBoxContainer/Collapsed/Collapsed Button" to="." method="_on_collapsed_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/Collapsed/MarginContainer2/Close Chat" to="." method="_on_close_chat_pressed"]
+[connection signal="pressed" from="VBoxContainer/Request/Request Button" to="." method="_on_collapsed_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/Request/MarginContainer2/Decline Request" to="." method="_on_close_chat_pressed"]

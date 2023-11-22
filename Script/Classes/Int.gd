@@ -12,13 +12,13 @@ var base: int
 var current: int:
 	set(val):
 		if current != val:
-			var prev_cur = current
+			var previous_value = current
 			current = val
 			text_requires_update = true
-			if prev_cur > val:
-				increased.emit()
-			elif prev_cur < val:
+			if previous_value > val:
 				decreased.emit()
+			elif previous_value < val:
+				increased.emit()
 			emit_changed()
 
 var text_requires_update := true

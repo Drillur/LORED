@@ -542,7 +542,6 @@ func get_responses(ids: Array, resource: DialogueResource, id_trail: String, ext
 			var response: DialogueResponse = await create_response(data, extra_game_states)
 			response.next_id += id_trail
 			responses.append(response)
-
 	return responses
 
 
@@ -1076,14 +1075,12 @@ func thing_has_method(thing, method: String, args: Array) -> bool:
 func thing_has_property(thing: Object, property: String) -> bool:
 	if thing == null:
 		return false
-
 	for p in thing.get_property_list():
 		if _node_properties.has(p.name):
 			# Ignore any properties on the base Node
 			continue
 		if p.name == property:
 			return true
-
 	return false
 
 

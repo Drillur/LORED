@@ -572,6 +572,7 @@ func assign_lored(lored_type: int) -> void:
 		required_currencies = Cost.new({
 			_lored.fuel_currency: Value.new(half)
 		})
+		required_currencies.repeatable = true
 		hookup_required_currencies()
 		animation_key = "refuel"
 		if lored != LORED.Type.COAL and _lored.fuel_currency == Currency.Type.COAL:
@@ -623,6 +624,7 @@ func add_produced_currency(currency: int, amount: float) -> void:
 
 
 # - Signal
+
 
 func lored_output_changed() -> void:
 	for x in produced_currencies.values():
@@ -688,6 +690,7 @@ func lored_purchased_changed() -> void:
 
 
 # - Actions
+
 
 func add_bonus_production(cur: int, modifier: float) -> void:
 	bonus_production[cur] = modifier
@@ -909,11 +912,13 @@ func can_start() -> bool:
 	
 	if has_required_currencies:
 		if (
-			not required_currencies.use_allowed
+			required_currencies.use_allowed.is_false()
 			or required_currencies.affordable.is_false()
 			or not required_currencies.can_take_candy_from_a_baby()
 		):
+			#required_currencies.report()
 			return false
+	
 	if type == Type.REFUEL:
 		return true
 	return has_sufficient_fuel

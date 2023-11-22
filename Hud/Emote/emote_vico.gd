@@ -48,12 +48,15 @@ func setup(_emote: Emote) -> void:
 	
 	if emote.has_dialogue():
 		dialogue_container.show()
+		dialogue_text.visible_characters = -1
 		dialogue_text.text = "[i]" + emote.dialogue #[center]
 		var text_length = dialogue_text.get_parsed_text().length()
-		dialogue_text.custom_minimum_size.x = min(180, 30 + (text_length * 3))
+		dialogue_text.custom_minimum_size.x = min(180, 30 + (text_length * 4))
 		dialogue_text.show()
 		await dialogue_text.finished
 		var line_count = dialogue_text.get_line_count()
+		if line_count == 1:
+			dialogue_text.text = "[center]" + dialogue_text.text
 		dialogue_text.custom_minimum_size.y = min(45, line_count * 15)
 		#printt(line_count, dialogue_text.custom_minimum_size, emote.dialogue)
 		custom_minimum_size.y = max(52, dialogue_text.custom_minimum_size.y + 20)
@@ -98,6 +101,7 @@ func display_text() -> void:
 			display_text_timer.start(gv.CHAT_INTERVAL_STANDARD)
 		
 		await display_text_timer.timeout
+	
 	
 	display_text_timer.queue_free()
 	await get_tree().create_timer(1).timeout

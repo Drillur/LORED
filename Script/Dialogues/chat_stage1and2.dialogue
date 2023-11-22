@@ -3,11 +3,18 @@ COAL: [[Don't mind me! Just diggin' around!|Sure do love me some diggin!|Dig, di
 - What is fuel?
 	=>< what_is_fuel
 	=> COAL
-- Why is fuel? [if handbook.is_section_read("what_is_fuel")]
+- Why is fuel? [if is_section_read("what_is_fuel")]
 	=> why_is_fuel
+- Test a section read shit
+	=> test
+
+~ test
+COAL: Wow this sure is a test!
+- Response. save section after
+	=> END!
 
 ~ what_is_fuel
-COAL: Dude! Don't you have a car or something? What about a phone? Lots of things need fuel. So do we! Duh! My fuel is {{wa.get_icon_and_name_text(Currency.Type.COAL)}}, which is convenient because that's what I produce!{{handbook.mark_section_read("what_is_fuel")}}
+COAL: Dude! Don't you have a car or something? What about a phone? Lots of things need fuel. So do we! Duh! My fuel is {{wa.get_icon_and_name_text(Currency.Type.COAL)}}, which is convenient because that's what I produce!{{mark_section_read("what_is_fuel")}}
 - What happens if you run out of fuel?
 	COAL: Tee hee! There's a secret about that! Actually, nobody can take any {{wa.get_icon_and_name_text(Currency.Type.COAL)}} if I have less than 50% fuel! You could say I'm a pretty important guy.
 	- What if other LOREDs run out of fuel?
@@ -23,11 +30,11 @@ COAL: Dude! Don't you have a car or something? What about a phone? Lots of thing
 ~ why_is_fuel
 COAL: What are you talking about?
 - Why is this a mechanic in the game?
-	COAL: You've lost your mind, dude! Leave me alone!{{handbook.mark_section_read("why_is_fuel")}}
+	COAL: You've lost your mind, dude! Leave me alone!{{mark_section_read("why_is_fuel")}}
 	=> END!
 
 ~ how_does_fuel_work
-COAL: Oh, well... We all have our own fuel drain rate! Mine is {{handbook.get_coal_fuel()}} per second. So when I start working a job, I will lose that much fuel multiplied by the duration of the job! Get it?
+COAL: Oh, well... We all have our own fuel drain rate! Mine is {{get_coal_fuel()}} per second. So when I start working a job, I will lose that much fuel multiplied by the duration of the job! Get it?
 - Yes.
 	COAL: Great! Glad we had this chat. ... Bye. => END
 - No.
@@ -105,7 +112,7 @@ STONE: [[Lalala~!|Hrk!|Oh, you spooked me!]]
 - How do I level you up?
 	STONE: Just click on the {{res.get_icon_text("Level")}} button! But it costs resources, so if you don't have enough, it won't work.
 	- Leveling you up costs {{wa.get_icon_and_name_text(Currency.Type.IRON)}} and {{wa.get_icon_and_name_text(Currency.Type.COPPER)}}. How can I get those?
-		if handbook.is_iron_or_copper_unlocked()
+		if is_iron_or_copper_unlocked()
 			STONE: You just need to level them up! You've already unlocked them, just go level em up! But they can't work until they have {{wa.get_icon_and_name_text(Currency.Type.IRON_ORE)}} and {{wa.get_icon_and_name_text(Currency.Type.COPPER_ORE)}}, so you'll want to upgrade the LOREDs that produce those, too!
 			- Okay, I'll go click on all of the {{res.get_icon_text("Level")}} buttons. Easy! => END
 		else
@@ -118,8 +125,9 @@ STONE: [[Lalala~!|Hrk!|Oh, you spooked me!]]
 	- Cool!
 - What is a LORED?
 	STONE: Uh... me. I'm a LORED. So is {LORED:COAL}.
-	- Why is a LORED? [if handbook.is_section_read("why_is_fuel")]
+	- Why is a LORED? [if is_section_read("why_is_fuel")]
 		[shake rate=20.0 level=5 connected=0]STONE[/shake]: [shake rate=20.0 level=5 connected=0]Oh, no!!![/shake] {LORED:COAL} told me all about you! You won't trick me!!! I'm gettin da heck outta here!!!
+		=> END!
 	- Oh, okay!
 - Why do you like picking up rocks? Are you acoustic?
 	STONE: What?! No! I'm artistic!

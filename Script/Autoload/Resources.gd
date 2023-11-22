@@ -3,6 +3,7 @@ extends Node
 
 
 var bag := ResourcePreloader.new()
+var chats := {}
 
 
 
@@ -40,6 +41,8 @@ func dir_contents(path):
 					if bag.has_resource(_name):
 						printerr(_name, " already in bag! Change resource name!")
 					bag.add_resource(_name, load(_path))
+					if file_name.ends_with(".dialogue"):
+						chats[_name] = get_resource(_name)
 			file_name = dir.get_next()
 
 

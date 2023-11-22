@@ -565,8 +565,8 @@ func get_offline_earnings(_last_clock: float = SaveManager.loaded_data["Overseer
 		
 		c.set_gain_over_loss()
 	
-	#wa.get_currency(Currency.Type.COAL).gain_over_loss = 0.5
-	#wa.get_currency(Currency.Type.JOULES).gain_over_loss = 0.5
+	if eligible_currencies.is_empty():
+		return
 	
 	for c in eligible_currencies:
 		offline_earnings[c.type] = {}
