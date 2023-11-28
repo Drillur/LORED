@@ -3,10 +3,10 @@ extends Resource
 
 
 
-var s1 := Bool.new(false)
-var s2 := Bool.new(false)
-var s3 := Bool.new(false)
-var s4 := Bool.new(false)
+var s1 := LoudBool.new(false)
+var s2 := LoudBool.new(false)
+var s3 := LoudBool.new(false)
+var s4 := LoudBool.new(false)
 
 var highest := 0
 

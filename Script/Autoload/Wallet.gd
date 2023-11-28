@@ -18,8 +18,8 @@ var unlocked_currencies := []
 var wish_eligible_currencies := []
 var total_weight := 0
 
-var wallet_unlocked := Bool.new(false)
-var keep_wallet_sorted := Bool.new(false)
+var wallet_unlocked := LoudBool.new(false)
+var keep_wallet_sorted := LoudBool.new(false)
 
 var wallet: WalletVico
 

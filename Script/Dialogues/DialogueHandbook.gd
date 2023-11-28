@@ -19,8 +19,8 @@ var read_sections := []
 func _ready() -> void:
 	SaveManager.loading.became_false.connect(load_finished)
 	for chat in res.chats.values():
-		print("TITLES: ", chat.titles)
-		print("LINES: ", chat.lines)
+		#print("TITLES: ", chat.titles)
+		#print("LINES: ", chat.lines)
 		var sorted_titles: Array
 		var raw_titles = chat.titles.duplicate()
 		

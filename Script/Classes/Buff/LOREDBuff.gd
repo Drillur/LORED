@@ -25,7 +25,7 @@ func _init(_type: Type, _lored: LORED) -> void:
 			set_ticks(-1)
 			set_tick_rate(WITCH_get_tick_rate())
 			affected_by_bonus_ticks = true
-			bonus_ticks = Int.new(5)
+			bonus_ticks = LoudInt.new(5)
 			set_stack_limit(2)
 			
 			gv.about_to_prestige.connect(WITCH_subtract_rate)

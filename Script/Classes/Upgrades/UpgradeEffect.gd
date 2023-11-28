@@ -50,7 +50,7 @@ var upgrade_type: int
 
 var applied := false
 var dynamic := false
-var is_overwritten := Bool.new(false)
+var is_overwritten := LoudBool.new(false)
 
 var effect: Value
 var in_hand: Big

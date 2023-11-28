@@ -101,8 +101,8 @@ var stage: int
 var last_job: Job
 var primary_currency: Currency.Type
 var fuel_currency: Currency.Type
-var reason_cannot_work := Int.new(0)
-var active_currency: Int
+var reason_cannot_work := LoudInt.new(0)
+var active_currency: LoudInt
 
 var produced_currencies := []
 var required_currencies := []
@@ -112,25 +112,25 @@ var emote_queue := []
 
 @export var fuel: ValuePair
 @export var unlocked_jobs := []
-@export var unlocked := Bool.new(false)
-@export var purchased := Bool.new(false)
-@export var asleep := Bool.new(false)
+@export var unlocked := LoudBool.new(false)
+@export var purchased := LoudBool.new(false)
+@export var asleep := LoudBool.new(false)
 @export var time_spent_asleep := 0.0
-@export var level := Int.new(0)
+@export var level := LoudInt.new(0)
 
 
 var key_lored := false
-var autobuy := Bool.new(false)
+var autobuy := LoudBool.new(false)
 var persist := Persist.new()
 
 var autobuy_on_cooldown := false
 
 
-var working := Bool.new(false)
+var working := LoudBool.new(false)
 
 var time_went_to_bed := 0.0
 var fuel_rate_added := false
-var emoting := Bool.new(false)
+var emoting := LoudBool.new(false)
 
 var last_purchase_automatic := false
 var last_purchase_forced := false
@@ -153,8 +153,8 @@ var vico: LOREDVico
 var jobs := {}
 var sorted_jobs := []
 
-var output_increase := Float.new(2)
-var input_increase := Float.new(2)
+var output_increase := LoudFloat.new(2)
+var input_increase := LoudFloat.new(2)
 
 var fuel_cost: Value
 var output := Value.new(1)
@@ -180,7 +180,7 @@ func _init(_type: Type) -> void:
 	
 	cost.repeatable = true
 	
-	active_currency = Int.new(primary_currency)
+	active_currency = LoudInt.new(primary_currency)
 	cost.cache_costs()
 	
 	details.set_title(key.replace("_", " ").capitalize() + " LORED")

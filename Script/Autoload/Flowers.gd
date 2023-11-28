@@ -227,7 +227,7 @@ func add_random_flower(from_lored: bool, amount = 1, roll_bonus := 0):
 	var flower: Currency.Type = get_random_flower(roll_bonus)
 	if amount is Big:
 		amount = amount.toInt()
-	print("gained ", amount, " ", wa.get_currency_name(flower))
+	#print_debug("gained ", amount, " ", wa.get_currency_name(flower))
 	if from_lored:
 		wa.add_from_lored(flower, amount)
 	else:
@@ -331,7 +331,7 @@ func DEBUG__test_random_flower(roll_bonus: int = 0):
 		else:
 			rolled_flowers[tier][key] += 1
 	
-	print(
+	print_debug(
 		"Roll_bonus: ", roll_bonus,
 		"\nFlowers (tier 0): ", rolled_flowers[0],
 		"\nFlowers (tier 1): ", rolled_flowers[1],

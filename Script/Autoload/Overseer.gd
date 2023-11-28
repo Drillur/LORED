@@ -95,9 +95,9 @@ signal one_second
 
 var last_clock: float
 var current_clock: float = Time.get_unix_time_from_system()
-var session_duration := Int.new(0)
+var session_duration := LoudInt.new(0)
 var total_duration_played: int
-var run_duration := Int.new(0)
+var run_duration := LoudInt.new(0)
 
 func _notification(what) -> void:
 	if what == MainLoop.NOTIFICATION_APPLICATION_FOCUS_OUT:
@@ -139,7 +139,7 @@ const CHAT_INTERVAL_PUNCTUATION := 0.25
 const PUNCTUATION_MARKS := ["!", ",", ".", "?"]
 
 signal opened
-var root_ready := Bool.new(false)
+var root_ready := LoudBool.new(false)
 var closed := true
 
 
@@ -672,7 +672,7 @@ func emit_stage_unlocked(stage: int, unlocked: bool) -> void:
 # - Dialogues
 
 
-var dialogue_initialized := Bool.new(false)
+var dialogue_initialized := LoudBool.new(false)
 var dialogue := {}
 
 

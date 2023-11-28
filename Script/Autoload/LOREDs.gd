@@ -89,10 +89,10 @@ var loreds := {}
 var loreds_by_key := {}
 var lored_container: LOREDContainer
 
-var loreds_initialized := Bool.new(false)
+var loreds_initialized := LoudBool.new(false)
 
-var sleep_unlocked := Bool.new()
-var advanced_details_unlocked := Bool.new()
+var sleep_unlocked := LoudBool.new()
+var advanced_details_unlocked := LoudBool.new()
 
 var unlocked := []
 var active := []
@@ -145,7 +145,7 @@ func _ready():
 		loreds_by_key[loreds[lored].key] = loreds[lored]
 		loreds_initialized.became_true.connect(loreds[lored].loreds_initialized)
 	
-	print("LOREDs initialized in %s secs" % str(Time.get_unix_time_from_system() - d))
+	print_debug("LOREDs initialized in %s secs" % str(Time.get_unix_time_from_system() - d))
 	
 	loreds_initialized.set_to(true)
 	for lored in loreds.keys():

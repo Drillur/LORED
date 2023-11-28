@@ -3,14 +3,14 @@ extends Resource
 
 
 
-var duration: Float
+var duration: LoudFloat
 var timer := Timer.new()
-var active := Bool.new(false)
+var active := LoudBool.new(false)
 
 
 
 func _init(_duration: float):
-	duration = Float.new(_duration)
+	duration = LoudFloat.new(_duration)
 	duration.changed.connect(duration_changed)
 	timer.one_shot = true
 	timer.wait_time = _duration

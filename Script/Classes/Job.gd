@@ -75,7 +75,7 @@ var two_part_animation := false
 var part_one_played := false
 
 var unlocked_by_default := false
-var unlocked := Bool.new(false)
+var unlocked := LoudBool.new(false)
 func unlocked_changed() -> void:
 	if unlocked.is_true():
 		append_producer_and_user()
@@ -933,8 +933,6 @@ func can_start_job_special_requirements_REFUEL() -> bool:
 		and lored != LORED.Type.COAL
 		and lv.get_lored(LORED.Type.COAL).fuel.get_current_percent() <= lv.FUEL_WARNING
 	):
-		if lored == LORED.Type.COAL and key == "REFUEL":
-			print("Coal refuel fail")
 		return false
 	return true
 

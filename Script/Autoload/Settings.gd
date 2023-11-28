@@ -6,7 +6,7 @@ const saved_vars := [
 	"fullscreen",
 ]
 
-var fullscreen := Bool.new(false)
+var fullscreen := LoudBool.new(false)
 
 
 

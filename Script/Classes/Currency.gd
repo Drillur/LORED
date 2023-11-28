@@ -239,8 +239,8 @@ var added_by_loreds := Big.new(0, true)
 var added_by_player := Big.new(0, true)
 var added_by_buffs := Big.new(0, true)
 
-var safe := Bool.new(true)
-var unlocked := Bool.new(false)
+var safe := LoudBool.new(true)
+var unlocked := LoudBool.new(false)
 func unlocked_changed() -> void:
 	if unlocked.is_true():
 		saved_vars.append("count")
@@ -256,7 +256,7 @@ func unlocked_changed() -> void:
 		saved_vars.erase("added_by_buffs")
 
 var persist := Persist.new()
-var use_allowed := Bool.new(true)
+var use_allowed := LoudBool.new(true)
 var used_for_fuel := false
 
 var net_rate := Big.new(0, true)

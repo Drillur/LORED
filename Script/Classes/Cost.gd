@@ -16,8 +16,8 @@ var cache := {}
 
 var produced_by := []
 
-var affordable := Bool.new(false)
-var use_allowed := Bool.new(true) # set by player in Wallet
+var affordable := LoudBool.new(false)
+var use_allowed := LoudBool.new(true) # set by player in Wallet
 var purchased := false:
 	set(val):
 		if purchased != val:
@@ -34,7 +34,7 @@ var has_stage1_currency := false
 var cached := false
 var repeatable := false
 
-var times_purchased := Int.new(0)
+var times_purchased := LoudInt.new(0)
 
 var stage: int
 var longest_eta_cur: int = -1
@@ -327,8 +327,8 @@ func baby_became_adult() -> void:
 
 
 func report() -> void:
-	print("---Cost Report (", self, ")---")
-	print("Cost (Affordable: ", affordable.get_value(), "):")
+	print_debug("---Cost Report (", self, ")---")
+	print_debug("Cost (Affordable: ", affordable.get_value(), "):")
 	for cur in cost:
 		var currency = wa.get_currency(cur)
 		printt(" ", currency.key, cost[cur].get_text())

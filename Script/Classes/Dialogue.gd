@@ -42,9 +42,9 @@ var text: String
 var pose: Texture2D
 var speaker := LORED.Type.NO_LORED
 var replies := {}
-var read := Bool.new(false)
-var condition: Bool
-var reply_chain_read := Bool.new(false)
+var read := LoudBool.new(false)
+var condition: LoudBool
+var reply_chain_read := LoudBool.new(false)
 var chain_parent: Dialogue.Type
 var end_of_chain := false
 

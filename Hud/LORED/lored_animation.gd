@@ -15,7 +15,7 @@ var default_frames: SpriteFrames
 var animation_key := ""
 var previous_animation := ""
 #var default_flip_h := false
-var capped_anim := Bool.new(false)
+var capped_anim := LoudBool.new(false)
 
 
 

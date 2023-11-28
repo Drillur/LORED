@@ -103,7 +103,7 @@ var upgrades := {}
 var upgrades_by_key := {}
 var upgrade_menus := {}
 var upgrade_menu_by_key := {}
-var purchasable_upgrade_count := Int.new(0)
+var purchasable_upgrade_count := LoudInt.new(0)
 var limit_break := LimitBreak.new()
 var routine := RoutineUpgrade.new()
 

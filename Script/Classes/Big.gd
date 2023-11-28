@@ -48,7 +48,7 @@ var change_on_cooldown := false:
 			emit_signal("change_cooldown_finished")
 var change_queued := false
 
-var positive := Bool.new(true)
+var positive := LoudBool.new(true)
 
 @export var mantissa: float = 0.0:
 	set(val):

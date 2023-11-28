@@ -3,7 +3,7 @@ extends Resource
 
 
 
-var enabled := Bool.new(false)
+var enabled := LoudBool.new(false)
 
 var routine: Upgrade
 var capital_punishment: Upgrade

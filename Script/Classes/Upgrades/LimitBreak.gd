@@ -36,10 +36,10 @@ var cached_xp_required := {}
 
 var stupid_msg_printed := false
 var applied := false
-var enabled := Bool.new(false)
+var enabled := LoudBool.new(false)
 var total_xp := ValuePair.new(1)
 var xp := ValuePair.new(1)
-var level := Int.new(1)
+var level := LoudInt.new(1)
 var affected_stages := [1, 2,]
 var color: Color
 var next_color: Color

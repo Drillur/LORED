@@ -19,14 +19,14 @@ var timer := Timer.new()
 
 var details := Details.new()
 
-var active := Bool.new(false)
+var active := LoudBool.new(false)
 
-var tick_rate: Float
-var ticks: Int
-var stacks: Int
+var tick_rate: LoudFloat
+var ticks: LoudInt
+var stacks: LoudInt
 #var last_tick_clock: float
 
-var bonus_ticks: Int
+var bonus_ticks: LoudInt
 var affected_by_bonus_ticks := false
 
 var endless := false
@@ -54,18 +54,18 @@ func _init() -> void:
 func set_ticks(val: int) -> void:
 	if val == -1:
 		endless = true
-		ticks = Int.new(0)
+		ticks = LoudInt.new(0)
 	else:
-		ticks = Int.new(val)
+		ticks = LoudInt.new(val)
 		ticks.set_to(0)
 
 
 func set_tick_rate(val: float) -> void:
-	tick_rate = Float.new(val)
+	tick_rate = LoudFloat.new(val)
 
 
 func set_stack_limit(val: int) -> void:
-	stacks = Int.new(val)
+	stacks = LoudInt.new(val)
 	stacks.set_to(1)
 
 

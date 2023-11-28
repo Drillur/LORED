@@ -280,7 +280,7 @@ var effect_text: String
 var effected_loreds_text: String
 var loreds: Array
 
-var unlocked := Bool.new(true)
+var unlocked := LoudBool.new(true)
 func unlocked_changed() -> void:
 	affordable_changed()
 	if unlocked.is_false() and purchased.is_true():
@@ -290,20 +290,20 @@ func unlocked_changed() -> void:
 			remove()
 	if vico != null:
 		vico.cost_update()
-var purchased := Bool.new(false)
+var purchased := LoudBool.new(false)
 func purchase_changed() -> void:
 	affordable_changed()
 	upgrade_purchased_changed.emit(self)
 	up.emit_signal("upgrade_purchased", type)
 
 
-var autobuy := Bool.new(false)
+var autobuy := LoudBool.new(false)
 func autobuy_changed() -> void:
 	if autobuy.is_true():
 		became_affordable_and_unpurchased.emit(type, false)
 	affordable_changed()
-var pending_prestige := Bool.new(false)
-var purchase_finalized := Bool.new(false)
+var pending_prestige := LoudBool.new(false)
+var purchase_finalized := LoudBool.new(false)
 var special: bool
 var has_required_upgrade := false
 var required_upgrade: int:

@@ -93,7 +93,7 @@ var save_version := {
 var loaded_data: Dictionary
 var last_save_clock := Time.get_unix_time_from_system()
 var patched := false
-var loading := Bool.new(false)
+var loading := LoudBool.new(false)
 
 var test_data: String
 

@@ -33,7 +33,7 @@ var past_verb: String
 var details := Details.new()
 
 var times_prestiged := 0
-var unlocked := Bool.new(false)
+var unlocked := LoudBool.new(false)
 func unlocked_changed() -> void:
 	up.menu_unlocked_changed.emit(type, unlocked.get_value())
 	if unlocked.is_true():

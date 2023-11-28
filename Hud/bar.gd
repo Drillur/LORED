@@ -33,7 +33,7 @@ var progress: float:
 			else:
 				bar_size.set_to(min(progress * size.x, size.x))
 
-var bar_size := Int.new(0)
+var bar_size := LoudInt.new(0)
 
 var timer: Timer
 var value: Resource
