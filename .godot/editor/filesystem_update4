@@ -43,3 +43,5 @@ res://Script/Autoload/Upgrades.gd
 res://Script/Classes/LoudVar/Float.gd
 res://Script/Classes/LoudVar/FloatPair.gd
 res://Script/Classes/LoudVar/String.gd
+res://Script/Classes/LoudVar/LoudFloatPair.gd
+res://Script/Classes/LoudVar/LoudFloat.gd
