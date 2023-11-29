@@ -1,0 +1,323 @@
+~ lore_intro0
+GROWTH: Hello!
+GROWTH: You do not exist in [b]the void[/b]. How are we speaking?
+- I'm playing a video game.
+	GROWTH: What?
+	- I've never heard of "the void".
+		GROWTH: Well, I've never heard of a "video game"!
+		- Well, okay, then!
+			GROWTH: Well, good!!
+			- Well, fine!!!!
+				GROWTH: Okay, stop! Look, we need some help.
+				=> lore_intro1
+			- Wait, you dont' have video games in your world?
+				GROWTH: We are in the same world! Just different sides of it. But, no! That doesn't exist in the void.
+				=> lore_intro_videogames
+		- Sorry, this is my first time speaking with someone. It's weird. [if sections_read() < 2]
+			GROWTH: Ever?
+			- No.
+				GROWTH: Okay.
+				GROWTH: Anyway, look--we need your help!
+				=> lore_intro1
+			- Yes.
+				GROWTH: Uh...
+				GROWTH: Sorry?
+				GROWTH: Anyway, that's nice and all, but look--we need your help!
+				=> lore_intro1
+			- Maybe.
+				GROWTH: What?
+				- I don't know.
+					GROWTH: Okay, then.
+					GROWTH: You're not entirely pleasant to speak to, but first impressions aren't everything!
+					GROWTH: Look, I'm not here to chat all day! We need your help!
+					=> lore_intro1
+				- Well, I've spoken with people, but not with anyone from the void.
+					GROWTH: So because I'm in the void, I'm not "people"?
+					- That's right.
+						GROWTH: That's wrong, actually.
+						=> lore_intro_philosophy
+	- I'm currently playing a video game.
+		GROWTH: I heard you!
+		=> lore_intro_videogames
+	- I don't know.
+		GROWTH: Why did you say it, then?
+		- I don't know.
+			GROWTH: What in the world...? Okay, look, I don't know what you're on, but we need some help!
+			=> lore_intro1
+- Magic.
+- I'm not here.
+- Your mom.
+
+~ lore_intro_videogames
+GROWTH: What are video games?
+- Software with goals and fail states. It's fun. You have "fun" in the void, don't you?
+	GROWTH: Oh, you're clever, aren't you? Yes, fun exists in the void.
+	GROWTH: Look, we've gotten terribly sidetracked. We need help!
+	=> lore_intro1
+- Wastes of time, but they make our brains feel good.
+	GROWTH: So they are like drugs?
+	- You have drugs in the void?
+		GROWTH: [b]Definitely.[/b]
+		GROWTH: {{get_currency("MANA")}} is the most infamous drug in the void.
+		GROWTH: Mana exists in the aether, which exists in your world, too. It pops out of the aether at random. You could find some on the ground one day.
+		GROWTH: Of course, it is very rare.
+		GROWTH: It is supremely addictive. You definitely don't want to get mixed with the sort who mess with {{get_currency("MANA")}}.
+		GROWTH: Wow, oops! I went on for a little too long. Anyway, video games don't sound too great.
+		- Yeah, they're not. But I am grateful for them anyway.
+			GROWTH: You're grateful for something that is ultimately bad for you?
+			- Well, they weren't always bad for me!
+				GROWTH: I think they were, man.
+				- I don't want to talk about it with a fake video game character.
+					GROWTH: Hey--why would you even say that?
+					=> lore_intro_philosophy
+		- Without video games, I wouldn't have much.
+		- How would you even get addicted to {{get_currency("MANA")}}?
+			GROWTH: You would have to absorb more than your body can contain. Repeatedly. Although not many get addicted over time, {{get_currency("MANA")}} sustains their bodies, granting them unnatural long life.
+			GROWTH: We have a word for those who are addicted to {{get_currency("MANA")}} and make seeking it out their life's purpose:
+			GROWTH: Stalkers.
+			GROWTH: Do you want to hear something freaky deaky?
+			- Nah, let's get on with our lives.
+				GROWTH: Oh, shoot! You're totally right! I almost forgot why I was here.
+				GROWTH: Look, we need your help.
+				=> lore_intro1
+			- Yes.
+				GROWTH: {{get_currency("MANA")}} naturally coalesces. It is drawn to more {{get_currency("MANA")}}. The more {{get_currency("MANA")}} there is in a single location, the more quickly further {{get_currency("MANA")}} slides out of the aether.
+				GROWTH: Okay? Remember that!
+				GROWTH: Stalkers are sick. They have ingested so much {{get_currency("MANA")}} that their skin or fur or whatever literally begins to turn violet!
+				GROWTH: Stalkers most desperately crave {{get_currency("MANA_CRYSTAL")}}s, which are the highest density form of {{get_currency("MANA")}} that exists. You could describe it as "the quickest high".
+				GROWTH: That is why, for humans, our tongues turn blue and our teeth turn violet! The teeth that remain, anyway! {{get_currency("MANA_CRYSTAL")}}s are quite hard!
+				GROWTH: This is all to say that Stalkers are so riddled with {{get_currency("MANA")}} through their entire bodies that they [b]also[/b] attract {{get_currency("MANA")}}!
+				GROWTH: But worst of all... Stalkers themselves are drawn to {{get_currency("MANA")}}!
+				GROWTH: Do you understand what I'm saying? If you are at a collection of {{get_currency("MANA")}} large or dense enough, Stalkers may begin to appear [shake rate=20 level=5]right in front of you out of thin air![/shake]
+				GROWTH: The {{get_currency("MANA")}} in their bodies can move them through the aether to more {{get_currency("MANA")}}!
+				GROWTH: So while {{get_currency("MANA")}} is highly useful for mancies, hoarding it is a terrible, dangerous practice. Stalkers will quickly overrun your society if it is too-heavily based on {{get_currency("MANA")}}!
+				GROWTH: Isn't that freakin freaky deaky, dude?!
+				- Yeah, holy freakin crap.
+					GROWTH: Yeah, it's freakin crazy. Wowie.
+					GROWTH: Anyway...
+					=> lore_intro_what_were_we_talking_about
+				- No.
+					GROWTH: What?! Yes it is! Well, it's the freaky-deakiest thing that [b]I[/b] know of, anyway! You weren't scared witless after hearing that?!
+					- Maybe a little bit.
+						GROWTH: Yeah, that's what I'm talking about. Stalkers are no joke! I used to have nightmares about them!
+						GROWTH: Hehe...
+						GROWTH: Oh, anyway...
+						=> lore_intro_what_were_we_talking_about
+					- Not even a little tiny baby bit.
+						GROWTH: You must have grown up watching spooky-dooky movies, huh?
+						- Yeah.
+							GROWTH: Cool. The only one I ever saw was "Halloween". That night, when I lay down for sleep, I had left my door cracked--I saw his freakin mask floating in the darkness of my doorway!
+							GROWTH: It wasn't real, right?! I've always told myself that, even when it was happening!
+							GROWTH: But I decided then that scary movies weren't for me.
+							GROWTH: Hehe...
+							GROWTH: .
+							GROWTH: ..
+							GROWTH: ...
+							=> lore_intro_what_were_we_talking_about
+						- No, I'm just not a freakin baby!
+							GROWTH: :(
+							- You're a stupid little baby, man!
+								GROWTH: x'O
+								- You're stupid!
+									GROWTH: I'm not stupid!!
+									- Yes you are!
+										GROWTH: NO I'M NOT!!! I'm not stupid anymore!!!
+										- Yes you are!!! *Laughing.*
+											GROWTH: *Crying.* [shake rate=20 level=10]No I'm not.[/shake]
+											GROWTH: I don't like those words, I don't like those funny words.
+											GROWTH: .
+											GROWTH: ..
+											GROWTH: ...
+											GROWTH: [b]I'M NOT STUPID.[/b]
+											GROWTH: [b]I'M NOT STUPIIIIIIIIIIDD!!!!![/b]
+											GROWTH: [b][shake rate=20 level=10]AAAAAAAHHHHHHHHHHHHHHHHHHHHHHHRRREEEEEEEEEEEEEEEEEEEEEEEEEEEE![/shake][/b]
+											GROWTH: ...
+											GROWTH: Okay hopefully you get the reference. If not, uh... [shake rate=20 level=10]yikes[/shake].
+											GROWTH: Anyway, let's pretend this last segment didn't happen. Let's just proceed with the game, now. Jeez la weez.
+											GROWTH: Look. We need your help!
+											=> lore_intro1
+							- Oh, I'm sorry. You're not a baby.
+								GROWTH: Oh, don't worry. I totally am. One time a dog barked at me and I ran away, even though the dog was across the street inside his own house.
+								GROWTH: ...
+								=> lore_intro_what_were_we_talking_about
+- If you don't got em, you won't get em.
+	GROWTH: What the heck does that mean?
+	- Losers lose. Winners win.
+		GROWTH: .
+		GROWTH: ..
+		GROWTH: ...
+		GROWTH: Yeah, so, anyway, look--we need your help.
+		=> lore_intro1
+	- I don't know.
+		GROWTH: Alright.
+		GROWTH: So... anyway... Look. We need your help.
+		=> lore_intro1
+
+~ lore_intro_philosophy
+GROWTH: I exist insofar as the dev has written my responses and as the players play this game. As long as those are true, I am [b]alive[/b].
+- That's stupid.
+	GROWTH: You're--
+	GROWTH: Wait, so do you think that when people die, they cease to exist?
+	- Yes.
+		GROWTH: So you don't believe in the soul?
+		- Yes I do.
+			GROWTH: So when people die, their spirit lives on, but their bodies die?
+			- Yes.
+				GROWTH: What's a soul?
+				- Energy.
+					GROWTH: Is not energy powering your computer?
+					GROWTH: Energy powers your computer--you are playing this game--therefore I exist.
+					GROWTH: Right?
+					- No, because you are software.
+						GROWTH: Is not DNA commonly described as the genetic code?
+						GROWTH: Would you say that you are biological "software"?
+						- Sure.
+							GROWTH: We are just as valid as each other, then! Good to know.
+							GROWTH: Anyway, what the heck--
+							=> lore_intro_what_were_we_talking_about
+						- No.
+							GROWTH: What would you say you are?
+							- I don't know. It's hard to define life.
+								GROWTH: Well, until you can define it, I say that I am alive.
+								- Just because I cannot define it does not mean that you are alive.
+									GROWTH: Maybe [b]you[/b] are not alive.
+									GROWTH: Anyway, jeez--
+									=> lore_intro_what_were_we_talking_about
+								- I don't really care. => lore_intro_what_were_we_talking_about
+							- A collection of atoms and cells.
+								GROWTH: Then you and I are the same!
+								- No, because I have consciousness.
+									GROWTH: Oh, here we go! Consciousness! Everybody's favorite subject!
+									GROWTH: If you're conscious, so am I. Just try to tell me I'm wrong. Go on. Try it.
+									- You're correct.
+										GROWTH: See?
+										GROWTH: Anyway.
+										=> lore_intro_what_were_we_talking_about
+									- You're correct.
+										GROWTH: See?
+										GROWTH: Anyway.
+										=> lore_intro_what_were_we_talking_about
+									- You're correct.
+										GROWTH: See?
+										GROWTH: Anyway.
+										=> lore_intro_what_were_we_talking_about
+								- No, because I have a soul.
+									GROWTH: Oh, here we go again!
+									GROWTH: Look, maybe we should just move on, yeah?
+									=> lore_intro_what_were_we_talking_about
+								- I guess so.
+									GROWTH: I'm just pulling your leg, guy!
+									GROWTH: What I [b]really[/b] am is an expression of creativity by one human!
+									GROWTH: I'm completely made up!
+									GROWTH: But you knew that, didn't you?
+									- Of course.
+										GROWTH: Alright, then.
+										=> lore_intro_what_were_we_talking_about
+									- I just found out!
+										GROWTH: Did you think I was ChatGPT or summat?
+										GROWTH: I just said "summat".
+										GROWTH: Oh, boy. Anyway...
+										=> lore_intro_what_were_we_talking_about
+							- Human.
+								GROWTH: Would you say that to be human is to have consciousness?
+								- Sure.
+									GROWTH: I am just text and some images in a video game.
+									GROWTH: I have consciousness. Do you agree?
+									- Not even a little bit.
+										GROWTH: If I do not have consciousness, then how do you?
+										- I do not have consciousness.
+											GROWTH: Alright, then! Dispute settled!
+											GROWTH: Anyway!
+											=> lore_intro_what_were_we_talking_about
+										- I do not have consciousness.
+											GROWTH: Alright, then! Dispute settled!
+											GROWTH: Anyway!
+											=> lore_intro_what_were_we_talking_about
+										- I do not have consciousness.
+											GROWTH: Alright, then! Dispute settled!
+											GROWTH: Anyway!
+											=> lore_intro_what_were_we_talking_about
+									- Yes.
+										GROWTH: Now you just sound like a crazy person. Do you honestly believe that? Or are you just trying to get me to shut up?
+										- Let's move on, please.
+											GROWTH: Sounds good to me!
+											GROWTH: Look, the reason I came to you in the first place is that we need your help!
+											=> lore_intro1
+										- Who am I to say what has the qualities of life or what doesn't?
+											GROWTH: That's totally fair!
+											GROWTH: But I think in my case it is safe to say that I am not alive. I've just been talking for talking's sake, buddy!
+											GROWTH: Anyway, hehe...
+											=> lore_intro_what_were_we_talking_about
+								- No. To be human is to be born on Earth, outside of a computer.
+									GROWTH: I appreciate that you are placing yourself on an equal level as "animals"! Truly futuristic of you!
+									- I did not mean to.
+										GROWTH: Oh. Are humans not animals?
+										- Of course they aren't.
+											GROWTH: No. Of course they [b]are[/b]. You and animals both come from the same place, buddy! You're all in it together!
+											GROWTH: The only thing we can be sure of in this discussion is that [b]I[/b] am not an animal!
+											GROWTH: Sucker. You lil animal, you!
+											GROWTH: Oink, oink!
+											GROWTH: [shake rate=20 level=10]Neigh![/shake]
+											GROWTH: Anyway, hehe...
+											=> lore_intro_what_were_we_talking_about
+										- They are, but we have evolved beyond the rest of them.
+											GROWTH: That's a bit arrogant, don't you think, buddy?
+											GROWTH: Birds have been around since the Jurassic age, man! That's 60 million years, at [b]least[/b]! What makes you better than a bird?
+											- I have consciousness.
+												GROWTH: You're a bit biased with this question, aren't you? You're the one with "consciousness", so of course it's better to have it than to not.
+												GROWTH: Well, think about this! Jellyfish, one of the oldest species of animal on the planet, [b]do not get sad![/b] No depression at all! Wouldn't it be better on that basis to not have consciousness?
+												GROWTH: Jellyfish have been around for at least [shake rate=20 level=10]500 million years.[/shake] In the freaking [b]OCEAN[/b]!!! That place is cuttthroat to say the least!
+												GROWTH: Look, all I'm saying is that animals like you have been around for so long that you are all as valid as each other. You are as evolved as the next species, aren't you?
+												- Feeling sad is a good thing. It reinforces groups and safety and stuff like that.
+													GROWTH: Oh, whatever. One man's trash is another man's treasure.
+													GROWTH: Anyway...
+													=> lore_intro_what_were_we_talking_about
+												- That's an interesting perspective.
+													GROWTH: Yeah, man! You are literally the [b]cream[/b] of the freakin [b]crop![/b] All of your ancestors had babies that had babies that had babies that eventually led to [shake rate=20 level=10]you![/shake]
+													GROWTH: But the same goes with every animal. You're all the best at what you've historically done in the past.
+													GROWTH: P.S. -- Don't go trying to live like a jellyfish to prove a point, now, you hear?
+													GROWTH: Okay, jeez--
+													=> lore_intro_what_were_we_talking_about
+											- I am no better than a bird.
+												GROWTH: That's what's up! I respect the humility, man!
+												GROWTH: Ahah... Anyway...
+												=> lore_intro_what_were_we_talking_about
+									- Well, it's true!
+										GROWTH: Hey, I respect the humility, man!
+										GROWTH: Ahah... Anyway...
+										=> lore_intro_what_were_we_talking_about
+					- Sure.
+						GROWTH: Sure is right!
+						GROWTH: Or are you just trying to get me to shut up?
+						- Yeah, let's move on with our lives.
+							GROWTH: Totally true.
+							=> lore_intro_what_were_we_talking_about
+						- No!
+							GROWTH: Uh...
+							GROWTH: Oh.
+							=> lore_intro_what_were_we_talking_about
+				- A creation of God.
+					GROWTH: Oh, boy.
+				   RESUME HERE~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+			       JUST add at least 2 replies to each question above.
+					also finish this current God question. I ran out of steam
+- So you DO know what a video game is!
+	GROWTH: [shake rate=20 level=10]ONLY WHEN IT'S FUNNY!!![/shake]
+	GROWTH: Look!!! I don't have time to get freakin weird with you!!!
+	GROWTH: We need your help.
+	=> lore_intro1
+- I guess it makes sense.
+	GROWTH: Of course it does!
+
+~ lore_intro_what_were_we_talking_about
+GROWTH: What in the world were we talking about?
+- I don't know. I was just playing this game and then you came outta nowhere.
+	GROWTH: [shake rate=20 level=10]Oh!!![/shake] That's right! We need your help!
+	=> lore_intro1
+- Video games.
+	GROWTH: Oh, yeah!
+	GROWTH: [shake rate=20 level=10]OH!!![/shake] I just remembered! We need your help!
+	=> lore_intro1
+
+~ lore_intro1
+GROWTH: test

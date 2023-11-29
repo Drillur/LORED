@@ -58,6 +58,7 @@ var dialogue_line: DialogueLine:
 		
 		# The dialogue has finished so close the balloon
 		if not next_dialogue_line:
+			handbook.mark_section_read()
 			hide()
 			return
 		

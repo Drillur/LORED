@@ -1,3 +1,4 @@
+Node
 VBoxContainer
 MarginContainer
 TextureRect
@@ -29,4 +30,3 @@ CollisionShape2D
 Area2D
 Path2D
 StaticBody2D
-RigidBody2D

@@ -112,7 +112,7 @@ func remove() -> void:
 
 func connect_calls() -> void:
 	for currency in wa.currency.values():
-		if currency.increased_by_lored.is_connected(add_xp):
+		if gv.dev_mode and currency.increased_by_lored.is_connected(add_xp):
 			printerr("Limit Break was already connected!")
 			return
 		currency.increased_by_lored.connect(add_xp)
@@ -121,7 +121,7 @@ func connect_calls() -> void:
 
 func disconnect_calls() -> void:
 	for currency in wa.currency.values():
-		if not currency.increased_by_lored.is_connected(add_xp):
+		if gv.dev_mode and not currency.increased_by_lored.is_connected(add_xp):
 			printerr("Limit Break wasn't connected!")
 			return
 		currency.increased_by_lored.disconnect(add_xp)

@@ -488,7 +488,7 @@ func RANDOM_STONE() -> void:
 	
 	match d[randi() % d.size()]:
 		10:
-			var text = wa.get_icon_and_name_text(LORED.Type.OIL)
+			var text = wa.get_icon_and_name_text(Currency.Type.OIL)
 			dialogue = "Is it alright that that baby is slurping up %s? Uh... well, I'm sure his parents know what they're doing!" % text
 		9: dialogue = "I like chocolate with peanut butter!"
 		8:

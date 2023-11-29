@@ -14,9 +14,9 @@ COAL: Wow this sure is a test!
 	=> END!
 
 ~ what_is_fuel
-COAL: Dude! Don't you have a car or something? What about a phone? Lots of things need fuel. So do we! Duh! My fuel is {{wa.get_icon_and_name_text(Currency.Type.COAL)}}, which is convenient because that's what I produce!{{mark_section_read("what_is_fuel")}}
+COAL: Dude! Don't you have a car or something? What about a phone? Lots of things need fuel. So do we! Duh! My fuel is {{get_currency("COAL")}}, which is convenient because that's what I produce!
 - What happens if you run out of fuel?
-	COAL: Tee hee! There's a secret about that! Actually, nobody can take any {{wa.get_icon_and_name_text(Currency.Type.COAL)}} if I have less than 50% fuel! You could say I'm a pretty important guy.
+	COAL: Tee hee! There's a secret about that! Actually, nobody can take any {{get_currency("COAL")}} if I have less than 50% fuel! You could say I'm a pretty important guy.
 	- What if other LOREDs run out of fuel?
 		COAL: Oh, then they just can't do anything. Suckers.
 		- Yeah, what a bunch of suckers!
@@ -30,20 +30,22 @@ COAL: Dude! Don't you have a car or something? What about a phone? Lots of thing
 ~ why_is_fuel
 COAL: What are you talking about?
 - Why is this a mechanic in the game?
-	COAL: You've lost your mind, dude! Leave me alone!{{mark_section_read("why_is_fuel")}}
+	COAL: You've lost your mind, dude! Leave me alone!
 	=> END!
 
 ~ how_does_fuel_work
 COAL: Oh, well... We all have our own fuel drain rate! Mine is {{get_coal_fuel()}} per second. So when I start working a job, I will lose that much fuel multiplied by the duration of the job! Get it?
 - Yes.
-	COAL: Great! Glad we had this chat. ... Bye. => END
+	COAL: Great! Glad we had this chat. ... Bye.
+	=> END
 - No.
 	COAL: Okay, how about an example?
 	COAL: Pretend I am a cell phone! Your cell phone, in fact! And pretend that you just opened up TikTok, YouTube, Instagram, Video Editor, and Snapchat, [b]and[/b] you started screen-recording [b]and[/b] actual-recording at the same time too!
 	COAL: How screwed is your battery? All of those... ahem... [b]JOBS..?![/b] just used a bunch of [b]FUEL[/b]. PHONE FUEL!
 	COAL: GET IT NOW?
 	- Yes.
-		COAL: Good! Because I don't know what else I'd say to help you along here! Uh... Yeah, good job or whatever! Bye. => END
+		COAL: Good! Because I don't know what else I'd say to help you along here! Uh... Yeah, good job or whatever! Bye.
+		=> END
 	- No.
 		COAL: ... [wave amp=20 freq=1]*Inhales deeply.*[/wave]
 		COAL: Fine. It's fine! My sole purpose right now is to get you to understand things about this game! And I certainly have the patience to make this a reality!
@@ -59,13 +61,14 @@ COAL: Oh, well... We all have our own fuel drain rate! Mine is {{get_coal_fuel()
 				COAL: Oh. Really? Neat! So... so do you think I should have just tried to act like a regular tutorial from the very beginning?
 				- Yes.
 					COAL: Oh, what do you know? Just be happy with your new knowledge and let me dig some holes!
-					- Okay, bye. => END!
+					- Okay, bye.
+					=> END!
 				- No. What matters is that we finally got there in the end!
 					COAL: Hee hee hee! Yeah!
 					=> END
 			- No.
 				COAL: I had a feeling you might say that.
-				COAL: My advice to you is to click the star buttons as often as you can, repeatedly. Make sure {{wa.get_icon_and_name_text(Currency.Type.COAL)}} net output is positive. And... just... leave me alone.
+				COAL: My advice to you is to click the star buttons as often as you can, repeatedly. Make sure {{get_currency("COAL")}} net output is positive. And... just... leave me alone.
 				COAL: Good luck!
 				=> END
 		- I just don't know what fuel is at all.
@@ -73,7 +76,7 @@ COAL: Oh, well... We all have our own fuel drain rate! Mine is {{get_coal_fuel()
 			COAL: That makes your car go vroomy vroomy. Another example of fuel is... let's say... your continued ignorance of fuel! That is [b]FUEL[/b] for my [b]ANGER[/b]! Does that make sense?
 			COAL: I... oh, boy... Okay, so, if I can now just assume you have a basic understanding of fuel in the real world, I will then believe in your ability to suspend your disbelief that fuel can exist in fictional realities, too.
 			COAL: Okay?
-			COAL: {{wa.get_icon_and_name_text(Currency.Type.COAL)}} is a type of [b]FUEL[/b] in this game. I produce {{wa.get_icon_and_name_text(Currency.Type.COAL)}}. I even use {{wa.get_icon_and_name_text(Currency.Type.COAL)}} as fuel. {LORED:STONE} uses {{wa.get_icon_and_name_text(Currency.Type.COAL)}} as fuel, too.
+			COAL: {{get_currency("COAL")}} is a type of [b]FUEL[/b] in this game. I produce {{get_currency("COAL")}}. I even use {{get_currency("COAL")}} as fuel. {{get_lored("STONE")}} uses {{get_currency("COAL")}} as fuel, too.
 			COAL: We [b]BURN FUEL[/b] to then [b]WORK JOBS[/b]. If we have insufficient [b]FUEL[/b], we may not [b]WORK JOBS[/b].
 			COAL: Oh, you know what I should have said from the very start?!
 			COAL: [shake rate=20 level=10]IF YOU RUN OUT OF FUEL, YOU CAN'T PLAY THE GAME ANYMORE.[/shake] [b]SO DON'T RUN OUT OF FUEL!!![/b]
@@ -83,7 +86,8 @@ COAL: Oh, well... We all have our own fuel drain rate! Mine is {{get_coal_fuel()
 			- Yes.
 				COAL: Thank freaking gawd.
 				COAL: If I ever hear the word [b]fuel[/b] again, it will be too soon. 
-				COAL: Now please leave me alone. => END
+				COAL: Now please leave me alone.
+				=> END
 			- No.
 				[shake rate=20 level=10]COAL[/shake]: [shake rate=20 level=10]YOU ARE ABSOLUTELY KIDDING ME!!![/shake]
 				COAL: THERE IS NO WAY YOU ARE SERIOUS!!! DUDE!!!!!
@@ -99,34 +103,36 @@ COAL: LOREDs require fuel to perform tasks. They will automatically pull resourc
 COAL: In times of high fuel usage, it may be possible that LOREDs would be waiting around for their chance to grab fuel. To mitigate this and increase stability, each LORED has their own fuel storage.
 COAL: LOREDs will not load their fuel storage if it is greater than 50%. When it is below 50%, they will begin looking for a chance to load fuel, but it is not mandatory for them to do so as soon as possible.
 COAL: However, when they are below 15% fuel, they will have no choice but to wait for a chance to grab fuel from the available resource pool.
-COAL: If you find multiple LOREDs are at this point--awaiting {{wa.get_icon_and_name_text(Currency.Type.COAL)}} for example--it would be beneficial to upgrade... uh, me. Or whoever is producing the fuel resource you are low on.
+COAL: If you find multiple LOREDs are at this point--awaiting {{get_currency("COAL")}} for example--it would be beneficial to upgrade... uh, me. Or whoever is producing the fuel resource you are low on.
 COAL: This feature is a great feature and everybody loves it.
 COAL: Do you want to hear that explanation again?
 - Yes.
 	=> actual_fuel_tutorial
 - No.
 	=> END
+=> COAL
 
 ~ STONE
 STONE: [[Lalala~!|Hrk!|Oh, you spooked me!]]
 - How do I level you up?
 	STONE: Just click on the {{res.get_icon_text("Level")}} button! But it costs resources, so if you don't have enough, it won't work.
-	- Leveling you up costs {{wa.get_icon_and_name_text(Currency.Type.IRON)}} and {{wa.get_icon_and_name_text(Currency.Type.COPPER)}}. How can I get those?
+	- Leveling you up costs {{get_currency("IRON")}} and {{get_currency("COPPER")}}. How can I get those?
 		if is_iron_or_copper_unlocked()
-			STONE: You just need to level them up! You've already unlocked them, just go level em up! But they can't work until they have {{wa.get_icon_and_name_text(Currency.Type.IRON_ORE)}} and {{wa.get_icon_and_name_text(Currency.Type.COPPER_ORE)}}, so you'll want to upgrade the LOREDs that produce those, too!
-			- Okay, I'll go click on all of the {{res.get_icon_text("Level")}} buttons. Easy! => END
+			STONE: You just need to level them up! You've already unlocked them, just go level em up! But they can't work until they have {{get_currency("IRON_ORE")}} and {{get_currency("COPPER_ORE")}}, so you'll want to upgrade the LOREDs that produce those, too!
+			- Okay, I'll go click on all of the {{res.get_icon_text("Level")}} buttons. Easy!
+			=> END
 		else
-			STONE: I guess you'll just have to wait until they're unlocked to find out! [color=#808080]But keep this in mind: {{wa.get_icon_and_name_text(Currency.Type.IRON)}} goes super well with peanut butter and honey.[/color]
+			STONE: I guess you'll just have to wait until they're unlocked to find out! [color=#808080]But keep this in mind: {{get_currency("IRON")}} goes super well with peanut butter and honey.[/color]
 			- Alrighty, then.
 - What does leveling you up do?
-	STONE: It wrinkles my brain by 200%! ... Actually, it doubles most of my stats. I'll make 2x as much {{wa.get_icon_and_name_text(Currency.Type.STONE)}}, for example. [shake rate=20.0 level=5 connected=0]BUT!!![/shake] It also doubles my fuel usage!!! So be careful!!!
+	STONE: It wrinkles my brain by 200%! ... Actually, it doubles most of my stats. I'll make 2x as much {{get_currency("STONE")}}, for example. [shake rate=20.0 level=5 connected=0]BUT!!![/shake] It also doubles my fuel usage!!! So be careful!!!
 	- What is fuel?
 		=>< what_is_fuel
 	- Cool!
 - What is a LORED?
-	STONE: Uh... me. I'm a LORED. So is {LORED:COAL}.
+	STONE: Uh... me. I'm a LORED. So is {{get_lored("COAL")}}.
 	- Why is a LORED? [if is_section_read("why_is_fuel")]
-		[shake rate=20.0 level=5 connected=0]STONE[/shake]: [shake rate=20.0 level=5 connected=0]Oh, no!!![/shake] {LORED:COAL} told me all about you! You won't trick me!!! I'm gettin da heck outta here!!!
+		[shake rate=20.0 level=5 connected=0]STONE[/shake]: [shake rate=20.0 level=5 connected=0]Oh, no!!![/shake] {{get_lored("COAL")}} told me all about you! You won't trick me!!! I'm gettin da heck outta here!!!
 		=> END!
 	- Oh, okay!
 - Why do you like picking up rocks? Are you acoustic?

@@ -80,6 +80,13 @@ enum Type {
 	
 	NO_LORED,
 }
+enum Attribute {
+	OUTPUT,
+	INPUT,
+	HASTE,
+	CRIT,
+	FUEL_COST,
+}
 enum ReasonCannotWork {
 	CAN_WORK,
 	UNKNOWN,

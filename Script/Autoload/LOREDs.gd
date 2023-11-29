@@ -321,7 +321,7 @@ func get_icon_and_name_text(lored: int) -> String:
 	return get_lored(lored).details.icon_and_name_text
 
 
-func get_colored_name(lored: int) -> String:
+func get_colored_name(lored: LORED.Type) -> String:
 	return get_lored(lored).details.colored_name
 
 

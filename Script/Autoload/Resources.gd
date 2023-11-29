@@ -38,8 +38,9 @@ func dir_contents(path):
 				):
 					var _name := file_name.split(".")[0]
 					var _path = path + "/" + file_name
-					if bag.has_resource(_name):
-						printerr(_name, " already in bag! Change resource name!")
+					if gv.dev_mode:
+						if bag.has_resource(_name):
+							printerr(_name, " already in bag! Change resource name!")
 					bag.add_resource(_name, load(_path))
 					if file_name.ends_with(".dialogue"):
 						chats[_name] = get_resource(_name)

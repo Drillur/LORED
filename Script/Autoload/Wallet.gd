@@ -211,7 +211,7 @@ func get_weighted_random_currency() -> int:
 	return get_random_unlocked_currency()
 
 
-func get_icon_and_name_text(cur: int) -> String:
+func get_icon_and_name_text(cur: Currency.Type) -> String:
 	return currency[cur].details.icon_and_name_text
 
 

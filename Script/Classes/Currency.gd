@@ -51,6 +51,7 @@ enum Type {
 	
 	FLOWER_SEED, # 37
 	MANA,
+	MANA_CRYSTAL,
 	BLOOD,
 	RANDOM_FLOWER, # 40
 	
@@ -563,6 +564,12 @@ func init_FLOWER_SEED() -> void:
 
 
 func init_MANA() -> void:
+	details.color = Color(0.721569, 0.34902, 0.901961) # violet
+	details.alt_color = Color(0, 0.709804, 1) # blue
+	details.icon = res.get_resource("water")
+
+
+func init_MANA_CRYSTAL() -> void:
 	details.color = Color(0.721569, 0.34902, 0.901961) # violet
 	details.alt_color = Color(0, 0.709804, 1) # blue
 	details.icon = res.get_resource("water")

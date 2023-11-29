@@ -604,7 +604,7 @@ var selected_stage := 1:
 
 func unlock_stage(stage: int) -> void:
 	var _stage = get_stage(stage)
-	if _stage.unlocked:
+	if gv.dev_mode and _stage.unlocked:
 		printerr("Stage was already unlocked.")
 	else:
 		_stage.unlock()
