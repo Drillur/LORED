@@ -1,13 +1,122 @@
 class_name UpgradeEffect
-extends Resource
+extends RefCounted
 
 
+
+class UpgradeValue:
+	
+	var saved_vars := []
+	
+	var value: LoudFloat
+	var applied_value: float
+	var dynamic: bool
+	
+	
+	
+	func _init(base_value: float, _dynamic: bool):
+		value = LoudFloat.new(base_value)
+		dynamic = _dynamic
+		if dynamic:
+			saved_vars.append("value")
+	
+	
+	
+	func get_value() -> float:
+		applied_value = value.get_value()
+		return applied_value
+	
+	
+	func get_applied_value() -> float:
+		return applied_value
+
+
+class LOREDAttributeUpgradeEffect:
+	
+	extends MethodsUpgradeEffect
+	
+	
+	
+	var saved_vars := []
+	
+	var loreds: Array[LORED]
+	var attributes: Array[LORED.Attribute]
+	
+	
+	
+	func _init(
+		_loreds: Array[LORED.Type],
+		_attributes: Array[LORED.Attribute],
+		_base_value: float,
+		_dynamic: bool
+	):
+		super(UpgradeEffect.Type.LORED_ATTRIBUTE)
+		for type in _loreds:
+			loreds.append(lv.get_lored(type))
+		attributes = _attributes
+		value = UpgradeValue.new(_base_value, _dynamic)
+		if _dynamic: 
+			saved_vars.append("value")
+		for lored in loreds:
+			for attribute in attributes:
+				match attribute:
+					LORED.Attribute.HASTE:
+						applied_methods.append(lored.haste.increase_multiplied)
+						removed_methods.append(lored.haste.decrease_multiplied)
+					LORED.Attribute.OUTPUT:
+						applied_methods.append(lored.output.increase_multiplied)
+						removed_methods.append(lored.output.decrease_multiplied)
+					LORED.Attribute.INPUT:
+						applied_methods.append(lored.input.increase_multiplied)
+						removed_methods.append(lored.input.decrease_multiplied)
+					LORED.Attribute.FUEL:
+						applied_methods.append(lored.fuel.increase_multiplied)
+						removed_methods.append(lored.fuel.decrease_multiplied)
+					LORED.Attribute.FUEL_COST:
+						applied_methods.append(lored.fuel_cost.increase_multiplied)
+						removed_methods.append(lored.fuel_cost.decrease_multiplied)
+					LORED.Attribute.CRIT:
+						applied_methods.append(lored.crit.increase_added)
+						removed_methods.append(lored.crit.decrease_added)
+
+
+class MethodsUpgradeEffect:
+	
+	extends UpgradeEffect
+	
+	
+	
+	var applied_methods := []
+	var removed_methods := []
+	var value: UpgradeValue
+	var has_value := false
+	
+	
+	
+	func _init(_type: Type):
+		super(_type)
+		applied.became_true.connect(apply_methods)
+		applied.became_false.connect(remove_methods)
+	
+	
+	func apply_methods() -> void:
+		if has_value:
+			for method in applied_methods:
+				method.call(value.get_value())
+		else:
+			for method in applied_methods:
+				method.call()
+	
+	
+	func remove_methods() -> void:
+		if has_value:
+			for method in removed_methods:
+				method.call(value.get_applied_value())
+		else:
+			for method in removed_methods:
+				method.call()
 
 enum Type {
-	LORED_HASTE,
-	LORED_OUTPUT,
-	LORED_OUTPUT_INPUT,
-	LORED_INPUT,
+	LORED_ATTRIBUTE,
 }
 
 var type: Type:
@@ -17,75 +126,32 @@ var type: Type:
 var key: String
 var applied := LoudBool.new(false)
 
-var upgrade_value: UpgradeEffectValue
-var affected_loreds: UpgradeEffectLOREDs
-
-var apply_methods: Array[Callable]
-var remove_methods: Array[Callable]
 
 
-
-func _init(_type: Type, data: Dictionary) -> void:
+func _init(_type: Type) -> void:
 	type = _type
-	
-	if gv.dev_mode:
-		# assert data has proper keys
-		match type:
-			Type.LORED_HASTE:
-				assert("value" in data.keys())
-				assert("affected_loreds" in data.keys())
-	
-	if data.has("value"):
-		upgrade_value = UpgradeEffectValue.new(data["value"])
-		upgrade_value.value.changed.connect(upgrade_value_changed)
-	if data.has("affected_loreds"):
-		affected_loreds = UpgradeEffectLOREDs.new(data["affected_loreds"])
 
-
-
-# - Internal
-
-
-func upgrade_value_changed() -> void:
-	if applied.is_true():
-		refresh()
-
-
-
-# - Action
 
 
 func apply():
 	if applied.is_true():
 		return
 	applied.set_to(true)
-	if has_upgrade_value():
-		var applied_value = upgrade_value.get_value()
-		for method in apply_methods:
-			method.call(applied_value)
 
 
 func remove():
 	if applied.is_false():
 		return
 	applied.set_to(false)
-	if has_upgrade_value():
-		for method in remove_methods:
-			method.call(upgrade_value.get_applied_value())
 
 
 func refresh():
-	remove()
-	apply()
+	if applied.is_true():
+		remove()
+		apply()
+
 
 
 
 # - Get
 
-
-func affects_loreds() -> bool:
-	return "LORED" in key
-
-
-func has_upgrade_value() -> bool:
-	return upgrade_value != null

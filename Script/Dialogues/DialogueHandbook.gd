@@ -79,3 +79,7 @@ func get_lored(lored_key: String) -> String:
 
 func sections_read() -> int:
 	return read_sections.size()
+
+
+func get_current_year_text() -> String:
+	return str(Time.get_datetime_dict_from_system().year)

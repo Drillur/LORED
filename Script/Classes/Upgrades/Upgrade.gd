@@ -403,12 +403,8 @@ func _init(_type: int) -> void:
 
 func init_GRINDER() -> void:
 	details.name = "GRINDER"
-#	effect = UpgradeEffect.new(
-#		UpgradeEffect.Type.LORED_HASTE,
-#		{
-#			"value": 1.25,
-#			"affected_loreds": [LORED.Type.STONE]
-#		}
+#	effect = UpgradeEffect.LOREDAttributeUpgradeEffect.new(
+#		[LORED.Type.STONE], [LORED.Attribute.HASTE], 1.25, false
 #	)
 	set_effect(OldUpgradeEffect.Type.HASTE, 1.25)
 	add_affected_lored(LORED.Type.STONE)

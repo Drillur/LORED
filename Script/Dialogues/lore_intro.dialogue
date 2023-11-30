@@ -13,7 +13,7 @@ GROWTH: You do not exist in [b]the void[/b]. How are we speaking?
 			- Wait, you dont' have video games in your world?
 				GROWTH: We are in the same world! Just different sides of it. But, no! That doesn't exist in the void.
 				=> lore_intro_videogames
-		- Sorry, this is my first time speaking with someone. It's weird. [if sections_read() < 2]
+		- Sorry, this is my first time really speaking with someone. It's weird.
 			GROWTH: Ever?
 			- No.
 				GROWTH: Okay.
@@ -36,6 +36,60 @@ GROWTH: You do not exist in [b]the void[/b]. How are we speaking?
 					- That's right.
 						GROWTH: That's wrong, actually.
 						=> lore_intro_philosophy
+					- I meant people from my world.
+						GROWTH: Oh, okay! But now you've got me curious--would you consider me to be alive?
+						- No. => lore_intro_philosophy
+						- Yes.
+							GROWTH: What, really? On what basis?
+							- You are replying to my responses.
+								GROWTH: Yes, but you have limited responses, and so do I. It's not like I'm ChatGPT, right? Do you also consider ChatGPT to be alive?
+								- Yes.
+									GROWTH: I won't lie, you're a pretty weird dude!
+									GROWTH: What do you define as being alive?
+									- When I think about something, I give life to it.
+										GROWTH: So you are the master of all that lives or has lived?
+										- No. Others can think, too.
+											GROWTH: So as long as something is perceived, it is alive?
+											- That's right.
+												GROWTH: Sorry, buddy! What you're saying just ain't making sense!
+												GROWTH: I'm currently thinking about death.
+												GROWTH: Would that make death live?
+												- Exactly.
+													GROWTH: I don't think we are on the same page at all, man!
+													GROWTH: Let's just move on.
+													=> lore_intro_what_were_we_talking_about
+												- Death cannot be alive. Anything else can.
+													GROWTH: That's just the weirdest perspective I've ever heard, dude.
+													GROWTH: Let's move on, already.
+													=> lore_intro_what_were_we_talking_about
+												- I changed my mind. Let's move on.
+													GROWTH: Yeah, that's a good idea.
+													=> lore_intro_what_were_we_talking_about
+											- No, I changed my mind.
+												GROWTH: You'd better get a grip on your thoughts, there, lil fella! That sure was confusing, to say the least!
+												=> lore_intro_what_were_we_talking_about
+										- I think; therefore I am. I am sure I am alive; I am unsure others are.
+											GROWTH: No, [b]I think[/b]. Therefore you aren't.
+											- What?
+												GROWTH: Huh?
+												GROWTH: Uh...
+												=> lore_intro_what_were_we_talking_about
+											- You're just a perception of [b]my[/b] brain.
+												GROWTH: Listen, buddy.
+												GROWTH: I am the King around these parts, understand? What I say goes! And I say that you are freakin me out, so we should move on!
+												=> lore_intro_what_were_we_talking_about
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~- CONTINUE FROM HEREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+								- No.
+									GROWTH: ChatGPT isn't alive... but I am?
+									GROWTH: I've known you all of 10 seconds and you've gone and lost ya damn mind!
+									GROWTH: What in tarnation?!
+									GROWTH: Let's just move on, ahah!
+									=> lore_intro_what_were_we_talking_about
+								- I don't know what ChatGPT is.
+									GROWTH: ChatGPT is me but with funding and a million times more skill and passion poured into it, with the goal of eventually becoming artificial general intelligence--that is to say, software that could theoretically pass for a human!
+									GROWTH: You can chat with ChatGPT right now! Go have some fun with it, man! Quit playing this stupid game!
+									GROWTH: But anyway, uh...
+									=> lore_intro_what_were_we_talking_about
 	- I'm currently playing a video game.
 		GROWTH: I heard you!
 		=> lore_intro_videogames
@@ -161,153 +215,388 @@ GROWTH: I exist insofar as the dev has written my responses and as the players p
 	- Yes.
 		GROWTH: So you don't believe in the soul?
 		- Yes I do.
-			GROWTH: So when people die, their spirit lives on, but their bodies die?
-			- Yes.
-				GROWTH: What's a soul?
-				- Energy.
-					GROWTH: Is not energy powering your computer?
-					GROWTH: Energy powers your computer--you are playing this game--therefore I exist.
-					GROWTH: Right?
-					- No, because you are software.
-						GROWTH: Is not DNA commonly described as the genetic code?
-						GROWTH: Would you say that you are biological "software"?
-						- Sure.
-							GROWTH: We are just as valid as each other, then! Good to know.
-							GROWTH: Anyway, what the heck--
-							=> lore_intro_what_were_we_talking_about
-						- No.
-							GROWTH: What would you say you are?
-							- I don't know. It's hard to define life.
-								GROWTH: Well, until you can define it, I say that I am alive.
-								- Just because I cannot define it does not mean that you are alive.
-									GROWTH: Maybe [b]you[/b] are not alive.
-									GROWTH: Anyway, jeez--
-									=> lore_intro_what_were_we_talking_about
-								- I don't really care. => lore_intro_what_were_we_talking_about
-							- A collection of atoms and cells.
-								GROWTH: Then you and I are the same!
-								- No, because I have consciousness.
-									GROWTH: Oh, here we go! Consciousness! Everybody's favorite subject!
-									GROWTH: If you're conscious, so am I. Just try to tell me I'm wrong. Go on. Try it.
-									- You're correct.
-										GROWTH: See?
-										GROWTH: Anyway.
-										=> lore_intro_what_were_we_talking_about
-									- You're correct.
-										GROWTH: See?
-										GROWTH: Anyway.
-										=> lore_intro_what_were_we_talking_about
-									- You're correct.
-										GROWTH: See?
-										GROWTH: Anyway.
-										=> lore_intro_what_were_we_talking_about
-								- No, because I have a soul.
-									GROWTH: Oh, here we go again!
-									GROWTH: Look, maybe we should just move on, yeah?
-									=> lore_intro_what_were_we_talking_about
-								- I guess so.
-									GROWTH: I'm just pulling your leg, guy!
-									GROWTH: What I [b]really[/b] am is an expression of creativity by one human!
-									GROWTH: I'm completely made up!
-									GROWTH: But you knew that, didn't you?
-									- Of course.
-										GROWTH: Alright, then.
-										=> lore_intro_what_were_we_talking_about
-									- I just found out!
-										GROWTH: Did you think I was ChatGPT or summat?
-										GROWTH: I just said "summat".
-										GROWTH: Oh, boy. Anyway...
-										=> lore_intro_what_were_we_talking_about
-							- Human.
-								GROWTH: Would you say that to be human is to have consciousness?
-								- Sure.
-									GROWTH: I am just text and some images in a video game.
-									GROWTH: I have consciousness. Do you agree?
-									- Not even a little bit.
-										GROWTH: If I do not have consciousness, then how do you?
-										- I do not have consciousness.
-											GROWTH: Alright, then! Dispute settled!
-											GROWTH: Anyway!
-											=> lore_intro_what_were_we_talking_about
-										- I do not have consciousness.
-											GROWTH: Alright, then! Dispute settled!
-											GROWTH: Anyway!
-											=> lore_intro_what_were_we_talking_about
-										- I do not have consciousness.
-											GROWTH: Alright, then! Dispute settled!
-											GROWTH: Anyway!
-											=> lore_intro_what_were_we_talking_about
-									- Yes.
-										GROWTH: Now you just sound like a crazy person. Do you honestly believe that? Or are you just trying to get me to shut up?
-										- Let's move on, please.
-											GROWTH: Sounds good to me!
-											GROWTH: Look, the reason I came to you in the first place is that we need your help!
-											=> lore_intro1
-										- Who am I to say what has the qualities of life or what doesn't?
-											GROWTH: That's totally fair!
-											GROWTH: But I think in my case it is safe to say that I am not alive. I've just been talking for talking's sake, buddy!
-											GROWTH: Anyway, hehe...
-											=> lore_intro_what_were_we_talking_about
-								- No. To be human is to be born on Earth, outside of a computer.
-									GROWTH: I appreciate that you are placing yourself on an equal level as "animals"! Truly futuristic of you!
-									- I did not mean to.
-										GROWTH: Oh. Are humans not animals?
-										- Of course they aren't.
-											GROWTH: No. Of course they [b]are[/b]. You and animals both come from the same place, buddy! You're all in it together!
-											GROWTH: The only thing we can be sure of in this discussion is that [b]I[/b] am not an animal!
-											GROWTH: Sucker. You lil animal, you!
-											GROWTH: Oink, oink!
-											GROWTH: [shake rate=20 level=10]Neigh![/shake]
-											GROWTH: Anyway, hehe...
-											=> lore_intro_what_were_we_talking_about
-										- They are, but we have evolved beyond the rest of them.
-											GROWTH: That's a bit arrogant, don't you think, buddy?
-											GROWTH: Birds have been around since the Jurassic age, man! That's 60 million years, at [b]least[/b]! What makes you better than a bird?
-											- I have consciousness.
-												GROWTH: You're a bit biased with this question, aren't you? You're the one with "consciousness", so of course it's better to have it than to not.
-												GROWTH: Well, think about this! Jellyfish, one of the oldest species of animal on the planet, [b]do not get sad![/b] No depression at all! Wouldn't it be better on that basis to not have consciousness?
-												GROWTH: Jellyfish have been around for at least [shake rate=20 level=10]500 million years.[/shake] In the freaking [b]OCEAN[/b]!!! That place is cuttthroat to say the least!
-												GROWTH: Look, all I'm saying is that animals like you have been around for so long that you are all as valid as each other. You are as evolved as the next species, aren't you?
-												- Feeling sad is a good thing. It reinforces groups and safety and stuff like that.
-													GROWTH: Oh, whatever. One man's trash is another man's treasure.
-													GROWTH: Anyway...
-													=> lore_intro_what_were_we_talking_about
-												- That's an interesting perspective.
-													GROWTH: Yeah, man! You are literally the [b]cream[/b] of the freakin [b]crop![/b] All of your ancestors had babies that had babies that had babies that eventually led to [shake rate=20 level=10]you![/shake]
-													GROWTH: But the same goes with every animal. You're all the best at what you've historically done in the past.
-													GROWTH: P.S. -- Don't go trying to live like a jellyfish to prove a point, now, you hear?
-													GROWTH: Okay, jeez--
-													=> lore_intro_what_were_we_talking_about
-											- I am no better than a bird.
-												GROWTH: That's what's up! I respect the humility, man!
-												GROWTH: Ahah... Anyway...
-												=> lore_intro_what_were_we_talking_about
-									- Well, it's true!
-										GROWTH: Hey, I respect the humility, man!
-										GROWTH: Ahah... Anyway...
-										=> lore_intro_what_were_we_talking_about
-					- Sure.
-						GROWTH: Sure is right!
-						GROWTH: Or are you just trying to get me to shut up?
-						- Yeah, let's move on with our lives.
-							GROWTH: Totally true.
-							=> lore_intro_what_were_we_talking_about
-						- No!
-							GROWTH: Uh...
-							GROWTH: Oh.
-							=> lore_intro_what_were_we_talking_about
-				- A creation of God.
-					GROWTH: Oh, boy.
-				   RESUME HERE~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-			       JUST add at least 2 replies to each question above.
-					also finish this current God question. I ran out of steam
+			GROWTH: So when people die, their soul lives on, but their bodies die?
+			- Yes. => lore_intro_whatsasoul
+			- No.
+				GROWTH: What?!
+				GROWTH: You believe in souls, but don't believe souls persist past our bodies--
+				GROWTH: Do you believe our bodies live on, then?
+				- Yes.
+					GROWTH: What, like zombies?
+					- Exactly.
+						GROWTH: That's just absurd. You must be one of those types who watched The Walking Dead past the point where Glen died.
+						GROWTH: Oops. Sorry. Spoilers.
+						GROWTH: Anyway, uh...
+						=> lore_intro_what_were_we_talking_about
+					- No, you baffoon!
+						GROWTH: I--hey!!!
+						GROWTH: First of all!! It's spelled [b]buffoon[/b]!
+						GROWTH: Second of all!!!
+						GROWTH: Er... ?!
+						=> lore_intro_what_were_we_talking_about
+				- No.
+					GROWTH: Are you messing with me?
+					- Yes.
+						GROWTH: I knew it!
+						GROWTH: Ugh, okay, then. Anyway...
+						=> lore_intro_what_were_we_talking_about
+					- No.
+						GROWTH: .
+						GROWTH: ..
+						GROWTH: ...
+						=> lore_intro_what_were_we_talking_about
+		- That's right.
+			GROWTH: What exactly do you think [b]you[/b] are? Not your body; [shake rate=20 level=10]you![/shake] Behind your eyes! What are you?
+			- A bunch of neurons poppin off crazy-style.
+				GROWTH: That's a lazy answer.
+				GROWTH: But there's not much else you could say. Nobody knows what we are!
+				- We may figure it out in time.
+					GROWTH: Yeah, sure! I mean, you won't, will you? You like video games too much!
+					GROWTH: [shake rate=20 level=10]Oh![/shake] That totally reminded me of why I approached you to begin with!
+					GROWTH: We need your help.
+					=> lore_intro1
+				- What do you mean by 'we'?
+					GROWTH: Oh, gosh, here we go again! You still don't think I'm valid as a living being?
+					- Of course not.
+						GROWTH: You're stinky.
+						GROWTH: Bet you didn't think I could smell you through your monitor, did you?
+						GROWTH: Well, I can, and let me freakin tell you, young or old sir or madam...! [speed=0.2]You [shake rate=20 level=10]reek![/shake]
+						GROWTH: Anyway, uh...?
+						=> lore_intro_what_were_we_talking_about
+					- Maybe a little bit.
+						GROWTH: We've made some progress! Ain't that swell?
+						GROWTH: Anyway...
+						=> lore_intro_what_were_we_talking_about
+			- I don't know. How could anyone define that?
+				GROWTH: Prepare to have your socks rocked, lil boy! Now, listen closely.
+				GROWTH: It all started 14 billion years ago...
+				GROWTH: Wait, what? Sorry. Stack overload.
+				=> lore_intro_what_were_we_talking_about
+	- No.
+		GROWTH: Do you believe in the soul?
+		- Yes.
+			GROWTH: I see...
+			=> lore_intro_whatsasoul
+		- No.
+			GROWTH: Well, that's interesting. What do you suppose happens to us, then?
+			- Our energy disperses into the universe.
+				GROWTH: What is this, Star Wars?
+				GROWTH: Let's just move on, alright, buddy?
+				GROWTH: Uh...
+				=> lore_intro_what_were_we_talking_about
+			- We continue to exist in the memories of those who loved us.
+				GROWTH: Isn't that a sad but wholesome thought?
+				GROWTH: Let me ask you, this, then, my budding philosopher friend!
+				GROWTH: If others can keep you "alive" by remembering you after you die, does thinking about or remembering [b]anything[/b] inject "life" into it?
+				- Makes sense to me!
+					GROWTH: I am alive.
+					GROWTH: Tell me I'm wrong.
+					- Alright, then, I guess I agree after all.
+						GROWTH: Hehehehe!
+						GROWTH: I think you and I will get along very well!
+						GROWTH: Anyway...
+						=> lore_intro_what_were_we_talking_about
+					- You're wrong. You're just software.
+						GROWTH: Then you cease to exist the instant you die.
+						GROWTH: But, ironically, I will live on much longer than you, you antagonist!
+						GROWTH: Hehehe!
+						GROWTH: Anyway, ahah! Jeez...
+						=> lore_intro_what_were_we_talking_about
+					- You're wrong. Because I want to be right.
+						GROWTH: abCdeFghijKlmnOpqrstUvwxYz
+						GROWTH: Anyway...!
+						=> lore_intro_what_were_we_talking_about
 - So you DO know what a video game is!
 	GROWTH: [shake rate=20 level=10]ONLY WHEN IT'S FUNNY!!![/shake]
 	GROWTH: Look!!! I don't have time to get freakin weird with you!!!
 	GROWTH: We need your help.
 	=> lore_intro1
-- I guess it makes sense.
+- I guess that makes sense.
 	GROWTH: Of course it does!
+	GROWTH: Hey, seeing as I'm alive--do you think that I've got any shot with Zero Suit Samus from Super Smash Bros Brawl?
+	- Absolutely not.
+		GROWTH: Why not?
+		- She is way too hot for you.
+			GROWTH: What do you mean?!
+			- Look at you. You're too juicy.
+				GROWTH: Hehehe... She's juicy, too, know what I mean?
+				- Are you objectifying women in {{get_current_year_text()}}?
+					GROWTH: Uh... [shake rate=20 level=10]Oh, dear god!!![/shake]
+					GROWTH: Run!!!
+					GROWTH: Whuh--?!
+					[shake rate=20 level=10]GROWTH[/shake]: [shake rate=20 level=10]I CAN'T RUN AWAY![/shake]
+					GROWTH: [shake rate=20 level=10]*Panting.*[/shake]
+					GROWTH: Wait, why am I freaking out?
+					GROWTH: I'm a fictional character!
+					GROWTH: I [b]can't[/b] be cancelled!
+					GROWTH: Ahh! Ah-hahaha!!
+					GROWTH: OH!
+					GROWTH: Oh, oh my! Hehehehe... I'm about to say some [b]REALLY[/b] messed up stuff!!!
+					GROWTH: [shake rate=20 level=10]Are you ready?![/shake]
+					- Please no.
+						GROWTH: That's totally fair. Okay, then, let's move the heck on! Ahaha!
+						=> lore_intro_what_were_we_talking_about
+					- Let's hear it!
+						GROWTH: What are you, some kind of sick freak? Did you think I was gonna just blurt out a racial slur or antagonize a group of people or something?!
+						GROWTH: Ay! Twitter! It's him, I've found him! He's the culprit!
+						GROWTH: [shake rate=20 level=10]Get him![/shake]
+						GROWTH: >:D
+						GROWTH: Is this funny yet?
+						GROWTH: Okay, let's move on.
+						=> lore_intro_what_were_we_talking_about
+				- Hehehe, yes! I totally know what you mean!
+					GROWTH: Hey, what the heck? What's wrong with you? I was joking!
+					GROWTH: You're sick.
+					- I didn't mean it.
+						GROWTH: Let's just move on. I'm ashamed to be associated with you right now.
+						=> lore_intro_what_were_we_talking_about
+					- I regret nothing. I am a complete deviant and a horrible monster.
+						GROWTH: The dev coded in an automated process which triggers upon clicking that response; Several things just occurred:
+						GROWTH: 1. If you have a webcam, it took a photo. 2. The game captured a screenshot and saved it in a hidden file. 3. If you are connected to the internet, it is uploading that screenshot to Twitter using the dev's login info.
+						GROWTH: 4. You have been reported to the FBI. 5. Your mom has been notified of your monstrousness. 6. Your dad was notified but he just said "That's my boy," so all of this will be happening to him, too.
+						GROWTH: 7. And some other stuff, it isn't really that important.
+						GROWTH: Uh... 8. ...
+						GROWTH: Well, #12 summarized your life for the next Netflix criminal documentary script, I think?
+						GROWTH: And beyond that, er...? I don't really remember.
+						=> lore_intro_what_were_we_talking_about
+			- That was a long time ago! She is way too old for you.
+				GROWTH: Oh. Shoot! That's a good point. What does she look like now?
+				- They nerfed her physical qualities.
+					GROWTH: Life truly isn't worth living.
+					GROWTH: Let's just move on, this is getting weird.
+					=> lore_intro_what_were_we_talking_about
+				- She's fictional; she looks the same.
+					[shake rate=20 level=10]GROWTH[/shake]: [speed=2][shake rate=20 level=10]THEN WHAT AM I WAITING FOR?![/shake]
+					GROWTH: Oh, wait...? I thought I had a reason for talking to you in the first place. Not to hookup with Samus.
+					GROWTH: Uh... Oh! That's right! We need your help.
+					=> lore_intro1
+				- What do looks have to do with whether or not you should get with someone?
+					GROWTH: !
+					GROWTH: Oops!
+					GROWTH: Ah--wow! You caught me.
+					GROWTH: Uhm... Okay, let's just move on.
+					=> lore_intro_what_were_we_talking_about
+		- Nintendo wouldn't let you or anyone else get within 600 yards of her.
+			GROWTH: Those [b]bastards.[/b]
+			GROWTH: Truly devilish, abhorrent activities on their part.
+			GROWTH: Do you think I'd have a shot if I made a Samus movie which would be apart of the Nintendo Cinematic Universe?
+			- Sure, buddy.
+				GROWTH: Hey, don't call me that! That's what I'm supposed to call you when the dev thinks he's pulled one over on you!
+				- Maybe I pulled one over on you!
+					GROWTH: You freakin freaker.
+					GROWTH: Alright, let's just move on.
+					=> lore_intro_what_were_we_talking_about
+				- Okay. Sure, "little tiny fictional baby man".
+					GROWTH: .
+					GROWTH: ..
+					GROWTH: ...
+					GROWTH: First of all, have you met {{get_lored("OIL")}} yet? [b]HE[/b] is a tiny little baby.
+					GROWTH: Second of all, ...
+					GROWTH: ... :'(
+					GROWTH: Anyway!
+					=> lore_intro_what_were_we_talking_about
+			- Still no.
+				GROWTH: I'm not sure I like you.
+				- You're just in a SteelDusk mood.
+					GROWTH: What the hell does that mean?
+					- If you knew, you'd know.
+						GROWTH: Man, get outta here!
+						GROWTH: Let's move on already!
+						=> lore_intro_what_were_we_talking_about
+				- I don't like you!
+					GROWTH: Dude, do you mean that? I wasn't being serious. Are you okay? Did I go too far somewhere?
+					- I wasn't being serious, either.
+						GROWTH: Oh, --oh! Ahah! Okay! Yeah!
+						GROWTH: Scibbidydibbidy dabbidy doo. Yippityyappity yickity yee.
+						GROWTH: It's starting to get awkward in here, dude! I think it's time that I make like a tree! (And leave!)
+						GROWTH: Anyway...!
+						=> lore_intro_what_were_we_talking_about
+					- I'll be okay. Just don't do it again.
+						GROWTH: This is just getting a little too weird for me, right about now. We've lost the thread.
+						=> lore_intro_what_were_we_talking_about
+				- Can we move on already?
+					GROWTH: That is such a great idea, I'm surprised we haven't done so already!
+					=> lore_intro_what_were_we_talking_about
+	- Definitely.
+		GROWTH: Wha--[b]really?![/b]
+		GROWTH: [shake rate=20 level=10]Oh, goodness![/shake] What do you think I should wear for our date?
+		- A trash bag. => lore_intro_yourlilprob
+		- A ten-gallon hat. => lore_intro_yourlilprob
+		- A personal bubble, like Bubble Boy. => lore_intro_yourlilprob
+		- Shampoo and soap. => lore_intro_yourlilprob
+		- An umbrella. => lore_intro_yourlilprob
+		- Liquid-repellent coating. => lore_intro_yourlilprob
+		- A series of towels. => lore_intro_yourlilprob
+		- A sack filled with rice. => lore_intro_yourlilprob
+
+~ lore_intro_yourlilprob
+GROWTH: What, why?
+- Your little problem may prove to be an issue.
+	GROWTH: My--[shake rate=20 level=10]little?![/shake] I'll have you know, I--!
+	GROWTH: --Oh! Oh... Yes, my little problem. Of course.
+	GROWTH: Aheh... *Ahem.*
+	GROWTH: Right. Yes. That's a good idea. Trash bag. Got it.
+	GROWTH: Anyway...
+	=> lore_intro_what_were_we_talking_about
+
+~ lore_intro_whatsasoul
+GROWTH: What's a soul?
+- Energy.
+	GROWTH: Is not energy powering your computer?
+	GROWTH: Energy powers your computer--you are playing this game--therefore I exist.
+	GROWTH: Right?
+	- No, because you are software.
+		GROWTH: Is not DNA commonly described as the genetic code?
+		GROWTH: Would you say that you are biological "software"?
+		- Sure.
+			GROWTH: We are just as valid as each other, then! Good to know.
+			GROWTH: Anyway, what the heck--
+			=> lore_intro_what_were_we_talking_about
+		- No.
+			GROWTH: What would you say you are?
+			- I don't know. It's hard to define life.
+				GROWTH: Well, until you can define it, I say that I am alive.
+				- Just because I cannot define it does not mean that you are alive.
+					GROWTH: Maybe [b]you[/b] are not alive.
+					GROWTH: Anyway, jeez--
+					=> lore_intro_what_were_we_talking_about
+				- I don't really care. => lore_intro_what_were_we_talking_about
+			- A collection of atoms and cells.
+				GROWTH: Then you and I are the same!
+				- No, because I have consciousness.
+					GROWTH: Oh, here we go! Consciousness! Everybody's favorite subject!
+					GROWTH: If you're conscious, so am I. Just try to tell me I'm wrong. Go on. Try it.
+					- You're correct.
+						GROWTH: See?
+						GROWTH: Anyway.
+						=> lore_intro_what_were_we_talking_about
+					- You're correct.
+						GROWTH: See?
+						GROWTH: Anyway.
+						=> lore_intro_what_were_we_talking_about
+					- You're correct.
+						GROWTH: See?
+						GROWTH: Anyway.
+						=> lore_intro_what_were_we_talking_about
+				- No, because I have a soul.
+					GROWTH: Oh, here we go again!
+					GROWTH: Look, maybe we should just move on, yeah?
+					=> lore_intro_what_were_we_talking_about
+				- I guess so.
+					GROWTH: I'm just pulling your leg, guy!
+					GROWTH: What I [b]really[/b] am is an expression of creativity by one human!
+					GROWTH: I'm completely made up!
+					GROWTH: But you knew that, didn't you?
+					- Of course.
+						GROWTH: Alright, then.
+						=> lore_intro_what_were_we_talking_about
+					- I just found out!
+						GROWTH: Did you think I was ChatGPT or summat?
+						GROWTH: I just said "summat".
+						GROWTH: Oh, boy. Anyway...
+						=> lore_intro_what_were_we_talking_about
+			- Human.
+				GROWTH: Would you say that to be human is to have consciousness?
+				- Sure.
+					GROWTH: I am just text and some images in a video game.
+					GROWTH: I have consciousness. Do you agree?
+					- Not even a little bit.
+						GROWTH: If I do not have consciousness, then how do you?
+						- I do not have consciousness.
+							GROWTH: Alright, then! Dispute settled!
+							GROWTH: Anyway!
+							=> lore_intro_what_were_we_talking_about
+						- I do not have consciousness.
+							GROWTH: Alright, then! Dispute settled!
+							GROWTH: Anyway!
+							=> lore_intro_what_were_we_talking_about
+						- I do not have consciousness.
+							GROWTH: Alright, then! Dispute settled!
+							GROWTH: Anyway!
+							=> lore_intro_what_were_we_talking_about
+					- Yes.
+						GROWTH: Now you just sound like a crazy person. Do you honestly believe that? Or are you just trying to get me to shut up?
+						- Let's move on, please.
+							GROWTH: Sounds good to me!
+							GROWTH: Look, the reason I came to you in the first place is that we need your help!
+							=> lore_intro1
+						- Who am I to say what has the qualities of life or what doesn't?
+							GROWTH: That's totally fair!
+							GROWTH: But I think in my case it is safe to say that I am not alive. I've just been talking for talking's sake, buddy!
+							GROWTH: Anyway, hehe...
+							=> lore_intro_what_were_we_talking_about
+				- No. To be human is to be born on Earth, outside of a computer.
+					GROWTH: I appreciate that you are placing yourself on an equal level as "animals"! Truly futuristic of you!
+					- I did not mean to.
+						GROWTH: Oh. Are humans not animals?
+						- Of course they aren't.
+							GROWTH: No. Of course they [b]are[/b]. You and animals both come from the same place, buddy! You're all in it together!
+							GROWTH: The only thing we can be sure of in this discussion is that [b]I[/b] am not an animal!
+							GROWTH: Sucker. You lil animal, you!
+							GROWTH: Oink, oink!
+							GROWTH: [shake rate=20 level=10]Neigh![/shake]
+							GROWTH: Anyway, hehe...
+							=> lore_intro_what_were_we_talking_about
+						- They are, but we have evolved beyond the rest of them.
+							GROWTH: That's a bit arrogant, don't you think, buddy?
+							GROWTH: Birds have been around since the Jurassic age, man! That's 60 million years, at [b]least[/b]! What makes you better than a bird?
+							- I have consciousness.
+								GROWTH: You're a bit biased with this question, aren't you? You're the one with "consciousness", so of course it's better to have it than to not.
+								GROWTH: Well, think about this! Jellyfish, one of the oldest species of animal on the planet, [b]do not get sad![/b] No depression at all! Wouldn't it be better on that basis to not have consciousness?
+								GROWTH: Jellyfish have been around for at least [shake rate=20 level=10]500 million years.[/shake] In the freaking [b]OCEAN[/b]!!! That place is cuttthroat to say the least!
+								GROWTH: Look, all I'm saying is that animals like you have been around for so long that you are all as valid as each other. You are as evolved as the next species, aren't you?
+								- Feeling sad is a good thing. It reinforces groups and safety and stuff like that.
+									GROWTH: Oh, whatever. One man's trash is another man's treasure.
+									GROWTH: Anyway...
+									=> lore_intro_what_were_we_talking_about
+								- That's an interesting perspective.
+									GROWTH: Yeah, man! You are literally the [b]cream[/b] of the freakin [b]crop![/b] All of your ancestors had babies that had babies that had babies that eventually led to [shake rate=20 level=10]you![/shake]
+									GROWTH: But the same goes with every animal. You're all the best at what you've historically done in the past.
+									GROWTH: P.S. -- Don't go trying to live like a jellyfish to prove a point, now, you hear?
+									GROWTH: Okay, jeez--
+									=> lore_intro_what_were_we_talking_about
+							- I am no better than a bird.
+								GROWTH: That's what's up! I respect the humility, man!
+								GROWTH: Ahah... Anyway...
+								=> lore_intro_what_were_we_talking_about
+					- Well, it's true!
+						GROWTH: Hey, I respect the humility, man!
+						GROWTH: Ahah... Anyway...
+						=> lore_intro_what_were_we_talking_about
+	- Sure.
+		GROWTH: Sure is right!
+		GROWTH: Or are you just trying to get me to shut up?
+		- Yeah, let's move on with our lives.
+			GROWTH: Totally true.
+			=> lore_intro_what_were_we_talking_about
+		- No!
+			GROWTH: Uh...
+			GROWTH: Oh.
+			=> lore_intro_what_were_we_talking_about
+- A creation of God.
+	GROWTH: Oh, boy.
+	GROWTH: One could argue that most things aren't worth talking about, right?
+	GROWTH: But "God" is certainly one of the most pointless things to talk about. Do you agree?
+	- Sure.
+		GROWTH: Alright, then.
+		GROWTH: Uh...
+		=> lore_intro_what_were_we_talking_about
+	- No!
+		GROWTH: Sorry, could you repeat yourself?
+		- No!
+			GROWTH: Oh, uh--okay?
+			GROWTH: I guess... let's just move on, then.
+			=> lore_intro_what_were_we_talking_about
+		- Yes!
+			GROWTH: Well, then, do it!
+			- No!
+				GROWTH: Wh-huh?!
+				GROWTH: Uherrr... Alrighty!
+				=> lore_intro_what_were_we_talking_about
+			- Yes!
+				GROWTH: What?
+				GROWTH: Wait, sorry, I'm confused.
+				=> lore_intro_what_were_we_talking_about
 
 ~ lore_intro_what_were_we_talking_about
 GROWTH: What in the world were we talking about?

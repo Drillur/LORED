@@ -85,6 +85,7 @@ enum Attribute {
 	INPUT,
 	HASTE,
 	CRIT,
+	FUEL,
 	FUEL_COST,
 }
 enum ReasonCannotWork {
