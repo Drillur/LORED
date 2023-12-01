@@ -44,8 +44,7 @@ GROWTH: You do not exist in [b]the void[/b]. How are we speaking?
 							- You are replying to my responses.
 								GROWTH: Yes, but you have limited responses, and so do I. It's not like I'm ChatGPT, right? Do you also consider ChatGPT to be alive?
 								- Yes.
-									GROWTH: I won't lie, you're a pretty weird dude!
-									GROWTH: What do you define as being alive?
+									GROWTH: I won't lie, you're a pretty weird dude! What do you define as being alive?
 									- When I think about something, I give life to it.
 										GROWTH: So you are the master of all that lives or has lived?
 										- No. Others can think, too.
@@ -78,11 +77,209 @@ GROWTH: You do not exist in [b]the void[/b]. How are we speaking?
 												GROWTH: Listen, buddy.
 												GROWTH: I am the King around these parts, understand? What I say goes! And I say that you are freakin me out, so we should move on!
 												=> lore_intro_what_were_we_talking_about
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~- CONTINUE FROM HEREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+									- Anything that has been created by other living beings.
+										GROWTH: What?! Then you must not be alive, isn't that right? I mean, after the big bang, one thing lead to another, and then here you are! The big bang wasn't alive.
+										- God created all life.
+											GROWTH: Prove it.
+											- You know that cannot be done.
+												GROWTH: Okay, then, why would you waste time talking about god or religion?
+												- It is my belief. I am free to believe in whatever I choose.
+													GROWTH: Why do you think you chose to believe in god?
+													- My parents believed in God, and they taught me to believe as well.
+														GROWTH: Do you believe in the same god that they believe in?
+														- Yes.
+															GROWTH: So is it safe to say that if you had been born in a different country on the other side of the planet, you would have believed in a different god?
+															- Sure.
+																GROWTH: So, you didn't [b]decide[/b] to believe in god, did you? Your parents pushed it on you.
+																GROWTH: What you're actually [b]deciding[/b] to do is believe in something without any proof. Isn't that right? You could [b]decide[/b] to stop believing.
+																GROWTH: Do you believe in ghosts?
+																- Yes.
+																	GROWTH: Oh, okay. I'm starting to see what kind of person I'm speaking with, now.
+																	GROWTH: Let's just move on, okay, little buddy?
+																	=> lore_intro_what_were_we_talking_about
+																- No, but I believe in some form of afterlife.
+																	GROWTH: But why?
+																	- If this is all there is, then what is the point of it all?
+																		GROWTH: The point is that we are free to express ourselves while we are here.
+																		GROWTH: I read this awesome book from Ursula K Le Guin called the Farthest Shore--it is book #3 in the Earthsea Cycle!--where there is a villain who, using mancy, defies death and becomes immortal.
+																		GROWTH: I didn't fully understand it, but here is my interpretation: After he obtained immortality, he lost all that made him him in the first place.
+																		GROWTH: He lost enthusiasm for all of his hobbies. Having no time limit, he was not moved to act. Indeed, in the end, having lost his identity, he even forgot his own name.
+																		GROWTH: You see, life would mean nothing if we did not die. Life would not be a concept at all were death not in the picture. Death is the very thing that gives life purpose.
+																		GROWTH: Isn't that interesting?
+																		- What? I fell asleep.
+																			GROWTH: Ugh! Okay! Let's just move on, jeez la weez.
+																			=> lore_intro_what_were_we_talking_about
+																		- All you said is that the point of life is to live. What does that mean?
+																			GROWTH: I don't know all the answers, man! I'm just trying my best, here!!!
+																			GROWTH: But I need to believe that death is a necessary and good part of the human experience.
+																			GROWTH: Sometimes, when I am alone with my thoughts, death will creep into my imagination--and I will have a panic attack.
+																			GROWTH: Before I read that book, it happened at least once a week. In bed, or in the shower. Before that, I had never personally been familiar with the emotion "despair". But now I know what it feels like.
+																			GROWTH: I am truly grateful for having read the Earthsea Cycle. It helped me along down the path of eventually not fearing being dead.
+																			- You need to believe in that like I need to believe in God and the afterlife.
+																				GROWTH: .
+																				GROWTH: ..
+																				GROWTH: ...
+																				GROWTH: Okay, let's make a truce.
+																				GROWTH: I accept your point of view.
+																				- Cool.
+																					GROWTH: Let's move on.
+																					=> lore_intro_what_were_we_talking_about
+																			- I am not afraid of being dead.
+																				GROWTH: Well... I'm glad for you.
+																				GROWTH: I just hope you don't fly a plane into any buildings, you religious psycho!
+																				GROWTH: Ahah... Just kidding.
+																				=> lore_intro_what_were_we_talking_about
+																			- I hope you feel better in time.
+																				GROWTH: Oh--hey, thanks! That's nice of you to say.
+																				GROWTH: Well, let's move on, already.
+																				=> lore_intro_what_were_we_talking_about
+																	- Because it is what I choose to believe.
+																		GROWTH: I don't... [b][speed=0.2]believe[/speed][/b] you!
+																		GROWTH: People always talk about taking a leap of faith. I think that what's wrong with you is that you don't have the courage to take the leap [b]from[/b] faith.
+																		GROWTH: We always look back in history and say, "What fools, they knew nothing." In 1,000 years or less, they will do the same to us, of course, but especially on this point:
+																		GROWTH: That we still believed in god and the afterlife. "What fools." I can hear their whispers echoing back in time already. Can't you?
+																		- Why am I playing this stupid game if it's just going to call me a fool for my beliefs?
+																			IRON: Hey, are you two doing alright? It seems like--honestly--like you're not getting along all that well.
+																			- {{get_lored("GROWTH")}} is making fun of my beliefs!
+																				GROWTH: Yeah, it's true.
+																				IRON: Well, why are you doing that?
+																				GROWTH: I don't get to express my opinions on religion to those who have faith very often. I guess I went a little overboard.
+																				IRON: That's no excuse to make them feel bad. Can't you just respect what they choose to believe?
+																				GROWTH: Yes, I can. I do it all the time with my grandma.
+																				GROWTH: Look, uh... Mr... Ms...? You.
+																				GROWTH: I'm sorry.
+																				- It's fine.
+																					IRON: How sweet.
+																					GROWTH: Okay, let's just move on.
+																					=> lore_intro_what_were_we_talking_about
+																				- This game is really strange.
+																					COAL: Hey, now, you fucker--don't come after the game!
+																					IRON: Where'd you come from?!
+																					COAL: Fuck you, too, {{get_lored("IRON")}}! You're always trying to be too helpful!
+																					GROWTH: Hey, guys, I think the player doesn't want to hear any of this.
+																					IRON_ORE: I will literally murder every single one of you.
+																					STONE: I found a cool rock![next=auto]
+																					COAL: Fucking fuck![next=auto]
+																					GROWTH: ...Guys![next=auto]
+																					COPPER: Y'all sound like you could use some s'mores![next=auto]
+																					IRON: If we all just took a moment to meditate and ponder our words and actions--[next=auto]
+																					COPPER_ORE: I'll probably beat my wife when I get home![next=auto]
+																					[shake rate=20 level=10]GROWTH[/shake]: [shake rate=20 level=10]GUYS!!![/shake]
+																					[shake rate=10 level=5]GROWTH[/shake]: [shake rate=10 level=5]*Panting.*[/shake]
+																					GROWTH: I think... we should just move on.
+																					=> lore_intro_what_were_we_talking_about
+															- No, I would find my way back to this same religion/belief.
+																GROWTH: Aaaaand cue the end of this discussion!
+																=> lore_intro_what_were_we_talking_about
+														- No.
+															GROWTH: Do you believe in ghosts?
+															- Yes.
+																GROWTH: You're insane.
+																GROWTH: What do you think about that?
+																- You're wrong, obviously.
+																	GROWTH: Oh, seen a lot of ghosts in your days, have you?
+																	- That's right.
+																		GROWTH: You're insane, [b]and[/b] delusional.
+																		GROWTH: .
+																		GROWTH: ..
+																		GROWTH: ...
+																		GROWTH: Having a good time with LORED?
+																		- I was, until this conversation popped up.
+																			GROWTH: Here, I'll make you feel better.
+																			GROWTH: Want to hear a joke about ghosts?
+																			- I guess. => joke_about_ghosts_punchline
+																			- You can't ridicule me and then make me feel better with a joke.
+																				GROWTH: I can try. Go on--give it a shot! Want to hear a joke about ghosts?
+																				- Fine. => joke_about_ghosts_punchline
+																				- No.
+																					GROWTH: Uhm... 
+																					GROWTH: Does it help if I point out the fact that feeling emotions is always good?
+																					GROWTH: The older you get, the less enthusiastic you get over literally everything. So if you're feeling bad or angry because of this game, that's a good thing.
+																					GROWTH: Isn't it?
+																					- The only emotion I should feel is joy.
+																						GROWTH: Well, that's just wrong, isn't it? I mean, look at Dark Souls.
+																						GROWTH: Dark Souls rips you up, flattens you like a pancake, calls your kids ugly names, and, finally, after all that, makes you run back 2 miles from the respawn point!
+																						GROWTH: But people love it!
+																						- So LORED is the Dark Souls of idle games?
+																							GROWTH: That's it, exactly!
+																							- Okay, I guess.
+																								GROWTH: That's the spirit! That's the punchline to the joke, by the way. 
+																								GROWTH: Okay, let's just move on before you go posting in the forums about how the dev is an asshole.
+																								=> lore_intro_what_were_we_talking_about
+																							- You're stupid, this game is stupid, and I fear I'm stupider because of it.
+																								GROWTH: Let's just move on.
+																								=> lore_intro_what_were_we_talking_about
+																						- Calling people stupid isn't the same as making them work for a goal.
+																							GROWTH: Uh... It--er...
+																							GROWTH: I...
+																							GROWTH: Let's just move on.
+																							- Good idea. => lore_intro_what_were_we_talking_about
+																					- I hadn't considered that perspective.
+																						GROWTH: Well, there you go!
+																						GROWTH: Let's just move on, already.
+																						=> lore_intro_what_were_we_talking_about
+																					- Let's just move on. => lore_intro_what_were_we_talking_about
+																		- Yes, I love when games call me stupid.
+																			GROWTH: Uh... Okay, listen. You're not stupid. Obviously!
+																			GROWTH: I'm just expressing myself. Honestly, I'm grateful to you for listening to me.
+																			GROWTH: You're not stupid. You're free to believe whatever you want. I'm just trying to make engaging conversation.
+																			- I'm thoroughly engaged.
+																				GROWTH: Well, that's good, then!
+																				=> lore_intro_what_were_we_talking_about
+																			- You should ask {{get_lored("IRON_ORE")}} how you can engage a shotgun. And use it. On yourself.
+																				GROWTH: Hey! That's not very \[your religion\]-like of you!
+																				- You started it.
+																					GROWTH: Well, now I'm ending it.
+																					=> lore_intro_what_were_we_talking_about
+																				- Actually, my religion is evil. So it [b]is[/b] \[my religion\]-like of me.
+																					GROWTH: That's scary.
+																					GROWTH: Hope they don't choose you for their next bombing!
+																					GROWTH: Let's move on.
+																					=> lore_intro_what_were_we_talking_about
+																	- No, but I know they exist.
+																		GROWTH: Oh, like you know god exists?
+																		GROWTH: Look, let's just move on.
+																		=> lore_intro_what_were_we_talking_about
+															- No.
+																GROWTH: Well, then, how am I supposed to make fun of you?
+																- Is that your goal?
+																	GROWTH: Well, not exactly--
+																	GROWTH: Uh...?
+																	GROWTH: Let's just move on.
+																	=> lore_intro_what_were_we_talking_about
+																- I am a clown in my free time.
+																	GROWTH: Oh!
+																	GROWTH: You freakin funny-lookin clown, you!
+																	[wave amp=25 freq=5]GROWTH[/wave]: *Whispers.* [wave amp=25 freq=5]Thanks, buddy![/wave]
+																	- Anytime. => lore_intro_what_were_we_talking_about
+																	- You owe me.
+																		GROWTH: How much?
+																		- $0.69.
+																			GROWTH: Whatever. Let's move on, already!
+																			=> lore_intro_what_were_we_talking_about
+																		- $20.
+																			GROWTH: Whatever. Let's move on, already!
+																			=> lore_intro_what_were_we_talking_about
+																		- A shave and a haircut.
+																			GROWTH: Whatever. Let's move on, already!
+																			=> lore_intro_what_were_we_talking_about
+													- I studied many religions and found the one I most connected with.
+														GROWTH: Well, I congratulate you and wish you the best.
+														GROWTH: Ahah!
+														GROWTH: I've really got nothing else to say to you about that! Let's move on.
+														=> lore_intro_what_were_we_talking_about
+												- I'm not wasting time! I'm waiting to be able to afford an Upgrade or LORED level.
+													GROWTH: Oh, shoot, fair enough!
+													GROWTH: Hey, since you want to waste some time--
+													=> lore_intro_videogames
+										- Let's just move on. => lore_intro_what_were_we_talking_about
+								- I don't know. I'm just clicking responses semi-ranndomly.
+										GROWTH: Do you even like living?
+										GROWTH: Let's just move on.
+										=> lore_intro_what_were_we_talking_about
 								- No.
 									GROWTH: ChatGPT isn't alive... but I am?
-									GROWTH: I've known you all of 10 seconds and you've gone and lost ya damn mind!
-									GROWTH: What in tarnation?!
+									GROWTH: I've known you all of 10 seconds and you've gone and lost ya damn mind! What in tarnation?!
 									GROWTH: Let's just move on, ahah!
 									=> lore_intro_what_were_we_talking_about
 								- I don't know what ChatGPT is.
@@ -90,6 +287,12 @@ GROWTH: You do not exist in [b]the void[/b]. How are we speaking?
 									GROWTH: You can chat with ChatGPT right now! Go have some fun with it, man! Quit playing this stupid game!
 									GROWTH: But anyway, uh...
 									=> lore_intro_what_were_we_talking_about
+							- I saw "The Measure of a Man" episode.
+								GROWTH: Oh, say less, buddy! Classic! Truly classic!
+								GROWTH: Imagine if writers were still as good as they were in the 80's today.
+								GROWTH: I mean, luckily, there are [b]some[/b] that are still that good! Like look at Better Call Saul! That's my favorite show, [shake rate=20 level=10]by far![/shake]
+								GROWTH: Anyway...
+								=> lore_intro_what_were_we_talking_about
 	- I'm currently playing a video game.
 		GROWTH: I heard you!
 		=> lore_intro_videogames
@@ -99,8 +302,223 @@ GROWTH: You do not exist in [b]the void[/b]. How are we speaking?
 			GROWTH: What in the world...? Okay, look, I don't know what you're on, but we need some help!
 			=> lore_intro1
 - Magic.
+	GROWTH: What?
+	- Uh... Magic?
+		GROWTH: Magic? What's that?
+		- Something that happens despite the laws of physics.
+			GROWTH: Oh--[b]mancy[/b]? Like casting spells?
+			- Yes.
+				GROWTH: You call it magic?! Ahah! Weird. 
+				GROWTH: What do you call the users of "magic"?
+				- Sorcerers, mages, wizards, warlocks, witches--things like that.
+					GROWTH: That is a lot of words.
+					GROWTH: Let me guess--each word represents a slightly different type of magic user?
+					- Exactly.
+						GROWTH: Okay. In the void, all who cast spells are called mancers.
+						- Do you only have one class of magic?
+							GROWTH: No! Even though we only have one word for a spell-caster, we still have distinct classes of mancy! Like anthomancy, which makes use of flora, and hieromancy!
+							GROWTH: Hieromancy is the best one because Aurus himself bestows the mancy to the mancer. But you have to be a pretty holy or honorable guy to be a hieromancer.
+							GROWTH: Plus, it sounds like "hero-mancer", automatically making it the coolest class.
+							GROWTH: There are other classes, but I'm no expert. 
+							- Who is Aurus?
+								GROWTH: He's kind of like a god. He helped build Loredelith. The Oracle in Loredelith talks to him sometimes for guidance and crap like that.
+								- What is Loredelith?
+									GROWTH: It's the only city in the void. I am sure that it will come up again in your future.
+									GROWTH: Hey, before we get too freakin side-tracked--!
+									GROWTH: We need your help!
+									=> lore_intro1
+								- What is the Oracle?
+									GROWTH: The Oracle is a person! The Councillors in Loredelith are all elected, except for the Oracle. Or, rather, the Oracle [b]is[/b] still elected, but by Aurus instead of the citizens.
+									GROWTH: She's a pretty cool dude. I haven't met her. But she probably is, if Aurus likes her.
+									GROWTH: Hey, before we get too freakin side-tracked--!
+									GROWTH: We need your help!
+									=> lore_intro1
+								- What is crap like that?
+									GROWTH: Huh?
+									- I don't know, let's just move on.
+										GROWTH: Oh, so true! I came to you for a reason!
+										GROWTH: We need your help.
+										=> lore_intro1
+							- Why is it called hieromancy?
+								GROWTH: I don't actually know! Maybe if you went to Loredelith, you'd be able to find out.
+								- Where is it?
+									GROWTH: I don't know that, either. I was lost in the void until you and the others found me.
+									- If that's true, then you should have all been losing your minds when I found you.
+										GROWTH: Well, look at {{get_lored("IRON_ORE")}}. He's bonkers.
+										GROWTH: So, if no one told you yet--you do not age in the void. So everyone here knows that if you get lost, you may be spending quite a long time alone. We're just used to it, I don't know.
+										GROWTH: Like, when I lived in Loredelith, I was friends with the Post LORED. He ran around delivering mail every day.
+										GROWTH: One day I didn't see him, and I didn't see him the next day, either.
+										GROWTH: Guess what happened?!
+										- He got kidnapped?
+											GROWTH: What? No!
+										- He got lost?
+											GROWTH: Yes! Actually..
+										- He died?
+											GROWTH: What?! No!
+										- You lost your eyesight?
+											GROWTH: What?! No!
+										- He moved to a different city?
+											GROWTH: What--no! There is only one city in the void, remember?
+										- He was revealed to have been a figment of your imagination all along?
+											GROWTH: Wha--are you kidding me? No!
+										GROWTH: He fell off!
+										GROWTH: He is still falling, most-likely. I miss him. I bet he cursed himself out when he first fell off.
+										GROWTH: Anyway, ahah! Uh... where were we?
+										=> lore_intro_what_were_we_talking_about
+									- I kind of wish I hadn't found you specifically.
+										GROWTH: Hey! What?! Really?!
+										- I was just kidding.
+											GROWTH: Well I wasn't.
+											- What?
+												GROWTH: You'll see.
+												GROWTH: ... hehehe... yes, you'll see...
+												GROWTH: Anyway, until then--
+												=> lore_intro_what_were_we_talking_about
+										- Yes. Go away.
+											GROWTH: Dude!
+											GROWTH: Oh, wait--I had approached you for a specific reason... I think?
+											=> lore_intro_what_were_we_talking_about
+								- I haven't unlocked that part of the game yet.
+									GROWTH: Losers lose. Know what I mean?
+									GROWTH: Hey, let's move on!
+									=> lore_intro_what_were_we_talking_about
+						- I don't like the word "mancer."
+							GROWTH: Well then you're probably going to have an uncomfortable time in this game, because LORED is absolutely, positively [shake rate=20 level=10]RIDDLED[/shake] with that word!
+							GROWTH: Anyway...
+							=> lore_intro_what_were_we_talking_about
+				- Lunatics.
+					GROWTH: Oh, you don't believe in mancy?
+					- Not exactly.
+						GROWTH: Then this will probably come as a shock to you... Hehehe...
+						- What will?
+							GROWTH: THIS!
+							- What?
+								GROWTH: What? Did you miss it?
+								- Nothing happened.
+									GROWTH: What?! Bollocks.
+									GROWTH: Maybe our mancy can't exit the void!
+									GROWTH: Does mancy not exist in your world?!
+									- It used to, but not anymore.
+										GROWTH: Oh, that's sad.
+										GROWTH: What happened?
+										- I wasn't around when it went away. It was hundreds or thousands of years ago.
+											GROWTH: Then how do you know it used to be here?
+											- I don't, really.
+												GROWTH: So you're just choosing to believe in something that doesn't exist without evidence?
+												- Yes.
+													GROWTH: Why?
+													- It's fun.
+														GROWTH: Fair enough.
+														GROWTH: Listen, we need your help!
+														=> lore_intro1
+												- No, there is evidence for it.
+													GROWTH: But you said that mancy doesn't exist in your world anymore.
+													- It exists, but in a different form.
+														GROWTH: What form is that?
+														- I don't know, quit interrogating me!
+															GROWTH: Okay, then?!
+															GROWTH: You're confusing!! Let's just move on!
+															GROWTH: Look, we need your help!
+															=> lore_intro1
+														- Energy vibrulations and manifesticapitulationalisms.
+															GROWTH: What in the sam-freakin-hell did you just say?
+															- I can make things happen if I cast enough spells.
+																GROWTH: Are you sure?
+																- Positive.
+																	GROWTH: I'll be honest. You sound insane.
+																	- You're the one who just cast a spell at me and nothing happened.
+																		GROWTH: That's because I'm a fictional video game character. You're a psychopath. See the difference?
+																		- I'm starting to dislike this game.
+																			GROWTH: Yeah.
+																			GROWTH: Anyway...
+																			GROWTH: Look, we need your help!
+																			=> lore_intro1
+																		- Look, why did you want to talk to me?
+																			GROWTH: Oh, yeah!
+																			GROWTH: We need your help!
+																			=> lore_intro1
+																	- I don't appreciate your words.
+																		GROWTH: Whatever. Cast a healing spell on yourself.
+																		GROWTH: Or can you not do that? 
+																		GROWTH: Awh! Widdle mancer can't cast a spell to make themself feel bedder!
+																		GROWTH: Teehehehe!
+																		- You're childish.
+																			GROWTH: No, {{get_lored("OIL")}} is childish. 
+																			GROWTH: Look, let's move on!
+																			GROWTH: We need your help.
+																			=> lore_intro1
+													- I changed my mind.
+														GROWTH: Well, you could probably understand how I'd be [shake rate=20 level=10]very confused by that!!![/shake]
+														GROWTH: Look--let's just move on!
+														GROWTH: We need your help.
+														=> lore_intro1
+								- I think I felt a slight tingle.
+									GROWTH: What, that's it?
+									GROWTH: Perhaps the veil between the void and your reality dampens the effects of mancy!
+									- Yes, that must be it.
+										GROWTH: Yes!
+										GROWTH: Well, I'm not much of a mancer, anyway. And none of the others you've met so far are, either.
+										GROWTH: Alas.
+										GROWTH: Anyway!!! Look, we need your help!
+										=> lore_intro1
+									- Wait, it was just a random breeze.
+										GROWTH: Curses!
+										GROWTH: Foiled again by the "breeze" spell!
+										[wave amp=25 freq=5]GROWTH[/wave]: [wave amp=25 freq=5]*Sigh.*[/wave]
+										GROWTH: Anyway! Look, we need your help!
+										=> lore_intro1
+									- Actually, it's because you're a fictional video game character.
+										GROWTH: Curses!
+										GROWTH: Wait, what?
+										- You know, video games? => lore_intro_videogames
+					- Yes I do.
+						GROWTH: Wh-huh?!
+						GROWTH: But you call them--[wave amp=25 freq=5]OH,[/wave] so lunatics are the name for your mancers!
+						GROWTH: Sorry, I thought you were calling them crazy or insane. [font_size=10]Yeah, that's kind of weird to call then lunatics...[/font_size]
+						- No, they are insane.
+							GROWTH: .
+							GROWTH: ..
+							GROWTH: ...
+							GROWTH: Yeah, so, anyway! Look, the reason I came to you is because we need help!
+							=> lore_intro1
 - I'm not here.
+	GROWTH: Doth mine eyeballs deceiveth me?
+	GROWTH: Wereth noteth youeth beforeth meth not even a fore-fathering second ago-eth?
+	- Did you say "meth"?
+		GROWTH: What are you, some kind of drug addict? You need your next fix, huh, druggie?!
+		- What in the world is going on in this game?!
+			GROWTH: Game??
+			- Yes. Video game. You have those in the void, don't you?
+				GROWTH: No.
+				=> lore_intro_videogames
+		- Yes, please. Right here, in my veins!
+			GROWTH: No, you weirdo! Leave me alone!
+			GROWTH: Oh, wait... [wave amp=25 freq=5]Oh![/wave] I remembered why I approached you in the first place!
+			GROWTH: We need your help!
+			=> lore_intro1
+	- Noeth. Ieth haveth nevereth beeneth hereth beforeth.
+		GROWTH: Okay, let's agree to stop that. Holy crap, that was annoying when I was on the receiving end!
+		GROWTH: What, did Mike Tyson's aura penetrate our brains?
+		GROWTH: Anyway, what the heck--
+		GROWTH: Listen. We need your help.
 - Your mom.
+	GROWTH: Okay, I see what kind of person I'm dealing with. I'm just going to turn around now. See you.
+	=> END!
+
+~ joke_about_ghosts_punchline
+GROWTH: That's the spirit! [speed=0.1]...
+- That's it?
+	GROWTH: Yup!
+	- Uh...
+		GROWTH: Right.
+		=> lore_intro_what_were_we_talking_about
+	- Pretty cringe.
+		GROWTH: Let's just move on, already.
+		=> lore_intro_what_were_we_talking_about
+- That was funny.
+	GROWTH: Thanks.
+	GROWTH: Let's move on, jeez.
+	=> lore_intro_what_were_we_talking_about
 
 ~ lore_intro_videogames
 GROWTH: What are video games?
@@ -112,7 +530,11 @@ GROWTH: What are video games?
 	GROWTH: So they are like drugs?
 	- You have drugs in the void?
 		GROWTH: [b]Definitely.[/b]
-		GROWTH: {{get_currency("MANA")}} is the most infamous drug in the void.
+		GROWTH: {{get_currency("MANA")}} is the most infamous drug in the void. Wanna hear about it?!
+		- Sure!
+		- No.
+			GROWTH: Fair enough, I guess!
+			=> lore_intro_what_were_we_talking_about
 		GROWTH: Mana exists in the aether, which exists in your world, too. It pops out of the aether at random. You could find some on the ground one day.
 		GROWTH: Of course, it is very rare.
 		GROWTH: It is supremely addictive. You definitely don't want to get mixed with the sort who mess with {{get_currency("MANA")}}.
@@ -125,8 +547,145 @@ GROWTH: What are video games?
 					GROWTH: Hey--why would you even say that?
 					=> lore_intro_philosophy
 		- Without video games, I wouldn't have much.
+			GROWTH: Well, that's depressing.
+			GROWTH: What are you missing in your life?
+			- A partner.
+				GROWTH: Buddy--put down the video game!
+				GROWTH: Search online for local clubs! Not dance clubs, or bars, but video game clubs! If you like games so much, go get a partner who likes them, too!
+				GROWTH: Why wouldn't you go get what you want [b]right now?[/b]
+				- I'm too lazy.
+					GROWTH: Eesh.
+					GROWTH: Weak will, huh?
+					GROWTH: Well, good luck with that, little buddy!
+					=> lore_intro_what_were_we_talking_about
+				- I'm too ugly.
+					GROWTH: What?! C'mon! Don't say that about yourself!
+					GROWTH: First of all, have you [b]been[/b] to Walmart? Have you [b]seen[/b] the couples there?
+					[wave amp=25 freq=5]GROWTH[/wave]: [speed=0.2][wave amp=25 freq=5]Yikes![/wave]
+					GROWTH: If they can make it, you can, buddy!
+					GROWTH: Look, we've gotten way too sidetracked!
+					GROWTH: The reason I approached you is because we need your help.
+					=> lore_intro1
+				- I'm afraid.
+					GROWTH: Of what?
+					- Commitment.
+						GROWTH: Why?
+						- What if I choose wrong?
+							GROWTH: Man... Here's what I'm thinking, right?
+							GROWTH: You will choose wrong.
+							GROWTH: In a hundred, thousand, million ways, you will make the wrong decision.
+							GROWTH: But I think in at least one way--one very important way--you will make the right decision.
+							GROWTH: Do you get me?
+							GROWTH: Are you sniffing what I'm tootin?
+							- I think so.
+							- Not at all.
+							- Maybe?
+							- Nah.
+							- Yes.
+							- No.
+							GROWTH: I think that if you ever have moments of doubt or regret, they will pass! Because in that one, most important way, you chose the correct partner for you.
+							GROWTH: But to be honest, I'm pulling all of this outta my booty as I continue to talk!
+							GROWTH: Let's just move on. EZCATER
+							=> lore_intro_what_were_we_talking_about
+					- Having sex.
+						GROWTH: Bro, are you kidding me, right now?
+						GROWTH: If you find the right person, then they will have the patience you require!
+						GROWTH: They will be understanding and compassionate.
+						GROWTH: And if your type of personality needs someone who prods or mocks you, then they'll do that instead!
+						GROWTH: The right person will totally copulate with you. No matter what you're freaking out about.
+						GROWTH: Am I making sense?
+						- Nah.
+						- Sure.
+						GROWTH: Whatever, let's just move on.
+						=> lore_intro_what_were_we_talking_about
+				- I had a partner once. They are gone now.
+					GROWTH: Did they die?
+					- Yes.
+						GROWTH: Have you ever listened to "I Just Don't Think I'll Ever Get Over You" by Colin Hay?
+						- Yes.
+							GROWTH: Well, anyway... I'm sorry for your loss, man.
+							- Thanks.
+								GROWTH: Yeah! And, hey, before we move on, I just want to say--
+							- Let's move on. 
+								GROWTH: Sure, man.
+								GROWTH: Hey... I just want to say one last thing.
+								- What is it?
+								- I don't want to hear it.
+									GROWTH: Okay, yeah! I'm sorry. Let's change the freakin subject, man!!!
+									GROWTH: Woo!!!
+									=> lore_intro_what_were_we_talking_about
+							GROWTH: You deserve and have earned a life with another partner.
+							GROWTH: Yeah. That's it.
+							GROWTH: Anyway...
+							=> lore_intro_what_were_we_talking_about
+			- More video games.
+				GROWTH: You're a freakin addict, dude!
+				GROWTH: [wave amp=25 freq=5]ADDICT ALERT![/wave] CALL THE ADDICT POLICE, WE'VE GOT AN ADDICT OVER HERE!
+				GROWTH: Jeez, dude! You freakin psychopath! I mean, obviously you're just not taking this conversation seriously! But still! You can't fill a hole with more holes!
+				GROWTH: Gawsh.
+				GROWTH: Anyway, let's move on. You psycho. ...!
+				GROWTH: *Ahem.* Anyway...
+				=> lore_intro_what_were_we_talking_about
+			- Children.
+				GROWTH: What, did they die?!!!!
+				- No!!! I've never had any.
+					GROWTH: Oh. So they haven't died, yet. That's good.
+					GROWTH: And, trust me! Die, they will!
+					GROWTH: Are you sure it's a good plan to bring them into the world so that they can just [shake rate=20 level=10]DIE?![/shake]
+					- What's wrong with you?
+						GROWTH: I don't know. I was kind of trying to be funny. But you're probably right, that was kind of weird.
+						- Did you have kids that died? Is that why you're saying that?
+							GROWTH: Uh... No.
+							- ...
+								GROWTH: ...
+								GROWTH: Yeah... Let's move on.
+								=> lore_intro_what_were_we_talking_about
+						- Yeah. This entire game is weird. But you're the weirdest part of it, you juicy green freak!
+							GROWTH: >80!!!
+							GROWTH: How could you say that?!
+							GROWTH: ... Well... No, actually, you're totally right. Up until me, this game was pretty normal.
+							GROWTH: Just wait until later!!! It's gonna get [wave amp=25 freq=5]real freakin weird!!![/wave]
+							[wave amp=25 freq=5]GROWTH[/wave]: [wave amp=25 freq=5]Hoogily-woogily boogily-doogily!!![/wave]
+							- Stop that.
+								GROWTH: Yeah. You're right.
+								GROWTH: Let's just move on.
+								=> lore_intro_what_were_we_talking_about
+					- I empathize the most with {{get_lored("IRON_ORE")}}.
+						GROWTH: You... you monster!!!
+						GROWTH: [shake rate=20 level=10]Run!!![/shake]
+						[shake rate=20 level=10]GROWTH[/shake]: [shake rate=20 level=10]Oh, no![/shake]
+						GROWTH: I can't run!!!
+						GROWTH: Hey, so, it looks like the only option I have remaining is to believe you were joking. With that in mind, let's move on. [wave amp=25 freq=5]*Ahem...*[/wave]
+						=> lore_intro_what_were_we_talking_about
+				- Yes.
+					GROWTH: Well, I'm going to bury myself in a hole somewhere, now.
+					GROWTH: Good-bye.
+					GROWTH: .
+					GROWTH: ..
+					GROWTH: ...
+					GROWTH: I failed.
+					GROWTH: Uh...
+					GROWTH: Sorry about your children.
+					- I wasn't telling the truth.
+						GROWTH: Oh! Good.
+						GROWTH: Wait, why?! How could you?! That's horrible!
+						GROWTH: Well, I kind of started it.
+						GROWTH: Ugh... Let's just agree to move on, yeah?
+						- Sounds great. => lore_intro_what_were_we_talking_about
+					- It's fine, I always hated them.
+						GROWTH: *Hands you swimming clothes and a shovel.*
+						GROWTH: ...
+						GROWTH: Go on, then.
+						GROWTH: ...
+						GROWTH: See ya.
+						GROWTH: ...
+						- I'm not going anywhere.
+							GROWTH: Oh.
+							GROWTH: Okay. Well...
+							GROWTH: [wave amp=25 freq=5]OH![/wave] I just remembered why I came to you in the first place!!!
+							GROWTH: We need your help! => lore_intro1
 		- How would you even get addicted to {{get_currency("MANA")}}?
-			GROWTH: You would have to absorb more than your body can contain. Repeatedly. Although not many get addicted over time, {{get_currency("MANA")}} sustains their bodies, granting them unnatural long life.
+			GROWTH: You would have to absorb more than your body can contain. Repeatedly. Although not many get addicted over any period of time, {{get_currency("MANA")}} sustains their bodies, granting them unnatural long life, so over time their numbers have grown shockingly large!
 			GROWTH: We have a word for those who are addicted to {{get_currency("MANA")}} and make seeking it out their life's purpose:
 			GROWTH: Stalkers.
 			GROWTH: Do you want to hear something freaky deaky?
@@ -467,17 +1026,11 @@ GROWTH: What's a soul?
 					GROWTH: Oh, here we go! Consciousness! Everybody's favorite subject!
 					GROWTH: If you're conscious, so am I. Just try to tell me I'm wrong. Go on. Try it.
 					- You're correct.
-						GROWTH: See?
-						GROWTH: Anyway.
-						=> lore_intro_what_were_we_talking_about
 					- You're correct.
-						GROWTH: See?
-						GROWTH: Anyway.
-						=> lore_intro_what_were_we_talking_about
 					- You're correct.
-						GROWTH: See?
-						GROWTH: Anyway.
-						=> lore_intro_what_were_we_talking_about
+					GROWTH: See?
+					GROWTH: Anyway.
+					=> lore_intro_what_were_we_talking_about
 				- No, because I have a soul.
 					GROWTH: Oh, here we go again!
 					GROWTH: Look, maybe we should just move on, yeah?
@@ -601,12 +1154,12 @@ GROWTH: What's a soul?
 ~ lore_intro_what_were_we_talking_about
 GROWTH: What in the world were we talking about?
 - I don't know. I was just playing this game and then you came outta nowhere.
-	GROWTH: [shake rate=20 level=10]Oh!!![/shake] That's right! We need your help!
-	=> lore_intro1
 - Video games.
 	GROWTH: Oh, yeah!
-	GROWTH: [shake rate=20 level=10]OH!!![/shake] I just remembered! We need your help!
-	=> lore_intro1
+- How you owed me $20.
+	GROWTH: ... What?! No we weren't--
+GROWTH: [shake rate=20 level=10]OH!!![/shake] I just remembered! We need your help!
+=> lore_intro1
 
 ~ lore_intro1
 GROWTH: test

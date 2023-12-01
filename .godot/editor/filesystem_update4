@@ -9,9 +9,5 @@ res://Theme/ShadowText.tres
 res://Theme/RoundedTopWithShadow.tres
 res://Theme/Title.tres
 res://Theme/RoundedBackground.tres
-res://Script/Classes/Upgrades/UpgradeEffect.gd
-res://Script/Classes/Upgrades/Upgrade.gd
-res://Script/Classes/LORED.gd
 res://Scene/Root.tscn
-res://Script/Dialogues/DialogueHandbook.gd
 res://Hud/right_bar.tscn
