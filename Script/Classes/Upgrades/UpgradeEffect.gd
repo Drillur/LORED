@@ -3,21 +3,29 @@ extends RefCounted
 
 
 
+#region Sub-Classes
+
 class UpgradeValue:
 	
 	var saved_vars := []
 	
 	var value: LoudFloat
 	var applied_value: float
-	var dynamic: bool
+	var dynamic := false:
+		set(val):
+			if dynamic != val:
+				dynamic = val
+				if val:
+					if not "value" in saved_vars:
+						saved_vars.append("value")
+				else:
+					if "value" in saved_vars:
+						saved_vars.erase("value")
 	
 	
 	
-	func _init(base_value: float, _dynamic: bool):
+	func _init(base_value: float):
 		value = LoudFloat.new(base_value)
-		dynamic = _dynamic
-		if dynamic:
-			saved_vars.append("value")
 	
 	
 	
@@ -30,90 +38,126 @@ class UpgradeValue:
 		return applied_value
 
 
-class LOREDAttributeUpgradeEffect:
-	
-	extends MethodsUpgradeEffect
+class UpgradeMethods:
 	
 	
-	
-	var saved_vars := []
-	
-	var loreds: Array[LORED]
-	var attributes: Array[LORED.Attribute]
-	
-	
-	
-	func _init(
-		_loreds: Array[LORED.Type],
-		_attributes: Array[LORED.Attribute],
-		_base_value: float,
-		_dynamic: bool
-	):
-		super(UpgradeEffect.Type.LORED_ATTRIBUTE)
-		for type in _loreds:
-			loreds.append(lv.get_lored(type))
-		attributes = _attributes
-		value = UpgradeValue.new(_base_value, _dynamic)
-		if _dynamic: 
-			saved_vars.append("value")
-		for lored in loreds:
-			for attribute in attributes:
-				match attribute:
-					LORED.Attribute.HASTE:
-						applied_methods.append(lored.haste.increase_multiplied)
-						removed_methods.append(lored.haste.decrease_multiplied)
-					LORED.Attribute.OUTPUT:
-						applied_methods.append(lored.output.increase_multiplied)
-						removed_methods.append(lored.output.decrease_multiplied)
-					LORED.Attribute.INPUT:
-						applied_methods.append(lored.input.increase_multiplied)
-						removed_methods.append(lored.input.decrease_multiplied)
-					LORED.Attribute.FUEL:
-						applied_methods.append(lored.fuel.increase_multiplied)
-						removed_methods.append(lored.fuel.decrease_multiplied)
-					LORED.Attribute.FUEL_COST:
-						applied_methods.append(lored.fuel_cost.increase_multiplied)
-						removed_methods.append(lored.fuel_cost.decrease_multiplied)
-					LORED.Attribute.CRIT:
-						applied_methods.append(lored.crit.increase_added)
-						removed_methods.append(lored.crit.decrease_added)
-
-
-class MethodsUpgradeEffect:
-	
-	extends UpgradeEffect
+	var applied_methods: Array[Callable]
+	var removed_methods: Array[Callable]
+	var value_reference: UpgradeValue:
+		set(val):
+			value_reference = val
+			has_value_reference = true
+	var has_value_reference := false
 	
 	
 	
-	var applied_methods := []
-	var removed_methods := []
-	var value: UpgradeValue
-	var has_value := false
+	func add_applied_method(method: Callable) -> void:
+		if not method in applied_methods:
+			applied_methods.append(method)
 	
 	
-	
-	func _init(_type: Type):
-		super(_type)
-		applied.became_true.connect(apply_methods)
-		applied.became_false.connect(remove_methods)
+	func add_removed_method(method: Callable) -> void:
+		if not method in removed_methods:
+			removed_methods.append(method)
 	
 	
 	func apply_methods() -> void:
-		if has_value:
+		if has_value_reference:
 			for method in applied_methods:
-				method.call(value.get_value())
+				method.call(value_reference.get_value())
 		else:
 			for method in applied_methods:
 				method.call()
 	
 	
 	func remove_methods() -> void:
-		if has_value:
-			for method in removed_methods:
-				method.call(value.get_applied_value())
+		if has_value_reference:
+			for method in applied_methods:
+				method.call(value_reference.get_applied_value())
 		else:
-			for method in removed_methods:
+			for method in applied_methods:
 				method.call()
+
+
+
+class LOREDAttribute:
+	extends UpgradeEffect
+	
+#region Sub-Classes (Haste, Output, Crit.Dynamic)
+	
+	
+	class Haste:
+		extends LOREDAttribute
+		
+		
+		class Dynamic:
+			extends Haste
+			func _init(_lored_types: Array[LORED.Type], _value: float):
+				super(_lored_types, _value)
+				value.dynamic = true
+		
+		
+		func _init(_lored_types: Array[LORED.Type], _value: float):
+			attribute = LORED.Attribute.HASTE
+			super(_lored_types, _value)
+	
+	
+	
+	class Output:
+		extends LOREDAttribute
+		
+		
+		class Dynamic:
+			extends Output
+			
+			func _init(_lored_types: Array[LORED.Type], _value: float):
+				super(_lored_types, _value)
+				value.dynamic = true
+		
+		
+		func _init(_lored_types: Array[LORED.Type], _value: float):
+			attribute = LORED.Attribute.OUTPUT
+			super(_lored_types, _value)
+	
+	
+#endregion
+	
+	var attribute: LORED.Attribute
+	var value: UpgradeValue
+	var methods := UpgradeMethods.new()
+	
+	
+	
+	func _init(_lored_types: Array[LORED.Type], _value: float) -> void:
+		super(Type.LORED_ATTRIBUTE)
+		value = UpgradeValue.new(_value)
+		methods.value = value
+		match attribute:
+			LORED.Attribute.HASTE:
+				for lored in get_loreds(_lored_types):
+					methods.add_applied_method(lored.haste.increase_multiplied)
+					methods.add_removed_method(lored.haste.decrease_multiplied)
+			LORED.Attribute.OUTPUT:
+				for lored in get_loreds(_lored_types):
+					methods.add_applied_method(lored.output.increase_multiplied)
+					methods.add_removed_method(lored.output.decrease_multiplied)
+		applied.became_true.connect(methods.apply_methods)
+		applied.became_false.connect(methods.remove_methods)
+		value.value.changed.connect(refresh)
+	
+	
+	
+	func get_loreds(_lored_types: Array[LORED.Type]) -> Array[LORED]:
+		var loreds: Array[LORED]
+		for lored_type in _lored_types:
+			var lored = lv.get_lored(lored_type)
+			loreds.append(lored)
+		return loreds
+
+
+#endregion
+
+
 
 enum Type {
 	LORED_ATTRIBUTE,

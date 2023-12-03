@@ -11,3 +11,4 @@ res://Theme/Title.tres
 res://Theme/RoundedBackground.tres
 res://Scene/Root.tscn
 res://Hud/right_bar.tscn
+res://Script/Classes/Upgrades/Upgrade.gd
