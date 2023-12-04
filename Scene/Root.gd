@@ -55,7 +55,9 @@ var upgrade_section_queued := false
 
 
 func _ready():
+	up.get_upgrade(Upgrade.Type.AUTOSHOVELER).effect.applied.changed.connect(update_dlabel)
 	if not gv.dev_mode:
+		%Dlabel.queue_free()
 		tooltip_position_display.queue_free()
 		upgrades_button.hide()
 		wallet_button.hide()
@@ -492,3 +494,5 @@ func _on_dev_3_pressed():
 func _on_dev_4_pressed():
 	wa.add(Currency.Type.MALIGNANCY, "1e20")
 
+func update_dlabel():
+	%Dlabel.text = str(up.get_upgrade(Upgrade.Type.AUTOSHOVELER).effect.applied.get_value())

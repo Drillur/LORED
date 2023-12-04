@@ -287,7 +287,7 @@ func apply() -> void:
 				var cur = wa.get_currency(currency)
 				cur.decreased_by_lored.connect(currency_used)
 			Type.UPGRADE_NAME:
-				for lored in lv.get_lored_in_list(affected_loreds):
+				for lored in lv.get_loreds_in_list(affected_loreds):
 					lored.output_increase.multiply(1.1)
 					lored.input_increase.multiply(1.1)
 					lored.fuel_cost.increase_multiplied(10)
@@ -318,7 +318,7 @@ func remove() -> void:
 				var cur = wa.get_currency(currency)
 				cur.decreased_by_lored.disconnect(currency_used)
 			Type.UPGRADE_NAME:
-				for lored in lv.get_lored_in_list(affected_loreds):
+				for lored in lv.get_loreds_in_list(affected_loreds):
 					lored.output_increase.divide(1.1)
 					lored.input_increase.divide(1.1)
 					lored.fuel_cost.decrease_multiplied(10)

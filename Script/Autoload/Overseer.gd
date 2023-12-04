@@ -660,7 +660,7 @@ func get_currencies_in_stage(stage: int) -> Array:
 	return get_stage(stage).currencies
 
 
-func get_loreds_in_stage(stage: int) -> Array:
+func get_loreds_in_stage(stage: int) -> Array[LORED.Type]:
 	return get_stage(stage).loreds
 
 

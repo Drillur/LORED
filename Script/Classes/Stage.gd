@@ -32,7 +32,7 @@ var unlocked := false:
 			unlocked = val
 			emit_signal("stage_unlocked_changed", type, val)
 
-var loreds := []
+var loreds: Array[LORED.Type]
 var upgrades := []
 var currencies := []
 

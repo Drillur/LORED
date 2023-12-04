@@ -248,8 +248,13 @@ func lored_woke_up(lored: int) -> void:
 
 # - Get
 
+
 func get_lored(lored: int) -> LORED:
 	return loreds[lored]
+
+
+func get_details(lored: LORED.Type) -> Details:
+	return get_lored(lored).details
 
 
 func lored_is_emoting(lored: int) -> bool:
@@ -280,7 +285,7 @@ func get_color(lored: int) -> Color:
 	return get_lored(lored).details.color
 
 
-func get_loreds_in_stage(stage: int) -> Array:
+func get_loreds_in_stage(stage: int) -> Array[LORED.Type]:
 	return gv.get_loreds_in_stage(stage)
 
 
@@ -361,8 +366,8 @@ func get_all_loreds() -> Array:
 	return loreds.values()
 
 
-func get_lored_in_list(list: Array) -> Array:
-	var arr = []
-	for x in list:
-		arr.append(get_lored(x))
-	return arr
+func get_loreds_in_list(_lored_types: Array[LORED.Type]) -> Array[LORED]:
+	var loreds: Array[LORED]
+	for lored_type in _lored_types:
+		loreds.append(get_lored(lored_type))
+	return loreds

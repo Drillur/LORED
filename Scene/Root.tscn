@@ -526,6 +526,13 @@ bbcode_enabled = true
 text = "Big text"
 fit_content = true
 
+[node name="Dlabel" type="RichTextLabel" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Cheat Section/Cheat/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+bbcode_enabled = true
+text = "Big text"
+fit_content = true
+
 [node name="Dev1" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Cheat Section/Cheat/VBoxContainer" instance=ExtResource("4_3h2sv")]
 layout_mode = 2
 icon = ExtResource("21_u1378")

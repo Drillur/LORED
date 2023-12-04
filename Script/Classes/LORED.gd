@@ -1106,7 +1106,7 @@ func reset(hard: bool):
 	wake_up()
 	if working.is_true():
 		stop_job()
-	working.set_false()
+		working.set_to(false)
 	
 	if hard:
 		if purchased.is_true_by_default():
@@ -1628,7 +1628,7 @@ func get_crit_text() -> String:
 	return crit.get_text()
 
 
-func get_attributes_by_currency(currency_type: int) -> Array:
+func get_attributes_by_currency(currency_type: Currency.Type) -> Array:
 	var arr := []
 	for job in jobs.values():
 		arr += job.get_attributes_by_currency(currency_type)
