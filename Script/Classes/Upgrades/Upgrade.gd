@@ -781,28 +781,13 @@ func init_HOW_IS_THIS_AN_RPG() -> void:
 
 func init_ITS_GROWIN_ON_ME() -> void:
 	details.name = "IT'S GROWIN ON ME"
-	RESUME HERE!!!!
-	THIS ONE GONNA BE CRAZY
 	var iron = lv.get_colored_name(LORED.Type.IRON)
 	var cop = lv.get_colored_name(LORED.Type.COPPER)
 	var growth = lv.get_colored_name(LORED.Type.GROWTH)
 	details.description = "Whenever %s pops, either %s or %s will receive an [b]output and input boost[/b]." % [growth, iron, cop]
 	details.icon = wa.get_icon(Currency.Type.GROWTH)
 	details.color = lv.get_color(LORED.Type.GROWTH)
-	effect = OldUpgradeEffect.new(
-		OldUpgradeEffect.Type.BONUS_ACTION_ON_CURRENCY_GAIN,
-		{
-			"upgrade_type": type,
-			"currency": Currency.Type.GROWTH,
-			"effect value": 1,
-			"effect value2": 1,
-			"bonus_action_type": OldUpgradeEffect.BONUS_ACTION.INCREASE_EFFECT1_OR_2,
-			"modifier": 0.0001,
-		}
-	)
-	effect.save_effect(true)
-	add_affected_lored(LORED.Type.IRON)
-	add_affected_lored(LORED.Type.COPPER)
+	effect = UpgradeEffect.ActionOnCurrencyGain.ItsOnMe.Growin.new()
 	cost = Cost.new({
 		Currency.Type.MALIGNANCY: Value.new("2e3"),
 	})
@@ -2880,22 +2865,7 @@ func init_ITS_SPREADIN_ON_ME() -> void:
 	details.description = "Placeholder"
 	details.icon = wa.get_icon(Currency.Type.GROWTH)
 	details.color = lv.get_color(LORED.Type.GROWTH)
-	effect = OldUpgradeEffect.new(
-		OldUpgradeEffect.Type.BONUS_ACTION_ON_CURRENCY_GAIN,
-		{
-			"upgrade_type": type,
-			"currency": Currency.Type.GROWTH,
-			"replaced_upgrade": Type.ITS_GROWIN_ON_ME,
-			"effect value": 1,
-			"bonus_action_type": OldUpgradeEffect.BONUS_ACTION.INCREASE_EFFECT,
-			"modifier": 0.0001,
-		}
-	)
-	effect.save_effect(true)
-	add_affected_lored(LORED.Type.IRON_ORE)
-	add_affected_lored(LORED.Type.COPPER_ORE)
-	add_affected_lored(LORED.Type.IRON)
-	add_affected_lored(LORED.Type.COPPER)
+	effect = UpgradeEffect.ActionOnCurrencyGain.ItsOnMe.Spreadin.new()
 	cost = Cost.new({
 		Currency.Type.TUMORS: Value.new("8e13"),
 	})
@@ -3394,6 +3364,8 @@ func reset() -> void:
 
 
 func get_dynamic_text() -> String:
+	if effect is UpgradeEffect: #ueue
+		return effect.text.get_value()
 	match type:
 		Upgrade.Type.LIMIT_BREAK:
 			return "[center][b]x%s[/b]" % up.limit_break.level.text + effected_loreds_text

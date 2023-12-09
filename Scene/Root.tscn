@@ -360,26 +360,22 @@ unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="limitbreak" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Upgrade Section/Upgrade/UpgradeVicos" node_paths=PackedStringArray("tooltip_parent") instance=ExtResource("14_vidbt")]
+[node name="limitbreak" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Upgrade Section/Upgrade/UpgradeVicos" instance=ExtResource("14_vidbt")]
 layout_mode = 2
 upgrade_type = 1
-tooltip_parent = NodePath("../../../../../../../../../../Control/RightDown")
 
-[node name="spreadin" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Upgrade Section/Upgrade/UpgradeVicos" node_paths=PackedStringArray("tooltip_parent") instance=ExtResource("14_vidbt")]
+[node name="spreadin" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Upgrade Section/Upgrade/UpgradeVicos" instance=ExtResource("14_vidbt")]
 layout_mode = 2
 upgrade_type = 54
-tooltip_parent = NodePath("../../../../../../../../../../Control/RightDown")
 
-[node name="growin" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Upgrade Section/Upgrade/UpgradeVicos" node_paths=PackedStringArray("tooltip_parent") instance=ExtResource("14_vidbt")]
+[node name="growin" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Upgrade Section/Upgrade/UpgradeVicos" instance=ExtResource("14_vidbt")]
 layout_mode = 2
 upgrade_type = 168
-tooltip_parent = NodePath("../../../../../../../../../../Control/RightDown")
 
-[node name="milkshake" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Upgrade Section/Upgrade/UpgradeVicos" node_paths=PackedStringArray("tooltip_parent") instance=ExtResource("14_vidbt")]
+[node name="milkshake" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Upgrade Section/Upgrade/UpgradeVicos" instance=ExtResource("14_vidbt")]
 layout_mode = 2
 mouse_filter = 2
 upgrade_type = 178
-tooltip_parent = NodePath("../../../../../../../../../../Control/RightDown")
 
 [node name="Save Section" type="VBoxContainer" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer"]
 unique_name_in_owner = true

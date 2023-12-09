@@ -83,11 +83,11 @@ func setup(data: Dictionary) -> void:
 	if up.is_upgrade_purchased(upgrade.type):
 		match upgrade.type:
 			Upgrade.Type.ITS_SPREADIN_ON_ME:
-				upgrade.effect.effect.increased.connect(update_dynamic_description)
+				upgrade.effect.value1.value.increased.connect(update_dynamic_description)
 				update_dynamic_description()
 			Upgrade.Type.ITS_GROWIN_ON_ME:
-				upgrade.effect.effect.increased.connect(update_dynamic_description)
-				upgrade.effect.effect2.increased.connect(update_dynamic_description)
+				upgrade.effect.value1.value.increased.connect(update_dynamic_description)
+				upgrade.effect.value2.value.increased.connect(update_dynamic_description)
 				update_dynamic_description()
 			Upgrade.Type.I_DRINK_YOUR_MILKSHAKE:
 				upgrade.effect.effect.increased.connect(update_dynamic_description)
@@ -108,7 +108,7 @@ func purchased_changed() -> void:
 
 func update_dynamic_description() -> void:
 	description.text = upgrade.details.description 
-	description.text += "\n\n" + upgrade.get_dynamic_text()
+	description.text += "\n\n[center]" + upgrade.get_dynamic_text()
 
 
 func upgrade_unlocked_changed() -> void:
