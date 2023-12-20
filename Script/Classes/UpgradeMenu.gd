@@ -42,7 +42,7 @@ func unlocked_changed() -> void:
 			if upgrade.cost.affordable.is_true():
 				upgrade.affordable_changed()
 
-var upgrades := []
+var upgrades: Array[Upgrade.Type]
 var purchased_upgrades := []
 var affordable_and_unpurchased_upgrades := []
 

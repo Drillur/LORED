@@ -1235,20 +1235,11 @@ func should_autobuy() -> bool:
 func automatic_purchase(levels_to_buy := -1) -> void:
 	last_purchase_automatic = true
 	last_purchase_forced = false
-	var gained_levels: int
-	if levels_to_buy == -1:
-		gained_levels = cost.buy_up_to_x_times(false, level.get_value())
-	else:
-		gained_levels = cost.buy_up_to_x_times(false, level.get_value(), level.get_value() + levels_to_buy)
 	if purchased.is_false():
 		purchased.set_to(true)
-	set_level_to(level.get_value() + gained_levels)
+	set_level_to(level.get_value() + 1)
 	if stage == 1 and level.equal(5):
 		became_an_adult.emit()
-	
-	#autobuy_check() cannot do because stack overflow
-#	if gained_levels > 1:
-#		printt(key, "leveled up %s times" % str(gained_levels))
 
 
 func purchase() -> void:

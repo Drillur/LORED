@@ -247,5 +247,5 @@ func get_prestige_name(menu: int) -> String:
 	return get_upgrade_menu(menu).prestige_name
 
 
-func get_upgrades_in_menu(menu: int) -> Array:
+func get_upgrades_in_menu(menu: int) -> Array[Upgrade.Type]:
 	return get_upgrade_menu(menu).upgrades

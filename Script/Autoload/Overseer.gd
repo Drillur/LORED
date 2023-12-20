@@ -644,7 +644,7 @@ signal prestiged
 signal about_to_prestige
 var last_reset_stage := 1
 
-func prestige_now(stage: int) -> void:
+func prestige_now(stage: Stage.Type) -> void:
 	about_to_prestige.emit()
 	run_duration.reset()
 	prestige.emit(stage)

@@ -1,4 +1,4 @@
-res://Hud/LORED/lored_vico.tscn
+res://Hud/Upgrade/Tooltip/upgrade_tooltip.tscn
 res://Theme/Standard.tres
 res://Theme/Invis.tres
 res://Theme/TextButton.tres
@@ -10,10 +10,13 @@ res://Theme/RoundedTopWithShadow.tres
 res://Theme/Title.tres
 res://Theme/RoundedBackground.tres
 res://Scene/Root.tscn
-res://Script/Classes/Upgrades/Upgrade.gd
 res://Hud/right_bar.tscn
 res://Hud/Dialogue/dialogue_balloon.tscn
-res://Hud/Upgrade/Tooltip/upgrade_tooltip.tscn
-res://Hud/Upgrade/Upgrade Effect Widget.gd
-res://Script/Classes/Upgrades/UpgradeEffect.gd
+res://Hud/LORED/lored_vico.tscn
+res://Hud/LORED/Tooltip/lored_level_up.tscn
+res://Script/Classes/Upgrades/Upgrade.gd
 res://Hud/Upgrade/Tooltip/upgrade_tooltip.gd
+res://Script/Classes/Upgrades/UpgradeEffect.gd
+res://Script/Classes/UpgradeMenu.gd
+res://Script/Autoload/Upgrades.gd
+res://Script/Autoload/Overseer.gd

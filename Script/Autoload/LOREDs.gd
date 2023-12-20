@@ -371,3 +371,7 @@ func get_loreds_in_list(_lored_types: Array[LORED.Type]) -> Array[LORED]:
 	for lored_type in _lored_types:
 		loreds.append(get_lored(lored_type))
 	return loreds
+
+
+func get_job(_lored_type: LORED.Type, _job_type: Job.Type) -> Job:
+	return get_lored(_lored_type).get_job(_job_type)

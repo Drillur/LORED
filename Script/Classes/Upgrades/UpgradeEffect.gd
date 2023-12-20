@@ -3,6 +3,10 @@ extends Resource
 
 
 
+var saved_vars := []
+
+
+
 #region Sub-Classes
 
 
@@ -11,8 +15,17 @@ class LOREDList:
 	
 	var loreds: Array[LORED]
 	var lored_text: String
+	var equal_to_stage := -1
 	
 	func _init(_lored_types: Array[LORED.Type]) -> void:
+		if _lored_types == lv.get_loreds_in_stage(1):
+			equal_to_stage = 1
+		elif _lored_types == lv.get_loreds_in_stage(2):
+			equal_to_stage = 2
+		elif _lored_types == lv.get_loreds_in_stage(3):
+			equal_to_stage = 3
+		elif _lored_types == lv.get_loreds_in_stage(4):
+			equal_to_stage = 4
 		loreds = lv.get_loreds_in_list(_lored_types)
 	
 	
@@ -30,63 +43,7 @@ class UpgradeValue:
 	extends RefCounted
 	
 	
-	
-	class Float:
-		extends UpgradeValue
-		
-		
-		var value: LoudFloat
-		var applied_value: float
-		
-		
-		
-		func _init(base_value: float):
-			value = LoudFloat.new(base_value)
-		
-		
-		func reset() -> void:
-			value.reset()
-		
-		
-		func get_value() -> float:
-			applied_value = value.get_value()
-			return applied_value
-		
-		
-		func get_applied_value() -> float:
-			return applied_value
-	
-	
-	
-	class _Big:
-		extends UpgradeValue
-		
-		
-		var value: Value
-		var applied_value: Big
-		
-		
-		
-		func _init(base_value: float):
-			value = Value.new(base_value)
-		
-		
-		func reset() -> void:
-			value.reset()
-		
-		
-		func get_value() -> Big:
-			applied_value = Big.new(value.get_value())
-			return applied_value
-		
-		
-		func get_applied_value() -> Big:
-			return applied_value
-	
-	
-	
 	var saved_vars := []
-	
 	var dynamic := false:
 		set(val):
 			if dynamic != val:
@@ -97,67 +54,76 @@ class UpgradeValue:
 				else:
 					if "value" in saved_vars:
 						saved_vars.erase("value")
+	
+	var value # can be LoudFloat or Value
+	var applied_value # can be float or Big
+	
+	
+	func _init(base_value: float, big: bool) -> void:
+		if big:
+			value = Value.new(base_value)
+		else:
+			value = LoudFloat.new(base_value)
+	
+	
+	func reset() -> void:
+		value.reset()
+	
+	
+	func get_value():
+		applied_value = value.get_value()
+		return applied_value
+	
+	
+	func get_applied_value():
+		return applied_value
 
 
 class UpgradeMethods:
 	extends UpgradeEffect
 	
-	#region Sub-Classes
-	class WithValue:
-		extends UpgradeMethods
-		
-		
-		var value: UpgradeValue.Float:
-			set(val):
-				value = val
-				value.value.changed.connect(refresh_methods)
-				value.value.changed.connect(emit_changed)
-				applied.became_false.connect(value.value.reset)
-		
-		
-		func _init(_type: Type) -> void:
-			super(_type)
-			applied.became_true.connect(apply_methods)
-			applied.became_false.connect(remove_methods)
-		
-		
-		func apply_methods() -> void:
-			for method in applied_methods:
-				method.call(value.get_value())
-		
-		
-		func remove_methods() -> void:
-			for method in removed_methods:
-				method.call(value.get_applied_value())
-		
-		
-		func refresh_methods() -> void:
-			remove_methods()
-			apply_methods()
-	
-	
-	class WithoutValue:
-		extends UpgradeMethods
-		
-		
-		func _init(_type: Type) -> void:
-			super(_type)
-			applied.became_true.connect(apply_methods)
-			applied.became_false.connect(remove_methods)
-		
-		
-		func apply_methods() -> void:
-			for method in applied_methods:
-				method.call()
-		
-		
-		func remove_methods() -> void:
-			for method in removed_methods:
-				method.call()
-	#endregion
 	
 	var applied_methods: Array[Callable]
 	var removed_methods: Array[Callable]
+	
+	var value: UpgradeValue:
+		set(val):
+			value = val
+			has_value = true
+			value.value.changed.connect(refresh_methods)
+			value.value.changed.connect(emit_changed)
+			applied.became_false.connect(value.value.reset)
+	
+	
+	func _init(_type: Type) -> void:
+		super(_type)
+		applied.became_true.connect(apply_methods)
+		applied.became_false.connect(remove_methods)
+	
+	
+	func apply_methods() -> void:
+		if has_value:
+			for method in applied_methods:
+				method.call(value.get_value())
+		else:
+			for method in applied_methods:
+				method.call()
+	
+	
+	func remove_methods() -> void:
+		if has_value:
+			if value.get_applied_value() == null:
+				return
+			for method in removed_methods:
+				method.call(value.get_applied_value())
+		else:
+			for method in removed_methods:
+				method.call()
+	
+	
+	func refresh_methods() -> void:
+		remove_methods()
+		apply_methods()
 	
 	
 	func add_applied_method(method: Callable) -> void:
@@ -171,71 +137,21 @@ class UpgradeMethods:
 
 
 class LOREDAttribute:
-	extends UpgradeMethods.WithValue
+	extends UpgradeMethods
 	
-	#region Sub-Classes (Haste, Output, Crit.Dynamic)
-	
-	class Haste:
-		extends LOREDAttribute
-		func _init(_lored_types: Array[LORED.Type], _value: float):
-			attributes = [LORED.Attribute.HASTE]
-			super(_lored_types, _value)
-	
-	
-	class Output:
-		extends LOREDAttribute
-		func _init(_lored_types: Array[LORED.Type], _value: float):
-			attributes = [LORED.Attribute.OUTPUT]
-			super(_lored_types, _value)
-	
-	
-	class OutputAndInput:
-		extends LOREDAttribute
-		func _init(_lored_types: Array[LORED.Type], _value: float):
-			attributes = [LORED.Attribute.OUTPUT, LORED.Attribute.INPUT]
-			super(_lored_types, _value)
-	
-	
-	class _Input:
-		extends LOREDAttribute
-		func _init(_lored_types: Array[LORED.Type], _value: float):
-			attributes = [LORED.Attribute.INPUT]
-			super(_lored_types, _value)
-	
-	
-	class Fuel:
-		extends LOREDAttribute
-		func _init(_lored_types: Array[LORED.Type], _value: float):
-			attributes = [LORED.Attribute.FUEL]
-			super(_lored_types, _value)
-	
-	
-	class FuelCost:
-		extends LOREDAttribute
-		func _init(_lored_types: Array[LORED.Type], _value: float):
-			attributes = [LORED.Attribute.FUEL_COST]
-			super(_lored_types, _value)
-	
-	
-	class Crit:
-		extends LOREDAttribute
-		func _init(_lored_types: Array[LORED.Type], _value: float):
-			attributes = [LORED.Attribute.CRIT]
-			super(_lored_types, _value)
-	
-	#endregion
 	
 	var attributes: Array[LORED.Attribute]
 	var lored_list: LOREDList
 	
-	func _init(_lored_types: Array[LORED.Type], _value: float) -> void:
+	
+	func _init(_lored_types: Array[LORED.Type], _value: float, _attributes: Array[LORED.Attribute]) -> void:
+		attributes = _attributes
 		super(Type.LORED_ATTRIBUTE)
-		value = UpgradeValue.Float.new(_value)
+		value = UpgradeValue.new(_value, false)
 		value.value.changed.connect(update_text)
 		set_lored_recipients_text(_lored_types)
 		lored_list = LOREDList.new(_lored_types)
 		has_lored_list = true
-		has_value = true
 		match attributes:
 			[LORED.Attribute.HASTE]:
 				text = LoudString.new("Haste [b]x%s")
@@ -277,37 +193,25 @@ class LOREDAttribute:
 		update_text()
 	
 	
-	
 	func update_text() -> void:
 		text.set_to(text.base % value.value.get_text())
 
 
 class LOREDSpecificInput:
-	extends UpgradeMethods.WithValue
+	extends UpgradeMethods
 	
-	#region Sub-Classes (Haste, Output, Crit.Dynamic)
-	
-	class Dynamic:
-		extends LOREDSpecificInput
-		
-		
-		func _init(_lored_types: Array[LORED.Type], _value: float, _input: Currency.Type):
-			super(_lored_types, _value, _input)
-			value.dynamic = true
-	
-	#endregion
 	
 	var attributes: Array[LORED.Attribute]
 	var lored_list: LOREDList
 	
+	
 	func _init(_lored_types: Array[LORED.Type], _value: float, _input: Currency.Type) -> void:
 		super(Type.LORED_ATTRIBUTE)
-		value = UpgradeValue.Float.new(_value)
+		value = UpgradeValue.new(_value, false)
 		value.value.changed.connect(update_text)
 		set_lored_recipients_text(_lored_types)
 		lored_list = LOREDList.new(_lored_types)
 		has_lored_list = true
-		has_value = true
 		for lored in lored_list.loreds:
 			for att in lored.get_attributes_by_currency(_input):
 				add_applied_method(att.increase_multiplied)
@@ -316,34 +220,17 @@ class LOREDSpecificInput:
 		update_text()
 	
 	
-	
 	func update_text() -> void:
 		text.set_to(text.base % value.value.get_text())
 
 
-class LOREDAutobuyer:
-	extends UpgradeMethods.WithoutValue
-	
-	var lored_list: LOREDList
-	
-	func _init(_lored_types: Array[LORED.Type]) -> void:
-		super(Type.LORED_AUTOBUYER)
-		set_lored_recipients_text(_lored_types)
-		lored_list = LOREDList.new(_lored_types)
-		has_lored_list = true
-		for lored in lored_list.loreds:
-			add_applied_method(lored.autobuy.set_true)
-			add_removed_method(lored.autobuy.set_false)
-		text = LoudString.new("Autobuyer")
-
-
 class FreeLORED:
-	extends UpgradeMethods.WithoutValue
+	extends UpgradeMethods
 	
 	var lored_list: LOREDList
 	
 	func _init(_lored_types: Array[LORED.Type]) -> void:
-		super(Type.LORED_AUTOBUYER)
+		super(Type.FREE_LORED)
 		lored_list = LOREDList.new(_lored_types)
 		has_lored_list = true
 		for lored in lored_list.loreds:
@@ -351,163 +238,262 @@ class FreeLORED:
 			add_removed_method(lored.purchased.set_reset_value_false)
 
 
-class ActionOnCurrencyGain:
-	extends UpgradeEffect
+class ItsOnMe:
+	extends UpgradeMethods
 	
 	
-	class ItsOnMe:
-		extends ActionOnCurrencyGain
-		
-		
-		class Growin:
-			extends ItsOnMe
-			
-			
-			
-			var value2 := UpgradeValue._Big.new(1.0)
-			var spreadin_applied: LoudBool
-			
-			
-			
-			func _init() -> void:
-				value2.dynamic = true
-				value1.value.changed.connect(refresh_value_1)
-				value1.value.changed.connect(update_text)
-				value2.value.changed.connect(refresh_value_2)
-				value2.value.changed.connect(update_text)
-				applied.became_false.connect(remove_value_1)
-				applied.became_true.connect(apply_value_1)
-				applied.became_false.connect(remove_value_2)
-				applied.became_true.connect(apply_value_2)
-				value2.value.changed.connect(emit_changed)
-				spreadin_applied = up.get_upgrade(Upgrade.Type.ITS_SPREADIN_ON_ME).effect.applied
-				spreadin_applied.became_true.connect(remove_value_1)
-				spreadin_applied.became_true.connect(remove_value_2)
-				spreadin_applied.became_false.connect(apply_value_1)
-				spreadin_applied.became_false.connect(apply_value_1)
-				super()
-				currency.increased_by_lored.connect(currency_increased_by_lored)
-				var iron_text = iron.details.icon_and_colored_name + ": [b]x%s"
-				var copper_text = copper.details.icon_and_colored_name + ": [b]x%s"
-				text = LoudString.new(iron_text + "\n" + copper_text)
-				update_text()
-			
-			
-			func apply_value_1() -> void:
-				if applied.is_true() and spreadin_applied.is_false():
-					iron.output.increase_multiplied(value1.get_value())
-			
-			
-			func remove_value_1() -> void:
-				iron.output.decrease_multiplied(value1.get_applied_value())
-			
-			
-			func refresh_value_1() -> void:
-				print("refresh1")
-				remove_value_1()
-				apply_value_1()
-			
-			
-			func apply_value_2() -> void:
-				if applied.is_true() and spreadin_applied.is_false():
-					copper.output.increase_multiplied(value2.get_value())
-			
-			
-			func remove_value_2() -> void:
-				copper.output.decrease_multiplied(value2.get_applied_value())
-			
-			
-			func refresh_value_2() -> void:
-				print("refresh2")
-				remove_value_2()
-				apply_value_2()
-			
-			
-			func currency_increased_by_lored(amount: Big) -> void:
-				if applied.is_true():
-					var modded_amount = Big.new(amount).m(INCREASE).m(currency.last_crit_modifier)
-					print("amount ", amount.text)
-					print("INCREASE ", INCREASE)
-					print("currency.last_crit_modifier ", currency.last_crit_modifier)
-					print("modded amount: ", modded_amount.text)
-					if randi() % 2 == 0:
-						value1.value.add(modded_amount)
-					else:
-						value2.value.add(modded_amount)
-			
-			
-			func update_text() -> void:
-				print("value changed! ", value1.value.get_text())
-				text.set_to(text.base % [value1.value.get_text(), value2.value.get_text()])
-		
-		
-		class Spreadin:
-			extends ItsOnMe
-			
-			
-			
-			var copper_ore := lv.get_lored(LORED.Type.COPPER_ORE)
-			var iron_ore := lv.get_lored(LORED.Type.IRON_ORE)
-			
-			
-			
-			func _init() -> void:
-				value1.value.changed.connect(refresh_value_1)
-				value1.value.changed.connect(update_text)
-				applied.became_false.connect(remove_value_1)
-				applied.became_true.connect(apply_value_1)
-				super()
-				currency.increased_by_lored.connect(currency_increased_by_lored)
-				text = LoudString.new("[b]x%s")
-				update_text()
-			
-			
-			func apply_value_1() -> void:
-				iron.output.increase_multiplied(value1.get_value())
-				copper.output.increase_multiplied(value1.get_value())
-				iron_ore.output.increase_multiplied(value1.get_value())
-				copper_ore.output.increase_multiplied(value1.get_value())
-			
-			
-			func remove_value_1() -> void:
-				iron.output.decrease_multiplied(value1.get_applied_value())
-				copper.output.decrease_multiplied(value1.get_applied_value())
-				iron_ore.output.decrease_multiplied(value1.get_applied_value())
-				copper_ore.output.decrease_multiplied(value1.get_applied_value())
-			
-			
-			func refresh_value_1() -> void:
-				remove_value_1()
-				apply_value_1()
-			
-			
-			func currency_increased_by_lored(amount: Big) -> void:
-				if applied.is_true():
-					var modded_amount = Big.new(amount).m(INCREASE).m(currency.last_crit_modifier)
-					value1.value.add(modded_amount)
-			
-			
-			func update_text() -> void:
-				text.set_to(text.base % value1.value.get_text())
-		
-		
-		const INCREASE := 0.0001
-		var value1 := UpgradeValue._Big.new(1.0)
-		var iron := lv.get_lored(LORED.Type.IRON)
-		var copper := lv.get_lored(LORED.Type.COPPER)
+	class Growin:
+		extends ItsOnMe
 		
 		
 		func _init() -> void:
-			value1.dynamic = true
-			value1.value.changed.connect(emit_changed)
-			super(Currency.Type.GROWTH)
+			super()
+			var iron_ore: LORED = lv.get_lored(LORED.Type.IRON_ORE)
+			add_applied_method(iron_ore.output.increase_multiplied)
+			add_applied_method(iron_ore.input.increase_multiplied)
+			add_removed_method(iron_ore.output.decrease_multiplied)
+			add_removed_method(iron_ore.input.decrease_multiplied)
+			var copper_ore: LORED = lv.get_lored(LORED.Type.COPPER_ORE)
+			add_applied_method(copper_ore.output.increase_multiplied)
+			add_applied_method(copper_ore.input.increase_multiplied)
+			add_removed_method(copper_ore.output.decrease_multiplied)
+			add_removed_method(copper_ore.input.decrease_multiplied)
 	
 	
+	class Spreadin:
+		extends ItsOnMe
+		
+		
+		func _init() -> void:
+			super()
+			var iron: LORED = lv.get_lored(LORED.Type.IRON)
+			add_applied_method(iron.output.increase_multiplied)
+			add_applied_method(iron.input.increase_multiplied)
+			add_removed_method(iron.output.decrease_multiplied)
+			add_removed_method(iron.input.decrease_multiplied)
+			var copper: LORED = lv.get_lored(LORED.Type.COPPER)
+			add_applied_method(copper.output.increase_multiplied)
+			add_applied_method(copper.input.increase_multiplied)
+			add_removed_method(copper.output.decrease_multiplied)
+			add_removed_method(copper.input.decrease_multiplied)
+	
+	
+	const INCREASE := 0.01
+	
+	
+	func _init():
+		value = UpgradeValue.new(1.0, false)
+		value.value.changed.connect(update_text)
+		text = LoudString.new("[b]x%s")
+		value.dynamic = true
+		wa.get_currency(Currency.Type.GROWTH).increased_by_lored.connect(growth_increased_by_lored)
+		update_text()
+		super(Type.ITS_ON_ME)
+	
+	
+	func growth_increased_by_lored(_amount) -> void:
+		if applied.is_true():
+			value.value.add(INCREASE)
+	
+	
+	func update_text() -> void:
+		text.set_to(text.base % value.value.get_text())
+
+
+class Milkshake:
+	extends UpgradeMethods
+	
+	
+	const INCREASE := 0.01
+	var coal = lv.get_lored(LORED.Type.COAL)
 	var currency: Currency
+	var lored_type := LORED.Type.COAL
 	
 	
-	func _init(_currency_type: Currency.Type) -> void:
-		currency = wa.get_currency(_currency_type) as Currency
+	func _init() -> void:
+		currency = wa.get_currency(Currency.Type.COAL) as Currency
+		currency.decreased_by_lored.connect(coal_taken)
+		value = UpgradeValue.new(1.0, false)
+		value.value.changed.connect(update_text)
+		value.dynamic = true
+		add_applied_method(coal.output.increase_multiplied)
+		add_removed_method(coal.output.decrease_multiplied)
+		super(Type.MILKSHAKE)
+		text = LoudString.new("[b]x%s")
+		update_text()
+	
+	
+	func coal_taken(_amount) -> void:
+		if applied.is_true():
+			value.value.add(INCREASE)
+	
+	
+	func update_text() -> void:
+		text.set_to(text.base % value.value.get_text())
+
+
+class Autobuyer:
+	extends UpgradeMethods
+	
+	
+	class _LORED:
+		extends Autobuyer
+		
+		
+		var lored_type: LORED.Type
+		
+		
+		func _init(_lored_type: LORED.Type):
+			lored_type = _lored_type
+			var lored = lv.get_lored(_lored_type)
+			add_applied_method(lored.autobuy.set_true)
+			add_removed_method(lored.autobuy.set_false)
+			set_lored_recipients_text([_lored_type])
+			super(Type.LORED_AUTOBUYER)
+	
+	
+	class _UpgradeMenu:
+		extends Autobuyer
+		
+		
+		func _init(_upgrade_menu: UpgradeMenu.Type):
+			await up.all_upgrades_initialized
+			for upgrade_type in up.get_upgrades_in_menu(_upgrade_menu):
+				var upgrade = up.get_upgrade(upgrade_type)
+				add_applied_method(upgrade.enable_autobuy)
+				add_removed_method(upgrade.disable_autobuy)
+			var upmen = up.get_upgrade_menu(_upgrade_menu) as UpgradeMenu
+			recipients_text = "[i]for [/i]" + upmen.details.colored_name
+			super(Type.UPGRADE_AUTOBUYER)
+	
+	
+	func _init(_type: Type) -> void:
+		text = LoudString.new("Autobuyer")
+		super(_type)
+
+
+class BonusJobProduction:
+	extends UpgradeEffect
+	
+	
+	var modifier := 1.0
+	var job: Job
+	var currency_type: Currency.Type
+	var lored_type: LORED.Type
+	
+	
+	func _init(_job: Job, _cur: Currency.Type, _modifier: float) -> void:
+		job = _job
+		lored_type = job.lored
+		currency_type = _cur
+		modifier = _modifier
+		applied.became_true.connect(applied_became_true)
+		applied.became_false.connect(applied_became_false)
+		var lored_name = lv.get_colored_name(job.lored)
+		var pronoun_his = lv.get_lored(job.lored).pronoun_his
+		var pronoun_he = lv.get_lored(job.lored).pronoun_he
+		var job_name = "[i]" + job.name + "[/i]"
+		var modifier_text := ""
+		if modifier == 1.0:
+			modifier_text = "an equal amount of"
+		else:
+			modifier_text = str(modifier).pad_decimals(1) + "x"
+		var currency_name = wa.get_icon_and_name_text(_cur)
+		text = LoudString.new("Whenever %s performs %s %s job, %s will produce %s %s." % [
+			lored_name,
+			pronoun_his,
+			job_name,
+			pronoun_he,
+			modifier_text,
+			currency_name
+		])
+	
+	
+	func applied_became_true() -> void:
+		job.add_bonus_production(currency_type, modifier)
+	
+	
+	func applied_became_false() -> void:
+		job.remove_bonus_production(currency_type)
+
+
+class UpgradeName:
+	extends UpgradeEffect
+	
+	
+	var lored_list := LOREDList.new(lv.get_loreds_in_stage(1))
+	
+	
+	func _init():
+		has_lored_list = true
+		applied.became_true.connect(applied_became_true)
+		applied.became_false.connect(applied_became_false)
+		super(Type.UPGRADE_NAME)
+	
+	
+	func applied_became_true() -> void:
+		for lored in lored_list.loreds:
+			lored.output_increase.multiply(1.1)
+			lored.input_increase.multiply(1.1)
+			lored.fuel_cost.increase_multiplied(10)
+			lored.fuel.increase_multiplied(10)
+			lored.fuel.fill_up()
+	
+	
+	func applied_became_false() -> void:
+		for lored in lored_list.loreds:
+			lored.output_increase.divide(1.1)
+			lored.input_increase.divide(1.1)
+			lored.fuel_cost.decrease_multiplied(10)
+			lored.fuel.decrease_multiplied(10)
+			lored.fuel.fill_up()
+
+
+class _Persist:
+	extends UpgradeMethods
+	
+	
+	class _Upgrade:
+		extends _Persist
+		
+		
+		func _init(_upgrade_types: Array[Upgrade.Type], _stage: Stage.Type):
+			type = Type.UPGRADE_PERSIST
+			for upgrade_type in _upgrade_types:
+				var upgrade = up.get_upgrade(upgrade_type)
+				add_applied_method(upgrade.persist.get("s" + str(_stage)).set_true)
+				add_removed_method(upgrade.persist.get("s" + str(_stage)).set_false)
+			super()
+	
+	
+	class _LORED:
+		extends _Persist
+		
+		
+		func _init():
+			type = Type.LORED_PERSIST
+			super()
+	
+	
+	func _init():
+		text = LoudString.new("Persists")
+
+
+class PrestigeNow:
+	extends UpgradeEffect
+	
+	
+	var stage: Stage.Type
+	
+	
+	func _init(_stage: Stage.Type):
+		type = Type.PRESTIGE_NOW
+		stage = _stage
+		applied.became_true.connect(applied_became_true)
+	
+	
+	func applied_became_true() -> void:
+		gv.prestige_now(stage)
 
 
 #endregion
@@ -515,9 +501,18 @@ class ActionOnCurrencyGain:
 
 
 enum Type {
+	PLACEHOLDER,
 	LORED_ATTRIBUTE,
 	LORED_SPECIFIC_INPUT,
+	FREE_LORED,
 	LORED_AUTOBUYER,
+	LORED_PERSIST,
+	UPGRADE_AUTOBUYER,
+	UPGRADE_NAME,
+	UPGRADE_PERSIST,
+	ITS_ON_ME,
+	MILKSHAKE,
+	PRESTIGE_NOW,
 }
 
 var type: Type:
@@ -530,7 +525,11 @@ var text: LoudString
 var recipients_text: String
 
 var has_lored_list := false
-var has_value := false
+var has_value := false:
+	set(val):
+		has_value = val
+		if val:
+			saved_vars.append("value")
 
 
 
