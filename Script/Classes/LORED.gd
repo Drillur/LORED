@@ -1185,8 +1185,8 @@ func should_autobuy() -> bool:
 		if ( # upgrade conditions
 			(
 				stage == 1
-				and up.is_upgrade_purchased(Upgrade.Type.DONT_TAKE_CANDY_FROM_BABIES)
 				and level.less(5)
+				and up.is_upgrade_purchased(Upgrade.Type.DONT_TAKE_CANDY_FROM_BABIES)
 			) or (
 				type in [Type.MALIGNANCY, Type.IRON, Type.COPPER]
 				and up.is_upgrade_purchased(Upgrade.Type.THE_WITCH_OF_LOREDELITH)

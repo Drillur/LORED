@@ -496,6 +496,33 @@ class PrestigeNow:
 		gv.prestige_now(stage)
 
 
+class _LimitBreak:
+	extends UpgradeEffect
+	
+	
+	func _init():
+		type = Type.LIMIT_BREAK
+		applied.became_true.connect(applied_became_true)
+		applied.became_false.connect(applied_became_false)
+		text = LoudString.new("[b]x%s[/b]")
+		up.limit_break.level.changed.connect(level_changed)
+		level_changed()
+		set_lored_recipients_text([])
+	
+	
+	func applied_became_true():
+		up.limit_break.enable()
+	
+	
+	func applied_became_false():
+		up.limit_break.disable()
+		up.limit_break.reset()
+	
+	
+	func level_changed() -> void:
+		text.set_to(text.base % up.limit_break.level.get_text())
+
+
 #endregion
 
 
@@ -513,6 +540,7 @@ enum Type {
 	ITS_ON_ME,
 	MILKSHAKE,
 	PRESTIGE_NOW,
+	LIMIT_BREAK,
 }
 
 var type: Type:
@@ -542,23 +570,34 @@ func _init(_type: Type) -> void:
 
 
 func set_lored_recipients_text(_lored_types: Array[LORED.Type]) -> void:
-	if _lored_types == lv.get_loreds_in_stage(1):
-		var _stage = gv.stage1.details.colored_name
-		recipients_text = "[i]for [/i]" + _stage
-	elif _lored_types == lv.get_loreds_in_stage(2):
-		var _stage = gv.stage2.details.colored_name
-		recipients_text = "[i]for [/i]" + _stage
-	elif _lored_types == lv.get_loreds_in_stage(3):
-		var _stage = gv.stage3.details.colored_name
-		recipients_text = "[i]for [/i]" + _stage
-	elif _lored_types == lv.get_loreds_in_stage(4):
-		var _stage = gv.stage4.details.colored_name
-		recipients_text = "[i]for [/i]" + _stage
-	else:
-		var arr := []
-		for lored_type in _lored_types:
-			arr.append(lv.get_colored_name(lored_type))
-		recipients_text = "[i]for [/i]" + gv.get_list_text_from_array(arr).replace("and", "[i]and[/i]")
+	match type:
+		Type.LIMIT_BREAK:
+			var s1 = gv.stage1.details.color_text % "1"
+			var s2 = gv.stage2.details.color_text % "2"
+			if up.limit_break.applies_to_stage_3():
+				var s3 = gv.stage3.details.color_text % "3"
+				if up.limit_break.applies_to_stage_4():
+					recipients_text = "[i]for[/i] All LOREDs"
+				recipients_text = "[i]for[/i] Stages %s, %s, and %s" % [s1, s2, s3]
+			recipients_text = "[i]for[/i] Stages %s and %s" % [s1, s2]
+		_:
+			if _lored_types == lv.get_loreds_in_stage(1):
+				var _stage = gv.stage1.details.colored_name
+				recipients_text = "[i]for [/i]" + _stage
+			elif _lored_types == lv.get_loreds_in_stage(2):
+				var _stage = gv.stage2.details.colored_name
+				recipients_text = "[i]for [/i]" + _stage
+			elif _lored_types == lv.get_loreds_in_stage(3):
+				var _stage = gv.stage3.details.colored_name
+				recipients_text = "[i]for [/i]" + _stage
+			elif _lored_types == lv.get_loreds_in_stage(4):
+				var _stage = gv.stage4.details.colored_name
+				recipients_text = "[i]for [/i]" + _stage
+			else:
+				var arr := []
+				for lored_type in _lored_types:
+					arr.append(lv.get_details(lored_type).icon_and_colored_name)
+				recipients_text = "[i]for [/i]" + gv.get_list_text_from_array(arr).replace("and", "[i]and[/i]")
 
 
 

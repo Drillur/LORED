@@ -277,7 +277,7 @@ var details := Details.new()
 var has_description: bool
 var effect_text: String
 
-var effected_loreds_text: String
+var effected_loreds_text: String #ueue remove
 var loreds: Array
 
 var unlocked := LoudBool.new(true)
@@ -1582,8 +1582,7 @@ func init_CANCERS_REAL_COOL() -> void:
 
 func init_SPOOKY() -> void:
 	details.name = "Sp0oKy"
-	set_effect(OldUpgradeEffect.Type.HASTE, 1.15)
-	add_affected_lored(LORED.Type.CARCINOGENS)
+	effect = UpgradeEffect.LOREDAttribute.new([LORED.Type.CARCINOGENS], 1.15, [LORED.Attribute.HASTE])
 	cost = Cost.new({
 		Currency.Type.CARCINOGENS: Value.new("1e3"),
 		Currency.Type.TUMORS: Value.new("2.5e3"),
@@ -1594,8 +1593,7 @@ func init_SPOOKY() -> void:
 
 func init_SQUEEORMP() -> void:
 	details.name = "Squeeormp"
-	set_effect(OldUpgradeEffect.Type.SPECIFIC_INPUT, 0.9, Currency.Type.PETROLEUM)
-	add_affected_lored(LORED.Type.PLASTIC)
+	effect = UpgradeEffect.LOREDSpecificInput.new([LORED.Type.PLASTIC], 0.9, Currency.Type.PETROLEUM)
 	cost = Cost.new({
 		Currency.Type.CARCINOGENS: Value.new("100e3"),
 	})
@@ -1605,8 +1603,7 @@ func init_SQUEEORMP() -> void:
 
 func init_SANDAL_FLANDALS() -> void:
 	details.name = "Sandal Flandals"
-	set_effect(OldUpgradeEffect.Type.SPECIFIC_INPUT, 0.8, Currency.Type.HUMUS)
-	add_affected_lored(LORED.Type.SAND)
+	effect = UpgradeEffect.LOREDSpecificInput.new([LORED.Type.SAND], 0.8, Currency.Type.HUMUS)
 	cost = Cost.new({
 		Currency.Type.SAND: Value.new("100e3"),
 		Currency.Type.CARCINOGENS: Value.new("10e3"),
@@ -1617,8 +1614,7 @@ func init_SANDAL_FLANDALS() -> void:
 
 func init_GLITTERDELVE() -> void:
 	details.name = "Glitterdelve"
-	set_effect(OldUpgradeEffect.Type.OUTPUT_AND_INPUT, 1.25)
-	add_affected_lored(LORED.Type.GALENA)
+	effect = UpgradeEffect.LOREDAttribute.new([LORED.Type.GALENA], 1.25, [LORED.Attribute.OUTPUT, LORED.Attribute.INPUT])
 	cost = Cost.new({
 		Currency.Type.LEAD: Value.new("100e3"),
 		Currency.Type.CARCINOGENS: Value.new("8e3"),
@@ -1629,8 +1625,7 @@ func init_GLITTERDELVE() -> void:
 
 func init_VIRILE() -> void:
 	details.name = "VIRILE"
-	set_effect(OldUpgradeEffect.Type.SPECIFIC_INPUT, 0.85, Currency.Type.SEEDS)
-	add_affected_lored(LORED.Type.TOBACCO)
+	effect = UpgradeEffect.LOREDSpecificInput.new([LORED.Type.TOBACCO], 0.85, Currency.Type.SEEDS)
 	cost = Cost.new({
 		Currency.Type.CIGARETTES: Value.new("50e3"),
 		Currency.Type.CARCINOGENS: Value.new("1.5e3"),
@@ -1641,8 +1636,7 @@ func init_VIRILE() -> void:
 
 func init_FACTORY_SQUIRTS() -> void:
 	details.name = "Factory Squirts"
-	set_effect(OldUpgradeEffect.Type.OUTPUT_AND_INPUT, 1.25)
-	add_affected_lored(LORED.Type.PETROLEUM)
+	effect = UpgradeEffect.LOREDAttribute.new([LORED.Type.PETROLEUM], 1.25, [LORED.Attribute.OUTPUT, LORED.Attribute.INPUT])
 	cost = Cost.new({
 		Currency.Type.GROWTH: Value.new("2e8"),
 		Currency.Type.LEAD: Value.new("3e3"),
@@ -1654,8 +1648,7 @@ func init_FACTORY_SQUIRTS() -> void:
 
 func init_LONGBOTTOM_LEAF() -> void:
 	details.name = "Longbottom Leaf"
-	set_effect(OldUpgradeEffect.Type.OUTPUT_AND_INPUT, 1.25)
-	add_affected_lored(LORED.Type.TOBACCO)
+	effect = UpgradeEffect.LOREDAttribute.new([LORED.Type.TOBACCO], 1.25, [LORED.Attribute.OUTPUT, LORED.Attribute.INPUT])
 	cost = Cost.new({
 		Currency.Type.WOOD: Value.new("500e3"),
 		Currency.Type.CARCINOGENS: Value.new("5e3"),
@@ -1666,8 +1659,7 @@ func init_LONGBOTTOM_LEAF() -> void:
 
 func init_INDEPENDENCE() -> void:
 	details.name = "INDEPENDENCE"
-	set_effect(OldUpgradeEffect.Type.CRIT, 10)
-	add_affected_lored(LORED.Type.LEAD)
+	effect = UpgradeEffect.LOREDAttribute.new([LORED.Type.LEAD], 10.0, [LORED.Attribute.CRIT])
 	cost = Cost.new({
 		Currency.Type.GALENA: Value.new("450e3"),
 		Currency.Type.LEAD: Value.new("450e3"),
@@ -1679,8 +1671,7 @@ func init_INDEPENDENCE() -> void:
 
 func init_NIKEY_WIKEYS() -> void:
 	details.name = "Nikey Wikeys"
-	set_effect(OldUpgradeEffect.Type.CRIT, 7)
-	add_affected_lored(LORED.Type.HUMUS)
+	effect = UpgradeEffect.LOREDAttribute.new([LORED.Type.HUMUS], 7.0, [LORED.Attribute.CRIT])
 	cost = Cost.new({
 		Currency.Type.SOIL: Value.new("1e6"),
 		Currency.Type.CARCINOGENS: Value.new("10e3"),
@@ -1691,8 +1682,7 @@ func init_NIKEY_WIKEYS() -> void:
 
 func init_ERECTWOOD() -> void:
 	details.name = "ERECTWOOD"
-	set_effect(OldUpgradeEffect.Type.OUTPUT_AND_INPUT, 1.3)
-	add_affected_lored(LORED.Type.HARDWOOD)
+	effect = UpgradeEffect.LOREDAttribute.new([LORED.Type.HARDWOOD], 1.3, [LORED.Attribute.OUTPUT, LORED.Attribute.INPUT])
 	cost = Cost.new({
 		Currency.Type.STEEL: Value.new("2e7"),
 		Currency.Type.CARCINOGENS: Value.new("1e6"),
@@ -1703,8 +1693,7 @@ func init_ERECTWOOD() -> void:
 
 func init_STEELY_DAN() -> void:
 	details.name = "Steely Dan"
-	set_effect(OldUpgradeEffect.Type.CRIT, 7)
-	add_affected_lored(LORED.Type.STEEL)
+	effect = UpgradeEffect.LOREDAttribute.new([LORED.Type.STEEL], 7.0, [LORED.Attribute.CRIT])
 	cost = Cost.new({
 		Currency.Type.GLASS: Value.new("3e7"),
 		Currency.Type.CARCINOGENS: Value.new("1e6"),
@@ -1715,8 +1704,7 @@ func init_STEELY_DAN() -> void:
 
 func init_MGALEKGOLO() -> void:
 	details.name = "Mgalekgolo"
-	set_effect(OldUpgradeEffect.Type.OUTPUT_AND_INPUT, 1.3)
-	add_affected_lored(LORED.Type.GLASS)
+	effect = UpgradeEffect.LOREDAttribute.new([LORED.Type.GLASS], 1.3, [LORED.Attribute.OUTPUT, LORED.Attribute.INPUT])
 	cost = Cost.new({
 		Currency.Type.WIRE: Value.new("80e6"),
 		Currency.Type.CARCINOGENS: Value.new("1e6"),
@@ -1727,8 +1715,7 @@ func init_MGALEKGOLO() -> void:
 
 func init_PULLEY() -> void:
 	details.name = "Pulley"
-	set_effect(OldUpgradeEffect.Type.SPECIFIC_INPUT, 0.9, Currency.Type.DRAW_PLATE)
-	add_affected_lored(LORED.Type.WIRE)
+	effect = UpgradeEffect.LOREDSpecificInput.new([LORED.Type.WIRE], 0.9, Currency.Type.DRAW_PLATE)
 	cost = Cost.new({
 		Currency.Type.HARDWOOD: Value.new("95e6"),
 		Currency.Type.CARCINOGENS: Value.new("1e6"),
@@ -1739,8 +1726,7 @@ func init_PULLEY() -> void:
 
 func init_LE_GUIN() -> void:
 	details.name = "Le Guin"
-	set_effect(OldUpgradeEffect.Type.HASTE, 1.25)
-	add_effected_stage(2)
+	effect = UpgradeEffect.LOREDAttribute.new(lv.get_loreds_in_stage(2), 1.25, [LORED.Attribute.HASTE])
 	cost = Cost.new({
 		Currency.Type.CARCINOGENS: Value.new("1e6"),
 		Currency.Type.TUMORS: Value.new("100e3"),
@@ -1751,8 +1737,7 @@ func init_LE_GUIN() -> void:
 
 func init_FLEEORMP() -> void:
 	details.name = "Fleeormp"
-	set_effect(OldUpgradeEffect.Type.SPECIFIC_INPUT, 0.8, Currency.Type.GALENA)
-	add_affected_lored(LORED.Type.LEAD)
+	effect = UpgradeEffect.LOREDSpecificInput.new([LORED.Type.LEAD], 0.8, Currency.Type.GALENA)
 	cost = Cost.new({
 		Currency.Type.GALENA: Value.new("100e6"),
 		Currency.Type.LEAD: Value.new("80e6"),
@@ -1764,8 +1749,7 @@ func init_FLEEORMP() -> void:
 
 func init_POTENT() -> void:
 	details.name = "Potent"
-	set_effect(OldUpgradeEffect.Type.SPECIFIC_INPUT, 0.85, Currency.Type.WATER)
-	add_affected_lored(LORED.Type.TOBACCO)
+	effect = UpgradeEffect.LOREDSpecificInput.new([LORED.Type.TOBACCO], 0.85, Currency.Type.WATER)
 	cost = Cost.new({
 		Currency.Type.SEEDS: Value.new("30e6"),
 		Currency.Type.PAPER: Value.new("45e6"),
@@ -1777,8 +1761,7 @@ func init_POTENT() -> void:
 
 func init_LIGHT_AS_A_FEATHER() -> void:
 	details.name = "Light as a Feather"
-	set_effect(OldUpgradeEffect.Type.SPECIFIC_INPUT, 0.9, Currency.Type.STEEL)
-	add_affected_lored(LORED.Type.AXES)
+	effect = UpgradeEffect.LOREDSpecificInput.new([LORED.Type.AXES], 0.9, Currency.Type.STEEL)
 	cost = Cost.new({
 		Currency.Type.DRAW_PLATE: Value.new("10e6"),
 		Currency.Type.CARCINOGENS: Value.new("10e6"),
@@ -1789,8 +1772,7 @@ func init_LIGHT_AS_A_FEATHER() -> void:
 
 func init_BUSY_BEE() -> void:
 	details.name = "Busy Bee"
-	set_effect(OldUpgradeEffect.Type.OUTPUT_AND_INPUT, 1.3)
-	add_affected_lored(LORED.Type.SEEDS)
+	effect = UpgradeEffect.LOREDAttribute.new([LORED.Type.SEEDS], 1.3, [LORED.Attribute.OUTPUT, LORED.Attribute.INPUT])
 	cost = Cost.new({
 		Currency.Type.STEEL: Value.new("10e6"),
 		Currency.Type.GLASS: Value.new("15e6"),
@@ -1802,8 +1784,7 @@ func init_BUSY_BEE() -> void:
 
 func init_DINDER_MUFFLIN() -> void:
 	details.name = "Dinder Mufflin"
-	set_effect(OldUpgradeEffect.Type.OUTPUT_AND_INPUT, 1.25)
-	add_affected_lored(LORED.Type.PAPER)
+	effect = UpgradeEffect.LOREDAttribute.new([LORED.Type.PAPER], 1.25, [LORED.Attribute.OUTPUT, LORED.Attribute.INPUT])
 	cost = Cost.new({
 		Currency.Type.STEEL: Value.new("100e6"),
 		Currency.Type.GLASS: Value.new("150e6"),
@@ -1815,8 +1796,7 @@ func init_DINDER_MUFFLIN() -> void:
 
 func init_ULTRA_SHITSTINCT() -> void:
 	details.name = "Ultra Shitstinct"
-	set_effect(OldUpgradeEffect.Type.OUTPUT_AND_INPUT, 1.35)
-	add_affected_lored(LORED.Type.HUMUS)
+	effect = UpgradeEffect.LOREDAttribute.new([LORED.Type.HUMUS], 1.35, [LORED.Attribute.OUTPUT, LORED.Attribute.INPUT])
 	cost = Cost.new({
 		Currency.Type.WATER: Value.new("1e9"),
 		Currency.Type.SEEDS: Value.new("25e6"),
@@ -1828,8 +1808,7 @@ func init_ULTRA_SHITSTINCT() -> void:
 
 func init_AND_THIS_IS_TO_GO_EVEN_FURTHER_BEYOND() -> void:
 	details.name = "And this is to go [i]even further beyond![/i]"
-	set_effect(OldUpgradeEffect.Type.OUTPUT_AND_INPUT, 1.25)
-	add_affected_lored(LORED.Type.HUMUS)
+	effect = UpgradeEffect.LOREDAttribute.new([LORED.Type.HUMUS], 1.25, [LORED.Attribute.OUTPUT, LORED.Attribute.INPUT])
 	cost = Cost.new({
 		Currency.Type.PAPER: Value.new("1e7"),
 		Currency.Type.WOOD_PULP: Value.new("3e7"),
@@ -1841,8 +1820,7 @@ func init_AND_THIS_IS_TO_GO_EVEN_FURTHER_BEYOND() -> void:
 
 func init_POWER_BARRELS() -> void:
 	details.name = "Power Barrels"
-	set_effect(OldUpgradeEffect.Type.OUTPUT_AND_INPUT, 1.2)
-	add_affected_lored(LORED.Type.LIQUID_IRON)
+	effect = UpgradeEffect.LOREDAttribute.new([LORED.Type.LIQUID_IRON], 1.2, [LORED.Attribute.OUTPUT, LORED.Attribute.INPUT])
 	cost = Cost.new({
 		Currency.Type.STEEL: Value.new("100e6"),
 		Currency.Type.GLASS: Value.new("25e6"),
@@ -1856,8 +1834,7 @@ func init_A_BEE_WITH_TINY_DAGGERS() -> void:
 	details.name = shit % "a bee with tiny daggers!!!"
 	details.icon = load("res://Sprites/Upgrades/abeewithdaggers.png")
 	details.color = lv.get_color(LORED.Type.SEEDS)
-	set_effect(OldUpgradeEffect.Type.CRIT, 6)
-	add_affected_lored(LORED.Type.SEEDS)
+	effect = UpgradeEffect.LOREDAttribute.new([LORED.Type.SEEDS], 6.0, [LORED.Attribute.CRIT])
 	cost = Cost.new({
 		Currency.Type.STEEL: Value.new("1e9"),
 		Currency.Type.GLASS: Value.new("25e6"),
@@ -1869,8 +1846,7 @@ func init_A_BEE_WITH_TINY_DAGGERS() -> void:
 
 func init_HARDWOOD_YO_MAMA() -> void:
 	details.name = "[img=<15>]res://Sprites/Currency/hard.png[/img] Hardwood Yo Mama"
-	set_effect(OldUpgradeEffect.Type.SPECIFIC_INPUT, 0.8, Currency.Type.HARDWOOD)
-	add_affected_lored(LORED.Type.AXES)
+	effect = UpgradeEffect.LOREDSpecificInput.new([LORED.Type.AXES], 0.8, Currency.Type.HARDWOOD)
 	cost = Cost.new({
 		Currency.Type.STEEL: Value.new("750e6"),
 		Currency.Type.CARCINOGENS: Value.new("25e6"),
@@ -1881,8 +1857,7 @@ func init_HARDWOOD_YO_MAMA() -> void:
 
 func init_STEEL_YO_MAMA() -> void:
 	details.name = "[img=<15>]res://Sprites/Currency/steel.png[/img] Steel Yo Mama"
-	set_effect(OldUpgradeEffect.Type.SPECIFIC_INPUT, 0.85, Currency.Type.LIQUID_IRON)
-	add_affected_lored(LORED.Type.STEEL)
+	effect = UpgradeEffect.LOREDSpecificInput.new([LORED.Type.STEEL], 0.85, Currency.Type.LIQUID_IRON)
 	cost = Cost.new({
 		Currency.Type.GLASS: Value.new("750e6"),
 		Currency.Type.CARCINOGENS: Value.new("25e6"),
@@ -1893,8 +1868,7 @@ func init_STEEL_YO_MAMA() -> void:
 
 func init_MAGNETIC_ACCELERATOR() -> void:
 	details.name = "Magnetic Accelerator"
-	set_effect(OldUpgradeEffect.Type.SPECIFIC_INPUT, 0.8, Currency.Type.SAND)
-	add_affected_lored(LORED.Type.GLASS)
+	effect = UpgradeEffect.LOREDSpecificInput.new([LORED.Type.GLASS], 0.8, Currency.Type.SAND)
 	cost = Cost.new({
 		Currency.Type.WIRE: Value.new("750e6"),
 		Currency.Type.CARCINOGENS: Value.new("25e6"),
@@ -1905,8 +1879,7 @@ func init_MAGNETIC_ACCELERATOR() -> void:
 
 func init_SPOOLY() -> void:
 	details.name = "Spooly"
-	set_effect(OldUpgradeEffect.Type.HASTE, 1.25)
-	add_affected_lored(LORED.Type.WIRE)
+	effect = UpgradeEffect.LOREDAttribute.new([LORED.Type.WIRE], 1.25, [LORED.Attribute.HASTE])
 	cost = Cost.new({
 		Currency.Type.HARDWOOD: Value.new("750e6"),
 		Currency.Type.CARCINOGENS: Value.new("25e6"),
@@ -1917,8 +1890,7 @@ func init_SPOOLY() -> void:
 
 func init_TORIYAMA() -> void:
 	details.name = "Toriyama"
-	set_effect(OldUpgradeEffect.Type.CRIT, 4)
-	add_effected_stage(2)
+	effect = UpgradeEffect.LOREDAttribute.new(lv.get_loreds_in_stage(2), 4.0, [LORED.Attribute.CRIT])
 	cost = Cost.new({
 		Currency.Type.STEEL: Value.new("1e9"),
 		Currency.Type.HARDWOOD: Value.new("1e9"),
@@ -1932,8 +1904,7 @@ func init_TORIYAMA() -> void:
 
 func init_BURDENED() -> void:
 	details.name = "Burdened"
-	set_effect(OldUpgradeEffect.Type.OUTPUT_AND_INPUT, 2)
-	add_affected_lored(LORED.Type.LEAD)
+	effect = UpgradeEffect.LOREDAttribute.new([LORED.Type.LEAD], 2.0, [LORED.Attribute.OUTPUT, LORED.Attribute.INPUT])
 	cost = Cost.new({
 		Currency.Type.HUMUS: Value.new("10e9"),
 		Currency.Type.WOOD_PULP: Value.new("4e9"),
@@ -1945,8 +1916,7 @@ func init_BURDENED() -> void:
 
 func init_SQUEEOMP() -> void:
 	details.name = "Squeeomp"
-	set_effect(OldUpgradeEffect.Type.SPECIFIC_INPUT, 0.85, Currency.Type.PETROLEUM)
-	add_affected_lored(LORED.Type.PLASTIC)
+	effect = UpgradeEffect.LOREDSpecificInput.new([LORED.Type.PLASTIC], 0.85, Currency.Type.PETROLEUM)
 	cost = Cost.new({
 		Currency.Type.TOBACCO: Value.new("12e9"),
 		Currency.Type.CARCINOGENS: Value.new("3e9"),
@@ -1957,8 +1927,7 @@ func init_SQUEEOMP() -> void:
 
 func init_BARELY_WOOD_BY_NOW() -> void:
 	details.name = "Barely Wood by Now"
-	set_effect(OldUpgradeEffect.Type.SPECIFIC_INPUT, 0.8, Currency.Type.WOOD)
-	add_affected_lored(LORED.Type.HARDWOOD)
+	effect = UpgradeEffect.LOREDSpecificInput.new([LORED.Type.HARDWOOD], 0.8, Currency.Type.WOOD)
 	cost = Cost.new({
 		Currency.Type.STEEL: Value.new("15e9"),
 		Currency.Type.CARCINOGENS: Value.new("1e9"),
@@ -1969,8 +1938,7 @@ func init_BARELY_WOOD_BY_NOW() -> void:
 
 func init_FINGERS_OF_ONDEN() -> void:
 	details.name = "Fingers of Onden"
-	set_effect(OldUpgradeEffect.Type.OUTPUT_AND_INPUT, 1.25)
-	add_affected_lored(LORED.Type.STEEL)
+	effect = UpgradeEffect.LOREDAttribute.new([LORED.Type.STEEL], 1.25, [LORED.Attribute.OUTPUT, LORED.Attribute.INPUT])
 	cost = Cost.new({
 		Currency.Type.GLASS: Value.new("15e9"),
 		Currency.Type.CARCINOGENS: Value.new("1e9"),
@@ -1981,8 +1949,7 @@ func init_FINGERS_OF_ONDEN() -> void:
 
 func init_O_SALVATORI() -> void:
 	details.name = "O'Salvatori"
-	set_effect(OldUpgradeEffect.Type.CRIT, 6)
-	add_affected_lored(LORED.Type.GLASS)
+	effect = UpgradeEffect.LOREDAttribute.new([LORED.Type.GLASS], 6.0, [LORED.Attribute.CRIT])
 	cost = Cost.new({
 		Currency.Type.WIRE: Value.new("15e9"),
 		Currency.Type.CARCINOGENS: Value.new("1e9"),
@@ -1993,8 +1960,7 @@ func init_O_SALVATORI() -> void:
 
 func init_LOW_RISES() -> void:
 	details.name = "low rises"
-	set_effect(OldUpgradeEffect.Type.OUTPUT_AND_INPUT, 1.35)
-	add_affected_lored(LORED.Type.WIRE)
+	effect = UpgradeEffect.LOREDAttribute.new([LORED.Type.WIRE], 1.35, [LORED.Attribute.OUTPUT, LORED.Attribute.INPUT])
 	cost = Cost.new({
 		Currency.Type.HARDWOOD: Value.new("10e9"),
 		Currency.Type.CARCINOGENS: Value.new("1e9"),
@@ -2005,10 +1971,7 @@ func init_LOW_RISES() -> void:
 
 func init_ILL_SHOW_YOU_HARDWOOD() -> void:
 	details.name = "i'll show you hardwood"
-	set_effect(OldUpgradeEffect.Type.CRIT, 6)
-	add_affected_lored(LORED.Type.AXES)
-	add_affected_lored(LORED.Type.WOOD)
-	add_affected_lored(LORED.Type.HARDWOOD)
+	effect = UpgradeEffect.LOREDAttribute.new([LORED.Type.AXES, LORED.Type.WOOD, LORED.Type.HARDWOOD], 6.0, [LORED.Attribute.CRIT])
 	cost = Cost.new({
 		Currency.Type.STEEL: Value.new("1e12"),
 		Currency.Type.CARCINOGENS: Value.new("250e9"),
@@ -2019,9 +1982,7 @@ func init_ILL_SHOW_YOU_HARDWOOD() -> void:
 
 func init_STEEL_LORD() -> void:
 	details.name = "Steel Lord"
-	set_effect(OldUpgradeEffect.Type.CRIT, 6)
-	add_affected_lored(LORED.Type.LIQUID_IRON)
-	add_affected_lored(LORED.Type.STEEL)
+	effect = UpgradeEffect.LOREDAttribute.new([LORED.Type.LIQUID_IRON, LORED.Type.STEEL], 6.0, [LORED.Attribute.CRIT])
 	cost = Cost.new({
 		Currency.Type.GLASS: Value.new("1e12"),
 		Currency.Type.CARCINOGENS: Value.new("250e9"),
@@ -2032,10 +1993,7 @@ func init_STEEL_LORD() -> void:
 
 func init_FINISH_THE_FIGHT() -> void:
 	details.name = "Finish the Fight"
-	set_effect(OldUpgradeEffect.Type.CRIT, 6)
-	add_affected_lored(LORED.Type.HUMUS)
-	add_affected_lored(LORED.Type.SAND)
-	add_affected_lored(LORED.Type.GLASS)
+	effect = UpgradeEffect.LOREDAttribute.new([LORED.Type.HUMUS, LORED.Type.SAND, LORED.Type.GLASS], 6.0, [LORED.Attribute.CRIT])
 	cost = Cost.new({
 		Currency.Type.WIRE: Value.new("1e12"),
 		Currency.Type.CARCINOGENS: Value.new("250e9"),
@@ -2046,9 +2004,7 @@ func init_FINISH_THE_FIGHT() -> void:
 
 func init_MICROSOFT_PAINT() -> void:
 	details.name = "Microsoft Paint"
-	set_effect(OldUpgradeEffect.Type.CRIT, 6)
-	add_affected_lored(LORED.Type.DRAW_PLATE)
-	add_affected_lored(LORED.Type.WIRE)
+	effect = UpgradeEffect.LOREDAttribute.new([LORED.Type.DRAW_PLATE, LORED.Type.WIRE], 6.0, [LORED.Attribute.CRIT])
 	cost = Cost.new({
 		Currency.Type.HARDWOOD: Value.new("1e12"),
 		Currency.Type.CARCINOGENS: Value.new("250e9"),
@@ -2060,8 +2016,7 @@ func init_MICROSOFT_PAINT() -> void:
 func init_JOHN_PETER_BAIN_TOTALBISCUIT() -> void:
 	details.name = "[img=<15>]res://Sprites/upgrades/Totalbiscuit.png[/img] John Peter Bain, TotalBiscuit"
 	details.icon = load("res://Sprites/upgrades/Totalbiscuit.png")
-	set_effect(OldUpgradeEffect.Type.OUTPUT_AND_INPUT, 2)
-	add_effected_stage(2)
+	effect = UpgradeEffect.LOREDAttribute.new(lv.get_loreds_in_stage(2), 2.0, [LORED.Attribute.OUTPUT, LORED.Attribute.INPUT])
 	cost = Cost.new({
 		Currency.Type.CARCINOGENS: Value.new("1e12"),
 		Currency.Type.TUMORS: Value.new("10e9"),
@@ -2072,8 +2027,7 @@ func init_JOHN_PETER_BAIN_TOTALBISCUIT() -> void:
 
 func init_MECHANICAL() -> void:
 	details.name = "Mechanical"
-	set_effect(OldUpgradeEffect.Type.OUTPUT_AND_INPUT, 2)
-	add_effected_stage(1)
+	effect = UpgradeEffect.LOREDAttribute.new(lv.get_loreds_in_stage(1), 2.0, [LORED.Attribute.OUTPUT, LORED.Attribute.INPUT])
 	cost = Cost.new({
 		Currency.Type.TUMORS: Value.new("250"),
 	})
@@ -2084,11 +2038,7 @@ func init_LIMIT_BREAK() -> void:
 	var a = gv.get_stage(1).details.colored_name
 	var b = gv.get_stage(2).details.colored_name
 	details.description = "%s and %s LOREDs may now charge [b]Limit Break[/b], greatly increasing their [b]output and input[/b]." % [a, b]
-	effect = OldUpgradeEffect.new(OldUpgradeEffect.Type.LIMIT_BREAK, {
-		"upgrade_type": type,
-		"effect value": 1,
-		"xp": ValuePair.new(1000),
-	})
+	effect = UpgradeEffect._LimitBreak.new()
 	details.color = gv.get_stage_color(2)
 	details.icon = res.get_resource("axe")
 	cost = Cost.new({
@@ -2101,6 +2051,7 @@ func init_DONT_TAKE_CANDY_FROM_BABIES() -> void:
 	details.description = "Stage 2 and up LOREDs will not take resources from a Stage 1 resource if its producing LORED is below level 5."
 	details.icon = gv.get_stage_icon(Stage.Type.STAGE1)
 	details.color = gv.get_stage_color(Stage.Type.STAGE1)
+	effect = UpgradeEffect.new(UpgradeEffect.Type.PLACEHOLDER)
 	cost = Cost.new({
 		Currency.Type.TUMORS: Value.new("1e3"),
 	})
@@ -2110,8 +2061,7 @@ func init_DONT_TAKE_CANDY_FROM_BABIES() -> void:
 
 func init_SPLISHY_SPLASHY() -> void:
 	details.name = "Splishy Splashy"
-	set_effect(OldUpgradeEffect.Type.AUTOBUYER)
-	add_affected_lored(LORED.Type.WATER)
+	effect = UpgradeEffect.Autobuyer._LORED.new(LORED.Type.WATER)
 	cost = Cost.new({
 		Currency.Type.TUMORS: Value.new("4e3"),
 	})
@@ -2119,8 +2069,7 @@ func init_SPLISHY_SPLASHY() -> void:
 
 func init_MILK() -> void:
 	details.name = "Milk"
-	set_effect(OldUpgradeEffect.Type.HASTE, 1.25)
-	add_effected_stage(2)
+	effect = UpgradeEffect.LOREDAttribute.new(lv.get_loreds_in_stage(2), 1.25, [LORED.Attribute.HASTE])
 	cost = Cost.new({
 		Currency.Type.TUMORS: Value.new("2e3"),
 	})
@@ -2128,8 +2077,7 @@ func init_MILK() -> void:
 
 func init_FALCON_PAWNCH() -> void:
 	details.name = "FALCON [b]PAWNCH[/b]"
-	set_effect(OldUpgradeEffect.Type.OUTPUT_AND_INPUT, 1.25)
-	add_effected_stage(2)
+	effect = UpgradeEffect.LOREDAttribute.new(lv.get_loreds_in_stage(2), 1.25, [LORED.Attribute.OUTPUT, LORED.Attribute.INPUT])
 	cost = Cost.new({
 		Currency.Type.TUMORS: Value.new("1250"),
 	})
@@ -2137,8 +2085,7 @@ func init_FALCON_PAWNCH() -> void:
 
 func init_SPEED_SHOPPER() -> void:
 	details.name = "Speed-Shopper"
-	set_effect(OldUpgradeEffect.Type.OUTPUT_AND_INPUT, 2)
-	add_effected_stage(2)
+	effect = UpgradeEffect.LOREDAttribute.new(lv.get_loreds_in_stage(2), 1.25, [LORED.Attribute.OUTPUT, LORED.Attribute.INPUT])
 	cost = Cost.new({
 		Currency.Type.TUMORS: Value.new("35e3"),
 	})
