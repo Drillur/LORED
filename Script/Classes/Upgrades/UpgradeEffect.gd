@@ -27,16 +27,6 @@ class LOREDList:
 		elif _lored_types == lv.get_loreds_in_stage(4):
 			equal_to_stage = 4
 		loreds = lv.get_loreds_in_list(_lored_types)
-	
-	
-	func get_highest_lored_type() -> int:
-		var i := 0
-		var highest_type := 0
-		for lored in loreds:
-			if lored.type > highest_type:
-				highest_type = int(lored.type)
-			i += 1 
-		return highest_type
 
 
 class UpgradeValue:
@@ -421,10 +411,11 @@ class UpgradeName:
 	extends UpgradeEffect
 	
 	
-	var lored_list := LOREDList.new(lv.get_loreds_in_stage(1))
+	var lored_list: LOREDList
 	
 	
-	func _init():
+	func _init(_loreds: Array[LORED.Type]):
+		lored_list = LOREDList.new(_loreds)
 		has_lored_list = true
 		applied.became_true.connect(applied_became_true)
 		applied.became_false.connect(applied_became_false)
@@ -458,6 +449,7 @@ class _Persist:
 		
 		
 		func _init(_upgrade_types: Array[Upgrade.Type], _stage: Stage.Type):
+			await up.all_upgrades_initialized
 			type = Type.UPGRADE_PERSIST
 			for upgrade_type in _upgrade_types:
 				var upgrade = up.get_upgrade(upgrade_type)
@@ -470,9 +462,25 @@ class _Persist:
 		extends _Persist
 		
 		
-		func _init():
+		func _init(_loreds: Array[LORED.Type], _stage: Stage.Type):
 			type = Type.LORED_PERSIST
+			for lored_type in _loreds:
+				var lored = lv.get_lored(lored_type)
+				add_applied_method(lored.persist.get("s" + str(_stage)).set_true)
+				add_removed_method(lored.persist.get("s" + str(_stage)).set_false)
 			super()
+	
+	
+	class _Currency:
+		extends _Persist
+		
+		
+		func _init(_currencies: Array[Currency.Type], _stage: Stage.Type):
+			type = Type.CURRENCY_PERSIST
+			for currency_type in _currencies:
+				var currency = wa.get_currency(currency_type)
+				add_applied_method(currency.persist.get("s" + str(_stage)).set_true)
+				add_removed_method(currency.persist.get("s" + str(_stage)).set_false)
 	
 	
 	func _init():
@@ -523,6 +531,50 @@ class _LimitBreak:
 		text.set_to(text.base % up.limit_break.level.get_text())
 
 
+class ApplyLOREDBuff:
+	extends UpgradeEffect
+	
+	
+	var buff: LOREDBuff.Type
+	var lored_list: LOREDList
+	
+	
+	func _init(_loreds: Array[LORED.Type], _buff: LOREDBuff.Type):
+		lored_list = LOREDList.new(_loreds)
+		has_lored_list = true
+		buff = _buff
+		
+		
+		type = Type.APPLY_BUFF
+		applied.became_true.connect(applied_became_true)
+		applied.became_false.connect(applied_became_false)
+		text = LoudString.new("[b]+%s[/b]" % LOREDBuff.get_buff_name(buff))
+		set_lored_recipients_text(_loreds)
+	
+	
+	func applied_became_true():
+		for lored in lored_list.loreds:
+			Buffs.apply_buff_on_lored(lored, buff)
+	
+	
+	func applied_became_false():
+		for lored in lored_list.loreds:
+			Buffs.remove_buff_from_lored(lored, buff)
+
+
+class CapitalPunishment:
+	extends UpgradeEffect
+	
+	
+	func _init():
+		gv.stage1.times_reset.changed.connect(times_reset_changed)
+		text = LoudString.new("[b]x%s[/b]")
+		times_reset_changed()
+	
+	
+	func times_reset_changed() -> void:
+		text.set_to(text.base % Big.get_float_text(max(1, gv.stage1.times_reset.get_value())))
+
 #endregion
 
 
@@ -534,6 +586,7 @@ enum Type {
 	FREE_LORED,
 	LORED_AUTOBUYER,
 	LORED_PERSIST,
+	CURRENCY_PERSIST,
 	UPGRADE_AUTOBUYER,
 	UPGRADE_NAME,
 	UPGRADE_PERSIST,
@@ -541,6 +594,7 @@ enum Type {
 	MILKSHAKE,
 	PRESTIGE_NOW,
 	LIMIT_BREAK,
+	APPLY_BUFF,
 }
 
 var type: Type:

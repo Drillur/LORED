@@ -375,3 +375,20 @@ func get_loreds_in_list(_lored_types: Array[LORED.Type]) -> Array[LORED]:
 
 func get_job(_lored_type: LORED.Type, _job_type: Job.Type) -> Job:
 	return get_lored(_lored_type).get_job(_job_type)
+
+
+func get_highest_lored_type(_lored_types: Array[LORED.Type]) -> int:
+	var i := 0
+	var highest_type := 0
+	for type in _lored_types:
+		if type > highest_type:
+			highest_type = int(type)
+		i += 1 
+	return highest_type
+
+
+func get_highest_lored_type_by_loreds(_loreds: Array[LORED]) -> int:
+	var types: Array[LORED.Type]
+	for lored in _loreds:
+		types.append(lored.type)
+	return get_highest_lored_type(types)

@@ -656,7 +656,7 @@ func hard_reset_now() -> void:
 	hard_reset.emit()
 
 
-func get_currencies_in_stage(stage: int) -> Array:
+func get_currencies_in_stage(stage: int) -> Array[Currency.Type]:
 	return get_stage(stage).currencies
 
 

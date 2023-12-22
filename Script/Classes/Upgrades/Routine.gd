@@ -57,7 +57,7 @@ func go() -> void:
 	
 	var base := Big.new(tumors.output.get_value()).m(1000)
 	if capital_punishment.purchased.is_true():
-		base.m(max(1, gv.stage1.times_reset))
+		base.m(max(1, gv.stage1.times_reset.get_value()))
 	
 	output.set_to(base)
 	cost.set_to(0)

@@ -10,7 +10,6 @@ const saved_vars := [
 ]
 
 func load_finished() -> void:
-	up.get_upgrade(Upgrade.Type.LIMIT_BREAK).update_effected_loreds_text()
 	if enabled.is_true():
 		apply()
 

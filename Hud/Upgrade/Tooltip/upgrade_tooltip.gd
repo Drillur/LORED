@@ -64,9 +64,10 @@ func setup(data: Dictionary) -> void:
 			upgrade.effect.text.changed.connect(update_effect_text)
 			recipients.text = upgrade.effect.get_recipients_text()
 		else:
+			print(upgrade.key, " is not UpgradeEffect")
 			recipients.text = upgrade.get_affected_loreds_text()
-			if upgrade.effect.effect != null:
-				upgrade.effect.effect.connect("changed", update_effect_text) 
+			if upgrade.effect.has_value:
+				upgrade.effect.value.value.changed.connect(update_effect_text)
 		update_effect_text()
 		recipients.show()
 		effect.show()

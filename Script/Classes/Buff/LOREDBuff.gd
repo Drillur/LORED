@@ -73,7 +73,7 @@ func WITCH_update_output() -> void:
 func WITCH_get_output() -> Big:
 	var base = object.get_primary_rate()
 	if up.is_upgrade_purchased(Upgrade.Type.GRIMOIRE):
-		base.m(max(1, gv.stage1.times_reset))
+		base.m(max(1, gv.stage1.times_reset.get_value()))
 	return base.m(5).powerInt(stacks.get_value())
 
 

@@ -25,7 +25,7 @@ var key: String
 
 var details := Details.new()
 
-var times_reset := 0
+var times_reset := LoudInt.new(0)
 var unlocked := false:
 	set(val):
 		if unlocked != val:
@@ -34,7 +34,7 @@ var unlocked := false:
 
 var loreds: Array[LORED.Type]
 var upgrades := []
-var currencies := []
+var currencies: Array[Currency.Type]
 
 
 
@@ -76,7 +76,7 @@ func STAGE4():
 
 
 func prestige() -> void:
-	times_reset += 1
+	times_reset.add(1)
 	prestiged.emit()
 
 
