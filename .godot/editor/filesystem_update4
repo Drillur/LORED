@@ -9,11 +9,12 @@ res://Theme/ShadowText.tres
 res://Theme/RoundedTopWithShadow.tres
 res://Theme/Title.tres
 res://Theme/RoundedBackground.tres
-res://Hud/Upgrade/Tooltip/upgrade_tooltip.gd
+res://Script/Autoload/Difficulty.gd
 res://Scene/Root.tscn
 res://Hud/right_bar.tscn
 res://Hud/Dialogue/dialogue_balloon.tscn
 res://Hud/LORED/lored_vico.tscn
 res://Hud/LORED/Tooltip/lored_level_up.tscn
-res://Hud/Upgrade/Upgrade Effect Widget.gd
-res://Script/Classes/Upgrades/Upgrade.gd
+res://Script/Autoload/SaveManager.gd
+res://Script/Classes/Upgrades/LimitBreak.gd
+res://Script/Classes/LORED.gd

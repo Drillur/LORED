@@ -96,8 +96,11 @@ func apply() -> void:
 	for stage in affected_stages:
 		for lored_type in gv.get_loreds_in_stage(stage):
 			var lored = lv.get_lored(lored_type) as LORED
-			lored.output.enable_limit_break()
-			lored.input.enable_limit_break()
+			if df.active_difficulty.equal(df.Type.SONIC):
+				lored.haste.enable_limit_break()
+			else:
+				lored.output.enable_limit_break()
+				lored.input.enable_limit_break()
 
 
 func remove() -> void:

@@ -176,6 +176,8 @@ func _init(_type: Type) -> void:
 	type = _type
 	key = Type.keys()[type]
 	
+	df.active_difficulty.changed.connect(difficulty_changed)
+	
 	purchased.changed.connect(purchased_updated)
 	purchased.reset_value_changed.connect(purchased_reset_value_updated)
 	unlocked.changed.connect(unlocked_updated)
@@ -203,9 +205,6 @@ func _init(_type: Type) -> void:
 	gv.one_second.connect(work)
 	disconnect_second_work_thing()
 	
-	SaveManager.load_finished.connect(load_finished)
-	SaveManager.load_started.connect(load_started)
-	SaveManager.load_started.connect(clear_emote_queue)
 	
 	gv.prestige.connect(prestige)
 	gv.prestiged.connect(force_purchase)
@@ -247,6 +246,8 @@ func _init(_type: Type) -> void:
 	
 	sort_jobs()
 
+
+#region _init
 
 func init_STONE() -> void:
 	details.name = "Scoot"
@@ -840,6 +841,8 @@ func init_S4PLACEHOLDER() -> void:
 	primary_currency = Currency.Type.STONE
 
 
+#endregion
+
 
 func add_job(_job: int, _unlocked_by_default := false) -> void:
 	jobs[_job] = Job.new(_job) as Job
@@ -1059,6 +1062,20 @@ func remove_limit_break(modifier: Big) -> void:
 	output.decrease_multiplied(modifier)
 	input.decrease_multiplied(modifier)
 
+
+func difficulty_changed() -> void:
+	output.decrease_multiplied(df.prev_output)
+	output.increase_multiplied(df.output.get_value())
+	input.decrease_multiplied(df.prev_input)
+	input.increase_multiplied(df.input.get_value())
+	fuel.decrease_multiplied(df.prev_fuel)
+	fuel.increase_multiplied(df.fuel.get_value())
+	fuel_cost.decrease_multiplied(df.prev_fuel_cost)
+	fuel_cost.increase_multiplied(df.fuel_cost.get_value())
+	haste.decrease_multiplied(df.prev_haste)
+	haste.increase_multiplied(df.haste.get_value())
+	crit.decrease_multiplied(df.prev_crit)
+	crit.increase_multiplied(df.crit.get_value())
 
 
 # - Actions

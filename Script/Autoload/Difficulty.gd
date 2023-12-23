@@ -4,7 +4,7 @@ extends Node
 
 var saved_vars := [
 	"active_difficulty",
-	"output", "input", "haste", "crit", "fuel", "fuel_cost",
+	#"output", "input", "haste", "crit", "fuel", "fuel_cost",
 ]
 
 
@@ -34,19 +34,21 @@ class DifficultyValues:
 	var haste := 1.0
 	var crit := 0.0
 	
-	var upgrades := []
+	var upgrades: Array[Upgrade]
+	var applied := false
 	
 	
 	
-	func _init(_type: int) -> void:
+	func _init(_type: Type) -> void:
 		type = _type
 		key = df.Type.keys()[type]
+		call("init_" + key)
+		df.active_difficulty.changed.connect(difficulty_changed)
 	
+	#region Init
 	
 	func init_CUSTOM() -> void:
 		description = "Go wild!"
-		
-	
 	
 	
 	func init_MARATHON() -> void:
@@ -56,7 +58,7 @@ class DifficultyValues:
 		fuel = 2
 		fuel_cost = 2
 		haste = 0.25
-		crit = -100
+		crit = -5
 	
 	
 	func init_TORTOISE() -> void:
@@ -72,7 +74,6 @@ class DifficultyValues:
 		output = 0.75
 		fuel_cost = 2
 		haste = 0.75
-		crit = -5
 	
 	
 	func init_NORMAL() -> void:
@@ -132,26 +133,71 @@ class DifficultyValues:
 		description = "Prepare yourself for game-breaking speed! Begin the game with Limit Break, except it instead affects Haste."
 		add_upgrade(Upgrade.Type.LIMIT_BREAK)
 	
+	#endregion
 	
 	
-	func add_upgrade(_upgrade_type: int) -> void:
-		pass
-		#upgrades.append(up.get_upgrade(upgrade_type))
+	# - Internal
+	
+	
+	func add_upgrade(_upgrade_type: Upgrade.Type) -> void:
+		upgrades.append(up.get_upgrade(_upgrade_type))
+	
+	
+	
+	# - Signal
+	
+	
+	func difficulty_changed() -> void:
+		if df.active_difficulty.get_value() == type:
+			df.output.set_to(output)
+			df.input.set_to(input)
+			df.fuel.set_to(fuel)
+			df.fuel_cost.set_to(fuel_cost)
+			df.haste.set_to(haste)
+			df.crit.set_to(crit)
+	
+	
+	
+	# - Action
+	
+	func apply_upgrades() -> void:
+		for upgrade in upgrades:
+			upgrade.unlocked.set_default_value(true)
+			upgrade.purchased.set_default_value(true)
+			upgrade.unlocked.reset()
+			upgrade.purchased.reset()
+			upgrade.apply()
+	
+	
+	func remove_upgrades() -> void:
+		for upgrade in upgrades:
+			upgrade.remove()
+			upgrade.unlocked.set_default_value(false)
+			upgrade.purchased.set_default_value(false)
+			upgrade.unlocked.reset()
+			upgrade.purchased.reset()
 
 
 
-var output := Big.new(1, true)
-var input := Big.new(1, true)
-var fuel := Big.new(1, true)
-var fuel_cost := Big.new(1, true)
-var haste := Big.new(1, true)
-var crit := Big.new(0, true)
+var output := LoudFloat.new(1.0)
+var input := LoudFloat.new(1.0)
+var fuel := LoudFloat.new(1.0)
+var fuel_cost := LoudFloat.new(1.0)
+var haste := LoudFloat.new(1.0)
+var crit := LoudFloat.new(0.0)
+
+var prev_output := 1.0
+var prev_input := 1.0
+var prev_fuel := 1.0
+var prev_fuel_cost := 1.0
+var prev_haste := 1.0
+var prev_crit := 0.0
 
 var description: String
 
 var diffs := []
 
-var active_difficulty := Type.NORMAL
+var active_difficulty := LoudInt.new(Type.NORMAL)
 
 
 
@@ -160,5 +206,21 @@ func _ready():
 		diffs.append(DifficultyValues.new(diff))
 
 
-func poop():
-	return
+
+
+
+# - Action
+
+
+func change_difficulty(new_difficulty: Type):
+	if active_difficulty.equal(new_difficulty):
+		return
+	prev_output = output.get_value()
+	prev_input = input.get_value()
+	prev_fuel = fuel.get_value()
+	prev_fuel_cost = fuel_cost.get_value()
+	prev_haste = haste.get_value()
+	prev_crit = crit.get_value()
+	diffs[active_difficulty.get_value()].remove_upgrades()
+	active_difficulty.set_to(new_difficulty)
+	diffs[active_difficulty.get_value()].apply_upgrades()
