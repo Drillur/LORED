@@ -60,14 +60,8 @@ func setup(data: Dictionary) -> void:
 		description.show()
 	else:
 		description.hide()
-		if upgrade.effect is UpgradeEffect: #ueue
-			upgrade.effect.text.changed.connect(update_effect_text)
-			recipients.text = upgrade.effect.get_recipients_text()
-		else:
-			print(upgrade.key, " is not UpgradeEffect")
-			recipients.text = upgrade.get_affected_loreds_text()
-			if upgrade.effect.has_value:
-				upgrade.effect.value.value.changed.connect(update_effect_text)
+		upgrade.effect.text.changed.connect(update_effect_text)
+		recipients.text = upgrade.effect.get_recipients_text()
 		update_effect_text()
 		recipients.show()
 		effect.show()
@@ -105,7 +99,7 @@ func purchased_changed() -> void:
 
 func update_dynamic_description() -> void:
 	description.text = upgrade.details.description
-	description.text += "\n\n[center]" + upgrade.get_dynamic_text()
+	description.text += "\n\n[center]" + upgrade.get_effect_text()
 
 
 func upgrade_unlocked_changed() -> void:

@@ -8,7 +8,7 @@ var saved_vars := [
 	"purchased",
 	"pending_prestige",
 	"cost",
-#	"effect",
+	"effect",
 ]
 
 
@@ -277,7 +277,6 @@ var details := Details.new()
 var has_description: bool
 var effect_text: String
 
-var effected_loreds_text: String #ueue remove
 var loreds: Array
 
 var unlocked := LoudBool.new(true)
@@ -319,7 +318,7 @@ var vico: UpgradeVico:
 	set(val):
 		vico = val
 var persist := Persist.new()
-var effect
+var effect: UpgradeEffect
 var cost: Cost
 
 
@@ -382,36 +381,21 @@ func _init(_type: int) -> void:
 	cost.became_safe.connect(affordable_changed)
 	
 	if details.icon == null:
-		if effect is UpgradeEffect: #ueue remove after removing else block
-			var lored_details: Details
-			if effect.has_lored_list:
-				if effect.lored_list.equal_to_stage >= 1:
-					details.color = gv.get_stage_color(effect.lored_list.equal_to_stage)
-					details.icon = gv.get_stage_icon(effect.lored_list.equal_to_stage)
-				else:
-					var highest_lored_type: int = lv.get_highest_lored_type_by_loreds(effect.lored_list.loreds)
-					lored_details = lv.get_details(highest_lored_type)
+		var lored_details: Details
+		if effect.has_lored_list:
+			if effect.lored_list.equal_to_stage >= 1:
+				details.color = gv.get_stage_color(effect.lored_list.equal_to_stage)
+				details.icon = gv.get_stage_icon(effect.lored_list.equal_to_stage)
 			else:
-				lored_details = lv.get_details(effect.lored_type)
-			if lored_details:
-				details.color = lored_details.color
-				details.icon = lored_details.icon
-		else: #ueue remove this whole shit
-			if loreds.size() < 10:
-				var highest = 0
-				var i = 0
-				var ok = 0
-				for x in loreds:
-					if x > highest:
-						highest = x
-						ok = i
-					i += 1
-				details.color = lv.get_color(loreds[ok])
-				details.icon = lv.get_icon(loreds[ok])
+				var highest_lored_type: int = lv.get_highest_lored_type_by_loreds(effect.lored_list.loreds)
+				lored_details = lv.get_details(highest_lored_type)
+		else:
+			lored_details = lv.get_details(effect.lored_type)
+		if lored_details:
+			details.color = lored_details.color
+			details.icon = lored_details.icon
 	
 	has_description = details.description != ""
-	if effect is UpgradeEffect: #ueue remove this check and then just add "effect" to the default saved_vars
-		saved_vars.append("effect")
 	
 	SaveManager.load_finished.connect(load_finished)
 
@@ -2871,43 +2855,6 @@ func init_GRIMOIRE() -> void:
 
 
 
-
-
-
-
-
-func set_effect(_type: int, base_value := -1.0, effected_input = -1) -> void:
-	var data := {}
-	if base_value != -1:
-		data["effect value"] = base_value
-	if effected_input != -1:
-		data["effected_input"] = effected_input
-	data["upgrade_type"] = type
-	effect = OldUpgradeEffect.new(_type, data)
-
-
-func add_affected_lored(lored: int) -> void:
-	loreds.append(lored)
-	effect.add_affected_lored(lored)
-	await up.all_upgrades_initialized
-	lv.get_lored(lored).add_influencing_upgrade(type)
-
-
-func add_affected_loreds(group: Array) -> void:
-	for lored in group:
-		add_affected_lored(lored)
-
-
-func add_effected_stage(_stage: int) -> void:
-	add_affected_loreds(lv.get_loreds_in_stage(_stage))
-	if details.icon == null:
-		details.icon = gv.get_stage(_stage).details.icon
-	if details.color == Color(0,0,0):
-		details.color = gv.get_stage(_stage).details.color
-
-
-
-
 # - Signal
 
 func required_upgrade_purchased() -> void:
@@ -2958,8 +2905,7 @@ func finalize_purchase() -> void:
 
 
 func apply() -> void:
-	if effect != null: #ueue remove != null
-		effect.apply()
+	effect.apply()
 	pending_prestige.set_to(false)
 	purchase_finalized.set_to(true)
 
@@ -2976,8 +2922,7 @@ func remove() -> void:
 		purchase_finalized.set_to(false)
 		if special:
 			pending_prestige.set_to(false)
-		if effect != null: #ueue remove null check
-			effect.remove()
+		effect.remove()
 		cost.purchased = false
 		purchased.set_to(false)
 		reset_effects()
@@ -3015,16 +2960,14 @@ func reset_effects() -> void:
 		Type.LIMIT_BREAK:
 			up.limit_break.reset()
 		_:
-			if effect != null and effect is UpgradeEffect and effect.has_value: #ueue remove != null and the below if
+			if effect.has_value:
 				effect.value.reset()
-			elif effect != null and effect is OldUpgradeEffect and effect.dynamic:
-				effect.reset_effects()
 
 
 func reset() -> void:
 	remove()
-	if effect != null and effect.dynamic: #ueue remove != null
-		effect.reset_effects()
+	if effect.has_value:
+		effect.value.value.reset()
 	cost.reset()
 	pending_prestige.set_to(false)
 
@@ -3033,57 +2976,5 @@ func reset() -> void:
 # - Get
 
 
-func get_dynamic_text() -> String:
-	if effect is UpgradeEffect: #ueue
-		return effect.text.get_value()
-	match type:
-		Upgrade.Type.LIMIT_BREAK:
-			return "[center][b]x%s[/b]" % up.limit_break.level.text + effected_loreds_text
-		Upgrade.Type.CAPITAL_PUNISHMENT:
-			return "[center][b]x%s[/b]" % Big.get_float_text(max(1, gv.stage1.times_reset.get_value()))
-		_:
-			return effect.get_dynamic_text()
-
-
 func get_effect_text() -> String:
-	if effect is UpgradeEffect: #ueue
-		return effect.get_text()
 	return effect.get_text()
-
-
-#func get_affected_loreds_text() -> String:
-	#if effected_loreds_text != "":
-		#return effected_loreds_text
-	#
-	#match type:
-		#Type.LIMIT_BREAK:
-			#var s1 = gv.stage1.details.color_text % "1"
-			#var s2 = gv.stage2.details.color_text % "2"
-			#if up.limit_break.applies_to_stage_3():
-				#var s3 = gv.stage3.details.color_text % "3"
-				#if up.limit_break.applies_to_stage_4():
-					#return "[i]for[/i] All LOREDs"
-				#return "[i]for[/i] Stages %s, %s, and %s" % [s1, s2, s3]
-			#return "[i]for[/i] Stages %s and %s" % [s1, s2]
-	#
-	#if loreds == lv.get_loreds_in_stage(1):
-		#var _stage = gv.stage1.details.colored_name
-		#return "[i]for [/i]" + _stage
-	#elif loreds == lv.get_loreds_in_stage(2):
-		#var _stage = gv.stage2.details.colored_name
-		#return "[i]for [/i]" + _stage
-	#elif loreds == lv.get_loreds_in_stage(3):
-		#var _stage = gv.stage3.details.colored_name
-		#return "[i]for [/i]" + _stage
-	#elif loreds == lv.get_loreds_in_stage(4):
-		#var _stage = gv.stage4.details.colored_name
-		#return "[i]for [/i]" + _stage
-	#
-	#if effect != null and effect.type == OldUpgradeEffect.Type.UPGRADE_AUTOBUYER: #ueue remove this
-		#var upmen = up.get_upgrade_menu(effect.upgrade_menu) as UpgradeMenu
-		#return "[i]for [/i]" + upmen.details.colored_name
-	## if loreds.size() > 8: probably a stage.
-	#var arr := []
-	#for lored in loreds:
-		#arr.append(lv.get_colored_name(lored))
-	#return "[i]for [/i]" + gv.get_list_text_from_array(arr).replace("and", "[i]and[/i]")

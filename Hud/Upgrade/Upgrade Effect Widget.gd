@@ -27,9 +27,6 @@ func _ready():
 	
 	upgrade.purchase_finalized.became_true.connect(show_self)
 	upgrade.purchase_finalized.became_false.connect(hide)
-	if upgrade.effect is OldUpgradeEffect: #ueue remove this section?
-		upgrade.effect.is_overwritten.became_true.connect(hide)
-		upgrade.effect.is_overwritten.became_false.connect(show_self)
 	
 	button.modulate = upgrade.details.color
 	button.mouse_entered.connect(show_tooltip)
@@ -50,19 +47,14 @@ func _ready():
 			update_lb_colors()
 		_:
 			limit_break.queue_free()
-			if upgrade.effect is UpgradeEffect: #ueue remove the ELSE section and this check.
-				upgrade.effect.changed.connect(update_effect_text)
-			else:
-				upgrade.effect.effect.changed.connect(update_effect_text)
-				if upgrade.effect.effect2 != null:
-					upgrade.effect.effect2.changed.connect(update_effect_text)
+			upgrade.effect.changed.connect(update_effect_text)
 	
 	update_effect_text()
 
 
 
 func update_effect_text() -> void:
-	effect.text = upgrade.get_dynamic_text()
+	effect.text = upgrade.get_effect_text()
 
 
 func update_lb_xp_cur() -> void:
