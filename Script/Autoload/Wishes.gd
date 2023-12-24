@@ -129,7 +129,7 @@ func new_pending_wish(wish: Wish) -> void:
 		wish.container = random_wish_container
 		active_random_wishes += 1
 	
-	var pending_vico = res.get_resource("wish_pending").instantiate()
+	var pending_vico = bag.get_resource("wish_pending").instantiate()
 	pending_vico.setup(wish)
 	wish.container.add_child(pending_vico)
 	wish.container.move_child(pending_vico, 0)
@@ -137,7 +137,7 @@ func new_pending_wish(wish: Wish) -> void:
 
 
 func new_wish_vico(wish: Wish, pending_vico_index: int) -> void:
-	var vico = res.get_resource("wish_vico").instantiate()
+	var vico = bag.get_resource("wish_vico").instantiate()
 	vico.setup(wish)
 	wish.container.add_child(vico)
 	wish.container.move_child(vico, pending_vico_index)

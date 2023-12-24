@@ -16,6 +16,6 @@ func _ready():
 func flip_flop() -> void:
 	node.visible = not node.visible
 	if node.visible:
-		texture = res.get_resource("View")
+		texture = bag.get_resource("View")
 	else:
-		texture = res.get_resource("ViewHide")
+		texture = bag.get_resource("ViewHide")

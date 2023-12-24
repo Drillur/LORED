@@ -30,7 +30,7 @@ func setup(_cost: Cost) -> void:
 	if not is_node_ready():
 		await ready
 	for cur in cost.cost:
-		content[cur] = res.get_resource("price_and_currency").instantiate()
+		content[cur] = bag.get_resource("price_and_currency").instantiate()
 		content[cur].setup(cur, cost.cost[cur])
 		content_parent.add_child(content[cur])
 	

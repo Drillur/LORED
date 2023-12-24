@@ -1101,7 +1101,7 @@ func init_ROUTINE() -> void:
 	details.name = "[i]Routine[/i]"
 	var metas = gv.get_stage(1).details.color_text % "Metastasizes"
 	details.description = "%s immediately. After one second, becomes purchasable again." % metas
-	details.icon = res.get_resource("s1m")
+	details.icon = bag.get_resource("s1m")
 	details.color = gv.get_stage_color(1)
 	effect = UpgradeEffect.PrestigeNow.new(Stage.Type.STAGE1)
 	cost = Cost.new({
@@ -2022,7 +2022,7 @@ func init_LIMIT_BREAK() -> void:
 	details.description = "%s and %s LOREDs may now charge [b]Limit Break[/b], greatly increasing their [b]output and input[/b]." % [a, b]
 	effect = UpgradeEffect._LimitBreak.new()
 	details.color = gv.get_stage_color(2)
-	details.icon = res.get_resource("axe")
+	details.icon = bag.get_resource("axe")
 	cost = Cost.new({
 		Currency.Type.TUMORS: Value.new("250"),
 	})

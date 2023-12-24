@@ -309,9 +309,9 @@ func _init(_type := Type.STONE) -> void:
 	if details.icon == null:
 		wa.curs_without_icons.append(key)
 		if is_flower:
-			details.icon = res.get_resource("001")
+			details.icon = bag.get_resource("001")
 		else:
-			details.icon = res.get_resource("Delete")
+			details.icon = bag.get_resource("Delete")
 	if details.color == Color.BLACK:
 		details.color = Color.WHITE
 	
@@ -323,13 +323,13 @@ func _init(_type := Type.STONE) -> void:
 func init_STONE() -> void:
 	count = Big.new(5, true)
 	details.color = Color(0.79, 0.79, 0.79)
-	details.icon = res.get_resource("stone")
+	details.icon = bag.get_resource("stone")
 	weight = 3
 
 
 func init_COAL() -> void:
 	details.color = Color(0.7, 0, 1)
-	details.icon = res.get_resource("coal")
+	details.icon = bag.get_resource("coal")
 	details.description = "Used primarily as fuel for LOREDs!"
 	weight = 2
 	used_for_fuel = true
@@ -337,18 +337,18 @@ func init_COAL() -> void:
 
 func init_IRON_ORE() -> void:
 	details.color = Color(0, 0.517647, 0.905882)
-	details.icon = res.get_resource("irono")
+	details.icon = bag.get_resource("irono")
 
 
 func init_COPPER_ORE() -> void:
 	details.color = Color(0.7, 0.33, 0)
-	details.icon = res.get_resource("copo")
+	details.icon = bag.get_resource("copo")
 
 
 func init_IRON() -> void:
 	count = Big.new(8, true)
 	details.color = Color(0.07, 0.89, 1)
-	details.icon = res.get_resource("iron")
+	details.icon = bag.get_resource("iron")
 	details.description = "It's possible that this is toast."
 	weight = 3
 	set_safety_condition(SafetyType.LORED_PURCHASED, LORED.Type.IRON)
@@ -357,21 +357,21 @@ func init_IRON() -> void:
 func init_COPPER() -> void:
 	count = Big.new(8, true)
 	details.color = Color(1, 0.74, 0.05)
-	details.icon = res.get_resource("cop")
+	details.icon = bag.get_resource("cop")
 	weight = 3
 	set_safety_condition(SafetyType.LORED_PURCHASED, LORED.Type.COPPER)
 
 
 func init_GROWTH() -> void:
 	details.color = Color(0.79, 1, 0.05)
-	details.icon = res.get_resource("growth")
+	details.icon = bag.get_resource("growth")
 	details.description = "What? This game is weird!"
 	weight = 2
 
 
 func init_JOULES() -> void:
 	details.color = Color(1, 0.98, 0)
-	details.icon = res.get_resource("jo")
+	details.icon = bag.get_resource("jo")
 	details.description = "Used primarily as fuel for LOREDs!"
 	weight = 2
 	used_for_fuel = true
@@ -380,79 +380,79 @@ func init_JOULES() -> void:
 
 func init_CONCRETE() -> void:
 	details.color = Color(0.35, 0.35, 0.35)
-	details.icon = res.get_resource("conc")
+	details.icon = bag.get_resource("conc")
 	weight = 3
 
 
 func init_MALIGNANCY() -> void:
 	count = Big.new(10, true)
 	details.color = Color(0.88, .12, .35)
-	details.icon = res.get_resource("malig")
+	details.icon = bag.get_resource("malig")
 	persist.s1.set_to(true)
 	set_safety_condition(SafetyType.LORED_PURCHASED, LORED.Type.TARBALLS)
 
 
 func init_TARBALLS() -> void:
 	details.color = Color(.56, .44, 1)
-	details.icon = res.get_resource("tar")
+	details.icon = bag.get_resource("tar")
 	weight = 2
 
 
 func init_OIL() -> void:
 	details.color = Color(.65, .3, .66)
-	details.icon = res.get_resource("oil")
+	details.icon = bag.get_resource("oil")
 
 
 func init_WATER() -> void:
 	details.color = Color(0, 0.647059, 1)
-	details.icon = res.get_resource("water")
+	details.icon = bag.get_resource("water")
 	details.description = "The 4x2 Lego piece of life."
 	weight = 2
 
 
 func init_HUMUS() -> void:
 	details.color = Color(0.458824, 0.25098, 0)
-	details.icon = res.get_resource("humus")
+	details.icon = bag.get_resource("humus")
 	details.description = "Actual shit."
 
 
 func init_SEEDS() -> void:
 	count = Big.new(2, true)
 	details.color = Color(1, 0.878431, 0.431373)
-	details.icon = res.get_resource("seed")
+	details.icon = bag.get_resource("seed")
 	set_safety_condition(SafetyType.LORED_PURCHASED, LORED.Type.SEEDS)
 
 
 func init_TREES() -> void:
 	details.color = Color(0.772549, 1, 0.247059)
-	details.icon = res.get_resource("tree")
+	details.icon = bag.get_resource("tree")
 
 
 func init_SOIL() -> void:
 	count = Big.new(25, true)
 	details.color = Color(0.737255, 0.447059, 0)
-	details.icon = res.get_resource("soil")
+	details.icon = bag.get_resource("soil")
 	set_safety_condition(SafetyType.LORED_PURCHASED, LORED.Type.SOIL)
 
 
 func init_AXES() -> void:
 	count = Big.new(5, true)
 	details.color = Color(0.691406, 0.646158, 0.586075)
-	details.icon = res.get_resource("axe")
+	details.icon = bag.get_resource("axe")
 	set_safety_condition(SafetyType.LORED_PURCHASED, LORED.Type.AXES)
 
 
 func init_WOOD() -> void:
 	count = Big.new(80, true)
 	details.color = Color(0.545098, 0.372549, 0.015686)
-	details.icon = res.get_resource("wood")
+	details.icon = bag.get_resource("wood")
 	set_safety_condition(SafetyType.LORED_PURCHASED, LORED.Type.WOOD)
 
 
 func init_HARDWOOD() -> void:
 	count = Big.new(95, true)
 	details.color = Color(0.92549, 0.690196, 0.184314)
-	details.icon = res.get_resource("hard")
+	details.icon = bag.get_resource("hard")
 	details.description = "( ͡⚆ ͜ʖ ͡⚆)"
 	weight = 3
 	set_safety_condition(SafetyType.LORED_PURCHASED, LORED.Type.HARDWOOD)
@@ -460,13 +460,13 @@ func init_HARDWOOD() -> void:
 
 func init_LIQUID_IRON() -> void:
 	details.color = Color(0.27, 0.888, .9)
-	details.icon = res.get_resource("liq")
+	details.icon = bag.get_resource("liq")
 
 
 func init_STEEL() -> void:
 	count = Big.new(25, true)
 	details.color = Color(0.607843, 0.802328, 0.878431)
-	details.icon = res.get_resource("steel")
+	details.icon = bag.get_resource("steel")
 	weight = 3
 	set_safety_condition(SafetyType.LORED_PURCHASED, LORED.Type.STEEL)
 
@@ -474,7 +474,7 @@ func init_STEEL() -> void:
 func init_SAND() -> void:
 	count = Big.new(250, true)
 	details.color = Color(.87, .70, .45)
-	details.icon = res.get_resource("sand")
+	details.icon = bag.get_resource("sand")
 	details.description = "It's roarse, and cough, and it gets eherweyeve!"
 	set_safety_condition(SafetyType.LORED_PURCHASED, LORED.Type.SAND)
 
@@ -482,69 +482,69 @@ func init_SAND() -> void:
 func init_GLASS() -> void:
 	count = Big.new(30, true)
 	details.color = Color(0.81, 0.93, 1.0)
-	details.icon = res.get_resource("glass")
+	details.icon = bag.get_resource("glass")
 	weight = 3
 	set_safety_condition(SafetyType.LORED_PURCHASED, LORED.Type.GLASS)
 
 
 func init_DRAW_PLATE() -> void:
 	details.color = Color(0.333333, 0.639216, 0.811765)
-	details.icon = res.get_resource("draw")
+	details.icon = bag.get_resource("draw")
 
 
 func init_WIRE() -> void:
 	count = Big.new(20, true)
 	details.color = Color(0.9, 0.6, 0.14)
-	details.icon = res.get_resource("wire")
+	details.icon = bag.get_resource("wire")
 	weight = 3
 	set_safety_condition(SafetyType.LORED_PURCHASED, LORED.Type.WIRE)
 
 
 func init_GALENA() -> void:
 	details.color = Color(0.701961, 0.792157, 0.929412)
-	details.icon = res.get_resource("gale")
+	details.icon = bag.get_resource("gale")
 
 
 func init_LEAD() -> void:
 	details.color = Color(0.53833, 0.714293, 0.984375)
-	details.icon = res.get_resource("lead")
+	details.icon = bag.get_resource("lead")
 
 
 func init_PETROLEUM() -> void:
 	details.color = Color(0.76, 0.53, 0.14)
-	details.icon = res.get_resource("pet")
+	details.icon = bag.get_resource("pet")
 
 
 func init_WOOD_PULP() -> void:
 	details.color = Color(0.94902, 0.823529, 0.54902)
-	details.icon = res.get_resource("pulp")
+	details.icon = bag.get_resource("pulp")
 
 
 func init_PAPER() -> void:
 	details.color = Color(0.792157, 0.792157, 0.792157)
-	details.icon = res.get_resource("paper")
+	details.icon = bag.get_resource("paper")
 
 
 func init_PLASTIC() -> void:
 	details.color = Color(0.85, 0.85, 0.85)
-	details.icon = res.get_resource("plast")
+	details.icon = bag.get_resource("plast")
 	weight = 2
 
 
 func init_TOBACCO() -> void:
 	details.color = Color(0.639216, 0.454902, 0.235294)
-	details.icon = res.get_resource("toba")
+	details.icon = bag.get_resource("toba")
 
 
 func init_CIGARETTES() -> void:
 	details.color = Color(0.929412, 0.584314, 0.298039)
-	details.icon = res.get_resource("ciga")
+	details.icon = bag.get_resource("ciga")
 	weight = 2
 
 
 func init_CARCINOGENS() -> void:
 	details.color = Color(0.772549, 0.223529, 0.192157)
-	details.icon = res.get_resource("carc")
+	details.icon = bag.get_resource("carc")
 	weight = 2
 
 
@@ -554,25 +554,25 @@ func init_EMBRYO() -> void:
 
 func init_TUMORS() -> void:
 	details.color = Color(1, .54, .54)
-	details.icon = res.get_resource("tum")
+	details.icon = bag.get_resource("tum")
 	persist.s2.set_to(true)
 
 
 func init_FLOWER_SEED() -> void:
 	details.color = Color(1, 0.878431, 0.431373)
-	details.icon = res.get_resource("seed")
+	details.icon = bag.get_resource("seed")
 
 
 func init_MANA() -> void:
 	details.color = Color(0.721569, 0.34902, 0.901961) # violet
 	details.alt_color = Color(0, 0.709804, 1) # blue
-	details.icon = res.get_resource("water")
+	details.icon = bag.get_resource("water")
 
 
 func init_MANA_CRYSTAL() -> void:
 	details.color = Color(0.721569, 0.34902, 0.901961) # violet
 	details.alt_color = Color(0, 0.709804, 1) # blue
-	details.icon = res.get_resource("water")
+	details.icon = bag.get_resource("water")
 
 
 func init_BLOOD() -> void:
@@ -586,126 +586,126 @@ func init_SPIRIT() -> void:
 
 func init_JOY() -> void:
 	details.color = Color(1, 0.909804, 0)
-	details.icon = res.get_resource("Joy")
+	details.icon = bag.get_resource("Joy")
 	persist.s4.set_to(true)
 
 
 func init_GRIEF() -> void:
 	details.color = Color(0.74902, 0.203922, 0.533333)
-	details.icon = res.get_resource("Grief")
+	details.icon = bag.get_resource("Grief")
 	persist.s4.set_to(true)
 
 
 func init_RANDOM_FLOWER() -> void:
-	details.icon = res.get_resource("001")
+	details.icon = bag.get_resource("001")
 func init_BABYS_BREATH() -> void:
-	details.icon = res.get_resource("004")
+	details.icon = bag.get_resource("004")
 	details.name = "Baby's Breath"
 func init_MILKWEED() -> void:
-	details.icon = res.get_resource("007")
+	details.icon = bag.get_resource("007")
 func init_BEE_BALM() -> void:
-	details.icon = res.get_resource("012")
+	details.icon = bag.get_resource("012")
 func init_VIOLET() -> void:
-	details.icon = res.get_resource("018")
+	details.icon = bag.get_resource("018")
 func init_PINCUSHION() -> void:
-	details.icon = res.get_resource("020")
+	details.icon = bag.get_resource("020")
 func init_LAVENDER() -> void:
-	details.icon = res.get_resource("021")
+	details.icon = bag.get_resource("021")
 func init_RAGWORT() -> void:
-	details.icon = res.get_resource("027")
+	details.icon = bag.get_resource("027")
 func init_SCHLONKWEED() -> void:
-	details.icon = res.get_resource("027")
+	details.icon = bag.get_resource("027")
 func init_PUS_POSY() -> void:
-	details.icon = res.get_resource("027")
+	details.icon = bag.get_resource("027")
 func init_GOOGRASS() -> void:
-	details.icon = res.get_resource("028")
+	details.icon = bag.get_resource("028")
 func init_POOPGRASS() -> void:
-	details.icon = res.get_resource("028")
+	details.icon = bag.get_resource("028")
 func init_OOZEWORT() -> void:
-	details.icon = res.get_resource("028")
+	details.icon = bag.get_resource("028")
 func init_STINKWEED() -> void:
-	details.icon = res.get_resource("029")
+	details.icon = bag.get_resource("029")
 func init_ASSGRASS() -> void:
-	details.icon = res.get_resource("029")
+	details.icon = bag.get_resource("029")
 func init_SCABLEAF() -> void:
-	details.icon = res.get_resource("029")
+	details.icon = bag.get_resource("029")
 func init_SNEEZEWEED() -> void:
-	details.icon = res.get_resource("030")
+	details.icon = bag.get_resource("030")
 func init_PEEWEED() -> void:
-	details.icon = res.get_resource("030")
+	details.icon = bag.get_resource("030")
 func init_GURGLEGRASS() -> void:
-	details.icon = res.get_resource("030")
+	details.icon = bag.get_resource("030")
 func init_BITTERWEED() -> void:
-	details.icon = res.get_resource("031")
+	details.icon = bag.get_resource("031")
 func init_BOOGERBLOSSOM() -> void:
-	details.icon = res.get_resource("031")
+	details.icon = bag.get_resource("031")
 func init_BLISTERBRANCH() -> void:
-	details.icon = res.get_resource("031")
+	details.icon = bag.get_resource("031")
 func init_GOUTWEED() -> void:
-	details.icon = res.get_resource("032")
+	details.icon = bag.get_resource("032")
 func init_HEMHORROID_HERB() -> void:
-	details.icon = res.get_resource("032")
+	details.icon = bag.get_resource("032")
 func init_PIMPLEGRASS() -> void:
-	details.icon = res.get_resource("032")
+	details.icon = bag.get_resource("032")
 func init_DEADKNETTLE() -> void:
-	details.icon = res.get_resource("033")
+	details.icon = bag.get_resource("033")
 func init_DONKY_DAISY() -> void:
-	details.icon = res.get_resource("033")
+	details.icon = bag.get_resource("033")
 func init_SPLATROOT() -> void:
-	details.icon = res.get_resource("033")
+	details.icon = bag.get_resource("033")
 func init_KNAPWEED() -> void:
-	details.icon = res.get_resource("034")
+	details.icon = bag.get_resource("034")
 func init_SCHLONKY_DAISY() -> void:
-	details.icon = res.get_resource("034")
+	details.icon = bag.get_resource("034")
 func init_RETCHLEAF() -> void:
-	details.icon = res.get_resource("034")
+	details.icon = bag.get_resource("034")
 func init_KNOTWEED() -> void:
-	details.icon = res.get_resource("035")
+	details.icon = bag.get_resource("035")
 func init_BLEACHBLOOM() -> void:
-	details.icon = res.get_resource("035")
+	details.icon = bag.get_resource("035")
 func init_SLOPDRAGON() -> void:
-	details.icon = res.get_resource("035")
+	details.icon = bag.get_resource("035")
 func init_SNOTWEED() -> void:
-	details.icon = res.get_resource("036")
+	details.icon = bag.get_resource("036")
 func init_SLIMEWEED() -> void:
-	details.icon = res.get_resource("036")
+	details.icon = bag.get_resource("036")
 func init_EVERSTAIN() -> void:
-	details.icon = res.get_resource("036")
+	details.icon = bag.get_resource("036")
 func init_DAISY() -> void:
-	details.icon = res.get_resource("043")
+	details.icon = bag.get_resource("043")
 func init_ROSEMARY() -> void:
-	details.icon = res.get_resource("051")
+	details.icon = bag.get_resource("051")
 func init_JACOBS_LADDER() -> void:
 	details.name = "Jacob's Ladder"
-	details.icon = res.get_resource("053")
+	details.icon = bag.get_resource("053")
 func init_HYDRANGEA() -> void:
-	details.icon = res.get_resource("056")
+	details.icon = bag.get_resource("056")
 func init_DANDELION() -> void:
-	details.icon = res.get_resource("062")
+	details.icon = bag.get_resource("062")
 func init_YARROW() -> void:
-	details.icon = res.get_resource("062")
+	details.icon = bag.get_resource("062")
 func init_SUNFLOWER() -> void:
-	details.icon = res.get_resource("063")
+	details.icon = bag.get_resource("063")
 func init_GINGER_ROOT() -> void:
-	details.icon = res.get_resource("ginger_01")
+	details.icon = bag.get_resource("ginger_01")
 func init_TULIP() -> void:
-	details.icon = res.get_resource("079")
+	details.icon = bag.get_resource("079")
 func init_MORNING_GLORY() -> void:
-	details.icon = res.get_resource("084")
+	details.icon = bag.get_resource("084")
 func init_CARNATION() -> void:
-	details.icon = res.get_resource("090")
+	details.icon = bag.get_resource("090")
 func init_ROSE() -> void:
-	details.icon = res.get_resource("091")
+	details.icon = bag.get_resource("091")
 func init_GERANIUM() -> void:
-	details.icon = res.get_resource("093")
+	details.icon = bag.get_resource("093")
 func init_COCKSCOMB() -> void:
-	details.icon = res.get_resource("096")
+	details.icon = bag.get_resource("096")
 func init_PITCHER_PLANT() -> void:
-	details.icon = res.get_resource("096")
+	details.icon = bag.get_resource("096")
 func init_MARIGOLD() -> void:
-	details.icon = res.get_resource("099")
+	details.icon = bag.get_resource("099")
 func init_SWEETPEA() -> void:
-	details.icon = res.get_resource("peas_01")
+	details.icon = bag.get_resource("peas_01")
 
 
 

@@ -484,7 +484,7 @@ func _on_dev_1_pressed():
 	wa.add(Currency.Type.COAL, 10)
 
 func _on_dev_2_pressed():
-	pass
+	handbook.new_chat_request()
 
 
 func _on_dev_3_pressed():

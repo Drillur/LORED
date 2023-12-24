@@ -170,7 +170,7 @@ func setup_lored(_lored: LORED):
 	lored_fuel_cost_changed()
 	
 	for job in lored.sorted_jobs:
-		var x = res.get_resource("lored_job").instantiate()
+		var x = bag.get_resource("lored_job").instantiate()
 		x.setup(lored.jobs[job])
 		lored_jobs.add_child(x)
 	
@@ -323,7 +323,7 @@ func sleep_pressed() -> void:
 
 func chat_pressed() -> void:
 	if lored.stage in [1, 2]:
-		var dialogue: DialogueResource = res.get_resource("chat_stage1and2")
+		var dialogue: DialogueResource = bag.get_resource("chat_stage1and2")
 		if lored.key in dialogue.get_titles():
 			dialogue_balloon.start(dialogue, lored.key)
 

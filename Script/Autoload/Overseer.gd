@@ -206,7 +206,7 @@ var flying_texts := []
 func flash(parent: Node, color = Color(1, 0, 0)) -> void:
 	if Engine.get_frames_per_second() < 60:
 		return
-	var _flash = res.get_resource("flash").instantiate()
+	var _flash = bag.get_resource("flash").instantiate()
 	parent.add_child(_flash)
 	_flash.flash(color)
 
@@ -271,7 +271,7 @@ var tip_filled := false
 func new_tooltip(type: int, parent: Node, info: Dictionary) -> void:
 	clear_tooltip()
 	
-	tooltip = res.get_resource("tooltip").instantiate()
+	tooltip = bag.get_resource("tooltip").instantiate()
 	tooltip.parent = parent
 	tooltip.tooltip_parent = tooltip_parent
 	tooltip.setup(type)
@@ -279,7 +279,7 @@ func new_tooltip(type: int, parent: Node, info: Dictionary) -> void:
 	tooltip.grow_vertical = Control.GROW_DIRECTION_BEGIN
 	
 	var key = TOOLTIP_KEYS[type].to_lower()
-	tooltip_content = res.get_resource(key).instantiate()
+	tooltip_content = bag.get_resource(key).instantiate()
 	tooltip_content.setup(info)
 	tooltip.content.add_child(tooltip_content)
 	tooltip.color = tooltip_content.color

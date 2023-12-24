@@ -24,7 +24,7 @@ extends CanvasLayer
 @onready var request_button = %"Request Button"
 @onready var decline_request = %"Decline Request"
 
-@onready var content = %Main
+@onready var content = %Content
 
 ## The dialogue resource
 var resource: DialogueResource
@@ -111,9 +111,12 @@ var dialogue_line: DialogueLine:
 		return dialogue_line
 
 
+
 func _ready() -> void:
 	hide()
+	request.hide()
 	Engine.get_singleton("DialogueManager").mutated.connect(_on_mutated)
+	handbook.chat_requested.connect(chat_requested)
 
 
 ## Start some dialogue
@@ -188,6 +191,17 @@ func close_chat() -> void:
 	if not request.visible:
 		dialogue_line = null
 		hide()
+
+
+func chat_requested(dialogue: DialogueResource, title: String, color: Color) -> void:
+	request.show()
+	request.modulate = color
+	gv.flash(request, color)
+	close_chat()
+	show()
+	await request_button.pressed
+	start(dialogue, title)
+	request.hide()
 
 
 

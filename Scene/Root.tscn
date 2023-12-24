@@ -28,13 +28,13 @@
 [ext_resource type="Texture2D" uid="uid://dbgwbxq3lcon1" path="res://Sprites/Hud/Delete.png" id="15_s64ty"]
 [ext_resource type="Texture2D" uid="uid://we2ve6twp6sc" path="res://Sprites/Currency/coal.png" id="21_u1378"]
 [ext_resource type="Texture2D" uid="uid://d31dpqjhgrtaq" path="res://Sprites/Hud/Discord.png" id="22_ejl1s"]
+[ext_resource type="Texture2D" uid="uid://df616q2gto2he" path="res://Sprites/Hud/Chat.png" id="22_mwas1"]
 [ext_resource type="Texture2D" uid="uid://kdslypb5pkh8" path="res://Sprites/Hud/ItchIo.svg" id="23_mvmsj"]
 [ext_resource type="Texture2D" uid="uid://bwk6j2a1sf2d7" path="res://Sprites/Hud/steam-logo-transparent.png" id="24_ila10"]
 [ext_resource type="Texture2D" uid="uid://dpest0qdhsgcn" path="res://Sprites/Hud/PatchNotes.png" id="24_qdxv7"]
 [ext_resource type="Texture2D" uid="uid://bbj2j5ohabcp1" path="res://Sprites/Hud/Godot.svg" id="24_u1xhr"]
 [ext_resource type="Texture2D" uid="uid://bqdnbs21rmkig" path="res://Sprites/Hud/Stats.png" id="25_ops5o"]
 [ext_resource type="Texture2D" uid="uid://cpjtvs6ijbec0" path="res://Sprites/upgrades/Totalbiscuit.png" id="26_n0q24"]
-[ext_resource type="Texture2D" uid="uid://bdpxtltnk88hw" path="res://Sprites/Hud/Tab/s1m.png" id="27_jvurx"]
 [ext_resource type="Texture2D" uid="uid://dfeythvu1og7s" path="res://Sprites/Currency/malig.png" id="28_6ie80"]
 [ext_resource type="PackedScene" uid="uid://dmxljcsin6f3o" path="res://Hud/right_bar.tscn" id="36_alffs"]
 [ext_resource type="PackedScene" uid="uid://baphpe1y2f1d1" path="res://Hud/Menu/settings.tscn" id="37_w5pyv"]
@@ -537,8 +537,8 @@ color = Color(1, 0, 0.866667, 1)
 
 [node name="Dev2" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Cheat Section/Cheat/VBoxContainer" instance=ExtResource("4_3h2sv")]
 layout_mode = 2
-icon = ExtResource("27_jvurx")
-text = "Test Tier Rolling"
+icon = ExtResource("22_mwas1")
+text = "Chat Request"
 
 [node name="Dev3" parent="HBoxContainer/Back/Overlay/Sidebar/MarginContainer/VBoxContainer/Menu Contents/MenuScroll/MenuContainer/VBoxContainer/Cheat Section/Cheat/VBoxContainer" instance=ExtResource("4_3h2sv")]
 layout_mode = 2

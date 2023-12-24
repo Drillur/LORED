@@ -66,7 +66,7 @@ func setup_currency(data: Dictionary) -> void:
 
 
 func setup_level_up(data: Dictionary) -> void:
-	icon.texture = res.get_resource("Level")
+	icon.texture = bag.get_resource("Level")
 	var lored = lv.get_lored(data.lored) as LORED
 	icon.modulate = lored.details.color
 	background.modulate = lored.details.color

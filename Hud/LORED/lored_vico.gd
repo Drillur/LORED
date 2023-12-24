@@ -373,14 +373,14 @@ func status_changed() -> void:
 
 func sleep_changed() -> void:
 	if lored.asleep.is_true():
-		sleep.set_icon(res.get_resource("awake"))
+		sleep.set_icon(bag.get_resource("awake"))
 		lored.status.set_to("[wave amp=20 freq=1]Sleeping.[/wave]")
 		animation.sleep()
 		start_spewing_sleep_text()
 		start_sleep_timer()
 		progress_bar.stop()
 	else:
-		sleep.set_icon(res.get_resource("Halt"))
+		sleep.set_icon(bag.get_resource("Halt"))
 		sleep_text_timer.stop()
 		sleep_timer.stop()
 
@@ -422,7 +422,7 @@ func spew_sleep_text() -> void:
 
 
 func emote(_emote: Emote) -> void:
-	var emote_vico = res.get_resource("emote_vico").instantiate() as EmoteVico
+	var emote_vico = bag.get_resource("emote_vico").instantiate() as EmoteVico
 	emote_vico.setup(_emote)
 	emote_container.add_child(emote_vico)
 

@@ -5,6 +5,9 @@ extends Node
 const saved_vars := [
 	"read_sections",
 ]
+const CHAT_REQUESTS := [
+	"lore_intro"
+]
 
 func load_finished() -> void:
 	for title in read_sections:
@@ -12,6 +15,8 @@ func load_finished() -> void:
 			read_sections.erase(title)
 	if gv.dev_mode:
 		print("Read sections: ", read_sections)
+
+signal chat_requested(dialogue_resource)
 
 var section_titles := []
 var read_sections := []
@@ -22,7 +27,7 @@ var current_section: String
 func _ready() -> void:
 	SaveManager.loading.became_false.connect(load_finished)
 	DialogueManager.passed_title.connect(passed_title)
-	for chat in res.chats.values():
+	for chat in bag.chats.values():
 		for section_title in chat.get_titles():
 			if not section_title in section_titles:
 				section_titles.append(section_title)
@@ -47,6 +52,10 @@ func mark_section_read(section_title: String = current_section) -> String:
 	if not section_title in read_sections:
 		read_sections.append(section_title)
 	return ""
+
+
+func new_chat_request() -> void:
+	chat_requested.emit(bag.get_resource("lore_intro"), "lore_intro", lv.get_color(LORED.Type.GROWTH))
 
 
 

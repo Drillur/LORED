@@ -22,6 +22,6 @@ func setup(data: Dictionary) -> void:
 	color = lored.details.color
 	
 	for buff in Buffs.get_buffs(lored):
-		var buff_bar = res.get_resource("buff_bar").instantiate()
+		var buff_bar = bag.get_resource("buff_bar").instantiate()
 		buff_bar.setup(buff)
 		buffs.add_child(buff_bar)

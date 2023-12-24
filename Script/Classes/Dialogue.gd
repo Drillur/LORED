@@ -93,7 +93,7 @@ func _init(_type: Type):
 			replies[Type.WHAT_IS_LORED] = "What is a LORED?"
 			replies[Type.WHY_LIKE_ROCKS] = "Why do you like picking up rocks? Are you acoustic?"
 		Type.HOW_LEVEL_UP:
-			text = "Just click on the %s button! But it costs resources, so if you don't have enough, it won't work." % res.get_icon_text("Level")
+			text = "Just click on the %s button! But it costs resources, so if you don't have enough, it won't work." % bag.get_icon_text("Level")
 			replies[Type.WHAT_IS_IRON] = "Leveling you up costs %s and %s. What is that?" % [
 				wa.get_icon_and_name_text(Currency.Type.IRON),
 				wa.get_icon_and_name_text(Currency.Type.COPPER)

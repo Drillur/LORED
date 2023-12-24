@@ -58,7 +58,7 @@ func setup_reward_text() -> void:
 		rewards.queue_free()
 		return
 	for _text in wish.get_reward_texts():
-		var x = res.get_resource("rich_text_label").instantiate()
+		var x = bag.get_resource("rich_text_label").instantiate()
 		x.text = _text
 		reward_details.add_child(x)
 

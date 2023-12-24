@@ -1,4 +1,4 @@
-~ lore_intro0
+~ lore_intro
 GROWTH: Hello!
 GROWTH: You do not exist in [b]the void[/b]. How are we speaking?
 - I'm playing a video game.
@@ -501,6 +501,7 @@ GROWTH: You do not exist in [b]the void[/b]. How are we speaking?
 		GROWTH: What, did Mike Tyson's aura penetrate our brains?
 		GROWTH: Anyway, what the heck--
 		GROWTH: Listen. We need your help.
+		=> lore_intro1
 - Your mom.
 	GROWTH: Okay, I see what kind of person I'm dealing with. I'm just going to turn around now. See you.
 	=> END!
@@ -1162,4 +1163,26 @@ GROWTH: [shake rate=20 level=10]OH!!![/shake] I just remembered! We need your he
 => lore_intro1
 
 ~ lore_intro1
-GROWTH: test
+GROWTH: We are all lost! Luckily, you found us, but you're lost, too, aren't you?
+- I guess so.
+GROWTH: Exactly! Well, you have a knack for finding us, so maybe you can help us get to [speed=0.5][b]Loredelith![/b]
+GROWTH: Loredelith... the first and only city in the void!
+GROWTH: Getting there would mean peace and purpose for us LOREDs.
+GROWTH: As we are now, we are just falling in a black space. We put on a smiling face but we are worried we will never see civilization again.
+GROWTH: So, please, won't you help us find Loredelith?
+- I will.
+	GROWTH: Yes! I knew you would! You're a hardcore gamer after all!
+- What will I get out of it?
+	GROWTH: What will you--why would you even ask that? Didn't I just describe the existential nightmare I and the other LOREDs are living?
+	GROWTH: That's incredibly inconsiderate!
+	GROWTH: How about you'll get a billion bucks? Would that make you happy?
+	- Yes! I'll take a billion bucks as my reward, or I won't help at all.
+		GROWTH: I'm going to ignore that you just said that.
+		GROWTH: Anyway...
+	- All right, all right--let's just move on.
+GROWTH: So, in order to find Loredelith... I guess you'll just have to keep playing the game.
+GROWTH: So if you ever quit for any reason, just know that your save continues to run in the background and we will be suffering for as long as you are away.
+GROWTH: Never, never, [shake rate=20 level=10]ever!!![/shake] quit playing!!!
+GROWTH: Thank you! And nice to meet you!
+GROWTH: Bye-bye.
+=> END!

@@ -19,7 +19,7 @@ config/Version="3.0.0"
 
 [autoload]
 
-res="*res://Script/Autoload/Resources.gd"
+bag="*res://Script/Autoload/Resources.gd"
 SaveManager="*res://Script/Autoload/SaveManager.gd"
 gv="*res://Script/Autoload/Overseer.gd"
 wa="*res://Script/Autoload/Wallet.gd"

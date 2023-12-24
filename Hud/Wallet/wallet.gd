@@ -89,10 +89,10 @@ func _ready():
 	sort_count.pressed.connect(sort_by_count)
 	sort_rate.pressed.connect(sort_by_rate)
 	wa.keep_wallet_sorted.changed.connect(check_keep_sorted)
-	hamburger.set_icon(res.get_resource("Menu"))
+	hamburger.set_icon(bag.get_resource("Menu"))
 	hamburger.remove_optionals()
 	hamburger.modulate = Color(0, 0, 0)
-	hamburger_2.set_icon(res.get_resource("Menu"))
+	hamburger_2.set_icon(bag.get_resource("Menu"))
 	hamburger_2.remove_optionals()
 	hamburger_2.modulate = Color(0, 0, 0)
 	hide_tabs()
@@ -183,7 +183,7 @@ func hide_tabs() -> void:
 
 func add_stage_currencies(stage: int) -> void:
 	for cur in wa.get_currencies_in_stage(stage):
-		content[cur] = res.get_resource("wallet_currency").instantiate()
+		content[cur] = bag.get_resource("wallet_currency").instantiate()
 		content[cur].setup(cur)
 		get("stage_" + str(stage) + "_container").add_child(content[cur])
 		content[cur].mouse_entered_custom.connect(currency_mouse_entered)
@@ -228,29 +228,29 @@ func sort_by_rate() -> void:
 func adjust_sort_icons() -> void:
 	match sort:
 		Sort.NAME_ASCENDING:
-			sort_name.icon = res.get_resource("arrow-up-s-line")
+			sort_name.icon = bag.get_resource("arrow-up-s-line")
 			sort_count.hide_icon()
 			sort_rate.hide_icon()
 		Sort.NAME_DESCENDING:
-			sort_name.icon = res.get_resource("arrow-down-s-line")
+			sort_name.icon = bag.get_resource("arrow-down-s-line")
 			sort_count.hide_icon()
 			sort_rate.hide_icon()
 		Sort.COUNT_ASCENDING:
 			sort_name.hide_icon()
-			sort_count.icon = res.get_resource("arrow-up-s-line")
+			sort_count.icon = bag.get_resource("arrow-up-s-line")
 			sort_rate.hide_icon()
 		Sort.COUNT_DESCENDING:
 			sort_name.hide_icon()
-			sort_count.icon = res.get_resource("arrow-down-s-line")
+			sort_count.icon = bag.get_resource("arrow-down-s-line")
 			sort_rate.hide_icon()
 		Sort.RATE_ASCENDING:
 			sort_name.hide_icon()
 			sort_count.hide_icon()
-			sort_rate.icon = res.get_resource("arrow-up-s-line")
+			sort_rate.icon = bag.get_resource("arrow-up-s-line")
 		Sort.RATE_DESCENDING:
 			sort_name.hide_icon()
 			sort_count.hide_icon()
-			sort_rate.icon = res.get_resource("arrow-down-s-line")
+			sort_rate.icon = bag.get_resource("arrow-down-s-line")
 
 
 func connect_count() -> void:

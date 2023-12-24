@@ -21,7 +21,7 @@ func setup(data: Dictionary) -> void:
 		await ready
 	color = lored.details.color
 	for job in lored.sorted_jobs:
-		var x = res.get_resource("lored_job").instantiate()
+		var x = bag.get_resource("lored_job").instantiate()
 		x.setup(lored.jobs[job])
 		jobs_parent.add_child(x)
 	
