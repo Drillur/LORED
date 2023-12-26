@@ -321,7 +321,7 @@ GROWTH: You do not exist in [b]the void[/b]. How are we speaking?
 							GROWTH: Plus, it sounds like "hero-mancer", automatically making it the coolest class.
 							GROWTH: There are other classes, but I'm no expert. 
 							- Who is Aurus?
-								GROWTH: He's kind of like a god. He helped build Loredelith. The Oracle in Loredelith talks to him sometimes for guidance and crap like that.
+								GROWTH: A god. He helped build Loredelith. The Oracle in Loredelith talks to him sometimes for guidance and crap like that.
 								- What is Loredelith?
 									GROWTH: It's the only city in the void. I am sure that it will come up again in your future.
 									GROWTH: Hey, before we get too freakin side-tracked--!
@@ -329,7 +329,7 @@ GROWTH: You do not exist in [b]the void[/b]. How are we speaking?
 									=> lore_intro1
 								- What is the Oracle?
 									GROWTH: The Oracle is a person! The Councillors in Loredelith are all elected, except for the Oracle. Or, rather, the Oracle [b]is[/b] still elected, but by Aurus instead of the citizens.
-									GROWTH: She's a pretty cool dude. I haven't met her. But she probably is, if Aurus likes her.
+									GROWTH: She's a pretty cool dude. I haven't met her, but she must be, if Aurus likes her.
 									GROWTH: Hey, before we get too freakin side-tracked--!
 									GROWTH: We need your help!
 									=> lore_intro1
@@ -1166,7 +1166,9 @@ GROWTH: [shake rate=20 level=10]OH!!![/shake] I just remembered! We need your he
 GROWTH: We are all lost! Luckily, you found us, but you're lost, too, aren't you?
 - I guess so.
 GROWTH: Exactly! Well, you have a knack for finding us, so maybe you can help us get to [speed=0.5][b]Loredelith![/b]
-GROWTH: Loredelith... the first and only city in the void!
+- What is Loredelith?
+	GROWTH: It is a city. It is the only one in the void.
+- Go on.
 GROWTH: Getting there would mean peace and purpose for us LOREDs.
 GROWTH: As we are now, we are just falling in a black space. We put on a smiling face but we are worried we will never see civilization again.
 GROWTH: So, please, won't you help us find Loredelith?

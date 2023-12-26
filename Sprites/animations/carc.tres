@@ -1,16 +1,19 @@
-[gd_resource type="SpriteFrames" load_steps=2 format=2]
+[gd_resource type="SpriteFrames" load_steps=2 format=3 uid="uid://bpjg2rl13c8sk"]
 
-[ext_resource path="res://Sprites/animations/carc/wait.png" type="Texture" id=1]
+[ext_resource type="Texture2D" uid="uid://dwqn0l3tjfonr" path="res://Sprites/animations/carc/wait.png" id="1"]
 
 [resource]
-animations = [ {
-"frames": [  ],
+animations = [{
+"frames": [],
 "loop": true,
-"name": "CARCINOGENS",
-"speed": 14.0
+"name": &"CARCINOGENS",
+"speed": 1.0
 }, {
-"frames": [ ExtResource( 1 ) ],
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1")
+}],
 "loop": true,
-"name": "ww",
+"name": &"ww",
 "speed": 5.0
-} ]
+}]

@@ -1,8 +1,16 @@
-[gd_scene load_steps=4 format=3 uid="uid://rmruae8fguk4"]
+[gd_scene load_steps=5 format=3 uid="uid://rmruae8fguk4"]
 
 [ext_resource type="Script" path="res://Hud/LORED/lored_container.gd" id="1_2pklp"]
 [ext_resource type="PackedScene" uid="uid://cc20piiohvlkw" path="res://Hud/LORED/lored_vico.tscn" id="1_4k0y7"]
 [ext_resource type="Theme" uid="uid://b8t7tkhvril5g" path="res://Theme/Standard.tres" id="1_q3qro"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cltj8"]
+draw_center = false
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 0, 0, 1)
 
 [node name="LORED Container" type="MarginContainer"]
 offset_right = 1280.0
@@ -315,6 +323,7 @@ theme_override_constants/margin_bottom = 250
 
 [node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Stage 3/ScrollContainer3/MarginContainer"]
 layout_mode = 2
+size_flags_vertical = 4
 theme_override_constants/separation = 30
 
 [node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/Stage 3/ScrollContainer3/MarginContainer/VBoxContainer"]
@@ -333,6 +342,19 @@ layout_mode = 2
 [node name="WITCH" parent="TabContainer/Stage 3/ScrollContainer3/MarginContainer/VBoxContainer/HBoxContainer" instance=ExtResource("1_4k0y7")]
 unique_name_in_owner = true
 layout_mode = 2
+
+[node name="FINDER" type="Panel" parent="TabContainer/Stage 3/ScrollContainer3/MarginContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_cltj8")
+
+[node name="FINDER" type="Panel" parent="TabContainer/Stage 3"]
+visible = false
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_cltj8")
 
 [node name="Stage 4" type="MarginContainer" parent="TabContainer"]
 visible = false

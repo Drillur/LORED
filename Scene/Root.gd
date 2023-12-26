@@ -131,7 +131,15 @@ func _ready():
 	wi.start()
 	
 	# DEBUG
+	if not gv.dev_mode:
+		return
 	update_fps()
+	if not gv.get_stage(2).unlocked:
+		gv.unlock_stage(2)
+	if not gv.get_stage(3).unlocked:
+		gv.unlock_stage(3)
+	for lored_type in lv.get_loreds_in_stage(3):
+		lv.get_lored(lored_type).unlock()
 
 
 func update_menu_size_once() -> void:
@@ -172,7 +180,7 @@ func _input(event):
 		elif settings.visible:
 			node = settings
 			button = settings_button
-		elif dialogue_balloon.visible:
+		elif dialogue_balloon.visible and dialogue_balloon.content.visible:
 			node = dialogue_balloon.content
 		
 		if (esc_pressed
@@ -247,7 +255,7 @@ func _input(event):
 
 
 func should_hide_a_menu() -> bool:
-	return (dialogue_balloon.visible and not dialogue_balloon.is_collapsed()) or settings.visible or menu_contents.visible or upgrade_container.visible or wallet.visible or offline_report.visible
+	return ((dialogue_balloon.visible and dialogue_balloon.content.visible) and not dialogue_balloon.is_collapsed()) or settings.visible or menu_contents.visible or upgrade_container.visible or wallet.visible or offline_report.visible
 
 
 func _on_menu_button_pressed():

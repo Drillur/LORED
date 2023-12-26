@@ -80,6 +80,8 @@ const ANIMATION_FRAMES := {
 	"TUMORS": 1, # ---------
 	"refuel0": 28,
 	"refuel1": 27,
+	
+	"PICK_FROM_GARDEN": 1,
 }
 
 signal started
@@ -145,7 +147,8 @@ func _ready():
 		loreds_by_key[loreds[lored].key] = loreds[lored]
 		loreds_initialized.became_true.connect(loreds[lored].loreds_initialized)
 	
-	print_debug("LOREDs initialized in %s secs" % str(Time.get_unix_time_from_system() - d))
+	if gv.dev_mode:
+		print_debug("LOREDs initialized in %s secs" % str(Time.get_unix_time_from_system() - d))
 	
 	loreds_initialized.set_to(true)
 	for lored in loreds.keys():

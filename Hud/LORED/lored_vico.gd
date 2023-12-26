@@ -4,11 +4,6 @@ extends MarginContainer
 
 
 
-
-func load_finished() -> void:
-	visible = lored.unlocked.get_value()
-
-
 func load_started() -> void:
 	stop_progress_bar()
 
@@ -40,7 +35,6 @@ func load_started() -> void:
 signal lored_details_requested(lored)
 
 var prefer_left_down: bool
-var has_lored := false
 var lored: LORED
 var current_job: Job
 var pending_outputs := {}
@@ -81,7 +75,6 @@ func _ready():
 	sleep_timer.connect("timeout", start_sleep_timer)
 	details.pressed.connect(emit_details)
 	
-	SaveManager.connect("load_finished", load_finished)
 	SaveManager.connect("load_started", load_started)
 	
 	lv.sleep_unlocked.changed.connect(sleep_lock)
@@ -90,7 +83,6 @@ func _ready():
 
 func attach_lored(_lored: LORED) -> void:
 	lored = _lored
-	has_lored = true
 	
 	# signals
 	gv.prestige.connect(prestige)
@@ -106,14 +98,14 @@ func attach_lored(_lored: LORED) -> void:
 	lored.unlocked.became_true.connect(show)
 	lored.unlocked.became_true.connect(display_all_parent_nodes)
 	lored.unlocked.became_false.connect(hide)
+	lored.unlocked.changed.connect(sleep_lock)
+	lored.unlocked.connect_and_call("changed", unlocked_changed)
 	lored.purchased.changed.connect(purchased_changed)
 	lored.autobuy.changed.connect(autobuy_changed)
 	lored.received_buff.connect(buffs_lock)
 	lored.purchased.connect_and_call("changed", buffs_lock)
 	lored.purchased.changed.connect(sleep_lock)
-	lored.unlocked.changed.connect(sleep_lock)
 	lored.status.changed.connect(status_changed)
-	lored.unlocked.connect_and_call("changed", unlocked_changed)
 	
 	sleep_lock()
 	
@@ -442,3 +434,9 @@ func display_parents(node) -> void:
 
 func emit_details() -> void:
 	lored_details_requested.emit(lored)
+
+
+func _on_visibility_changed():
+	if lored.stage == 3:
+		print(lored.key, visible)
+		pass

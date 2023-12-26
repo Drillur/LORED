@@ -1,0 +1,14 @@
+[gd_resource type="SpriteFrames" format=3 uid="uid://cpeec4tvcpcvr"]
+
+[resource]
+animations = [{
+"frames": [],
+"loop": true,
+"name": &"PICK_FROM_GARDEN",
+"speed": 5.0
+}, {
+"frames": [],
+"loop": true,
+"name": &"ww",
+"speed": 5.0
+}]

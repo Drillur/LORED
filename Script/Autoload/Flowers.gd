@@ -2,10 +2,6 @@ extends Node
 
 
 
-const saved_vars := ["flower_seeds", "wallet"]
-
-
-
 enum Type {
 	NEBULA_NECTAR = Currency.Type.NEBULA_NECTAR, # - - - 5
 	MOONLIGHT_BLOSSOM, # produces mana
@@ -173,8 +169,6 @@ var tier_3_list := []
 var tier_4_list := []
 var tier_5_list := []
 
-var flower_seeds := []
-
 
 
 func _ready() -> void:
@@ -234,17 +228,6 @@ func add_random_flower(from_lored: bool, amount = 1, roll_bonus := 0):
 		wa.add(flower, amount)
 
 
-func store_new_flower_seed(count: int, roll_bonus: int):
-	var new_seed = FlowerSeed.new(count, roll_bonus)
-	flower_seeds.append(new_seed)
-
-
-func plant_flower_seed(_seed: FlowerSeed = get_most_recent_flower_seed()):
-	gv.subtractFromResource(gv.Resource.FLOWER_SEED, _seed.count)
-	_seed.sprout()
-	flower_seeds.erase(_seed)
-
-
 
 # - Get
 
@@ -266,15 +249,6 @@ func get_flower_tier(type: Currency.Type) -> int:
 			)
 		)
 	)
-
-
-func is_seed_available() -> bool:
-	return not flower_seeds.is_empty()
-
-
-func get_most_recent_flower_seed() -> FlowerSeed:
-	var most_recent_seed_position: int = flower_seeds.size() - 1
-	return flower_seeds[most_recent_seed_position]
 
 
 func get_currency(type: Type) -> Currency:

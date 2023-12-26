@@ -47,8 +47,7 @@ enum Type {
 	TUMORS,
 	
 	# WITCH
-	PLANT_SEED,
-	SIFT_SEEDS,
+	PICK_FROM_GARDEN,
 }
 
 signal became_workable
@@ -88,6 +87,7 @@ var added_rate := false
 var working := false
 var added_rate_based_on_inhand: bool
 var do_not_alter_rates := false
+var random_duration: Array[float] = [0.8, 1.2]
 
 var has_sufficient_fuel := true
 var has_produced_currencies := false
@@ -558,6 +558,15 @@ func init_TUMORS() -> void:
 	status_text = "Growing %s" % wa.get_currency(produced_currencies.keys()[0]).details.colored_name
 
 
+func init_PICK_FROM_GARDEN() -> void:
+	name = "Pick from the Garden"
+	duration = Value.new(6.0)
+	animation = preload("res://Sprites/animations/WITCH.tres")
+	animation_key = "PICK_FROM_GARDEN"
+	add_produced_currency(Currency.Type.RANDOM_FLOWER, 1)
+	status_text = "Picking %s" % wa.get_currency(produced_currencies.keys()[0]).details.colored_name
+
+
 
 func assign_lored(lored_type: int) -> void:
 	lored = lored_type
@@ -578,7 +587,7 @@ func assign_lored(lored_type: int) -> void:
 		if lored != LORED.Type.COAL and _lored.fuel_currency == Currency.Type.COAL:
 			# whenever coal refuels, check if should emit workable!
 			lv.get_lored(LORED.Type.COAL).get_job(type).completed.connect(emit_workable)
-	else:
+	elif animation_key == "":
 		animation_key = _lored.key
 	
 	if has_required_currencies:
@@ -843,7 +852,7 @@ func start() -> void:
 
 
 func start_timer() -> void:
-	timer.start(duration.get_as_float())
+	timer.start(duration.get_as_float() * randf_range(random_duration[0], random_duration[1]))
 
 
 func stop() -> void:

@@ -46,7 +46,7 @@ func play_job_animation(job: Job) -> void:
 	previous_animation = animation_key
 	
 	var animation_length = lv.ANIMATION_FRAMES[animation_key]
-	speed_scale = animation_length / job.duration.get_as_float()
+	speed_scale = animation_length / job.timer.wait_time
 	if speed_scale > 25:
 		capped_anim.set_to(true)
 		speed_scale = 8

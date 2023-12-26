@@ -73,7 +73,7 @@ enum Type {
 	
 	WITCH, # 36
 	ARCANE,
-	BLOOD, # leave BLOOD at the bottom. see: init_stage()
+	BLOOD, # leave BLOOD at the bottom.
 	
 	# put s4 loreds here
 	S4PLACEHOLDER,
@@ -800,6 +800,7 @@ func init_WITCH() -> void:
 	details.description = "Loves her garden. In good favor with Aurus."
 	primary_currency = Currency.Type.FLOWER_SEED
 	set_female_pronouns()
+	add_job(Job.Type.PICK_FROM_GARDEN)
 
 
 func init_ARCANE() -> void:

@@ -1,4 +1,4 @@
-res://Script/NodeTree/Upgrades
+res://Sprites/animations
 res://Theme
 res://Script/Autoload
 res://Script/Dialogues
@@ -13,7 +13,6 @@ res://Script
 C:/Program Files (x86)/Steam/steamapps/common/Godot Engine/editor_data
 C:/Users/dills/AppData/Local/Programs/Microsoft VS Code
 res://Hud/Save
-res://Sprites/animations
 res://Hud/Tooltip
 res://Hud/Earnings Report
 res://Hud/Wallet
