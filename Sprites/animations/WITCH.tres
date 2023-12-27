@@ -4,7 +4,17 @@
 animations = [{
 "frames": [],
 "loop": true,
-"name": &"PICK_FROM_GARDEN",
+"name": &"EMPTY_POCKET",
+"speed": 5.0
+}, {
+"frames": [],
+"loop": true,
+"name": &"IDENTIFY_FLOWER",
+"speed": 5.0
+}, {
+"frames": [],
+"loop": true,
+"name": &"WALK_THE_WOOD",
 "speed": 5.0
 }, {
 "frames": [],

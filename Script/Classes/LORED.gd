@@ -800,7 +800,9 @@ func init_WITCH() -> void:
 	details.description = "Loves her garden. In good favor with Aurus."
 	primary_currency = Currency.Type.FLOWER_SEED
 	set_female_pronouns()
-	add_job(Job.Type.PICK_FROM_GARDEN)
+	add_job(Job.Type.IDENTIFY_FLOWER)
+	add_job(Job.Type.EMPTY_POCKET)
+	add_job(Job.Type.WALK_THE_WOOD)
 
 
 func init_ARCANE() -> void:
@@ -1415,10 +1417,10 @@ func work(job_type: int = get_next_job_automatically()) -> void:
 func get_next_job_automatically() -> int:
 	if purchased.is_false():
 		return -1
-	for _type in sorted_jobs:
-		var job: Job = jobs[_type]
+	for job in jobs.values():
+		#var job: Job = jobs[_type]
 		if job.can_start():
-			return _type
+			return job.type#_type
 	return -1
 
 

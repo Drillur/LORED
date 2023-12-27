@@ -144,7 +144,7 @@ unique_name_in_owner = true
 position = Vector2(2, 2)
 scale = Vector2(2, 2)
 sprite_frames = ExtResource("8_neisa")
-animation = &"PICK_FROM_GARDEN"
+animation = &"IDENTIFY_FLOWER"
 centered = false
 script = ExtResource("9_tchys")
 

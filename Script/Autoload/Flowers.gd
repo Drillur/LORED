@@ -2,6 +2,10 @@ extends Node
 
 
 
+const saved_vars := [
+	"flowers_requiring_identification",
+]
+
 enum Type {
 	NEBULA_NECTAR = Currency.Type.NEBULA_NECTAR, # - - - 5
 	MOONLIGHT_BLOSSOM, # produces mana
@@ -162,6 +166,9 @@ signal flower_count_changed(flower)
 
 var flower_names := {}
 
+var flowers_requiring_identification := {}
+var identifying_flower := -1
+
 var tier_0_list := []
 var tier_1_list := []
 var tier_2_list := []
@@ -239,12 +246,12 @@ func get_random_flower(roll_bonus := 0) -> Currency.Type:
 	return flower_index
 
 
-func get_flower_tier(type: Currency.Type) -> int:
-	return 5 if type in tier_5_list else (
-		4 if type in tier_4_list else (
+func get_tier(type: Currency.Type) -> int:
+	return 1 if type in tier_1_list else (
+		2 if type in tier_2_list else (
 			3 if type in tier_3_list else (
-				2 if type in tier_2_list else (
-					1 if type in tier_1_list else 0
+				4 if type in tier_4_list else (
+					5 if type in tier_5_list else 0
 				)
 			)
 		)
@@ -299,7 +306,7 @@ func DEBUG__test_random_flower(roll_bonus: int = 0):
 	for _i in range(1, 10000):
 		var flower := get_random_flower(roll_bonus) # cap: 50.
 		var key = keys[flower - Type.NEBULA_NECTAR]
-		var tier = get_flower_tier(flower)
+		var tier = get_tier(flower)
 		if not key in rolled_flowers[tier]:
 			rolled_flowers[tier][key] = 1
 		else:

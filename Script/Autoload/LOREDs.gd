@@ -81,7 +81,9 @@ const ANIMATION_FRAMES := {
 	"refuel0": 28,
 	"refuel1": 27,
 	
-	"PICK_FROM_GARDEN": 1,
+	"WALK_THE_WOOD": 1,
+	"EMPTY_POCKET": 1,
+	"IDENTIFY_FLOWER": 1,
 }
 
 signal started

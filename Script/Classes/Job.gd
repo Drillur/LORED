@@ -47,7 +47,9 @@ enum Type {
 	TUMORS,
 	
 	# WITCH
-	PICK_FROM_GARDEN,
+	EMPTY_POCKET,
+	WALK_THE_WOOD,
+	IDENTIFY_FLOWER,
 }
 
 signal became_workable
@@ -558,13 +560,35 @@ func init_TUMORS() -> void:
 	status_text = "Growing %s" % wa.get_currency(produced_currencies.keys()[0]).details.colored_name
 
 
-func init_PICK_FROM_GARDEN() -> void:
-	name = "Pick from the Garden"
-	duration = Value.new(6.0)
+func init_WALK_THE_WOOD() -> void:
+	name = "Walk the Wood"
+	duration = Value.new(10.0)
 	animation = preload("res://Sprites/animations/WITCH.tres")
-	animation_key = "PICK_FROM_GARDEN"
-	add_produced_currency(Currency.Type.RANDOM_FLOWER, 1)
-	status_text = "Picking %s" % wa.get_currency(produced_currencies.keys()[0]).details.colored_name
+	animation_key = "WALK_THE_WOOD"
+	add_produced_currency(Currency.Type.RANDOM_FLOWER, 4)
+	status_text = "Walking the Barging Wood"
+
+
+func init_EMPTY_POCKET() -> void:
+	name = "Empty Pocket"
+	duration = Value.new(1.0)
+	animation = preload("res://Sprites/animations/WITCH.tres")
+	animation_key = "EMPTY_POCKET"
+	required_currencies = Cost.new({
+		Currency.Type.RANDOM_FLOWER: Value.new(1),
+	})
+	status_text = "Emptying Pocket"
+
+
+func init_IDENTIFY_FLOWER() -> void:
+	name = "Identify Flower"
+	duration = Value.new(1.0)
+	animation = preload("res://Sprites/animations/WITCH.tres")
+	animation_key = "IDENTIFY_FLOWER"
+	status_text = "Identifying Flower"
+
+
+
 
 
 
@@ -836,6 +860,10 @@ func start() -> void:
 		in_hand_output["REFUEL"] = lv.get_lored(lored).fuel.get_x_percent(0.5)
 		lv.get_lored(lored).fuel.add_pending(in_hand_output["REFUEL"])
 	
+	match type:
+		Type.IDENTIFY_FLOWER:
+			Flowers.identifying_flower = Flowers.flowers_requiring_identification.keys()[0]
+	
 	if has_required_currencies:
 		required_currencies.purchase(false)
 		in_hand_input.clear()
@@ -852,7 +880,26 @@ func start() -> void:
 
 
 func start_timer() -> void:
-	timer.start(duration.get_as_float() * randf_range(random_duration[0], random_duration[1]))
+	var _duration: float = randf_range(random_duration[0], random_duration[1])
+	match type:
+		Type.IDENTIFY_FLOWER:
+			var tier: int = Flowers.get_tier(Flowers.identifying_flower)
+			match tier:
+				0:
+					_duration *= 1
+				1:
+					_duration *= 2
+				2:
+					_duration *= 4
+				3:
+					_duration *= 6
+				4:
+					_duration *= 8
+				5:
+					_duration *= 10
+		_:
+			_duration *= duration.get_as_float()
+	timer.start(_duration)
 
 
 func stop() -> void:
@@ -904,6 +951,31 @@ func complete_REFUEL() -> void:
 	lv.get_lored(lored).fuel.add(in_hand_output["REFUEL"])
 
 
+func complete_EMPTY_POCKET() -> void:
+	var flower: Currency = wa.get_currency(Flowers.get_random_flower()) as Currency
+	var amount = 1
+	if (
+		flower.count.equal(0)
+		and not flower.type in Flowers.flowers_requiring_identification.keys()
+	):
+		Flowers.flowers_requiring_identification[flower.type] = amount
+		print(Flowers.flowers_requiring_identification)
+	else:
+		last_production[flower.type] = amount
+		currency_produced.emit(amount)
+		flower.add_from_lored(amount)
+
+
+func complete_IDENTIFY_FLOWER() -> void:
+	var flower: Currency = wa.get_currency(Flowers.identifying_flower) as Currency
+	var amount = Flowers.flowers_requiring_identification[flower.type]
+	last_production[flower.type] = amount
+	currency_produced.emit(amount)
+	flower.add_from_lored(amount)
+	Flowers.flowers_requiring_identification.erase(flower.type)
+	Flowers.identifying_flower = -1
+
+
 
 # - Get
 
@@ -914,7 +986,7 @@ func can_start() -> bool:
 	if type != Type.REFUEL and lv.get_lored(lored).fuel.get_current_percent() <= lv.FUEL_DANGER:
 		return false
 	
-	var special_requirement_method := "can_start_job_special_requirements_" + key
+	var special_requirement_method := "can_start_" + key
 	if has_method(special_requirement_method):
 		if not call(special_requirement_method):
 			return false
@@ -933,7 +1005,7 @@ func can_start() -> bool:
 	return has_sufficient_fuel
 
 
-func can_start_job_special_requirements_REFUEL() -> bool:
+func can_start_REFUEL() -> bool:
 	var _lored = lv.get_lored(lored)
 	if _lored.fuel.get_current_percent() > lv.FUEL_WARNING:
 		return false
@@ -944,6 +1016,11 @@ func can_start_job_special_requirements_REFUEL() -> bool:
 	):
 		return false
 	return true
+
+
+func can_start_IDENTIFY_FLOWER() -> bool:
+	print("can identify flower? ", Flowers.flowers_requiring_identification.size())
+	return Flowers.flowers_requiring_identification.size() > 0
 
 
 func get_produced_currencies() -> Array:
